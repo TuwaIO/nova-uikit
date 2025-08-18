@@ -1,0 +1,68 @@
+{
+  "name": "@tuwaio/nova-core",
+  "version": "0.0.1",
+  "private": false,
+  "author": "Oleksandr Tkach",
+  "license": "Apache-2.0",
+  "description": "The foundational package for the TUWA design system. Provides core styling primitives, theme variables, and common React hooks and utilities.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css"
+  },
+  "keywords": [
+    "react",
+    "tailwindcss",
+    "design-system",
+    "ui-kit",
+    "hooks",
+    "utils",
+    "tuwa"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuwaIO/nova-uikit.git",
+    "directory": "packages/nova-core"
+  },
+  "homepage": "https://github.com/TuwaIO/nova-uikit",
+  "bugs": {
+    "url": "https://github.com/TuwaIO/nova-uikit/issues"
+  },
+  "contributors": [
+    {
+      "name": "Oleksandr Tkach",
+      "url": "https://github.com/Argeare5"
+    }
+  ],
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19",
+    "tailwindcss": ">=4"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.11",
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.2"
+  }
+}

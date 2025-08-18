@@ -1,0 +1,54 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# HashLink()
+
+> **HashLink**(`props`): `Element`
+
+Defined in: [packages/nova-transactions/src/components/HashLink.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/HashLink.tsx#L22)
+
+A component to display a hash string (e.g., transaction hash or address)
+with an optional label, a link to a block explorer, and a copy-to-clipboard button.
+
+## Parameters
+
+### props
+
+The component props.
+
+#### className?
+
+`string`
+
+Additional CSS classes to apply to the container element.
+
+#### explorerUrl?
+
+`string`
+
+An optional URL to a block explorer. If provided, the hash becomes a link.
+
+#### hash
+
+`string`
+
+The full hash string to display and copy.
+
+#### label?
+
+`string`
+
+An optional label to display before the hash (e.g., "Tx Hash").
+
+#### variant?
+
+`"default"` \| `"compact"` = `'default'`
+
+The visual style of the component.
+
+## Returns
+
+`Element`
+
+The rendered HashLink component.

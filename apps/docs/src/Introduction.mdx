@@ -1,0 +1,100 @@
+
+# TUWA Web3 Transaction Tracking - UI Components
+
+Welcome to the **TUWA Web3 Transaction Tracking** component library! 🚀
+
+## What is TUWA?
+
+TUWA provides a comprehensive suite of React components and hooks for tracking Web3 transactions with beautiful, user-friendly interfaces. Our components handle all the complexity of transaction monitoring while providing a seamless user experience.
+
+## Key Features
+
+- 🔄 **Real-time tracking** - Monitor transaction states automatically
+- 🎨 **Beautiful UI** - Pre-designed components that just work
+- 🌐 **Multi-chain** - Support for Ethereum, Polygon, Arbitrum, Base, and more
+- 🔗 **Wallet agnostic** - Works with any wallet connector (RainbowKit, ConnectKit, etc.)
+- 🎯 **TypeScript** - Full type safety out of the box
+- 🎨 **Themeable** - Customizable with CSS variables and Tailwind
+
+## Getting Started
+
+### Installation
+```bash
+pnpm add @tuwaio/web3-transactions-tracking-core
+```
+
+## Component Categories
+### 🔘 **Action Components**
+Interactive elements that trigger transactions
+- - Smart transaction button with built-in states `TxActionButton`
+
+### 📊 **Status Components**
+Display transaction states and progress
+- - Show current transaction status `TransactionStatusBadge`
+- - Visual progress indicator `TxProgressIndicator`
+
+### 📜 **History Components**
+Track and display transaction history
+- - List of user's transactions `TransactionsHistory`
+
+### 🔧 **Utility Components**
+Helper components for common patterns
+- - Transaction notifications `ToastTransaction`
+- - Transaction progress modals `TrackingTxModal`
+
+### 💳 **Wallet Components**
+Helper components for wallet interactions
+- - Display wallet avatar or blockies `WalletAvatar`
+- - Display wallet info and recent transaction history `WalletInfoModal`
+
+### 🎛️ **Provider**
+- - All in one `TransactionsWidget`
+
+## Theme Customization
+TUWA components use CSS variables for easy theming:
+
+```css
+:root {
+  --tuwa-success-bg: theme('colors.green.100');
+  --tuwa-success-text: theme('colors.green.700');
+  --tuwa-success-icon: theme('colors.green.500');
+
+  --tuwa-error-bg: theme('colors.red.100');
+  --tuwa-error-text: theme('colors.red.700');
+  --tuwa-error-icon: theme('colors.red.500');
+
+  --tuwa-pending-bg: theme('colors.yellow.100');
+  --tuwa-pending-text: theme('colors.yellow.800');
+  --tuwa-pending-icon: theme('colors.yellow.600');
+
+  --tuwa-info-bg: theme('colors.gray.100');
+  --tuwa-info-text: theme('colors.gray.600');
+  --tuwa-info-icon: theme('colors.gray.500');
+
+  --tuwa-text-primary: theme('colors.gray.900');
+  --tuwa-text-secondary: theme('colors.gray.500');
+  --tuwa-text-tertiary: theme('colors.gray.400');
+  --tuwa-text-accent: theme('colors.blue.600');
+  --tuwa-text-on-accent: theme('colors.white');
+
+  --tuwa-bg-primary: theme('colors.white');
+  --tuwa-bg-secondary: theme('colors.gray.50');
+  --tuwa-bg-muted: theme('colors.gray.100');
+
+  --tuwa-border-primary: theme('colors.gray.200');
+  --tuwa-border-secondary: theme('colors.gray.100');
+
+  --tuwa-button-gradient-from: theme('colors.blue.600');
+  --tuwa-button-gradient-to: theme('colors.purple.600');
+
+  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
+  --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+}
+```
+
+## Resources
+- 📚 [Full Documentation](https://docs.tuwa.io)
+- 🔗 [GitHub Repository](https://github.com/TuwaIO/web3-transactions-tracking)
+- 🐛 [Report Issues](https://github.com/TuwaIO/web3-transactions-tracking/issues)
+
+Built with ❤️ by [TUWA Team](https://github.com/TuwaIO)

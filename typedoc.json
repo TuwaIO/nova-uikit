@@ -1,0 +1,24 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "packages/nova-core/src/index.ts",
+    "packages/nova-transactions/src/index.ts",
+    "packages/nova-transactions/src/providers/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.json",
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-plugin-react"
+  ],
+  "out": "apps/docs/src/apiReference",
+  "readme": "none",
+  "githubPages": false,
+  "hideGenerator": true,
+  "cleanOutputDir": true,
+  "categorizeByGroup": true,
+  "hideBreadcrumbs": true,
+  "pageTitleTemplates": {
+    "member": "{name}"
+  }
+}

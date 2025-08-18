@@ -1,0 +1,324 @@
+# TransactionsWidget
+
+The **TransactionsWidget** is the centerpiece of the `transactions-tracking-ui` library. It's a comprehensive, all-in-one solution that orchestrates the entire transaction tracking experience in your dApp. 🎯
+
+## What is TransactionsWidget?
+
+`TransactionsWidget` is a powerful React component that combines all transaction tracking features into a single, easy-to-use interface. It acts as the central coordinator for:
+
+-   🔄 **Real-time transaction monitoring** across multiple chains.
+-   🍞 **Smart toast notifications** with live updates.
+-   📱 **Interactive modals** for detailed transaction progress tracking.
+-   💼 **Displaying wallet information** and transaction history.
+-   🎨 **Flexible customization** of appearance and functionality.
+
+Think of it as your dApp's transaction control center: drop it in once, and get a complete Web3 transaction UX.
+
+## Key Advantages
+
+### 🚀 All-in-One Component, Complete Solution
+
+Instead of importing and configuring multiple separate components, you get everything at once. This significantly simplifies integration.
+
+```tsx
+// Full transaction tracking in one component!
+<TransactionsWidget
+  transactionsPool={transactionsPool}
+  handleTransaction={handleTransaction}
+  appChains={chains}
+  config={wagmiConfig}
+  closeTxTrackedModal={closeModal}
+/>
+```
+
+### ⚡️ Smart Features Out of the Box
+
+  - **Auto-resuming**: Continues tracking transactions even after a page reload.
+  - **Multi-tracker support**: Works with standard Ethereum transactions, as well as Gelato and Safe.
+  - **Intelligent updates**: The component only re-renders when a transaction's status actually changes, optimizing performance.
+  - **Graceful error handling**: Provides beautiful and clear error messages with retry options.
+
+### 🎨 Advanced Customization
+
+Every aspect of the widget, from toasts to modals, can be configured via the `features`, `customization`, and `labels` props to perfectly match your design system.
+
+-----
+
+## Core Features
+
+`TransactionsWidget` includes three key UI elements that work together seamlessly.
+
+### 🍞 Toast Notifications
+
+Smart, non-intrusive notifications that:
+
+  - Appear immediately after a transaction is submitted.
+  - Update in real-time as the status changes (e.g., from "Pending" to "Success").
+  - Display success or failure states with appropriate colors.
+  - Can include action buttons and links to block explorers.
+  - Stack elegantly if multiple transactions are active.
+
+### 📱 Tracking Modal
+
+A detailed modal that provides:
+
+  - Real-time visualization of transaction progress.
+  - Assistance with network switching.
+  - Mechanisms to Speed Up, Cancel, or Retry transactions.
+  - Detailed transaction receipt information upon completion.
+
+### 💼 Wallet Info Modal
+
+A comprehensive view of the user's wallet, including:
+
+  - Complete transaction history (both successful and failed).
+  - Details for each transaction in the history.
+  - Options to copy the wallet address and disconnect.
+
+-----
+
+## Basic Usage
+
+### Simple Setup
+
+To get the component working, you need to pass a few key props from your tracking store.
+
+```tsx
+import { TransactionsWidget } from '@tuwaio/transactions-tracking-ui';
+import { useTxTrackingStore } from '../store'; // Your Zustand store
+import { wagmiConfig, chains } from '../config'; // Your configurations
+
+function MyApp() {
+  const transactionsPool = useTxTrackingStore((state) => state.transactionsPool);
+  const initialTx = useTxTrackingStore((state) => state.initialTx);
+  const closeTxTrackedModal = useTxTrackingStore((state) => state.closeTxTrackedModal);
+  const handleTransaction = useTxTrackingStore((state) => state.handleTransaction);
+
+  const { address, chain } = useAccount();
+
+  return (
+    <TransactionsWidget
+      // --- Required props ---
+      transactionsPool={transactionsPool}
+      handleTransaction={handleTransaction}
+      appChains={chains}
+      config={wagmiConfig}
+      closeTxTrackedModal={closeTxTrackedModal}
+      // --- Optional props ---
+      initialTx={initialTx}
+      walletAddress={address}
+      chain={chain}
+    />
+  );
+}
+```
+
+### Example with Custom Actions
+
+The `actions` prop allows you to define the logic for different types of transactions a user can initiate.
+
+```tsx
+<TransactionsWidget
+  // ...other required props
+  actions={{
+    transfer: {
+      title: 'Transfer Tokens',
+      description: 'Sending tokens to recipient',
+      // 'action' must be a function that returns a Promise
+      action: async (amount, to) => transferTokens(amount, to),
+    },
+    approve: {
+      title: 'Approve Spending',
+      description: 'Approving token allowance',
+      action: async (spender, amount) => approveTokens(spender, amount),
+    },
+  }}
+/>
+```
+
+-----
+
+## Advanced Customization
+
+### 🚩 Feature Flags
+
+You can easily enable or disable the main UI elements using the `features` prop. By default, all are enabled.
+
+```tsx
+<TransactionsWidget
+  // ...other props
+  features={{
+    toasts: true, // Enable/disable toast notifications
+    walletInfoModal: true, // Enable/disable wallet modal
+    trackingTxModal: true, // Enable/disable transaction tracking modal
+  }}
+/>
+```
+
+### 🎨 Deep Styling (Customization)
+
+The `customization` prop allows you to pass objects for deep customization of each child component.
+
+```tsx
+<TransactionsWidget
+  // ...other props
+  customization={{
+    toast: {
+      className: 'custom-toast-styles',
+    },
+    walletInfoModal: {
+      className: 'custom-wallet-modal',
+    },
+    trackingTxModal: {
+      className: 'custom-tracking-modal',
+    },
+  }}
+/>
+```
+
+### ⚙️ Toast Container Customization
+
+`TransactionsWidget` uses `react-toastify` under the hood. You can pass any props for `ToastContainer` directly.
+
+```tsx
+<TransactionsWidget
+  // ...other props
+  // --- Props for react-toastify ---
+  position="top-right"
+  limit={5}
+  newestOnTop
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="dark"
+/>
+```
+
+-----
+
+## Internationalization (i18n)
+
+You can easily translate all text in the widget to any language by passing a `labels` object.
+
+```tsx
+<TransactionsWidget
+  // ...other props
+  labels={{
+    transaction: {
+      pending: 'Waiting for confirmation...',
+      success: 'Transaction successful!',
+      failed: 'Transaction failed',
+      replaced: 'Transaction replaced',
+    },
+    wallet: {
+      connecting: 'Connecting wallet...',
+      connected: 'Wallet connected',
+      disconnected: 'Wallet disconnected',
+    },
+    buttons: {
+      retry: 'Retry',
+      close: 'Close',
+      viewOnExplorer: 'View on Explorer',
+      speedUp: 'Speed Up',
+      cancel: 'Cancel',
+    },
+  }}
+/>
+```
+
+-----
+
+## Props Reference
+
+### Core Props
+
+| Prop                  | Type                                   | Required | Description                                             |
+| --------------------- | ------------------------------------- | :------: | ------------------------------------------------------- |
+| `transactionsPool`    | `TransactionPool<TR, T>`              |    ✅    | The current transaction pool from the store.            |
+| `handleTransaction`   | `Function`                            |    ✅    | The handler function to initiate transactions.          |
+| `appChains`           | `Chain[]`                             |    ✅    | An array of supported networks (from `viem/chains`).    |
+| `config`              | `Config`                              |    ✅    | The Wagmi configuration object.                         |
+| `closeTxTrackedModal` | `() => void`                          |    ✅    | A function to close the transaction tracking modal.     |
+
+### Optional Props
+
+| Prop            | Type                  | Description                                                  |
+| --------------- | -------------------- | ------------------------------------------------------------ |
+| `walletAddress` | `string`             | The address of the currently connected wallet.               |
+| `chain`         | `Chain`              | The currently active chain.                                  |
+| `initialTx`     | `Transaction`        | The initial transaction to display in the modal.             |
+| `actions`       | `ActionRegistry`     | An object of available actions (transactions) for the user. Neded For retry logic. |
+
+### Customization Props
+
+| Prop            | Type                                                               | Description                                                          |
+| --------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `labels`        | `Partial<TuwaLabels>`                                             | An object to override the default text labels.                       |
+| `features`      | `{ toasts?: boolean; walletInfoModal?: boolean; ... }`            | An object to enable/disable UI features.                             |
+| `customization` | `{ toast?: ToastTransactionCustomization; ... }`                  | An object for deep styling and behavior customization of child components. |
+
+> **Note**: All props for `ToastContainer` from `react-toastify` are also supported.
+
+-----
+
+## Best Practices
+
+### 1\. Single Instance
+
+Use only **one** `TransactionsWidget` per application. It's best to place it in a root component, like `_app.tsx` or `Layout.tsx`.
+
+```tsx
+// ✅ Good: One widget in the app root
+function App({ Component, pageProps }) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={client}>
+        <Component {...pageProps} />
+        <TransactionsWidget {...props} />
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+```
+
+### 2\. Memoize Props
+
+To prevent unnecessary re-renders, wrap complex objects like `customization` or `actions` in `useMemo`.
+
+```tsx
+function MyPage() {
+  const customization = useMemo(() => ({
+    toast: { className: 'my-custom-toast' },
+    walletInfoModal: { maxTransactions: 20 },
+  }), []);
+
+  return (
+    <TransactionsWidget
+      customization={customization}
+      // ...other props
+    />
+  );
+}
+```
+
+-----
+
+## Troubleshooting
+
+  - **Toasts not appearing?**
+Ensure `features.toasts` is not set to `false`. Also, check if you've correctly configured `ToastContainer` if you're passing custom props.
+
+  - **Modal not opening?**
+Verify that you are correctly passing `initialTx` to the store and `closeTxTrackedModal` to the widget.
+
+  - **Styling conflicts?**
+Use more specific CSS selectors or CSS variables to override styles. The library provides variables like `--tuwa-success-bg`, `--tuwa-error-bg`, and others.
+
+-----
+
+## Summary
+
+`TransactionsWidget` is a powerful, flexible, and beautiful solution for Web3 transaction UX. Whether you're building a simple dApp or a complex DeFi protocol, this component provides everything you need for world-class transaction tracking.
+
+**Start with the basic setup and customize as needed. Your users will love the seamless transaction experience!** 🚀

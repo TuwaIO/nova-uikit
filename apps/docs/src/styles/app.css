@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@import '@tuwaio/nova-core/dist/index.css';
+
+.Toastify {
+  pointer-events: auto;
+}

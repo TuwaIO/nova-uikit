@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    "packages/nova-core": {
+      "package-name": "@tuwaio/nova-core",
+      "release-type": "node"
+    },
+    "packages/nova-transactions": {
+      "package-name": "@tuwaio/nova-transactions",
+      "release-type": "node"
+    }
+  },
+  "initial-version": "0.0.1"
+}
