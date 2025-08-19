@@ -6,7 +6,7 @@
 
 > **TransactionHistoryItemCustomization**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L32)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L32)
 
 Defines the structure for the `customization` prop, allowing users to override
 default sub-components with their own implementations for a history item.
@@ -27,7 +27,7 @@ default sub-components with their own implementations for a history item.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L33)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L33)
 
 #### description()?
 

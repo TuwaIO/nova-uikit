@@ -1,2 +1,2 @@
 export * from './LabelsProvider';
-export * from './TransactionsWidget';
+export * from './NovaProvider';

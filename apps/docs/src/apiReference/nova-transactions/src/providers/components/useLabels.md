@@ -6,7 +6,7 @@
 
 > **useLabels**(): [`TuwaLabels`](../../type-aliases/TuwaLabels.md)
 
-Defined in: [packages/nova-transactions/src/providers/LabelsProvider.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/providers/LabelsProvider.tsx#L42)
+Defined in: [packages/nova-transactions/src/providers/LabelsProvider.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/providers/LabelsProvider.tsx#L42)
 
 A custom hook to easily access the i18n labels from any component
 within the `LabelsProvider` tree.

@@ -6,7 +6,7 @@
 
 > **TransactionsHistoryCustomization**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
 
 Defines the customization options for the TransactionsHistory component.
 
@@ -26,7 +26,7 @@ Defines the customization options for the TransactionsHistory component.
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
 
 #### listWrapper?
 
@@ -40,7 +40,7 @@ CSS classes for the list's wrapper `div`.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
 
 #### HistoryItem?
 

@@ -6,7 +6,7 @@
 
 > **ToastTransactionProps**\<`TR`, `T`\> = `object` & `Pick`\<[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`\>, `"transactionsPool"`\>
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/ToastTransaction.tsx#L49)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/ToastTransaction.tsx#L49)
 
 ## Type declaration
 

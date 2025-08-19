@@ -6,7 +6,7 @@
 
 > **WalletAvatar**(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAvatar.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/WalletInfoModal/WalletAvatar.tsx#L30)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAvatar.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletAvatar.tsx#L30)
 
 A component that displays a user's avatar.
 It prioritizes showing the provided `ensAvatar`. If unavailable, it falls back

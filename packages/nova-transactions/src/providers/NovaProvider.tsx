@@ -1,5 +1,5 @@
 /**
- * @file This file contains the main `TransactionsWidget` component, the primary entry point for the UI library.
+ * @file This file contains the main `NovaProvider` component, the primary entry point for the UI library.
  */
 
 import { deepMerge } from '@tuwaio/nova-core';
@@ -34,7 +34,7 @@ const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
   [TransactionStatus.Replaced]: 'info',
 };
 
-export type TransactionsWidgetProps<TR, T extends Transaction<TR>> = {
+export type NovaProviderProps<TR, T extends Transaction<TR>> = {
   /** A partial object of labels to override the default English text. */
   labels?: Partial<TuwaLabels>;
   /** An object to enable or disable major UI features. All are enabled by default. */
@@ -59,13 +59,13 @@ export type TransactionsWidgetProps<TR, T extends Transaction<TR>> = {
   >;
 
 /**
- * The main entry point component for the transaction tracking UI.
- * It orchestrates toasts, modals, and providers.
+ * The main provider for the Nova UI ecosystem.
+ * It orchestrates toasts, modals, and the i18n context for the entire application.
  *
- * @param {TransactionsWidgetProps<TR, T>} props - The component props.
- * @returns {JSX.Element} The rendered widget.
+ * @param {NovaProviderProps<TR, T>} props - The component props.
+ * @returns {JSX.Element} The rendered provider.
  */
-export function TransactionsWidget<TR, T extends Transaction<TR>>({
+export function NovaProvider<TR, T extends Transaction<TR>>({
   labels,
   features,
   customization,
@@ -79,7 +79,7 @@ export function TransactionsWidget<TR, T extends Transaction<TR>>({
   walletAddress,
   chain,
   ...toastProps
-}: TransactionsWidgetProps<TR, T>): JSX.Element {
+}: NovaProviderProps<TR, T>): JSX.Element {
   const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<TR, T>>(transactionsPool);
 
@@ -152,7 +152,7 @@ export function TransactionsWidget<TR, T extends Transaction<TR>>({
     });
 
     prevTransactionsRef.current = transactionsPool;
-  }, [transactionsPool, appChains, customization?.toast, enabledFeatures]);
+  }, [transactionsPool, appChains, customization?.toast, enabledFeatures, config]);
 
   return (
     <LabelsProvider labels={mergedLabels}>

@@ -6,10 +6,10 @@
 
 ## Type Aliases
 
-- [TransactionsWidgetProps](type-aliases/TransactionsWidgetProps.md)
+- [NovaProviderProps](type-aliases/NovaProviderProps.md)
 
 ## Functions
 
 - [LabelsProvider](functions/LabelsProvider.md)
-- [TransactionsWidget](functions/TransactionsWidget.md)
+- [NovaProvider](functions/NovaProvider.md)
 - [useLabels](functions/useLabels.md)

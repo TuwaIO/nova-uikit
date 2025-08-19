@@ -6,7 +6,7 @@
 
 > **TxInfoBlockCustomization**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L22)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L22)
 
 Defines the customization options for the `TxInfoBlock` component.
 
@@ -26,7 +26,7 @@ Defines the customization options for the `TxInfoBlock` component.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L23)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L23)
 
 #### infoRow()?
 

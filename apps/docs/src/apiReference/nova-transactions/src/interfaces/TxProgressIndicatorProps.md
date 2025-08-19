@@ -4,7 +4,7 @@
 
 # TxProgressIndicatorProps
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:85](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L85)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:85](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L85)
 
 ## Properties
 
@@ -12,7 +12,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L90)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L90)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **isFailed**: `boolean`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L88)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L88)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **isProcessing**: `boolean`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L86)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L86)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **isReplaced**: `boolean`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:89](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L89)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:89](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L89)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **isSucceed**: `boolean`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L87)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L87)
 
 ***
 
@@ -52,6 +52,6 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgres
 
 > `optional` **StepComponent**: `ComponentType`\<[`StepProps`](../type-aliases/StepProps.md)\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L92)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L92)
 
 A custom component to use instead of the default `Step`.

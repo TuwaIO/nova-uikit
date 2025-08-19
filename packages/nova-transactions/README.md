@@ -13,21 +13,21 @@ This package provides the **View Layer** for TUWA's transaction tracking ecosyst
 -   **`@tuwaio/pulsar-core`**: The core state management engine.
 -   **`@tuwaio/nova-transactions` (this package)**: The React components that consume state from `pulsar-core` and render the UI.
 
-You must use both packages together to achieve the full functionality.
+You must set up both the Pulsar engine and this UI package to achieve the full functionality.
 
 ## Core Features
 
 -   **🧩 UI Components:** A suite of pre-built, accessible components including `TransactionModal`, `TransactionToasts`, and `TransactionHistory`.
--   **🔌 Simple Integration:** Just wrap your app in our providers, and the UI will automatically react to transactions tracked by `pulsar-core`.
+-   **🔌 Simple Integration:** The UI automatically reacts to transactions tracked by `pulsar-core`.
 -   **🌐 Internationalization (i18n):** Built-in support for multiple languages and easy overrides for all text content.
 -   **🎨 Highly Customizable:** Styled with `@tuwaio/nova-core` to be easily themed using Tailwind CSS.
 
 ## Installation
 
-1.  Install the required TUWA packages:
+1.  Install all the required TUWA packages:
 
     ```bash
-    pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core
+    pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/pulsar-evm @tuwaio/pulsar-react
     ```
 
 2.  This package relies on several peer dependencies. Install them if you haven't already:
@@ -38,38 +38,46 @@ You must use both packages together to achieve the full functionality.
 
 ## Getting Started
 
-To get started, you need to set up the providers from both `pulsar-core` and `nova-transactions`.
+To use this library, you need to set up the `NovaProvider` from this package alongside the Pulsar initialization logic.
+
+Here is a complete example of a `providers.tsx` file that configures both systems:
 
 ```tsx
 // app/providers.tsx or similar
 'use client';
 
 import { WagmiProvider } from 'wagmi';
-import { PulsarProvider } from '@tuwaio/pulsar-core';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NovaProvider, TransactionToasts } from '@tuwaio/nova-transactions';
 import { ToastContainer } from 'react-toastify';
 
+// Import the TransactionInitializer component you created (see pulsar-react docs)
+import { TransactionInitializer } from '../components/TransactionInitializer';
 // Import required CSS
-import 'react-toastify/dist/ReactToastify.css';
 import '@tuwaio/nova-core/dist/index.css';
+import '@tuwaio/nova-transactions/dist/index.css';
 
 // Your Wagmi Config
 import { wagmiConfig } from './wagmi';
 
+const queryClient = new QueryClient();
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
-      {/* State management from Pulsar */}
-      <PulsarProvider>
-        {/* UI layer from Nova */}
+      <QueryClientProvider client={queryClient}>
+        {/* NovaProvider is the parent for all UI-related context and components */}
         <NovaProvider>
+          {/* TransactionInitializer handles the logic of rehydrating the Pulsar store */}
+          <TransactionInitializer />
+          
           {children}
 
-          {/* Global UI components */}
+          {/* Global UI components from this package */}
           <TransactionToasts />
           <ToastContainer />
         </NovaProvider>
-      </PulsarProvider>
+      </QueryClientProvider>
     </WagmiProvider>
   );
 }
@@ -77,56 +85,66 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
 ## Usage Example
 
-Once the providers are set up, you use hooks from `@tuwaio/pulsar-core` to initiate and track transactions. The components from this library (`nova-transactions`) will automatically appear and update.
+Once the providers are set up, you use your custom `usePulsarStore` hook to track transactions. The components from this library will automatically appear and update.
 
 ```tsx
-// components/MintNFTButton.tsx
+// components/IncrementButton.tsx
 'use client';
 
-// Logic and state management hooks are imported from pulsar-core
-import { usePulsar } from '@tuwaio/pulsar-core'; 
-import { useWriteContract } from 'wagmi';
+import { getAccount } from '@wagmi/core';
+
+// Import your custom hook, created as shown in the pulsar-react docs
+import { usePulsarStore } from '../hooks/usePulsarStore';
+import { config } from '../configs/wagmiConfig';
 import { abi } from './my-nft-abi';
 
-const NFT_CONTRACT_ADDRESS = '0x...';
+const CONTRACT_ADDRESS = '0x...';
 
-export function MintNFTButton() {
-  const { writeContract } = useWriteContract();
-  const { track } = usePulsar(); // The main tracking function from the engine
+export function IncrementButton() {
+  const activeWallet = getAccount(config);
+  const { handleTransaction } = usePulsarStore();
 
-  const handleMint = () => {
-    // track() comes from pulsar-core and handles all the state logic.
-    // Nova's UI components listen to these state changes and appear automatically.
-    track({
-      write: () => writeContract({
-        address: NFT_CONTRACT_ADDRESS,
-        abi,
-        functionName: 'safeMint',
-        args: [1],
-      }),
-      metadata: {
-        title: 'Mint Your Awesome NFT',
-        description: 'This is a transaction to mint a new NFT.',
+  const handleIncrement = async () => {
+    await handleTransaction({
+      actionFunction: txActions.increment,
+      params: {
+        type: TxType.increment,
+        adapter: TransactionAdapter.EVM,
+        from: activeWallet.address ?? zeroAddress,
+        walletType: activeWallet.connector?.type ?? '',
+        desiredChainID: sepolia.id,
+        actionKey: TxAction.increment,
+        title: ['Incrementing', 'Incremented', 'Error when increment', 'Increment tx replaced'],
+        description: [
+          `Value after incrementing ${currentCount + 1}`,
+          `Success. Current value is ${currentCount + 1}`,
+          'Something went wrong when increment.',
+          'Transaction replaced. Please take a look details in your wallet.',
+        ],
+        payload: {
+          value: currentCount,
+        },
+        withTrackedModal: true,
       },
     });
-  };
+  }
 
-  return <button onClick={handleMint}>Mint NFT</button>;
+  return <button onClick={handleIncrement}>Increment</button>;
 }
 ```
 
 ## Internationalization (i18n)
 
-You can easily override the default English text by passing a `locale` object to the `NovaProvider`.
+You can easily override the default English text by passing a `locale` object to the `NovaProvider`. Here is an example with German translations:
 
 ```tsx
 <NovaProvider
   locale={{
     transaction: {
-      title: 'Транзакція',
-      pending: 'Очікування...',
-      success: 'Успішно!',
-      failed: 'Помилка!',
+      title: 'Transaktion',
+      pending: 'Ausstehend...',
+      success: 'Erfolgreich!',
+      failed: 'Fehlgeschlagen!',
     },
     // ... other keys
   }}
