@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.7...nova-transactions-v0.0.8) (2025-08-19)
+
+
+### Bug Fixes
+
+* update pulsar core version ([f84871e](https://github.com/TuwaIO/nova-uikit/commit/f84871e879c501c8af2d2a66713af74f8d08618a))
+
 ## [0.0.7](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.6...nova-transactions-v0.0.7) (2025-08-19)
 
 
