@@ -115,8 +115,6 @@ export const Default: Story = {
       adapter: TransactionAdapter.EVM,
       desiredChainID: 1,
       type: 'Swap',
-      from: zeroAddress,
-      walletType: 'injected',
       actionKey: 'swapTokens',
       title: 'Swap Tokens',
       description: 'Swapping 100 USDC for ETH',
@@ -143,8 +141,6 @@ export const Success: Story = {
       adapter: successTx.adapter,
       desiredChainID: successTx.chainId,
       type: successTx.type,
-      from: successTx.from,
-      walletType: successTx.walletType,
     },
   },
 };
@@ -171,8 +167,6 @@ export const Failed: Story = {
       adapter: failedTx.adapter,
       desiredChainID: failedTx.chainId,
       type: failedTx.type,
-      from: failedTx.from,
-      walletType: failedTx.walletType,
     },
     config: {} as Config,
     handleTransaction: async () => console.log('Retrying transaction...'),
@@ -199,8 +193,6 @@ export const Replaced: Story = {
       adapter: replacedTx.adapter,
       desiredChainID: replacedTx.chainId,
       type: replacedTx.type,
-      from: replacedTx.from,
-      walletType: replacedTx.walletType,
     },
   },
 };
@@ -220,8 +212,6 @@ export const CustomComponentsDemo: Story = {
       title: 'Custom Swap',
       description: 'Swapping with custom components',
       actionKey: 'swapTokens',
-      from: zeroAddress,
-      walletType: 'injected',
     },
     customization: {
       components: {

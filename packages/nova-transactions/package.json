@@ -65,8 +65,8 @@
     }
   ],
   "dependencies": {
-    "@tuwaio/pulsar-core": "latest",
-    "@tuwaio/pulsar-evm": "latest",
+    "@tuwaio/pulsar-core": "0.0.4",
+    "@tuwaio/pulsar-evm": "0.0.8",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.13",
     "ethereum-blockies-base64": "^1.0.2"

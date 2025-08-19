@@ -75,11 +75,11 @@ importers:
         specifier: workspace:^
         version: link:../../packages/nova-transactions
       '@tuwaio/pulsar-core':
-        specifier: 0.0.3
-        version: 0.0.3(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
+        specifier: 0.0.4
+        version: 0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
       '@tuwaio/pulsar-evm':
-        specifier: 0.0.7
-        version: 0.0.7(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
+        specifier: 0.0.8
+        version: 0.0.8(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
       ethereum-blockies-base64:
         specifier: ^1.0.2
         version: 1.0.2
@@ -251,11 +251,11 @@ importers:
         specifier: workspace:^
         version: link:../nova-core
       '@tuwaio/pulsar-core':
-        specifier: latest
-        version: 0.0.1(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
+        specifier: 0.0.4
+        version: 0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
       '@tuwaio/pulsar-evm':
-        specifier: latest
-        version: 0.0.3(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
+        specifier: 0.0.8
+        version: 0.0.8(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1362,31 +1362,15 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@tuwaio/pulsar-core@0.0.1':
-    resolution: {integrity: sha512-zeTw5WS4jKrxJcOl1uQZf8uGnY7S6o6pF6CxcdHC1GVPBkvP0qCGi8+RpfZ+dUD9WoJXYasvbppMrTOiHrw3Fg==}
+  '@tuwaio/pulsar-core@0.0.4':
+    resolution: {integrity: sha512-o54/H2hyd9KaBU6/YebRDxs0f32hwt6Eh0kgCGges99yKNRWXV0qzpRmwC98BHF+PG/nDg3Nqc5BZFPogKbmkQ==}
     peerDependencies:
       dayjs: '>=1'
       immer: '>=10'
       zustand: '>=5'
 
-  '@tuwaio/pulsar-core@0.0.3':
-    resolution: {integrity: sha512-H8Z2QvcTEWD+y773yL9ujVSvgXI2ZsZmICTQv7o5/Mp65HpYbExmCdWyVFupJ5bCLCrizOZ1x6rX4zsm9/cGUA==}
-    peerDependencies:
-      dayjs: '>=1'
-      immer: '>=10'
-      zustand: '>=5'
-
-  '@tuwaio/pulsar-evm@0.0.3':
-    resolution: {integrity: sha512-qAfrcG8XxqOBTtfITtKM51JsBkKVNgP4RxD6c/2GaAqeNq7Frf5zauCrT/xqYoOCYyMKCEHATAALKyZArmcRBA==}
-    peerDependencies:
-      '@wagmi/core': '>=2'
-      dayjs: '>=1'
-      immer: '>=10'
-      viem: '>=2'
-      zustand: '>=5'
-
-  '@tuwaio/pulsar-evm@0.0.7':
-    resolution: {integrity: sha512-Y2hw5hRGNgemNvqZ7mzKGM8OBcYZAAqmxs8ZA2yU4rwnOm7ugL24lYvqvXk7eKpQv5TG/VpHsMVSLChy58Te9w==}
+  '@tuwaio/pulsar-evm@0.0.8':
+    resolution: {integrity: sha512-nLweDoCY6DIiIjhNsqVM9XlBGyUjxzQO+LUy+icGSGPQPFIEStAlUh/iFDfM7ealLQAGz/nw2NOnyTiDNhQsGw==}
     peerDependencies:
       '@wagmi/core': '>=2'
       dayjs: '>=1'
@@ -5310,30 +5294,15 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.1
 
-  '@tuwaio/pulsar-core@0.0.1(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
+  '@tuwaio/pulsar-core@0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
     dependencies:
       dayjs: 1.11.13
       immer: 10.1.1
       zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)
 
-  '@tuwaio/pulsar-core@0.0.3(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
+  '@tuwaio/pulsar-evm@0.0.8(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
     dependencies:
-      dayjs: 1.11.13
-      immer: 10.1.1
-      zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)
-
-  '@tuwaio/pulsar-evm@0.0.3(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
-    dependencies:
-      '@tuwaio/pulsar-core': 0.0.1(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
-      '@wagmi/core': 2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2))
-      dayjs: 1.11.13
-      immer: 10.1.1
-      viem: 2.34.0(typescript@5.9.2)
-      zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)
-
-  '@tuwaio/pulsar-evm@0.0.7(@wagmi/core@2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(typescript@5.9.2))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))':
-    dependencies:
-      '@tuwaio/pulsar-core': 0.0.3(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
+      '@tuwaio/pulsar-core': 0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1))
       '@wagmi/core': 2.19.0(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(viem@2.34.0(typescript@5.9.2))
       dayjs: 1.11.13
       immer: 10.1.1

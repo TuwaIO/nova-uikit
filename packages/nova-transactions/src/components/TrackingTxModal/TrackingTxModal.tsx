@@ -14,10 +14,10 @@ import {
   TransactionStatus,
 } from '@tuwaio/pulsar-core';
 import { ActionTxKey, cancelTxAction, speedUpTxAction, TransactionTracker } from '@tuwaio/pulsar-evm';
-import { Config, getAccount } from '@wagmi/core';
+import { Config } from '@wagmi/core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, JSX, ReactNode, useEffect, useState } from 'react';
-import { Chain, zeroAddress } from 'viem';
+import { Chain } from 'viem';
 
 import { useLabels } from '../../providers';
 import { StatusAwareText } from '../StatusAwareText';
@@ -150,7 +150,6 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
   // --- Action Handlers ---
   const handleRetry = async () => {
     if (!canRetry || !txToDisplay?.actionKey) return;
-    const activeWallet = getAccount(config);
     const retryParams: InitialTransactionParams = {
       adapter: TransactionAdapter.EVM,
       type: txToDisplay.type,
@@ -160,8 +159,6 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
       description: txToDisplay.description,
       payload: txToDisplay.payload,
       withTrackedModal: true,
-      from: activeWallet.address ?? zeroAddress,
-      walletType: activeWallet.connector?.type ?? '',
     };
     onClose(trackedTx?.txKey);
 
