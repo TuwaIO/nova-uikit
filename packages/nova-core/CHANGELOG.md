@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.3...nova-core-v0.0.4) (2025-08-19)
+
+
+### Bug Fixes
+
+* storybook ([4fc8721](https://github.com/TuwaIO/nova-uikit/commit/4fc8721cba5fb8af70274ba1458131016960719b))
+
 ## [0.0.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.2...nova-core-v0.0.3) (2025-08-19)
 
 
