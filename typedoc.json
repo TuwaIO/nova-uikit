@@ -11,12 +11,12 @@
     "typedoc-plugin-markdown",
     "typedoc-plugin-react"
   ],
-  "out": "apps/docs/src/apiReference",
+  "out": "apps/docs/src/API_Reference",
   "readme": "none",
   "githubPages": false,
   "hideGenerator": true,
   "cleanOutputDir": true,
-  "categorizeByGroup": true,
+  "categorizeByGroup": false,
   "hideBreadcrumbs": true,
   "pageTitleTemplates": {
     "member": "{name}"

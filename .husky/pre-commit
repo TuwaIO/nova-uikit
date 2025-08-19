@@ -1,1 +1,1 @@
-pnpm docs:gen && git add apps/docs/src/apiReference
+pnpm docs:gen && git add apps/docs/src/API_Reference

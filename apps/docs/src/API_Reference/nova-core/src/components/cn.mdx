@@ -1,0 +1,41 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# cn()
+
+> **cn**(...`inputs`): `string`
+
+Defined in: [packages/nova-core/src/utils/cn.ts:25](https://github.com/TuwaIO/nova-uikit/blob/6c97c381f0e2c0df922ab158d0d6a629378a1956/packages/nova-core/src/utils/cn.ts#L25)
+
+A utility function to conditionally join class names together and resolve
+conflicting Tailwind CSS classes.
+
+It combines the functionality of `clsx` and `tailwind-merge`.
+
+## Parameters
+
+### inputs
+
+...`ClassValue`[]
+
+A list of class values to be combined.
+This can include strings, numbers, objects, arrays, and booleans.
+
+## Returns
+
+`string`
+
+The final, merged class name string.
+
+## Example
+
+```ts
+cn('p-4', 'bg-red-500', { 'font-bold': true }); // => 'p-4 bg-red-500 font-bold'
+cn('p-2', 'p-4'); // => 'p-4' (tailwind-merge resolves the conflict)
+```
+
+## See
+
+ - https://github.com/dcastil/tailwind-merge
+ - https://github.com/lukeed/clsx

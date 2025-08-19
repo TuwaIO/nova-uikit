@@ -5,19 +5,19 @@
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
   "description": "A React component library that provides the UI for @tuwaio/pulsar-core. Includes components, providers, and i18n support for transaction tracking.",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./providers": {
-      "import": "./dist/providers/index.mjs",
-      "require": "./dist/providers/index.js",
+      "import": "./dist/providers/index.js",
+      "require": "./dist/providers/index.cjs",
       "types": "./dist/providers/index.d.ts"
     },
     "./dist/index.css": "./dist/index.css"

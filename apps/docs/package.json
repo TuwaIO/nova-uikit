@@ -10,8 +10,8 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@tuwaio/pulsar-core": "latest",
-    "@tuwaio/pulsar-evm": "latest",
+    "@tuwaio/pulsar-core": "0.0.3",
+    "@tuwaio/pulsar-evm": "0.0.7",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "ethereum-blockies-base64": "^1.0.2"
@@ -26,14 +26,12 @@
     "@storybook/react": "^9.1.2",
     "@storybook/react-vite": "^9.1.2",
     "@storybook/manager-api": "^9.0.0-alpha.1",
-    "@storybook/addon-controls": "^9.0.8",
     "@storybook/addon-essentials": "^9.0.0-alpha.12",
     "@storybook/addon-backgrounds": "^9.1.0-alpha.5",
     "@storybook/addon-viewport": "^9.0.8",
     "@storybook/theming": "^9.0.0-alpha.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
-    "@types/node": "^24.3.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",

@@ -4,10 +4,16 @@ import type { Preview } from '@storybook/react-vite';
 import { defaultLabels } from '@tuwaio/nova-transactions';
 import { LabelsProvider } from '@tuwaio/nova-transactions/providers';
 
+// @ts-expect-error - theme is a valid option
 import { tuwaTheme } from './manager';
 
 const preview: Preview = {
   parameters: {
+    options: {
+      storySort: {
+        order: ['Introduction', 'NovaProvider', 'UI Components', 'API_Reference'],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
