@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.6...nova-transactions-v0.0.7) (2025-08-19)
+
+
+### Bug Fixes
+
+* storybook ([4fc8721](https://github.com/TuwaIO/nova-uikit/commit/4fc8721cba5fb8af70274ba1458131016960719b))
+
 ## [0.0.6](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.5...nova-transactions-v0.0.6) (2025-08-19)
 
 
