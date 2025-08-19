@@ -6,7 +6,7 @@
 
 > **TransactionKey**\<`TR`, `T`\>(`props`): `null` \| `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionKey.tsx#L43)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/TransactionKey.tsx#L43)
 
 A component that intelligently displays the relevant keys and hashes for a transaction.
 It handles different tracker types (EVM, Gelato, Safe) and statuses (e.g., replaced transactions).

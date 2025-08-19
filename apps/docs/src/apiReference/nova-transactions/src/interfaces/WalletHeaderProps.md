@@ -4,7 +4,7 @@
 
 # WalletHeaderProps
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L22)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L22)
 
 Defines the props for the `WalletHeader` component, including extensive customization options.
 
@@ -14,7 +14,7 @@ Defines the props for the `WalletHeader` component, including extensive customiz
 
 > `optional` **chain**: `Chain`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L26)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L26)
 
 The viem `Chain` object for the currently connected network.
 
@@ -24,7 +24,7 @@ The viem `Chain` object for the currently connected network.
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L28)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L28)
 
 Optional additional CSS classes for the container.
 
@@ -34,7 +34,7 @@ Optional additional CSS classes for the container.
 
 > `optional` **renderAddressDisplay**: (`props`) => `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L34)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L34)
 
 A render prop to replace the default `WalletAddressDisplay` component.
 
@@ -54,7 +54,7 @@ A render prop to replace the default `WalletAddressDisplay` component.
 
 > `optional` **renderAvatar**: (`props`) => `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L30)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L30)
 
 A render prop to replace the default `WalletAvatar` component.
 
@@ -74,7 +74,7 @@ A render prop to replace the default `WalletAvatar` component.
 
 > `optional` **renderName**: (`props`) => `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L32)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L32)
 
 A render prop to replace the default ENS name display.
 
@@ -94,7 +94,7 @@ A render prop to replace the default ENS name display.
 
 > `optional` **renderNoWalletContent**: () => `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L36)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L36)
 
 A render prop to replace the default content shown when no wallet is connected.
 
@@ -108,6 +108,6 @@ A render prop to replace the default content shown when no wallet is connected.
 
 > `optional` **walletAddress**: `` `0x${string}` ``
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L24)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L24)
 
 The user's wallet address. If undefined, the 'not connected' state is shown.

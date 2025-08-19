@@ -6,7 +6,7 @@
 
 > **WalletAddressDisplayProps** = `object`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:12](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L12)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:12](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L12)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAdd
 
 > **address**: `string`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L14)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L14)
 
 The wallet address to display.
 
@@ -24,7 +24,7 @@ The wallet address to display.
 
 > `optional` **chain**: `Chain`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L19)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L19)
 
 The viem `Chain` object for the network the address belongs to.
 This is used to generate the correct block explorer link.
@@ -35,6 +35,6 @@ This is used to generate the correct block explorer link.
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L21)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletAddressDisplay.tsx#L21)
 
 Optional additional CSS classes for the container.

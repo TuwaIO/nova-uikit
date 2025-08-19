@@ -6,7 +6,7 @@
 
 > **ToastTransactionCustomization**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/ToastTransaction.tsx#L32)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/ToastTransaction.tsx#L32)
 
 Defines the structure for the `customization` prop, allowing users to override
 default sub-components with their own implementations.
@@ -27,7 +27,7 @@ default sub-components with their own implementations.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/ToastTransaction.tsx#L33)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/ToastTransaction.tsx#L33)
 
 #### cancelButton()?
 

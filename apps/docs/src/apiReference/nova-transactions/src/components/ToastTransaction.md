@@ -6,7 +6,7 @@
 
 > **ToastTransaction**\<`TR`, `T`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/ToastTransaction.tsx#L80)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/ToastTransaction.tsx#L80)
 
 A composite component that renders the content for a transaction toast notification.
 It is highly customizable and includes actions for speeding up or canceling transactions

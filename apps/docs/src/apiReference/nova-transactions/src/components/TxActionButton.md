@@ -6,7 +6,7 @@
 
 > **TxActionButton**\<`TR`, `T`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TxActionButton.tsx#L55)
+Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/TxActionButton.tsx#L55)
 
 A stateful button that provides real-time feedback for a transaction's lifecycle.
 It listens for changes in the global `transactionsPool` to automatically update its

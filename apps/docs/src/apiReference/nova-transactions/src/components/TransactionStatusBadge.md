@@ -6,7 +6,7 @@
 
 > **TransactionStatusBadge**\<`TR`, `T`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionStatusBadge.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L26)
+Defined in: [packages/nova-transactions/src/components/TransactionStatusBadge.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L26)
 
 A component that displays a transaction's status as a styled badge
 with a corresponding icon, color, and label.

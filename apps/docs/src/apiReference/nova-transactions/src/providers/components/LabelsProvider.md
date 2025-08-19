@@ -6,7 +6,7 @@
 
 > **LabelsProvider**(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/providers/LabelsProvider.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/providers/LabelsProvider.tsx#L26)
+Defined in: [packages/nova-transactions/src/providers/LabelsProvider.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/providers/LabelsProvider.tsx#L26)
 
 A React component that provides a custom set of labels to all child components.
 Wrap your application or component tree with this provider to apply custom translations.

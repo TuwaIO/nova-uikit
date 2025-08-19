@@ -6,7 +6,7 @@
 
 > **TxProgressIndicator**(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L101)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L101)
 
 A 3-step progress indicator that visually represents the lifecycle of a transaction.
 

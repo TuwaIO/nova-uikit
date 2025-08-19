@@ -6,7 +6,7 @@
 
 > **WalletInfoModal**\<`TR`, `T`\>(`props`): `null` \| `Element`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L69)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L69)
 
 The main modal component for displaying wallet information and transaction history.
 It is highly customizable through the `customization` prop and supports full Radix UI Dialog customization.

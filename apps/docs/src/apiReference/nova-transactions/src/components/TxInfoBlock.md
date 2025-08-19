@@ -6,7 +6,7 @@
 
 > **TxInfoBlock**\<`TR`, `T`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/c38f885596dc568c4b7c49b3605e683fc88f4470/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L61)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/6dc34b098cacf0ae15cd1e41a47f4525a2a78768/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L61)
 
 A component that displays a block of essential transaction details,
 such as network, start time, and relevant hashes/keys.
