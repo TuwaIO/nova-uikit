@@ -6,7 +6,7 @@
 
 > **WalletHeader**(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L47)
+Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L47)
 
 A component that displays the header for the wallet modal, including the user's avatar,
 ENS name (if available), and address. It handles loading states for ENS data and

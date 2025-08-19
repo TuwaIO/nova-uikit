@@ -6,7 +6,7 @@
 
 > **StatusAwareText**(`props`): `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/StatusAwareText.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/StatusAwareText.tsx#L50)
+Defined in: [packages/nova-transactions/src/components/StatusAwareText.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/StatusAwareText.tsx#L50)
 
 A component that renders text conditionally based on a transaction's status.
 It's designed to work with the `title` and `description` fields of a transaction,

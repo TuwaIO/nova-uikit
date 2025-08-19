@@ -6,7 +6,7 @@
 
 > **TransactionHistoryItem**\<`TR`, `T`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L69)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L69)
 
 A component that renders a single row in the transaction history list.
 It is highly customizable via the `customization` prop.

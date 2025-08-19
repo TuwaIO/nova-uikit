@@ -6,7 +6,7 @@
 
 > **TransactionHistoryItemProps**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L49)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L49)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.ts
 
 > **appChains**: `Chain`[]
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L53)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L53)
 
 An array of supported chain objects.
 
@@ -34,7 +34,7 @@ An array of supported chain objects.
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L57)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L57)
 
 Optional additional CSS classes for the container.
 
@@ -44,7 +44,7 @@ Optional additional CSS classes for the container.
 
 > `optional` **customization**: [`TransactionHistoryItemCustomization`](TransactionHistoryItemCustomization.md)\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L59)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L59)
 
 An object to customize and override the default internal components.
 
@@ -54,7 +54,7 @@ An object to customize and override the default internal components.
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L55)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L55)
 
 The entire pool of transactions.
 
@@ -64,6 +64,6 @@ The entire pool of transactions.
 
 > **tx**: `T`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L51)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L51)
 
 The transaction object to display.

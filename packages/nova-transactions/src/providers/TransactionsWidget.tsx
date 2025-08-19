@@ -127,10 +127,10 @@ export function TransactionsWidget<TR, T extends Transaction<TR>>({
       const prevTx = prevPool[currentTx.txKey];
       const statusChanged = prevTx && prevTx.status !== currentTx.status;
       const hashAppeared =
-        prevTx.adapter === TransactionAdapter.EVM &&
         prevTx &&
+        prevTx?.adapter === TransactionAdapter.EVM &&
         !prevTx.hash &&
-        currentTx.adapter === TransactionAdapter.EVM &&
+        currentTx?.adapter === TransactionAdapter.EVM &&
         currentTx.hash;
 
       // Show toast for new pending transactions.
@@ -139,8 +139,8 @@ export function TransactionsWidget<TR, T extends Transaction<TR>>({
       }
       // Update toast for pending transactions.
       if (
-        (prevTx && prevTx.adapter === TransactionAdapter.EVM && prevTx.nonce) !==
-        (currentTx.adapter === TransactionAdapter.EVM && currentTx?.nonce)
+        (prevTx && prevTx?.adapter === TransactionAdapter.EVM && prevTx.nonce) !==
+        (currentTx?.adapter === TransactionAdapter.EVM && currentTx?.nonce)
       ) {
         showOrUpdateToast(currentTx, 'info');
       }

@@ -6,7 +6,7 @@
 
 > **cn**(...`inputs`): `string`
 
-Defined in: [packages/nova-core/src/utils/cn.ts:25](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-core/src/utils/cn.ts#L25)
+Defined in: [packages/nova-core/src/utils/cn.ts:25](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-core/src/utils/cn.ts#L25)
 
 A utility function to conditionally join class names together and resolve
 conflicting Tailwind CSS classes.

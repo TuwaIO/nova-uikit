@@ -6,7 +6,7 @@
 
 > **useCopyToClipboard**(`timeout?`): `object`
 
-Defined in: [packages/nova-core/src/hooks/useCopyToClipboard.ts:30](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-core/src/hooks/useCopyToClipboard.ts#L30)
+Defined in: [packages/nova-core/src/hooks/useCopyToClipboard.ts:30](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-core/src/hooks/useCopyToClipboard.ts#L30)
 
 A custom React hook that provides functionality to copy text to the clipboard.
 It also manages a "copied" state with a timeout for user feedback.

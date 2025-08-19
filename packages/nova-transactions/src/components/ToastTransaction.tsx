@@ -93,7 +93,7 @@ export function ToastTransaction<TR, T extends Transaction<TR>>({
   // A transaction can be replaced if it's pending and has the necessary fee info.
   const canReplace =
     config &&
-    tx.adapter === TransactionAdapter.EVM &&
+    tx?.adapter === TransactionAdapter.EVM &&
     tx.nonce !== undefined &&
     tx.pending &&
     tx.maxFeePerGas &&

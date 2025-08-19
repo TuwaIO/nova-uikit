@@ -50,7 +50,7 @@ export function TransactionKey<TR, T extends Transaction<TR>>({
 }: ToastTransactionKeyProps<TR, T>) {
   const labels = useLabels();
 
-  if (tx.adapter !== TransactionAdapter.EVM) return null;
+  if (tx?.adapter !== TransactionAdapter.EVM) return null;
 
   const wasReplaced = !!tx.replacedTxHash;
 

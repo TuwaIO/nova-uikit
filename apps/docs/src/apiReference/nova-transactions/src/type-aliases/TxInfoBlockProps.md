@@ -6,7 +6,7 @@
 
 > **TxInfoBlockProps**\<`TR`, `T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L44)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L44)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 > **appChains**: `Chain`[]
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L48)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L48)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L50)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L50)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 > `optional` **customization**: [`TxInfoBlockCustomization`](TxInfoBlockCustomization.md)\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L51)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L51)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L49)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L49)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 > **tx**: `T` & `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L45)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L45)
 
 #### Type declaration
 

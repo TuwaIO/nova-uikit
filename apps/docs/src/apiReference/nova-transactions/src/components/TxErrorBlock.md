@@ -6,7 +6,7 @@
 
 > **TxErrorBlock**(`props`): `null` \| `Element`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxErrorBlock.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxErrorBlock.tsx#L28)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxErrorBlock.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxErrorBlock.tsx#L28)
 
 A component that displays a formatted block for a transaction error message.
 It includes a title, an icon, the error message in a scrollable area,

@@ -6,7 +6,7 @@
 
 > **TxStatusVisual**(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxStatusVisual.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/ded3074ef357f2ffaf35252f54b4c5cffd22b72b/packages/nova-transactions/src/components/TrackingTxModal/TxStatusVisual.tsx#L26)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxStatusVisual.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/c42b60dded49bd6a07eb5a3854c09ac76349f6d8/packages/nova-transactions/src/components/TrackingTxModal/TxStatusVisual.tsx#L26)
 
 A component that renders a large, animated icon to visually represent the
 current state of a transaction within the tracking modal.
