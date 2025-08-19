@@ -1,6 +1,6 @@
 # TUWA Nova UI Kit
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/main.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](./LICENSE)
 [![Contributors](https://img.shields.io/github/contributors/TuwaIO/nova-uikit)](https://github.com/TuwaIO/nova-uikit/graphs/contributors)
 

@@ -2,7 +2,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](./LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/main.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 
 The foundational package for the TUWA design system. Provides core styling primitives, theme variables, and common React hooks and utilities.
 

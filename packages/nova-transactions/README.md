@@ -2,7 +2,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-transactions.svg)](./LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/main.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 
 The official React UI component library for the Pulsar transaction engine. Provides accessible modals, toasts, and history widgets to visualize transaction states.
 
