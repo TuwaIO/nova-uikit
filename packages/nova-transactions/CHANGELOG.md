@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.2...nova-transactions-v0.0.3) (2025-08-19)
+
+
+### Bug Fixes
+
+* readme ([05e33e0](https://github.com/TuwaIO/nova-uikit/commit/05e33e02ef1112b8c8802b8a68ec7d1923773fde))
+
 ## [0.0.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.1...nova-transactions-v0.0.2) (2025-08-19)
 
 
