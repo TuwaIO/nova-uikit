@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.1...nova-transactions-v0.0.2) (2025-08-19)
+
+
+### Bug Fixes
+
+* adapter tx key ([cc96b56](https://github.com/TuwaIO/nova-uikit/commit/cc96b564ac61ab03e8993e11f4f373bae39d71bb))
+
 ## 0.0.1 (2025-08-18)
 
 
