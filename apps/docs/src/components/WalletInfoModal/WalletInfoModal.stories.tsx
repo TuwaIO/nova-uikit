@@ -1,90 +1,98 @@
+// apps/docs/src/components/WalletInfoModal/WalletInfoModal.stories.tsx
+
 import { StarIcon, UserIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Transaction, TransactionPool } from '@tuwaio/web3-transactions-tracking-core';
-import { TransactionStatus } from '@tuwaio/web3-transactions-tracking-core/src';
+import { WalletInfoModal } from '@tuwaio/nova-transactions';
+import { Transaction, TransactionAdapter, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
+import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'; // Import the plugin
 import { useState } from 'react';
 import { Address } from 'viem';
 import { mainnet, polygon } from 'viem/chains';
 
-import { WalletInfoModal } from './WalletInfoModal';
+dayjs.extend(relativeTime); // Extend dayjs with the plugin
 
 // --- Mock Transaction Type ---
-interface MockTransaction extends Transaction<'evm'> {
+type MockTransaction = Transaction<TransactionTracker> & {
   title: string;
   txHash: string;
   recipientAddress: Address;
   amount: string;
   tokenAddress: Address;
-}
+};
 
 // --- Mock Data ---
-const mockTransactionsPool: TransactionPool<'evm', MockTransaction> = {
+const mockTransactionsPool: TransactionPool<TransactionTracker, MockTransaction> = {
   '1': {
     txKey: '1',
-    tracker: 'evm' as const,
+    tracker: TransactionTracker.Ethereum,
+    adapter: TransactionAdapter.EVM,
     type: 'swap',
     chainId: 1,
     from: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     pending: false,
     walletType: 'metamask',
     status: TransactionStatus.Success,
-    localTimestamp: dayjs().subtract(2, 'minute').valueOf(),
+    localTimestamp: dayjs().subtract(2, 'minute').unix(),
     title: 'Swap ETH for USDC',
     txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     recipientAddress: '0xA0b86a33E6441c4eB16f6B6a5e4F3e8A5e4C5c8e' as Address,
-    amount: '1000000000000000000', // 1 ETH как строка
+    amount: '1000000000000000000', // 1 ETH as a string
     tokenAddress: '0x0000000000000000000000000000000000000000' as Address,
     hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
   },
   '2': {
     txKey: '2',
-    tracker: 'evm' as const,
+    tracker: TransactionTracker.Ethereum,
+    adapter: TransactionAdapter.EVM,
     type: 'transfer',
     chainId: 1,
     from: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     pending: true,
     walletType: 'metamask',
     status: undefined, // pending transaction
-    localTimestamp: dayjs().subtract(30, 'second').valueOf(),
+    localTimestamp: dayjs().subtract(30, 'second').unix(),
     title: 'Transfer USDC',
     txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
     recipientAddress: '0xB1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0' as Address,
-    amount: '500000000', // 500 USDC как строка
+    amount: '500000000', // 500 USDC as a string
     tokenAddress: '0xA0b86a33E6441c4eB16f6B6a5e4F3e8A5e4C5c8e' as Address,
     hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
   },
   '3': {
     txKey: '3',
-    tracker: 'evm' as const,
+    tracker: TransactionTracker.Ethereum,
+    adapter: TransactionAdapter.EVM,
     type: 'stake',
     chainId: 1,
     from: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     pending: false,
     walletType: 'metamask',
     status: TransactionStatus.Failed,
-    localTimestamp: dayjs().subtract(10, 'minute').valueOf(),
+    localTimestamp: dayjs().subtract(10, 'minute').unix(),
     title: 'Stake ETH',
     txHash: '0xfedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321',
     recipientAddress: '0xC2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1' as Address,
-    amount: '2000000000000000000', // 2 ETH как строка
+    amount: '2000000000000000000', // 2 ETH as a string
     tokenAddress: '0x0000000000000000000000000000000000000000' as Address,
     hash: '0xfedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321',
   },
   '4': {
     txKey: '4',
-    tracker: 'evm' as const,
+    tracker: TransactionTracker.Ethereum,
+    adapter: TransactionAdapter.EVM,
     type: 'bridge',
     chainId: 137, // Polygon
     from: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     pending: false,
     walletType: 'metamask',
     status: TransactionStatus.Replaced,
-    localTimestamp: dayjs().subtract(15, 'minute').valueOf(),
+    localTimestamp: dayjs().subtract(15, 'minute').unix(),
     title: 'Bridge USDT to Polygon',
     txHash: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b',
     recipientAddress: '0xD4a3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1' as Address,
-    amount: '1000000', // 1 USDT как строка
+    amount: '1000000', // 1 USDT as a string
     tokenAddress: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F' as Address,
     hash: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b',
   },
@@ -291,7 +299,7 @@ export const CustomHistory: Story = {
                     };
 
                     const getTimeAgo = (timestamp: number) => {
-                      return dayjs(timestamp).fromNow();
+                      return dayjs.unix(timestamp).fromNow();
                     };
 
                     return (
@@ -342,7 +350,7 @@ export const StateComparison: Story = {
         description: 'Connected wallet without transactions',
         props: {
           walletAddress: EXAMPLE_ADDRESSES.empty,
-          transactionsPool: {} as TransactionPool<'evm', MockTransaction>,
+          transactionsPool: {} as TransactionPool<TransactionTracker, MockTransaction>,
         },
       },
       {
@@ -351,7 +359,7 @@ export const StateComparison: Story = {
         description: 'No wallet connected state',
         props: {
           walletAddress: undefined,
-          transactionsPool: {} as TransactionPool<'evm', MockTransaction>,
+          transactionsPool: {} as TransactionPool<TransactionTracker, MockTransaction>,
         },
       },
     ];

@@ -1,8 +1,7 @@
 import { HeartIcon, SparklesIcon, StarIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { TxStatusVisual } from '@tuwaio/nova-transactions';
 import { useState } from 'react';
-
-import { TxStatusVisual } from './TxStatusVisual';
 
 // --- Storybook Meta Configuration ---
 

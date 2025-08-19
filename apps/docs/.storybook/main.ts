@@ -15,8 +15,7 @@ const config: StorybookConfig = {
   },
   staticDirs: ['./public'],
   docs: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+    // @ts-expect-error - autodocs is a valid option
     autodocs: 'tag',
   },
   core: {

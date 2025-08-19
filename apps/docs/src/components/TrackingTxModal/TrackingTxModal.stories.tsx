@@ -1,13 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { TransactionStatus } from '@tuwaio/web3-transactions-tracking-core';
+// apps/docs/src/components/TrackingTxModal/TrackingTxModal.stories.tsx
 
-import { defaultLabels } from '../../i18n/en';
-import { LabelsProvider } from '../../providers';
-import { TrackingTxModal, TrackingTxModalCustomization, TxActions } from './TrackingTxModal';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { TrackingTxModal, type TxActions } from '@tuwaio/nova-transactions';
+import { Transaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { TransactionTracker } from '@tuwaio/pulsar-evm';
+import type { Config } from '@wagmi/core';
+import dayjs from 'dayjs';
+import type { Chain } from 'viem';
+import { zeroAddress } from 'viem';
+
+// --- Mock Data Types ---
+type MockTransaction = Transaction<TransactionTracker>;
 
 // --- Mock Data ---
-
-const mockChains = [
+const mockChains: Chain[] = [
   {
     id: 1,
     name: 'Ethereum',
@@ -24,39 +30,29 @@ const mockChains = [
   },
 ];
 
-const createMockTransaction = (overrides = {}) => ({
+const createMockTransaction = (overrides: Partial<MockTransaction> = {}): MockTransaction => ({
   txKey: 'mock-tx-key-123',
-  txHash: '0x1234567890abcdef1234567890abcdef12345678',
-  chainId: 1,
-  nonce: 42,
+  tracker: TransactionTracker.Ethereum,
+  adapter: TransactionAdapter.EVM,
   type: 'Swap',
+  chainId: 1,
+  from: '0x1234567890123456789012345678901234567890',
+  pending: true,
+  walletType: 'metaMask',
+  status: undefined,
+  localTimestamp: dayjs().unix(),
+  hash: '0x1234567890abcdef1234567890abcdef12345678',
   title: 'Swap Tokens',
   description: 'Swapping 100 USDC for ETH',
   actionKey: 'swapTokens',
-  status: undefined,
-  pending: true,
   isError: false,
   isTrackedModalOpen: true,
+  nonce: 42,
   maxFeePerGas: '20000000000',
   maxPriorityFeePerGas: '1000000000',
   payload: { from: 'USDC', to: 'ETH', amount: '100' },
-  tracker: 'ethereum' as const,
-  localTimestamp: Date.now(),
-  walletType: 'metaMask',
-  from: '0x1234567890123456789012345678901234567890',
   ...overrides,
 });
-
-const mockTransactionsPool = {
-  'mock-tx-key-123': createMockTransaction(),
-  'mock-tx-key-456': createMockTransaction({
-    txKey: 'mock-tx-key-456',
-    status: TransactionStatus.Success,
-    pending: false,
-    title: 'Transfer Complete',
-    description: 'Successfully transferred 50 USDC',
-  }),
-};
 
 const mockActions: TxActions = {
   swapTokens: async () => {
@@ -74,15 +70,6 @@ const mockActions: TxActions = {
 const meta: Meta<typeof TrackingTxModal> = {
   title: 'UI Components/TrackingTxModal/TrackingTxModal',
   component: TrackingTxModal,
-  decorators: [
-    (Story) => (
-      <LabelsProvider labels={defaultLabels}>
-        <div className="h-screen bg-gray-100 p-4">
-          <Story />
-        </div>
-      </LabelsProvider>
-    ),
-  ],
   parameters: {
     layout: 'fullscreen',
     backgrounds: {
@@ -95,40 +82,20 @@ const meta: Meta<typeof TrackingTxModal> = {
   },
   args: {
     appChains: mockChains,
-    transactionsPool: mockTransactionsPool,
+    transactionsPool: {},
     actions: mockActions,
     onClose: (txKey?: string) => console.log('Modal closed:', txKey),
     onOpenWalletInfo: () => console.log('Opening wallet info...'),
   },
   argTypes: {
-    onClose: {
-      action: 'onClose',
-      description: 'Function called when the modal is closed',
-    },
-    onOpenWalletInfo: {
-      action: 'onOpenWalletInfo',
-      description: 'Function called when wallet info button is clicked',
-    },
-    className: {
-      control: 'text',
-      description: 'Additional CSS classes for the modal container',
-    },
-    appChains: {
-      control: false,
-      description: 'Array of supported blockchain networks',
-    },
-    transactionsPool: {
-      control: false,
-      description: 'Global transaction pool from the tracking store',
-    },
-    actions: {
-      control: false,
-      description: 'Registry of retryable actions',
-    },
-    customization: {
-      control: false,
-      description: 'Customization options for modal components and behavior',
-    },
+    onClose: { action: 'onClose' },
+    onOpenWalletInfo: { action: 'onOpenWalletInfo' },
+    className: { control: 'text' },
+    appChains: { control: false },
+    transactionsPool: { control: false },
+    actions: { control: false },
+    customization: { control: false },
+    initialTx: { control: false },
   },
 };
 
@@ -136,125 +103,125 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// --- Basic States ---
+// --- Stories ---
 
 export const Default: Story = {
   name: 'Default (Pending)',
   args: {
     initialTx: {
+      localTimestamp: dayjs().unix(),
+      isInitializing: false,
+      withTrackedModal: true,
+      adapter: TransactionAdapter.EVM,
+      desiredChainID: 1,
       type: 'Swap',
+      from: zeroAddress,
+      walletType: 'injected',
+      actionKey: 'swapTokens',
       title: 'Swap Tokens',
       description: 'Swapping 100 USDC for ETH',
-      withTrackedModal: true,
-      desiredChainID: 1,
-      actionKey: 'swapTokens',
-      isInitializing: false,
-      localTimestamp: Date.now(),
     },
   },
 };
 
+const successTx = createMockTransaction({
+  txKey: 'mock-tx-key-success',
+  status: TransactionStatus.Success,
+  pending: false,
+  title: 'Swap Complete',
+  description: 'Successfully swapped 100 USDC for 0.05 ETH',
+});
 export const Success: Story = {
   name: 'Successful Transaction',
   args: {
-    transactionsPool: {
-      'mock-tx-key-success': createMockTransaction({
-        txKey: 'mock-tx-key-success',
-        status: TransactionStatus.Success,
-        pending: false,
-        isTrackedModalOpen: true,
-        title: 'Swap Complete',
-        description: 'Successfully swapped 100 USDC for 0.05 ETH',
-        hash: '0x1234567890abcdef1234567890abcdef12345678',
-      }),
-    },
+    transactionsPool: { [successTx.txKey]: successTx },
     initialTx: {
-      isInitializing: true,
-      type: 'Swap',
-      title: 'Swap Complete',
-      description: 'Successfully swapped 100 USDC for 0.05 ETH',
+      localTimestamp: dayjs().unix(),
+      isInitializing: false,
       withTrackedModal: true,
-      desiredChainID: 1,
-      lastTxKey: 'mock-tx-key-success',
-      localTimestamp: Date.now(),
+      lastTxKey: successTx.txKey,
+      adapter: successTx.adapter,
+      desiredChainID: successTx.chainId,
+      type: successTx.type,
+      from: successTx.from,
+      walletType: successTx.walletType,
     },
   },
 };
 
+const failedTx = createMockTransaction({
+  txKey: 'mock-tx-key-failed',
+  status: TransactionStatus.Failed,
+  pending: false,
+  isError: true,
+  errorMessage: 'Transaction reverted: Insufficient balance',
+  title: 'Swap Failed',
+  description: 'Failed to swap tokens',
+});
 export const Failed: Story = {
   name: 'Failed Transaction',
   args: {
-    transactionsPool: {
-      'mock-tx-key-failed': createMockTransaction({
-        txKey: 'mock-tx-key-failed',
-        status: TransactionStatus.Failed,
-        pending: false,
-        isError: true,
-        isTrackedModalOpen: true,
-        errorMessage: 'Transaction reverted: Insufficient balance',
-        title: 'Swap Failed',
-        description: 'Failed to swap tokens',
-        hash: '0x1234567890abcdef1234567890abcdef12345678',
-      }),
-    },
+    transactionsPool: { [failedTx.txKey]: failedTx },
     initialTx: {
-      isInitializing: true,
-      type: 'Swap',
-      title: 'Swap Failed',
-      description: 'Failed to swap tokens',
+      localTimestamp: dayjs().unix(),
+      isInitializing: false,
       withTrackedModal: true,
-      desiredChainID: 1,
-      lastTxKey: 'mock-tx-key-failed',
-      errorMessage: 'Transaction reverted: Insufficient balance',
-      localTimestamp: Date.now(),
+      lastTxKey: failedTx.txKey,
+      errorMessage: failedTx.errorMessage,
+      adapter: failedTx.adapter,
+      desiredChainID: failedTx.chainId,
+      type: failedTx.type,
+      from: failedTx.from,
+      walletType: failedTx.walletType,
     },
-    config: {} as any,
+    config: {} as Config,
     handleTransaction: async () => console.log('Retrying transaction...'),
   },
 };
 
+const replacedTx = createMockTransaction({
+  txKey: 'mock-tx-key-replaced',
+  status: TransactionStatus.Replaced,
+  pending: false,
+  title: 'Transaction Sped Up',
+  description: 'Transaction was replaced with a higher gas fee',
+  replacedTxHash: '0x1234567890abcdef1234567890abcdefqw2345678',
+});
 export const Replaced: Story = {
   name: 'Replaced Transaction',
   args: {
-    transactionsPool: {
-      'mock-tx-key-replaced': createMockTransaction({
-        txKey: 'mock-tx-key-replaced',
-        status: TransactionStatus.Replaced,
-        pending: false,
-        isTrackedModalOpen: true,
-        title: 'Transaction Sped Up',
-        description: 'Transaction was replaced with higher gas fee',
-        hash: '0x1234567890abcdef1234567890abcdef12345678',
-        replacedTxHash: '0x1234567890abcdef1234567890abcdefqw2345678',
-      }),
-    },
+    transactionsPool: { [replacedTx.txKey]: replacedTx },
     initialTx: {
-      isInitializing: true,
-      type: 'Transfer',
-      title: 'Transaction Sped Up',
-      description: 'Transaction was replaced with higher gas fee',
+      localTimestamp: dayjs().unix(),
+      isInitializing: false,
       withTrackedModal: true,
-      desiredChainID: 1,
-      lastTxKey: 'mock-tx-key-replaced',
-      localTimestamp: Date.now(),
+      lastTxKey: replacedTx.txKey,
+      adapter: replacedTx.adapter,
+      desiredChainID: replacedTx.chainId,
+      type: replacedTx.type,
+      from: replacedTx.from,
+      walletType: replacedTx.walletType,
     },
   },
 };
 
-// --- Custom Components Demo ---
+// --- Customization ---
 
 export const CustomComponentsDemo: Story = {
   name: 'Custom Components',
   args: {
     initialTx: {
+      localTimestamp: dayjs().unix(),
+      isInitializing: true,
+      withTrackedModal: true,
+      adapter: TransactionAdapter.EVM,
+      desiredChainID: 1,
       type: 'Swap',
       title: 'Custom Swap',
       description: 'Swapping with custom components',
-      withTrackedModal: true,
-      desiredChainID: 1,
       actionKey: 'swapTokens',
-      localTimestamp: Date.now(),
-      isInitializing: true,
+      from: zeroAddress,
+      walletType: 'injected',
     },
     customization: {
       components: {
@@ -343,43 +310,6 @@ export const CustomComponentsDemo: Story = {
           </div>
         ),
       },
-    } as TrackingTxModalCustomization<any, any>,
-  },
-};
-
-// --- Error Handling Demo ---
-
-export const ErrorHandlingDemo: Story = {
-  name: 'Error Handling',
-  args: {
-    transactionsPool: {
-      'error-tx-key': createMockTransaction({
-        txKey: 'error-tx-key',
-        status: TransactionStatus.Failed,
-        pending: false,
-        isError: true,
-        isTrackedModalOpen: true,
-        errorMessage: 'Error: execution reverted: UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT',
-        title: 'Swap Failed',
-        description: 'Transaction was reverted',
-      }),
-    },
-    initialTx: {
-      type: 'Swap',
-      title: 'Swap Failed',
-      description: 'Transaction was reverted',
-      withTrackedModal: true,
-      desiredChainID: 1,
-      lastTxKey: 'error-tx-key',
-      errorMessage: 'Error: execution reverted: UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT',
-      actionKey: 'swapTokens',
-      localTimestamp: Date.now(),
-      isInitializing: true,
-    },
-    config: {} as any,
-    handleTransaction: async () => {
-      console.log('Retrying failed transaction...');
-      await new Promise((resolve) => setTimeout(resolve, 2000));
     },
   },
 };

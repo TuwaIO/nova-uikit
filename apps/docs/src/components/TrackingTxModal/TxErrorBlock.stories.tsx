@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { TxErrorBlock } from './TxErrorBlock';
+import { TxErrorBlock } from '@tuwaio/nova-transactions';
 
 const meta: Meta<typeof TxErrorBlock> = {
   title: 'UI Components/TrackingTxModal/TxErrorBlock',

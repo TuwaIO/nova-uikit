@@ -1,100 +1,114 @@
+# Introduction to Nova UI Kit
 
-# TUWA Web3 Transaction Tracking - UI Components
+Welcome to **Nova UI Kit**, a comprehensive design system for building modern, robust, and beautiful Web3 applications. 🚀
 
-Welcome to the **TUWA Web3 Transaction Tracking** component library! 🚀
+## What is Nova?
 
-## What is TUWA?
+Nova is a collection of React component libraries built on a shared core. It provides everything from foundational utilities and hooks in `@tuwaio/nova-core` to specialized, feature-rich components in packages like `@tuwaio/nova-transactions`. The entire system is designed to be cohesive, themeable, and easy to integrate into any React project.
 
-TUWA provides a comprehensive suite of React components and hooks for tracking Web3 transactions with beautiful, user-friendly interfaces. Our components handle all the complexity of transaction monitoring while providing a seamless user experience.
+## Core Philosophy
+
+-   **Modularity**: Start with `@tuwaio/nova-core` for essential utilities and theming, then add other `nova-*` packages as you need them.
+-   **Developer Experience**: Simple, predictable APIs with full TypeScript support make development a breeze.
+-   **Customization**: A powerful theming system using CSS variables allows you to tailor the look and feel to match your brand perfectly.
+-   **Headless-First**: While we provide beautiful pre-styled components, the core logic is often available through headless hooks for maximum flexibility.
 
 ## Key Features
 
-- 🔄 **Real-time tracking** - Monitor transaction states automatically
-- 🎨 **Beautiful UI** - Pre-designed components that just work
-- 🌐 **Multi-chain** - Support for Ethereum, Polygon, Arbitrum, Base, and more
-- 🔗 **Wallet agnostic** - Works with any wallet connector (RainbowKit, ConnectKit, etc.)
-- 🎯 **TypeScript** - Full type safety out of the box
-- 🎨 **Themeable** - Customizable with CSS variables and Tailwind
+-   🎨 **Centralized Theming**: A single source of truth for styles across all Nova packages.
+-   🛠️ **Core Utilities**: Essential hooks and functions like `useCopyToClipboard` and `cn` are available in `@tuwaio/nova-core`.
+-   🧱 **Specialized Packages**: Feature-specific libraries like `nova-transactions` provide ready-to-use components for complex tasks.
+-   🌐 **Web3 Ready**: Built with the decentralized web in mind, with first-class support for EVM chains.
+-   🔗 **Wallet Agnostic**: Integrates smoothly with popular wallet connectors like RainbowKit and ConnectKit via Wagmi.
 
 ## Getting Started
 
-### Installation
+### 1. Installation
+
+Every Nova project starts with `@tuwaio/nova-core`. You can then add other packages as needed.
+
 ```bash
-pnpm add @tuwaio/web3-transactions-tracking-core
-```
+pnpm add @tuwaio/nova-core @tuwaio/nova-transactions
+````
 
-## Component Categories
-### 🔘 **Action Components**
-Interactive elements that trigger transactions
-- - Smart transaction button with built-in states `TxActionButton`
+You will also need to have peer dependencies like `react` and `tailwindcss` installed.
 
-### 📊 **Status Components**
-Display transaction states and progress
-- - Show current transaction status `TransactionStatusBadge`
-- - Visual progress indicator `TxProgressIndicator`
+### 2\. Setup
 
-### 📜 **History Components**
-Track and display transaction history
-- - List of user's transactions `TransactionsHistory`
-
-### 🔧 **Utility Components**
-Helper components for common patterns
-- - Transaction notifications `ToastTransaction`
-- - Transaction progress modals `TrackingTxModal`
-
-### 💳 **Wallet Components**
-Helper components for wallet interactions
-- - Display wallet avatar or blockies `WalletAvatar`
-- - Display wallet info and recent transaction history `WalletInfoModal`
-
-### 🎛️ **Provider**
-- - All in one `TransactionsWidget`
-
-## Theme Customization
-TUWA components use CSS variables for easy theming:
+With Tailwind CSS v4, setup is minimal. Create a main CSS file (e.g., `src/app.css`) and import Tailwind's base styles along with Nova's core theme variables.
 
 ```css
+/* src/app.css */
+
+/* Import Tailwind's base, components, and utilities */
+@import "tailwindcss";
+
+/* Import Nova's core theme variables and styles */
+@import "@tuwaio/nova-core/dist/index.css";
+@import "@tuwaio/nova-transactions/dist/index.css"; /* If using this package */
+```
+
+Then, import this CSS file into your main application entry point (e.g., `main.tsx` or `App.tsx`).
+
+### 3\. Basic Usage Example
+
+Here’s a simple example of using a hook from `@tuwaio/nova-core` and styling a button with Nova's theme variables.
+
+```tsx
+// src/components/MyComponent.tsx
+import { useState } from 'react';
+import { useCopyToClipboard } from '@tuwaio/nova-core';
+
+function MyComponent() {
+  const [copied, copy] = useCopyToClipboard();
+
+  return (
+    <div className="p-4">
+      <h1 className="text-lg font-bold text-[var(--nova-text-primary)]">
+        Welcome to Nova UI Kit
+      </h1>
+      <button
+        onClick={() => copy('Hello, Nova!')}
+        className="mt-2 px-4 py-2 bg-[var(--nova-bg-muted)] text-[var(--nova-text-secondary)] rounded-md hover:bg-[var(--nova-border-primary)]"
+      >
+        {copied ? 'Copied to Clipboard!' : 'Copy Text'}
+      </button>
+    </div>
+  );
+}
+```
+
+## Theme Customization
+
+Nova is built on a robust system of CSS variables. Simply override them in your global stylesheet to apply your custom theme. Make sure your overrides come after the `@import` of Nova's styles.
+
+```css
+/* src/app.css */
+@import "tailwindcss";
+@import "@tuwaio/nova-core/dist/index.css";
+@import "@tuwaio/nova-transactions/dist/index.css";
+
+/* Your custom theme overrides */
 :root {
-  --tuwa-success-bg: theme('colors.green.100');
-  --tuwa-success-text: theme('colors.green.700');
-  --tuwa-success-icon: theme('colors.green.500');
+  --nova-accent: theme('colors.teal.500');
+  --nova-text-primary: theme('colors.slate.800');
+  --nova-bg-primary: theme('colors.white');
+  --nova-border-primary: theme('colors.slate.200');
+  /* ... add other overrides as needed */
+}
 
-  --tuwa-error-bg: theme('colors.red.100');
-  --tuwa-error-text: theme('colors.red.700');
-  --tuwa-error-icon: theme('colors.red.500');
-
-  --tuwa-pending-bg: theme('colors.yellow.100');
-  --tuwa-pending-text: theme('colors.yellow.800');
-  --tuwa-pending-icon: theme('colors.yellow.600');
-
-  --tuwa-info-bg: theme('colors.gray.100');
-  --tuwa-info-text: theme('colors.gray.600');
-  --tuwa-info-icon: theme('colors.gray.500');
-
-  --tuwa-text-primary: theme('colors.gray.900');
-  --tuwa-text-secondary: theme('colors.gray.500');
-  --tuwa-text-tertiary: theme('colors.gray.400');
-  --tuwa-text-accent: theme('colors.blue.600');
-  --tuwa-text-on-accent: theme('colors.white');
-
-  --tuwa-bg-primary: theme('colors.white');
-  --tuwa-bg-secondary: theme('colors.gray.50');
-  --tuwa-bg-muted: theme('colors.gray.100');
-
-  --tuwa-border-primary: theme('colors.gray.200');
-  --tuwa-border-secondary: theme('colors.gray.100');
-
-  --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.purple.600');
-
-  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+.dark {
+  --nova-accent: theme('colors.teal.400');
+  --nova-text-primary: theme('colors.slate.100');
+  --nova-bg-primary: theme('colors.slate.900');
+  --nova-border-primary: theme('colors.slate.700');
+  /* ... etc. */
 }
 ```
 
 ## Resources
-- 📚 [Full Documentation](https://docs.tuwa.io)
-- 🔗 [GitHub Repository](https://github.com/TuwaIO/web3-transactions-tracking)
-- 🐛 [Report Issues](https://github.com/TuwaIO/web3-transactions-tracking/issues)
 
-Built with ❤️ by [TUWA Team](https://github.com/TuwaIO)
+  - 🔗 **GitHub Repository**: [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
+  - 🐛 **Report Issues**: [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
+
+Built with ❤️ by the **TUWA Team**.

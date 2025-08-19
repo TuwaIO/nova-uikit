@@ -1,12 +1,9 @@
 import { StarIcon, UserIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { WalletAddressDisplay, WalletAvatar, WalletHeader } from '@tuwaio/nova-transactions';
 import { useState } from 'react';
 import { Address, zeroAddress } from 'viem';
 import { mainnet } from 'viem/chains';
-
-import { WalletAddressDisplay } from './WalletAddressDisplay';
-import { WalletAvatar } from './WalletAvatar';
-import { WalletHeader } from './WalletHeader';
 
 // --- Mock Data ---
 

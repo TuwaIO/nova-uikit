@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import '@tuwaio/nova-core/dist/index.css';
+@import '@tuwaio/nova-transactions/dist/index.css';
 
 .Toastify {
   pointer-events: auto;

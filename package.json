@@ -14,6 +14,8 @@
     "test": "pnpm --filter \"./packages/**\" test",
     "clean": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' + && rm -rf .turbo",
     "docs:gen": "typedoc",
+    "postdocs:gen": "sh ./rename-md-to-mdx.sh",
+    "storybook": "pnpm docs:gen && pnpm --filter @tuwaio/storybook storybook",
     "prepare": "husky"
   },
   "repository": {

@@ -8,6 +8,20 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./providers": {
+      "import": "./dist/providers/index.mjs",
+      "require": "./dist/providers/index.js",
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -17,7 +31,6 @@
   "scripts": {
     "build": "tsup && pnpm exec postcss ./src/styles/app.css -o ./dist/index.css"
   },
-  "type": "module",
   "keywords": [
     "react",
     "web3",

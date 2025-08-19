@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { WalletAvatar } from '@tuwaio/nova-transactions';
 import { zeroAddress } from 'viem';
-
-import { WalletAvatar } from './WalletAvatar';
 
 // --- Mock Data ---
 

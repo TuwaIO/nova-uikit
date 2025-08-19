@@ -1,12 +1,9 @@
-import 'tailwindcss';
 import '../src/styles/app.css';
 
 import type { Preview } from '@storybook/react-vite';
 import { defaultLabels } from '@tuwaio/nova-transactions';
-import { LabelsProvider } from '@tuwaio/nova-transactions/dist/providers';
+import { LabelsProvider } from '@tuwaio/nova-transactions/providers';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 import { tuwaTheme } from './manager';
 
 const preview: Preview = {

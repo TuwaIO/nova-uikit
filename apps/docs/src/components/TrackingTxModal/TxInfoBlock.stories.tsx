@@ -1,24 +1,25 @@
+// apps/docs/src/components/TrackingTxModal/TxInfoBlock.stories.tsx
+
 import { CalendarIcon, ClockIcon, GlobeAltIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { TransactionTracker } from '@tuwaio/evm-transactions-tracking/src';
-import { Transaction, TransactionPool } from '@tuwaio/web3-transactions-tracking-core';
-import { TransactionStatus } from '@tuwaio/web3-transactions-tracking-core/src';
+import { TxInfoBlock } from '@tuwaio/nova-transactions';
+import { Transaction, TransactionAdapter, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
+import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import dayjs from 'dayjs';
 import { Address } from 'viem';
 import { arbitrum, base, mainnet, optimism, polygon } from 'viem/chains';
 
-import { TxInfoBlock } from './TxInfoBlock';
-
 // --- Mock Transaction Type ---
-interface MockTransaction extends Transaction<TransactionTracker> {
+type MockTransaction = Transaction<TransactionTracker> & {
   title: string;
   desiredChainID?: number;
-}
+};
 
 // --- Mock Data ---
 const mockTransaction: MockTransaction = {
   txKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
   tracker: TransactionTracker.Ethereum,
+  adapter: TransactionAdapter.EVM, // This was the missing required property
   type: 'swap',
   chainId: 1,
   from: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045' as Address,
@@ -402,7 +403,7 @@ export const InteractiveDemo: Story = {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[var(--tuwa-text-primary)] mb-2">Transaction Info Block Demo</h2>
           <p className="text-[var(--tuwa-text-secondary)]">
-            Различные типы транзакций с разными сетями и временными метками
+            Different transaction types with various networks and timestamps.
           </p>
         </div>
 
