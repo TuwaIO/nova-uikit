@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.12](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.11...nova-transactions-v0.0.12) (2025-08-20)
+
+
+### Bug Fixes
+
+* toasts visibility on mobile ([3e65053](https://github.com/TuwaIO/nova-uikit/commit/3e65053a3ef978515e6fefc215ba06ba9a29842e))
+* tx action button when wallet switching ([9d495b2](https://github.com/TuwaIO/nova-uikit/commit/9d495b293de526491123d108634e78c7a31a0e71))
+
 ## [0.0.11](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.10...nova-transactions-v0.0.11) (2025-08-20)
 
 
