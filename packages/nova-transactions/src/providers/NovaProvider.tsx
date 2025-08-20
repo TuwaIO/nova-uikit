@@ -158,7 +158,7 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
     prevTransactionsRef.current = transactionsPool;
   }, [transactionsPool, appChains, customization?.toast, enabledFeatures, config]);
 
-  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || !isTrackingModalOpen);
+  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || !isTrackingModalOpen || !isWalletInfoModalOpen);
 
   return (
     <LabelsProvider labels={mergedLabels}>
