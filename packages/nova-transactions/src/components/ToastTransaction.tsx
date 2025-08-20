@@ -7,7 +7,7 @@ import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionAdapter } from '@tuwaio/pulsar-core';
 import { cancelTxAction, speedUpTxAction } from '@tuwaio/pulsar-evm';
-import { Config } from '@wagmi/core';
+import { Config, getAccount } from '@wagmi/core';
 import { JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 import { Chain } from 'viem';
@@ -172,6 +172,8 @@ export function ToastTransaction<TR, T extends Transaction<TR>>({
               )}
             </div>
           ) : (
+            config &&
+            getAccount(config).address &&
             openWalletInfoModal &&
             (C?.walletInfoButton ? (
               C.walletInfoButton({ onClick: () => openWalletInfoModal(true), children: labels.toast.openWalletInfo })
