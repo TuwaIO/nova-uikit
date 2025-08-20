@@ -137,10 +137,10 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
       if (!prevTx && currentTx.pending) {
         showOrUpdateToast(currentTx, 'info');
       }
-      // Update toast for pending transactions.
+      // Update toast for pending transactions and nonce changes.
       if (
-        (prevTx && prevTx?.adapter === TransactionAdapter.EVM && prevTx.nonce) !==
-        (currentTx?.adapter === TransactionAdapter.EVM && currentTx?.nonce)
+        (prevTx && prevTx?.adapter === TransactionAdapter.EVM && prevTx.pending ? prevTx.nonce : undefined) !==
+        (currentTx?.adapter === TransactionAdapter.EVM && currentTx.pending ? currentTx?.nonce : undefined)
       ) {
         showOrUpdateToast(currentTx, 'info');
       }
