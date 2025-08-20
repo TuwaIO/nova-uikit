@@ -2,7 +2,7 @@
  * @file This file contains the main `NovaProvider` component, the primary entry point for the UI library.
  */
 
-import { deepMerge } from '@tuwaio/nova-core';
+import { deepMerge, useMediaQuery } from '@tuwaio/nova-core';
 import {
   IInitializeTxTrackingStore,
   Transaction,
@@ -83,6 +83,10 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
   const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<TR, T>>(transactionsPool);
 
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isTrackingModalOpen =
+    !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
+
   // Memoize feature flags for stability.
   const enabledFeatures = useMemo(
     () => ({
@@ -154,9 +158,11 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
     prevTransactionsRef.current = transactionsPool;
   }, [transactionsPool, appChains, customization?.toast, enabledFeatures, config]);
 
+  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || !isTrackingModalOpen);
+
   return (
     <LabelsProvider labels={mergedLabels}>
-      {enabledFeatures.toasts && (
+      {shouldShowToasts && (
         <ToastContainer
           position="bottom-right"
           stacked

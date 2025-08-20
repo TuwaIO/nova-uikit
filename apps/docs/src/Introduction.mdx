@@ -35,10 +35,10 @@ You will also need to have peer dependencies like `react` and `tailwindcss` inst
 
 ### 2\. Setup
 
-With Tailwind CSS v4, setup is minimal. Create a main CSS file (e.g., `src/app.css`) and import Tailwind's base styles along with Nova's core theme variables.
+With Tailwind CSS, setup is minimal. Create a main CSS file (e.g., `src/styles/app.css`) and import Tailwind's base styles along with Nova's core theme variables.
 
 ```css
-/* src/app.css */
+/* src/styles/app.css */
 
 /* Import Tailwind's base, components, and utilities */
 @import "tailwindcss";
@@ -48,7 +48,7 @@ With Tailwind CSS v4, setup is minimal. Create a main CSS file (e.g., `src/app.c
 @import "@tuwaio/nova-transactions/dist/index.css"; /* If using this package */
 ```
 
-Then, import this CSS file into your main application entry point (e.g., `main.tsx` or `App.tsx`).
+Then, import this CSS file into your main application entry point (e.g., `main.tsx` or `layout.tsx`).
 
 ### 3\. Basic Usage Example
 
@@ -64,12 +64,12 @@ function MyComponent() {
 
   return (
     <div className="p-4">
-      <h1 className="text-lg font-bold text-[var(--nova-text-primary)]">
+      <h1 className="text-lg font-bold text-[var(--tuwa-text-primary)]">
         Welcome to Nova UI Kit
       </h1>
       <button
         onClick={() => copy('Hello, Nova!')}
-        className="mt-2 px-4 py-2 bg-[var(--nova-bg-muted)] text-[var(--nova-text-secondary)] rounded-md hover:bg-[var(--nova-border-primary)]"
+        className="mt-2 px-4 py-2 bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-secondary)] rounded-md hover:bg-[var(--tuwa-border-primary)]"
       >
         {copied ? 'Copied to Clipboard!' : 'Copy Text'}
       </button>
@@ -83,25 +83,25 @@ function MyComponent() {
 Nova is built on a robust system of CSS variables. Simply override them in your global stylesheet to apply your custom theme. Make sure your overrides come after the `@import` of Nova's styles.
 
 ```css
-/* src/app.css */
+/* src/styles/app.css */
 @import "tailwindcss";
 @import "@tuwaio/nova-core/dist/index.css";
 @import "@tuwaio/nova-transactions/dist/index.css";
 
 /* Your custom theme overrides */
 :root {
-  --nova-accent: theme('colors.teal.500');
-  --nova-text-primary: theme('colors.slate.800');
-  --nova-bg-primary: theme('colors.white');
-  --nova-border-primary: theme('colors.slate.200');
+  --tuwa-text-accent: theme('colors.teal.500');
+  --tuwa-text-primary: theme('colors.slate.800');
+  --tuwa-bg-primary: theme('colors.white');
+  --tuwa-border-primary: theme('colors.slate.200');
   /* ... add other overrides as needed */
 }
 
 .dark {
-  --nova-accent: theme('colors.teal.400');
-  --nova-text-primary: theme('colors.slate.100');
-  --nova-bg-primary: theme('colors.slate.900');
-  --nova-border-primary: theme('colors.slate.700');
+  --tuwa-text-accent: theme('colors.teal.400');
+  --tuwa-text-primary: theme('colors.slate.100');
+  --tuwa-bg-primary: theme('colors.slate.900');
+  --tuwa-border-primary: theme('colors.slate.700');
   /* ... etc. */
 }
 ```

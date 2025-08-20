@@ -4,34 +4,41 @@ The **NovaProvider** is the centerpiece of the `@tuwaio/nova-transactions` libra
 
 ## What is NovaProvider?
 
-`NovaProvider` is a powerful React context provider that combines all transaction tracking UI features into a single, easy-to-use component. It acts as the central coordinator for:
+`NovaProvider` is a powerful React component that combines all transaction tracking UI features into a single, easy-to-use instance. It acts as the central coordinator for:
 
 -   🍞 **Smart toast notifications** with live updates.
 -   📱 **Interactive modals** for detailed transaction progress tracking.
 -   💼 **Displaying wallet information** and transaction history.
--   🌐 **Providing internationalization (i18n)** context for all nested components.
+-   🌐 **Providing internationalization (i18n)** context for all UI elements.
 -   🎨 **Enabling flexible customization** of appearance and functionality.
 
-Think of it as your dApp's transaction UI control center: wrap your application with it once, and get a complete, production-ready Web3 transaction UX.
+Think of it as your dApp's transaction UI control center: include it **once** in your root layout, and it handles rendering all necessary modals and notifications globally for your application.
 
 ## Key Advantages
 
-### 🚀 All-in-One Provider, Zero-Clutter Solution
+### 🚀 All-in-One Component, Zero-Clutter Solution
 
-Instead of importing and managing multiple modals and toast containers in your app's layout, you get everything with a single provider. This significantly simplifies integration and keeps your component tree clean.
+Instead of importing and managing multiple modals and toast containers in your app's layout, you get everything with a single component. This significantly simplifies integration and keeps your component tree clean.
 
 ```tsx
-// All transaction UI is handled by this single provider
-<NovaProvider {...props}>
-  <MyApp />
-</NovaProvider>
+// In your root layout (e.g., AppLayout.tsx)
+function AppLayout({ children }) {
+  return (
+    <div>
+      {children}
+
+      {/* NovaProvider renders alongside your app, not as a wrapper */}
+      <NovaProvider {...props} />
+    </div>
+  );
+}
 ````
 
 ### ⚡️ Smart Features Out of the Box
 
   - **Automatic UI Reactions**: Listens to your transaction store and automatically triggers toasts and modals.
   - **Multi-tracker Support**: Works with standard Ethereum transactions, as well as Gelato and Safe.
-  - **Intelligent Updates**: The component only re-renders its children when necessary, optimizing performance.
+  - **Optimized Performance**: The component is designed to minimize re-renders.
   - **Graceful Error Handling**: Provides beautiful and clear error messages with retry options.
 
 ### 🎨 Advanced Customization
@@ -50,7 +57,7 @@ Smart, non-intrusive notifications that appear automatically based on transactio
 
 ### 📱 Tracking Modal
 
-A detailed modal that provides real-time visualization of transaction progress. It is triggered when a new transaction is initiated and configured with `withTrackedModal: true`.
+A detailed modal that provides real-time visualization of transaction progress. It is triggered when a new transaction is initiated with `withTrackedModal: true`.
 
 ### 💼 Wallet Info Modal
 
@@ -60,46 +67,57 @@ A comprehensive view of the user's wallet, including transaction history. This m
 
 ## Basic Usage
 
-To get the provider working, you need to connect it to your application's state. The example below uses a Zustand store, which is the recommended approach for managing transaction state with Pulsar.
+To use the provider, place it in a high-level layout component and pass it the required props from your Pulsar store and `wagmi`.
 
 ```tsx
+// In your main providers file (e.g., src/providers/index.tsx)
 import { NovaProvider } from '@tuwaio/nova-transactions';
-import { useTxTrackingStore } from '../store'; // Your Zustand store
-import { wagmiConfig, chains } from '../config'; // Your configurations
-import { useAccount } from 'wagmi';
+import { usePulsarStore } from '../hooks/txTrackingHooks';
+import { wagmiConfig, appChains } from '../configs/wagmiConfig';
+import { useAccount, WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-function AppLayout({ children }) {
-  // 1. Get state and actions from your tracking store
-  const transactionsPool = useTxTrackingStore((state) => state.transactionsPool);
-  const initialTx = useTxTrackingStore((state) => state.initialTx);
-  const closeTxTrackedModal = useTxTrackingStore(
+// 1. Create a new QueryClient instance
+const queryClient = new QueryClient();
+
+export function Providers({ children }) {
+  // 2. Get state and actions from your Pulsar store
+  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
+  const initialTx = usePulsarStore((state) => state.initialTx);
+  const closeTxTrackedModal = usePulsarStore(
     (state) => state.closeTxTrackedModal,
   );
-  const handleTransaction = useTxTrackingStore(
+  const handleTransaction = usePulsarStore(
     (state) => state.handleTransaction,
   );
-  const actions = useTxTrackingStore((state) => state.actions);
+  const actions = usePulsarStore((state) => state.actions);
 
-  // 2. Get wallet info from Wagmi
+  // 3. Get wallet info from Wagmi
   const { address, chain } = useAccount();
 
   return (
-    // 3. Wrap your app and pass the props
-    <NovaProvider
-      // --- Required props from your store ---
-      transactionsPool={transactionsPool}
-      handleTransaction={handleTransaction}
-      appChains={chains}
-      config={wagmiConfig}
-      closeTxTrackedModal={closeTxTrackedModal}
-      // --- Optional props ---
-      initialTx={initialTx}
-      walletAddress={address}
-      chain={chain}
-      actions={actions}
-    >
-      {children}
-    </NovaProvider>
+    // 4. Wrap everything in WagmiProvider
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        {/* Your other providers and app content */}
+        {children}
+
+        {/* 5. Render NovaProvider as a standalone component */}
+        <NovaProvider
+          // --- Required props from your store ---
+          transactionsPool={transactionsPool}
+          handleTransaction={handleTransaction}
+          appChains={appChains}
+          config={wagmiConfig}
+          closeTxTrackedModal={closeTxTrackedModal}
+          // --- Optional props ---
+          initialTx={initialTx}
+          walletAddress={address}
+          chain={chain}
+          actions={actions}
+        />
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 ```
@@ -117,7 +135,7 @@ You can easily enable or disable the main UI elements using the `features` prop.
   // ...other props
   features={{
     toasts: true, // Enable/disable toast notifications
-    walletInfoModal: true, // Enable/disable wallet modal
+    walletInfoModal: false, // Example: disable the wallet modal
     trackingTxModal: true, // Enable/disable transaction tracking modal
   }}
 />
@@ -134,9 +152,6 @@ The `customization` prop allows you to pass objects for deep styling and compone
     toast: {
       className: 'custom-toast-styles',
     },
-    walletInfoModal: {
-      className: 'custom-wallet-modal',
-    },
     trackingTxModal: {
       className: 'custom-tracking-modal',
     },
@@ -146,7 +161,7 @@ The `customization` prop allows you to pass objects for deep styling and compone
 
 ### ⚙️ Toast Container Customization
 
-`NovaProvider` uses `react-toastify` under the hood. You can pass any props for `ToastContainer` directly to `NovaProvider`.
+`NovaProvider` uses `react-toastify` under the hood. You can pass any props for its `ToastContainer` directly to `NovaProvider`.
 
 ```tsx
 <NovaProvider
@@ -159,17 +174,15 @@ The `customization` prop allows you to pass objects for deep styling and compone
 />
 ```
 
------
+### 🌐 Internationalization (i18n)
 
-## Internationalization (i18n)
-
-You can easily translate all text to any language by passing a `labels` object. This context is available to all nested Nova components.
+You can easily translate all text by passing a `labels` object.
 
 ```tsx
 const myLabels = {
-  transaction: {
-    pending: 'Erwartung...',
-    success: 'Die Transaktion ist erfolgreich!',
+  transactionModal: {
+    pending: 'Ausstehend...',
+    success: 'Erfolgreich!',
     // ...
   },
 };
@@ -219,7 +232,7 @@ const myLabels = {
 
 ### 1\. Single Instance at the Root
 
-Use only **one** `NovaProvider` per application. It's designed to be a singleton and should be placed in a high-level component, like `_app.tsx` or a root `Layout.tsx`, wrapping your entire page content.
+Use only **one** `NovaProvider` per application. It's designed to be a singleton and should be placed at a high level in your component tree, like `_app.tsx` or a root `Layout.tsx`, so it can render above all other content. **It should not wrap your page content.**
 
 ### 2\. Memoize Props
 
@@ -229,4 +242,4 @@ To prevent unnecessary re-renders, wrap complex objects like `customization` or 
 
 ## Summary
 
-`NovaProvider` is a powerful, flexible, and beautiful solution for Web3 transaction UX. By centralizing control of modals and toasts, it streamlines development and provides your users with a world-class, consistent transaction experience. **Start with the basic setup and customize as needed\!** 🚀
+`NovaProvider` is a powerful, flexible, and beautiful solution for Web3 transaction UX. By centralizing control of modals and toasts into a single component, it streamlines development and provides your users with a world-class, consistent transaction experience. **Start with the basic setup and customize as needed\!** 🚀
