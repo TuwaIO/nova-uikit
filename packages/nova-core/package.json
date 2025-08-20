@@ -1,6 +1,6 @@
 {
   "name": "@tuwaio/nova-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
@@ -55,7 +55,7 @@
     "react": ">=19",
     "react-dom": ">=19",
     "tailwindcss": ">=4",
-    "tailwind-merge":">=3"
+    "tailwind-merge": ">=3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
