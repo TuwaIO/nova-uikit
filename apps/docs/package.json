@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tuwaio/pulsar-core": "0.0.4",
-    "@tuwaio/pulsar-evm": "0.0.8",
+    "@tuwaio/pulsar-evm": "0.0.10",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "ethereum-blockies-base64": "^1.0.2"
