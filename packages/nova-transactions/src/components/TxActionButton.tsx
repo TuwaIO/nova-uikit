@@ -40,6 +40,8 @@ export interface TxActionButtonProps<TR, T extends Transaction<TR>>
   replacedContent?: ReactNode;
   /** The duration (in milliseconds) to display the 'succeed', 'failed', or 'replaced' state before automatically resetting the button to 'idle'. Defaults to 2500ms. */
   resetTimeout?: number;
+  /** Optional active wallet address. If provided, the button will only display if the transaction was initiated by the active wallet. */
+  walletAddress?: string;
 }
 
 /**
@@ -63,6 +65,7 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
   resetTimeout = 2500,
   transactionsPool,
   className,
+  walletAddress,
   ...props
 }: TxActionButtonProps<TR, T>): JSX.Element {
   const labels = useLabels();
@@ -74,6 +77,10 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
   useEffect(() => {
     if (trackedTxKey) {
       const trackedTransaction = transactionsPool[trackedTxKey];
+      if (walletAddress ? trackedTransaction.from.toLowerCase() !== walletAddress.toLowerCase() : false) {
+        setStatus('idle');
+        setTrackedTxKey(undefined);
+      }
       if (trackedTransaction?.status) {
         switch (trackedTransaction.status) {
           case TransactionStatus.Success:
@@ -88,7 +95,7 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
         }
       }
     }
-  }, [transactionsPool, trackedTxKey]);
+  }, [transactionsPool, trackedTxKey, walletAddress]);
 
   // Effect 2: Resets the button to the 'idle' state.
   // After a terminal state ('succeed', 'failed', 'replaced') is displayed, this timer
