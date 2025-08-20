@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.9](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.8...nova-transactions-v0.0.9) (2025-08-20)
+
+
+### Bug Fixes
+
+* nova provider toast display ([08eba8a](https://github.com/TuwaIO/nova-uikit/commit/08eba8ae8d3f95b682badea39f500181ab46fa0d))
+* update wallet info button in toat tx ([17318e6](https://github.com/TuwaIO/nova-uikit/commit/17318e6325d91a5938da36d094e3126971b9d837))
+
 ## [0.0.8](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.7...nova-transactions-v0.0.8) (2025-08-19)
 
 
