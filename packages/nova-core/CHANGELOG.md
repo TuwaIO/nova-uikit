@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.5...nova-core-v0.0.6) (2025-08-20)
+
+
+### Bug Fixes
+
+* stories and mobile toast visibility ([56e7baf](https://github.com/TuwaIO/nova-uikit/commit/56e7baf705da1381cfeccba6cd7bf119c6ff149a))
+
 ## [0.0.5](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.4...nova-core-v0.0.5) (2025-08-20)
 
 

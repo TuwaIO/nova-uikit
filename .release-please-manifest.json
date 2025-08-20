@@ -1,4 +1,4 @@
 {
-  "packages/nova-core": "0.0.5",
-  "packages/nova-transactions": "0.0.10"
+  "packages/nova-core": "0.0.6",
+  "packages/nova-transactions": "0.0.11"
 }

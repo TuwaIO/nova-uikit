@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.11](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.10...nova-transactions-v0.0.11) (2025-08-20)
+
+
+### Bug Fixes
+
+* stories and mobile toast visibility ([56e7baf](https://github.com/TuwaIO/nova-uikit/commit/56e7baf705da1381cfeccba6cd7bf119c6ff149a))
+
 ## [0.0.10](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.9...nova-transactions-v0.0.10) (2025-08-20)
 
 
