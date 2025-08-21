@@ -54,7 +54,6 @@ import { TransactionInitializer } from '../components/TransactionInitializer';
 // Import required CSS
 import '@tuwaio/nova-core/dist/index.css';
 import '@tuwaio/nova-transactions/dist/index.css';
-import 'react-toastify/dist/ReactToastify.css';
 
 // Your Wagmi Config
 import { wagmiConfig, appChains } from './wagmi';
