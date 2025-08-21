@@ -90,9 +90,10 @@ export function ToastTransaction<TR, T extends Transaction<TR>>({
   const labels = useLabels();
   const C = customization?.components; // Shortcut for customization components
 
-  // A transaction can be replaced if it's pending and has the necessary fee info.
+  // A transaction can be replaced when wallet connected and if it's pending, and has the necessary fee info.
   const canReplace =
     config &&
+    config.state.status === 'connected' &&
     tx?.adapter === TransactionAdapter.EVM &&
     tx.nonce !== undefined &&
     tx.pending &&

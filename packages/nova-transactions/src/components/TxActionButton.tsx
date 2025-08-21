@@ -72,15 +72,18 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
   const [status, setStatus] = useState<ButtonStatus>('idle');
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    if (!walletAddress) {
+      setStatus('idle');
+      setTrackedTxKey(undefined);
+    }
+  }, [walletAddress]);
+
   // Effect 1: Monitors the transaction pool.
   // When the status of the tracked transaction changes, this effect updates the button's visual state.
   useEffect(() => {
     if (trackedTxKey) {
       const trackedTransaction = transactionsPool[trackedTxKey];
-      if (walletAddress ? trackedTransaction.from.toLowerCase() !== walletAddress.toLowerCase() : false) {
-        setStatus('idle');
-        setTrackedTxKey(undefined);
-      }
       if (trackedTransaction?.status) {
         switch (trackedTransaction.status) {
           case TransactionStatus.Success:
@@ -95,7 +98,7 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
         }
       }
     }
-  }, [transactionsPool, trackedTxKey, walletAddress]);
+  }, [transactionsPool, trackedTxKey]);
 
   // Effect 2: Resets the button to the 'idle' state.
   // After a terminal state ('succeed', 'failed', 'replaced') is displayed, this timer
