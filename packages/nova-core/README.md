@@ -32,7 +32,6 @@ Use this package to:
 2.  **Import the core styles** into the root of your application's main CSS file (e.g., `globals.css`). **This step is crucial.**
 
     ```css
-    @import "tailwindcss";
     @import '@tuwaio/nova-core/dist/index.css';
     ```
 
@@ -40,64 +39,15 @@ Use this package to:
 
 You can use the provided styles in two ways: directly with CSS variables (basic) or by integrating them into your theme (recommended).
 
-### Basic Usage (Without `tailwind.config.js`)
+### Usage
 
-With Tailwind CSS v4, you can use the CSS variables from this package directly in your className as arbitrary values. A `tailwind.config.js` file is not required for this to work.
+For example with Tailwind CSS v4, you can use the CSS variables from this package directly in your className as arbitrary values only need to @import tailwindcss in your .css file.
 
 ```tsx
 // You can use the variables directly
 <button className="bg-[var(--tuwa-color-primary)] text-[var(--tuwa-color-foreground)] p-[var(--tuwa-spacing-md)]">
   Click Me
 </button>
-```
-
-### Recommended Usage (Theming with `tailwind.config.js`)
-
-While a config file is optional in Tailwind v4, creating one to map our CSS variables to Tailwind's theme allows you to use clean, semantic class names. This is the recommended approach for building a consistent design system.
-
-**1. Create or update your `tailwind.config.js`:**
-
-```js
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: 'var(--tuwa-color-primary)',
-        secondary: 'var(--tuwa-color-secondary)',
-        background: 'var(--tuwa-color-background)',
-        foreground: 'var(--tuwa-color-foreground)',
-      },
-      // ... etc.
-    },
-  },
-  plugins: [],
-};
-```
-
-**2. Use semantic class names in your components:**
-
-Now your code becomes much cleaner and easier to read.
-
-```tsx
-import { cn } from '@tuwaio/nova-core';
-
-export function Button({ intent, className, ...props }) {
-  const buttonClasses = cn(
-    'px-4 py-2 rounded-md font-semibold transition-colors',
-    {
-      'bg-primary text-white hover:opacity-90': intent === 'primary',
-      'bg-secondary text-foreground hover:opacity-90': intent === 'secondary',
-    },
-    className,
-  );
-
-  return <button className={buttonClasses} {...props} />;
-}
 ```
 
 ## Contributing

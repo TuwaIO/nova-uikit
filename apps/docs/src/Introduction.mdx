@@ -39,13 +39,11 @@ With Tailwind CSS, setup is minimal. Create a main CSS file (e.g., `src/styles/a
 
 ```css
 /* src/styles/app.css */
-
-/* Import Tailwind's base, components, and utilities */
-@import "tailwindcss";
-
 /* Import Nova's core theme variables and styles */
 @import "@tuwaio/nova-core/dist/index.css";
 @import "@tuwaio/nova-transactions/dist/index.css"; /* If using this package */
+/* Import Tailwind's base, components, and utilities */
+@import "tailwindcss";
 ```
 
 Then, import this CSS file into your main application entry point (e.g., `main.tsx` or `layout.tsx`).
@@ -84,9 +82,9 @@ Nova is built on a robust system of CSS variables. Simply override them in your 
 
 ```css
 /* src/styles/app.css */
-@import "tailwindcss";
 @import "@tuwaio/nova-core/dist/index.css";
 @import "@tuwaio/nova-transactions/dist/index.css";
+@import "tailwindcss";
 
 /* Your custom theme overrides */
 :root {
