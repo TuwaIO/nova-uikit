@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.15](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.14...nova-transactions-v0.0.15) (2025-08-21)
+
+
+### Bug Fixes
+
+* typo in docs ([3e0f880](https://github.com/TuwaIO/nova-uikit/commit/3e0f8800d3c83299ca811cff6780c55d4b387796))
+
 ## [0.0.14](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.13...nova-transactions-v0.0.14) (2025-08-21)
 
 
