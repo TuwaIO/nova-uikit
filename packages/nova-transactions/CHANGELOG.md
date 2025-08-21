@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.13](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.12...nova-transactions-v0.0.13) (2025-08-21)
+
+
+### Bug Fixes
+
+* action tx button and toat tx when wallet not connected ([cba817e](https://github.com/TuwaIO/nova-uikit/commit/cba817e3324fd77b8db7e278ddccee8cdb476608))
+
 ## [0.0.12](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.11...nova-transactions-v0.0.12) (2025-08-20)
 
 
