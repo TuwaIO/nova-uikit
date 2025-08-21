@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.14](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.13...nova-transactions-v0.0.14) (2025-08-21)
+
+
+### Bug Fixes
+
+* optimize tailwindcss bundle ([db14eb1](https://github.com/TuwaIO/nova-uikit/commit/db14eb12298da7927b46ed10019243170aa79e07))
+
 ## [0.0.13](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.12...nova-transactions-v0.0.13) (2025-08-21)
 
 

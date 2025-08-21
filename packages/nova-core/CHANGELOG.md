@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.6...nova-core-v0.0.7) (2025-08-21)
+
+
+### Bug Fixes
+
+* optimize tailwindcss bundle ([db14eb1](https://github.com/TuwaIO/nova-uikit/commit/db14eb12298da7927b46ed10019243170aa79e07))
+
 ## [0.0.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.5...nova-core-v0.0.6) (2025-08-20)
 
 
