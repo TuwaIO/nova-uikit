@@ -156,7 +156,13 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
       withTrackedModal: true,
     };
     if (adapter?.retryTxAction) {
-      await adapter.retryTxAction({ tx: retryParams, txKey: trackedTx?.txKey ?? '', actions, onClose });
+      await adapter.retryTxAction({
+        tx: retryParams,
+        txKey: trackedTx?.txKey ?? '',
+        actions,
+        onClose,
+        handleTransaction,
+      });
     }
   };
 
