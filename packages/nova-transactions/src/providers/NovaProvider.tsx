@@ -5,14 +5,16 @@
 import { deepMerge, useMediaQuery } from '@tuwaio/nova-core';
 import {
   IInitializeTxTrackingStore,
+  ITxTrackingStore,
   Transaction,
   TransactionAdapter,
   TransactionPool,
   TransactionStatus,
+  TxActions,
+  TxAdapter,
 } from '@tuwaio/pulsar-core';
 import { JSX, useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
-import { Address, Chain } from 'viem';
 
 import {
   ToastCloseButton,
@@ -20,7 +22,6 @@ import {
   ToastTransactionCustomization,
   TrackingTxModal,
   TrackingTxModalCustomization,
-  TrackingTxModalProps,
   WalletInfoModal,
   WalletInfoModalCustomization,
 } from '../components';
@@ -34,7 +35,10 @@ const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
   [TransactionStatus.Replaced]: 'info',
 };
 
-export type NovaProviderProps<TR, T extends Transaction<TR>> = {
+export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
+  adapters: TxAdapter<TR, T, A>[];
+  connectedWalletAddress?: string;
+  connectedAdapterType?: TransactionAdapter;
   /** A partial object of labels to override the default English text. */
   labels?: Partial<TuwaLabels>;
   /** An object to enable or disable major UI features. All are enabled by default. */
@@ -45,18 +49,17 @@ export type NovaProviderProps<TR, T extends Transaction<TR>> = {
   };
   /** A single object to pass down deep customization options to all child components. */
   customization?: {
-    toast?: ToastTransactionCustomization<TR, T>;
-    walletInfoModal?: WalletInfoModalCustomization<TR, T>;
-    trackingTxModal?: TrackingTxModalCustomization<TR, T>;
+    toast?: ToastTransactionCustomization<TR, T, A>;
+    walletInfoModal?: WalletInfoModalCustomization<TR, T, A>;
+    trackingTxModal?: TrackingTxModalCustomization<TR, T, A>;
   };
-  chain?: Chain;
-  walletAddress?: string;
+  /** A registry of retryable actions, keyed by `actionKey`. */
+  actions?: TxActions;
+  /** The global transaction pool from the tracking store. */
+  transactionsPool: TransactionPool<TR, T>;
 } & Pick<IInitializeTxTrackingStore<TR, T>, 'closeTxTrackedModal'> &
-  ToastContainerProps &
-  Pick<
-    TrackingTxModalProps<TR, T>,
-    'handleTransaction' | 'actions' | 'config' | 'appChains' | 'transactionsPool' | 'initialTx'
-  >;
+  Partial<Pick<ITxTrackingStore<TR, T, A>, 'handleTransaction' | 'initialTx'>> &
+  ToastContainerProps;
 
 /**
  * The main provider for the Nova UI ecosystem.
@@ -65,21 +68,20 @@ export type NovaProviderProps<TR, T extends Transaction<TR>> = {
  * @param {NovaProviderProps<TR, T>} props - The component props.
  * @returns {JSX.Element} The rendered provider.
  */
-export function NovaProvider<TR, T extends Transaction<TR>>({
+export function NovaProvider<TR, T extends Transaction<TR>, A>({
+  adapters,
+  connectedWalletAddress,
+  connectedAdapterType,
   labels,
   features,
   customization,
   closeTxTrackedModal,
   actions,
-  config,
   handleTransaction,
   initialTx,
-  appChains,
   transactionsPool,
-  walletAddress,
-  chain,
   ...toastProps
-}: NovaProviderProps<TR, T>): JSX.Element {
+}: NovaProviderProps<TR, T, A>): JSX.Element {
   const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<TR, T>>(transactionsPool);
 
@@ -110,10 +112,10 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
           {...props}
           tx={tx}
           transactionsPool={transactionsPool}
-          appChains={appChains}
           openWalletInfoModal={enabledFeatures.walletInfoModal ? () => setIsWalletInfoModalOpen(true) : undefined}
           customization={customization?.toast}
-          config={config}
+          adapters={adapters}
+          connectedWalletAddress={connectedWalletAddress}
         />
       );
 
@@ -156,7 +158,7 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
     });
 
     prevTransactionsRef.current = transactionsPool;
-  }, [transactionsPool, appChains, customization?.toast, enabledFeatures, config]);
+  }, [transactionsPool, customization?.toast, enabledFeatures]);
 
   const shouldShowToasts = enabledFeatures.toasts && (!isMobile || !isTrackingModalOpen || !isWalletInfoModalOpen);
 
@@ -179,12 +181,12 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
       {enabledFeatures.walletInfoModal && (
         <WalletInfoModal
           transactionsPool={transactionsPool}
-          walletAddress={walletAddress as Address}
-          chain={chain}
+          connectedWalletAddress={connectedWalletAddress}
           isOpen={isWalletInfoModalOpen}
           setIsOpen={setIsWalletInfoModalOpen}
-          appChains={appChains}
           customization={customization?.walletInfoModal}
+          adapters={adapters}
+          connectedAdapterType={connectedAdapterType}
         />
       )}
 
@@ -193,12 +195,12 @@ export function NovaProvider<TR, T extends Transaction<TR>>({
           initialTx={initialTx}
           onClose={closeTxTrackedModal}
           onOpenWalletInfo={() => setIsWalletInfoModalOpen(true)}
-          appChains={appChains}
           transactionsPool={transactionsPool}
           customization={customization?.trackingTxModal}
           actions={actions}
-          config={config}
           handleTransaction={handleTransaction}
+          adapters={adapters}
+          connectedAdapterType={connectedAdapterType}
         />
       )}
     </LabelsProvider>

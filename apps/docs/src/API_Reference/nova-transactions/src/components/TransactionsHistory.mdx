@@ -4,9 +4,9 @@
 
 # TransactionsHistory()
 
-> **TransactionsHistory**\<`TR`, `T`\>(`props`): `Element`
+> **TransactionsHistory**\<`TR`, `T`, `A`\>(`props`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionsHistory.tsx#L54)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionsHistory.tsx#L54)
 
 A component that displays a scrollable list of transactions for the connected wallet.
 It handles states for when a wallet is not connected or when there is no history.
@@ -21,11 +21,15 @@ It handles states for when a wallet is not connected or when there is no history
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Parameters
 
 ### props
 
-[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`\> & `object`
+[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`, `A`\> & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"`\> & `object`
 
 ## Returns
 

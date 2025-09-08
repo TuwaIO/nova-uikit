@@ -17,9 +17,6 @@ importers:
       '@semantic-release/exec':
         specifier: ^7.1.0
         version: 7.1.0(semantic-release@24.2.7(typescript@5.9.2))
-      '@semantic-release/github':
-        specifier: ^11.0.4
-        version: 11.0.4(semantic-release@24.2.7(typescript@5.9.2))
       '@semantic-release/release-notes-generator':
         specifier: ^14.0.3
         version: 14.0.3(semantic-release@24.2.7(typescript@5.9.2))
@@ -268,11 +265,11 @@ importers:
         specifier: workspace:^
         version: link:../nova-core
       '@tuwaio/pulsar-core':
-        specifier: 0.0.4
-        version: 0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-alpha.4.815bc21.acc55b8.30fab03
+        version: 1.0.0-alpha.4.815bc21.acc55b8.30fab03(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@tuwaio/pulsar-evm':
-        specifier: 0.0.10
-        version: 0.0.10(@tuwaio/pulsar-core@0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(@wagmi/core@2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-alpha.4.815bc21.acc55b8.30fab03
+        version: 1.0.0-alpha.4.815bc21.acc55b8.30fab03(@tuwaio/pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(@wagmi/core@2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@types/react':
         specifier: ^19.1.10
         version: 19.1.10
@@ -1382,8 +1379,25 @@ packages:
       immer: '>=10'
       zustand: '>=5'
 
+  '@tuwaio/pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03':
+    resolution: {integrity: sha512-3CiCj7+IDJbWpMQKeKlmAizli/M5UdVETs5mCd9/GTRwU91SrF+30zAhLLE7HhxCIa5Dl+1geQlTqvZciWELGw==}
+    peerDependencies:
+      dayjs: '>=1'
+      immer: '>=10'
+      zustand: '>=5'
+
   '@tuwaio/pulsar-evm@0.0.10':
     resolution: {integrity: sha512-8s/9B5YSSX87EmHC+zReO9LdBYZLqnGrO5CPX5hXgThxpUmen12IYW/9v7TPQQzHQQaWoQHt2Ph4K2RlbF39VA==}
+    peerDependencies:
+      '@tuwaio/pulsar-core': '>=0'
+      '@wagmi/core': '>=2'
+      dayjs: '>=1'
+      immer: '>=10'
+      viem: '>=2'
+      zustand: '>=5'
+
+  '@tuwaio/pulsar-evm@1.0.0-alpha.4.815bc21.acc55b8.30fab03':
+    resolution: {integrity: sha512-tYzSMLyfeK3/pSFtnkLfbZ7la7ntASg5DP5S+dtoGflY+IK8x715N77tNxZgSsJBmFrwa2AUstP4jA/S2sR6JA==}
     peerDependencies:
       '@tuwaio/pulsar-core': '>=0'
       '@wagmi/core': '>=2'
@@ -5126,9 +5140,24 @@ snapshots:
       immer: 10.1.1
       zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
 
+  '@tuwaio/pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
+    dependencies:
+      dayjs: 1.11.13
+      immer: 10.1.1
+      zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
+
   '@tuwaio/pulsar-evm@0.0.10(@tuwaio/pulsar-core@0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(@wagmi/core@2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
     dependencies:
       '@tuwaio/pulsar-core': 0.0.4(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+      '@wagmi/core': 2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))
+      dayjs: 1.11.13
+      immer: 10.1.1
+      viem: 2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4)
+      zustand: 5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
+
+  '@tuwaio/pulsar-evm@1.0.0-alpha.4.815bc21.acc55b8.30fab03(@tuwaio/pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(@wagmi/core@2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(dayjs@1.11.13)(immer@10.1.1)(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
+    dependencies:
+      '@tuwaio/pulsar-core': 1.0.0-alpha.4.815bc21.acc55b8.30fab03(dayjs@1.11.13)(immer@10.1.1)(zustand@5.0.7(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@wagmi/core': 2.19.0(@tanstack/query-core@5.85.5)(@types/react@19.1.10)(immer@10.1.1)(react@19.1.1)(typescript@5.9.2)(use-sync-external-store@1.4.0(react@19.1.1))(viem@2.34.0(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)(zod@3.22.4))
       dayjs: 1.11.13
       immer: 10.1.1

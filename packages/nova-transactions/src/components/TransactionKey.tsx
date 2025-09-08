@@ -4,24 +4,20 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionAdapter } from '@tuwaio/pulsar-core';
-import { selectEvmTxExplorerLink, TransactionTracker } from '@tuwaio/pulsar-evm';
+import { selectAdapterByKey, Transaction, TransactionAdapter } from '@tuwaio/pulsar-core';
+import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import { ReactNode } from 'react';
-import { Chain, Hex } from 'viem';
 
-import { useLabels } from '../providers';
+import { NovaProviderProps, useLabels } from '../providers';
 import { HashLink } from './HashLink';
-import { WalletInfoModalProps } from './WalletInfoModal';
 
 // Utility type to extract the props of the HashLink component.
 type CustomHashLinkProps = Parameters<typeof HashLink>[0];
 
-export interface ToastTransactionKeyProps<TR, T extends Transaction<TR>>
-  extends Pick<WalletInfoModalProps<TR, T>, 'transactionsPool'> {
+export interface ToastTransactionKeyProps<TR, T extends Transaction<TR>, A>
+  extends Pick<NovaProviderProps<TR, T, A>, 'adapters' | 'transactionsPool'> {
   /** The transaction object to display identifiers for. */
   tx: T;
-  /** An array of supported chain objects, used for generating explorer links. */
-  appChains: Chain[];
   /** The visual variant, which applies different container styles. */
   variant?: 'toast' | 'history';
   /** Optional additional CSS classes for the container. */
@@ -40,16 +36,17 @@ export interface ToastTransactionKeyProps<TR, T extends Transaction<TR>>
  * @param {ToastTransactionKeyProps<TR, T>} props - The component props.
  * @returns {JSX.Element} The rendered component.
  */
-export function TransactionKey<TR, T extends Transaction<TR>>({
+export function TransactionKey<TR, T extends Transaction<TR>, A>({
   tx,
-  appChains,
+  adapters,
   transactionsPool,
   variant = 'toast',
   className,
   renderHashLink,
-}: ToastTransactionKeyProps<TR, T>) {
+}: ToastTransactionKeyProps<TR, T, A>) {
   const labels = useLabels();
 
+  // TODO: temporary, need fix with logic for multiple adapters
   if (tx?.adapter !== TransactionAdapter.EVM) return null;
 
   const wasReplaced = !!tx.replacedTxHash;
@@ -64,6 +61,8 @@ export function TransactionKey<TR, T extends Transaction<TR>>({
     return renderHashLink ? renderHashLink(props) : <HashLink {...props} />;
   };
 
+  const adapter = selectAdapterByKey({ adapterKey: tx.adapter, adapters });
+
   return (
     <div className={cn(containerClasses, className)}>
       {/* Display tracker-specific identifiers (like Gelato Task ID or SafeTxHash) */}
@@ -77,25 +76,23 @@ export function TransactionKey<TR, T extends Transaction<TR>>({
         // Case 1: The transaction was replaced (e.g., sped up).
         <>
           {tx.hash && renderHash({ label: labels.hashLabels.original, hash: tx.hash, variant: 'compact' })}
-          {renderHash({
-            label: labels.hashLabels.replaced,
-            hash: tx.replacedTxHash as Hex,
-            // The explorer link should point to the NEW (replaced) transaction.
-            explorerUrl: selectEvmTxExplorerLink(
-              transactionsPool,
-              appChains,
-              tx.txKey as Hex,
-              tx.replacedTxHash as Hex,
-            ),
-          })}
+          {tx.replacedTxHash &&
+            adapter?.getExplorerTxUrl &&
+            renderHash({
+              label: labels.hashLabels.replaced,
+              hash: tx.replacedTxHash,
+              // The explorer link should point to the NEW (replaced) transaction.
+              explorerUrl: adapter.getExplorerTxUrl(transactionsPool, tx.txKey, tx.replacedTxHash),
+            })}
         </>
       ) : (
         // Case 2: Standard transaction hash.
         tx.hash &&
+        adapter?.getExplorerTxUrl &&
         renderHash({
           label: labels.hashLabels.default,
-          hash: tx.hash as Hex,
-          explorerUrl: selectEvmTxExplorerLink(transactionsPool, appChains, tx.txKey as Hex),
+          hash: tx.hash,
+          explorerUrl: adapter?.getExplorerTxUrl(transactionsPool, tx.txKey),
         })
       )}
     </div>

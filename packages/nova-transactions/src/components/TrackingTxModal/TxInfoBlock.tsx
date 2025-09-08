@@ -5,12 +5,11 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { JSX, ReactNode } from 'react';
-import { Chain } from 'viem';
 
-import { useLabels } from '../../providers';
+import { NovaProviderProps, useLabels } from '../../providers';
 import { ToastTransactionKeyProps, TransactionKey } from '../TransactionKey';
 
 // --- Prop Types for Customization ---
@@ -19,7 +18,7 @@ type CustomInfoRowProps = { label: ReactNode; value: ReactNode };
 /**
  * Defines the customization options for the `TxInfoBlock` component.
  */
-export type TxInfoBlockCustomization<TR, T extends Transaction<TR>> = {
+export type TxInfoBlockCustomization<TR, T extends Transaction<TR>, A> = {
   components?: {
     /** A render prop to replace the default label-value row component. */
     infoRow?: (props: CustomInfoRowProps) => ReactNode;
@@ -27,7 +26,7 @@ export type TxInfoBlockCustomization<TR, T extends Transaction<TR>> = {
      * A render prop to customize the rendering of the transaction keys/hashes.
      * This is passed down to the underlying `TransactionKey` component.
      */
-    transactionKey?: ToastTransactionKeyProps<TR, T>['renderHashLink'];
+    transactionKey?: ToastTransactionKeyProps<TR, T, A>['renderHashLink'];
   };
 };
 
@@ -41,15 +40,13 @@ function InfoRow({ label, value }: { label: ReactNode; value: ReactNode }) {
   );
 }
 
-export type TxInfoBlockProps<TR, T extends Transaction<TR>> = {
+export type TxInfoBlockProps<TR, T extends Transaction<TR>, A> = {
   tx: T & {
     desiredChainID?: number;
   };
-  appChains: Chain[];
-  transactionsPool: TransactionPool<TR, T>;
   className?: string;
-  customization?: TxInfoBlockCustomization<TR, T>;
-};
+  customization?: TxInfoBlockCustomization<TR, T, A>;
+} & Pick<NovaProviderProps<TR, T, A>, 'adapters' | 'transactionsPool'>;
 
 /**
  * A component that displays a block of essential transaction details,
@@ -58,13 +55,13 @@ export type TxInfoBlockProps<TR, T extends Transaction<TR>> = {
  * @param {object} props - The component props.
  * @returns {JSX.Element} The rendered info block.
  */
-export function TxInfoBlock<TR, T extends Transaction<TR>>({
+export function TxInfoBlock<TR, T extends Transaction<TR>, A>({
   tx,
-  appChains,
+  adapters,
   transactionsPool,
   className,
   customization,
-}: TxInfoBlockProps<TR, T>): JSX.Element {
+}: TxInfoBlockProps<TR, T, A>): JSX.Element {
   const labels = useLabels();
 
   const renderInfoRow = (props: CustomInfoRowProps) => {
@@ -101,7 +98,7 @@ export function TxInfoBlock<TR, T extends Transaction<TR>>({
       <div className="border-t border-[var(--tuwa-border-primary)] pt-3">
         <TransactionKey
           tx={tx}
-          appChains={appChains}
+          adapters={adapters}
           transactionsPool={transactionsPool}
           variant="history" // 'history' variant has suitable styling for this block
           renderHashLink={customization?.components?.transactionKey}

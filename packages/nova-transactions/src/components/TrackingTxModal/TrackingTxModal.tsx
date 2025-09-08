@@ -1,3 +1,5 @@
+// TODO: need fix with logic for multiple adapters
+
 /**
  * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single transaction.
  * It provides real-time feedback, customization options, and actions like retry, speed up, and cancel.
@@ -7,19 +9,15 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@tuwaio/nova-core';
 import {
   InitialTransactionParams,
-  ITxTrackingStore,
+  selectAdapterByKey,
   Transaction,
   TransactionAdapter,
-  TransactionPool,
   TransactionStatus,
 } from '@tuwaio/pulsar-core';
-import { ActionTxKey, cancelTxAction, speedUpTxAction, TransactionTracker } from '@tuwaio/pulsar-evm';
-import { Config } from '@wagmi/core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, JSX, ReactNode, useEffect, useState } from 'react';
-import { Chain } from 'viem';
 
-import { useLabels } from '../../providers';
+import { NovaProviderProps, useLabels } from '../../providers';
 import { StatusAwareText } from '../StatusAwareText';
 import { TxErrorBlock, TxErrorBlockProps } from './TxErrorBlock';
 import { TxInfoBlock, TxInfoBlockProps } from './TxInfoBlock';
@@ -40,14 +38,11 @@ type CustomFooterProps = {
   isProcessing?: boolean;
 };
 
-/** A registry of functions that can be re-executed via the 'Retry' button. The key should match `actionKey` on a transaction. */
-export type TxActions = Record<string, (...args: any[]) => Promise<unknown>>;
-
 /**
  * Defines the customization options for the TrackingTxModal.
  * Allows overriding modal behavior, animations, and individual UI components.
  */
-export type TrackingTxModalCustomization<TR, T extends Transaction<TR>> = {
+export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
   /** Custom props to pass to the underlying Radix UI `Dialog.Content` component. */
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
   /** Custom Framer Motion animation properties for the modal's entrance and exit. */
@@ -58,13 +53,16 @@ export type TrackingTxModalCustomization<TR, T extends Transaction<TR>> = {
     footer?: (props: CustomFooterProps) => ReactNode;
     statusVisual?: (props: TxStatusVisualProps) => ReactNode;
     progressIndicator?: (props: TxProgressIndicatorProps) => ReactNode;
-    infoBlock?: (props: TxInfoBlockProps<TR, T>) => ReactNode;
+    infoBlock?: (props: TxInfoBlockProps<TR, T, A>) => ReactNode;
     errorBlock?: (props: TxErrorBlockProps) => ReactNode;
   };
 };
 
-export interface TrackingTxModalProps<TR, T extends Transaction<TR>>
-  extends Partial<Pick<ITxTrackingStore<TR, T, ActionTxKey>, 'handleTransaction' | 'initialTx'>> {
+export interface TrackingTxModalProps<TR, T extends Transaction<TR>, A>
+  extends Pick<
+    NovaProviderProps<TR, T, A>,
+    'handleTransaction' | 'initialTx' | 'actions' | 'transactionsPool' | 'adapters' | 'connectedAdapterType'
+  > {
   /** A function to close the modal. */
   onClose: (txKey?: string) => void;
   /** A function to open the main wallet info modal. */
@@ -72,15 +70,7 @@ export interface TrackingTxModalProps<TR, T extends Transaction<TR>>
   /** Optional additional CSS classes for the modal's container. */
   className?: string;
   /** An object containing all customization options for the modal. */
-  customization?: TrackingTxModalCustomization<TR, T>;
-  /** An array of `viem` chain objects supported by the application. */
-  appChains: Chain[];
-  /** The global transaction pool from the tracking store. */
-  transactionsPool: TransactionPool<TR, T>;
-  /** A registry of retryable actions, keyed by `actionKey`. */
-  actions?: TxActions;
-  /** The wagmi config object, required for retry, cancel, and speed up functionality. */
-  config?: Config;
+  customization?: TrackingTxModalCustomization<TR, T, A>;
 }
 
 /**
@@ -92,18 +82,18 @@ export interface TrackingTxModalProps<TR, T extends Transaction<TR>>
  * @param {TrackingTxModalProps<TR, T>} props - The component props.
  * @returns {JSX.Element} The rendered tracking modal.
  */
-export function TrackingTxModal<TR, T extends Transaction<TR>>({
+export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
+  adapters,
   onClose,
   onOpenWalletInfo,
   className,
   customization,
-  appChains,
   transactionsPool,
   actions,
   handleTransaction,
-  config,
   initialTx,
-}: TrackingTxModalProps<TR, T>): JSX.Element {
+  connectedAdapterType,
+}: TrackingTxModalProps<TR, T, A>): JSX.Element {
   const labels = useLabels();
   const C = customization?.components;
 
@@ -113,10 +103,12 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
   // It ensures the modal always displays the latest information for the tracked transaction.
   useEffect(() => {
     let currentTx: T | undefined;
-    if (initialTx?.lastTxKey) {
-      currentTx = transactionsPool[initialTx.lastTxKey];
-    } else if (trackedTx) {
-      currentTx = transactionsPool[trackedTx.txKey];
+    if (transactionsPool) {
+      if (initialTx?.lastTxKey) {
+        currentTx = transactionsPool[initialTx.lastTxKey];
+      } else if (trackedTx) {
+        currentTx = transactionsPool[trackedTx.txKey];
+      }
     }
     setTrackedTx(currentTx);
   }, [transactionsPool, initialTx, trackedTx]);
@@ -130,14 +122,17 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
   const isPending = trackedTx?.pending ?? true;
   const isProcessing = isInitializing || isPending;
   const isError = trackedTx?.isError || !!initialTx?.errorMessage;
-  const canRetry = txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction && config;
+  const canRetry =
+    txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction && !!connectedAdapterType;
   const canReplace =
-    config &&
+    !!connectedAdapterType &&
     trackedTx?.adapter === TransactionAdapter.EVM &&
     trackedTx?.nonce !== undefined &&
     trackedTx.pending &&
     trackedTx.maxFeePerGas &&
     trackedTx.maxPriorityFeePerGas;
+
+  const adapter = selectAdapterByKey({ adapterKey: trackedTx?.adapter ?? TransactionAdapter.EVM, adapters });
 
   const motionProps: MotionProps = {
     initial: { opacity: 0, scale: 0.95 },
@@ -160,27 +155,17 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
       payload: txToDisplay.payload,
       withTrackedModal: true,
     };
-    onClose(trackedTx?.txKey);
-
-    await handleTransaction({
-      actionFunction: () =>
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        actions![txToDisplay.actionKey]({
-          config,
-          ...txToDisplay.payload,
-        }),
-      params: retryParams,
-      defaultTracker: TransactionTracker.Ethereum as any,
-    });
+    if (adapter?.retryTxAction) {
+      await adapter.retryTxAction({ tx: retryParams, txKey: trackedTx?.txKey ?? '', actions, onClose });
+    }
   };
 
   const handleCancel = async () => {
-    if (canReplace && trackedTx) await cancelTxAction({ config, tx: trackedTx });
+    if (canReplace && trackedTx && adapter?.cancelTxAction) await adapter.cancelTxAction(trackedTx);
   };
 
   const handleSpeedUp = async () => {
-    if (canReplace && trackedTx) await speedUpTxAction({ config, tx: trackedTx });
+    if (canReplace && trackedTx && adapter?.speedUpTxAction) await adapter.speedUpTxAction(trackedTx);
   };
 
   const isOpen = (trackedTx?.isTrackedModalOpen || initialTx?.withTrackedModal) ?? false;
@@ -282,9 +267,9 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
                         />
                       )}
                       {C?.infoBlock ? (
-                        C.infoBlock({ tx: txToDisplay as T, appChains, transactionsPool })
+                        C.infoBlock({ tx: txToDisplay as T, adapters, transactionsPool })
                       ) : (
-                        <TxInfoBlock tx={txToDisplay as T} appChains={appChains} transactionsPool={transactionsPool} />
+                        <TxInfoBlock tx={txToDisplay as T} adapters={adapters} transactionsPool={transactionsPool} />
                       )}
                       {C?.errorBlock ? (
                         C.errorBlock({ error: trackedTx?.errorMessage || initialTx?.errorMessage })

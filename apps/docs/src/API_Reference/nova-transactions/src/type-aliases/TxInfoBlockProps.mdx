@@ -2,11 +2,31 @@
 
 ***
 
-# TxInfoBlockProps\<TR, T\>
+# TxInfoBlockProps\<TR, T, A\>
 
-> **TxInfoBlockProps**\<`TR`, `T`\> = `object`
+> **TxInfoBlockProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"transactionsPool"`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L44)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L43)
+
+## Type declaration
+
+### className?
+
+> `optional` **className**: `string`
+
+### customization?
+
+> `optional` **customization**: [`TxInfoBlockCustomization`](TxInfoBlockCustomization.md)\<`TR`, `T`, `A`\>
+
+### tx
+
+> **tx**: `T` & `object`
+
+#### Type declaration
+
+##### desiredChainID?
+
+> `optional` **desiredChainID**: `number`
 
 ## Type Parameters
 
@@ -18,48 +38,6 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 `T` *extends* `Transaction`\<`TR`\>
 
-## Properties
+### A
 
-### appChains
-
-> **appChains**: `Chain`[]
-
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L48)
-
-***
-
-### className?
-
-> `optional` **className**: `string`
-
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L50)
-
-***
-
-### customization?
-
-> `optional` **customization**: [`TxInfoBlockCustomization`](TxInfoBlockCustomization.md)\<`TR`, `T`\>
-
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L51)
-
-***
-
-### transactionsPool
-
-> **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
-
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L49)
-
-***
-
-### tx
-
-> **tx**: `T` & `object`
-
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L45)
-
-#### Type declaration
-
-##### desiredChainID?
-
-> `optional` **desiredChainID**: `number`
+`A`

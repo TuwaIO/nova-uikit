@@ -2,11 +2,11 @@
 
 ***
 
-# TxInfoBlockCustomization\<TR, T\>
+# TxInfoBlockCustomization\<TR, T, A\>
 
-> **TxInfoBlockCustomization**\<`TR`, `T`\> = `object`
+> **TxInfoBlockCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L22)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L21)
 
 Defines the customization options for the `TxInfoBlock` component.
 
@@ -20,13 +20,17 @@ Defines the customization options for the `TxInfoBlock` component.
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Properties
 
 ### components?
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L23)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L22)
 
 #### infoRow()?
 
@@ -46,7 +50,7 @@ A render prop to replace the default label-value row component.
 
 #### transactionKey?
 
-> `optional` **transactionKey**: [`ToastTransactionKeyProps`](../interfaces/ToastTransactionKeyProps.md)\<`TR`, `T`\>\[`"renderHashLink"`\]
+> `optional` **transactionKey**: [`ToastTransactionKeyProps`](../interfaces/ToastTransactionKeyProps.md)\<`TR`, `T`, `A`\>\[`"renderHashLink"`\]
 
 A render prop to customize the rendering of the transaction keys/hashes.
 This is passed down to the underlying `TransactionKey` component.

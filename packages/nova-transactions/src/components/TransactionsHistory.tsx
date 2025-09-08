@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 
-import { useLabels } from '../providers';
+import { NovaProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 import { WalletInfoModalProps } from './WalletInfoModal';
 
@@ -15,7 +15,7 @@ type CustomPlaceholderProps = { title: string; message: string };
 /**
  * Defines the customization options for the TransactionsHistory component.
  */
-export type TransactionsHistoryCustomization<TR, T extends Transaction<TR>> = {
+export type TransactionsHistoryCustomization<TR, T extends Transaction<TR>, A> = {
   classNames?: {
     /** CSS classes for the list's wrapper `div`. */
     listWrapper?: string;
@@ -30,7 +30,7 @@ export type TransactionsHistoryCustomization<TR, T extends Transaction<TR>> = {
      * A custom component to use instead of the default `TransactionHistoryItem`.
      * This should be a component type, not a render function.
      */
-    HistoryItem?: ComponentType<TransactionHistoryItemProps<TR, T>>;
+    HistoryItem?: ComponentType<TransactionHistoryItemProps<TR, T, A>>;
   };
 };
 
@@ -51,21 +51,22 @@ function HistoryPlaceholder({ title, message, className }: { title: string; mess
  * @param {WalletInfoModalProps<TR, T> & { customization?: TransactionsHistoryCustomization<TR, T> }} props
  * @returns {JSX.Element} The rendered transaction history section.
  */
-export function TransactionsHistory<TR, T extends Transaction<TR>>({
-  walletAddress,
+export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
+  adapters,
+  connectedWalletAddress,
   transactionsPool,
-  appChains,
   className,
   customization,
-}: WalletInfoModalProps<TR, T> & {
-  className?: string;
-  customization?: TransactionsHistoryCustomization<TR, T>;
-}): JSX.Element {
+}: WalletInfoModalProps<TR, T, A> &
+  Pick<NovaProviderProps<TR, T, A>, 'adapters'> & {
+    className?: string;
+    customization?: TransactionsHistoryCustomization<TR, T, A>;
+  }): JSX.Element {
   const labels = useLabels();
   const C = customization?.components;
 
-  const transactionsByWallet = walletAddress
-    ? selectAllTransactionsByActiveWallet(transactionsPool, walletAddress)
+  const transactionsByWallet = connectedWalletAddress
+    ? selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress)
     : [];
 
   // Sort transactions by timestamp, newest first.
@@ -87,7 +88,7 @@ export function TransactionsHistory<TR, T extends Transaction<TR>>({
     <div className={cn('flex flex-col gap-y-3', className)}>
       <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{labels.walletModal.history.title}</h3>
 
-      {!walletAddress ? (
+      {!connectedWalletAddress ? (
         // Case 1: Wallet is not connected.
         renderPlaceholder(
           labels.walletModal.history.connectWalletTitle,
@@ -106,7 +107,7 @@ export function TransactionsHistory<TR, T extends Transaction<TR>>({
               key={tx.txKey} // The key is now correctly and safely handled here.
               tx={tx}
               transactionsPool={transactionsPool}
-              appChains={appChains}
+              adapters={adapters}
             />
           ))}
         </div>

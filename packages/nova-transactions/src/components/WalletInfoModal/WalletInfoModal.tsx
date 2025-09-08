@@ -5,27 +5,26 @@
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey, Transaction, TransactionAdapter } from '@tuwaio/pulsar-core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, JSX, ReactNode } from 'react';
-import { Address, Chain } from 'viem';
 
-import { useLabels } from '../../providers';
+import { NovaProviderProps, useLabels } from '../../providers';
 import { TransactionsHistory, TransactionsHistoryCustomization } from '../TransactionsHistory';
 import { WalletHeader } from './WalletHeader';
 
 // --- Prop Types for Customization ---
 type CustomHeaderProps = { closeModal: () => void };
-type CustomWalletInfoProps<TR, T extends Transaction<TR>> = WalletInfoModalProps<TR, T>;
-type CustomHistoryProps<TR, T extends Transaction<TR>> = WalletInfoModalProps<TR, T> & {
-  customization?: TransactionsHistoryCustomization<TR, T>;
+type CustomWalletInfoProps<TR, T extends Transaction<TR>, A> = WalletInfoModalProps<TR, T, A>;
+type CustomHistoryProps<TR, T extends Transaction<TR>, A> = WalletInfoModalProps<TR, T, A> & {
+  customization?: TransactionsHistoryCustomization<TR, T, A>;
 };
 
 /**
  * Defines the customization options for the WalletInfoModal.
  * Allows customization of modal behavior, animations, and individual UI components.
  */
-export type WalletInfoModalCustomization<TR, T extends Transaction<TR>> = {
+export type WalletInfoModalCustomization<TR, T extends Transaction<TR>, A> = {
   /** Custom props to pass to the underlying Radix UI Dialog.Content component */
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
   /** Custom Framer Motion animation properties */
@@ -39,24 +38,23 @@ export type WalletInfoModalCustomization<TR, T extends Transaction<TR>> = {
     /** A render prop to replace the entire modal header. */
     header?: (props: CustomHeaderProps) => ReactNode;
     /** A render prop to replace the `WalletHeader` component. */
-    walletInfo?: (props: CustomWalletInfoProps<TR, T>) => ReactNode;
+    walletInfo?: (props: CustomWalletInfoProps<TR, T, A>) => ReactNode;
     /** A render prop to replace the `TransactionsHistory` component. */
-    history?: (props: CustomHistoryProps<TR, T>) => ReactNode;
+    history?: (props: CustomHistoryProps<TR, T, A>) => ReactNode;
   };
 };
 
 /**
  * Defines the core props for the WalletInfoModal and its children.
  */
-export interface WalletInfoModalProps<TR, T extends Transaction<TR>> {
-  /** The connected wallet's address. */
-  walletAddress?: Address;
-  /** The viem `Chain` object for the currently connected network. */
-  chain?: Chain;
-  /** The entire pool of transactions from the store. */
-  transactionsPool: TransactionPool<TR, T>;
-  /** An array of all chains supported by the application. */
-  appChains: Chain[];
+export interface WalletInfoModalProps<TR, T extends Transaction<TR>, A>
+  extends Pick<
+    NovaProviderProps<TR, T, A>,
+    'adapters' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
+  > {
+  isOpen?: boolean;
+  setIsOpen?: (value: boolean) => void;
+  customization?: WalletInfoModalCustomization<TR, T, A>;
 }
 
 /**
@@ -66,16 +64,12 @@ export interface WalletInfoModalProps<TR, T extends Transaction<TR>> {
  * @param {WalletInfoModalProps<TR, T> & { ... }} props - The component props.
  * @returns {JSX.Element | null} The rendered modal or null if not open.
  */
-export function WalletInfoModal<TR, T extends Transaction<TR>>({
+export function WalletInfoModal<TR, T extends Transaction<TR>, A>({
   isOpen,
   setIsOpen,
   customization,
   ...props
-}: WalletInfoModalProps<TR, T> & {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  customization?: WalletInfoModalCustomization<TR, T>;
-}): JSX.Element | null {
+}: WalletInfoModalProps<TR, T, A>): JSX.Element | null {
   const labels = useLabels();
 
   const defaultMotionProps: MotionProps = {
@@ -86,7 +80,7 @@ export function WalletInfoModal<TR, T extends Transaction<TR>>({
   };
 
   const motionProps = { ...defaultMotionProps, ...customization?.motionProps };
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => setIsOpen && setIsOpen(false);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && closeModal()}>
@@ -141,7 +135,15 @@ export function WalletInfoModal<TR, T extends Transaction<TR>>({
                       {customization?.components?.walletInfo ? (
                         customization.components.walletInfo(props)
                       ) : (
-                        <WalletHeader walletAddress={props.walletAddress} chain={props.chain} />
+                        <WalletHeader
+                          explorerUrl={
+                            selectAdapterByKey({
+                              adapterKey: props.connectedAdapterType ?? TransactionAdapter.EVM,
+                              adapters: props.adapters,
+                            })?.getExplorerUrl() ?? ''
+                          }
+                          walletAddress={props.connectedWalletAddress}
+                        />
                       )}
 
                       {customization?.components?.history ? (

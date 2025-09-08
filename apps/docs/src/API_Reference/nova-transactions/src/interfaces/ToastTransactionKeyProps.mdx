@@ -2,13 +2,13 @@
 
 ***
 
-# ToastTransactionKeyProps\<TR, T\>
+# ToastTransactionKeyProps\<TR, T, A\>
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L19)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:17](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionKey.tsx#L17)
 
 ## Extends
 
-- `Pick`\<[`WalletInfoModalProps`](WalletInfoModalProps.md)\<`TR`, `T`\>, `"transactionsPool"`\>
+- `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"transactionsPool"`\>
 
 ## Type Parameters
 
@@ -20,15 +20,21 @@ Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:19](ht
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Properties
 
-### appChains
+### adapters
 
-> **appChains**: `Chain`[]
+> **adapters**: `TxAdapter`\<`TR`, `T`, `A`\>[]
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L24)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L39)
 
-An array of supported chain objects, used for generating explorer links.
+#### Inherited from
+
+`Pick.adapters`
 
 ***
 
@@ -36,7 +42,7 @@ An array of supported chain objects, used for generating explorer links.
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L28)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionKey.tsx#L24)
 
 Optional additional CSS classes for the container.
 
@@ -46,7 +52,7 @@ Optional additional CSS classes for the container.
 
 > `optional` **renderHashLink**: (`props`) => `ReactNode`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L33)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionKey.tsx#L29)
 
 An optional render prop to allow for complete customization of how the hash link is rendered.
 If not provided, the default `HashLink` component will be used.
@@ -85,9 +91,9 @@ If not provided, the default `HashLink` component will be used.
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L57)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L59)
 
-The entire pool of transactions from the store.
+The global transaction pool from the tracking store.
 
 #### Inherited from
 
@@ -99,7 +105,7 @@ The entire pool of transactions from the store.
 
 > **tx**: `T`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L22)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionKey.tsx#L20)
 
 The transaction object to display identifiers for.
 
@@ -109,6 +115,6 @@ The transaction object to display identifiers for.
 
 > `optional` **variant**: `"toast"` \| `"history"`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L26)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TransactionKey.tsx#L22)
 
 The visual variant, which applies different container styles.

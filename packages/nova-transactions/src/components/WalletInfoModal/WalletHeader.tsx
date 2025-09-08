@@ -1,3 +1,5 @@
+// TODO: need add ENS support for multiple chains and adapters
+
 /**
  * @file This file contains the `WalletHeader` component, used to display user avatar, name, and address.
  */
@@ -5,7 +7,6 @@
 import { cn, textCenterEllipsis } from '@tuwaio/nova-core';
 import { getAvatar, getName } from '@tuwaio/pulsar-evm';
 import { JSX, ReactNode, useEffect, useState } from 'react';
-import { Address, Chain, Hex } from 'viem';
 
 import { useLabels } from '../../providers';
 import { WalletAddressDisplay } from './WalletAddressDisplay';
@@ -14,16 +15,15 @@ import { WalletAvatar } from './WalletAvatar';
 // --- Prop Types for Customization ---
 type AvatarRenderProps = { address: string; ensAvatar?: string };
 type NameRenderProps = { ensName?: string; isLoading: boolean; address: string };
-type AddressRenderProps = { address: string; chain?: Chain };
+type AddressRenderProps = { address: string; explorerUrl: string };
 
 /**
  * Defines the props for the `WalletHeader` component, including extensive customization options.
  */
 export interface WalletHeaderProps {
   /** The user's wallet address. If undefined, the 'not connected' state is shown. */
-  walletAddress?: Address;
-  /** The viem `Chain` object for the currently connected network. */
-  chain?: Chain;
+  walletAddress?: string;
+  explorerUrl: string;
   /** Optional additional CSS classes for the container. */
   className?: string;
   /** A render prop to replace the default `WalletAvatar` component. */
@@ -46,12 +46,12 @@ export interface WalletHeaderProps {
  */
 export function WalletHeader({
   walletAddress,
-  chain,
   className,
   renderAvatar,
   renderName,
   renderAddressDisplay,
   renderNoWalletContent,
+  explorerUrl,
 }: WalletHeaderProps): JSX.Element {
   const labels = useLabels();
 
@@ -68,7 +68,7 @@ export function WalletHeader({
         setEnsAvatar(undefined);
 
         try {
-          const name = await getName(walletAddress as Hex);
+          const name = await getName(walletAddress as `0x${string}`);
           if (name) {
             setEnsName(name);
             const avatar = await getAvatar(name);
@@ -132,7 +132,7 @@ export function WalletHeader({
               ) : (
                 <WalletAddressDisplay
                   address={walletAddress}
-                  chain={chain}
+                  explorerUrl={explorerUrl}
                   className="text-xl font-bold text-[var(--tuwa-text-primary)] bg-transparent px-0 py-0 rounded-none"
                 />
               )}
@@ -143,9 +143,9 @@ export function WalletHeader({
               {!isLoading &&
                 ensNameAbbreviated &&
                 (renderAddressDisplay ? (
-                  renderAddressDisplay({ address: walletAddress, chain })
+                  renderAddressDisplay({ address: walletAddress, explorerUrl })
                 ) : (
-                  <WalletAddressDisplay address={walletAddress} chain={chain} />
+                  <WalletAddressDisplay address={walletAddress} explorerUrl={explorerUrl} />
                 ))}
             </div>
           </div>

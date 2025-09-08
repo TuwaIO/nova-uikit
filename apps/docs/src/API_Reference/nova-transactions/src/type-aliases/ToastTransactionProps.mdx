@@ -2,19 +2,13 @@
 
 ***
 
-# ToastTransactionProps\<TR, T\>
+# ToastTransactionProps\<TR, T, A\>
 
-> **ToastTransactionProps**\<`TR`, `T`\> = `object` & `Pick`\<[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`\>, `"transactionsPool"`\>
+> **ToastTransactionProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"transactionsPool"` \| `"adapters"` \| `"connectedWalletAddress"`\>
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/ToastTransaction.tsx#L49)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/ToastTransaction.tsx#L45)
 
 ## Type declaration
-
-### appChains
-
-> **appChains**: `Chain`[]
-
-An array of supported chain objects, used for displaying network information.
 
 ### className?
 
@@ -28,15 +22,9 @@ Optional additional CSS classes for the toast container.
 
 Props from `react-toastify` to control the toast itself.
 
-### config?
-
-> `optional` **config**: `Config`
-
-The wagmi config object, required for Speed Up and Cancel functionality.
-
 ### customization?
 
-> `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`TR`, `T`\>
+> `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`TR`, `T`, `A`\>
 
 An object to customize and override the default internal components.
 
@@ -81,3 +69,7 @@ The transaction object to display in the toast.
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
+
+### A
+
+`A`

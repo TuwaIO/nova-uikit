@@ -5,18 +5,13 @@
 import { ArrowTopRightOnSquareIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 import { JSX } from 'react';
-import { Chain } from 'viem';
 
 import { useLabels } from '../../providers';
 
 export type WalletAddressDisplayProps = {
   /** The wallet address to display. */
   address: string;
-  /**
-   * The viem `Chain` object for the network the address belongs to.
-   * This is used to generate the correct block explorer link.
-   */
-  chain?: Chain;
+  explorerUrl: string;
   /** Optional additional CSS classes for the container. */
   className?: string;
 };
@@ -28,12 +23,11 @@ export type WalletAddressDisplayProps = {
  * @param {WalletAddressDisplayProps} props - The component props.
  * @returns {JSX.Element} The rendered component.
  */
-export function WalletAddressDisplay({ address, chain, className }: WalletAddressDisplayProps): JSX.Element {
+export function WalletAddressDisplay({ address, explorerUrl, className }: WalletAddressDisplayProps): JSX.Element {
   const { isCopied, copy } = useCopyToClipboard();
   const labels = useLabels();
 
   // Dynamically generate the explorer link based on the provided chain.
-  const explorerUrl = chain?.blockExplorers?.default.url;
   const explorerLink = explorerUrl ? `${explorerUrl}/address/${address}` : undefined;
 
   return (

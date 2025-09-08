@@ -9,8 +9,8 @@ import { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { JSX, ReactNode } from 'react';
-import { Chain } from 'viem';
 
+import { NovaProviderProps } from '../providers';
 import { StatusAwareText } from './StatusAwareText';
 import { TransactionKey } from './TransactionKey';
 import { TransactionStatusBadge } from './TransactionStatusBadge';
@@ -23,13 +23,13 @@ type CustomIconProps = { chainId: number };
 type CustomStatusAwareTextProps = Parameters<typeof StatusAwareText>[0];
 type CustomTimestampProps = { timestamp?: number };
 type CustomStatusBadgeProps<TR, T extends Transaction<TR>> = Parameters<typeof TransactionStatusBadge<TR, T>>[0];
-type CustomTransactionKeyProps<TR, T extends Transaction<TR>> = Parameters<typeof TransactionKey<TR, T>>[0];
+type CustomTransactionKeyProps<TR, T extends Transaction<TR>, A> = Parameters<typeof TransactionKey<TR, T, A>>[0];
 
 /**
  * Defines the structure for the `customization` prop, allowing users to override
  * default sub-components with their own implementations for a history item.
  */
-export type TransactionHistoryItemCustomization<TR, T extends Transaction<TR>> = {
+export type TransactionHistoryItemCustomization<TR, T extends Transaction<TR>, A> = {
   components?: {
     /** Override the default chain icon. */
     icon?: (props: CustomIconProps) => ReactNode;
@@ -42,22 +42,20 @@ export type TransactionHistoryItemCustomization<TR, T extends Transaction<TR>> =
     /** Override the default status badge component. */
     statusBadge?: (props: CustomStatusBadgeProps<TR, T>) => ReactNode;
     /** Override the default component for displaying transaction keys/hashes. */
-    transactionKey?: (props: CustomTransactionKeyProps<TR, T>) => ReactNode;
+    transactionKey?: (props: CustomTransactionKeyProps<TR, T, A>) => ReactNode;
   };
 };
 
-export type TransactionHistoryItemProps<TR, T extends Transaction<TR>> = {
+export type TransactionHistoryItemProps<TR, T extends Transaction<TR>, A> = {
   /** The transaction object to display. */
   tx: T;
-  /** An array of supported chain objects. */
-  appChains: Chain[];
   /** The entire pool of transactions. */
   transactionsPool: TransactionPool<TR, T>;
   /** Optional additional CSS classes for the container. */
   className?: string;
   /** An object to customize and override the default internal components. */
-  customization?: TransactionHistoryItemCustomization<TR, T>;
-};
+  customization?: TransactionHistoryItemCustomization<TR, T, A>;
+} & Pick<NovaProviderProps<TR, T, A>, 'adapters'>;
 
 /**
  * A component that renders a single row in the transaction history list.
@@ -66,13 +64,13 @@ export type TransactionHistoryItemProps<TR, T extends Transaction<TR>> = {
  * @param {TransactionHistoryItemProps<TR, T>} props - The component props.
  * @returns {JSX.Element} The rendered history item.
  */
-export function TransactionHistoryItem<TR, T extends Transaction<TR>>({
+export function TransactionHistoryItem<TR, T extends Transaction<TR>, A>({
   tx,
-  appChains,
+  adapters,
   transactionsPool,
   className,
   customization,
-}: TransactionHistoryItemProps<TR, T>): JSX.Element {
+}: TransactionHistoryItemProps<TR, T, A>): JSX.Element {
   const C = customization?.components; // Shortcut for customization components
 
   return (
@@ -123,9 +121,9 @@ export function TransactionHistoryItem<TR, T extends Transaction<TR>>({
 
       {/* --- Transaction Keys/Hashes --- */}
       {C?.transactionKey ? (
-        C.transactionKey({ tx, appChains, transactionsPool, variant: 'history' })
+        C.transactionKey({ tx, adapters, transactionsPool, variant: 'history' })
       ) : (
-        <TransactionKey tx={tx} appChains={appChains} transactionsPool={transactionsPool} variant="history" />
+        <TransactionKey tx={tx} adapters={adapters} transactionsPool={transactionsPool} variant="history" />
       )}
     </div>
   );

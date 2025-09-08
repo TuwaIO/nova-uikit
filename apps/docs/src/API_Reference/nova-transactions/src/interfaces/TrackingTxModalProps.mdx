@@ -2,13 +2,13 @@
 
 ***
 
-# TrackingTxModalProps\<TR, T\>
+# TrackingTxModalProps\<TR, T, A\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L66)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L61)
 
 ## Extends
 
-- `Partial`\<`Pick`\<`ITxTrackingStore`\<`TR`, `T`, `ActionTxKey`\>, `"handleTransaction"` \| `"initialTx"`\>\>
+- `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"handleTransaction"` \| `"initialTx"` \| `"actions"` \| `"transactionsPool"` \| `"adapters"` \| `"connectedAdapterType"`\>
 
 ## Type Parameters
 
@@ -20,25 +20,35 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingT
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Properties
 
 ### actions?
 
-> `optional` **actions**: [`TxActions`](../type-aliases/TxActions.md)
+> `optional` **actions**: `TxActions`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L81)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L57)
 
 A registry of retryable actions, keyed by `actionKey`.
 
+#### Inherited from
+
+`Pick.actions`
+
 ***
 
-### appChains
+### adapters
 
-> **appChains**: `Chain`[]
+> **adapters**: `TxAdapter`\<`TR`, `T`, `A`\>[]
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:77](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L77)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L39)
 
-An array of `viem` chain objects supported by the application.
+#### Inherited from
+
+`Pick.adapters`
 
 ***
 
@@ -46,27 +56,29 @@ An array of `viem` chain objects supported by the application.
 
 > `optional` **className**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L73)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:71](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L71)
 
 Optional additional CSS classes for the modal's container.
 
 ***
 
-### config?
+### connectedAdapterType?
 
-> `optional` **config**: `Config`
+> `optional` **connectedAdapterType**: `TransactionAdapter`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:83](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L83)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L41)
 
-The wagmi config object, required for retry, cancel, and speed up functionality.
+#### Inherited from
+
+`Pick.connectedAdapterType`
 
 ***
 
 ### customization?
 
-> `optional` **customization**: [`TrackingTxModalCustomization`](../type-aliases/TrackingTxModalCustomization.md)\<`TR`, `T`\>
+> `optional` **customization**: [`TrackingTxModalCustomization`](../type-aliases/TrackingTxModalCustomization.md)\<`TR`, `T`, `A`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L75)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L73)
 
 An object containing all customization options for the modal.
 
@@ -76,7 +88,7 @@ An object containing all customization options for the modal.
 
 > `optional` **handleTransaction**: (`params`) => `Promise`\<`void`\>
 
-Defined in: node\_modules/.pnpm/@tuwaio+pulsar-core@0.0.4\_dayjs@1.11.13\_immer@10.1.1\_zustand@5.0.7\_@types+react@19.1.10\_immer\_kxndvfbccsqhfdrn6dfhqleabe/node\_modules/@tuwaio/pulsar-core/dist/index.d.ts:203
+Defined in: node\_modules/.pnpm/@tuwaio+pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03\_dayjs@1.11.13\_immer@10.1.1\_zustand@\_5ygtvlfhq3ydnwqffjzwe4jkgm/node\_modules/@tuwaio/pulsar-core/dist/index.d.ts:222
 
 A wrapper function that handles the entire lifecycle of a transaction.
 It creates an `InitialTransaction`, executes the on-chain action, and tracks its status.
@@ -89,7 +101,7 @@ The parameters for handling the transaction.
 
 ###### actionFunction
 
-() => `Promise`\<`undefined` \| `ActionTxKey`\>
+() => `Promise`\<`undefined` \| `A`\>
 
 The async function to execute (e.g., a smart contract write call).
 
@@ -109,7 +121,7 @@ The metadata for the transaction to be created, of type `InitialTransactionParam
 
 #### Inherited from
 
-`Partial.handleTransaction`
+`Pick.handleTransaction`
 
 ***
 
@@ -117,13 +129,13 @@ The metadata for the transaction to be created, of type `InitialTransactionParam
 
 > `optional` **initialTx**: `InitialTransaction`
 
-Defined in: node\_modules/.pnpm/@tuwaio+pulsar-core@0.0.4\_dayjs@1.11.13\_immer@10.1.1\_zustand@5.0.7\_@types+react@19.1.10\_immer\_kxndvfbccsqhfdrn6dfhqleabe/node\_modules/@tuwaio/pulsar-core/dist/index.d.ts:248
+Defined in: node\_modules/.pnpm/@tuwaio+pulsar-core@1.0.0-alpha.4.815bc21.acc55b8.30fab03\_dayjs@1.11.13\_immer@10.1.1\_zustand@\_5ygtvlfhq3ydnwqffjzwe4jkgm/node\_modules/@tuwaio/pulsar-core/dist/index.d.ts:267
 
 The state of a transaction that is currently being initiated but not yet submitted.
 
 #### Inherited from
 
-`Partial.initialTx`
+`Pick.initialTx`
 
 ***
 
@@ -131,7 +143,7 @@ The state of a transaction that is currently being initiated but not yet submitt
 
 > **onClose**: (`txKey?`) => `void`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L69)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L67)
 
 A function to close the modal.
 
@@ -151,7 +163,7 @@ A function to close the modal.
 
 > **onOpenWalletInfo**: () => `void`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:71](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L71)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L69)
 
 A function to open the main wallet info modal.
 
@@ -165,6 +177,10 @@ A function to open the main wallet info modal.
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L79)
+Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/b72145a1f64f5b4f5f0fedbaf7f0792427229acd/packages/nova-transactions/src/providers/NovaProvider.tsx#L59)
 
 The global transaction pool from the tracking store.
+
+#### Inherited from
+
+`Pick.transactionsPool`
