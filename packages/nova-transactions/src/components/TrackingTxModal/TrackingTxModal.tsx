@@ -171,6 +171,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   };
 
   const handleSpeedUp = async () => {
+    console.log('handleSpeedUp: trackedTx', trackedTx);
     if (canReplace && trackedTx && adapter?.speedUpTxAction) await adapter.speedUpTxAction(trackedTx);
   };
 
