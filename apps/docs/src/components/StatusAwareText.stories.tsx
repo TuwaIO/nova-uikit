@@ -5,40 +5,50 @@ import { TransactionStatus } from '@tuwaio/pulsar-core';
 // --- Storybook Meta Configuration ---
 
 const meta: Meta<typeof StatusAwareText> = {
-  title: 'UI Components/basic/StatusAwareText',
+  title: 'Components/Shared/StatusAwareText',
   component: StatusAwareText,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
   args: {
-    // Default source array for status-dependent text
     source: [
-      'Transaction is pending...',
-      'Transaction successful!',
-      'Transaction failed.',
-      'Transaction was replaced.',
+      'Your transaction is pending...',
+      'Your transaction was successful!',
+      'Your transaction failed.',
+      'Your transaction was replaced.',
     ],
     variant: 'description',
     applyColor: false,
+    txStatus: undefined, // Default to pending state
   },
   argTypes: {
     txStatus: {
       control: 'select',
       options: [undefined, ...Object.values(TransactionStatus)],
+      description: 'The current status of the transaction, used to select the correct text and color.',
+    },
+    source: {
+      control: 'object',
+      description:
+        "The source for the text. Can be a single string or an array in the format: `['pending', 'success', 'error', 'replaced']`.",
+    },
+    fallback: {
+      control: 'text',
+      description: 'A fallback string to display if `source` is not provided or is invalid.',
     },
     variant: {
       control: 'radio',
       options: ['title', 'description'],
+      description: "The visual variant, which determines the base text style ('title' or 'description').",
     },
     applyColor: {
       control: 'boolean',
+      description: 'If true, applies a status-specific color to the text.',
     },
-    source: {
-      control: 'object', // Using object control for array/string flexibility
-    },
-    fallback: {
+    className: {
       control: 'text',
+      description: 'Optional additional CSS classes for custom styling.',
     },
   },
 };
@@ -50,16 +60,16 @@ type Story = StoryObj<typeof meta>;
 // --- Stories ---
 
 /**
- * Displays the default/pending text. This is the text at index 0 of the `source` array.
+ * Displays the default/pending text (index 0 of the `source` array).
  */
-export const DefaultPending: Story = {
+export const Pending: Story = {
   args: {
     txStatus: undefined,
   },
 };
 
 /**
- * Displays the success text. This is the text at index 1 of the `source` array.
+ * Displays the success text (index 1 of the `source` array).
  */
 export const Success: Story = {
   args: {
@@ -68,7 +78,7 @@ export const Success: Story = {
 };
 
 /**
- * Displays the failed text. This is the text at index 2 of the `source` array.
+ * Displays the failed text (index 2 of the `source` array).
  */
 export const Failed: Story = {
   args: {
@@ -101,7 +111,7 @@ export const FailedWithColor: Story = {
  */
 export const TitleVariant: Story = {
   args: {
-    txStatus: undefined,
+    txStatus: TransactionStatus.Success,
     variant: 'title',
     source: ['Pending Title', 'Success Title', 'Failed Title', 'Replaced Title'],
   },
@@ -113,8 +123,8 @@ export const TitleVariant: Story = {
  */
 export const SimpleStringSource: Story = {
   args: {
-    source: 'This is a static message.',
-    txStatus: TransactionStatus.Success, // Will be ignored
+    source: 'This is a static, unchanging message.',
+    txStatus: TransactionStatus.Success, // This prop will be ignored
   },
 };
 
@@ -124,6 +134,6 @@ export const SimpleStringSource: Story = {
 export const WithFallback: Story = {
   args: {
     source: undefined,
-    fallback: 'This is a fallback message.',
+    fallback: 'This is the fallback message.',
   },
 };

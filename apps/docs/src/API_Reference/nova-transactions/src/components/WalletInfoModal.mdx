@@ -4,12 +4,12 @@
 
 # WalletInfoModal()
 
-> **WalletInfoModal**\<`TR`, `T`\>(`props`): `null` \| `Element`
+> **WalletInfoModal**\<`TR`, `T`, `A`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L69)
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L74)
 
 The main modal component for displaying wallet information and transaction history.
-It is highly customizable through the `customization` prop and supports full Radix UI Dialog customization.
+It is highly customizable and built with accessibility in mind using Radix UI.
 
 ## Type Parameters
 
@@ -21,16 +21,16 @@ It is highly customizable through the `customization` prop and supports full Rad
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`\> & `object`
-
-The component props.
+[`WalletInfoModalProps`](../type-aliases/WalletInfoModalProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
-`null` \| `Element`
-
-The rendered modal or null if not open.
+`Element`

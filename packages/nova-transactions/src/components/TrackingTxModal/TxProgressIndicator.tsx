@@ -4,67 +4,83 @@
 
 import { ArrowPathIcon, CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
-import { ComponentType, JSX } from 'react';
+import { ComponentType, useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
 // --- Sub-component: Step ---
 
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';
-export type StepProps = { status: StepStatus; label: string; isFirst?: boolean; isLast?: boolean; className?: string };
+export type StepProps = { status: StepStatus; label: string; isFirst?: boolean; isLast?: boolean };
+
+/**
+ * A configuration map for styling each step based on its status.
+ * Defined outside the component to prevent re-creation.
+ */
+const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; border: string; fill: string; pulse?: string }> = {
+  completed: {
+    line: 'bg-[var(--tuwa-success-icon)]',
+    border: 'border-[var(--tuwa-success-icon)]',
+    fill: 'bg-[var(--tuwa-success-icon)]',
+  },
+  error: {
+    line: 'bg-[var(--tuwa-error-icon)]',
+    border: 'border-[var(--tuwa-error-icon)]',
+    fill: 'bg-[var(--tuwa-error-icon)]',
+  },
+  replaced: {
+    line: 'bg-[var(--tuwa-info-icon)]',
+    border: 'border-[var(--tuwa-info-icon)]',
+    fill: 'bg-[var(--tuwa-info-icon)]',
+  },
+  active: {
+    line: 'bg-[var(--tuwa-pending-icon)]',
+    border: 'border-[var(--tuwa-pending-icon)]',
+    fill: 'bg-transparent',
+    pulse: 'bg-[var(--tuwa-pending-icon)]',
+  },
+  inactive: {
+    line: 'bg-[var(--tuwa-border-primary)]',
+    border: 'border-[var(--tuwa-border-primary)]',
+    fill: 'bg-transparent',
+  },
+};
 
 /**
  * Renders a single step in the progress indicator.
- * This is an internal component but can be replaced via customization.
  */
-function Step({ status, label, isFirst = false }: StepProps): JSX.Element {
-  const state = {
-    isCompleted: status === 'completed',
-    isError: status === 'error',
-    isReplaced: status === 'replaced',
-    isActive: status === 'active',
-  };
+function Step({ status, label, isFirst = false }: StepProps) {
+  const styles = STEP_STYLE_CONFIG[status];
 
-  const colorConfig = {
-    line: cn({
-      'bg-[var(--tuwa-success-icon)]': state.isCompleted,
-      'bg-[var(--tuwa-error-icon)]': state.isError,
-      'bg-[var(--tuwa-info-icon)]': state.isReplaced,
-      'bg-[var(--tuwa-pending-icon)]': state.isActive,
-      'bg-[var(--tuwa-border-primary)]': status === 'inactive',
-    }),
-    border: cn({
-      'border-[var(--tuwa-success-icon)]': state.isCompleted,
-      'border-[var(--tuwa-error-icon)]': state.isError,
-      'border-[var(--tuwa-info-icon)]': state.isReplaced,
-      'border-[var(--tuwa-pending-icon)]': state.isActive,
-      'border-[var(--tuwa-border-primary)]': status === 'inactive',
-    }),
-    fill: cn({
-      'bg-[var(--tuwa-success-icon)]': state.isCompleted,
-      'bg-[var(--tuwa-error-icon)]': state.isError,
-      'bg-[var(--tuwa-info-icon)]': state.isReplaced,
-    }),
-    pulse: cn({ 'bg-[var(--tuwa-pending-icon)]': state.isActive }),
+  const renderIcon = () => {
+    switch (status) {
+      case 'completed':
+        return <CheckIcon className="h-3 w-3 text-white" />;
+      case 'error':
+        return <ExclamationTriangleIcon className="h-3 w-3 text-white" />;
+      case 'replaced':
+        return <ArrowPathIcon className="h-3 w-3 text-white" />;
+      case 'active':
+        return <div className={cn('h-2 w-2 animate-pulse rounded-full', styles.pulse)} />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="relative flex flex-1 flex-col items-center min-w-[80px]">
+    <div className="relative flex min-w-[80px] flex-1 flex-col items-center">
       {/* Connecting line */}
-      {!isFirst && <div className={cn('absolute right-1/2 top-[10px] h-0.5 w-full', colorConfig.line)} />}
+      {!isFirst && <div className={cn('absolute right-1/2 top-[10px] h-0.5 w-full', styles.line)} />}
 
       {/* Circle and Icon */}
       <div
         className={cn(
           'relative z-10 flex h-5 w-5 items-center justify-center rounded-full border-2',
-          colorConfig.border,
-          colorConfig.fill,
+          styles.border,
+          styles.fill,
         )}
       >
-        {state.isCompleted && <CheckIcon className="h-3 w-3 text-white" />}
-        {state.isError && <ExclamationTriangleIcon className="h-3 w-3 text-white" />}
-        {state.isReplaced && <ArrowPathIcon className="h-3 w-3 text-white" />}
-        {state.isActive && <div className={cn('h-2 w-2 animate-pulse rounded-full', colorConfig.pulse)} />}
+        {renderIcon()}
       </div>
 
       {/* Label */}
@@ -88,15 +104,11 @@ export interface TxProgressIndicatorProps {
   isFailed?: boolean;
   isReplaced?: boolean;
   className?: string;
-  /** A custom component to use instead of the default `Step`. */
   StepComponent?: ComponentType<StepProps>;
 }
 
 /**
  * A 3-step progress indicator that visually represents the lifecycle of a transaction.
- *
- * @param {TxProgressIndicatorProps} props - The component props.
- * @returns {JSX.Element} The rendered progress indicator.
  */
 export function TxProgressIndicator({
   isProcessing,
@@ -105,45 +117,42 @@ export function TxProgressIndicator({
   isReplaced,
   className,
   StepComponent = Step,
-}: TxProgressIndicatorProps): JSX.Element {
-  const labels = useLabels();
+}: TxProgressIndicatorProps) {
+  const { trackingModal, statuses } = useLabels();
 
-  // This logic determines the status of each of the three steps.
-  const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
-    // Step 1: "Created" - Always completed once the process starts.
-    if (stepIndex === 1) return 'completed';
+  // Memoize the steps array to avoid re-calculating on every render.
+  const steps = useMemo((): StepProps[] => {
+    const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
+      if (stepIndex === 1) return 'completed'; // "Created" is always complete
+      if (stepIndex === 2) {
+        // "Processing"
+        if (isSucceed || isFailed || isReplaced) return 'completed';
+        if (isProcessing) return 'active';
+      }
+      if (stepIndex === 3) {
+        // "Final"
+        if (isSucceed) return 'completed';
+        if (isFailed) return 'error';
+        if (isReplaced) return 'replaced';
+        if (isProcessing) return 'active';
+      }
+      return 'inactive';
+    };
 
-    // Step 2: "Processing"
-    if (stepIndex === 2) {
-      if (isSucceed || isFailed || isReplaced) return 'completed';
-      if (isProcessing) return 'active';
-    }
+    const getStepLabel = (stepIndex: 1 | 2 | 3): string => {
+      if (stepIndex === 1) return trackingModal.progressIndicator.created;
+      if (stepIndex === 2) return trackingModal.progressIndicator.processing;
+      if (isFailed) return statuses.failed;
+      if (isReplaced) return statuses.replaced;
+      return trackingModal.progressIndicator.succeed;
+    };
 
-    // Step 3: "Final"
-    if (stepIndex === 3) {
-      if (isSucceed) return 'completed';
-      if (isFailed) return 'error';
-      if (isReplaced) return 'replaced';
-      if (isProcessing) return 'active';
-    }
-
-    return 'inactive';
-  };
-
-  const getStepLabel = (stepIndex: 1 | 2 | 3): string => {
-    if (stepIndex === 1) return labels.trackingModal.progressIndicator.created;
-    if (stepIndex === 2) return labels.trackingModal.progressIndicator.processing;
-    // For step 3, the label changes based on the final status.
-    if (isFailed) return labels.statuses.failed;
-    if (isReplaced) return labels.statuses.replaced;
-    return labels.trackingModal.progressIndicator.succeed;
-  };
-
-  const steps: StepProps[] = [
-    { status: getStepStatus(1), label: getStepLabel(1), isFirst: true },
-    { status: getStepStatus(2), label: getStepLabel(2) },
-    { status: getStepStatus(3), label: getStepLabel(3), isLast: true },
-  ];
+    return [
+      { status: getStepStatus(1), label: getStepLabel(1), isFirst: true },
+      { status: getStepStatus(2), label: getStepLabel(2) },
+      { status: getStepStatus(3), label: getStepLabel(3), isLast: true },
+    ];
+  }, [isProcessing, isSucceed, isFailed, isReplaced, trackingModal, statuses]);
 
   return (
     <div className={cn('flex w-full items-start px-4 pt-2 pb-1', className)}>

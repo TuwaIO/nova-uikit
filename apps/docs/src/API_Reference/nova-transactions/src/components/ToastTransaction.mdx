@@ -4,13 +4,12 @@
 
 # ToastTransaction()
 
-> **ToastTransaction**\<`TR`, `T`\>(`props`): `Element`
+> **ToastTransaction**\<`TR`, `T`, `A`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/ToastTransaction.tsx#L80)
+Defined in: [nova-transactions/src/components/ToastTransaction.tsx:77](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/ToastTransaction.tsx#L77)
 
 A composite component that renders the content for a transaction toast notification.
-It is highly customizable and includes actions for speeding up or canceling transactions
-when they are in a pending state.
+It is highly customizable and leverages the adapter to show relevant actions like "Speed Up".
 
 ## Type Parameters
 
@@ -18,24 +17,20 @@ when they are in a pending state.
 
 `TR`
 
-The generic type for the transaction tracker registry.
-
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
 
-The generic type for the transaction object.
+### A
+
+`A`
 
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`ToastTransactionProps`](../type-aliases/ToastTransactionProps.md)\<`TR`, `T`\>
-
-The component props.
+[`ToastTransactionProps`](../type-aliases/ToastTransactionProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
 `Element`
-
-The rendered toast body.

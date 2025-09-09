@@ -54,6 +54,6 @@ For example with Tailwind CSS v4, you can use the CSS variables from this packag
 
 Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
 
-## License
+## 📄 License
 
-This project is licensed under the **Apache-2.0 License**.
+This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.

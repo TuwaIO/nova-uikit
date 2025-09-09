@@ -4,13 +4,12 @@
 
 # TxActionButton()
 
-> **TxActionButton**\<`TR`, `T`\>(`props`): `Element`
+> **TxActionButton**\<`TR`, `T`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TxActionButton.tsx#L57)
+Defined in: [nova-transactions/src/components/TxActionButton.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TxActionButton.tsx#L80)
 
 A stateful button that provides real-time feedback for a transaction's lifecycle.
-It listens for changes in the global `transactionsPool` to automatically update its
-visual state, showing loading, success, failure, and replaced statuses.
+It listens for changes in `transactionsPool` to automatically update its visual state.
 
 ## Type Parameters
 
@@ -18,24 +17,16 @@ visual state, showing loading, success, failure, and replaced statuses.
 
 `TR`
 
-The generic type for the transaction tracker registry.
-
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
 
-The generic type for the transaction object.
-
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`TxActionButtonProps`](../interfaces/TxActionButtonProps.md)\<`TR`, `T`\>
-
-The component props.
+[`TxActionButtonProps`](../type-aliases/TxActionButtonProps.md)\<`TR`, `T`\>
 
 ## Returns
 
 `Element`
-
-The rendered stateful action button.

@@ -2,41 +2,51 @@
 
 ***
 
-# NovaProviderProps\<TR, T\>
+# NovaProviderProps\<TR, T, A\>
 
-> **NovaProviderProps**\<`TR`, `T`\> = `object` & `Pick`\<`IInitializeTxTrackingStore`\<`TR`, `T`\>, `"closeTxTrackedModal"`\> & `ToastContainerProps` & `Pick`\<[`TrackingTxModalProps`](../../interfaces/TrackingTxModalProps.md)\<`TR`, `T`\>, `"handleTransaction"` \| `"actions"` \| `"config"` \| `"appChains"` \| `"transactionsPool"` \| `"initialTx"`\>
+> **NovaProviderProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<`ITxTrackingStore`\<`TR`, `T`, `A`\>, `"closeTxTrackedModal"` \| `"handleTransaction"` \| `"initialTx"`\> & `ToastContainerProps`
 
-Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/providers/NovaProvider.tsx#L37)
+Defined in: [nova-transactions/src/providers/NovaProvider.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/providers/NovaProvider.tsx#L45)
 
-## Type declaration
+Defines the props for the NovaProvider component.
 
-### chain?
+## Type Declaration
 
-> `optional` **chain**: `Chain`
+### actions?
+
+> `optional` **actions**: `TxActions`
+
+### adapters
+
+> **adapters**: `TxAdapter`\<`TR`, `T`, `A`\>[]
+
+### connectedAdapterType?
+
+> `optional` **connectedAdapterType**: `TransactionAdapter`
+
+### connectedWalletAddress?
+
+> `optional` **connectedWalletAddress**: `string`
 
 ### customization?
 
 > `optional` **customization**: `object`
 
-A single object to pass down deep customization options to all child components.
-
 #### customization.toast?
 
-> `optional` **toast**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`TR`, `T`\>
+> `optional` **toast**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`TR`, `T`, `A`\>
 
 #### customization.trackingTxModal?
 
-> `optional` **trackingTxModal**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`TR`, `T`\>
+> `optional` **trackingTxModal**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`TR`, `T`, `A`\>
 
 #### customization.walletInfoModal?
 
-> `optional` **walletInfoModal**: [`WalletInfoModalCustomization`](../../type-aliases/WalletInfoModalCustomization.md)\<`TR`, `T`\>
+> `optional` **walletInfoModal**: [`WalletInfoModalCustomization`](../../type-aliases/WalletInfoModalCustomization.md)\<`TR`, `T`, `A`\>
 
 ### features?
 
 > `optional` **features**: `object`
-
-An object to enable or disable major UI features. All are enabled by default.
 
 #### features.toasts?
 
@@ -54,11 +64,9 @@ An object to enable or disable major UI features. All are enabled by default.
 
 > `optional` **labels**: `Partial`\<[`TuwaLabels`](../../type-aliases/TuwaLabels.md)\>
 
-A partial object of labels to override the default English text.
+### transactionsPool
 
-### walletAddress?
-
-> `optional` **walletAddress**: `string`
+> **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
 ## Type Parameters
 
@@ -69,3 +77,7 @@ A partial object of labels to override the default English text.
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
+
+### A
+
+`A`

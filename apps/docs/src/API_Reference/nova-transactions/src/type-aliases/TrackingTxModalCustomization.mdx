@@ -2,14 +2,11 @@
 
 ***
 
-# TrackingTxModalCustomization\<TR, T\>
+# TrackingTxModalCustomization\<TR, T, A\>
 
-> **TrackingTxModalCustomization**\<`TR`, `T`\> = `object`
+> **TrackingTxModalCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L50)
-
-Defines the customization options for the TrackingTxModal.
-Allows overriding modal behavior, animations, and individual UI components.
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L40)
 
 ## Type Parameters
 
@@ -21,99 +18,41 @@ Allows overriding modal behavior, animations, and individual UI components.
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Properties
 
 ### components?
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L56)
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L43)
 
-A record of custom components to override parts of the modal's UI.
+#### ErrorBlock?
 
-#### errorBlock()?
+> `optional` **ErrorBlock**: `ComponentType`\<[`TxErrorBlockProps`](TxErrorBlockProps.md)\>
 
-> `optional` **errorBlock**: (`props`) => `ReactNode`
+#### Footer?
 
-##### Parameters
+> `optional` **Footer**: `ComponentType`\<`CustomFooterProps`\>
 
-###### props
+#### Header?
 
-[`TxErrorBlockProps`](TxErrorBlockProps.md)
+> `optional` **Header**: `ComponentType`\<`CustomHeaderProps`\>
 
-##### Returns
+#### InfoBlock?
 
-`ReactNode`
+> `optional` **InfoBlock**: `ComponentType`\<[`TxInfoBlockProps`](TxInfoBlockProps.md)\<`TR`, `T`, `A`\>\>
 
-#### footer()?
+#### ProgressIndicator?
 
-> `optional` **footer**: (`props`) => `ReactNode`
+> `optional` **ProgressIndicator**: `ComponentType`\<[`TxProgressIndicatorProps`](../interfaces/TxProgressIndicatorProps.md)\>
 
-##### Parameters
+#### StatusVisual?
 
-###### props
-
-`CustomFooterProps`
-
-##### Returns
-
-`ReactNode`
-
-#### header()?
-
-> `optional` **header**: (`props`) => `ReactNode`
-
-##### Parameters
-
-###### props
-
-`CustomHeaderProps`
-
-##### Returns
-
-`ReactNode`
-
-#### infoBlock()?
-
-> `optional` **infoBlock**: (`props`) => `ReactNode`
-
-##### Parameters
-
-###### props
-
-[`TxInfoBlockProps`](TxInfoBlockProps.md)\<`TR`, `T`\>
-
-##### Returns
-
-`ReactNode`
-
-#### progressIndicator()?
-
-> `optional` **progressIndicator**: (`props`) => `ReactNode`
-
-##### Parameters
-
-###### props
-
-[`TxProgressIndicatorProps`](../interfaces/TxProgressIndicatorProps.md)
-
-##### Returns
-
-`ReactNode`
-
-#### statusVisual()?
-
-> `optional` **statusVisual**: (`props`) => `ReactNode`
-
-##### Parameters
-
-###### props
-
-[`TxStatusVisualProps`](TxStatusVisualProps.md)
-
-##### Returns
-
-`ReactNode`
+> `optional` **StatusVisual**: `ComponentType`\<[`TxStatusVisualProps`](TxStatusVisualProps.md)\>
 
 ***
 
@@ -121,9 +60,7 @@ A record of custom components to override parts of the modal's UI.
 
 > `optional` **modalProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog.Content`\>\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L52)
-
-Custom props to pass to the underlying Radix UI `Dialog.Content` component.
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L41)
 
 ***
 
@@ -131,6 +68,4 @@ Custom props to pass to the underlying Radix UI `Dialog.Content` component.
 
 > `optional` **motionProps**: `MotionProps`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L54)
-
-Custom Framer Motion animation properties for the modal's entrance and exit.
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L42)

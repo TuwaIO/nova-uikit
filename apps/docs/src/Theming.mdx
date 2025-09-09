@@ -1,0 +1,169 @@
+# Theming
+
+Welcome to the theming guide for **Nova UI Kit**. This document provides everything you need to customize the look and feel of the components to perfectly match your brand. 🎨
+
+## Core Philosophy
+
+Nova's theming system is built with two core principles in mind: **simplicity** and **flexibility**. We achieve this by using **CSS Custom Properties (Variables)** for all color and style definitions.
+
+-   **No Complex Configs:** You don't need to write any JavaScript or special configuration files. All theming is done in plain CSS.
+-   **Full Control:** Every color used in our components is exposed as a variable.
+
+---
+
+## How to Customize Your Theme
+
+Customizing your theme is a simple, three-step process.
+
+### 1. Locate Your Global CSS File
+
+Find the main stylesheet for your application. This is typically located at `src/styles/app.css` or a similar path.
+
+### 2. Import Nova's Styles
+
+Ensure you are importing the necessary CSS files from the Nova packages at the top of your global stylesheet.
+
+```css
+/* src/styles/app.css */
+@import '@tuwaio/nova-core/dist/index.css';
+@import '@tuwaio/nova-transactions/dist/index.css';
+@import "tailwindcss";
+````
+
+### 3\. Override CSS Variables
+
+Add your overrides for `:root` (light mode) and `.dark` (dark mode) **after** the `@import` statements. You can copy the entire block of variables below and change the values to match your design system.
+
+```css
+/* src/styles/app.css */
+@import '@tuwaio/nova-core/dist/index.css';
+@import '@tuwaio/nova-transactions/dist/index.css';
+@import "tailwindcss";
+/* ... other imports ... */
+
+/* Your custom theme overrides go here! */
+:root {
+  --tuwa-text-accent: theme('colors.blue.500');
+  --tuwa-button-gradient-from: theme('colors.blue.600');
+  --tuwa-button-gradient-to: theme('colors.indigo.600');
+  /* ... etc. */
+}
+
+.dark {
+  --tuwa-text-accent: theme('colors.sky.400');
+  --tuwa-button-gradient-from: theme('colors.sky.500');
+  --tuwa-button-gradient-to: theme('colors.indigo.500');
+  /* ... etc. */
+}
+```
+
+-----
+
+## Full List of Theme Variables
+
+Here is the complete list of all CSS variables you can override. Copy and paste these into your global stylesheet and adjust the values as needed.
+
+### Light Theme (Default)
+
+```css
+:root {
+  /* Success State Colors */
+  --tuwa-success-bg: theme('colors.green.100');
+  --tuwa-success-text: theme('colors.green.700');
+  --tuwa-success-icon: theme('colors.green.500');
+
+  /* Error State Colors */
+  --tuwa-error-bg: theme('colors.red.100');
+  --tuwa-error-text: theme('colors.red.700');
+  --tuwa-error-icon: theme('colors.red.500');
+
+  /* Pending State Colors */
+  --tuwa-pending-bg: theme('colors.yellow.100');
+  --tuwa-pending-text: theme('colors.yellow.800');
+  --tuwa-pending-icon: theme('colors.yellow.600');
+
+  /* Info State Colors */
+  --tuwa-info-bg: theme('colors.gray.100');
+  --tuwa-info-text: theme('colors.gray.600');
+  --tuwa-info-icon: theme('colors.gray.500');
+
+  /* Text Colors */
+  --tuwa-text-primary: theme('colors.gray.900');
+  --tuwa-text-secondary: theme('colors.gray.500');
+  --tuwa-text-tertiary: theme('colors.gray.400');
+  --tuwa-text-accent: theme('colors.blue.600');
+  --tuwa-text-on-accent: theme('colors.white');
+
+  /* Background Colors */
+  --tuwa-bg-primary: theme('colors.white');
+  --tuwa-bg-secondary: theme('colors.gray.50');
+  --tuwa-bg-muted: theme('colors.gray.100');
+
+  /* Border Colors */
+  --tuwa-border-primary: theme('colors.gray.200');
+  --tuwa-border-secondary: theme('colors.gray.100');
+
+  /* Button Gradient Colors */
+  --tuwa-button-gradient-from: theme('colors.blue.600');
+  --tuwa-button-gradient-to: theme('colors.purple.600');
+  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
+  --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+}
+```
+
+### Dark Theme
+
+```css
+.dark {
+  /* Success State Colors */
+  --tuwa-success-bg: theme('colors.green.900');
+  --tuwa-success-text: theme('colors.green.300');
+  --tuwa-success-icon: theme('colors.green.400');
+
+  /* Error State Colors */
+  --tuwa-error-bg: theme('colors.red.900');
+  --tuwa-error-text: theme('colors.red.300');
+  --tuwa-error-icon: theme('colors.red.400');
+
+  /* Pending State Colors */
+  --tuwa-pending-bg: theme('colors.yellow.900');
+  --tuwa-pending-text: theme('colors.yellow.300');
+  --tuwa-pending-icon: theme('colors.yellow.400');
+
+  /* Info State Colors */
+  --tuwa-info-bg: theme('colors.gray.700');
+  --tuwa-info-text: theme('colors.gray.300');
+  --tuwa-info-icon: theme('colors.gray.400');
+
+  /* Text Colors */
+  --tuwa-text-primary: theme('colors.gray.50');
+  --tuwa-text-secondary: theme('colors.gray.400');
+  --tuwa-text-tertiary: theme('colors.gray.500');
+  --tuwa-text-accent: theme('colors.blue.400');
+  --tuwa-text-on-accent: theme('colors.white');
+
+  /* Background Colors */
+  --tuwa-bg-primary: theme('colors.gray.900');
+  --tuwa-bg-secondary: theme('colors.gray.800');
+  --tuwa-bg-muted: theme('colors.gray.700');
+
+  /* Border Colors */
+  --tuwa-border-primary: theme('colors.gray.700');
+  --tuwa-border-secondary: theme('colors.gray.800');
+
+  /* Button Gradient Colors */
+  --tuwa-button-gradient-from: theme('colors.blue.500');
+  --tuwa-button-gradient-to: theme('colors.purple.500');
+  --tuwa-button-gradient-from-hover: theme('colors.blue.600');
+  --tuwa-button-gradient-to-hover: theme('colors.purple.600');
+}
+```
+
+-----
+
+## 🔗 Resources
+
+  - **GitHub Repository**: [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
+  - **Report Issues**: [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
+
+Built with ❤️ by the **TUWA Team**.

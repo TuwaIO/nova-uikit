@@ -4,12 +4,12 @@
 
 # NovaProvider()
 
-> **NovaProvider**\<`TR`, `T`\>(`props`): `Element`
+> **NovaProvider**\<`TR`, `T`, `A`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/providers/NovaProvider.tsx#L68)
+Defined in: [nova-transactions/src/providers/NovaProvider.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/providers/NovaProvider.tsx#L69)
 
-The main provider for the Nova UI ecosystem.
-It orchestrates toasts, modals, and the i18n context for the entire application.
+The main component for the Nova UI ecosystem. It renders and orchestrates all
+UI elements like toasts and modals, and provides the i18n context.
 
 ## Type Parameters
 
@@ -21,16 +21,16 @@ It orchestrates toasts, modals, and the i18n context for the entire application.
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`NovaProviderProps`](../type-aliases/NovaProviderProps.md)\<`TR`, `T`\>
-
-The component props.
+[`NovaProviderProps`](../type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
 `Element`
-
-The rendered provider.

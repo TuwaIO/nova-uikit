@@ -7,18 +7,12 @@ The **NovaProvider** is the centerpiece of the `@tuwaio/nova-transactions` libra
 `NovaProvider` is a powerful React component that combines all transaction tracking UI features into a single, easy-to-use instance. It acts as the central coordinator for:
 
 -   🍞 **Smart toast notifications** with live updates.
--   📱 **Interactive modals** for detailed transaction progress tracking.
--   💼 **Displaying wallet information** and transaction history.
--   🌐 **Providing internationalization (i18n)** context for all UI elements.
--   🎨 **Enabling flexible customization** of appearance and functionality.
+-   📱 **An interactive modal** for detailed transaction progress tracking.
+-   💼 **A wallet info modal** for displaying the connected account and transaction history.
+-   🌐 **An internationalization (i18n) context** for all UI elements.
+-   🎨 **Flexible customization** of appearance and functionality.
 
-Think of it as your dApp's transaction UI control center: include it **once** in your root layout, and it handles rendering all necessary modals and notifications globally for your application.
-
-## Key Advantages
-
-### 🚀 All-in-One Component, Zero-Clutter Solution
-
-Instead of importing and managing multiple modals and toast containers in your app's layout, you get everything with a single component. This significantly simplifies integration and keeps your component tree clean.
+Think of it as your dApp's transaction UI control center: include it **once** in your root layout, and it handles rendering all necessary modals and notifications globally for your application. **It does not wrap your `children`**.
 
 ```tsx
 // In your root layout (e.g., AppLayout.tsx)
@@ -34,87 +28,68 @@ function AppLayout({ children }) {
 }
 ````
 
-### ⚡️ Smart Features Out of the Box
-
-  - **Automatic UI Reactions**: Listens to your transaction store and automatically triggers toasts and modals.
-  - **Multi-tracker Support**: Works with standard Ethereum transactions, as well as Gelato and Safe.
-  - **Optimized Performance**: The component is designed to minimize re-renders.
-  - **Graceful Error Handling**: Provides beautiful and clear error messages with retry options.
-
-### 🎨 Advanced Customization
-
-Every aspect of the UI, from toasts to modals, can be configured via the `features`, `customization`, and `labels` props to perfectly match your design system.
-
 -----
 
-## Core Features
-
-`NovaProvider` orchestrates three key UI elements that work together seamlessly.
-
-### 🍞 Toast Notifications
-
-Smart, non-intrusive notifications that appear automatically based on transaction state changes. They are fully customizable and stack elegantly if multiple transactions are active.
-
-### 📱 Tracking Modal
-
-A detailed modal that provides real-time visualization of transaction progress. It is triggered when a new transaction is initiated with `withTrackedModal: true`.
-
-### 💼 Wallet Info Modal
-
-A comprehensive view of the user's wallet, including transaction history. This modal is controlled internally but can be opened from other components, like the toast notifications.
-
------
-
-## Basic Usage
+## Setup and Usage
 
 To use the provider, place it in a high-level layout component and pass it the required props from your Pulsar store and `wagmi`.
 
 ```tsx
-// In your main providers file (e.g., src/providers/index.tsx)
-import { NovaProvider } from '@tuwaio/nova-transactions';
-import { usePulsarStore } from '../hooks/txTrackingHooks';
-import { wagmiConfig, appChains } from '../configs/wagmiConfig';
-import { useAccount, WagmiProvider } from 'wagmi';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// src/providers/index.tsx
+'use client';
 
-// 1. Create a new QueryClient instance
+import {usePulsar} from '@/store/pulsar';
+import {NovaProvider} from '@tuwaio/nova-transactions';
+import {useAccount, WagmiProvider} from 'wagmi';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {PulsarInitializer} from '@/components/PulsarInitializer';
+import {wagmiConfig, chains} from '@/configs'; // Your app's configs
+import {TransactionAdapter} from '@tuwaio/pulsar-core';
+import {evmAdapter} from '@tuwaio/pulsar-evm';
+
+// Import required CSS
+import '@tuwaio/nova-core/dist/index.css';
+import '@tuwaio/nova-transactions/dist/index.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 const queryClient = new QueryClient();
 
-export function Providers({ children }) {
-  // 2. Get state and actions from your Pulsar store
-  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
-  const initialTx = usePulsarStore((state) => state.initialTx);
-  const closeTxTrackedModal = usePulsarStore(
-    (state) => state.closeTxTrackedModal,
-  );
-  const handleTransaction = usePulsarStore(
-    (state) => state.handleTransaction,
-  );
-  const actions = usePulsarStore((state) => state.actions);
-
-  // 3. Get wallet info from Wagmi
+export function Providers({ children }: { children: React.ReactNode }) {
+  // 1. Get state and actions from your Pulsar store hook
+  const {
+    transactionsPool,
+    initialTx,
+    handleTransaction,
+    closeTxTrackedModal,
+    actions,
+  } = usePulsar();
+  
+  // 2. Get live wallet data from wagmi
   const { address, chain } = useAccount();
 
   return (
-    // 4. Wrap everything in WagmiProvider
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        {/* Your other providers and app content */}
+        <PulsarInitializer />
+          
         {children}
 
-        {/* 5. Render NovaProvider as a standalone component */}
+        {/* 3. Render NovaProvider as a self-contained UI manager */}
         <NovaProvider
-          // --- Required props from your store ---
+          // --- Props from Pulsar Store ---
           transactionsPool={transactionsPool}
-          handleTransaction={handleTransaction}
-          appChains={appChains}
-          config={wagmiConfig}
-          closeTxTrackedModal={closeTxTrackedModal}
-          // --- Optional props ---
           initialTx={initialTx}
-          walletAddress={address}
-          chain={chain}
+          handleTransaction={handleTransaction}
+          closeTxTrackedModal={closeTxTrackedModal}
           actions={actions}
+          
+          // --- Props from Wallet Connector (e.g., wagmi) ---
+          connectedWalletAddress={address}
+          connectedAdapterType={chain?.id ? TransactionAdapter.EVM : undefined} // Example for EVM
+          
+          // --- Static Configuration ---
+          // The adapters array, similar like using for store
+          adapters={[evmAdapter(wagmiConfig, chains)]}
         />
       </QueryClientProvider>
     </WagmiProvider>
@@ -124,49 +99,51 @@ export function Providers({ children }) {
 
 -----
 
-## Advanced Customization
+## Customization
 
-### 🚩 Feature Flags
+### Feature Flags
 
-You can easily enable or disable the main UI elements using the `features` prop. By default, all are enabled.
+Enable or disable the main UI elements using the `features` prop. All are enabled by default.
 
 ```tsx
 <NovaProvider
   // ...other props
   features={{
-    toasts: true, // Enable/disable toast notifications
-    walletInfoModal: false, // Example: disable the wallet modal
-    trackingTxModal: true, // Enable/disable transaction tracking modal
+    toasts: true,
+    walletInfoModal: false, // Example: disable the wallet info modal
+    trackingTxModal: true,
   }}
 />
 ```
 
-### 🎨 Deep Styling (Customization)
+### Component Overrides
 
-The `customization` prop allows you to pass objects for deep styling and component replacement for each UI element.
+The `customization` prop allows you to replace any internal component with your own implementation.
 
 ```tsx
+import { MyCustomBadge } from './MyCustomBadge';
+
 <NovaProvider
   // ...other props
   customization={{
     toast: {
-      className: 'custom-toast-styles',
-    },
-    trackingTxModal: {
-      className: 'custom-tracking-modal',
+        // You can override any component inside the toast
+        components: {
+            StatusBadge: ({ tx }) => <MyCustomBadge status={tx.status} />
+        }
     },
   }}
 />
 ```
 
-### ⚙️ Toast Container Customization
+### Toast Container Customization
 
-`NovaProvider` uses `react-toastify` under the hood. You can pass any props for its `ToastContainer` directly to `NovaProvider`.
+`NovaProvider` uses `react-toastify` under the hood. You can pass any props for its `ToastContainer` directly to `NovaProvider` to control its behavior.
 
 ```tsx
 <NovaProvider
   // ...other props
-  // --- Props for react-toastify ---
+  // --- Props for react-toastify's ToastContainer ---
   position="top-right"
   limit={5}
   newestOnTop
@@ -174,14 +151,14 @@ The `customization` prop allows you to pass objects for deep styling and compone
 />
 ```
 
-### 🌐 Internationalization (i18n)
+### Internationalization (i18n)
 
-You can easily translate all text by passing a `labels` object.
+Easily translate all text by passing a `labels` object.
 
 ```tsx
-const myLabels = {
-  transactionModal: {
-    pending: 'Ausstehend...',
+const germanLabels = {
+  statuses: {
+    pending: 'In Bearbeitung...',
     success: 'Erfolgreich!',
     // ...
   },
@@ -189,7 +166,7 @@ const myLabels = {
 
 <NovaProvider
   // ...other props
-  labels={myLabels}
+  labels={germanLabels}
 />
 ```
 
@@ -197,49 +174,18 @@ const myLabels = {
 
 ## Props Reference
 
-### Core Props
-
-| Prop                  | Type                                   | Required | Description                                             |
-| --------------------- | -------------------------------------- | :------: | ------------------------------------------------------- |
-| `transactionsPool`    | `TransactionPool<TR, T>`               |    ✅    | The current transaction pool from your state store.     |
-| `handleTransaction`   | `Function`                             |    ✅    | The handler function from your store to initiate txs.   |
-| `appChains`           | `Chain[]`                              |    ✅    | An array of supported networks (from `viem/chains`).    |
-| `config`              | `Config`                               |    ✅    | The Wagmi configuration object.                         |
-| `closeTxTrackedModal` | `() => void`                           |    ✅    | A function from your store to close the tracking modal. |
-
-### Optional Props
-
-| Prop            | Type                 | Description                                                  |
-| --------------- | -------------------- | ------------------------------------------------------------ |
-| `walletAddress` | `Address`            | The address of the currently connected wallet.               |
-| `chain`         | `Chain`              | The currently active chain.                                  |
-| `initialTx`     | `InitialTransaction` | The initial transaction from your store to show in the modal. |
-| `actions`       | `ActionRegistry`     | An object of actions for retry logic.                        |
-
-### Customization Props
-
-| Prop            | Type                                                               | Description                                                          |
-| --------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------- |
-| `labels`        | `Partial<TuwaLabels>`                                              | An object to override the default text labels.                       |
-| `features`      | `{ toasts?: boolean; walletInfoModal?: boolean; ... }`             | An object to enable/disable UI features.                             |
-| `customization` | `{ toast?: ToastTransactionCustomization; ... }`                   | An object for deep styling and behavior customization. |
+| Prop                     | Type                               | Required | Description                                                              |
+| ------------------------ | ---------------------------------- | :------: | ------------------------------------------------------------------------ |
+| `adapters`               | `TxAdapter[]`                      |    ✅    | The array of configured adapters similar to your Pulsar store.                 |
+| `transactionsPool`       | `TransactionPool`                  |    ✅    | The current transaction pool from your Pulsar store.                     |
+| `handleTransaction`      | `Function`                         |    ✅    | The handler function from your store to initiate transactions.           |
+| `closeTxTrackedModal`    | `(txKey?: string) => void`         |    ✅    | A function from your store to close the tracking modal.                  |
+| `connectedWalletAddress` | `string`                           |    -     | The address of the currently connected wallet.                           |
+| `connectedAdapterType`   | `TransactionAdapter`               |    -     | The adapter type of the currently connected wallet (e.g., TransactionAdapter.EVM).        |
+| `initialTx`              | `InitialTransaction`               |    -     | The initial transaction object from your store.                          |
+| `actions`                | `TxActions`                        |    -     | An object of actions for retry logic.                                    |
+| `labels`                 | `Partial<TuwaLabels>`              |    -     | An object to override the default text labels for i18n.                  |
+| `features`               | `object`                           |    -     | An object to enable or disable UI features like toasts or modals.        |
+| `customization`          | `object`                           |    -     | An object for deep styling and component replacement.                    |
 
 > **Note**: All props for `ToastContainer` from `react-toastify` are also supported and can be passed directly to `NovaProvider`.
-
------
-
-## Best Practices
-
-### 1\. Single Instance at the Root
-
-Use only **one** `NovaProvider` per application. It's designed to be a singleton and should be placed at a high level in your component tree, like `_app.tsx` or a root `Layout.tsx`, so it can render above all other content. **It should not wrap your page content.**
-
-### 2\. Memoize Props
-
-To prevent unnecessary re-renders, wrap complex objects like `customization` or `actions` in `useMemo` if they are defined within a component that re-renders often.
-
------
-
-## Summary
-
-`NovaProvider` is a powerful, flexible, and beautiful solution for Web3 transaction UX. By centralizing control of modals and toasts into a single component, it streamlines development and provides your users with a world-class, consistent transaction experience. **Start with the basic setup and customize as needed\!** 🚀

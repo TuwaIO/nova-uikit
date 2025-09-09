@@ -2,61 +2,33 @@
 
 ***
 
-# ToastTransactionProps\<TR, T\>
+# ToastTransactionProps\<TR, T, A\>
 
-> **ToastTransactionProps**\<`TR`, `T`\> = `object` & `Pick`\<[`WalletInfoModalProps`](../interfaces/WalletInfoModalProps.md)\<`TR`, `T`\>, `"transactionsPool"`\>
+> **ToastTransactionProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"transactionsPool"` \| `"adapters"` \| `"connectedWalletAddress"`\>
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/ToastTransaction.tsx#L49)
+Defined in: [nova-transactions/src/components/ToastTransaction.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/ToastTransaction.tsx#L31)
 
-## Type declaration
-
-### appChains
-
-> **appChains**: `Chain`[]
-
-An array of supported chain objects, used for displaying network information.
+## Type Declaration
 
 ### className?
 
 > `optional` **className**: `string`
 
-Optional additional CSS classes for the toast container.
-
 ### closeToast?
 
 > `optional` **closeToast**: `ToastContentProps`\[`"closeToast"`\]
 
-Props from `react-toastify` to control the toast itself.
-
-### config?
-
-> `optional` **config**: `Config`
-
-The wagmi config object, required for Speed Up and Cancel functionality.
-
 ### customization?
 
-> `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`TR`, `T`\>
-
-An object to customize and override the default internal components.
+> `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`TR`, `T`, `A`\>
 
 ### icon?
 
 > `optional` **icon**: `ReactNode`
 
-An optional custom icon to display instead of the default chain icon.
-
 ### openWalletInfoModal()?
 
-> `optional` **openWalletInfoModal**: (`value`) => `void`
-
-A function to open the main wallet info modal. If not provided, the button will not be rendered.
-
-#### Parameters
-
-##### value
-
-`boolean`
+> `optional` **openWalletInfoModal**: () => `void`
 
 #### Returns
 
@@ -70,8 +42,6 @@ A function to open the main wallet info modal. If not provided, the button will 
 
 > **tx**: `T`
 
-The transaction object to display in the toast.
-
 ## Type Parameters
 
 ### TR
@@ -81,3 +51,7 @@ The transaction object to display in the toast.
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
+
+### A
+
+`A`

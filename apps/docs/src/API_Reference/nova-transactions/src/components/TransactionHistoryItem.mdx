@@ -4,12 +4,13 @@
 
 # TransactionHistoryItem()
 
-> **TransactionHistoryItem**\<`TR`, `T`\>(`props`): `Element`
+> **TransactionHistoryItem**\<`TR`, `T`, `A`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L69)
+Defined in: [nova-transactions/src/components/TransactionHistoryItem.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L67)
 
 A component that renders a single row in the transaction history list.
-It is highly customizable via the `customization` prop.
+It is highly customizable via the `customization` prop, allowing developers
+to override any of its internal parts with their own components.
 
 ## Type Parameters
 
@@ -21,16 +22,16 @@ It is highly customizable via the `customization` prop.
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`TransactionHistoryItemProps`](../type-aliases/TransactionHistoryItemProps.md)\<`TR`, `T`\>
-
-The component props.
+[`TransactionHistoryItemProps`](../type-aliases/TransactionHistoryItemProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
 `Element`
-
-The rendered history item.

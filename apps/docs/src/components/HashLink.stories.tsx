@@ -4,29 +4,39 @@ import { HashLink } from '@tuwaio/nova-transactions';
 // --- Storybook Meta Configuration ---
 
 const meta: Meta<typeof HashLink> = {
-  title: 'UI Components/basic/HashLink',
+  title: 'Components/Shared/HashLink',
   component: HashLink,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
   args: {
-    hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-    explorerUrl: 'https://etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef',
+    hash: '0x7a2de40d55c1e2b3e9e3f4b1d7a0c8e6b9c5b2a12b4d7f8e9f0a1b3c5d7e9f0a',
     variant: 'default',
+    label: 'Tx Hash',
+    explorerUrl: 'https://sepolia.etherscan.io/tx/0x7a2de40d55c1e2b3e9e3f4b1d7a0c8e6b9c5b2a12b4d7f8e9f0a1b3c5d7e9f0a',
   },
   argTypes: {
-    variant: {
-      control: {
-        type: 'radio',
-      },
-      options: ['default', 'compact'],
+    hash: {
+      control: 'text',
+      description: 'The full hash string to display and copy.',
     },
     label: {
       control: 'text',
+      description: 'An optional label to display before the hash.',
     },
-    hash: {
+    explorerUrl: {
       control: 'text',
+      description: 'An optional URL to a block explorer. If provided, the hash becomes a link.',
+    },
+    variant: {
+      control: 'radio',
+      options: ['default', 'compact'],
+      description: "The visual style of the component. 'default' is larger, 'compact' is smaller.",
+    },
+    className: {
+      control: 'text',
+      description: 'Additional CSS classes for custom styling.',
     },
   },
 };
@@ -38,37 +48,16 @@ type Story = StoryObj<typeof meta>;
 // --- Stories ---
 
 /**
- * The default appearance of the HashLink component.
+ * The default appearance of the `HashLink` component with a label and explorer link.
  */
 export const Default: Story = {
   args: {
-    label: 'Tx Hash',
+    label: 'Default',
   },
 };
 
 /**
- * The HashLink component with a shorter hash. The ellipsis is not displayed.
- */
-export const ShortHash: Story = {
-  args: {
-    label: 'Short Hash',
-    hash: '0x1234...abcd',
-  },
-};
-
-/**
- * The HashLink component with a long hash, demonstrating the center ellipsis.
- */
-export const LongHash: Story = {
-  name: 'With Long Hash',
-  args: {
-    label: 'Long Hash',
-    hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-  },
-};
-
-/**
- * The compact variant of the HashLink, suitable for smaller spaces.
+ * The compact variant of the `HashLink`, suitable for smaller spaces or less prominent display.
  */
 export const Compact: Story = {
   args: {
@@ -78,17 +67,17 @@ export const Compact: Story = {
 };
 
 /**
- * The HashLink component displayed without a label.
+ * The `HashLink` component displayed without a label.
  */
 export const NoLabel: Story = {
-  name: 'Without Label',
   args: {
     label: undefined,
   },
 };
 
 /**
- * The HashLink component without an explorer URL. The link icon is not rendered.
+ * The `HashLink` component without an `explorerUrl`. It displays the hash as plain text
+ * but retains the copy-to-clipboard functionality.
  */
 export const NoExplorerLink: Story = {
   name: 'Without Explorer Link',

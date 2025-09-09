@@ -1,25 +1,22 @@
+'use client';
+
 /**
  * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single transaction.
- * It provides real-time feedback, customization options, and actions like retry, speed up, and cancel.
  */
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@tuwaio/nova-core';
 import {
+  InitialTransaction,
   InitialTransactionParams,
-  ITxTrackingStore,
+  selectAdapterByKey,
   Transaction,
-  TransactionAdapter,
-  TransactionPool,
   TransactionStatus,
 } from '@tuwaio/pulsar-core';
-import { ActionTxKey, cancelTxAction, speedUpTxAction, TransactionTracker } from '@tuwaio/pulsar-evm';
-import { Config } from '@wagmi/core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
-import { ComponentPropsWithoutRef, JSX, ReactNode, useEffect, useState } from 'react';
-import { Chain } from 'viem';
+import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
 
-import { useLabels } from '../../providers';
+import { NovaProviderProps, useLabels } from '../../providers';
 import { StatusAwareText } from '../StatusAwareText';
 import { TxErrorBlock, TxErrorBlockProps } from './TxErrorBlock';
 import { TxInfoBlock, TxInfoBlockProps } from './TxInfoBlock';
@@ -27,117 +24,125 @@ import { TxProgressIndicator, TxProgressIndicatorProps } from './TxProgressIndic
 import { TxStatusVisual, TxStatusVisualProps } from './TxStatusVisual';
 
 // --- Prop Types for Customization ---
-
-/** Props provided to a custom header component. */
-type CustomHeaderProps = { onClose: (txKey?: string) => void };
-/** Props provided to a custom footer component. */
+type CustomHeaderProps = { onClose: () => void; title: ReactNode };
 type CustomFooterProps = {
-  onClose: (txKey?: string) => void;
+  onClose: () => void;
   onOpenWalletInfo: () => void;
   onRetry?: () => void;
   onSpeedUp?: () => void;
   onCancel?: () => void;
   isProcessing?: boolean;
+  isFailed?: boolean;
+  canReplace?: boolean;
+  connectedWalletAddress?: string;
 };
 
-/** A registry of functions that can be re-executed via the 'Retry' button. The key should match `actionKey` on a transaction. */
-export type TxActions = Record<string, (...args: any[]) => Promise<unknown>>;
-
-/**
- * Defines the customization options for the TrackingTxModal.
- * Allows overriding modal behavior, animations, and individual UI components.
- */
-export type TrackingTxModalCustomization<TR, T extends Transaction<TR>> = {
-  /** Custom props to pass to the underlying Radix UI `Dialog.Content` component. */
+export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
-  /** Custom Framer Motion animation properties for the modal's entrance and exit. */
   motionProps?: MotionProps;
-  /** A record of custom components to override parts of the modal's UI. */
   components?: {
-    header?: (props: CustomHeaderProps) => ReactNode;
-    footer?: (props: CustomFooterProps) => ReactNode;
-    statusVisual?: (props: TxStatusVisualProps) => ReactNode;
-    progressIndicator?: (props: TxProgressIndicatorProps) => ReactNode;
-    infoBlock?: (props: TxInfoBlockProps<TR, T>) => ReactNode;
-    errorBlock?: (props: TxErrorBlockProps) => ReactNode;
+    Header?: ComponentType<CustomHeaderProps>;
+    Footer?: ComponentType<CustomFooterProps>;
+    StatusVisual?: ComponentType<TxStatusVisualProps>;
+    ProgressIndicator?: ComponentType<TxProgressIndicatorProps>;
+    InfoBlock?: ComponentType<TxInfoBlockProps<TR, T, A>>;
+    ErrorBlock?: ComponentType<TxErrorBlockProps>;
   };
 };
 
-export interface TrackingTxModalProps<TR, T extends Transaction<TR>>
-  extends Partial<Pick<ITxTrackingStore<TR, T, ActionTxKey>, 'handleTransaction' | 'initialTx'>> {
-  /** A function to close the modal. */
+export type TrackingTxModalProps<TR, T extends Transaction<TR>, A> = Pick<
+  NovaProviderProps<TR, T, A>,
+  'handleTransaction' | 'initialTx' | 'actions' | 'transactionsPool' | 'adapters' | 'connectedWalletAddress'
+> & {
   onClose: (txKey?: string) => void;
-  /** A function to open the main wallet info modal. */
   onOpenWalletInfo: () => void;
-  /** Optional additional CSS classes for the modal's container. */
   className?: string;
-  /** An object containing all customization options for the modal. */
-  customization?: TrackingTxModalCustomization<TR, T>;
-  /** An array of `viem` chain objects supported by the application. */
-  appChains: Chain[];
-  /** The global transaction pool from the tracking store. */
-  transactionsPool: TransactionPool<TR, T>;
-  /** A registry of retryable actions, keyed by `actionKey`. */
-  actions?: TxActions;
-  /** The wagmi config object, required for retry, cancel, and speed up functionality. */
-  config?: Config;
-}
+  customization?: TrackingTxModalCustomization<TR, T, A>;
+};
 
 /**
  * A detailed modal that displays the real-time status and lifecycle of a transaction.
  * It opens automatically for transactions initiated with `withTrackedModal: true`.
- *
- * @template TR - The generic type for the transaction tracker registry.
- * @template T - The generic type for the transaction object.
- * @param {TrackingTxModalProps<TR, T>} props - The component props.
- * @returns {JSX.Element} The rendered tracking modal.
  */
-export function TrackingTxModal<TR, T extends Transaction<TR>>({
+export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
+  adapters,
   onClose,
   onOpenWalletInfo,
   className,
   customization,
-  appChains,
   transactionsPool,
   actions,
   handleTransaction,
-  config,
   initialTx,
-}: TrackingTxModalProps<TR, T>): JSX.Element {
-  const labels = useLabels();
-  const C = customization?.components;
+  connectedWalletAddress,
+}: TrackingTxModalProps<TR, T, A>) {
+  // --- State Derivation ---
+  const activeTx = useMemo(
+    () => (initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined),
+    [transactionsPool, initialTx],
+  );
 
-  const [trackedTx, setTrackedTx] = useState<T | undefined>(undefined);
+  const txToDisplay = activeTx ?? initialTx;
 
-  // This effect syncs the modal's internal state (`trackedTx`) with the global `transactionsPool`.
-  // It ensures the modal always displays the latest information for the tracked transaction.
-  useEffect(() => {
-    let currentTx: T | undefined;
-    if (initialTx?.lastTxKey) {
-      currentTx = transactionsPool[initialTx.lastTxKey];
-    } else if (trackedTx) {
-      currentTx = transactionsPool[trackedTx.txKey];
-    }
-    setTrackedTx(currentTx);
-  }, [transactionsPool, initialTx, trackedTx]);
+  const isOpen = (initialTx?.withTrackedModal && !activeTx) || (activeTx?.isTrackedModalOpen ?? false);
 
-  // The transaction object to use for displaying information. Prioritizes the tracked transaction.
-  const txToDisplay = trackedTx ?? initialTx;
+  // --- Derived Status Flags ---
+  const { isProcessing, isSucceed, isFailed, isReplaced } = useMemo(() => {
+    const txStatus = activeTx?.status;
+    const isInitializing = initialTx?.isInitializing ?? false;
+    const isPending = activeTx?.pending ?? false;
+    return {
+      isProcessing: isInitializing || isPending,
+      isSucceed: txStatus === TransactionStatus.Success,
+      isFailed: activeTx?.isError || !!initialTx?.errorMessage,
+      isReplaced: txStatus === TransactionStatus.Replaced,
+    };
+  }, [activeTx, initialTx]);
 
-  // --- Derived State Constants for Clarity ---
-  const txStatus = trackedTx?.status;
-  const isInitializing = initialTx?.isInitializing ?? false;
-  const isPending = trackedTx?.pending ?? true;
-  const isProcessing = isInitializing || isPending;
-  const isError = trackedTx?.isError || !!initialTx?.errorMessage;
-  const canRetry = txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction && config;
-  const canReplace =
-    config &&
-    trackedTx?.adapter === TransactionAdapter.EVM &&
-    trackedTx?.nonce !== undefined &&
-    trackedTx.pending &&
-    trackedTx.maxFeePerGas &&
-    trackedTx.maxPriorityFeePerGas;
+  // --- Adapter and Action Logic ---
+  const adapter = useMemo(
+    () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapters }) : undefined),
+    [txToDisplay, adapters],
+  );
+
+  const canRetry = !!(isFailed && txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction);
+  const canReplace = !!(
+    adapter?.speedUpTxAction &&
+    adapter?.cancelTxAction &&
+    activeTx?.pending &&
+    activeTx.tracker === 'ethereum'
+  );
+
+  // --- Action Handlers ---
+  const handleRetry = () => {
+    if (!canRetry || !txToDisplay?.actionKey || !adapter?.retryTxAction) return;
+
+    const retryParams: InitialTransactionParams = {
+      adapter: txToDisplay.adapter,
+      type: txToDisplay.type,
+      desiredChainID: 'desiredChainID' in txToDisplay ? txToDisplay.desiredChainID : txToDisplay.chainId,
+      actionKey: txToDisplay.actionKey,
+      title: txToDisplay.title,
+      description: txToDisplay.description,
+      payload: txToDisplay.payload,
+      withTrackedModal: true,
+    };
+    adapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', actions, onClose, handleTransaction });
+  };
+  const handleCancel = () => {
+    if (canReplace && activeTx) adapter.cancelTxAction!(activeTx);
+  };
+  const handleSpeedUp = () => {
+    if (canReplace && activeTx) adapter.speedUpTxAction!(activeTx);
+  };
+
+  // --- Customization & Rendering ---
+  const CustomHeader = customization?.components?.Header;
+  const CustomFooter = customization?.components?.Footer;
+  const CustomStatusVisual = customization?.components?.StatusVisual;
+  const CustomProgressIndicator = customization?.components?.ProgressIndicator;
+  const CustomInfoBlock = customization?.components?.InfoBlock;
+  const CustomErrorBlock = customization?.components?.ErrorBlock;
 
   const motionProps: MotionProps = {
     initial: { opacity: 0, scale: 0.95 },
@@ -147,214 +152,113 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
     ...customization?.motionProps,
   };
 
-  // --- Action Handlers ---
-  const handleRetry = async () => {
-    if (!canRetry || !txToDisplay?.actionKey) return;
-    const retryParams: InitialTransactionParams = {
-      adapter: TransactionAdapter.EVM,
-      type: txToDisplay.type,
-      desiredChainID: trackedTx?.chainId || initialTx?.desiredChainID || 1,
-      actionKey: txToDisplay.actionKey,
-      title: txToDisplay.title,
-      description: txToDisplay.description,
-      payload: txToDisplay.payload,
-      withTrackedModal: true,
-    };
-    onClose(trackedTx?.txKey);
-
-    await handleTransaction({
-      actionFunction: () =>
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        actions![txToDisplay.actionKey]({
-          config,
-          ...txToDisplay.payload,
-        }),
-      params: retryParams,
-      defaultTracker: TransactionTracker.Ethereum as any,
-    });
-  };
-
-  const handleCancel = async () => {
-    if (canReplace && trackedTx) await cancelTxAction({ config, tx: trackedTx });
-  };
-
-  const handleSpeedUp = async () => {
-    if (canReplace && trackedTx) await speedUpTxAction({ config, tx: trackedTx });
-  };
-
-  const isOpen = (trackedTx?.isTrackedModalOpen || initialTx?.withTrackedModal) ?? false;
+  if (!txToDisplay) return null;
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose(trackedTx?.txKey)}>
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
       <Dialog.Portal>
         <AnimatePresence>
           {isOpen && (
             <>
               <Dialog.Overlay asChild>
                 <motion.div
-                  className="fixed inset-0 bg-black/60 z-50"
+                  className="fixed inset-0 z-50 bg-black/60"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 />
               </Dialog.Overlay>
               <Dialog.Content
-                className="fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 outline-none z-50"
-                onOpenAutoFocus={() => setTrackedTx(undefined)}
+                className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 outline-none"
                 {...customization?.modalProps}
                 asChild
               >
                 <motion.div {...motionProps}>
                   <div
                     className={cn(
-                      'relative flex flex-col gap-3 rounded-2xl bg-[var(--tuwa-bg-primary)] p-5 pt-0 shadow-2xl max-h-[98dvh] overflow-y-auto',
+                      'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl bg-[var(--tuwa-bg-primary)] p-5 pt-0 shadow-2xl',
                       className,
                     )}
                   >
-                    {/* Header: Title and Close Button */}
-                    {C?.header ? (
-                      C.header({ onClose: () => onClose(trackedTx?.txKey) })
+                    {CustomHeader ? (
+                      <CustomHeader
+                        onClose={() => onClose(activeTx?.txKey)}
+                        title={<DefaultHeaderTitle tx={txToDisplay} />}
+                      />
                     ) : (
-                      <header className="flex items-start justify-between sticky top-0 w-full z-10 pt-5 pb-2 bg-[var(--tuwa-bg-primary)]">
-                        <Dialog.Title className="text-lg font-bold text-[var(--tuwa-text-primary)]">
-                          {labels.trackingModal.title}
-                        </Dialog.Title>
-                        <Dialog.Close asChild>
-                          <button
-                            type="button"
-                            onClick={() => onClose(trackedTx?.txKey)}
-                            aria-label={labels.actions.close}
-                            className="cursor-pointer ml-2 -mt-1 rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
-                          >
-                            <XMarkIcon className="h-5 w-5" />
-                          </button>
-                        </Dialog.Close>
-                      </header>
+                      <DefaultHeader
+                        onClose={() => onClose(activeTx?.txKey)}
+                        title={<DefaultHeaderTitle tx={txToDisplay} />}
+                      />
                     )}
 
-                    {/* Main Content: Visuals, Info, and Error Blocks */}
                     <main className="flex flex-col gap-3">
-                      {C?.statusVisual ? (
-                        C.statusVisual({
-                          isProcessing,
-                          isSucceed: txStatus === TransactionStatus.Success,
-                          isFailed: isError,
-                          isReplaced: txStatus === TransactionStatus.Replaced,
-                        })
+                      {CustomStatusVisual ? (
+                        <CustomStatusVisual
+                          isProcessing={isProcessing}
+                          isSucceed={isSucceed}
+                          isFailed={isFailed}
+                          isReplaced={isReplaced}
+                        />
                       ) : (
                         <TxStatusVisual
                           isProcessing={isProcessing}
-                          isSucceed={txStatus === TransactionStatus.Success}
-                          isFailed={isError}
-                          isReplaced={txStatus === TransactionStatus.Replaced}
+                          isSucceed={isSucceed}
+                          isFailed={isFailed}
+                          isReplaced={isReplaced}
                         />
                       )}
-                      <div className="flex flex-col items-center text-center -mt-2">
-                        <StatusAwareText
-                          txStatus={txStatus}
-                          source={txToDisplay?.title}
-                          fallback={txToDisplay?.type}
-                          variant="title"
-                          applyColor
-                          className="text-xl"
+                      {CustomProgressIndicator ? (
+                        <CustomProgressIndicator
+                          isProcessing={isProcessing}
+                          isSucceed={isSucceed}
+                          isFailed={isFailed}
+                          isReplaced={isReplaced}
                         />
-                        <StatusAwareText
-                          txStatus={txStatus}
-                          source={txToDisplay?.description}
-                          variant="description"
-                          className="mt-0"
-                        />
-                      </div>
-                      {C?.progressIndicator ? (
-                        C.progressIndicator({
-                          isProcessing,
-                          isSucceed: txStatus === TransactionStatus.Success,
-                          isFailed: isError,
-                          isReplaced: txStatus === TransactionStatus.Replaced,
-                        })
                       ) : (
                         <TxProgressIndicator
                           isProcessing={isProcessing}
-                          isSucceed={txStatus === TransactionStatus.Success}
-                          isFailed={isError}
-                          isReplaced={txStatus === TransactionStatus.Replaced}
+                          isSucceed={isSucceed}
+                          isFailed={isFailed}
+                          isReplaced={isReplaced}
                         />
                       )}
-                      {C?.infoBlock ? (
-                        C.infoBlock({ tx: txToDisplay as T, appChains, transactionsPool })
+                      {CustomInfoBlock ? (
+                        <CustomInfoBlock tx={txToDisplay} adapters={adapters} transactionsPool={transactionsPool} />
                       ) : (
-                        <TxInfoBlock tx={txToDisplay as T} appChains={appChains} transactionsPool={transactionsPool} />
+                        <TxInfoBlock tx={txToDisplay} adapters={adapters} transactionsPool={transactionsPool} />
                       )}
-                      {C?.errorBlock ? (
-                        C.errorBlock({ error: trackedTx?.errorMessage || initialTx?.errorMessage })
+                      {CustomErrorBlock ? (
+                        <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
                       ) : (
-                        <TxErrorBlock error={trackedTx?.errorMessage || initialTx?.errorMessage} />
+                        <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
                       )}
                     </main>
 
-                    {/* Footer: Action Buttons */}
-                    {C?.footer ? (
-                      C.footer({
-                        onClose: () => onClose(trackedTx?.txKey),
-                        onOpenWalletInfo,
-                        isProcessing,
-                        onRetry: canRetry ? handleRetry : undefined,
-                        onSpeedUp: canReplace ? handleSpeedUp : undefined,
-                        onCancel: canReplace ? handleCancel : undefined,
-                      })
+                    {CustomFooter ? (
+                      <CustomFooter
+                        onClose={() => onClose(activeTx?.txKey)}
+                        onOpenWalletInfo={onOpenWalletInfo}
+                        isProcessing={isProcessing}
+                        isFailed={isFailed}
+                        canReplace={canReplace}
+                        onRetry={canRetry ? handleRetry : undefined}
+                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
+                        onCancel={canReplace ? handleCancel : undefined}
+                        connectedWalletAddress={connectedWalletAddress}
+                      />
                     ) : (
-                      <footer className="mt-2 flex w-full items-center justify-between border-t border-[var(--tuwa-border-primary)] pt-4">
-                        <div className="flex items-center gap-4">
-                          {canReplace && (
-                            <>
-                              <button
-                                type="button"
-                                onClick={handleSpeedUp}
-                                className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
-                              >
-                                {labels.actions.speedUp}
-                              </button>
-                              <button
-                                type="button"
-                                onClick={handleCancel}
-                                className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
-                              >
-                                {labels.actions.cancel}
-                              </button>
-                            </>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3">
-                          {isError && canRetry ? (
-                            <button
-                              type="button"
-                              onClick={handleRetry}
-                              className="cursor-pointer rounded-md bg-[var(--tuwa-button-gradient-from)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity hover:opacity-90"
-                            >
-                              {labels.trackingModal.retry}
-                            </button>
-                          ) : (
-                            !canReplace && (
-                              <button
-                                type="button"
-                                onClick={onOpenWalletInfo}
-                                className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]"
-                              >
-                                {labels.trackingModal.walletInfo}
-                              </button>
-                            )
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => onClose(trackedTx?.txKey)}
-                            disabled={isProcessing && !canReplace}
-                            className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)] disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            {isProcessing && !canReplace ? labels.trackingModal.processing : labels.trackingModal.close}
-                          </button>
-                        </div>
-                      </footer>
+                      <DefaultFooter
+                        onClose={() => onClose(activeTx?.txKey)}
+                        onOpenWalletInfo={onOpenWalletInfo}
+                        isProcessing={isProcessing}
+                        isFailed={isFailed}
+                        canReplace={canReplace}
+                        onRetry={canRetry ? handleRetry : undefined}
+                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
+                        onCancel={canReplace ? handleCancel : undefined}
+                        connectedWalletAddress={connectedWalletAddress}
+                      />
                     )}
                   </div>
                 </motion.div>
@@ -366,3 +270,110 @@ export function TrackingTxModal<TR, T extends Transaction<TR>>({
     </Dialog.Root>
   );
 }
+
+// --- Default Sub-Components ---
+
+const DefaultHeaderTitle = ({ tx }: { tx: Transaction<any> | InitialTransaction }) => (
+  <StatusAwareText
+    txStatus={'status' in tx ? tx.status : undefined}
+    source={tx.title}
+    fallback={tx.type}
+    variant="title"
+    className="text-lg"
+  />
+);
+
+const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
+  const { actions } = useLabels();
+  return (
+    <header className="sticky top-0 z-10 flex w-full items-start justify-between bg-[var(--tuwa-bg-primary)] pt-5 pb-2">
+      <Dialog.Title>{title}</Dialog.Title>
+      <Dialog.Close asChild>
+        <button
+          type="button"
+          onClick={() => onClose()}
+          aria-label={actions.close}
+          className="cursor-pointer -mt-1 ml-2 rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+        >
+          <XMarkIcon className="h-5 w-5" />
+        </button>
+      </Dialog.Close>
+    </header>
+  );
+};
+
+const DefaultFooter = ({
+  onClose,
+  onOpenWalletInfo,
+  isProcessing,
+  onRetry,
+  onSpeedUp,
+  onCancel,
+  canReplace,
+  isFailed,
+  connectedWalletAddress,
+}: CustomFooterProps) => {
+  const { trackingModal, actions } = useLabels();
+
+  const MainActionButton = () => {
+    if (isFailed && onRetry) {
+      return (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="cursor-pointer rounded-md bg-[var(--tuwa-button-gradient-from)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity hover:opacity-90"
+        >
+          {trackingModal.retry}
+        </button>
+      );
+    }
+    if (!isProcessing && !canReplace && !!connectedWalletAddress) {
+      return (
+        <button
+          type="button"
+          onClick={onOpenWalletInfo}
+          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]"
+        >
+          {trackingModal.walletInfo}
+        </button>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <footer className="mt-2 flex w-full items-center justify-between border-t border-[var(--tuwa-border-primary)] pt-4">
+      <div className="flex items-center gap-4">
+        {canReplace && onSpeedUp && onCancel && (
+          <>
+            <button
+              type="button"
+              onClick={onSpeedUp}
+              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
+            >
+              {actions.speedUp}
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
+            >
+              {actions.cancel}
+            </button>
+          </>
+        )}
+      </div>
+      <div className="flex items-center gap-3">
+        <MainActionButton />
+        <button
+          type="button"
+          onClick={onClose}
+          disabled={isProcessing && !canReplace}
+          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
+        </button>
+      </div>
+    </footer>
+  );
+};

@@ -2,11 +2,11 @@
 
 ***
 
-# TransactionsHistoryCustomization\<TR, T\>
+# TransactionsHistoryCustomization\<TR, T, A\>
 
-> **TransactionsHistoryCustomization**\<`TR`, `T`\> = `object`
+> **TransactionsHistoryCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
 
 Defines the customization options for the TransactionsHistory component.
 
@@ -20,19 +20,21 @@ Defines the customization options for the TransactionsHistory component.
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Properties
 
 ### classNames?
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TransactionsHistory.tsx#L20)
 
 #### listWrapper?
 
 > `optional` **listWrapper**: `string`
-
-CSS classes for the list's wrapper `div`.
 
 ***
 
@@ -40,28 +42,12 @@ CSS classes for the list's wrapper `div`.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
 
 #### HistoryItem?
 
-> `optional` **HistoryItem**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`TR`, `T`\>\>
+> `optional` **HistoryItem**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`TR`, `T`, `A`\>\>
 
-A custom component to use instead of the default `TransactionHistoryItem`.
-This should be a component type, not a render function.
+#### Placeholder?
 
-#### placeholder()?
-
-> `optional` **placeholder**: (`props`) => `ReactNode`
-
-A render prop to replace the default placeholder component
-(e.g., for "Connect Wallet" or "No Transactions").
-
-##### Parameters
-
-###### props
-
-`CustomPlaceholderProps`
-
-##### Returns
-
-`ReactNode`
+> `optional` **Placeholder**: `ComponentType`\<`CustomPlaceholderProps`\>

@@ -1,82 +1,94 @@
 /**
- * @file This file contains the main `WalletInfoModal` component, which serves as the primary UI for viewing wallet details and transaction history.
+ * @file This file contains the main `WalletInfoModal` component, which serves as the primary UI
+ * for viewing wallet details and transaction history.
  */
 
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey, Transaction } from '@tuwaio/pulsar-core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
-import { ComponentPropsWithoutRef, JSX, ReactNode } from 'react';
-import { Address, Chain } from 'viem';
+import { ComponentPropsWithoutRef, ComponentType, useMemo } from 'react';
 
-import { useLabels } from '../../providers';
-import { TransactionsHistory, TransactionsHistoryCustomization } from '../TransactionsHistory';
-import { WalletHeader } from './WalletHeader';
+import { NovaProviderProps, useLabels } from '../../providers';
+import { TransactionsHistory, TransactionsHistoryProps } from '../TransactionsHistory';
+import { WalletHeader, WalletHeaderProps } from './WalletHeader';
 
 // --- Prop Types for Customization ---
 type CustomHeaderProps = { closeModal: () => void };
-type CustomWalletInfoProps<TR, T extends Transaction<TR>> = WalletInfoModalProps<TR, T>;
-type CustomHistoryProps<TR, T extends Transaction<TR>> = WalletInfoModalProps<TR, T> & {
-  customization?: TransactionsHistoryCustomization<TR, T>;
-};
 
 /**
  * Defines the customization options for the WalletInfoModal.
- * Allows customization of modal behavior, animations, and individual UI components.
  */
-export type WalletInfoModalCustomization<TR, T extends Transaction<TR>> = {
-  /** Custom props to pass to the underlying Radix UI Dialog.Content component */
+export type WalletInfoModalCustomization<TR, T extends Transaction<TR>, A> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
-  /** Custom Framer Motion animation properties */
   motionProps?: MotionProps;
   classNames?: {
-    /** CSS classes for the main content wrapper div. */
     contentWrapper?: string;
   };
-  /** Custom component overrides for different parts of the modal */
   components?: {
-    /** A render prop to replace the entire modal header. */
-    header?: (props: CustomHeaderProps) => ReactNode;
-    /** A render prop to replace the `WalletHeader` component. */
-    walletInfo?: (props: CustomWalletInfoProps<TR, T>) => ReactNode;
-    /** A render prop to replace the `TransactionsHistory` component. */
-    history?: (props: CustomHistoryProps<TR, T>) => ReactNode;
+    Header?: ComponentType<CustomHeaderProps>;
+    WalletInfo?: ComponentType<WalletHeaderProps<TR, T, A>>;
+    History?: ComponentType<TransactionsHistoryProps<TR, T, A>>;
   };
 };
 
 /**
- * Defines the core props for the WalletInfoModal and its children.
+ * Defines the core props for the WalletInfoModal.
  */
-export interface WalletInfoModalProps<TR, T extends Transaction<TR>> {
-  /** The connected wallet's address. */
-  walletAddress?: Address;
-  /** The viem `Chain` object for the currently connected network. */
-  chain?: Chain;
-  /** The entire pool of transactions from the store. */
-  transactionsPool: TransactionPool<TR, T>;
-  /** An array of all chains supported by the application. */
-  appChains: Chain[];
-}
+export type WalletInfoModalProps<TR, T extends Transaction<TR>, A> = Pick<
+  NovaProviderProps<TR, T, A>,
+  'adapters' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
+> & {
+  isOpen?: boolean;
+  setIsOpen: (value: boolean) => void;
+  customization?: WalletInfoModalCustomization<TR, T, A>;
+};
+
+/**
+ * The default header component, can be overridden via customization.
+ */
+const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: string }) => {
+  const { actions } = useLabels();
+  return (
+    <div className="sticky top-0 left-0 z-10 flex w-full items-center justify-between border-b border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)] p-4">
+      <Dialog.Title className="text-lg font-bold text-[var(--tuwa-text-primary)]">{title}</Dialog.Title>
+      <Dialog.Close asChild>
+        <button
+          type="button"
+          onClick={closeModal}
+          aria-label={actions.close}
+          className="cursor-pointer rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+        >
+          <XMarkIcon className="h-6 w-6" />
+        </button>
+      </Dialog.Close>
+    </div>
+  );
+};
 
 /**
  * The main modal component for displaying wallet information and transaction history.
- * It is highly customizable through the `customization` prop and supports full Radix UI Dialog customization.
- *
- * @param {WalletInfoModalProps<TR, T> & { ... }} props - The component props.
- * @returns {JSX.Element | null} The rendered modal or null if not open.
+ * It is highly customizable and built with accessibility in mind using Radix UI.
  */
-export function WalletInfoModal<TR, T extends Transaction<TR>>({
+export function WalletInfoModal<TR, T extends Transaction<TR>, A>({
   isOpen,
   setIsOpen,
   customization,
-  ...props
-}: WalletInfoModalProps<TR, T> & {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
-  customization?: WalletInfoModalCustomization<TR, T>;
-}): JSX.Element | null {
-  const labels = useLabels();
+  adapters,
+  connectedAdapterType,
+  connectedWalletAddress,
+  transactionsPool,
+}: WalletInfoModalProps<TR, T, A>) {
+  const { walletModal } = useLabels();
+
+  const { explorerUrl } = useMemo(() => {
+    if (!connectedAdapterType) return { explorerUrl: undefined };
+    const adapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapters });
+    return { explorerUrl: adapter?.getExplorerUrl() };
+  }, [connectedAdapterType, adapters]);
+
+  const closeModal = () => setIsOpen(false);
 
   const defaultMotionProps: MotionProps = {
     initial: { opacity: 0, scale: 0.95 },
@@ -84,9 +96,11 @@ export function WalletInfoModal<TR, T extends Transaction<TR>>({
     exit: { opacity: 0, scale: 0.95 },
     transition: { duration: 0.2, ease: 'easeOut' },
   };
-
   const motionProps = { ...defaultMotionProps, ...customization?.motionProps };
-  const closeModal = () => setIsOpen(false);
+
+  const CustomHeader = customization?.components?.Header;
+  const CustomWalletInfo = customization?.components?.WalletInfo;
+  const CustomHistory = customization?.components?.History;
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && closeModal()}>
@@ -96,7 +110,7 @@ export function WalletInfoModal<TR, T extends Transaction<TR>>({
             <>
               <Dialog.Overlay asChild>
                 <motion.div
-                  className="fixed inset-0 bg-black/45 flex items-center justify-center p-2 z-50"
+                  className="fixed inset-0 z-50 bg-black/45"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -104,50 +118,54 @@ export function WalletInfoModal<TR, T extends Transaction<TR>>({
                 />
               </Dialog.Overlay>
               <Dialog.Content
-                className="fixed left-1/2 top-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 outline-none z-50"
+                className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 outline-none"
                 {...customization?.modalProps}
                 asChild
               >
                 <motion.div {...motionProps}>
                   <div
                     className={cn(
-                      'relative w-full max-w-2xl outline-none rounded-2xl bg-[var(--tuwa-bg-secondary)] shadow-xl max-h-[98dvh] overflow-y-auto',
+                      'relative max-h-[98dvh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-[var(--tuwa-bg-secondary)] shadow-xl outline-none',
                       customization?.classNames?.contentWrapper,
                     )}
                   >
                     {/* Header */}
-                    {customization?.components?.header ? (
-                      customization.components.header({ closeModal })
+                    {CustomHeader ? (
+                      <CustomHeader closeModal={closeModal} />
                     ) : (
-                      <div className="flex items-center justify-between border-b border-[var(--tuwa-border-primary)] p-4 sticky top-0 left-0 w-full bg-[var(--tuwa-bg-secondary)] z-10">
-                        <Dialog.Title className="text-lg font-bold text-[var(--tuwa-text-primary)]">
-                          {labels.walletModal.title}
-                        </Dialog.Title>
-                        <Dialog.Close asChild>
-                          <button
-                            type="button"
-                            onClick={closeModal}
-                            aria-label={labels.actions.close}
-                            className="cursor-pointer rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
-                          >
-                            <XMarkIcon className="h-6 w-6" />
-                          </button>
-                        </Dialog.Close>
-                      </div>
+                      <DefaultHeader closeModal={closeModal} title={walletModal.title} />
                     )}
 
                     {/* Body */}
-                    <div className="flex flex-col gap-4 p-4 sm:p-6 sm:gap-6">
-                      {customization?.components?.walletInfo ? (
-                        customization.components.walletInfo(props)
+                    <div className="flex flex-col gap-4 p-4 sm:gap-6 sm:p-6">
+                      {CustomWalletInfo ? (
+                        <CustomWalletInfo
+                          adapters={adapters}
+                          connectedAdapterType={connectedAdapterType}
+                          walletAddress={connectedWalletAddress}
+                          explorerUrl={explorerUrl}
+                        />
                       ) : (
-                        <WalletHeader walletAddress={props.walletAddress} chain={props.chain} />
+                        <WalletHeader
+                          adapters={adapters}
+                          connectedAdapterType={connectedAdapterType}
+                          walletAddress={connectedWalletAddress}
+                          explorerUrl={explorerUrl}
+                        />
                       )}
 
-                      {customization?.components?.history ? (
-                        customization.components.history(props)
+                      {CustomHistory ? (
+                        <CustomHistory
+                          adapters={adapters}
+                          transactionsPool={transactionsPool}
+                          connectedWalletAddress={connectedWalletAddress}
+                        />
                       ) : (
-                        <TransactionsHistory {...props} />
+                        <TransactionsHistory
+                          adapters={adapters}
+                          transactionsPool={transactionsPool}
+                          connectedWalletAddress={connectedWalletAddress}
+                        />
                       )}
                     </div>
                   </div>

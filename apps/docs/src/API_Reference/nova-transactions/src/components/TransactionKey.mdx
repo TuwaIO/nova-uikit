@@ -4,12 +4,12 @@
 
 # TransactionKey()
 
-> **TransactionKey**\<`TR`, `T`\>(`props`): `null` \| `Element`
+> **TransactionKey**\<`TR`, `T`, `A`\>(`__namedParameters`): `null` \| `Element`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/20015c9bfce4ecff209b6275296f35799ced635d/packages/nova-transactions/src/components/TransactionKey.tsx#L43)
+Defined in: [nova-transactions/src/components/TransactionKey.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/6aeab728cfd962d1f842390efac1e0823880290c/packages/nova-transactions/src/components/TransactionKey.tsx#L40)
 
 A component that intelligently displays the relevant keys and hashes for a transaction.
-It handles different tracker types (EVM, Gelato, Safe) and statuses (e.g., replaced transactions).
+It leverages the adapter system to show chain-specific identifiers and explorer links.
 
 ## Type Parameters
 
@@ -21,16 +21,16 @@ It handles different tracker types (EVM, Gelato, Safe) and statuses (e.g., repla
 
 `T` *extends* `Transaction`\<`TR`\>
 
+### A
+
+`A`
+
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`ToastTransactionKeyProps`](../interfaces/ToastTransactionKeyProps.md)\<`TR`, `T`\>
-
-The component props.
+[`TransactionKeyProps`](../type-aliases/TransactionKeyProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
 `null` \| `Element`
-
-The rendered component.
