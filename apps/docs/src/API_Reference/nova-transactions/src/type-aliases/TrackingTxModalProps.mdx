@@ -1,0 +1,55 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# TrackingTxModalProps\<TR, T, A\>
+
+> **TrackingTxModalProps**\<`TR`, `T`, `A`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"handleTransaction"` \| `"initialTx"` \| `"actions"` \| `"transactionsPool"` \| `"adapters"`\> & `object`
+
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L52)
+
+## Type Declaration
+
+### className?
+
+> `optional` **className**: `string`
+
+### customization?
+
+> `optional` **customization**: [`TrackingTxModalCustomization`](TrackingTxModalCustomization.md)\<`TR`, `T`, `A`\>
+
+### onClose()
+
+> **onClose**: (`txKey?`) => `void`
+
+#### Parameters
+
+##### txKey?
+
+`string`
+
+#### Returns
+
+`void`
+
+### onOpenWalletInfo()
+
+> **onOpenWalletInfo**: () => `void`
+
+#### Returns
+
+`void`
+
+## Type Parameters
+
+### TR
+
+`TR`
+
+### T
+
+`T` *extends* `Transaction`\<`TR`\>
+
+### A
+
+`A`

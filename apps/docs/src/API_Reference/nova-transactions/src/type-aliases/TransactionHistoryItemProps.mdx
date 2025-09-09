@@ -4,11 +4,11 @@
 
 # TransactionHistoryItemProps\<TR, T, A\>
 
-> **TransactionHistoryItemProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"`\>
+> **TransactionHistoryItemProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"transactionsPool"`\>
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L49)
+Defined in: [nova-transactions/src/components/TransactionHistoryItem.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L40)
 
-## Type declaration
+## Type Declaration
 
 ### className?
 
@@ -21,12 +21,6 @@ Optional additional CSS classes for the container.
 > `optional` **customization**: [`TransactionHistoryItemCustomization`](TransactionHistoryItemCustomization.md)\<`TR`, `T`, `A`\>
 
 An object to customize and override the default internal components.
-
-### transactionsPool
-
-> **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
-
-The entire pool of transactions.
 
 ### tx
 

@@ -6,7 +6,7 @@
 
 > **TransactionsHistoryCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
 
 Defines the customization options for the TransactionsHistory component.
 
@@ -30,13 +30,11 @@ Defines the customization options for the TransactionsHistory component.
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionsHistory.tsx#L20)
 
 #### listWrapper?
 
 > `optional` **listWrapper**: `string`
-
-CSS classes for the list's wrapper `div`.
 
 ***
 
@@ -44,28 +42,12 @@ CSS classes for the list's wrapper `div`.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
+Defined in: [nova-transactions/src/components/TransactionsHistory.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionsHistory.tsx#L23)
 
 #### HistoryItem?
 
 > `optional` **HistoryItem**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`TR`, `T`, `A`\>\>
 
-A custom component to use instead of the default `TransactionHistoryItem`.
-This should be a component type, not a render function.
+#### Placeholder?
 
-#### placeholder()?
-
-> `optional` **placeholder**: (`props`) => `ReactNode`
-
-A render prop to replace the default placeholder component
-(e.g., for "Connect Wallet" or "No Transactions").
-
-##### Parameters
-
-###### props
-
-`CustomPlaceholderProps`
-
-##### Returns
-
-`ReactNode`
+> `optional` **Placeholder**: `ComponentType`\<`CustomPlaceholderProps`\>

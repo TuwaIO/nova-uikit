@@ -1,10 +1,11 @@
 /**
- * @file This file contains the main `NovaProvider` component, the primary entry point for the UI library.
+ * @file This file contains the main `NovaProvider` component, which is the root
+ * for the Nova UI library. It should be placed at the top level of your application
+ * to orchestrate modals, toasts, and internationalization.
  */
 
 import { deepMerge, useMediaQuery } from '@tuwaio/nova-core';
 import {
-  IInitializeTxTrackingStore,
   ITxTrackingStore,
   Transaction,
   TransactionAdapter,
@@ -13,7 +14,7 @@ import {
   TxActions,
   TxAdapter,
 } from '@tuwaio/pulsar-core';
-import { JSX, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
 
 import {
@@ -29,16 +30,32 @@ import { defaultLabels } from '../i18n/en';
 import { TuwaLabels } from '../i18n/types';
 import { LabelsProvider } from './LabelsProvider';
 
+/**
+ * Maps a transaction's final status to the corresponding toast type for visual feedback.
+ */
 const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
   [TransactionStatus.Success]: 'success',
   [TransactionStatus.Failed]: 'error',
   [TransactionStatus.Replaced]: 'info',
 };
 
+/**
+ * Defines the props for the NovaProvider component.
+ * @template TR - The type of the tracker identifier.
+ * @template T - The transaction type.
+ * @template A - The type of the key returned by an action function.
+ */
 export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
+  /** An array of configured adapters for different blockchain ecosystems. */
   adapters: TxAdapter<TR, T, A>[];
+  /** The address of the currently connected wallet. */
   connectedWalletAddress?: string;
+  /** The adapter type of the currently connected wallet. */
   connectedAdapterType?: TransactionAdapter;
+  /** The global transaction pool from the Pulsar store. */
+  transactionsPool: TransactionPool<TR, T>;
+  /** A registry of retryable actions, keyed by `actionKey`. */
+  actions?: TxActions;
   /** A partial object of labels to override the default English text. */
   labels?: Partial<TuwaLabels>;
   /** An object to enable or disable major UI features. All are enabled by default. */
@@ -53,43 +70,33 @@ export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
     walletInfoModal?: WalletInfoModalCustomization<TR, T, A>;
     trackingTxModal?: TrackingTxModalCustomization<TR, T, A>;
   };
-  /** A registry of retryable actions, keyed by `actionKey`. */
-  actions?: TxActions;
-  /** The global transaction pool from the tracking store. */
-  transactionsPool: TransactionPool<TR, T>;
-} & Pick<IInitializeTxTrackingStore<TR, T>, 'closeTxTrackedModal'> &
-  Partial<Pick<ITxTrackingStore<TR, T, A>, 'handleTransaction' | 'initialTx'>> &
+} & Pick<ITxTrackingStore<TR, T, A>, 'closeTxTrackedModal' | 'handleTransaction' | 'initialTx'> &
   ToastContainerProps;
 
 /**
- * The main provider for the Nova UI ecosystem.
- * It orchestrates toasts, modals, and the i18n context for the entire application.
- *
- * @param {NovaProviderProps<TR, T>} props - The component props.
- * @returns {JSX.Element} The rendered provider.
+ * The main component for the Nova UI ecosystem. It renders and orchestrates all
+ * UI elements like toasts and modals, and provides the i18n context.
+ * This component does not wrap any children.
  */
 export function NovaProvider<TR, T extends Transaction<TR>, A>({
   adapters,
   connectedWalletAddress,
   connectedAdapterType,
+  transactionsPool,
+  initialTx,
+  handleTransaction,
+  closeTxTrackedModal,
+  actions,
   labels,
   features,
   customization,
-  closeTxTrackedModal,
-  actions,
-  handleTransaction,
-  initialTx,
-  transactionsPool,
   ...toastProps
-}: NovaProviderProps<TR, T, A>): JSX.Element {
+}: NovaProviderProps<TR, T, A>) {
   const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<TR, T>>(transactionsPool);
 
   const isMobile = useMediaQuery('(max-width: 767px)');
-  const isTrackingModalOpen =
-    !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
 
-  // Memoize feature flags for stability.
   const enabledFeatures = useMemo(
     () => ({
       toasts: features?.toasts ?? true,
@@ -99,19 +106,19 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
     [features],
   );
 
-  // Merge default and custom labels.
   const mergedLabels = useMemo(() => deepMerge(defaultLabels, labels || {}), [labels]);
 
-  // Effect to handle automatic toast notifications.
   useEffect(() => {
     if (!enabledFeatures.toasts) return;
 
-    const showOrUpdateToast = (tx: T, type: TypeOptions) => {
+    const showOrUpdateToast = (tx: T) => {
+      const type = tx.pending ? 'info' : (STATUS_TO_TOAST_TYPE[tx.status!] ?? 'info');
+
       const content = (props: ToastContentProps) => (
         <ToastTransaction
           {...props}
-          tx={tx}
           transactionsPool={transactionsPool}
+          tx={tx}
           openWalletInfoModal={enabledFeatures.walletInfoModal ? () => setIsWalletInfoModalOpen(true) : undefined}
           customization={customization?.toast}
           adapters={adapters}
@@ -128,39 +135,28 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
 
     const prevPool = prevTransactionsRef.current;
 
-    // Compare current pool with the previous one to detect changes.
     Object.values(transactionsPool).forEach((currentTx) => {
       const prevTx = prevPool[currentTx.txKey];
-      const statusChanged = prevTx && prevTx.status !== currentTx.status;
-      const hashAppeared =
-        prevTx &&
-        prevTx?.adapter === TransactionAdapter.EVM &&
-        !prevTx.hash &&
-        currentTx?.adapter === TransactionAdapter.EVM &&
-        currentTx.hash;
 
-      // Show toast for new pending transactions.
-      if (!prevTx && currentTx.pending) {
-        showOrUpdateToast(currentTx, 'info');
+      if (!prevTx) {
+        if (currentTx.pending) {
+          showOrUpdateToast(currentTx);
+        }
+        return;
       }
-      // Update toast for pending transactions and nonce changes.
-      if (
-        (prevTx && prevTx?.adapter === TransactionAdapter.EVM && prevTx.pending ? prevTx.nonce : undefined) !==
-        (currentTx?.adapter === TransactionAdapter.EVM && currentTx.pending ? currentTx?.nonce : undefined)
-      ) {
-        showOrUpdateToast(currentTx, 'info');
-      }
-      // Update toast when a final status is reached or a hash appears.
-      else if (statusChanged || hashAppeared) {
-        const toastType = STATUS_TO_TOAST_TYPE[currentTx.status!] ?? 'info';
-        showOrUpdateToast(currentTx, toastType);
+
+      if (JSON.stringify(prevTx) !== JSON.stringify(currentTx)) {
+        showOrUpdateToast(currentTx);
       }
     });
 
     prevTransactionsRef.current = transactionsPool;
-  }, [transactionsPool, customization?.toast, enabledFeatures]);
+  }, [transactionsPool, adapters, customization?.toast, enabledFeatures, connectedWalletAddress]);
 
-  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || !isTrackingModalOpen || !isWalletInfoModalOpen);
+  const isTrackingModalOpen =
+    !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
+
+  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isWalletInfoModalOpen));
 
   return (
     <LabelsProvider labels={mergedLabels}>
@@ -181,11 +177,11 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
       {enabledFeatures.walletInfoModal && (
         <WalletInfoModal
           transactionsPool={transactionsPool}
-          connectedWalletAddress={connectedWalletAddress}
           isOpen={isWalletInfoModalOpen}
           setIsOpen={setIsWalletInfoModalOpen}
           customization={customization?.walletInfoModal}
           adapters={adapters}
+          connectedWalletAddress={connectedWalletAddress}
           connectedAdapterType={connectedAdapterType}
         />
       )}
@@ -200,7 +196,6 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
           actions={actions}
           handleTransaction={handleTransaction}
           adapters={adapters}
-          connectedAdapterType={connectedAdapterType}
         />
       )}
     </LabelsProvider>

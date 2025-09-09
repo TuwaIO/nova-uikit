@@ -1,0 +1,68 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# TransactionKeyProps\<TR, T, A\>
+
+> **TransactionKeyProps**\<`TR`, `T`, `A`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"transactionsPool"`\> & `object`
+
+Defined in: [nova-transactions/src/components/TransactionKey.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionKey.tsx#L19)
+
+Defines the props for the TransactionKey component.
+
+## Type Declaration
+
+### className?
+
+> `optional` **className**: `string`
+
+Optional additional CSS classes for the container.
+
+### renderHashLink()?
+
+> `optional` **renderHashLink**: (`props`) => `ReactNode`
+
+An optional render prop to allow for complete customization of how the hash link is rendered.
+If not provided, the default `HashLink` component will be used.
+
+#### Parameters
+
+##### props
+
+[`HashLinkProps`](HashLinkProps.md)
+
+#### Returns
+
+`ReactNode`
+
+### tx
+
+> **tx**: `T`
+
+The transaction object to display identifiers for.
+
+### variant?
+
+> `optional` **variant**: `"toast"` \| `"history"`
+
+The visual variant, which applies different container styles.
+
+## Type Parameters
+
+### TR
+
+`TR`
+
+The type of the tracker identifier.
+
+### T
+
+`T` *extends* `Transaction`\<`TR`\>
+
+The transaction type.
+
+### A
+
+`A`
+
+The type of the key returned by an action function.

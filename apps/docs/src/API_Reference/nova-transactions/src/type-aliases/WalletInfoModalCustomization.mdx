@@ -6,10 +6,9 @@
 
 > **WalletInfoModalCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L27)
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L23)
 
 Defines the customization options for the WalletInfoModal.
-Allows customization of modal behavior, animations, and individual UI components.
 
 ## Type Parameters
 
@@ -31,13 +30,11 @@ Allows customization of modal behavior, animations, and individual UI components
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L32)
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L26)
 
 #### contentWrapper?
 
 > `optional` **contentWrapper**: `string`
-
-CSS classes for the main content wrapper div.
 
 ***
 
@@ -45,57 +42,19 @@ CSS classes for the main content wrapper div.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L37)
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L29)
 
-Custom component overrides for different parts of the modal
+#### Header?
 
-#### header()?
+> `optional` **Header**: `ComponentType`\<`CustomHeaderProps`\>
 
-> `optional` **header**: (`props`) => `ReactNode`
+#### History?
 
-A render prop to replace the entire modal header.
+> `optional` **History**: `ComponentType`\<[`TransactionsHistoryProps`](TransactionsHistoryProps.md)\<`TR`, `T`, `A`\>\>
 
-##### Parameters
+#### WalletInfo?
 
-###### props
-
-`CustomHeaderProps`
-
-##### Returns
-
-`ReactNode`
-
-#### history()?
-
-> `optional` **history**: (`props`) => `ReactNode`
-
-A render prop to replace the `TransactionsHistory` component.
-
-##### Parameters
-
-###### props
-
-`CustomHistoryProps`\<`TR`, `T`, `A`\>
-
-##### Returns
-
-`ReactNode`
-
-#### walletInfo()?
-
-> `optional` **walletInfo**: (`props`) => `ReactNode`
-
-A render prop to replace the `WalletHeader` component.
-
-##### Parameters
-
-###### props
-
-`CustomWalletInfoProps`\<`TR`, `T`, `A`\>
-
-##### Returns
-
-`ReactNode`
+> `optional` **WalletInfo**: `ComponentType`\<[`WalletHeaderProps`](WalletHeaderProps.md)\<`TR`, `T`, `A`\>\>
 
 ***
 
@@ -103,9 +62,7 @@ A render prop to replace the `WalletHeader` component.
 
 > `optional` **modalProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog.Content`\>\>
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L29)
-
-Custom props to pass to the underlying Radix UI Dialog.Content component
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L24)
 
 ***
 
@@ -113,6 +70,4 @@ Custom props to pass to the underlying Radix UI Dialog.Content component
 
 > `optional` **motionProps**: `MotionProps`
 
-Defined in: [packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L31)
-
-Custom Framer Motion animation properties
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletInfoModal.tsx#L25)

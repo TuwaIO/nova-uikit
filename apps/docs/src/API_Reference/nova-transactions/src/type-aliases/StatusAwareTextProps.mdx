@@ -1,0 +1,70 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# StatusAwareTextProps
+
+> **StatusAwareTextProps** = `object`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L20)
+
+## Properties
+
+### applyColor?
+
+> `optional` **applyColor**: `boolean`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L33)
+
+If true, applies a status-specific color to the text. Defaults to false.
+
+***
+
+### className?
+
+> `optional` **className**: `string`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L35)
+
+Optional additional CSS classes for custom styling.
+
+***
+
+### fallback?
+
+> `optional` **fallback**: `string`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L29)
+
+A fallback string to display if `source` is not provided or is invalid.
+
+***
+
+### source?
+
+> `optional` **source**: `string` \| readonly `string`[]
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L27)
+
+The source for the text. Can be a single string for static text, or an array of strings
+for dynamic text based on status. The array format must be: `[pending, success, error, replaced]`.
+
+***
+
+### txStatus?
+
+> `optional` **txStatus**: `TransactionStatus`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L22)
+
+The current status of the transaction, used to select the correct text and color.
+
+***
+
+### variant
+
+> **variant**: `"title"` \| `"description"`
+
+Defined in: [nova-transactions/src/components/StatusAwareText.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/StatusAwareText.tsx#L31)
+
+The visual variant, which determines the base text style ('title' or 'description').

@@ -6,10 +6,7 @@
 
 > **ToastTransactionCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/ToastTransaction.tsx#L28)
-
-Defines the structure for the `customization` prop, allowing users to override
-default sub-components with their own implementations.
+Defined in: [nova-transactions/src/components/ToastTransaction.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/ToastTransaction.tsx#L20)
 
 ## Type Parameters
 
@@ -31,100 +28,28 @@ default sub-components with their own implementations.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/ToastTransaction.tsx#L29)
+Defined in: [nova-transactions/src/components/ToastTransaction.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/ToastTransaction.tsx#L21)
 
-#### cancelButton()?
+#### CancelButton?
 
-> `optional` **cancelButton**: (`props`) => `ReactNode`
+> `optional` **CancelButton**: `ComponentType`\<`CustomActionButtonProps`\>
 
-Override the default "Cancel" button.
+#### SpeedUpButton?
 
-##### Parameters
+> `optional` **SpeedUpButton**: `ComponentType`\<`CustomActionButtonProps`\>
 
-###### props
+#### StatusAwareText?
 
-`CustomActionButtonProps`
+> `optional` **StatusAwareText**: `ComponentType`\<[`StatusAwareTextProps`](StatusAwareTextProps.md)\>
 
-##### Returns
+#### StatusBadge?
 
-`ReactNode`
+> `optional` **StatusBadge**: `ComponentType`\<[`TransactionStatusBadgeProps`](TransactionStatusBadgeProps.md)\<`TR`, `T`\>\>
 
-#### speedUpButton()?
+#### TransactionKey?
 
-> `optional` **speedUpButton**: (`props`) => `ReactNode`
+> `optional` **TransactionKey**: `ComponentType`\<[`TransactionKeyProps`](TransactionKeyProps.md)\<`TR`, `T`, `A`\>\>
 
-Override the default "Speed Up" button.
+#### WalletInfoButton?
 
-##### Parameters
-
-###### props
-
-`CustomActionButtonProps`
-
-##### Returns
-
-`ReactNode`
-
-#### statusAwareText()?
-
-> `optional` **statusAwareText**: (`props`) => `ReactNode`
-
-Override the default title/description component.
-
-##### Parameters
-
-###### props
-
-`CustomStatusAwareTextProps`
-
-##### Returns
-
-`ReactNode`
-
-#### statusBadge()?
-
-> `optional` **statusBadge**: (`props`) => `ReactNode`
-
-Override the default status badge component.
-
-##### Parameters
-
-###### props
-
-`CustomStatusBadgeProps`\<`TR`, `T`\>
-
-##### Returns
-
-`ReactNode`
-
-#### transactionKey()?
-
-> `optional` **transactionKey**: (`props`) => `ReactNode`
-
-Override the default component for displaying transaction keys/hashes.
-
-##### Parameters
-
-###### props
-
-`CustomTransactionKeyProps`\<`TR`, `T`, `A`\>
-
-##### Returns
-
-`ReactNode`
-
-#### walletInfoButton()?
-
-> `optional` **walletInfoButton**: (`props`) => `ReactNode`
-
-Override the default "Open wallet info" button.
-
-##### Parameters
-
-###### props
-
-`CustomActionButtonProps`
-
-##### Returns
-
-`ReactNode`
+> `optional` **WalletInfoButton**: `ComponentType`\<`CustomActionButtonProps`\>

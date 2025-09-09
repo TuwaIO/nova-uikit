@@ -1,94 +1,144 @@
-// TODO: need add ENS support for multiple chains and adapters
-
 /**
  * @file This file contains the `WalletHeader` component, used to display user avatar, name, and address.
  */
 
 import { cn, textCenterEllipsis } from '@tuwaio/nova-core';
-import { getAvatar, getName } from '@tuwaio/pulsar-evm';
-import { JSX, ReactNode, useEffect, useState } from 'react';
+import { selectAdapterByKey, Transaction } from '@tuwaio/pulsar-core';
+import { ReactNode, useEffect, useState } from 'react';
 
-import { useLabels } from '../../providers';
-import { WalletAddressDisplay } from './WalletAddressDisplay';
-import { WalletAvatar } from './WalletAvatar';
+import { NovaProviderProps, useLabels } from '../../providers';
+import { WalletAddressDisplay, WalletAddressDisplayProps } from './WalletAddressDisplay';
+import { WalletAvatar, WalletAvatarProps } from './WalletAvatar';
 
 // --- Prop Types for Customization ---
-type AvatarRenderProps = { address: string; ensAvatar?: string };
 type NameRenderProps = { ensName?: string; isLoading: boolean; address: string };
-type AddressRenderProps = { address: string; explorerUrl: string };
 
 /**
  * Defines the props for the `WalletHeader` component, including extensive customization options.
  */
-export interface WalletHeaderProps {
-  /** The user's wallet address. If undefined, the 'not connected' state is shown. */
+export type WalletHeaderProps<TR, T extends Transaction<TR>, A> = Pick<
+  NovaProviderProps<TR, T, A>,
+  'adapters' | 'connectedAdapterType'
+> & {
   walletAddress?: string;
-  explorerUrl: string;
-  /** Optional additional CSS classes for the container. */
+  explorerUrl?: string;
   className?: string;
-  /** A render prop to replace the default `WalletAvatar` component. */
-  renderAvatar?: (props: AvatarRenderProps) => ReactNode;
-  /** A render prop to replace the default ENS name display. */
+  renderAvatar?: (props: WalletAvatarProps) => ReactNode;
   renderName?: (props: NameRenderProps) => ReactNode;
-  /** A render prop to replace the default `WalletAddressDisplay` component. */
-  renderAddressDisplay?: (props: AddressRenderProps) => ReactNode;
-  /** A render prop to replace the default content shown when no wallet is connected. */
+  renderAddressDisplay?: (props: WalletAddressDisplayProps) => ReactNode;
   renderNoWalletContent?: () => ReactNode;
-}
+};
+
+// --- Default Sub-Components ---
+
+const DefaultNameDisplay = ({
+  isLoading,
+  ensName,
+  walletAddress,
+  explorerUrl,
+  renderAddressDisplay,
+}: {
+  isLoading: boolean;
+  ensName?: string;
+  walletAddress: string;
+  explorerUrl?: string;
+  renderAddressDisplay?: (props: WalletAddressDisplayProps) => ReactNode;
+}) => (
+  <div className="flex flex-col">
+    {/* Primary content area - ENS name or large address */}
+    <div className="mb-1.5 flex h-7 items-center">
+      {isLoading ? (
+        <div className="h-full w-48 animate-pulse rounded-md bg-[var(--tuwa-bg-muted)]" />
+      ) : ensName ? (
+        <h2 className="text-xl font-bold text-[var(--tuwa-text-primary)]">{ensName}</h2>
+      ) : (
+        <WalletAddressDisplay
+          address={walletAddress}
+          explorerUrl={explorerUrl}
+          className="rounded-none bg-transparent px-0 py-0 text-xl font-bold text-[var(--tuwa-text-primary)]"
+        />
+      )}
+    </div>
+
+    {/* Secondary content area - small address display (only when ENS exists) */}
+    <div className="flex h-5 items-center">
+      {!isLoading &&
+        ensName &&
+        (renderAddressDisplay ? (
+          renderAddressDisplay({ address: walletAddress, explorerUrl })
+        ) : (
+          <WalletAddressDisplay address={walletAddress} explorerUrl={explorerUrl} />
+        ))}
+    </div>
+  </div>
+);
 
 /**
  * A component that displays the header for the wallet modal, including the user's avatar,
- * ENS name (if available), and address. It handles loading states for ENS data and
- * provides a "not connected" view.
- *
- * @param {WalletHeaderProps} props - The component props.
- * @returns {JSX.Element} The rendered wallet header.
+ * name (if available), and address. It leverages the active adapter to fetch name service data.
  */
-export function WalletHeader({
+export function WalletHeader<TR, T extends Transaction<TR>, A>({
   walletAddress,
+  adapters,
+  connectedAdapterType,
   className,
   renderAvatar,
   renderName,
   renderAddressDisplay,
   renderNoWalletContent,
   explorerUrl,
-}: WalletHeaderProps): JSX.Element {
-  const labels = useLabels();
-
-  const [ensName, setEnsName] = useState<string | undefined>(undefined);
-  const [ensAvatar, setEnsAvatar] = useState<string | undefined>(undefined);
+}: WalletHeaderProps<TR, T, A>) {
+  const { walletModal } = useLabels();
+  const [ensName, setEnsName] = useState<string | null>(null);
+  const [ensAvatar, setEnsAvatar] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch ENS data whenever the wallet address changes.
+  // Fetch Name Service data whenever the wallet address or active adapter changes.
   useEffect(() => {
-    const fetchEnsData = async () => {
-      if (walletAddress) {
-        setIsLoading(true);
-        setEnsName(undefined);
-        setEnsAvatar(undefined);
+    const fetchNameData = async () => {
+      if (!walletAddress || !connectedAdapterType) {
+        setIsLoading(false);
+        return;
+      }
 
-        try {
-          const name = await getName(walletAddress as `0x${string}`);
-          if (name) {
-            setEnsName(name);
-            const avatar = await getAvatar(name);
+      // Select the currently active adapter.
+      const adapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapters });
+
+      // Check if the adapter supports name and avatar resolution.
+      const hasNameResolver = adapter && 'getName' in adapter && typeof adapter.getName === 'function';
+      const hasAvatarResolver = adapter && 'getAvatar' in adapter && typeof adapter.getAvatar === 'function';
+
+      if (!hasNameResolver) {
+        setIsLoading(false);
+        return; // This adapter doesn't support ENS or equivalent.
+      }
+
+      setIsLoading(true);
+      setEnsName(null);
+      setEnsAvatar(null);
+
+      try {
+        const name = adapter?.getName ? await adapter.getName(walletAddress) : null;
+        if (name) {
+          setEnsName(name);
+          if (hasAvatarResolver) {
+            const avatar = adapter?.getAvatar ? await adapter.getAvatar(name) : null;
             setEnsAvatar(avatar);
           }
-        } finally {
-          setIsLoading(false);
         }
+      } catch (error) {
+        console.error('Failed to fetch name service data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchEnsData();
-  }, [walletAddress]);
+    fetchNameData();
+  }, [walletAddress, adapters, connectedAdapterType]);
 
   // --- Render "Not Connected" State ---
   if (!walletAddress) {
-    if (renderNoWalletContent) {
-      return <>{renderNoWalletContent()}</>;
-    }
-
+    if (renderNoWalletContent) return <>{renderNoWalletContent()}</>;
     return (
       <div
         className={cn(
@@ -96,7 +146,7 @@ export function WalletHeader({
           className,
         )}
       >
-        {labels.walletModal.header.notConnected}
+        {walletModal.header.notConnected}
       </div>
     );
   }
@@ -109,7 +159,7 @@ export function WalletHeader({
 
   // --- Render "Connected" State ---
   return (
-    <div className={cn('flex items-center gap-4 min-h-[4rem]', className)}>
+    <div className={cn('flex min-h-[4rem] items-center gap-4', className)}>
       <div>
         {renderAvatar ? (
           renderAvatar({ address: walletAddress, ensAvatar })
@@ -118,37 +168,17 @@ export function WalletHeader({
         )}
       </div>
 
-      <div className="flex flex-col justify-center min-h-[3.5rem] min-w-[200px]">
+      <div className="flex min-h-[3.5rem] min-w-[200px] flex-col justify-center">
         {renderName ? (
           renderName({ ensName: ensNameAbbreviated, isLoading, address: walletAddress })
         ) : (
-          <div className="flex flex-col">
-            {/* Primary content area - ENS name or large address */}
-            <div className="h-7 flex items-center mb-1.5">
-              {isLoading ? (
-                <div className="h-full w-48 animate-pulse rounded-md bg-[var(--tuwa-bg-muted)]" />
-              ) : ensNameAbbreviated ? (
-                <h2 className="text-xl font-bold text-[var(--tuwa-text-primary)]">{ensNameAbbreviated}</h2>
-              ) : (
-                <WalletAddressDisplay
-                  address={walletAddress}
-                  explorerUrl={explorerUrl}
-                  className="text-xl font-bold text-[var(--tuwa-text-primary)] bg-transparent px-0 py-0 rounded-none"
-                />
-              )}
-            </div>
-
-            {/* Secondary content area - small address display (only when ENS exists) */}
-            <div className="h-5 flex items-center">
-              {!isLoading &&
-                ensNameAbbreviated &&
-                (renderAddressDisplay ? (
-                  renderAddressDisplay({ address: walletAddress, explorerUrl })
-                ) : (
-                  <WalletAddressDisplay address={walletAddress} explorerUrl={explorerUrl} />
-                ))}
-            </div>
-          </div>
+          <DefaultNameDisplay
+            isLoading={isLoading}
+            ensName={ensNameAbbreviated}
+            walletAddress={walletAddress}
+            explorerUrl={explorerUrl}
+            renderAddressDisplay={renderAddressDisplay}
+          />
         )}
       </div>
     </div>

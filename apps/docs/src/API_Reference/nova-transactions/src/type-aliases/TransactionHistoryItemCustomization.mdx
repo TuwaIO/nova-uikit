@@ -6,7 +6,7 @@
 
 > **TransactionHistoryItemCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L32)
+Defined in: [nova-transactions/src/components/TransactionHistoryItem.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L29)
 
 Defines the structure for the `customization` prop, allowing users to override
 default sub-components with their own implementations for a history item.
@@ -31,100 +31,28 @@ default sub-components with their own implementations for a history item.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L33)
+Defined in: [nova-transactions/src/components/TransactionHistoryItem.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L30)
 
-#### description()?
+#### Description?
 
-> `optional` **description**: (`props`) => `ReactNode`
+> `optional` **Description**: `ComponentType`\<[`StatusAwareTextProps`](StatusAwareTextProps.md)\>
 
-Override the default description component.
+#### Icon?
 
-##### Parameters
+> `optional` **Icon**: `ComponentType`\<`CustomIconProps`\>
 
-###### props
+#### StatusBadge?
 
-`CustomStatusAwareTextProps`
+> `optional` **StatusBadge**: `ComponentType`\<[`TransactionStatusBadgeProps`](TransactionStatusBadgeProps.md)\<`TR`, `T`\>\>
 
-##### Returns
+#### Timestamp?
 
-`ReactNode`
+> `optional` **Timestamp**: `ComponentType`\<`CustomTimestampProps`\>
 
-#### icon()?
+#### Title?
 
-> `optional` **icon**: (`props`) => `ReactNode`
+> `optional` **Title**: `ComponentType`\<[`StatusAwareTextProps`](StatusAwareTextProps.md)\>
 
-Override the default chain icon.
+#### TransactionKey?
 
-##### Parameters
-
-###### props
-
-`CustomIconProps`
-
-##### Returns
-
-`ReactNode`
-
-#### statusBadge()?
-
-> `optional` **statusBadge**: (`props`) => `ReactNode`
-
-Override the default status badge component.
-
-##### Parameters
-
-###### props
-
-`CustomStatusBadgeProps`\<`TR`, `T`\>
-
-##### Returns
-
-`ReactNode`
-
-#### timestamp()?
-
-> `optional` **timestamp**: (`props`) => `ReactNode`
-
-Override the default timestamp component.
-
-##### Parameters
-
-###### props
-
-`CustomTimestampProps`
-
-##### Returns
-
-`ReactNode`
-
-#### title()?
-
-> `optional` **title**: (`props`) => `ReactNode`
-
-Override the default title component.
-
-##### Parameters
-
-###### props
-
-`CustomStatusAwareTextProps`
-
-##### Returns
-
-`ReactNode`
-
-#### transactionKey()?
-
-> `optional` **transactionKey**: (`props`) => `ReactNode`
-
-Override the default component for displaying transaction keys/hashes.
-
-##### Parameters
-
-###### props
-
-`CustomTransactionKeyProps`\<`TR`, `T`, `A`\>
-
-##### Returns
-
-`ReactNode`
+> `optional` **TransactionKey**: `ComponentType`\<[`TransactionKeyProps`](TransactionKeyProps.md)\<`TR`, `T`, `A`\>\>

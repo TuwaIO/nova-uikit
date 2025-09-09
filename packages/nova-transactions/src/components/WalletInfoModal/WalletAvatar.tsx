@@ -4,49 +4,57 @@
 
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { JSX, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isHex, zeroAddress } from 'viem';
 
 import { useLabels } from '../../providers';
 
 export type WalletAvatarProps = {
-  /** The user's wallet address. Used for the blockie fallback and background color generation. */
+  /** The user's wallet address, used for the blockie fallback and background color. */
   address: string;
   /** An optional URL for the user's ENS avatar image. */
-  ensAvatar?: string;
+  ensAvatar?: string | null;
   /** Optional additional CSS classes for the container. */
   className?: string;
 };
 
 /**
  * A component that displays a user's avatar.
- * It prioritizes showing the provided `ensAvatar`. If unavailable, it falls back
- * to a procedurally generated "blockie" based on the user's address.
- * It also generates a unique background color from the address as a placeholder.
  *
- * @param {WalletAvatarProps} props - The component props.
- * @returns {JSX.Element} The rendered avatar component.
+ * It prioritizes showing the provided `ensAvatar`. If unavailable or if the image fails to load,
+ * it falls back to a procedurally generated "blockie" based on the user's address.
+ * It also generates a unique background color from the address as a placeholder.
  */
-export function WalletAvatar({ address, ensAvatar, className }: WalletAvatarProps): JSX.Element {
-  const labels = useLabels();
+export function WalletAvatar({ address, ensAvatar, className }: WalletAvatarProps) {
+  const { walletModal } = useLabels();
 
-  // Generate a unique, consistent background color from the first 6 hex characters of the address.
-  const bgColor = `#${address.slice(2, 8)}`;
+  // The source URL for the image, which can change if the ENS avatar fails to load.
+  const [imageSrc, setImageSrc] = useState(ensAvatar);
 
-  const [avatar, setAvatar] = useState<string | undefined>(undefined);
+  // Memoize the generated blockie to avoid re-creating it on every render.
+  const blockie = useMemo(() => makeBlockie(isHex(address) ? address : zeroAddress), [address]);
 
+  // Memoize the background color to avoid re-calculating it on every render.
+  const bgColor = useMemo(() => `#${address.slice(2, 8)}`, [address]);
+
+  // This effect resets the image source whenever the `ensAvatar` prop changes.
   useEffect(() => {
-    setAvatar(ensAvatar ?? makeBlockie(isHex(address) ? address : zeroAddress));
-  }, [ensAvatar, address]);
+    setImageSrc(ensAvatar);
+  }, [ensAvatar]);
+
+  // If the ENS avatar URL is invalid, this handler will set the image source to the blockie fallback.
+  const handleError = () => {
+    setImageSrc(blockie);
+  };
 
   return (
     <div className={cn('h-12 w-12 flex-shrink-0 rounded-full', className)} style={{ backgroundColor: bgColor }}>
       <img
+        key={ensAvatar} // Force re-mount of img tag when ensAvatar changes
         className="h-full w-full rounded-full object-cover"
-        // Use the ENS avatar if provided, otherwise generate a blockie as a fallback.
-        src={avatar}
-        alt={`${labels.walletModal.header.avatarAlt} ${address}`}
-        onError={() => setAvatar(makeBlockie(isHex(address) ? address : zeroAddress))}
+        src={imageSrc || blockie}
+        alt={`${walletModal.header.avatarAlt} ${address}`}
+        onError={handleError}
       />
     </div>
   );

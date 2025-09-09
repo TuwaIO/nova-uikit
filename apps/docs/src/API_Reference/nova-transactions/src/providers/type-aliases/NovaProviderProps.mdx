@@ -4,11 +4,13 @@
 
 # NovaProviderProps\<TR, T, A\>
 
-> **NovaProviderProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<`IInitializeTxTrackingStore`\<`TR`, `T`\>, `"closeTxTrackedModal"`\> & `Partial`\<`Pick`\<`ITxTrackingStore`\<`TR`, `T`, `A`\>, `"handleTransaction"` \| `"initialTx"`\>\> & `ToastContainerProps`
+> **NovaProviderProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<`ITxTrackingStore`\<`TR`, `T`, `A`\>, `"closeTxTrackedModal"` \| `"handleTransaction"` \| `"initialTx"`\> & `ToastContainerProps`
 
-Defined in: [packages/nova-transactions/src/providers/NovaProvider.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/providers/NovaProvider.tsx#L38)
+Defined in: [nova-transactions/src/providers/NovaProvider.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/providers/NovaProvider.tsx#L48)
 
-## Type declaration
+Defines the props for the NovaProvider component.
+
+## Type Declaration
 
 ### actions?
 
@@ -20,13 +22,19 @@ A registry of retryable actions, keyed by `actionKey`.
 
 > **adapters**: `TxAdapter`\<`TR`, `T`, `A`\>[]
 
+An array of configured adapters for different blockchain ecosystems.
+
 ### connectedAdapterType?
 
 > `optional` **connectedAdapterType**: `TransactionAdapter`
 
+The adapter type of the currently connected wallet.
+
 ### connectedWalletAddress?
 
 > `optional` **connectedWalletAddress**: `string`
+
+The address of the currently connected wallet.
 
 ### customization?
 
@@ -74,7 +82,7 @@ A partial object of labels to override the default English text.
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
 
-The global transaction pool from the tracking store.
+The global transaction pool from the Pulsar store.
 
 ## Type Parameters
 
@@ -82,10 +90,16 @@ The global transaction pool from the tracking store.
 
 `TR`
 
+The type of the tracker identifier.
+
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
 
+The transaction type.
+
 ### A
 
 `A`
+
+The type of the key returned by an action function.

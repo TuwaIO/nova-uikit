@@ -1,0 +1,89 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# WalletHeaderProps\<TR, T, A\>
+
+> **WalletHeaderProps**\<`TR`, `T`, `A`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"connectedAdapterType"`\> & `object`
+
+Defined in: [nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/WalletInfoModal/WalletHeader.tsx#L19)
+
+Defines the props for the `WalletHeader` component, including extensive customization options.
+
+## Type Declaration
+
+### className?
+
+> `optional` **className**: `string`
+
+### explorerUrl?
+
+> `optional` **explorerUrl**: `string`
+
+### renderAddressDisplay()?
+
+> `optional` **renderAddressDisplay**: (`props`) => `ReactNode`
+
+#### Parameters
+
+##### props
+
+[`WalletAddressDisplayProps`](WalletAddressDisplayProps.md)
+
+#### Returns
+
+`ReactNode`
+
+### renderAvatar()?
+
+> `optional` **renderAvatar**: (`props`) => `ReactNode`
+
+#### Parameters
+
+##### props
+
+[`WalletAvatarProps`](WalletAvatarProps.md)
+
+#### Returns
+
+`ReactNode`
+
+### renderName()?
+
+> `optional` **renderName**: (`props`) => `ReactNode`
+
+#### Parameters
+
+##### props
+
+`NameRenderProps`
+
+#### Returns
+
+`ReactNode`
+
+### renderNoWalletContent()?
+
+> `optional` **renderNoWalletContent**: () => `ReactNode`
+
+#### Returns
+
+`ReactNode`
+
+### walletAddress?
+
+> `optional` **walletAddress**: `string`
+
+## Type Parameters
+
+### TR
+
+`TR`
+
+### T
+
+`T` *extends* `Transaction`\<`TR`\>
+
+### A
+
+`A`

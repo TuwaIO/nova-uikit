@@ -6,9 +6,9 @@
 
 > **TxInfoBlockProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"adapters"` \| `"transactionsPool"`\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L43)
+Defined in: [nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L25)
 
-## Type declaration
+## Type Declaration
 
 ### className?
 
@@ -20,13 +20,9 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlo
 
 ### tx
 
-> **tx**: `T` & `object`
+> **tx**: `T` \| `InitialTransaction`
 
-#### Type declaration
-
-##### desiredChainID?
-
-> `optional` **desiredChainID**: `number`
+The transaction object to display, which can be a full transaction or an initial one.
 
 ## Type Parameters
 

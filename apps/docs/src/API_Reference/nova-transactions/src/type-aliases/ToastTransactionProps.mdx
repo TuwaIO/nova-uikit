@@ -6,45 +6,29 @@
 
 > **ToastTransactionProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"transactionsPool"` \| `"adapters"` \| `"connectedWalletAddress"`\>
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/ToastTransaction.tsx#L45)
+Defined in: [nova-transactions/src/components/ToastTransaction.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/ToastTransaction.tsx#L31)
 
-## Type declaration
+## Type Declaration
 
 ### className?
 
 > `optional` **className**: `string`
 
-Optional additional CSS classes for the toast container.
-
 ### closeToast?
 
 > `optional` **closeToast**: `ToastContentProps`\[`"closeToast"`\]
-
-Props from `react-toastify` to control the toast itself.
 
 ### customization?
 
 > `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`TR`, `T`, `A`\>
 
-An object to customize and override the default internal components.
-
 ### icon?
 
 > `optional` **icon**: `ReactNode`
 
-An optional custom icon to display instead of the default chain icon.
-
 ### openWalletInfoModal()?
 
-> `optional` **openWalletInfoModal**: (`value`) => `void`
-
-A function to open the main wallet info modal. If not provided, the button will not be rendered.
-
-#### Parameters
-
-##### value
-
-`boolean`
+> `optional` **openWalletInfoModal**: () => `void`
 
 #### Returns
 
@@ -57,8 +41,6 @@ A function to open the main wallet info modal. If not provided, the button will 
 ### tx
 
 > **tx**: `T`
-
-The transaction object to display in the toast.
 
 ## Type Parameters
 

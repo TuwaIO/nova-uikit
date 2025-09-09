@@ -6,9 +6,7 @@
 
 > **TxInfoBlockCustomization**\<`TR`, `T`, `A`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L21)
-
-Defines the customization options for the `TxInfoBlock` component.
+Defined in: [nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L18)
 
 ## Type Parameters
 
@@ -30,27 +28,12 @@ Defines the customization options for the `TxInfoBlock` component.
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L22)
+Defined in: [nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L19)
 
-#### infoRow()?
+#### InfoRow?
 
-> `optional` **infoRow**: (`props`) => `ReactNode`
-
-A render prop to replace the default label-value row component.
-
-##### Parameters
-
-###### props
-
-`CustomInfoRowProps`
-
-##### Returns
-
-`ReactNode`
+> `optional` **InfoRow**: `ComponentType`\<`CustomInfoRowProps`\>
 
 #### transactionKey?
 
-> `optional` **transactionKey**: [`ToastTransactionKeyProps`](../interfaces/ToastTransactionKeyProps.md)\<`TR`, `T`, `A`\>\[`"renderHashLink"`\]
-
-A render prop to customize the rendering of the transaction keys/hashes.
-This is passed down to the underlying `TransactionKey` component.
+> `optional` **transactionKey**: [`TransactionKeyProps`](TransactionKeyProps.md)\<`TR`, `T`, `A`\>\[`"renderHashLink"`\]

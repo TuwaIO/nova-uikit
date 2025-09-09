@@ -4,11 +4,12 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction } from '@tuwaio/pulsar-core';
-import { ComponentType, JSX, ReactNode } from 'react';
+import { ComponentType, useMemo } from 'react';
 
 import { NovaProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
-import { WalletInfoModalProps } from './WalletInfoModal';
+
+// --- Types for Customization & Props ---
 
 type CustomPlaceholderProps = { title: string; message: string };
 
@@ -17,25 +18,31 @@ type CustomPlaceholderProps = { title: string; message: string };
  */
 export type TransactionsHistoryCustomization<TR, T extends Transaction<TR>, A> = {
   classNames?: {
-    /** CSS classes for the list's wrapper `div`. */
     listWrapper?: string;
   };
   components?: {
-    /**
-     * A render prop to replace the default placeholder component
-     * (e.g., for "Connect Wallet" or "No Transactions").
-     */
-    placeholder?: (props: CustomPlaceholderProps) => ReactNode;
-    /**
-     * A custom component to use instead of the default `TransactionHistoryItem`.
-     * This should be a component type, not a render function.
-     */
+    Placeholder?: ComponentType<CustomPlaceholderProps>;
     HistoryItem?: ComponentType<TransactionHistoryItemProps<TR, T, A>>;
   };
 };
 
-// A local component for displaying placeholder messages.
-function HistoryPlaceholder({ title, message, className }: { title: string; message: string; className?: string }) {
+/**
+ * Defines the props for the TransactionsHistory component.
+ * @template TR - The type of the tracker identifier.
+ * @template T - The transaction type.
+ * @template A - The type of the key returned by an action function.
+ */
+export type TransactionsHistoryProps<TR, T extends Transaction<TR>, A> = Pick<
+  NovaProviderProps<TR, T, A>,
+  'adapters' | 'transactionsPool' | 'connectedWalletAddress'
+> & {
+  className?: string;
+  customization?: TransactionsHistoryCustomization<TR, T, A>;
+};
+
+// --- Default Sub-Components ---
+
+function HistoryPlaceholder({ title, message, className }: CustomPlaceholderProps & { className?: string }) {
   return (
     <div className={cn('rounded-lg bg-[var(--tuwa-bg-muted)] p-8 text-center', className)}>
       <h4 className="font-semibold text-[var(--tuwa-text-primary)]">{title}</h4>
@@ -46,10 +53,7 @@ function HistoryPlaceholder({ title, message, className }: { title: string; mess
 
 /**
  * A component that displays a scrollable list of transactions for the connected wallet.
- * It handles states for when a wallet is not connected or when there is no history.
- *
- * @param {WalletInfoModalProps<TR, T> & { customization?: TransactionsHistoryCustomization<TR, T> }} props
- * @returns {JSX.Element} The rendered transaction history section.
+ * It handles states for when a wallet is not connected or when the history is empty.
  */
 export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
   adapters,
@@ -57,45 +61,32 @@ export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
   transactionsPool,
   className,
   customization,
-}: WalletInfoModalProps<TR, T, A> &
-  Pick<NovaProviderProps<TR, T, A>, 'adapters'> & {
-    className?: string;
-    customization?: TransactionsHistoryCustomization<TR, T, A>;
-  }): JSX.Element {
-  const labels = useLabels();
-  const C = customization?.components;
+}: TransactionsHistoryProps<TR, T, A>) {
+  const { walletModal } = useLabels();
 
-  const transactionsByWallet = connectedWalletAddress
-    ? selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress)
-    : [];
+  // Memoize the filtered and sorted transactions to prevent re-computation on every render.
+  const sortedTransactions = useMemo(() => {
+    if (!connectedWalletAddress) return [];
+    const transactions = selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress);
+    // Sort by timestamp, newest first.
+    return transactions.sort((a, b) => (b.localTimestamp ?? 0) - (a.localTimestamp ?? 0));
+  }, [transactionsPool, connectedWalletAddress]);
 
-  // Sort transactions by timestamp, newest first.
-  const sortedTransactions = [...transactionsByWallet].sort(
-    (a, b) => (b.localTimestamp ?? 0) - (a.localTimestamp ?? 0),
-  );
+  // Use custom components if provided, otherwise fall back to the defaults.
+  const { Placeholder = HistoryPlaceholder, HistoryItem = TransactionHistoryItem } = customization?.components ?? {};
 
-  const renderPlaceholder = (title: string, message: string) => {
-    if (C?.placeholder) {
-      return C.placeholder({ title, message });
+  const renderContent = () => {
+    if (!connectedWalletAddress) {
+      return (
+        <Placeholder
+          title={walletModal.history.connectWalletTitle}
+          message={walletModal.history.connectWalletMessage}
+        />
+      );
     }
-    return <HistoryPlaceholder title={title} message={message} />;
-  };
 
-  // Use the custom component if provided, otherwise default to TransactionHistoryItem.
-  const HistoryItemComponent = C?.HistoryItem || TransactionHistoryItem;
-
-  return (
-    <div className={cn('flex flex-col gap-y-3', className)}>
-      <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{labels.walletModal.history.title}</h3>
-
-      {!connectedWalletAddress ? (
-        // Case 1: Wallet is not connected.
-        renderPlaceholder(
-          labels.walletModal.history.connectWalletTitle,
-          labels.walletModal.history.connectWalletMessage,
-        )
-      ) : sortedTransactions.length > 0 ? (
-        // Case 2: Wallet is connected and there are transactions.
+    if (sortedTransactions.length > 0) {
+      return (
         <div
           className={cn(
             'max-h-[400px] overflow-y-auto rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
@@ -103,21 +94,24 @@ export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItemComponent
-              key={tx.txKey} // The key is now correctly and safely handled here.
-              tx={tx}
-              transactionsPool={transactionsPool}
-              adapters={adapters}
-            />
+            <HistoryItem key={tx.txKey} tx={tx} transactionsPool={transactionsPool} adapters={adapters} />
           ))}
         </div>
-      ) : (
-        // Case 3: Wallet is connected, but no transactions.
-        renderPlaceholder(
-          labels.walletModal.history.noTransactionsTitle,
-          labels.walletModal.history.noTransactionsMessage,
-        )
-      )}
+      );
+    }
+
+    return (
+      <Placeholder
+        title={walletModal.history.noTransactionsTitle}
+        message={walletModal.history.noTransactionsMessage}
+      />
+    );
+  };
+
+  return (
+    <div className={cn('flex flex-col gap-y-3', className)}>
+      <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{walletModal.history.title}</h3>
+      {renderContent()}
     </div>
   );
 }

@@ -4,31 +4,32 @@
 
 import { ArrowTopRightOnSquareIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
-import { JSX } from 'react';
+import { useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
 export type WalletAddressDisplayProps = {
-  /** The wallet address to display. */
+  /** The full wallet address to display. */
   address: string;
-  explorerUrl: string;
+  /** The base URL for the block explorer. If not provided, the explorer link will not be rendered. */
+  explorerUrl?: string;
   /** Optional additional CSS classes for the container. */
   className?: string;
 };
 
 /**
  * A component that renders a wallet address in a styled "pill" format,
- * including a copy button and a link to the appropriate block explorer.
- *
- * @param {WalletAddressDisplayProps} props - The component props.
- * @returns {JSX.Element} The rendered component.
+ * including a copy button and an optional link to the appropriate block explorer.
  */
-export function WalletAddressDisplay({ address, explorerUrl, className }: WalletAddressDisplayProps): JSX.Element {
+export function WalletAddressDisplay({ address, explorerUrl, className }: WalletAddressDisplayProps) {
   const { isCopied, copy } = useCopyToClipboard();
-  const labels = useLabels();
+  const { actions, txError } = useLabels();
 
-  // Dynamically generate the explorer link based on the provided chain.
-  const explorerLink = explorerUrl ? `${explorerUrl}/address/${address}` : undefined;
+  // Memoize the full explorer link to avoid re-calculating it on every render.
+  const fullExplorerLink = useMemo(
+    () => (explorerUrl && address ? `${explorerUrl}/address/${address}` : undefined),
+    [explorerUrl, address],
+  );
 
   return (
     <div
@@ -40,8 +41,8 @@ export function WalletAddressDisplay({ address, explorerUrl, className }: Wallet
       <span>{textCenterEllipsis(address, 6, 6)}</span>
       <button
         type="button"
-        title={isCopied ? labels.txError.copied : labels.actions.copy}
-        aria-label={isCopied ? labels.txError.copied : labels.actions.copy}
+        title={isCopied ? txError.copied : actions.copy}
+        aria-label={isCopied ? txError.copied : `${actions.copy} address`}
         onClick={() => copy(address)}
         className="cursor-pointer transition-colors hover:text-[var(--tuwa-text-primary)]"
       >
@@ -52,15 +53,14 @@ export function WalletAddressDisplay({ address, explorerUrl, className }: Wallet
         )}
       </button>
 
-      {/* Only render the explorer link if a URL could be generated */}
-      {explorerLink && (
+      {fullExplorerLink && (
         <a
-          href={explorerLink}
+          href={fullExplorerLink}
           target="_blank"
           rel="noopener noreferrer"
           className="transition-colors hover:text-[var(--tuwa-text-accent)]"
-          title={labels.actions.viewOnExplorer}
-          aria-label={labels.actions.viewOnExplorer}
+          title={actions.viewOnExplorer}
+          aria-label={actions.viewOnExplorer}
         >
           <ArrowTopRightOnSquareIcon className="h-4 w-4" />
         </a>

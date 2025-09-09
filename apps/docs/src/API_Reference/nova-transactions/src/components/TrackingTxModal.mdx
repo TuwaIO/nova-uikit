@@ -4,9 +4,9 @@
 
 # TrackingTxModal()
 
-> **TrackingTxModal**\<`TR`, `T`, `A`\>(`props`): `Element`
+> **TrackingTxModal**\<`TR`, `T`, `A`\>(`__namedParameters`): `null` \| `Element`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:85](https://github.com/TuwaIO/nova-uikit/blob/cdce32a6d8178b6b9f3fe71ab68cef7a7448a723/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L85)
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L66)
 
 A detailed modal that displays the real-time status and lifecycle of a transaction.
 It opens automatically for transactions initiated with `withTrackedModal: true`.
@@ -17,13 +17,9 @@ It opens automatically for transactions initiated with `withTrackedModal: true`.
 
 `TR`
 
-The generic type for the transaction tracker registry.
-
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
-
-The generic type for the transaction object.
 
 ### A
 
@@ -31,14 +27,10 @@ The generic type for the transaction object.
 
 ## Parameters
 
-### props
+### \_\_namedParameters
 
-[`TrackingTxModalProps`](../interfaces/TrackingTxModalProps.md)\<`TR`, `T`, `A`\>
-
-The component props.
+[`TrackingTxModalProps`](../type-aliases/TrackingTxModalProps.md)\<`TR`, `T`, `A`\>
 
 ## Returns
 
-`Element`
-
-The rendered tracking modal.
+`null` \| `Element`

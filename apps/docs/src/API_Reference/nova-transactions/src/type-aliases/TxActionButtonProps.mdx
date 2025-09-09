@@ -1,0 +1,89 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# TxActionButtonProps\<TR, T\>
+
+> **TxActionButtonProps**\<`TR`, `T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
+
+Defined in: [nova-transactions/src/components/TxActionButton.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/78a2a232911a274222f152266bfefc233948d277/packages/nova-transactions/src/components/TxActionButton.tsx#L50)
+
+## Type Declaration
+
+### action()
+
+> **action**: () => `Promise`\<`void`\>
+
+The async function to execute when the button is clicked to initiate the transaction.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### children
+
+> **children**: `ReactNode`
+
+The default content to display when the button is 'idle'.
+
+### failedContent?
+
+> `optional` **failedContent**: `ReactNode`
+
+Optional custom content for the 'failed' state.
+
+### getLastTxKey()
+
+> **getLastTxKey**: () => `string` \| `undefined`
+
+A function that returns the unique key of the most recently initiated transaction.
+
+#### Returns
+
+`string` \| `undefined`
+
+### loadingContent?
+
+> `optional` **loadingContent**: `ReactNode`
+
+Optional custom content for the 'loading' state.
+
+### replacedContent?
+
+> `optional` **replacedContent**: `ReactNode`
+
+Optional custom content for the 'replaced' state.
+
+### resetTimeout?
+
+> `optional` **resetTimeout**: `number`
+
+The duration (in ms) to display a final state before resetting to 'idle'. Defaults to 2500ms.
+
+### succeedContent?
+
+> `optional` **succeedContent**: `ReactNode`
+
+Optional custom content for the 'succeed' state.
+
+### transactionsPool
+
+> **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
+
+The global transaction pool from the Pulsar store.
+
+### walletAddress?
+
+> `optional` **walletAddress**: `string`
+
+Optional active wallet address. If provided, the button will only track transactions from this address.
+
+## Type Parameters
+
+### TR
+
+`TR`
+
+### T
+
+`T` *extends* `Transaction`\<`TR`\>
