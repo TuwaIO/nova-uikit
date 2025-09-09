@@ -83,7 +83,7 @@
     "ethereum-blockies-base64": ">=1"
   },
   "devDependencies": {
-    "@tuwaio/pulsar-core": "1.0.0-alpha.8.815bc21.acc55b8.4202b7a",
+    "@tuwaio/pulsar-core": "^0.0.5",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.18",
     "ethereum-blockies-base64": "^1.0.2",

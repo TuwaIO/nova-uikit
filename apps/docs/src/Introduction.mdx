@@ -1,41 +1,44 @@
 # Introduction to Nova UI Kit
 
-Welcome to **Nova UI Kit**, a comprehensive design system for building modern, robust, and beautiful Web3 applications. 🚀
+Welcome to the Storybook for **Nova UI Kit**, a comprehensive design system for building modern, robust, and beautiful Web3 applications. 🚀
+
+This Storybook serves as a live, interactive documentation and development environment for all Nova components.
+
+---
 
 ## What is Nova?
 
 Nova is a collection of React component libraries built on a shared core. It provides everything from foundational utilities and hooks in `@tuwaio/nova-core` to specialized, feature-rich components in packages like `@tuwaio/nova-transactions`. The entire system is designed to be cohesive, themeable, and easy to integrate into any React project.
 
-## Core Philosophy
+### Core Philosophy
 
 -   **Modularity**: Start with `@tuwaio/nova-core` for essential utilities and theming, then add other `nova-*` packages as you need them.
 -   **Developer Experience**: Simple, predictable APIs with full TypeScript support make development a breeze.
 -   **Customization**: A powerful theming system using CSS variables allows you to tailor the look and feel to match your brand perfectly.
--   **Headless-First**: While we provide beautiful pre-styled components, the core logic is often available through headless hooks for maximum flexibility.
+-   **Accessibility First**: Built on top of Radix UI primitives to ensure components are accessible out-of-the-box.
 
-## Key Features
+---
 
--   🎨 **Centralized Theming**: A single source of truth for styles across all Nova packages.
--   🛠️ **Core Utilities**: Essential hooks and functions like `useCopyToClipboard` and `cn` are available in `@tuwaio/nova-core`.
--   🧱 **Specialized Packages**: Feature-specific libraries like `nova-transactions` provide ready-to-use components for complex tasks.
--   🌐 **Web3 Ready**: Built with the decentralized web in mind, with first-class support for EVM chains.
--   🔗 **Wallet Agnostic**: Integrates smoothly with popular wallet connectors like RainbowKit and ConnectKit via Wagmi.
-
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Installation
 
-Every Nova project starts with `@tuwaio/nova-core`. You can then add other packages as needed.
+Install the Nova packages you need. For transaction tracking, you'll typically want both.
 
 ```bash
+# Using pnpm
 pnpm add @tuwaio/nova-core @tuwaio/nova-transactions
+
+# Using npm
+npm install @tuwaio/nova-core @tuwaio/nova-transactions
+
+# Using yarn
+yarn add @tuwaio/nova-core @tuwaio/nova-transactions
 ````
 
-You will also need to have peer dependencies like `react` and `tailwindcss` installed.
+### 2\. Setup CSS
 
-### 2\. Setup
-
-With Tailwind CSS, setup is minimal. Create a main CSS file (e.g., `src/styles/app.css`) and import Tailwind's base styles along with Nova's core theme variables.
+Create a main CSS file (e.g., `src/styles/app.css`) and import Nova's styles **before** Tailwind's utility classes.
 
 ```css
 /* src/styles/app.css */
@@ -46,39 +49,13 @@ With Tailwind CSS, setup is minimal. Create a main CSS file (e.g., `src/styles/a
 @import "tailwindcss";
 ```
 
-Then, import this CSS file into your main application entry point (e.g., `main.tsx` or `layout.tsx`).
+Then, import this CSS file into your main application entry point (e.g., `layout.tsx` or `main.tsx`).
 
-### 3\. Basic Usage Example
+-----
 
-Here’s a simple example of using a hook from `@tuwaio/nova-core` and styling a button with Nova's theme variables.
+## 🎨 Theme Customization
 
-```tsx
-// src/components/MyComponent.tsx
-import { useState } from 'react';
-import { useCopyToClipboard } from '@tuwaio/nova-core';
-
-function MyComponent() {
-  const [copied, copy] = useCopyToClipboard();
-
-  return (
-    <div className="p-4">
-      <h1 className="text-lg font-bold text-[var(--tuwa-text-primary)]">
-        Welcome to Nova UI Kit
-      </h1>
-      <button
-        onClick={() => copy('Hello, Nova!')}
-        className="mt-2 px-4 py-2 bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-secondary)] rounded-md hover:bg-[var(--tuwa-border-primary)]"
-      >
-        {copied ? 'Copied to Clipboard!' : 'Copy Text'}
-      </button>
-    </div>
-  );
-}
-```
-
-## Theme Customization
-
-Nova is built on a robust system of CSS variables. Simply override them in your global stylesheet to apply your custom theme. Make sure your overrides come after the `@import` of Nova's styles.
+Nova is built on a robust system of CSS variables. To apply your custom theme, simply override them in your global stylesheet. **Make sure your overrides come after the `@import` of Nova's styles.**
 
 ```css
 /* src/styles/app.css */
@@ -86,9 +63,9 @@ Nova is built on a robust system of CSS variables. Simply override them in your 
 @import "@tuwaio/nova-transactions/dist/index.css";
 @import "tailwindcss";
 
-/* Your custom theme overrides */
+/* 3. Your custom theme overrides */
 :root {
-  --tuwa-text-accent: theme('colors.teal.500');
+  --tuwa-text-accent: theme('colors.blue.500');
   --tuwa-text-primary: theme('colors.slate.800');
   --tuwa-bg-primary: theme('colors.white');
   --tuwa-border-primary: theme('colors.slate.200');
@@ -96,17 +73,18 @@ Nova is built on a robust system of CSS variables. Simply override them in your 
 }
 
 .dark {
-  --tuwa-text-accent: theme('colors.teal.400');
+  --tuwa-text-accent: theme('colors.blue.400');
   --tuwa-text-primary: theme('colors.slate.100');
   --tuwa-bg-primary: theme('colors.slate.900');
   --tuwa-border-primary: theme('colors.slate.700');
   /* ... etc. */
 }
 ```
+-----
 
-## Resources
+## 🔗 Resources
 
-  - 🔗 **GitHub Repository**: [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
-  - 🐛 **Report Issues**: [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
+  - **GitHub Repository**: [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
+  - **Report Issues**: [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
 
 Built with ❤️ by the **TUWA Team**.

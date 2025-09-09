@@ -1,21 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { TxActionButton, TxActionButtonProps } from '@tuwaio/nova-transactions';
-import { Transaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { TxActionButton } from '@tuwaio/nova-transactions';
+import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 import { TransactionTracker } from '@tuwaio/pulsar-evm';
-import { zeroAddress } from 'viem';
-import { sepolia } from 'viem/chains';
+import { useState } from 'react';
+import { action } from 'storybook/actions';
+import { mainnet } from 'viem/chains';
 
-const MOCK_TX_KEY = '0x_storybook_tx_hash';
+// --- Mocks and Helpers ---
 
-// --- Helper Functions & Types ---
+const MOCK_TX_KEY = '0x_storybook_tx_hash_action_button';
 
-const createMockTx = (overrides: Partial<Transaction<unknown>>): Transaction<unknown> => ({
-  tracker: TransactionTracker.Ethereum,
+const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
   adapter: TransactionAdapter.EVM,
+  tracker: TransactionTracker.Ethereum,
   txKey: MOCK_TX_KEY,
   type: 'storybook-action',
-  chainId: sepolia.id,
-  from: zeroAddress,
+  chainId: mainnet.id,
+  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   pending: true,
   localTimestamp: Date.now(),
   walletType: 'injected',
@@ -23,14 +24,10 @@ const createMockTx = (overrides: Partial<Transaction<unknown>>): Transaction<unk
   ...overrides,
 });
 
-// A base type for our stories' arguments.
-type StoryArgs = Partial<TxActionButtonProps<unknown, Transaction<unknown>>>;
-
 // --- Storybook Meta Configuration ---
 
-const meta: Meta<StoryArgs> = {
-  title: 'UI Components/TxActionButton',
-  // @ts-expect-error - not erroring because we are using a custom component
+const meta: Meta<typeof TxActionButton> = {
+  title: 'Components/Actions/TxActionButton',
   component: TxActionButton,
   tags: ['autodocs'],
   parameters: {
@@ -38,32 +35,34 @@ const meta: Meta<StoryArgs> = {
   },
   args: {
     children: 'Initiate Transaction',
-    action: async () => {
-      console.log('Action triggered!');
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    },
     getLastTxKey: () => MOCK_TX_KEY,
-    transactionsPool: {
-      [MOCK_TX_KEY]: createMockTx({ pending: false, status: TransactionStatus.Success }),
-    },
-    resetTimeout: 2500,
+    walletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    resetTimeout: 3000,
   },
   argTypes: {
     children: {
       control: 'text',
-      name: 'children',
-      description: 'Can be text or a React component.',
+      description: "The default content for the button's 'idle' state.",
     },
-    className: {
+    action: {
+      action: 'action-triggered',
+      description: 'The async function to execute when the button is clicked.',
+    },
+    getLastTxKey: {
+      control: false,
+      description: 'A function that returns the key of the most recently initiated transaction.',
+    },
+    transactionsPool: {
+      control: 'object',
+      description: 'The global transaction pool from the Pulsar store.',
+    },
+    walletAddress: {
       control: 'text',
-      name: 'className',
-      description: 'Optional additional CSS classes to apply to the button.',
-    },
-    disabled: {
-      control: 'boolean',
+      description: 'If provided, the button will only track transactions from this address.',
     },
     resetTimeout: {
       control: 'number',
+      description: 'The duration (in ms) to display a final state before resetting.',
     },
   },
 };
@@ -74,29 +73,83 @@ type Story = StoryObj<typeof meta>;
 
 // --- Stories ---
 
+/**
+ * This is an interactive story that simulates the full lifecycle of a transaction.
+ * Click the button to see it transition from `loading` to `succeed`. The transaction
+ * pool is updated after a delay to mimic on-chain confirmation.
+ */
+export const FullLifecycle: Story = {
+  render: (args) => {
+    const [transactionsPool, setTransactionsPool] = useState({});
+
+    const handleAction = async () => {
+      action('action-triggered')();
+      // 1. Initially, the pool is empty.
+      setTransactionsPool({});
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate signing
+
+      // 2. After signing, a pending transaction appears in the pool.
+      const pendingTx = createMockTx({ pending: true, status: undefined });
+      setTransactionsPool({ [MOCK_TX_KEY]: pendingTx });
+      await new Promise((resolve) => setTimeout(resolve, 2500)); // Simulate mining
+
+      // 3. The transaction is successful.
+      const successTx = createMockTx({ pending: false, status: TransactionStatus.Success });
+      setTransactionsPool({ [MOCK_TX_KEY]: successTx });
+    };
+
+    return (
+      <TxActionButton {...args} action={handleAction} transactionsPool={transactionsPool}>
+        Click to Simulate
+      </TxActionButton>
+    );
+  },
+};
+
+/**
+ * The default, idle state of the button, ready to be clicked.
+ */
+export const Idle: Story = {
+  args: {
+    transactionsPool: {},
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    action: action('action-triggered'),
+  },
+};
+
+/**
+ * A story to demonstrate the `loading` state. Note: This state is typically transient
+ * and will automatically change once the transaction appears in the pool.
+ */
+export const Loading: Story = {
+  args: {
+    // To see this state, click the button and then quickly switch to the Docs tab.
+    transactionsPool: {},
+    action: () => new Promise(() => {}), // An action that never resolves
+  },
+};
+
+/**
+ * The button in a `succeed` state. After the `resetTimeout` (3 seconds), it will revert to idle.
+ */
 export const Success: Story = {
-  name: 'State: Success',
   args: {
-    transactionsPool: {
-      [MOCK_TX_KEY]: createMockTx({ pending: false, status: TransactionStatus.Success }),
-    },
+    transactionsPool: { [MOCK_TX_KEY]: createMockTx({ status: TransactionStatus.Success }) },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    action: action('action-triggered'),
   },
 };
 
+/**
+ * The button in a `failed` state. It will reset to idle after the timeout.
+ */
 export const Failed: Story = {
-  name: 'State: Failed',
   args: {
-    transactionsPool: {
-      [MOCK_TX_KEY]: createMockTx({ pending: false, status: TransactionStatus.Failed }),
-    },
-  },
-};
-
-export const Replaced: Story = {
-  name: 'State: Replaced',
-  args: {
-    transactionsPool: {
-      [MOCK_TX_KEY]: createMockTx({ pending: false, status: TransactionStatus.Replaced }),
-    },
+    transactionsPool: { [MOCK_TX_KEY]: createMockTx({ status: TransactionStatus.Failed }) },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    action: action('action-triggered'),
   },
 };

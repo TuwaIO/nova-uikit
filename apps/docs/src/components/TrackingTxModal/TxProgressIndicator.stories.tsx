@@ -1,24 +1,15 @@
-// apps/docs/src/components/TrackingTxModal/TxProgressIndicator.stories.tsx
-
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { TxProgressIndicator } from '@tuwaio/nova-transactions';
+import { StepProps, TxProgressIndicator } from '@tuwaio/nova-transactions';
 import { useState } from 'react';
 
 // --- Storybook Meta Configuration ---
 
 const meta: Meta<typeof TxProgressIndicator> = {
-  title: 'UI Components/TrackingTxModal/TxProgressIndicator',
+  title: 'Components/Modal/TxProgressIndicator',
   component: TxProgressIndicator,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
-    backgrounds: {
-      default: 'light',
-      values: [
-        { name: 'light', value: '#f8fafc' },
-        { name: 'dark', value: '#0f172a' },
-      ],
-    },
   },
   args: {
     isProcessing: false,
@@ -29,27 +20,23 @@ const meta: Meta<typeof TxProgressIndicator> = {
   argTypes: {
     isProcessing: {
       control: 'boolean',
-      description: 'True if the transaction is currently being processed',
+      description: 'True if the transaction is currently being processed (in the mempool).',
     },
     isSucceed: {
       control: 'boolean',
-      description: 'True if the transaction has successfully completed',
+      description: 'True if the transaction has successfully completed.',
     },
     isFailed: {
       control: 'boolean',
-      description: 'True if the transaction has failed',
+      description: 'True if the transaction has failed or was reverted.',
     },
     isReplaced: {
       control: 'boolean',
-      description: 'True if the transaction was replaced (e.g., sped up)',
-    },
-    className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      description: 'True if the transaction was replaced (e.g., sped up or cancelled).',
     },
     StepComponent: {
       control: false,
-      description: 'Custom component to use instead of the default Step',
+      description: 'An optional custom component to use instead of the default `Step`.',
     },
   },
 };
@@ -58,91 +45,92 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// --- Basic States ---
+// --- Stories ---
 
-export const Default: Story = {
-  name: 'Default (Created)',
-};
+/**
+ * An interactive story that allows you to toggle between all possible states of the progress indicator.
+ */
+export const Interactive: Story = {
+  render: (args) => {
+    const [status, setStatus] = useState<keyof typeof states>('created');
 
-// --- State Comparison ---
-
-export const AllStates: Story = {
-  render: () => {
-    const states = [
-      { label: 'Default (Created)', props: {} },
-      { label: 'Processing', props: { isProcessing: true } },
-      { label: 'Success', props: { isSucceed: true } },
-      { label: 'Failed', props: { isFailed: true } },
-      { label: 'Replaced', props: { isReplaced: true } },
-    ];
+    const states = {
+      created: { label: 'Created', props: {} },
+      processing: { label: 'Processing', props: { isProcessing: true } },
+      succeed: { label: 'Succeed', props: { isSucceed: true } },
+      failed: { label: 'Failed', props: { isFailed: true } },
+      replaced: { label: 'Replaced', props: { isReplaced: true } },
+    };
 
     return (
-      <div className="space-y-8 p-6 max-w-4xl">
-        {states.map(({ label, props }) => (
-          <div key={label} className="space-y-3">
-            <h3 className="text-sm font-medium text-center text-[var(--tuwa-text-primary)]">{label}</h3>
-            <div className="p-4 bg-[var(--tuwa-bg-secondary)] rounded-lg border border-[var(--tuwa-border-primary)]">
-              <TxProgressIndicator {...props} />
-            </div>
-          </div>
-        ))}
+      <div className="w-96 space-y-4">
+        <TxProgressIndicator {...args} {...states[status].props} />
+        <div className="flex flex-wrap justify-center gap-2 rounded-md bg-[var(--tuwa-bg-muted)] p-2">
+          {Object.entries(states).map(([key, { label }]) => (
+            <button key={key} onClick={() => setStatus(key as keyof typeof states)}>
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
     );
   },
 };
 
-// --- Interactive Demo ---
+/**
+ * The default state of the indicator, shown when a transaction is first created but not yet processing.
+ */
+export const Default: Story = {
+  name: 'State: Created',
+};
 
-export const InteractiveDemo: Story = {
-  render: () => {
-    const [currentState, setCurrentState] = useState<string>('default');
+/**
+ * The state when the transaction is actively being processed on-chain.
+ */
+export const Processing: Story = {
+  name: 'State: Processing',
+  args: {
+    isProcessing: true,
+  },
+};
 
-    const states = [
-      { key: 'default', label: 'Default (Created)', props: {} },
-      { key: 'processing', label: 'Processing', props: { isProcessing: true } },
-      { key: 'success', label: 'Success', props: { isSucceed: true } },
-      { key: 'failed', label: 'Failed', props: { isFailed: true } },
-      { key: 'replaced', label: 'Replaced', props: { isReplaced: true } },
-    ];
+/**
+ * The final state for a successfully completed transaction. All steps are marked as complete.
+ */
+export const Succeed: Story = {
+  name: 'State: Succeed',
+  args: {
+    isSucceed: true,
+  },
+};
 
-    const activeProps = states.find((state) => state.key === currentState)?.props || {};
+/**
+ * The final state for a failed transaction. The last step is marked with an error.
+ */
+export const Failed: Story = {
+  name: 'State: Failed',
+  args: {
+    isFailed: true,
+  },
+};
 
-    return (
-      <div className="space-y-6 p-6 max-w-4xl">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-[var(--tuwa-text-primary)] mb-2">Progress Indicator Demo</h2>
-          <p className="text-[var(--tuwa-text-secondary)]">Click buttons to see different transaction states</p>
-        </div>
-
-        {/* Progress Display */}
-        <div className="p-6 bg-[var(--tuwa-bg-secondary)] rounded-xl border-2 border-[var(--tuwa-border-primary)]">
-          <TxProgressIndicator {...activeProps} />
-        </div>
-
-        {/* State Buttons */}
-        <div className="flex flex-wrap justify-center gap-3">
-          {states.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setCurrentState(key)}
-              className={`cursor-pointer px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
-                currentState === key
-                  ? 'bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)] border-[var(--tuwa-text-accent)] shadow-lg'
-                  : 'bg-[var(--tuwa-bg-secondary)] text-[var(--tuwa-text-primary)] border-[var(--tuwa-border-primary)] hover:bg-[var(--tuwa-bg-muted)] hover:border-[var(--tuwa-text-accent)]'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Current State Info */}
-        <div className="text-center p-4 bg-[var(--tuwa-info-bg)] rounded-lg">
-          <p className="text-sm text-[var(--tuwa-info-text)]">
-            Current state: <span className="font-semibold">{states.find((s) => s.key === currentState)?.label}</span>
-          </p>
-        </div>
+/**
+ * An example of replacing the default `Step` component with a completely custom implementation.
+ */
+export const WithCustomStep: Story = {
+  args: {
+    ...Processing.args,
+    StepComponent: ({ status, label }: StepProps) => (
+      <div className="flex flex-1 flex-col items-center gap-2">
+        <div
+          className={`h-4 w-4 rounded-full ${
+            status === 'completed' ? 'bg-green-500' : status === 'active' ? 'bg-blue-500 animate-pulse' : 'bg-gray-300'
+          }`}
+        />
+        <span className={`text-xs ${status !== 'inactive' ? 'font-bold text-blue-700' : 'text-gray-500'}`}>
+          {label}
+        </span>
       </div>
-    );
+    ),
   },
 };

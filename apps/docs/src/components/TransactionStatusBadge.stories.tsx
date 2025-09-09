@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionStatusBadge } from '@tuwaio/nova-transactions';
-import { Transaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import { zeroAddress, zeroHash } from 'viem';
-import { sepolia } from 'viem/chains';
+import { mainnet } from 'viem/chains';
 
-// --- Helper Functions & Types ---
+// --- Mocks and Helpers ---
 
-const createMockTx = (overrides: Partial<Transaction<unknown>>): Transaction<unknown> => ({
-  tracker: TransactionTracker.Ethereum,
+const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
   adapter: TransactionAdapter.EVM,
+  tracker: TransactionTracker.Ethereum,
   txKey: zeroHash,
-  type: 'increment',
-  chainId: sepolia.id,
+  type: 'storybook-action',
+  chainId: mainnet.id,
   from: zeroAddress,
   pending: false,
   localTimestamp: Date.now(),
@@ -20,24 +20,29 @@ const createMockTx = (overrides: Partial<Transaction<unknown>>): Transaction<unk
   ...overrides,
 });
 
-// A base type for our stories' arguments.
-type StoryArgs = Partial<typeof TransactionStatusBadge>;
-
 // --- Storybook Meta Configuration ---
 
-const meta: Meta<StoryArgs> = {
-  title: 'UI Components/basic/TransactionStatusBadge',
+const meta: Meta<typeof TransactionStatusBadge> = {
+  title: 'Components/Shared/TransactionStatusBadge',
   component: TransactionStatusBadge,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
-  // We provide a default `tx` object for the main story page.
   args: {
-    tx: createMockTx({ pending: true }),
+    // Default to the 'Pending' state for the main component view
+    tx: createMockTx({ pending: true, status: undefined }),
   },
-  // argTypes can be inferred automatically by Storybook or defined here if needed.
-  // For simplicity and consistency, we will let Storybook handle them.
+  argTypes: {
+    tx: {
+      control: 'object',
+      description: 'The transaction object whose status will be displayed.',
+    },
+    className: {
+      control: 'text',
+      description: 'Optional additional CSS classes for the badge container.',
+    },
+  },
 };
 
 export default meta;
@@ -45,31 +50,38 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // --- Stories ---
-// Each story now defines its own complete `tx` prop, making them self-contained and clear.
 
+/**
+ * The `pending` state is shown when a transaction has been submitted but not yet finalized.
+ */
 export const Pending: Story = {
-  name: 'State: Pending',
   args: {
-    tx: createMockTx({ pending: true }),
+    tx: createMockTx({ pending: true, status: undefined }),
   },
 };
 
+/**
+ * The `Success` state is shown for a successfully completed transaction.
+ */
 export const Success: Story = {
-  name: 'State: Success',
   args: {
     tx: createMockTx({ pending: false, status: TransactionStatus.Success }),
   },
 };
 
+/**
+ * The `Failed` state is shown for a reverted or failed transaction.
+ */
 export const Failed: Story = {
-  name: 'State: Failed',
   args: {
     tx: createMockTx({ pending: false, status: TransactionStatus.Failed, isError: true }),
   },
 };
 
+/**
+ * The `Replaced` state is shown when a transaction has been replaced (e.g., sped up or cancelled).
+ */
 export const Replaced: Story = {
-  name: 'State: Replaced',
   args: {
     tx: createMockTx({ pending: false, status: TransactionStatus.Replaced }),
   },

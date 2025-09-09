@@ -62,6 +62,7 @@ import {WagmiProvider} from 'wagmi';
 import {PulsarInitializer} from '@/components/PulsarInitializer';
 import {wagmiConfig, chains, pulsarStore} from '@/configs'; // Your app's configs
 import {TransactionAdapter} from '@tuwaio/pulsar-core';
+import {evmAdapter} from '@tuwaio/pulsar-evm';
 
 // Import required CSS
 import '@tuwaio/nova-core/dist/index.css';
