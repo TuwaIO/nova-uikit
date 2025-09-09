@@ -14,7 +14,7 @@ import {
   TxActions,
   TxAdapter,
 } from '@tuwaio/pulsar-core';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
 
 import {
@@ -41,30 +41,19 @@ const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
 
 /**
  * Defines the props for the NovaProvider component.
- * @template TR - The type of the tracker identifier.
- * @template T - The transaction type.
- * @template A - The type of the key returned by an action function.
  */
 export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
-  /** An array of configured adapters for different blockchain ecosystems. */
   adapters: TxAdapter<TR, T, A>[];
-  /** The address of the currently connected wallet. */
   connectedWalletAddress?: string;
-  /** The adapter type of the currently connected wallet. */
   connectedAdapterType?: TransactionAdapter;
-  /** The global transaction pool from the Pulsar store. */
   transactionsPool: TransactionPool<TR, T>;
-  /** A registry of retryable actions, keyed by `actionKey`. */
   actions?: TxActions;
-  /** A partial object of labels to override the default English text. */
   labels?: Partial<TuwaLabels>;
-  /** An object to enable or disable major UI features. All are enabled by default. */
   features?: {
     toasts?: boolean;
     walletInfoModal?: boolean;
     trackingTxModal?: boolean;
   };
-  /** A single object to pass down deep customization options to all child components. */
   customization?: {
     toast?: ToastTransactionCustomization<TR, T, A>;
     walletInfoModal?: WalletInfoModalCustomization<TR, T, A>;
@@ -76,7 +65,6 @@ export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
 /**
  * The main component for the Nova UI ecosystem. It renders and orchestrates all
  * UI elements like toasts and modals, and provides the i18n context.
- * This component does not wrap any children.
  */
 export function NovaProvider<TR, T extends Transaction<TR>, A>({
   adapters,
@@ -108,17 +96,18 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
 
   const mergedLabels = useMemo(() => deepMerge(defaultLabels, labels || {}), [labels]);
 
-  useEffect(() => {
-    if (!enabledFeatures.toasts) return;
+  // Memoized function to show or update a toast.
+  const showOrUpdateToast = useCallback(
+    (tx: T) => {
+      if (!enabledFeatures.toasts) return;
 
-    const showOrUpdateToast = (tx: T) => {
       const type = tx.pending ? 'info' : (STATUS_TO_TOAST_TYPE[tx.status!] ?? 'info');
 
       const content = (props: ToastContentProps) => (
         <ToastTransaction
           {...props}
-          transactionsPool={transactionsPool}
           tx={tx}
+          transactionsPool={transactionsPool}
           openWalletInfoModal={enabledFeatures.walletInfoModal ? () => setIsWalletInfoModalOpen(true) : undefined}
           customization={customization?.toast}
           adapters={adapters}
@@ -131,27 +120,42 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
       } else {
         toast(content, { toastId: tx.txKey, type, closeOnClick: false });
       }
-    };
+    },
+    [transactionsPool, enabledFeatures, customization?.toast, adapters, connectedWalletAddress],
+  );
 
+  // Effect 1: Handles toasts for NEW or CHANGED transactions.
+  useEffect(() => {
     const prevPool = prevTransactionsRef.current;
 
     Object.values(transactionsPool).forEach((currentTx) => {
       const prevTx = prevPool[currentTx.txKey];
 
-      if (!prevTx) {
-        if (currentTx.pending) {
-          showOrUpdateToast(currentTx);
-        }
+      // Case 1: A new transaction is added and is pending.
+      if (!prevTx && currentTx.pending) {
+        showOrUpdateToast(currentTx);
         return;
       }
 
-      if (JSON.stringify(prevTx) !== JSON.stringify(currentTx)) {
+      // Case 2: An existing transaction has been updated.
+      if (prevTx && JSON.stringify(prevTx) !== JSON.stringify(currentTx)) {
         showOrUpdateToast(currentTx);
       }
     });
 
     prevTransactionsRef.current = transactionsPool;
-  }, [transactionsPool, adapters, customization?.toast, enabledFeatures, connectedWalletAddress]);
+  }, [transactionsPool, showOrUpdateToast]);
+
+  // Effect 2: Handles toast UPDATES when the connected wallet address changes.
+  useEffect(() => {
+    // This ensures that visible toasts re-render to show/hide wallet-specific actions
+    // like "Speed Up", even for completed transactions.
+    Object.values(transactionsPool).forEach((tx) => {
+      if (toast.isActive(tx.txKey)) {
+        showOrUpdateToast(tx);
+      }
+    });
+  }, [connectedWalletAddress, showOrUpdateToast, transactionsPool]);
 
   const isTrackingModalOpen =
     !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
@@ -176,13 +180,13 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
 
       {enabledFeatures.walletInfoModal && (
         <WalletInfoModal
-          transactionsPool={transactionsPool}
           isOpen={isWalletInfoModalOpen}
           setIsOpen={setIsWalletInfoModalOpen}
           customization={customization?.walletInfoModal}
           adapters={adapters}
           connectedWalletAddress={connectedWalletAddress}
           connectedAdapterType={connectedAdapterType}
+          transactionsPool={transactionsPool}
         />
       )}
 

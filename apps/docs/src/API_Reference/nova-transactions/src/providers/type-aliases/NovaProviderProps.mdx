@@ -6,7 +6,7 @@
 
 > **NovaProviderProps**\<`TR`, `T`, `A`\> = `object` & `Pick`\<`ITxTrackingStore`\<`TR`, `T`, `A`\>, `"closeTxTrackedModal"` \| `"handleTransaction"` \| `"initialTx"`\> & `ToastContainerProps`
 
-Defined in: [nova-transactions/src/providers/NovaProvider.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/5275b21e4cfcca13146d3aad8d93d68998767c72/packages/nova-transactions/src/providers/NovaProvider.tsx#L48)
+Defined in: [nova-transactions/src/providers/NovaProvider.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/87cfc2dd068381a9f9b057c1747513f099faa808/packages/nova-transactions/src/providers/NovaProvider.tsx#L45)
 
 Defines the props for the NovaProvider component.
 
@@ -16,31 +16,21 @@ Defines the props for the NovaProvider component.
 
 > `optional` **actions**: `TxActions`
 
-A registry of retryable actions, keyed by `actionKey`.
-
 ### adapters
 
 > **adapters**: `TxAdapter`\<`TR`, `T`, `A`\>[]
-
-An array of configured adapters for different blockchain ecosystems.
 
 ### connectedAdapterType?
 
 > `optional` **connectedAdapterType**: `TransactionAdapter`
 
-The adapter type of the currently connected wallet.
-
 ### connectedWalletAddress?
 
 > `optional` **connectedWalletAddress**: `string`
 
-The address of the currently connected wallet.
-
 ### customization?
 
 > `optional` **customization**: `object`
-
-A single object to pass down deep customization options to all child components.
 
 #### customization.toast?
 
@@ -58,8 +48,6 @@ A single object to pass down deep customization options to all child components.
 
 > `optional` **features**: `object`
 
-An object to enable or disable major UI features. All are enabled by default.
-
 #### features.toasts?
 
 > `optional` **toasts**: `boolean`
@@ -76,13 +64,9 @@ An object to enable or disable major UI features. All are enabled by default.
 
 > `optional` **labels**: `Partial`\<[`TuwaLabels`](../../type-aliases/TuwaLabels.md)\>
 
-A partial object of labels to override the default English text.
-
 ### transactionsPool
 
 > **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
-
-The global transaction pool from the Pulsar store.
 
 ## Type Parameters
 
@@ -90,16 +74,10 @@ The global transaction pool from the Pulsar store.
 
 `TR`
 
-The type of the tracker identifier.
-
 ### T
 
 `T` *extends* `Transaction`\<`TR`\>
 
-The transaction type.
-
 ### A
 
 `A`
-
-The type of the key returned by an action function.
