@@ -278,7 +278,7 @@ const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   const { actions } = useLabels();
   return (
     <header className="sticky top-0 z-10 flex w-full items-start justify-between bg-[var(--tuwa-bg-primary)] pt-5 pb-2">
-      <Dialog.Title asChild>{title}</Dialog.Title>
+      <Dialog.Title>{title}</Dialog.Title>
       <Dialog.Close asChild>
         <button
           type="button"
