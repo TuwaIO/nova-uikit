@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.16](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.15...nova-transactions-v0.0.16) (2025-09-09)
+
+
+### Bug Fixes
+
+* adapters logic ([#16](https://github.com/TuwaIO/nova-uikit/issues/16)) ([e97db38](https://github.com/TuwaIO/nova-uikit/commit/e97db385df3d3713bd30ff5f870405f73aa71b4d))
+
 ## [0.0.15](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.14...nova-transactions-v0.0.15) (2025-08-21)
 
 
