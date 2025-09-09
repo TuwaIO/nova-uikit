@@ -196,6 +196,7 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
           actions={actions}
           handleTransaction={handleTransaction}
           adapters={adapters}
+          connectedWalletAddress={connectedWalletAddress}
         />
       )}
     </LabelsProvider>

@@ -34,6 +34,7 @@ type CustomFooterProps = {
   isProcessing?: boolean;
   isFailed?: boolean;
   canReplace?: boolean;
+  connectedWalletAddress?: string;
 };
 
 export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
@@ -51,7 +52,7 @@ export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
 
 export type TrackingTxModalProps<TR, T extends Transaction<TR>, A> = Pick<
   NovaProviderProps<TR, T, A>,
-  'handleTransaction' | 'initialTx' | 'actions' | 'transactionsPool' | 'adapters'
+  'handleTransaction' | 'initialTx' | 'actions' | 'transactionsPool' | 'adapters' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
   onOpenWalletInfo: () => void;
@@ -73,6 +74,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   actions,
   handleTransaction,
   initialTx,
+  connectedWalletAddress,
 }: TrackingTxModalProps<TR, T, A>) {
   // --- State Derivation ---
   const activeTx = useMemo(
@@ -243,6 +245,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
                         onRetry={canRetry ? handleRetry : undefined}
                         onSpeedUp={canReplace ? handleSpeedUp : undefined}
                         onCancel={canReplace ? handleCancel : undefined}
+                        connectedWalletAddress={connectedWalletAddress}
                       />
                     ) : (
                       <DefaultFooter
@@ -254,6 +257,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
                         onRetry={canRetry ? handleRetry : undefined}
                         onSpeedUp={canReplace ? handleSpeedUp : undefined}
                         onCancel={canReplace ? handleCancel : undefined}
+                        connectedWalletAddress={connectedWalletAddress}
                       />
                     )}
                   </div>
@@ -307,6 +311,7 @@ const DefaultFooter = ({
   onCancel,
   canReplace,
   isFailed,
+  connectedWalletAddress,
 }: CustomFooterProps) => {
   const { trackingModal, actions } = useLabels();
 
@@ -322,7 +327,7 @@ const DefaultFooter = ({
         </button>
       );
     }
-    if (!isProcessing && !canReplace) {
+    if (!isProcessing && !canReplace && !!connectedWalletAddress) {
       return (
         <button
           type="button"

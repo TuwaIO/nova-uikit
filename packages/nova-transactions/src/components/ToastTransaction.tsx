@@ -142,7 +142,8 @@ export function ToastTransaction<TR, T extends Transaction<TR>, A>({
               <CancelButton onClick={handleCancel}>{actions.cancel}</CancelButton>
             </div>
           ) : (
-            openWalletInfoModal && (
+            openWalletInfoModal &&
+            !!connectedWalletAddress && (
               <WalletInfoButton onClick={openWalletInfoModal}>{toast.openWalletInfo}</WalletInfoButton>
             )
           )}
