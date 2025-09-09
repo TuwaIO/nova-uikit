@@ -88,9 +88,10 @@ export function ToastTransaction<TR, T extends Transaction<TR>, A>({
 
   const adapter = selectAdapterByKey({ adapterKey: tx.adapter, adapters });
 
-  // Let the adapter decide if the transaction can be replaced.
-  // We only check if the transaction is pending and if the adapter provides the necessary action handlers.
+  // A transaction can be replaced only if it's a standard on-chain transaction (not Safe or Gelato),
+  // is pending, the adapter supports the actions, and it belongs to the connected wallet.
   const canBeReplaced = !!(
+    tx.tracker === 'ethereum' &&
     tx.pending &&
     adapter?.speedUpTxAction &&
     adapter?.cancelTxAction &&

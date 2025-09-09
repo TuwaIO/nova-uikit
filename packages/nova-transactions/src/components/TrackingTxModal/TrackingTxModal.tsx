@@ -104,7 +104,12 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   );
 
   const canRetry = !!(isFailed && txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction);
-  const canReplace = !!(adapter?.speedUpTxAction && adapter?.cancelTxAction && activeTx?.pending);
+  const canReplace = !!(
+    adapter?.speedUpTxAction &&
+    adapter?.cancelTxAction &&
+    activeTx?.pending &&
+    activeTx.tracker === 'ethereum'
+  );
 
   // --- Action Handlers ---
   const handleRetry = () => {
