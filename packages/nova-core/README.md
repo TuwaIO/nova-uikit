@@ -50,9 +50,13 @@ For example with Tailwind CSS v4, you can use the CSS variables from this packag
 </button>
 ```
 
-## Contributing
+## 🤝 Contributing & Support
 
 Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
+
+If you find this library useful, please consider supporting its development. Every contribution helps!
+
+[**➡️ View Support Options**](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
 
 ## 📄 License
 

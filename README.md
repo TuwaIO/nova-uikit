@@ -65,9 +65,13 @@ pnpm dev
 ```
 This will open Storybook at **http://localhost:6006**.
 
-## 🤝 Contributing
+## 🤝 Contributing & Support
 
-We welcome contributions from the community! Please read our main **[Contribution Guidelines](./CONTRIBUTING.md)** for details on our code of conduct, commit message standards, and the pull request process.
+Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
+
+If you find this library useful, please consider supporting its development. Every contribution helps!
+
+[**➡️ View Support Options**](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
 
 ## 📄 License
 
