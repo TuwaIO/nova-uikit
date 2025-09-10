@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.9](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.8...nova-core-v0.0.9) (2025-09-10)
+
+
+### Bug Fixes
+
+* added donations to readme ([b8f1264](https://github.com/TuwaIO/nova-uikit/commit/b8f1264a2d0261ccc3bf700cd4c502a98593d68a))
+
 ## [0.0.8](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.7...nova-core-v0.0.8) (2025-09-09)
 
 

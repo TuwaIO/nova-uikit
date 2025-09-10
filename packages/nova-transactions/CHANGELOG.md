@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.17](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.16...nova-transactions-v0.0.17) (2025-09-10)
+
+
+### Bug Fixes
+
+* added donations to readme ([b8f1264](https://github.com/TuwaIO/nova-uikit/commit/b8f1264a2d0261ccc3bf700cd4c502a98593d68a))
+
 ## [0.0.16](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.15...nova-transactions-v0.0.16) (2025-09-09)
 
 
