@@ -11,7 +11,6 @@ import {
   TransactionAdapter,
   TransactionPool,
   TransactionStatus,
-  TxActions,
   TxAdapter,
 } from '@tuwaio/pulsar-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -47,7 +46,6 @@ export type NovaProviderProps<TR, T extends Transaction<TR>, A> = {
   connectedWalletAddress?: string;
   connectedAdapterType?: TransactionAdapter;
   transactionsPool: TransactionPool<TR, T>;
-  actions?: TxActions;
   labels?: Partial<TuwaLabels>;
   features?: {
     toasts?: boolean;
@@ -74,7 +72,6 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
   initialTx,
   handleTransaction,
   closeTxTrackedModal,
-  actions,
   labels,
   features,
   customization,
@@ -197,7 +194,6 @@ export function NovaProvider<TR, T extends Transaction<TR>, A>({
           onOpenWalletInfo={() => setIsWalletInfoModalOpen(true)}
           transactionsPool={transactionsPool}
           customization={customization?.trackingTxModal}
-          actions={actions}
           handleTransaction={handleTransaction}
           adapters={adapters}
           connectedWalletAddress={connectedWalletAddress}

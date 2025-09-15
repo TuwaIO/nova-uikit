@@ -52,7 +52,7 @@ export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
 
 export type TrackingTxModalProps<TR, T extends Transaction<TR>, A> = Pick<
   NovaProviderProps<TR, T, A>,
-  'handleTransaction' | 'initialTx' | 'actions' | 'transactionsPool' | 'adapters' | 'connectedWalletAddress'
+  'handleTransaction' | 'initialTx' | 'transactionsPool' | 'adapters' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
   onOpenWalletInfo: () => void;
@@ -71,7 +71,6 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   className,
   customization,
   transactionsPool,
-  actions,
   handleTransaction,
   initialTx,
   connectedWalletAddress,
@@ -105,7 +104,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
     [txToDisplay, adapters],
   );
 
-  const canRetry = !!(isFailed && txToDisplay?.actionKey && actions?.[txToDisplay.actionKey] && handleTransaction);
+  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && handleTransaction);
   const canReplace = !!(
     adapter?.speedUpTxAction &&
     adapter?.cancelTxAction &&
@@ -115,19 +114,19 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
 
   // --- Action Handlers ---
   const handleRetry = () => {
-    if (!canRetry || !txToDisplay?.actionKey || !adapter?.retryTxAction) return;
+    if (!canRetry || !adapter?.retryTxAction) return;
 
-    const retryParams: InitialTransactionParams = {
+    const retryParams: InitialTransactionParams<A> = {
       adapter: txToDisplay.adapter,
       type: txToDisplay.type,
       desiredChainID: 'desiredChainID' in txToDisplay ? txToDisplay.desiredChainID : txToDisplay.chainId,
-      actionKey: txToDisplay.actionKey,
+      actionFunction: initialTx?.actionFunction,
       title: txToDisplay.title,
       description: txToDisplay.description,
       payload: txToDisplay.payload,
       withTrackedModal: true,
     };
-    adapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', actions, onClose, handleTransaction });
+    adapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, handleTransaction });
   };
   const handleCancel = () => {
     if (canReplace && activeTx) adapter.cancelTxAction!(activeTx);
@@ -273,15 +272,17 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
 
 // --- Default Sub-Components ---
 
-const DefaultHeaderTitle = ({ tx }: { tx: Transaction<any> | InitialTransaction }) => (
-  <StatusAwareText
-    txStatus={'status' in tx ? tx.status : undefined}
-    source={tx.title}
-    fallback={tx.type}
-    variant="title"
-    className="text-lg"
-  />
-);
+function DefaultHeaderTitle<TR, A>({ tx }: { tx: Transaction<TR> | InitialTransaction<A> }) {
+  return (
+    <StatusAwareText
+      txStatus={'status' in tx ? tx.status : undefined}
+      source={tx.title}
+      fallback={tx.type}
+      variant="title"
+      className="text-lg"
+    />
+  );
+}
 
 const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   const { actions } = useLabels();
