@@ -61,7 +61,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     initialTx,
     handleTransaction,
     closeTxTrackedModal,
-    actions,
   } = usePulsar();
   
   // 2. Get live wallet data from wagmi
@@ -81,7 +80,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
           initialTx={initialTx}
           handleTransaction={handleTransaction}
           closeTxTrackedModal={closeTxTrackedModal}
-          actions={actions}
           
           // --- Props from Wallet Connector (e.g., wagmi) ---
           connectedWalletAddress={address}
@@ -183,7 +181,6 @@ const germanLabels = {
 | `connectedWalletAddress` | `string`                           |    -     | The address of the currently connected wallet.                           |
 | `connectedAdapterType`   | `TransactionAdapter`               |    -     | The adapter type of the currently connected wallet (e.g., TransactionAdapter.EVM).        |
 | `initialTx`              | `InitialTransaction`               |    -     | The initial transaction object from your store.                          |
-| `actions`                | `TxActions`                        |    -     | An object of actions for retry logic.                                    |
 | `labels`                 | `Partial<TuwaLabels>`              |    -     | An object to override the default text labels for i18n.                  |
 | `features`               | `object`                           |    -     | An object to enable or disable UI features like toasts or modals.        |
 | `customization`          | `object`                           |    -     | An object for deep styling and component replacement.                    |
