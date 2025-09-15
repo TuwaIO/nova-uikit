@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.18](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.17...nova-transactions-v0.0.18) (2025-09-15)
+
+
+### Bug Fixes
+
+* retry actions logic ([#19](https://github.com/TuwaIO/nova-uikit/issues/19)) ([e8fb5f2](https://github.com/TuwaIO/nova-uikit/commit/e8fb5f29bf6cc8231dc45e4f838b24b5882fb809))
+
 ## [0.0.17](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.16...nova-transactions-v0.0.17) (2025-09-10)
 
 
