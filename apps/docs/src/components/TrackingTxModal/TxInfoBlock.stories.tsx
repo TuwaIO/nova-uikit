@@ -4,12 +4,13 @@ import { TxInfoBlock } from '@tuwaio/nova-transactions';
 import { EvmTransaction, InitialTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import dayjs from 'dayjs';
+import { action } from 'storybook/actions';
 import { zeroAddress } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
 
 // --- Mocks and Helpers ---
 
-const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTransaction => ({
+const createInitialTx = (overrides: Partial<InitialTransaction<any>> = {}): InitialTransaction<any> => ({
   adapter: TransactionAdapter.EVM,
   desiredChainID: mainnet.id,
   type: 'Token Swap',
@@ -18,6 +19,10 @@ const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTr
   withTrackedModal: true,
   isInitializing: true,
   localTimestamp: dayjs().unix(),
+  actionFunction: async () => {
+    action('retryAction')();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  },
   ...overrides,
 });
 

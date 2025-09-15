@@ -1,12 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrackingTxModal } from '@tuwaio/nova-transactions';
-import {
-  EvmTransaction,
-  InitialTransaction,
-  TransactionAdapter,
-  TransactionStatus,
-  TxActions,
-} from '@tuwaio/pulsar-core';
+import { EvmTransaction, InitialTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
@@ -19,15 +13,19 @@ const MOCK_DATA = {
   address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045' as Address,
   txKey: '0x_storybook_modal_tx_key',
   actionKey: 'swapTokens',
+  action: async () => {
+    action('retryAction')();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  },
 };
 
-const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTransaction => ({
+const createInitialTx = (overrides: Partial<InitialTransaction<any>> = {}): InitialTransaction<any> => ({
   adapter: TransactionAdapter.EVM,
   desiredChainID: mainnet.id,
   type: 'Token Swap',
   title: 'Swapping Tokens',
   description: 'Please confirm the transaction in your wallet.',
-  actionKey: MOCK_DATA.actionKey,
+  actionFunction: MOCK_DATA.action,
   withTrackedModal: true,
   isInitializing: true,
   localTimestamp: dayjs().unix(),
@@ -53,17 +51,9 @@ const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): E
     'The swap failed.',
     'The swap was replaced.',
   ],
-  actionKey: MOCK_DATA.actionKey,
   isTrackedModalOpen: true,
   ...overrides,
 });
-
-const mockActions: TxActions = {
-  [MOCK_DATA.actionKey]: async () => {
-    action('retryAction')();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  },
-};
 
 const mockEvmAdapter = {
   key: TransactionAdapter.EVM,
@@ -87,7 +77,6 @@ const meta: Meta<typeof TrackingTxModal> = {
   },
   args: {
     adapters: [mockEvmAdapter as any],
-    actions: mockActions,
     onClose: action('onClose'),
     onOpenWalletInfo: action('onOpenWalletInfo'),
   },
@@ -111,7 +100,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const FullLifecycle: Story = {
   render: (args) => {
-    const [initialTx, setInitialTx] = useState<InitialTransaction | undefined>(createInitialTx());
+    const [initialTx, setInitialTx] = useState<InitialTransaction<any> | undefined>(createInitialTx());
     const [transactionsPool, setTransactionsPool] = useState({});
 
     useEffect(() => {

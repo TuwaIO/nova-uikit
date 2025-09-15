@@ -24,7 +24,7 @@ export type TxInfoBlockCustomization<TR, T extends Transaction<TR>, A> = {
 
 export type TxInfoBlockProps<TR, T extends Transaction<TR>, A> = {
   /** The transaction object to display, which can be a full transaction or an initial one. */
-  tx: T | InitialTransaction;
+  tx: T | InitialTransaction<A>;
   className?: string;
   customization?: TxInfoBlockCustomization<TR, T, A>;
 } & Pick<NovaProviderProps<TR, T, A>, 'adapters' | 'transactionsPool'>;
