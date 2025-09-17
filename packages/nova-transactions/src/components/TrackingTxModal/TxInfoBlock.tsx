@@ -35,7 +35,7 @@ export type TxInfoBlockProps<T extends Transaction> = {
   tx: T | InitialTransaction;
   className?: string;
   customization?: TxInfoBlockCustomization<T>;
-} & Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'>;
+} & Pick<NovaProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Component ---
 function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
@@ -51,13 +51,7 @@ function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
  * A component that displays a block of essential transaction details,
  * such as network, timestamps, Solana-specific details, and relevant hashes/keys.
  */
-export function TxInfoBlock<T extends Transaction>({
-  tx,
-  adapter,
-  transactionsPool,
-  className,
-  customization,
-}: TxInfoBlockProps<T>) {
+export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, customization }: TxInfoBlockProps<T>) {
   const { txInfo, statuses, hashLabels } = useLabels();
 
   // Select the correct adapter for the given transaction.
@@ -130,7 +124,6 @@ export function TxInfoBlock<T extends Transaction>({
           <TransactionKey
             tx={tx as T}
             adapter={adapter}
-            transactionsPool={transactionsPool}
             variant="history" // 'history' variant provides suitable styling for this block
             renderHashLink={customization?.components?.transactionKey}
           />

@@ -44,7 +44,7 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
   customization?: TransactionHistoryItemCustomization<T>;
   /** Optional additional CSS classes for the container. */
   className?: string;
-} & Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'>;
+} & Pick<NovaProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Components ---
 
@@ -67,7 +67,6 @@ const DefaultTimestamp = ({ timestamp }: CustomTimestampProps) => (
 export function TransactionHistoryItem<T extends Transaction>({
   tx,
   adapter,
-  transactionsPool,
   className,
   customization,
 }: TransactionHistoryItemProps<T>): JSX.Element {
@@ -106,7 +105,7 @@ export function TransactionHistoryItem<T extends Transaction>({
       </div>
 
       {/* --- Transaction Keys/Hashes --- */}
-      <TxKey tx={tx} adapter={adapter} transactionsPool={transactionsPool} variant="history" />
+      <TxKey tx={tx} adapter={adapter} variant="history" />
     </div>
   );
 }

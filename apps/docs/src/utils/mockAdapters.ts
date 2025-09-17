@@ -13,8 +13,8 @@ export const mockEvmAdapter = {
    * Get transaction explorer URL based on pool and transaction key.
    * @template T The specific transaction type.
    */
-  getExplorerTxUrl: (pool: Record<string, any>, txKey: string, replacedTxHash?: string): string => {
-    return `https://etherscan.io/tx/${replacedTxHash || (pool[txKey] as any)?.hash}`;
+  getExplorerTxUrl: (tx: Transaction): string => {
+    return `https://etherscan.io/tx/${tx.adapter === TransactionAdapter.EVM ? tx?.hash : tx.txKey}`;
   },
 
   /**
@@ -89,8 +89,8 @@ export const mockSolanaAdapter = {
    * Returns the explorer URL for a specific transaction based on the pool.
    * @template T The specific transaction type.
    */
-  getExplorerTxUrl: (pool: Record<string, any>, txKey: string): string => {
-    return `https://solscan.io/tx/${(pool[txKey] as any)?.hash || txKey}`;
+  getExplorerTxUrl: (tx: Transaction): string => {
+    return `https://solscan.io/tx/${tx.adapter === TransactionAdapter.EVM ? tx?.hash : tx.txKey}`;
   },
 
   /**

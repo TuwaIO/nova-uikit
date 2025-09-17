@@ -36,7 +36,7 @@ export type ToastTransactionProps<T extends Transaction> = {
   customization?: ToastTransactionCustomization<T>;
   closeToast?: ToastContentProps['closeToast'];
   toastProps?: ToastContainerProps;
-} & Pick<NovaProviderProps<T>, 'transactionsPool' | 'adapter' | 'connectedWalletAddress'>;
+} & Pick<NovaProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
 
 // --- Default Sub-Components ---
 
@@ -77,7 +77,6 @@ const DefaultWalletInfoButton = ({ onClick, children }: CustomActionButtonProps)
 export function ToastTransaction<T extends Transaction>({
   openWalletInfoModal,
   tx,
-  transactionsPool,
   icon,
   className,
   customization,
@@ -132,7 +131,7 @@ export function ToastTransaction<T extends Transaction>({
 
       {/* --- Body: Hashes + Status/Actions --- */}
       <div>
-        <CTransactionKey transactionsPool={transactionsPool} adapter={adapter} tx={tx} variant="toast" />
+        <CTransactionKey adapter={adapter} tx={tx} variant="toast" />
         <div className="mt-3 flex items-center justify-between">
           <CStatusBadge tx={tx} />
 

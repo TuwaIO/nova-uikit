@@ -104,7 +104,6 @@ export function NovaProvider<T extends Transaction>({
         <ToastTransaction
           {...props}
           tx={tx}
-          transactionsPool={transactionsPool}
           openWalletInfoModal={enabledFeatures.walletInfoModal ? () => setIsWalletInfoModalOpen(true) : undefined}
           customization={customization?.toast}
           adapter={adapter}

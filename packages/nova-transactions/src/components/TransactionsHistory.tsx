@@ -92,7 +92,7 @@ export function TransactionsHistory<T extends Transaction>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItem key={tx.txKey} tx={tx} transactionsPool={transactionsPool} adapter={adapter} />
+            <HistoryItem key={tx.txKey} tx={tx} adapter={adapter} />
           ))}
         </div>
       );

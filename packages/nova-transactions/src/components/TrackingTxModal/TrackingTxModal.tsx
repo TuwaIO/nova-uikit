@@ -223,9 +223,9 @@ export function TrackingTxModal<T extends Transaction>({
                         />
                       )}
                       {CustomInfoBlock ? (
-                        <CustomInfoBlock tx={txToDisplay} adapter={adapter} transactionsPool={transactionsPool} />
+                        <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
                       ) : (
-                        <TxInfoBlock tx={txToDisplay} adapter={adapter} transactionsPool={transactionsPool} />
+                        <TxInfoBlock tx={txToDisplay} adapter={adapter} />
                       )}
                       {CustomErrorBlock ? (
                         <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />

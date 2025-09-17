@@ -16,7 +16,7 @@ import { HashLink, HashLinkProps } from './HashLink';
  * @template T - The transaction type.
  * @template A - The type of the key returned by an action function.
  */
-export type TransactionKeyProps<T extends Transaction> = Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'> & {
+export type TransactionKeyProps<T extends Transaction> = Pick<NovaProviderProps<T>, 'adapter'> & {
   /** The transaction object to display identifiers for. */
   tx: T;
   /** The visual variant, which applies different container styles. */
@@ -39,7 +39,6 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaProviderProps<
 export function TransactionKey<T extends Transaction>({
   tx,
   adapter,
-  transactionsPool,
   variant = 'toast',
   className,
   renderHashLink,
@@ -72,7 +71,7 @@ export function TransactionKey<T extends Transaction>({
         variant: tx.tracker !== TransactionTracker.Solana ? 'compact' : 'default',
         explorerUrl:
           foundAdapter.getExplorerTxUrl && tx.tracker === TransactionTracker.Solana
-            ? foundAdapter?.getExplorerTxUrl(transactionsPool, tx.txKey)
+            ? foundAdapter?.getExplorerTxUrl(tx)
             : undefined,
       })
     : null;
@@ -97,7 +96,7 @@ export function TransactionKey<T extends Transaction>({
             renderHash({
               label: hashLabels.replaced,
               hash: replacedHash,
-              explorerUrl: foundAdapter.getExplorerTxUrl(transactionsPool, tx.txKey, replacedHash),
+              explorerUrl: foundAdapter.getExplorerTxUrl(tx),
             })}
         </>
       );
@@ -109,7 +108,7 @@ export function TransactionKey<T extends Transaction>({
       renderHash({
         label: hashLabels.default,
         hash: onChainHash,
-        explorerUrl: foundAdapter.getExplorerTxUrl(transactionsPool, tx.txKey),
+        explorerUrl: foundAdapter.getExplorerTxUrl(tx),
       })
     );
   })();
