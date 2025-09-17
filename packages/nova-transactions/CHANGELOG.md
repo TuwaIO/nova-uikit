@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.20](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.19...nova-transactions-v0.0.20) (2025-09-17)
+
+
+### Bug Fixes
+
+* update packages and get explorer tx logic ([c6b4b16](https://github.com/TuwaIO/nova-uikit/commit/c6b4b1683e08193148a5da5b30a21cdf777aa537))
+
 ## [0.0.19](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.18...nova-transactions-v0.0.19) (2025-09-17)
 
 
