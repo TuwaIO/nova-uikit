@@ -16,28 +16,26 @@ type CustomPlaceholderProps = { title: string; message: string };
 /**
  * Defines the customization options for the TransactionsHistory component.
  */
-export type TransactionsHistoryCustomization<TR, T extends Transaction<TR>, A> = {
+export type TransactionsHistoryCustomization<T extends Transaction> = {
   classNames?: {
     listWrapper?: string;
   };
   components?: {
     Placeholder?: ComponentType<CustomPlaceholderProps>;
-    HistoryItem?: ComponentType<TransactionHistoryItemProps<TR, T, A>>;
+    HistoryItem?: ComponentType<TransactionHistoryItemProps<T>>;
   };
 };
 
 /**
  * Defines the props for the TransactionsHistory component.
- * @template TR - The type of the tracker identifier.
  * @template T - The transaction type.
- * @template A - The type of the key returned by an action function.
  */
-export type TransactionsHistoryProps<TR, T extends Transaction<TR>, A> = Pick<
-  NovaProviderProps<TR, T, A>,
-  'adapters' | 'transactionsPool' | 'connectedWalletAddress'
+export type TransactionsHistoryProps<T extends Transaction> = Pick<
+  NovaProviderProps<T>,
+  'adapter' | 'transactionsPool' | 'connectedWalletAddress'
 > & {
   className?: string;
-  customization?: TransactionsHistoryCustomization<TR, T, A>;
+  customization?: TransactionsHistoryCustomization<T>;
 };
 
 // --- Default Sub-Components ---
@@ -55,13 +53,13 @@ function HistoryPlaceholder({ title, message, className }: CustomPlaceholderProp
  * A component that displays a scrollable list of transactions for the connected wallet.
  * It handles states for when a wallet is not connected or when the history is empty.
  */
-export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
-  adapters,
+export function TransactionsHistory<T extends Transaction>({
+  adapter,
   connectedWalletAddress,
   transactionsPool,
   className,
   customization,
-}: TransactionsHistoryProps<TR, T, A>) {
+}: TransactionsHistoryProps<T>) {
   const { walletModal } = useLabels();
 
   // Memoize the filtered and sorted transactions to prevent re-computation on every render.
@@ -94,7 +92,7 @@ export function TransactionsHistory<TR, T extends Transaction<TR>, A>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItem key={tx.txKey} tx={tx} transactionsPool={transactionsPool} adapters={adapters} />
+            <HistoryItem key={tx.txKey} tx={tx} transactionsPool={transactionsPool} adapter={adapter} />
           ))}
         </div>
       );

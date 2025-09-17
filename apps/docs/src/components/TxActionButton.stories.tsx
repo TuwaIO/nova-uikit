@@ -1,28 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxActionButton } from '@tuwaio/nova-transactions';
 import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
-import { mainnet } from 'viem/chains';
 
-// --- Mocks and Helpers ---
-
-const MOCK_TX_KEY = '0x_storybook_tx_hash_action_button';
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: MOCK_TX_KEY,
-  type: 'storybook-action',
-  chainId: mainnet.id,
-  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-  pending: true,
-  localTimestamp: Date.now(),
-  walletType: 'injected',
-  status: undefined,
-  ...overrides,
-});
+import { createMockTx } from '../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -35,7 +17,7 @@ const meta: Meta<typeof TxActionButton> = {
   },
   args: {
     children: 'Initiate Transaction',
-    getLastTxKey: () => MOCK_TX_KEY,
+    getLastTxKey: () => '0x_storybook_tx_hash_action_button',
     walletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     resetTimeout: 3000,
   },
@@ -81,20 +63,24 @@ type Story = StoryObj<typeof meta>;
 export const FullLifecycle: Story = {
   render: (args) => {
     const [transactionsPool, setTransactionsPool] = useState({});
+    const MOCK_TX_KEY = '0x_storybook_tx_hash_action_button';
 
     const handleAction = async () => {
-      action('action-triggered')();
+      action('action-triggered');
       // 1. Initially, the pool is empty.
       setTransactionsPool({});
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate signing
 
       // 2. After signing, a pending transaction appears in the pool.
-      const pendingTx = createMockTx({ pending: true, status: undefined });
+      const pendingTx = createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }) as EvmTransaction;
       setTransactionsPool({ [MOCK_TX_KEY]: pendingTx });
       await new Promise((resolve) => setTimeout(resolve, 2500)); // Simulate mining
 
       // 3. The transaction is successful.
-      const successTx = createMockTx({ pending: false, status: TransactionStatus.Success });
+      const successTx = createMockTx(TransactionAdapter.EVM, {
+        pending: false,
+        status: TransactionStatus.Success,
+      }) as EvmTransaction;
       setTransactionsPool({ [MOCK_TX_KEY]: successTx });
     };
 
@@ -135,7 +121,11 @@ export const Loading: Story = {
  */
 export const Success: Story = {
   args: {
-    transactionsPool: { [MOCK_TX_KEY]: createMockTx({ status: TransactionStatus.Success }) },
+    transactionsPool: {
+      '0x_storybook_tx_hash_action_button': createMockTx(TransactionAdapter.EVM, {
+        status: TransactionStatus.Success,
+      }),
+    },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     action: action('action-triggered'),
@@ -147,7 +137,11 @@ export const Success: Story = {
  */
 export const Failed: Story = {
   args: {
-    transactionsPool: { [MOCK_TX_KEY]: createMockTx({ status: TransactionStatus.Failed }) },
+    transactionsPool: {
+      '0x_storybook_tx_hash_action_button': createMockTx(TransactionAdapter.EVM, {
+        status: TransactionStatus.Failed,
+      }),
+    },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     action: action('action-triggered'),

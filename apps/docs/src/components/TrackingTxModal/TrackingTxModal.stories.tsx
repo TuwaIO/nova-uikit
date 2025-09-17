@@ -1,12 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrackingTxModal } from '@tuwaio/nova-transactions';
-import { EvmTransaction, InitialTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
+import {
+  EvmTransaction,
+  InitialTransaction,
+  SolanaTransaction,
+  TransactionAdapter,
+  TransactionStatus,
+  TransactionTracker,
+} from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { action } from 'storybook/actions';
 import { Address } from 'viem';
 import { mainnet } from 'viem/chains';
+
+import { mockEvmAdapter, mockSolanaAdapter } from '../../utils/mockAdapters';
+
 // --- Mocks and Helpers ---
 
 const MOCK_DATA = {
@@ -16,10 +25,13 @@ const MOCK_DATA = {
   action: async () => {
     action('retryAction')();
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    return undefined;
   },
 };
 
-const createInitialTx = (overrides: Partial<InitialTransaction<any>> = {}): InitialTransaction<any> => ({
+// --- EVM --- //
+
+const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTransaction => ({
   adapter: TransactionAdapter.EVM,
   desiredChainID: mainnet.id,
   type: 'Token Swap',
@@ -32,7 +44,7 @@ const createInitialTx = (overrides: Partial<InitialTransaction<any>> = {}): Init
   ...overrides,
 });
 
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
+const createMockTx = (overrides: Partial<EvmTransaction>): EvmTransaction => ({
   adapter: TransactionAdapter.EVM,
   tracker: TransactionTracker.Ethereum,
   txKey: MOCK_DATA.txKey,
@@ -55,17 +67,27 @@ const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): E
   ...overrides,
 });
 
-const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
-  getExplorerTxUrl: () => `https://etherscan.io/tx/mock_hash`,
-  speedUpTxAction: async (tx: any) => action('speedUpTxAction')(tx),
-  cancelTxAction: async (tx: any) => action('cancelTxAction')(tx),
-  retryTxAction: ({ handleTransaction, ...rest }: any) => {
-    action('retryTxAction')(rest);
-    handleTransaction({ ...rest }); // Simulate re-running the transaction
-  },
-  // ... other required adapter methods
-};
+// --- Solana --- //
+
+const createMockSolanaTx = (overrides: Partial<SolanaTransaction> = {}): SolanaTransaction => ({
+  adapter: TransactionAdapter.SOLANA,
+  tracker: TransactionTracker.Solana,
+  txKey: MOCK_DATA.txKey,
+  slot: Math.floor(Math.random() * 1000000),
+  recentBlockhash: `hash_${Math.random().toString(16).slice(2, 8)}`,
+  confirmations: 5,
+  pending: true,
+  walletType: 'Phantom',
+  status: undefined,
+  localTimestamp: dayjs().unix(),
+  chainId: 'devnet',
+  from: '0x0',
+  type: 'Test Transaction',
+  title: 'Solana Test',
+  description: 'Testing Solana Transaction Flow',
+  isTrackedModalOpen: true,
+  ...overrides,
+});
 
 // --- Storybook Meta Configuration ---
 
@@ -76,14 +98,14 @@ const meta: Meta<typeof TrackingTxModal> = {
     layout: 'fullscreen',
   },
   args: {
-    adapters: [mockEvmAdapter as any],
+    adapter: [mockEvmAdapter, mockSolanaAdapter],
     onClose: action('onClose'),
     onOpenWalletInfo: action('onOpenWalletInfo'),
   },
   argTypes: {
     initialTx: { control: false },
     transactionsPool: { control: false },
-    adapters: { control: false },
+    adapter: { control: false },
   },
 };
 
@@ -94,30 +116,24 @@ type Story = StoryObj<typeof meta>;
 // --- Stories ---
 
 /**
- * An interactive story simulating the full lifecycle of a transaction.
- * It starts with an `initialTx` (user signs), transitions to a pending `activeTx`,
- * and finally resolves to a `Success` status.
+ * Full lifecycle of an EVM transaction.
  */
 export const FullLifecycle: Story = {
   render: (args) => {
-    const [initialTx, setInitialTx] = useState<InitialTransaction<any> | undefined>(createInitialTx());
-    const [transactionsPool, setTransactionsPool] = useState({});
+    const [initialTx, setInitialTx] = useState<InitialTransaction>(createInitialTx());
+    const [transactionsPool, setTransactionsPool] = useState<Record<string, EvmTransaction>>({});
 
     useEffect(() => {
-      // Simulate the transaction flow
       const runFlow = async () => {
-        // 1. Initializing (waiting for signature)
         setInitialTx(createInitialTx());
         setTransactionsPool({});
         await new Promise((r) => setTimeout(r, 2000));
 
-        // 2. Submitted (pending on-chain)
         const pendingTx = createMockTx({ pending: true });
-        setInitialTx({ ...initialTx!, isInitializing: false, lastTxKey: MOCK_DATA.txKey });
+        setInitialTx({ ...initialTx, isInitializing: false, lastTxKey: MOCK_DATA.txKey });
         setTransactionsPool({ [MOCK_DATA.txKey]: pendingTx });
         await new Promise((r) => setTimeout(r, 3000));
 
-        // 3. Success
         const successTx = createMockTx({ pending: false, status: TransactionStatus.Success });
         setTransactionsPool({ [MOCK_DATA.txKey]: successTx });
       };
@@ -133,47 +149,43 @@ export const FullLifecycle: Story = {
 };
 
 /**
- * A transaction that has failed, showing the error message and a "Retry" button.
+ * Full lifecycle of a Solana transaction.
  */
-export const FailedWithRetry: Story = {
-  args: {
-    initialTx: createInitialTx({
-      isInitializing: false,
-      lastTxKey: MOCK_DATA.txKey,
-      errorMessage: 'Transaction reverted: Insufficient funds.',
-    }),
-    transactionsPool: {
-      [MOCK_DATA.txKey]: createMockTx({
-        pending: false,
-        status: TransactionStatus.Failed,
-        isError: true,
-        errorMessage: 'Transaction reverted: Insufficient funds.',
-      }),
-    },
-    handleTransaction: async (params) => action('handleTransaction')(params),
-  },
-};
+export const SolanaLifecycle: Story = {
+  render: (args) => {
+    const [initialTx, setInitialTx] = useState<InitialTransaction>(createInitialTx({ desiredChainID: 'devnet' }));
+    const [transactionsPool, setTransactionsPool] = useState<Record<string, SolanaTransaction>>({
+      [MOCK_DATA.txKey]: createMockSolanaTx({ pending: true }),
+    });
 
-/**
- * A pending transaction with "Speed Up" and "Cancel" actions available.
- */
-export const PendingWithActions: Story = {
-  args: {
-    initialTx: createInitialTx({ isInitializing: false, lastTxKey: MOCK_DATA.txKey }),
-    transactionsPool: {
-      [MOCK_DATA.txKey]: createMockTx({ pending: true, tracker: TransactionTracker.Ethereum }),
-    },
-  },
-};
+    useEffect(() => {
+      const runFlow = async () => {
+        setInitialTx(createInitialTx({ desiredChainID: 'devnet' }));
+        setTransactionsPool({});
+        await new Promise((r) => setTimeout(r, 2000));
 
-/**
- * A transaction that was replaced, showing the final "Replaced" state.
- */
-export const Replaced: Story = {
-  args: {
-    initialTx: createInitialTx({ isInitializing: false, lastTxKey: MOCK_DATA.txKey }),
-    transactionsPool: {
-      [MOCK_DATA.txKey]: createMockTx({ pending: false, status: TransactionStatus.Replaced }),
-    },
+        setInitialTx({ ...initialTx, isInitializing: false, lastTxKey: MOCK_DATA.txKey });
+        setTransactionsPool({
+          [MOCK_DATA.txKey]: createMockSolanaTx({
+            pending: true,
+          }),
+        });
+        await new Promise((r) => setTimeout(r, 3000));
+        setTransactionsPool({
+          [MOCK_DATA.txKey]: createMockSolanaTx({
+            confirmations: 32,
+            pending: false,
+            status: TransactionStatus.Success,
+          }),
+        });
+      };
+      runFlow();
+    }, []);
+
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-100">
+        <TrackingTxModal {...args} initialTx={initialTx} transactionsPool={transactionsPool} />
+      </div>
+    );
   },
 };

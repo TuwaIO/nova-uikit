@@ -26,25 +26,25 @@ type CustomTimestampProps = { timestamp?: number };
  * Defines the structure for the `customization` prop, allowing users to override
  * default sub-components with their own implementations for a history item.
  */
-export type TransactionHistoryItemCustomization<TR, T extends Transaction<TR>, A> = {
+export type TransactionHistoryItemCustomization<T extends Transaction> = {
   components?: {
     Icon?: ComponentType<CustomIconProps>;
     Title?: ComponentType<StatusAwareTextProps>;
     Description?: ComponentType<StatusAwareTextProps>;
     Timestamp?: ComponentType<CustomTimestampProps>;
-    StatusBadge?: ComponentType<TransactionStatusBadgeProps<TR, T>>;
-    TransactionKey?: ComponentType<TransactionKeyProps<TR, T, A>>;
+    StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
+    TransactionKey?: ComponentType<TransactionKeyProps<T>>;
   };
 };
 
-export type TransactionHistoryItemProps<TR, T extends Transaction<TR>, A> = {
+export type TransactionHistoryItemProps<T extends Transaction> = {
   /** The transaction object to display. */
   tx: T;
   /** An object to customize and override the default internal components. */
-  customization?: TransactionHistoryItemCustomization<TR, T, A>;
+  customization?: TransactionHistoryItemCustomization<T>;
   /** Optional additional CSS classes for the container. */
   className?: string;
-} & Pick<NovaProviderProps<TR, T, A>, 'adapters' | 'transactionsPool'>;
+} & Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'>;
 
 // --- Default Sub-Components ---
 
@@ -64,13 +64,13 @@ const DefaultTimestamp = ({ timestamp }: CustomTimestampProps) => (
  * It is highly customizable via the `customization` prop, allowing developers
  * to override any of its internal parts with their own components.
  */
-export function TransactionHistoryItem<TR, T extends Transaction<TR>, A>({
+export function TransactionHistoryItem<T extends Transaction>({
   tx,
-  adapters,
+  adapter,
   transactionsPool,
   className,
   customization,
-}: TransactionHistoryItemProps<TR, T, A>): JSX.Element {
+}: TransactionHistoryItemProps<T>): JSX.Element {
   // Use the provided custom components, or fall back to the defaults.
   const {
     Icon = DefaultIcon,
@@ -106,7 +106,7 @@ export function TransactionHistoryItem<TR, T extends Transaction<TR>, A>({
       </div>
 
       {/* --- Transaction Keys/Hashes --- */}
-      <TxKey tx={tx} adapters={adapters} transactionsPool={transactionsPool} variant="history" />
+      <TxKey tx={tx} adapter={adapter} transactionsPool={transactionsPool} variant="history" />
     </div>
   );
 }

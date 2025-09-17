@@ -1,52 +1,11 @@
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxInfoBlock } from '@tuwaio/nova-transactions';
-import { EvmTransaction, InitialTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
-import dayjs from 'dayjs';
-import { action } from 'storybook/actions';
-import { zeroAddress } from 'viem';
-import { mainnet, sepolia } from 'viem/chains';
+import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { sepolia } from 'viem/chains';
 
-// --- Mocks and Helpers ---
-
-const createInitialTx = (overrides: Partial<InitialTransaction<any>> = {}): InitialTransaction<any> => ({
-  adapter: TransactionAdapter.EVM,
-  desiredChainID: mainnet.id,
-  type: 'Token Swap',
-  title: 'Preparing Swap...',
-  description: 'Please confirm in your wallet',
-  withTrackedModal: true,
-  isInitializing: true,
-  localTimestamp: dayjs().unix(),
-  actionFunction: async () => {
-    action('retryAction')();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  },
-  ...overrides,
-});
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: '0x123abcdeef',
-  type: 'Token Swap',
-  chainId: mainnet.id,
-  from: zeroAddress,
-  pending: false,
-  localTimestamp: dayjs().unix(),
-  walletType: 'injected',
-  status: TransactionStatus.Success,
-  hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-  title: 'Swap Tokens',
-  ...overrides,
-});
-
-const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
-  getExplorerTxUrl: (pool: any, txKey: string) => `https://etherscan.io/tx/${pool[txKey]?.hash}`,
-  // ... other required adapter methods
-};
+import { mockEvmAdapter, mockSolanaAdapter } from '../../utils/mockAdapters';
+import { createInitialTx, createMockTx } from '../../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -59,20 +18,23 @@ const meta: Meta<typeof TxInfoBlock> = {
   },
   render: (args) => {
     const transactionsPool = 'txKey' in args.tx ? { [args.tx.txKey]: args.tx } : {};
-    return <TxInfoBlock {...args} transactionsPool={transactionsPool} />;
+    return <TxInfoBlock {...args} transactionsPool={transactionsPool} adapter={args.adapter} />;
   },
   args: {
-    tx: createMockTx({}),
-    adapters: [mockEvmAdapter as any],
+    tx: createMockTx(TransactionAdapter.EVM, {
+      status: TransactionStatus.Success,
+      pending: false,
+    }),
+    adapter: [mockEvmAdapter],
   },
   argTypes: {
     tx: {
       control: 'object',
       description: 'The transaction object to display (can be a full or initial transaction).',
     },
-    adapters: {
+    adapter: {
       control: false,
-      description: 'An array of configured adapters.',
+      description: 'Adapters to be used for retrieving chain-specific data.',
     },
     transactionsPool: {
       control: false,
@@ -89,7 +51,15 @@ type Story = StoryObj<typeof meta>;
 /**
  * The default view for a standard, completed EVM transaction.
  */
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    tx: createMockTx(TransactionAdapter.EVM, {
+      status: TransactionStatus.Success,
+      pending: false,
+    }),
+    adapter: [mockEvmAdapter],
+  },
+};
 
 /**
  * The view for an `InitialTransaction`, before it has been submitted to the network.
@@ -98,6 +68,7 @@ export const Default: Story = {};
 export const InitialState: Story = {
   args: {
     tx: createInitialTx(),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -107,10 +78,11 @@ export const InitialState: Story = {
  */
 export const GelatoTransaction: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -119,9 +91,10 @@ export const GelatoTransaction: Story = {
  */
 export const DifferentNetwork: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       chainId: sepolia.id,
     }),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -130,6 +103,7 @@ export const DifferentNetwork: Story = {
  */
 export const WithCustomization: Story = {
   args: {
+    ...Default.args,
     customization: {
       components: {
         InfoRow: ({ label, value }) => (
@@ -143,5 +117,16 @@ export const WithCustomization: Story = {
         ),
       },
     },
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * An example of a Solana transaction's info block.
+ */
+export const SolanaTransaction: Story = {
+  args: {
+    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true }),
+    adapter: [mockSolanaAdapter],
   },
 };

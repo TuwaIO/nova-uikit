@@ -2,11 +2,11 @@
 
 ***
 
-# TxActionButtonProps\<TR, T\>
+# TxActionButtonProps\<T\>
 
-> **TxActionButtonProps**\<`TR`, `T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
+> **TxActionButtonProps**\<`T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
 
-Defined in: [nova-transactions/src/components/TxActionButton.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/components/TxActionButton.tsx#L50)
+Defined in: [nova-transactions/src/components/TxActionButton.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/components/TxActionButton.tsx#L50)
 
 ## Type Declaration
 
@@ -68,7 +68,7 @@ Optional custom content for the 'succeed' state.
 
 ### transactionsPool
 
-> **transactionsPool**: `TransactionPool`\<`TR`, `T`\>
+> **transactionsPool**: `TransactionPool`\<`T`\>
 
 The global transaction pool from the Pulsar store.
 
@@ -80,10 +80,6 @@ Optional active wallet address. If provided, the button will only track transact
 
 ## Type Parameters
 
-### TR
-
-`TR`
-
 ### T
 
-`T` *extends* `Transaction`\<`TR`\>
+`T` *extends* `Transaction`

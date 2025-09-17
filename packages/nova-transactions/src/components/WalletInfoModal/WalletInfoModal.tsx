@@ -20,7 +20,7 @@ type CustomHeaderProps = { closeModal: () => void };
 /**
  * Defines the customization options for the WalletInfoModal.
  */
-export type WalletInfoModalCustomization<TR, T extends Transaction<TR>, A> = {
+export type WalletInfoModalCustomization<T extends Transaction> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
   motionProps?: MotionProps;
   classNames?: {
@@ -28,21 +28,21 @@ export type WalletInfoModalCustomization<TR, T extends Transaction<TR>, A> = {
   };
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
-    WalletInfo?: ComponentType<WalletHeaderProps<TR, T, A>>;
-    History?: ComponentType<TransactionsHistoryProps<TR, T, A>>;
+    WalletInfo?: ComponentType<WalletHeaderProps<T>>;
+    History?: ComponentType<TransactionsHistoryProps<T>>;
   };
 };
 
 /**
  * Defines the core props for the WalletInfoModal.
  */
-export type WalletInfoModalProps<TR, T extends Transaction<TR>, A> = Pick<
-  NovaProviderProps<TR, T, A>,
-  'adapters' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
+export type WalletInfoModalProps<T extends Transaction> = Pick<
+  NovaProviderProps<T>,
+  'adapter' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
 > & {
   isOpen?: boolean;
   setIsOpen: (value: boolean) => void;
-  customization?: WalletInfoModalCustomization<TR, T, A>;
+  customization?: WalletInfoModalCustomization<T>;
 };
 
 /**
@@ -71,22 +71,22 @@ const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: strin
  * The main modal component for displaying wallet information and transaction history.
  * It is highly customizable and built with accessibility in mind using Radix UI.
  */
-export function WalletInfoModal<TR, T extends Transaction<TR>, A>({
+export function WalletInfoModal<T extends Transaction>({
   isOpen,
   setIsOpen,
   customization,
-  adapters,
+  adapter,
   connectedAdapterType,
   connectedWalletAddress,
   transactionsPool,
-}: WalletInfoModalProps<TR, T, A>) {
+}: WalletInfoModalProps<T>) {
   const { walletModal } = useLabels();
 
   const { explorerUrl } = useMemo(() => {
     if (!connectedAdapterType) return { explorerUrl: undefined };
-    const adapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapters });
-    return { explorerUrl: adapter?.getExplorerUrl() };
-  }, [connectedAdapterType, adapters]);
+    const foundAdapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapter });
+    return { explorerUrl: foundAdapter?.getExplorerUrl() };
+  }, [connectedAdapterType, adapter]);
 
   const closeModal = () => setIsOpen(false);
 
@@ -140,14 +140,14 @@ export function WalletInfoModal<TR, T extends Transaction<TR>, A>({
                     <div className="flex flex-col gap-4 p-4 sm:gap-6 sm:p-6">
                       {CustomWalletInfo ? (
                         <CustomWalletInfo
-                          adapters={adapters}
+                          adapter={adapter}
                           connectedAdapterType={connectedAdapterType}
                           walletAddress={connectedWalletAddress}
                           explorerUrl={explorerUrl}
                         />
                       ) : (
                         <WalletHeader
-                          adapters={adapters}
+                          adapter={adapter}
                           connectedAdapterType={connectedAdapterType}
                           walletAddress={connectedWalletAddress}
                           explorerUrl={explorerUrl}
@@ -156,13 +156,13 @@ export function WalletInfoModal<TR, T extends Transaction<TR>, A>({
 
                       {CustomHistory ? (
                         <CustomHistory
-                          adapters={adapters}
+                          adapter={adapter}
                           transactionsPool={transactionsPool}
                           connectedWalletAddress={connectedWalletAddress}
                         />
                       ) : (
                         <TransactionsHistory
-                          adapters={adapters}
+                          adapter={adapter}
                           transactionsPool={transactionsPool}
                           connectedWalletAddress={connectedWalletAddress}
                         />

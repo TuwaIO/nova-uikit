@@ -17,26 +17,26 @@ import { TransactionStatusBadge, TransactionStatusBadgeProps } from './Transacti
 // --- Prop Types for Customization ---
 type CustomActionButtonProps = { onClick: () => void; children: ReactNode };
 
-export type ToastTransactionCustomization<TR, T extends Transaction<TR>, A> = {
+export type ToastTransactionCustomization<T extends Transaction> = {
   components?: {
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
-    TransactionKey?: ComponentType<TransactionKeyProps<TR, T, A>>;
-    StatusBadge?: ComponentType<TransactionStatusBadgeProps<TR, T>>;
+    TransactionKey?: ComponentType<TransactionKeyProps<T>>;
+    StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
     WalletInfoButton?: ComponentType<CustomActionButtonProps>;
     SpeedUpButton?: ComponentType<CustomActionButtonProps>;
     CancelButton?: ComponentType<CustomActionButtonProps>;
   };
 };
 
-export type ToastTransactionProps<TR, T extends Transaction<TR>, A> = {
+export type ToastTransactionProps<T extends Transaction> = {
   tx: T;
   openWalletInfoModal?: () => void;
   icon?: ReactNode;
   className?: string;
-  customization?: ToastTransactionCustomization<TR, T, A>;
+  customization?: ToastTransactionCustomization<T>;
   closeToast?: ToastContentProps['closeToast'];
   toastProps?: ToastContainerProps;
-} & Pick<NovaProviderProps<TR, T, A>, 'transactionsPool' | 'adapters' | 'connectedWalletAddress'>;
+} & Pick<NovaProviderProps<T>, 'transactionsPool' | 'adapter' | 'connectedWalletAddress'>;
 
 // --- Default Sub-Components ---
 
@@ -74,7 +74,7 @@ const DefaultWalletInfoButton = ({ onClick, children }: CustomActionButtonProps)
  * A composite component that renders the content for a transaction toast notification.
  * It is highly customizable and leverages the adapter to show relevant actions like "Speed Up".
  */
-export function ToastTransaction<TR, T extends Transaction<TR>, A>({
+export function ToastTransaction<T extends Transaction>({
   openWalletInfoModal,
   tx,
   transactionsPool,
@@ -82,29 +82,29 @@ export function ToastTransaction<TR, T extends Transaction<TR>, A>({
   className,
   customization,
   connectedWalletAddress,
-  adapters,
-}: ToastTransactionProps<TR, T, A>): JSX.Element {
+  adapter,
+}: ToastTransactionProps<T>): JSX.Element {
   const { actions, toast } = useLabels();
 
-  const adapter = selectAdapterByKey({ adapterKey: tx.adapter, adapters });
+  const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
   // A transaction can be replaced only if it's a standard on-chain transaction (not Safe or Gelato),
   // is pending, the adapter supports the actions, and it belongs to the connected wallet.
   const canBeReplaced = !!(
     tx.tracker === 'ethereum' &&
     tx.pending &&
-    adapter?.speedUpTxAction &&
-    adapter?.cancelTxAction &&
+    foundAdapter?.speedUpTxAction &&
+    foundAdapter?.cancelTxAction &&
     tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase()
   );
 
   // --- Action Handlers ---
   const handleCancel = () => {
-    if (canBeReplaced) adapter.cancelTxAction!(tx);
+    if (canBeReplaced) foundAdapter.cancelTxAction!(tx);
   };
 
   const handleSpeedUp = () => {
-    if (canBeReplaced) adapter.speedUpTxAction!(tx);
+    if (canBeReplaced) foundAdapter.speedUpTxAction!(tx);
   };
 
   // --- Component Overrides ---
@@ -132,7 +132,7 @@ export function ToastTransaction<TR, T extends Transaction<TR>, A>({
 
       {/* --- Body: Hashes + Status/Actions --- */}
       <div>
-        <CTransactionKey transactionsPool={transactionsPool} adapters={adapters} tx={tx} variant="toast" />
+        <CTransactionKey transactionsPool={transactionsPool} adapter={adapter} tx={tx} variant="toast" />
         <div className="mt-3 flex items-center justify-between">
           <CStatusBadge tx={tx} />
 

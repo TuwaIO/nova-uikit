@@ -1,46 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionHistoryItem } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
+import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import { zeroAddress } from 'viem';
-import { mainnet, sepolia } from 'viem/chains';
 
-// --- Mocks and Helpers ---
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: '0x123abcdeef',
-  type: 'Token Swap',
-  chainId: mainnet.id,
-  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-  pending: false,
-  localTimestamp: dayjs().subtract(5, 'minutes').unix(),
-  walletType: 'injected',
-  status: TransactionStatus.Success,
-  hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-  title: ['Swapping tokens...', 'Swap successful!', 'Swap failed', 'Swap replaced'],
-  description: [
-    'Processing your token swap',
-    'Your tokens have been swapped',
-    'Token swap failed',
-    'Swap was replaced',
-  ],
-  ...overrides,
-});
-
-const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
-  getExplorerTxUrl: (pool: any, txKey: string, replacedTxHash?: string) =>
-    `https://etherscan.io/tx/${replacedTxHash || pool[txKey]?.hash}`,
-  // Add other required adapter methods as mocks
-  getWalletInfo: () => ({ walletAddress: zeroAddress, walletType: 'injected' }),
-  checkChainForTx: async () => {},
-  checkTransactionsTracker: () => ({ txKey: 'mock', tracker: TransactionTracker.Ethereum }),
-  checkAndInitializeTrackerInStore: async () => {},
-  getExplorerUrl: () => 'https://etherscan.io',
-};
+import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
+import { createMockTx } from '../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -58,15 +22,18 @@ const meta: Meta<typeof TransactionHistoryItem> = {
     return <TransactionHistoryItem {...args} transactionsPool={transactionsPool} />;
   },
   args: {
-    tx: createMockTx({}),
-    adapters: [mockEvmAdapter as any],
+    tx: createMockTx(TransactionAdapter.EVM, {
+      status: TransactionStatus.Success,
+      pending: false,
+    }),
+    adapter: [mockEvmAdapter],
   },
   argTypes: {
     tx: {
       control: 'object',
       description: 'The transaction object to display.',
     },
-    adapters: {
+    adapter: {
       control: false,
       description: 'An array of configured adapters.',
     },
@@ -88,7 +55,8 @@ type Story = StoryObj<typeof meta>;
  */
 export const Success: Story = {
   args: {
-    tx: createMockTx({ status: TransactionStatus.Success }),
+    tx: createMockTx(TransactionAdapter.EVM, { status: TransactionStatus.Success }),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -97,12 +65,13 @@ export const Success: Story = {
  */
 export const Pending: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       pending: true,
       status: undefined,
       hash: undefined,
       localTimestamp: dayjs().subtract(30, 'seconds').unix(),
     }),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -111,23 +80,25 @@ export const Pending: Story = {
  */
 export const Failed: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       status: TransactionStatus.Failed,
       errorMessage: 'Transaction failed due to an unexpected error.',
     }),
+    adapter: [mockEvmAdapter],
   },
 };
 
 /**
  * A transaction that was replaced (e.g., sped up or cancelled).
- * The `TransactionKey` component will display both the original and replaced hashes.
+ * The `TransactionKey` component will display both the original and replacing hashes.
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       status: TransactionStatus.Replaced,
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
     }),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -136,12 +107,22 @@ export const Replaced: Story = {
  */
 export const Gelato: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
-      chainId: sepolia.id,
       hash: '0x_on_chain_hash_from_gelato',
     }),
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * An example of a Solana transaction in the history view.
+ */
+export const Solana: Story = {
+  args: {
+    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true, status: undefined }),
+    adapter: [mockSolanaAdapter],
   },
 };
 
@@ -151,6 +132,10 @@ export const Gelato: Story = {
 export const WithCustomization: Story = {
   name: 'With Custom Components',
   args: {
+    tx: createMockTx(TransactionAdapter.EVM, {
+      status: TransactionStatus.Success,
+      pending: false,
+    }),
     customization: {
       components: {
         Title: (props) => <div className="font-bold text-purple-600">✨ Custom Title: {props.fallback}</div>,
@@ -159,5 +144,6 @@ export const WithCustomization: Story = {
         ),
       },
     },
+    adapter: [mockEvmAdapter],
   },
 };

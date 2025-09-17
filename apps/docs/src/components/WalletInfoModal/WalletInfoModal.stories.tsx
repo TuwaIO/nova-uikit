@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory, WalletHeader, WalletInfoModal } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
+import { TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { Address, zeroAddress } from 'viem';
-import { mainnet, sepolia } from 'viem/chains';
+import { Address } from 'viem';
+
+import { mockEvmAdapter, mockSolanaAdapter } from '../../utils/mockAdapters';
+import { createMockTx } from '../../utils/mockTransactions';
 
 // --- Mocks and Helpers ---
 
@@ -20,51 +21,45 @@ const MOCK_DATA = {
   },
 };
 
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: `0x_tx_${Math.random().toString(16).slice(2)}`,
-  type: 'Token Swap',
-  chainId: mainnet.id,
-  from: MOCK_DATA.ens.address,
-  pending: false,
-  localTimestamp: dayjs().unix(),
-  walletType: 'injected',
-  status: TransactionStatus.Success,
-  hash: `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`,
-  title: 'Swap Tokens',
-  ...overrides,
-});
-
 const mockTransactionsPool = {
   ...[
-    createMockTx({ status: TransactionStatus.Success, localTimestamp: dayjs().subtract(2, 'minutes').unix() }),
-    createMockTx({ pending: true, status: undefined, localTimestamp: dayjs().subtract(30, 'seconds').unix() }),
-    createMockTx({
+    createMockTx(TransactionAdapter.EVM, {
+      status: TransactionStatus.Success,
+      localTimestamp: dayjs().subtract(2, 'minutes').unix(),
+      from: MOCK_DATA.ens.address,
+    }),
+    createMockTx(TransactionAdapter.EVM, {
+      pending: true,
+      status: undefined,
+      hash: undefined,
+      from: MOCK_DATA.ens.address,
+      localTimestamp: dayjs().subtract(30, 'seconds').unix(),
+    }),
+    createMockTx(TransactionAdapter.EVM, {
       status: TransactionStatus.Failed,
+      from: MOCK_DATA.ens.address,
       localTimestamp: dayjs().subtract(1, 'hour').unix(),
-      chainId: sepolia.id,
     }),
   ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
 };
 
-const createMockAdapter = (withEns: boolean) => ({
-  key: TransactionAdapter.EVM,
-  getExplorerUrl: () => mainnet.blockExplorers.default.url,
-  getName: async (address: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return withEns && address === MOCK_DATA.ens.address ? MOCK_DATA.ens.name : null;
-  },
-  getAvatar: async (name: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return withEns && name === MOCK_DATA.ens.name ? MOCK_DATA.ens.avatar : null;
-  },
-  // Add other required adapter methods as mocks
-  getWalletInfo: () => ({ walletAddress: zeroAddress, walletType: 'injected' }),
-  checkChainForTx: async () => {},
-  checkTransactionsTracker: () => ({ txKey: 'mock', tracker: TransactionTracker.Ethereum }),
-  checkAndInitializeTrackerInStore: async () => {},
-});
+const createInteractiveMockAdapter = (withEns: boolean) => {
+  const adapter = { ...mockEvmAdapter };
+  if (withEns) {
+    adapter.getName = async (address: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return address === MOCK_DATA.ens.address ? MOCK_DATA.ens.name : null;
+    };
+    adapter.getAvatar = async (name: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return name === MOCK_DATA.ens.name ? MOCK_DATA.ens.avatar : null;
+    };
+  } else {
+    adapter.getName = async () => null;
+    adapter.getAvatar = async () => null;
+  }
+  return adapter;
+};
 
 // --- Storybook Meta Configuration ---
 
@@ -77,7 +72,7 @@ const meta: Meta<typeof WalletInfoModal> = {
   args: {
     isOpen: true,
     setIsOpen: () => {},
-    adapters: [createMockAdapter(true) as any],
+    adapter: [createInteractiveMockAdapter(true)],
     connectedAdapterType: TransactionAdapter.EVM,
     connectedWalletAddress: MOCK_DATA.ens.address,
     transactionsPool: mockTransactionsPool,
@@ -86,7 +81,7 @@ const meta: Meta<typeof WalletInfoModal> = {
     isOpen: { control: 'boolean' },
     setIsOpen: { action: 'setIsOpen' },
     connectedWalletAddress: { control: 'text' },
-    adapters: { control: false },
+    adapter: { control: false },
     connectedAdapterType: { control: false },
     transactionsPool: { control: false },
   },
@@ -98,50 +93,43 @@ type Story = StoryObj<typeof meta>;
 
 // --- Stories ---
 
-/**
- * This is an interactive story. Click the button to open and close the modal.
- * This demonstrates the default appearance with a connected wallet and transaction history.
- */
 export const Interactive: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[var(--tuwa-bg-primary)] p-8">
-        <button onClick={() => setIsOpen(true)}>Open Wallet Modal</button>
+      <div className="flex h-screen w-full items-center justify-center bg-[var(--tuwa-bg-muted)] p-8">
+        <button className="rounded-md bg-blue-500 px-4 py-2 text-white" onClick={() => setIsOpen(true)}>
+          Open Wallet Modal
+        </button>
         <WalletInfoModal {...args} isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     );
   },
   args: {
-    isOpen: false, // Start closed for the interactive story
+    isOpen: false,
+    adapter: [createInteractiveMockAdapter(true)],
   },
 };
 
-/**
- * The modal's appearance when the connected wallet has no transaction history.
- */
 export const EmptyHistory: Story = {
   args: {
     connectedWalletAddress: MOCK_DATA.noEns.address,
     transactionsPool: {},
+    adapter: [createInteractiveMockAdapter(false)],
   },
 };
 
-/**
- * The modal's appearance when no wallet is connected.
- */
 export const NotConnected: Story = {
   args: {
     connectedWalletAddress: undefined,
     transactionsPool: {},
+    adapter: [mockEvmAdapter],
   },
 };
 
-/**
- * An example of extensive customization, replacing the default header, wallet info, and history sections.
- */
 export const FullyCustomized: Story = {
   args: {
+    ...meta.args,
     customization: {
       components: {
         Header: ({ closeModal }) => (
@@ -160,6 +148,9 @@ export const FullyCustomized: Story = {
             <h3 className="mb-2 font-bold text-purple-700">Custom Activity Feed</h3>
             <TransactionsHistory
               {...props}
+              adapter={props.adapter}
+              transactionsPool={props.transactionsPool}
+              connectedWalletAddress={props.connectedWalletAddress}
               customization={{
                 components: {
                   HistoryItem: ({ tx }) => <div className="border-b p-2">Custom Item: {tx.type}</div>,
@@ -169,6 +160,19 @@ export const FullyCustomized: Story = {
           </div>
         ),
       },
+    },
+    adapter: [createInteractiveMockAdapter(true)],
+  },
+};
+
+export const WithSolanaWallet: Story = {
+  name: 'Solana Wallet',
+  args: {
+    adapter: [mockSolanaAdapter],
+    connectedAdapterType: TransactionAdapter.SOLANA,
+    connectedWalletAddress: 'mockedSolanaWalletAddress' as Address,
+    transactionsPool: {
+      mock_solana_tx_key: createMockTx(TransactionAdapter.SOLANA, { from: 'mockedSolanaWalletAddress' }),
     },
   },
 };

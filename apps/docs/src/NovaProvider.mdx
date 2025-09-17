@@ -86,8 +86,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           connectedAdapterType={chain?.id ? TransactionAdapter.EVM : undefined} // Example for EVM
           
           // --- Static Configuration ---
-          // The adapters array, similar like using for store
-          adapters={[evmAdapter(wagmiConfig, chains)]}
+          // Adapter or adapters array, similar like using for store
+          adapter={evmAdapter(wagmiConfig, chains)}
         />
       </QueryClientProvider>
     </WagmiProvider>
@@ -174,7 +174,7 @@ const germanLabels = {
 
 | Prop                     | Type                               | Required | Description                                                              |
 | ------------------------ | ---------------------------------- | :------: | ------------------------------------------------------------------------ |
-| `adapters`               | `TxAdapter[]`                      |    ✅    | The array of configured adapters similar to your Pulsar store.                 |
+| `adapter`                | `TxAdapter or TxAdapter[]`         |    ✅    | Adapter or array of configured adapters similar to your Pulsar store.                 |
 | `transactionsPool`       | `TransactionPool`                  |    ✅    | The current transaction pool from your Pulsar store.                     |
 | `handleTransaction`      | `Function`                         |    ✅    | The handler function from your store to initiate transactions.           |
 | `closeTxTrackedModal`    | `(txKey?: string) => void`         |    ✅    | A function from your store to close the tracking modal.                  |

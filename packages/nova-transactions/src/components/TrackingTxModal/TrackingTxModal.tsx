@@ -37,7 +37,7 @@ type CustomFooterProps = {
   connectedWalletAddress?: string;
 };
 
-export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
+export type TrackingTxModalCustomization<T extends Transaction> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
   motionProps?: MotionProps;
   components?: {
@@ -45,27 +45,27 @@ export type TrackingTxModalCustomization<TR, T extends Transaction<TR>, A> = {
     Footer?: ComponentType<CustomFooterProps>;
     StatusVisual?: ComponentType<TxStatusVisualProps>;
     ProgressIndicator?: ComponentType<TxProgressIndicatorProps>;
-    InfoBlock?: ComponentType<TxInfoBlockProps<TR, T, A>>;
+    InfoBlock?: ComponentType<TxInfoBlockProps<T>>;
     ErrorBlock?: ComponentType<TxErrorBlockProps>;
   };
 };
 
-export type TrackingTxModalProps<TR, T extends Transaction<TR>, A> = Pick<
-  NovaProviderProps<TR, T, A>,
-  'handleTransaction' | 'initialTx' | 'transactionsPool' | 'adapters' | 'connectedWalletAddress'
+export type TrackingTxModalProps<T extends Transaction> = Pick<
+  NovaProviderProps<T>,
+  'handleTransaction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
   onOpenWalletInfo: () => void;
   className?: string;
-  customization?: TrackingTxModalCustomization<TR, T, A>;
+  customization?: TrackingTxModalCustomization<T>;
 };
 
 /**
  * A detailed modal that displays the real-time status and lifecycle of a transaction.
  * It opens automatically for transactions initiated with `withTrackedModal: true`.
  */
-export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
-  adapters,
+export function TrackingTxModal<T extends Transaction>({
+  adapter,
   onClose,
   onOpenWalletInfo,
   className,
@@ -74,7 +74,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   handleTransaction,
   initialTx,
   connectedWalletAddress,
-}: TrackingTxModalProps<TR, T, A>) {
+}: TrackingTxModalProps<T>) {
   // --- State Derivation ---
   const activeTx = useMemo(
     () => (initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined),
@@ -99,24 +99,24 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
   }, [activeTx, initialTx]);
 
   // --- Adapter and Action Logic ---
-  const adapter = useMemo(
-    () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapters }) : undefined),
-    [txToDisplay, adapters],
+  const foundAdapter = useMemo(
+    () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined),
+    [txToDisplay, adapter],
   );
 
   const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && handleTransaction);
   const canReplace = !!(
-    adapter?.speedUpTxAction &&
-    adapter?.cancelTxAction &&
+    foundAdapter?.speedUpTxAction &&
+    foundAdapter?.cancelTxAction &&
     activeTx?.pending &&
     activeTx.tracker === 'ethereum'
   );
 
   // --- Action Handlers ---
   const handleRetry = () => {
-    if (!canRetry || !adapter?.retryTxAction) return;
+    if (!canRetry || !foundAdapter?.retryTxAction) return;
 
-    const retryParams: InitialTransactionParams<A> = {
+    const retryParams: InitialTransactionParams = {
       adapter: txToDisplay.adapter,
       type: txToDisplay.type,
       desiredChainID: 'desiredChainID' in txToDisplay ? txToDisplay.desiredChainID : txToDisplay.chainId,
@@ -126,13 +126,13 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
       payload: txToDisplay.payload,
       withTrackedModal: true,
     };
-    adapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, handleTransaction });
+    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, handleTransaction });
   };
   const handleCancel = () => {
-    if (canReplace && activeTx) adapter.cancelTxAction!(activeTx);
+    if (canReplace && activeTx) foundAdapter.cancelTxAction!(activeTx);
   };
   const handleSpeedUp = () => {
-    if (canReplace && activeTx) adapter.speedUpTxAction!(activeTx);
+    if (canReplace && activeTx) foundAdapter.speedUpTxAction!(activeTx);
   };
 
   // --- Customization & Rendering ---
@@ -223,9 +223,9 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
                         />
                       )}
                       {CustomInfoBlock ? (
-                        <CustomInfoBlock tx={txToDisplay} adapters={adapters} transactionsPool={transactionsPool} />
+                        <CustomInfoBlock tx={txToDisplay} adapter={adapter} transactionsPool={transactionsPool} />
                       ) : (
-                        <TxInfoBlock tx={txToDisplay} adapters={adapters} transactionsPool={transactionsPool} />
+                        <TxInfoBlock tx={txToDisplay} adapter={adapter} transactionsPool={transactionsPool} />
                       )}
                       {CustomErrorBlock ? (
                         <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
@@ -272,7 +272,7 @@ export function TrackingTxModal<TR, T extends Transaction<TR>, A>({
 
 // --- Default Sub-Components ---
 
-function DefaultHeaderTitle<TR, A>({ tx }: { tx: Transaction<TR> | InitialTransaction<A> }) {
+function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
   return (
     <StatusAwareText
       txStatus={'status' in tx ? tx.status : undefined}

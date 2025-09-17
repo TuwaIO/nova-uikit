@@ -47,10 +47,7 @@ const getDefaultContent = (labels: TuwaLabels['trackedTxButton']) => ({
   ),
 });
 
-export type TxActionButtonProps<TR, T extends Transaction<TR>> = Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  'onClick'
-> & {
+export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> & {
   /** The default content to display when the button is 'idle'. */
   children: ReactNode;
   /** The async function to execute when the button is clicked to initiate the transaction. */
@@ -58,7 +55,7 @@ export type TxActionButtonProps<TR, T extends Transaction<TR>> = Omit<
   /** A function that returns the unique key of the most recently initiated transaction. */
   getLastTxKey: () => string | undefined;
   /** The global transaction pool from the Pulsar store. */
-  transactionsPool: TransactionPool<TR, T>;
+  transactionsPool: TransactionPool<T>;
   /** Optional active wallet address. If provided, the button will only track transactions from this address. */
   walletAddress?: string;
   /** Optional custom content for the 'loading' state. */
@@ -77,7 +74,7 @@ export type TxActionButtonProps<TR, T extends Transaction<TR>> = Omit<
  * A stateful button that provides real-time feedback for a transaction's lifecycle.
  * It listens for changes in `transactionsPool` to automatically update its visual state.
  */
-export function TxActionButton<TR, T extends Transaction<TR>>({
+export function TxActionButton<T extends Transaction>({
   children,
   action,
   getLastTxKey,
@@ -90,7 +87,7 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
   resetTimeout = 2500,
   className,
   ...props
-}: TxActionButtonProps<TR, T>) {
+}: TxActionButtonProps<T>) {
   const { trackedTxButton } = useLabels();
   const [status, setStatus] = useState<ButtonStatus>('idle');
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
@@ -110,8 +107,7 @@ export function TxActionButton<TR, T extends Transaction<TR>>({
 
     const trackedTx = transactionsPool[trackedTxKey];
 
-    // IMPORTANT: Only update status for transactions initiated by the active wallet.
-    if (trackedTx && trackedTx.from.toLowerCase() === walletAddress?.toLowerCase()) {
+    if (trackedTx) {
       switch (trackedTx.status) {
         case TransactionStatus.Success:
           setStatus('succeed');

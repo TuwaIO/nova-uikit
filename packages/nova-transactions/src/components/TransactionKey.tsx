@@ -4,7 +4,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { selectAdapterByKey, Transaction } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey, Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
 import { NovaProviderProps, useLabels } from '../providers';
@@ -16,10 +16,7 @@ import { HashLink, HashLinkProps } from './HashLink';
  * @template T - The transaction type.
  * @template A - The type of the key returned by an action function.
  */
-export type TransactionKeyProps<TR, T extends Transaction<TR>, A> = Pick<
-  NovaProviderProps<TR, T, A>,
-  'adapters' | 'transactionsPool'
-> & {
+export type TransactionKeyProps<T extends Transaction> = Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'> & {
   /** The transaction object to display identifiers for. */
   tx: T;
   /** The visual variant, which applies different container styles. */
@@ -31,26 +28,29 @@ export type TransactionKeyProps<TR, T extends Transaction<TR>, A> = Pick<
    * If not provided, the default `HashLink` component will be used.
    */
   renderHashLink?: (props: HashLinkProps) => ReactNode;
+  /** Optional number of confirmations for a transaction. */
+  confirmations?: number;
 };
 
 /**
  * A component that intelligently displays the relevant keys and hashes for a transaction.
  * It leverages the adapter system to show chain-specific identifiers and explorer links.
  */
-export function TransactionKey<TR, T extends Transaction<TR>, A>({
+export function TransactionKey<T extends Transaction>({
   tx,
-  adapters,
+  adapter,
   transactionsPool,
   variant = 'toast',
   className,
   renderHashLink,
-}: TransactionKeyProps<TR, T, A>) {
-  const { hashLabels } = useLabels();
+  confirmations,
+}: TransactionKeyProps<T>) {
+  const { hashLabels, statuses } = useLabels();
 
   // Select the correct adapter for the given transaction.
-  const adapter = selectAdapterByKey({ adapterKey: tx.adapter, adapters });
+  const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
-  if (!adapter) return null;
+  if (!foundAdapter) return null;
 
   // Helper to use the render prop if provided, otherwise default to HashLink.
   const renderHash = (props: HashLinkProps) => {
@@ -63,10 +63,18 @@ export function TransactionKey<TR, T extends Transaction<TR>, A>({
       : 'flex w-full flex-col gap-y-2';
 
   // The primary key of the transaction (e.g., taskId, safeTxHash).
-  // @ts-expect-error - TODO: a better way to get tracker label from i18n
-  const trackerLabel = hashLabels[tx.tracker as string];
+  // This removes the need for `@ts-expect-error` by using a type assertion to key into hashLabels.
+  const trackerLabel = (hashLabels as Record<string, string>)[String(tx.tracker)];
   const trackerKeyElement = trackerLabel
-    ? renderHash({ label: trackerLabel, hash: tx.txKey, variant: 'compact' })
+    ? renderHash({
+        label: trackerLabel,
+        hash: tx.txKey,
+        variant: tx.tracker !== TransactionTracker.Solana ? 'compact' : 'default',
+        explorerUrl:
+          foundAdapter.getExplorerTxUrl && tx.tracker === TransactionTracker.Solana
+            ? foundAdapter?.getExplorerTxUrl(transactionsPool, tx.txKey)
+            : undefined,
+      })
     : null;
 
   // The on-chain hash elements, handling normal and replaced transactions.
@@ -85,11 +93,11 @@ export function TransactionKey<TR, T extends Transaction<TR>, A>({
               hash: onChainHash,
               variant: 'compact',
             })}
-          {adapter.getExplorerTxUrl &&
+          {typeof foundAdapter.getExplorerTxUrl !== 'undefined' &&
             renderHash({
               label: hashLabels.replaced,
               hash: replacedHash,
-              explorerUrl: adapter.getExplorerTxUrl(transactionsPool, tx.txKey, replacedHash),
+              explorerUrl: foundAdapter.getExplorerTxUrl(transactionsPool, tx.txKey, replacedHash),
             })}
         </>
       );
@@ -97,11 +105,11 @@ export function TransactionKey<TR, T extends Transaction<TR>, A>({
 
     return (
       onChainHash &&
-      adapter.getExplorerTxUrl &&
+      typeof foundAdapter.getExplorerTxUrl !== 'undefined' &&
       renderHash({
         label: hashLabels.default,
         hash: onChainHash,
-        explorerUrl: adapter.getExplorerTxUrl(transactionsPool, tx.txKey),
+        explorerUrl: foundAdapter.getExplorerTxUrl(transactionsPool, tx.txKey),
       })
     );
   })();
@@ -113,6 +121,11 @@ export function TransactionKey<TR, T extends Transaction<TR>, A>({
     <div className={cn(containerClasses, className)}>
       {shouldShowTrackerKey && trackerKeyElement}
       {onChainHashesElement}
+      {typeof confirmations === 'number' && (
+        <p className="text-xs text-[var(--tuwa-text-tertiary)]">
+          {statuses.confirmationsLabel}: {confirmations}
+        </p>
+      )}
     </div>
   );
 }

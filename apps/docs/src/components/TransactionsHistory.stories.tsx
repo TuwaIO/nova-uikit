@@ -1,41 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
+import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import { zeroAddress } from 'viem';
-import { mainnet } from 'viem/chains';
 
-// --- Mocks and Helpers ---
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: `0x_tx_${Math.random().toString(16).slice(2)}`,
-  type: 'Token Swap',
-  chainId: mainnet.id,
-  from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
-  pending: false,
-  localTimestamp: dayjs().unix(),
-  walletType: 'injected',
-  status: TransactionStatus.Success,
-  hash: `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`,
-  title: 'Swap Tokens',
-  ...overrides,
-});
-
-const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
-  getExplorerTxUrl: (pool: any, txKey: string) => `https://etherscan.io/tx/${pool[txKey]?.hash}`,
-  // ... other required adapter methods
-  getWalletInfo: () => ({ walletAddress: zeroAddress, walletType: 'injected' }),
-  checkChainForTx: async () => {},
-  checkTransactionsTracker: () => ({ txKey: 'mock', tracker: TransactionTracker.Ethereum }),
-  checkAndInitializeTrackerInStore: async () => {},
-  getExplorerUrl: () => 'https://etherscan.io',
-};
-
-const mockWalletAddress = '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8';
+import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
+import { createMockTx } from '../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -46,8 +15,23 @@ const meta: Meta<typeof TransactionsHistory> = {
   parameters: {
     layout: 'padded',
   },
+  // The render function automatically creates the transactionsPool based on the tx arg.
+  // This simplifies individual story definitions.
+  render: (args) => {
+    const transactionsPool = args.transactionsPool;
+    return <TransactionsHistory {...args} transactionsPool={transactionsPool} />;
+  },
   args: {
-    adapters: [mockEvmAdapter as any],
+    connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    transactionsPool: {
+      ...[
+        createMockTx(TransactionAdapter.EVM, {
+          status: TransactionStatus.Success,
+          localTimestamp: dayjs().subtract(2, 'minutes').unix(),
+        }),
+      ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
+    },
+    adapter: [mockEvmAdapter],
   },
   argTypes: {
     connectedWalletAddress: {
@@ -58,7 +42,7 @@ const meta: Meta<typeof TransactionsHistory> = {
       control: 'object',
       description: 'The entire pool of transactions from the store.',
     },
-    adapters: {
+    adapter: {
       control: false,
       description: 'An array of configured adapters.',
     },
@@ -77,19 +61,39 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   args: {
-    connectedWalletAddress: mockWalletAddress,
+    connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: {
       ...[
-        createMockTx({ status: TransactionStatus.Success, localTimestamp: dayjs().subtract(2, 'minutes').unix() }),
-        createMockTx({ pending: true, status: undefined, localTimestamp: dayjs().subtract(30, 'seconds').unix() }),
-        createMockTx({ status: TransactionStatus.Failed, localTimestamp: dayjs().subtract(1, 'hour').unix() }),
-        createMockTx({
+        createMockTx(TransactionAdapter.EVM, {
+          status: TransactionStatus.Success,
+          localTimestamp: dayjs().subtract(2, 'minutes').unix(),
+          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
+        }),
+        createMockTx(TransactionAdapter.EVM, {
+          pending: true,
+          status: undefined,
+          hash: undefined,
+          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
+          localTimestamp: dayjs().subtract(30, 'seconds').unix(),
+        }),
+        createMockTx(TransactionAdapter.EVM, {
+          status: TransactionStatus.Failed,
+          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
+          localTimestamp: dayjs().subtract(1, 'hour').unix(),
+        }),
+        createMockTx(TransactionAdapter.EVM, {
           tracker: TransactionTracker.Gelato,
           txKey: 'gelato_task_123',
+          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(15, 'minutes').unix(),
+        }),
+        createMockTx(TransactionAdapter.SOLANA, {
+          from: 'mockedSolanaWalletAddress',
+          localTimestamp: dayjs().subtract(5, 'minutes').unix(),
         }),
       ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
     },
+    adapter: [mockEvmAdapter, mockSolanaAdapter],
   },
 };
 
@@ -98,8 +102,9 @@ export const Default: Story = {
  */
 export const NoTransactions: Story = {
   args: {
-    connectedWalletAddress: mockWalletAddress,
+    connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: {},
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -110,6 +115,7 @@ export const NoWalletConnected: Story = {
   args: {
     connectedWalletAddress: undefined,
     transactionsPool: {},
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -118,9 +124,10 @@ export const NoWalletConnected: Story = {
  */
 export const WithScrolling: Story = {
   args: {
-    connectedWalletAddress: mockWalletAddress,
+    connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: Array.from({ length: 15 }, (_, i) =>
-      createMockTx({
+      createMockTx(TransactionAdapter.EVM, {
+        from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
         localTimestamp: dayjs()
           .subtract(i * 10, 'minutes')
           .unix(),
@@ -129,6 +136,7 @@ export const WithScrolling: Story = {
         pending: i % 3 === 2,
       }),
     ).reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -149,6 +157,7 @@ export const WithCustomPlaceholder: Story = {
         ),
       },
     },
+    adapter: [mockEvmAdapter],
   },
 };
 
@@ -167,5 +176,6 @@ export const WithCustomHistoryItem: Story = {
         ),
       },
     },
+    adapter: [mockEvmAdapter],
   },
 };

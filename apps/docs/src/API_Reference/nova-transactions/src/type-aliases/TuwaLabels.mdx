@@ -6,9 +6,10 @@
 
 > **TuwaLabels** = `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:9](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L9)
+Defined in: [nova-transactions/src/i18n/types.ts:10](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L10)
 
-Defines the complete structure for all customizable text labels used throughout the transaction tracking UI components.
+Represents the set of labels used for various UI elements and features in a Tuwa-based application.
+This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
 
 ## Properties
 
@@ -16,7 +17,7 @@ Defines the complete structure for all customizable text labels used throughout 
 
 > **actions**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:114](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L114)
+Defined in: [nova-transactions/src/i18n/types.ts:123](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L123)
 
 Labels for common action buttons/links.
 
@@ -56,7 +57,7 @@ Text for a link to view the transaction on a block explorer.
 
 > **hashLabels**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:54](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L54)
+Defined in: [nova-transactions/src/i18n/types.ts:57](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L57)
 
 Labels for different types of transaction hashes/keys.
 
@@ -78,6 +79,12 @@ Label for a Gelato Task ID.
 
 Label for the original transaction hash (before replacement).
 
+#### recentBlockhash
+
+> **recentBlockhash**: `string`
+
+Special label for the most recent blockhash. This is used for the "Recent Blockhash" field in the transaction details modal.
+
 #### replaced
 
 > **replaced**: `string`
@@ -90,15 +97,27 @@ Label for the new transaction hash that replaced the original.
 
 Label for a Safe Transaction Hash.
 
+#### solana
+
+> **solana**: `string`
+
+Special label for the Solana signature. This is used for the "Signature" field in the transaction details modal.
+
 ***
 
 ### statuses
 
 > **statuses**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L39)
+Defined in: [nova-transactions/src/i18n/types.ts:40](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L40)
 
 Standard labels for transaction statuses.
+
+#### confirmationsLabel
+
+> **confirmationsLabel**: `string`
+
+Text for a confirmation count label, e.g., "1 confirmation" or "10 confirmations"
 
 #### failed
 
@@ -142,7 +161,7 @@ Text for an unknown or indeterminate status.
 
 > **toast**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:34](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L34)
+Defined in: [nova-transactions/src/i18n/types.ts:35](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L35)
 
 Labels related to toast notifications.
 
@@ -158,7 +177,7 @@ Text for the button/link within a toast to open the wallet modal.
 
 > **trackedTxButton**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:103](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L103)
+Defined in: [nova-transactions/src/i18n/types.ts:112](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L112)
 
 Labels for the main transaction action button.
 
@@ -192,7 +211,7 @@ Text shown on the button after the transaction succeeds.
 
 > **trackingModal**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:81](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L81)
+Defined in: [nova-transactions/src/i18n/types.ts:90](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L90)
 
 Labels for the detailed transaction tracking modal.
 
@@ -256,7 +275,7 @@ Label for the button to open the main wallet info modal.
 
 > **txError**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:74](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L74)
+Defined in: [nova-transactions/src/i18n/types.ts:83](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L83)
 
 Labels for the transaction error block.
 
@@ -278,7 +297,7 @@ The title for the error details section.
 
 > **txInfo**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:67](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L67)
+Defined in: [nova-transactions/src/i18n/types.ts:74](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L74)
 
 Labels for the transaction information block.
 
@@ -287,6 +306,12 @@ Labels for the transaction information block.
 > **network**: `string`
 
 Label for the network name.
+
+#### slot
+
+> **slot**: `string`
+
+Slot number for the transaction. This is used for the "Slot" field in the transaction details modal.
 
 #### started
 
@@ -300,7 +325,7 @@ Label indicating when the transaction was started.
 
 > **walletModal**: `object`
 
-Defined in: [nova-transactions/src/i18n/types.ts:11](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/i18n/types.ts#L11)
+Defined in: [nova-transactions/src/i18n/types.ts:12](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/i18n/types.ts#L12)
 
 Labels for the main wallet information modal.
 

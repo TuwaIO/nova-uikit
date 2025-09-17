@@ -16,9 +16,9 @@ type NameRenderProps = { ensName?: string; isLoading: boolean; address: string }
 /**
  * Defines the props for the `WalletHeader` component, including extensive customization options.
  */
-export type WalletHeaderProps<TR, T extends Transaction<TR>, A> = Pick<
-  NovaProviderProps<TR, T, A>,
-  'adapters' | 'connectedAdapterType'
+export type WalletHeaderProps<T extends Transaction> = Pick<
+  NovaProviderProps<T>,
+  'adapter' | 'connectedAdapterType'
 > & {
   walletAddress?: string;
   explorerUrl?: string;
@@ -77,9 +77,9 @@ const DefaultNameDisplay = ({
  * A component that displays the header for the wallet modal, including the user's avatar,
  * name (if available), and address. It leverages the active adapter to fetch name service data.
  */
-export function WalletHeader<TR, T extends Transaction<TR>, A>({
+export function WalletHeader<T extends Transaction>({
   walletAddress,
-  adapters,
+  adapter,
   connectedAdapterType,
   className,
   renderAvatar,
@@ -87,7 +87,7 @@ export function WalletHeader<TR, T extends Transaction<TR>, A>({
   renderAddressDisplay,
   renderNoWalletContent,
   explorerUrl,
-}: WalletHeaderProps<TR, T, A>) {
+}: WalletHeaderProps<T>) {
   const { walletModal } = useLabels();
   const [ensName, setEnsName] = useState<string | null>(null);
   const [ensAvatar, setEnsAvatar] = useState<string | null>(null);
@@ -102,11 +102,12 @@ export function WalletHeader<TR, T extends Transaction<TR>, A>({
       }
 
       // Select the currently active adapter.
-      const adapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapters });
+      const foundAdapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapter });
 
       // Check if the adapter supports name and avatar resolution.
-      const hasNameResolver = adapter && 'getName' in adapter && typeof adapter.getName === 'function';
-      const hasAvatarResolver = adapter && 'getAvatar' in adapter && typeof adapter.getAvatar === 'function';
+      const hasNameResolver = foundAdapter && 'getName' in foundAdapter && typeof foundAdapter.getName === 'function';
+      const hasAvatarResolver =
+        foundAdapter && 'getAvatar' in foundAdapter && typeof foundAdapter.getAvatar === 'function';
 
       if (!hasNameResolver) {
         setIsLoading(false);
@@ -118,11 +119,11 @@ export function WalletHeader<TR, T extends Transaction<TR>, A>({
       setEnsAvatar(null);
 
       try {
-        const name = adapter?.getName ? await adapter.getName(walletAddress) : null;
+        const name = foundAdapter?.getName ? await foundAdapter.getName(walletAddress) : null;
         if (name) {
           setEnsName(name);
           if (hasAvatarResolver) {
-            const avatar = adapter?.getAvatar ? await adapter.getAvatar(name) : null;
+            const avatar = foundAdapter?.getAvatar ? await foundAdapter.getAvatar(name) : null;
             setEnsAvatar(avatar);
           }
         }
@@ -134,7 +135,7 @@ export function WalletHeader<TR, T extends Transaction<TR>, A>({
     };
 
     fetchNameData();
-  }, [walletAddress, adapters, connectedAdapterType]);
+  }, [walletAddress, adapter, connectedAdapterType]);
 
   // --- Render "Not Connected" State ---
   if (!walletAddress) {

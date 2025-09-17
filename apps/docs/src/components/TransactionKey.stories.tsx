@@ -1,38 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { HashLink, TransactionKey } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
-import { zeroAddress } from 'viem';
-import { mainnet } from 'viem/chains';
+import { TransactionKey } from '@tuwaio/nova-transactions';
+import { TransactionAdapter, TransactionTracker } from '@tuwaio/pulsar-core';
 
-// --- Mocks and Helpers ---
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-  type: 'storybook-action',
-  chainId: mainnet.id,
-  from: zeroAddress,
-  pending: true,
-  localTimestamp: Date.now(),
-  walletType: 'injected',
-  status: undefined,
-  hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
-  ...overrides,
-});
-
-const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
-  getExplorerTxUrl: (pool: any, txKey: string, replacedTxHash?: string) =>
-    `https://etherscan.io/tx/${replacedTxHash || pool[txKey]?.hash}`,
-  // Add other required adapter methods as mocks
-  getWalletInfo: () => ({ walletAddress: zeroAddress, walletType: 'injected' }),
-  checkChainForTx: async () => {},
-  checkTransactionsTracker: () => ({ txKey: 'mock', tracker: TransactionTracker.Ethereum }),
-  checkAndInitializeTrackerInStore: async () => {},
-  getExplorerUrl: () => 'https://etherscan.io',
-};
+import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
+import { createMockTx } from '../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -45,11 +16,11 @@ const meta: Meta<typeof TransactionKey> = {
   },
   render: (args) => {
     const transactionsPool = { [args.tx.txKey]: args.tx };
-    return <TransactionKey {...args} transactionsPool={transactionsPool} />;
+    return <TransactionKey {...args} transactionsPool={transactionsPool} adapter={args.adapter} />;
   },
   args: {
-    tx: createMockTx({}),
-    adapters: [mockEvmAdapter as any],
+    tx: createMockTx(TransactionAdapter.EVM, {}),
+    adapter: mockEvmAdapter,
     variant: 'toast',
   },
   argTypes: {
@@ -57,9 +28,9 @@ const meta: Meta<typeof TransactionKey> = {
       control: 'object',
       description: 'The transaction object to display identifiers for.',
     },
-    adapters: {
+    adapter: {
       control: false,
-      description: 'An array of configured adapters.',
+      description: 'The adapter used to fetch transaction-specific behavior and URLs.',
     },
     variant: {
       control: 'radio',
@@ -80,74 +51,92 @@ type Story = StoryObj<typeof meta>;
 // --- Stories ---
 
 /**
- * A standard EVM transaction. Since the `txKey` and `hash` are the same, and the tracker
- * is the default ('ethereum'), only a single "Tx Hash" is displayed to avoid redundancy.
+ * A standard EVM transaction displaying only the on-chain transaction hash.
  */
 export const DefaultEVM: Story = {
   name: 'Default (EVM)',
   args: {
-    tx: createMockTx({}),
+    tx: createMockTx(TransactionAdapter.EVM, {}),
+    adapter: mockEvmAdapter,
   },
 };
 
 /**
- * A transaction tracked by Gelato. It displays the Gelato "Task ID" (`txKey`)
- * in addition to the on-chain "Tx Hash" (`hash`).
+ * Showcases a Solana transaction with slot, confirmations, and recent blockhash details.
+ */
+export const DefaultSolana: Story = {
+  name: 'Default (Solana)',
+  args: {
+    tx: createMockTx(TransactionAdapter.SOLANA, {}),
+    adapter: mockSolanaAdapter,
+  },
+};
+
+/**
+ * Showcases Gelato transaction details with both Task ID and on-chain hash.
  */
 export const Gelato: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),
+    adapter: mockEvmAdapter,
   },
 };
 
 /**
- * A transaction tracked by Safe. It displays the "SafeTxHash" (`txKey`)
- * in addition to the on-chain "Tx Hash" (`hash`).
+ * Displays the Safe transaction hash combined with the on-chain hash.
  */
 export const Safe: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       tracker: TransactionTracker.Safe,
       txKey: 'safe_0xabc...def_nonce_123',
     }),
+    adapter: mockEvmAdapter,
   },
 };
 
 /**
- * A transaction that was replaced. It displays the "Original" hash (struck-through if supported by styles)
- * and the "Replaced By" hash, which links to the new transaction on the explorer.
+ * Demonstrates a "replaced" transaction, showing both original and replacing hashes.
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
     }),
+    adapter: mockEvmAdapter,
   },
 };
 
 /**
- * The 'history' variant, which typically has no top border and is used within a list.
+ * The 'history' variant that uses a different container style for the transaction key.
  */
 export const HistoryVariant: Story = {
   args: {
     variant: 'history',
+    adapter: mockEvmAdapter,
   },
 };
 
 /**
- * A demonstration of the `renderHashLink` prop to completely customize the appearance of each hash.
+ * Customizes the rendering of the hash link to showcase additional styling or content.
  */
 export const WithCustomRender: Story = {
   args: {
-    tx: createMockTx({
+    tx: createMockTx(TransactionAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),
     renderHashLink: (props) => (
-      <HashLink {...props} label={`✨ ${props.label}`} className="rounded bg-purple-500/10 px-1" />
+      <div className="rounded bg-purple-500/30 px-2 py-1 text-purple-900">
+        Custom ✨{' '}
+        <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
+          {props.label}
+        </a>
+      </div>
     ),
+    adapter: mockEvmAdapter,
   },
 };

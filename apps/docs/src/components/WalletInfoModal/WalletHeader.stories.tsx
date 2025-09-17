@@ -2,10 +2,10 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WalletAvatar, WalletHeader } from '@tuwaio/nova-transactions';
 import { TransactionAdapter } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
 import { useState } from 'react';
-import { Address, zeroAddress } from 'viem';
-import { mainnet } from 'viem/chains';
+import { Address } from 'viem';
+
+import { mockEvmAdapter } from '../../utils/mockAdapters';
 
 // --- Mocks and Helpers ---
 
@@ -20,23 +20,23 @@ const MOCK_DATA = {
   },
 };
 
-const createMockAdapter = (withEns: boolean) => ({
-  key: TransactionAdapter.EVM,
-  getExplorerUrl: () => mainnet.blockExplorers.default.url,
-  getName: async (address: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
-    return withEns && address === MOCK_DATA.ens.address ? MOCK_DATA.ens.name : null;
-  },
-  getAvatar: async (name: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return withEns && name === MOCK_DATA.ens.name ? MOCK_DATA.ens.avatar : null;
-  },
-  // Add other required adapter methods as mocks
-  getWalletInfo: () => ({ walletAddress: zeroAddress, walletType: 'injected' }),
-  checkChainForTx: async () => {},
-  checkTransactionsTracker: () => ({ txKey: 'mock', tracker: TransactionTracker.Ethereum }),
-  checkAndInitializeTrackerInStore: async () => {},
-});
+const createInteractiveMockAdapter = (withEns: boolean) => {
+  const adapter = { ...mockEvmAdapter };
+  if (withEns) {
+    adapter.getName = async (address: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return address === MOCK_DATA.ens.address ? MOCK_DATA.ens.name : null;
+    };
+    adapter.getAvatar = async (name: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return name === MOCK_DATA.ens.name ? MOCK_DATA.ens.avatar : null;
+    };
+  } else {
+    adapter.getName = async () => null;
+    adapter.getAvatar = async () => null;
+  }
+  return adapter;
+};
 
 // --- Storybook Meta Configuration ---
 
@@ -48,7 +48,7 @@ const meta: Meta<typeof WalletHeader> = {
     layout: 'padded',
   },
   args: {
-    adapters: [createMockAdapter(true) as any],
+    adapter: [createInteractiveMockAdapter(true)],
     connectedAdapterType: TransactionAdapter.EVM,
     walletAddress: MOCK_DATA.ens.address,
   },
@@ -57,7 +57,7 @@ const meta: Meta<typeof WalletHeader> = {
       control: 'text',
       description: 'The wallet address to display. If undefined, shows the "not connected" state.',
     },
-    adapters: {
+    adapter: {
       control: false,
       description: 'An array of configured adapters.',
     },
@@ -109,7 +109,7 @@ export const Interactive: Story = {
           </button>
           <button onClick={() => setWalletAddress(undefined)}>Disconnect</button>
         </div>
-        <WalletHeader {...args} walletAddress={walletAddress} adapters={[createMockAdapter(hasEns) as any]} />
+        <WalletHeader {...args} walletAddress={walletAddress} adapter={[createInteractiveMockAdapter(hasEns)]} />
       </div>
     );
   },
@@ -121,7 +121,7 @@ export const Interactive: Story = {
 export const Default: Story = {
   args: {
     walletAddress: MOCK_DATA.ens.address,
-    adapters: [createMockAdapter(true) as any],
+    adapter: [createInteractiveMockAdapter(true)],
   },
 };
 
@@ -132,7 +132,7 @@ export const Default: Story = {
 export const WithoutENS: Story = {
   args: {
     walletAddress: MOCK_DATA.noEns.address,
-    adapters: [createMockAdapter(false) as any],
+    adapter: [createInteractiveMockAdapter(false)],
   },
 };
 

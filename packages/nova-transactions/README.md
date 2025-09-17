@@ -100,14 +100,13 @@ export function Providers({children}: { children: React.ReactNode }) {
           initialTx={initialTx}
           handleTransaction={handleTransaction}
           closeTxTrackedModal={closeTxTrackedModal}
-          actions={actions}
 
           // Pass live wallet and adapter data
           connectedWalletAddress={address}
           connectedAdapterType={chain?.id ? TransactionAdapter.EVM : undefined} // Example for EVM
 
           // Pass static configuration
-          adapters={[evmAdapter(wagmiConfig, chains)]}
+          adapter={evmAdapter(wagmiConfig, chains)}
         />
       </QueryClientProvider>
     </WagmiProvider>

@@ -35,6 +35,7 @@ export const defaultLabels: TuwaLabels = {
     reverted: 'Reverted',
     replaced: 'Replaced',
     unknown: 'Unknown',
+    confirmationsLabel: 'Confirmations',
   },
   hashLabels: {
     gelato: 'Gelato Task ID',
@@ -42,10 +43,13 @@ export const defaultLabels: TuwaLabels = {
     original: 'Original Tx Hash',
     replaced: 'Replaced Tx Hash',
     default: 'Tx Hash',
+    recentBlockhash: 'Recent Blockhash',
+    solana: 'Signature',
   },
   txInfo: {
     started: 'Started',
     network: 'Network',
+    slot: 'Slot',
   },
   txError: {
     title: 'Error',

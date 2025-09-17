@@ -4,7 +4,8 @@
  */
 
 /**
- * Defines the complete structure for all customizable text labels used throughout the transaction tracking UI components.
+ * Represents the set of labels used for various UI elements and features in a Tuwa-based application.
+ * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
 export type TuwaLabels = {
   /** Labels for the main wallet information modal. */
@@ -49,6 +50,8 @@ export type TuwaLabels = {
     replaced: string;
     /** Text for an unknown or indeterminate status. */
     unknown: string;
+    /** Text for a confirmation count label, e.g., "1 confirmation" or "10 confirmations" */
+    confirmationsLabel: string;
   };
   /** Labels for different types of transaction hashes/keys. */
   hashLabels: {
@@ -62,6 +65,10 @@ export type TuwaLabels = {
     replaced: string;
     /** Default label for a standard transaction hash. */
     default: string;
+    /** Special label for the most recent blockhash. This is used for the "Recent Blockhash" field in the transaction details modal. */
+    recentBlockhash: string;
+    /** Special label for the Solana signature. This is used for the "Signature" field in the transaction details modal. */
+    solana: string;
   };
   /** Labels for the transaction information block. */
   txInfo: {
@@ -69,6 +76,8 @@ export type TuwaLabels = {
     started: string;
     /** Label for the network name. */
     network: string;
+    /** Slot number for the transaction. This is used for the "Slot" field in the transaction details modal. */
+    slot: string;
   };
   /** Labels for the transaction error block. */
   txError: {

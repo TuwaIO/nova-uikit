@@ -2,11 +2,11 @@
 
 ***
 
-# TrackingTxModalProps\<TR, T, A\>
+# TrackingTxModalProps\<T\>
 
-> **TrackingTxModalProps**\<`TR`, `T`, `A`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`TR`, `T`, `A`\>, `"handleTransaction"` \| `"initialTx"` \| `"transactionsPool"` \| `"adapters"` \| `"connectedWalletAddress"`\> & `object`
+> **TrackingTxModalProps**\<`T`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`T`\>, `"handleTransaction"` \| `"initialTx"` \| `"transactionsPool"` \| `"adapter"` \| `"connectedWalletAddress"`\> & `object`
 
-Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/65a1bd7ec122493cea8ccec4d6019d37b9a860f4/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L53)
+Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/b4b07a699985b6b62e51480ca63064005b2848bc/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L53)
 
 ## Type Declaration
 
@@ -16,7 +16,7 @@ Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.ts
 
 ### customization?
 
-> `optional` **customization**: [`TrackingTxModalCustomization`](TrackingTxModalCustomization.md)\<`TR`, `T`, `A`\>
+> `optional` **customization**: [`TrackingTxModalCustomization`](TrackingTxModalCustomization.md)\<`T`\>
 
 ### onClose()
 
@@ -42,14 +42,6 @@ Defined in: [nova-transactions/src/components/TrackingTxModal/TrackingTxModal.ts
 
 ## Type Parameters
 
-### TR
-
-`TR`
-
 ### T
 
-`T` *extends* `Transaction`\<`TR`\>
-
-### A
-
-`A`
+`T` *extends* `Transaction`

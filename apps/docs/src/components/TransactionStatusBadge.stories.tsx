@@ -1,24 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionStatusBadge } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
-import { TransactionTracker } from '@tuwaio/pulsar-evm';
-import { zeroAddress, zeroHash } from 'viem';
-import { mainnet } from 'viem/chains';
+import { TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
 
-// --- Mocks and Helpers ---
-
-const createMockTx = (overrides: Partial<EvmTransaction<TransactionTracker>>): EvmTransaction<TransactionTracker> => ({
-  adapter: TransactionAdapter.EVM,
-  tracker: TransactionTracker.Ethereum,
-  txKey: zeroHash,
-  type: 'storybook-action',
-  chainId: mainnet.id,
-  from: zeroAddress,
-  pending: false,
-  localTimestamp: Date.now(),
-  walletType: 'injected',
-  ...overrides,
-});
+import { createMockTx } from '../utils/mockTransactions';
 
 // --- Storybook Meta Configuration ---
 
@@ -31,7 +15,7 @@ const meta: Meta<typeof TransactionStatusBadge> = {
   },
   args: {
     // Default to the 'Pending' state for the main component view
-    tx: createMockTx({ pending: true, status: undefined }),
+    tx: createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }),
   },
   argTypes: {
     tx: {
@@ -56,7 +40,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Pending: Story = {
   args: {
-    tx: createMockTx({ pending: true, status: undefined }),
+    tx: createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }),
   },
 };
 
@@ -65,7 +49,7 @@ export const Pending: Story = {
  */
 export const Success: Story = {
   args: {
-    tx: createMockTx({ pending: false, status: TransactionStatus.Success }),
+    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Success }),
   },
 };
 
@@ -74,7 +58,7 @@ export const Success: Story = {
  */
 export const Failed: Story = {
   args: {
-    tx: createMockTx({ pending: false, status: TransactionStatus.Failed, isError: true }),
+    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Failed, isError: true }),
   },
 };
 
@@ -83,6 +67,6 @@ export const Failed: Story = {
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx({ pending: false, status: TransactionStatus.Replaced }),
+    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Replaced }),
   },
 };

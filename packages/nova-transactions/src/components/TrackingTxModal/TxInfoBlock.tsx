@@ -1,33 +1,41 @@
 /**
  * @file This file contains the `TxInfoBlock` component, which displays key details about a transaction.
+ * It also supports Solana-specific functionality to display slot, confirmations, and recentBlockhash details.
  */
 
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
-import { InitialTransaction, Transaction } from '@tuwaio/pulsar-core';
+import {
+  InitialTransaction,
+  selectAdapterByKey,
+  SolanaTransaction,
+  Transaction,
+  TransactionAdapter,
+} from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
 import { NovaProviderProps, useLabels } from '../../providers';
+import { HashLink } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
 type CustomInfoRowProps = { label: ReactNode; value: ReactNode };
 
-export type TxInfoBlockCustomization<TR, T extends Transaction<TR>, A> = {
+export type TxInfoBlockCustomization<T extends Transaction> = {
   components?: {
     InfoRow?: ComponentType<CustomInfoRowProps>;
-    transactionKey?: TransactionKeyProps<TR, T, A>['renderHashLink'];
+    transactionKey?: TransactionKeyProps<T>['renderHashLink'];
   };
 };
 
-export type TxInfoBlockProps<TR, T extends Transaction<TR>, A> = {
+export type TxInfoBlockProps<T extends Transaction> = {
   /** The transaction object to display, which can be a full transaction or an initial one. */
-  tx: T | InitialTransaction<A>;
+  tx: T | InitialTransaction;
   className?: string;
-  customization?: TxInfoBlockCustomization<TR, T, A>;
-} & Pick<NovaProviderProps<TR, T, A>, 'adapters' | 'transactionsPool'>;
+  customization?: TxInfoBlockCustomization<T>;
+} & Pick<NovaProviderProps<T>, 'adapter' | 'transactionsPool'>;
 
 // --- Default Sub-Component ---
 function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
@@ -41,22 +49,30 @@ function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
 
 /**
  * A component that displays a block of essential transaction details,
- * such as network, start time, and relevant hashes/keys.
+ * such as network, timestamps, Solana-specific details, and relevant hashes/keys.
  */
-export function TxInfoBlock<TR, T extends Transaction<TR>, A>({
+export function TxInfoBlock<T extends Transaction>({
   tx,
-  adapters,
+  adapter,
   transactionsPool,
   className,
   customization,
-}: TxInfoBlockProps<TR, T, A>) {
-  const { txInfo } = useLabels();
+}: TxInfoBlockProps<T>) {
+  const { txInfo, statuses, hashLabels } = useLabels();
+
+  // Select the correct adapter for the given transaction.
+  const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
+
+  if (!foundAdapter) return null;
 
   // Use the custom InfoRow component if provided, otherwise fall back to the default.
   const { InfoRow = DefaultInfoRow } = customization?.components ?? {};
 
   // Determine the chain ID, falling back from the final chainId to the desiredChainID for initial transactions.
   const chainId = ('chainId' in tx ? tx.chainId : tx.desiredChainID) as number;
+
+  const isSolanaTransaction = tx.adapter === TransactionAdapter.SOLANA;
+  const solanaTx = isSolanaTransaction ? (tx as SolanaTransaction) : undefined;
 
   return (
     <div
@@ -81,12 +97,39 @@ export function TxInfoBlock<TR, T extends Transaction<TR>, A>({
         <InfoRow label={txInfo.started} value={dayjs.unix(tx.localTimestamp).format('MMM D, HH:mm:ss')} />
       )}
 
+      {/* --- Solana-specific Details (if applicable) --- */}
+      {isSolanaTransaction && (
+        <>
+          {solanaTx?.slot && (
+            <InfoRow
+              label={txInfo.slot}
+              value={
+                <HashLink
+                  hash={solanaTx.slot.toString()}
+                  explorerUrl={
+                    foundAdapter?.getExplorerUrl
+                      ? `${foundAdapter?.getExplorerUrl()}/block/${solanaTx.slot}`
+                      : undefined
+                  }
+                />
+              }
+            />
+          )}
+          {typeof solanaTx?.confirmations === 'number' && (
+            <InfoRow label={statuses.confirmationsLabel} value={solanaTx.confirmations} />
+          )}
+          {solanaTx?.recentBlockhash && (
+            <InfoRow label={hashLabels.recentBlockhash} value={<HashLink hash={solanaTx.recentBlockhash} />} />
+          )}
+        </>
+      )}
+
       {/* --- Transaction Hashes/Keys --- */}
       {'txKey' in tx && tx.txKey && (
         <div className="border-t border-[var(--tuwa-border-primary)] pt-3">
           <TransactionKey
             tx={tx as T}
-            adapters={adapters}
+            adapter={adapter}
             transactionsPool={transactionsPool}
             variant="history" // 'history' variant provides suitable styling for this block
             renderHashLink={customization?.components?.transactionKey}

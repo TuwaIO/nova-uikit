@@ -47,7 +47,7 @@ const getStatusConfig = (labels: TuwaLabels['statuses']) => ({
  * @template TR - The type of the tracker identifier.
  * @template T - The transaction type.
  */
-export type TransactionStatusBadgeProps<TR, T extends Transaction<TR>> = {
+export type TransactionStatusBadgeProps<T extends Transaction> = {
   /** The transaction object whose status will be displayed. */
   tx: T;
   /** Optional additional CSS classes to apply to the badge container. */
@@ -58,10 +58,7 @@ export type TransactionStatusBadgeProps<TR, T extends Transaction<TR>> = {
  * A component that displays a transaction's status as a styled badge
  * with a corresponding icon, color, and label.
  */
-export function TransactionStatusBadge<TR, T extends Transaction<TR>>({
-  tx,
-  className,
-}: TransactionStatusBadgeProps<TR, T>) {
+export function TransactionStatusBadge<T extends Transaction>({ tx, className }: TransactionStatusBadgeProps<T>) {
   const { statuses } = useLabels();
 
   // Memoize the configuration object so it's not re-created on every render.
