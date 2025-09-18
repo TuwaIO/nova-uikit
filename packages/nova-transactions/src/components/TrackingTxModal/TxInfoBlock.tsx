@@ -102,7 +102,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
                   hash={solanaTx.slot.toString()}
                   explorerUrl={
                     foundAdapter?.getExplorerUrl
-                      ? `${foundAdapter?.getExplorerUrl()}/block/${solanaTx.slot}`
+                      ? `${foundAdapter?.getExplorerUrl(`/block/${solanaTx.slot}`)}`
                       : undefined
                   }
                 />
