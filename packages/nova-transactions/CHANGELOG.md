@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.22](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.21...nova-transactions-v0.0.22) (2025-09-18)
+
+
+### Bug Fixes
+
+* update packages ([ac784fb](https://github.com/TuwaIO/nova-uikit/commit/ac784fbe1abf06a303ab2bb5f8f2ad3dab079a00))
+
 ## [0.0.21](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.20...nova-transactions-v0.0.21) (2025-09-18)
 
 
