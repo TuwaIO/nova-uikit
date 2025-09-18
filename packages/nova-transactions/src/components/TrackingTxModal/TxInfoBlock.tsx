@@ -102,14 +102,14 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
                   hash={solanaTx.slot.toString()}
                   explorerUrl={
                     foundAdapter?.getExplorerUrl
-                      ? `${foundAdapter?.getExplorerUrl()}/block/${solanaTx.slot}`
+                      ? `${foundAdapter?.getExplorerUrl(`/block/${solanaTx.slot}`)}`
                       : undefined
                   }
                 />
               }
             />
           )}
-          {typeof solanaTx?.confirmations === 'number' && (
+          {(typeof solanaTx?.confirmations === 'number' || typeof solanaTx?.confirmations === 'string') && (
             <InfoRow label={statuses.confirmationsLabel} value={solanaTx.confirmations} />
           )}
           {solanaTx?.recentBlockhash && (
