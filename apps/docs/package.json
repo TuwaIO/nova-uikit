@@ -10,7 +10,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@tuwaio/pulsar-core": "^0.1.7",
+    "@tuwaio/pulsar-core": "^0.1.8",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "ethereum-blockies-base64": "^1.0.2"

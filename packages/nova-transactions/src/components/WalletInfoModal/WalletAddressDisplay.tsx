@@ -4,7 +4,6 @@
 
 import { ArrowTopRightOnSquareIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
-import { useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
@@ -24,12 +23,6 @@ export type WalletAddressDisplayProps = {
 export function WalletAddressDisplay({ address, explorerUrl, className }: WalletAddressDisplayProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
-
-  // Memoize the full explorer link to avoid re-calculating it on every render.
-  const fullExplorerLink = useMemo(
-    () => (explorerUrl && address ? `${explorerUrl}/address/${address}` : undefined),
-    [explorerUrl, address],
-  );
 
   return (
     <div
@@ -53,9 +46,9 @@ export function WalletAddressDisplay({ address, explorerUrl, className }: Wallet
         )}
       </button>
 
-      {fullExplorerLink && (
+      {explorerUrl && (
         <a
-          href={fullExplorerLink}
+          href={explorerUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="transition-colors hover:text-[var(--tuwa-text-accent)]"

@@ -85,8 +85,8 @@ export function WalletInfoModal<T extends Transaction>({
   const { explorerUrl } = useMemo(() => {
     if (!connectedAdapterType) return { explorerUrl: undefined };
     const foundAdapter = selectAdapterByKey({ adapterKey: connectedAdapterType, adapter });
-    return { explorerUrl: foundAdapter?.getExplorerUrl() };
-  }, [connectedAdapterType, adapter]);
+    return { explorerUrl: foundAdapter?.getExplorerUrl(`/address/${connectedWalletAddress}`) };
+  }, [connectedAdapterType, adapter, connectedWalletAddress]);
 
   const closeModal = () => setIsOpen(false);
 
