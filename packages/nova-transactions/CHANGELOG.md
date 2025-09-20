@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.23](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.22...nova-transactions-v0.0.23) (2025-09-20)
+
+
+### Bug Fixes
+
+* wallet address solana explorer url ([8429437](https://github.com/TuwaIO/nova-uikit/commit/84294373d3fdf6192fed03b4abd6055673f857d1))
+
 ## [0.0.22](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.21...nova-transactions-v0.0.22) (2025-09-18)
 
 
