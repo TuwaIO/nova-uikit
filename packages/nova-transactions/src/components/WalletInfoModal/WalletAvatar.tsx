@@ -5,7 +5,6 @@
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
 import { useEffect, useMemo, useState } from 'react';
-import { isHex, zeroAddress } from 'viem';
 
 import { useLabels } from '../../providers';
 
@@ -17,6 +16,13 @@ export type WalletAvatarProps = {
   /** Optional additional CSS classes for the container. */
   className?: string;
 };
+
+function isHex(value: unknown, { strict = true }: { strict?: boolean | undefined } = {}): value is `0x${string}` {
+  if (!value) return false;
+  if (typeof value !== 'string') return false;
+  return strict ? /^0x[0-9a-fA-F]*$/.test(value) : value.startsWith('0x');
+}
+const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 /**
  * A component that displays a user's avatar.

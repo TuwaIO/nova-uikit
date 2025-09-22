@@ -13,7 +13,7 @@ The foundational package for the TUWA design system. Provides core styling primi
 Use this package to:
 -   Ensure brand consistency with a centralized theme and styling.
 -   Speed up development with a set of battle-tested helper hooks and utilities.
--   Provide a solid foundation for our component library, `@tuwaio/nova-react`.
+-   Provide a solid foundation for our component library, `@tuwaio/nova-transactions`.
 
 ## Core Features
 
@@ -34,10 +34,6 @@ Use this package to:
     ```css
     @import '@tuwaio/nova-core/dist/index.css';
     ```
-
-## Usage
-
-You can use the provided styles in two ways: directly with CSS variables (basic) or by integrating them into your theme (recommended).
 
 ### Usage
 

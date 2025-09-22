@@ -14,81 +14,103 @@ The **NovaProvider** is the centerpiece of the `@tuwaio/nova-transactions` libra
 
 Think of it as your dApp's transaction UI control center: include it **once** in your root layout, and it handles rendering all necessary modals and notifications globally for your application. **It does not wrap your `children`**.
 
-```tsx
-// In your root layout (e.g., AppLayout.tsx)
-function AppLayout({ children }) {
-  return (
-    <div>
-      {children}
-
-      {/* NovaProvider renders alongside your app, not as a wrapper */}
-      <NovaProvider {...props} />
-    </div>
-  );
-}
-````
-
 -----
 
 ## Setup and Usage
 
-To use the provider, place it in a high-level layout component and pass it the required props from your Pulsar store and `wagmi`.
+To use the provider, you first need to create the Pulsar store using the EVM adapter (in example) or any other and a custom hook, as shown in `txTrackingHooks.tsx`. This setup allows you to pass the store's state and functions to the NovaProvider. Then, you can use the `NovaProvider` as a standalone component in your root layout.
+
+```tsx
+// src/hooks/txTrackingHooks.tsx
+'use client';
+
+import { createBoundedUseStore, createPulsarStore } from '@tuwaio/pulsar-core';
+import { evmAdapter } from '@tuwaio/pulsar-evm';
+
+import { appChains, config } from '@/configs/wagmiConfig';
+
+const storageName = 'transactions-tracking-storage';
+
+export enum TxType {
+  example = 'example',
+}
+
+type ExampleTx = Transaction & {
+  type: TxType.example;
+  payload: {
+    value: number;
+  };
+};
+
+export type TransactionUnion = ExampleTx;
+
+export const usePulsarStore = createBoundedUseStore(
+  createPulsarStore<TransactionUnion>({
+    name: storageName,
+    adapter: evmAdapter(config, appChains),
+  }),
+);
+```
+
+```tsx
+// src/providers/NovaProvider.tsx
+import { NovaProvider as NP } from '@tuwaio/nova-transactions/providers';
+import { TransactionAdapter } from '@tuwaio/pulsar-core';
+import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
+import { useAccount } from 'wagmi';
+
+import { usePulsarStore } from '@/hooks/txTrackingHooks';
+
+export function NovaProvider() {
+  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
+  const initialTx = usePulsarStore((state) => state.initialTx);
+  const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
+  const handleTransaction = usePulsarStore((state) => state.handleTransaction);
+  const initializeTransactionsPool = usePulsarStore((state) => state.initializeTransactionsPool);
+  const getAdapter = usePulsarStore((state) => state.getAdapter);
+
+  useInitializeTransactionsPool({ initializeTransactionsPool });
+
+  const { address } = useAccount();
+
+  return (
+    <NP
+      transactionsPool={transactionsPool}
+      initialTx={initialTx}
+      closeTxTrackedModal={closeTxTrackedModal}
+      handleTransaction={handleTransaction}
+      connectedWalletAddress={address}
+      connectedAdapterType={TransactionAdapter.EVM}
+      adapter={getAdapter()}
+    />
+  );
+}
+
+```
 
 ```tsx
 // src/providers/index.tsx
 'use client';
 
-import {usePulsar} from '@/store/pulsar';
-import {NovaProvider} from '@tuwaio/nova-transactions';
-import {useAccount, WagmiProvider} from 'wagmi';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {PulsarInitializer} from '@/components/PulsarInitializer';
-import {wagmiConfig, chains} from '@/configs'; // Your app's configs
-import {TransactionAdapter} from '@tuwaio/pulsar-core';
-import {evmAdapter} from '@tuwaio/pulsar-evm';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
+import { WagmiProvider } from 'wagmi';
 
-// Import required CSS
-import '@tuwaio/nova-core/dist/index.css';
-import '@tuwaio/nova-transactions/dist/index.css';
-import 'react-toastify/dist/ReactToastify.css';
+import { config } from '@/configs/wagmiConfig';
+
+import { NovaProvider } from './NovaProvider';
 
 const queryClient = new QueryClient();
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  // 1. Get state and actions from your Pulsar store hook
-  const {
-    transactionsPool,
-    initialTx,
-    handleTransaction,
-    closeTxTrackedModal,
-  } = usePulsar();
-  
-  // 2. Get live wallet data from wagmi
-  const { address, chain } = useAccount();
-
+export function Providers({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <PulsarInitializer />
-          
-        {children}
-
-        {/* 3. Render NovaProvider as a self-contained UI manager */}
-        <NovaProvider
-          // --- Props from Pulsar Store ---
-          transactionsPool={transactionsPool}
-          initialTx={initialTx}
-          handleTransaction={handleTransaction}
-          closeTxTrackedModal={closeTxTrackedModal}
-          
-          // --- Props from Wallet Connector (e.g., wagmi) ---
-          connectedWalletAddress={address}
-          connectedAdapterType={chain?.id ? TransactionAdapter.EVM : undefined} // Example for EVM
-          
-          // --- Static Configuration ---
-          // Adapter or adapters array, similar like using for store
-          adapter={evmAdapter(wagmiConfig, chains)}
-        />
+        <RainbowKitProvider>
+          <NovaProvider />
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

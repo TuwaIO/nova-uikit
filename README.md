@@ -10,7 +10,7 @@ Welcome to the official monorepo for the **Nova UI Kit**, the comprehensive desi
 
 Our ecosystem is built on a clear separation of concerns:
 
--   **Pulsar Engine (`pulsar-core`, `pulsar-evm`):** The headless state management libraries that handle all the Web3 logic.
+-   **Pulsar Engine (`pulsar-core`, `pulsar-evm`, `pulsar-solana`):** The headless state management libraries that handle all the Web3 logic.
 -   **Nova UI Kit (this repo):** The view layer, providing foundational styles and React components to visualize the state managed by Pulsar.
 
 ## 📦 Packages in this Monorepo
@@ -27,7 +27,6 @@ This repository is managed using `pnpm` workspaces.
 -   **Framework**: React 19
 -   **Styling**: Tailwind CSS v4
 -   **State Management**: Zustand (via Pulsar)
--   **Web3**: Wagmi & Viem
 -   **Tooling**: TypeScript, pnpm, Vite, Storybook
 
 ---

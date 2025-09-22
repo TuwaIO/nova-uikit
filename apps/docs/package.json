@@ -10,7 +10,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@tuwaio/pulsar-core": "^0.1.8",
+    "@tuwaio/pulsar-core": "^0.1.10",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "ethereum-blockies-base64": "^1.0.2"
@@ -26,7 +26,7 @@
     "@storybook/react-vite": "^9.1.7",
     "@storybook/manager-api": "^9.0.0-alpha.1",
     "@storybook/addon-essentials": "^9.0.0-alpha.12",
-    "@storybook/addon-backgrounds": "^9.1.0-alpha.5",
+    "@storybook/addon-backgrounds": "^9.0.8",
     "@storybook/addon-viewport": "^9.0.8",
     "@storybook/theming": "^9.0.0-alpha.1",
     "@tailwindcss/postcss": "^4.1.13",
@@ -34,12 +34,11 @@
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",
-    "@wagmi/core": "^2.21.0",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
     "eslint-plugin-storybook": "^9.1.7",
-    "framer-motion": "^12.23.15",
+    "framer-motion": "^12.23.18",
     "immer": "^10.1.3",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
@@ -51,8 +50,8 @@
     "tailwindcss": "^4.1.13",
     "tsup": "^8.5.0",
     "typescript": "~5.9.2",
-    "viem": "^2.37.6",
-    "vite": "^7.1.6",
+    "viem": "^2.37.7",
+    "vite": "^7.1.7",
     "zustand": "^5.0.8"
   }
 }
