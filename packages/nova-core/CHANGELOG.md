@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.10](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.9...nova-core-v0.0.10) (2025-09-22)
+
+
+### Bug Fixes
+
+* updates dependencies and documentation ([b00ca5e](https://github.com/TuwaIO/nova-uikit/commit/b00ca5e5a3f3ccd576509f0402f7afe555023a5f))
+
 ## [0.0.9](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.0.8...nova-core-v0.0.9) (2025-09-10)
 
 
