@@ -18,8 +18,7 @@ const meta: Meta<typeof TransactionHistoryItem> = {
   // The render function automatically creates the transactionsPool based on the tx arg.
   // This simplifies individual story definitions.
   render: (args) => {
-    const transactionsPool = { [args.tx.txKey]: args.tx };
-    return <TransactionHistoryItem {...args} transactionsPool={transactionsPool} />;
+    return <TransactionHistoryItem {...args} />;
   },
   args: {
     tx: createMockTx(TransactionAdapter.EVM, {
@@ -36,10 +35,6 @@ const meta: Meta<typeof TransactionHistoryItem> = {
     adapter: {
       control: false,
       description: 'An array of configured adapters.',
-    },
-    transactionsPool: {
-      control: false, // Controlled by the custom render function
-      description: 'The entire pool of transactions from the store.',
     },
   },
 };

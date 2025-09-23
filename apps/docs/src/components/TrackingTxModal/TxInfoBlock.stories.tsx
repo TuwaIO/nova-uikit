@@ -17,8 +17,7 @@ const meta: Meta<typeof TxInfoBlock> = {
     layout: 'centered',
   },
   render: (args) => {
-    const transactionsPool = 'txKey' in args.tx ? { [args.tx.txKey]: args.tx } : {};
-    return <TxInfoBlock {...args} transactionsPool={transactionsPool} adapter={args.adapter} />;
+    return <TxInfoBlock {...args} adapter={args.adapter} />;
   },
   args: {
     tx: createMockTx(TransactionAdapter.EVM, {
@@ -35,9 +34,6 @@ const meta: Meta<typeof TxInfoBlock> = {
     adapter: {
       control: false,
       description: 'Adapters to be used for retrieving chain-specific data.',
-    },
-    transactionsPool: {
-      control: false,
     },
   },
 };
@@ -67,7 +63,7 @@ export const Default: Story = {
  */
 export const InitialState: Story = {
   args: {
-    tx: createInitialTx(),
+    tx: createInitialTx(TransactionAdapter.EVM),
     adapter: [mockEvmAdapter],
   },
 };

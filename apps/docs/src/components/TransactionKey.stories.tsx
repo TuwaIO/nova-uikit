@@ -15,8 +15,7 @@ const meta: Meta<typeof TransactionKey> = {
     layout: 'centered',
   },
   render: (args) => {
-    const transactionsPool = { [args.tx.txKey]: args.tx };
-    return <TransactionKey {...args} transactionsPool={transactionsPool} adapter={args.adapter} />;
+    return <TransactionKey {...args} adapter={args.adapter} />;
   },
   args: {
     tx: createMockTx(TransactionAdapter.EVM, {}),
