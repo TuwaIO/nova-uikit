@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { ComponentType, JSX } from 'react';
 
 import { NovaProviderProps } from '../providers';
+import { SolanaIcon } from './SolanaIcon';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -19,7 +20,7 @@ import { TransactionStatusBadge, TransactionStatusBadgeProps } from './Transacti
 dayjs.extend(relativeTime);
 
 // --- Prop Types for Customization ---
-type CustomIconProps = { chainId: number };
+type CustomIconProps = { chainId: number | string };
 type CustomTimestampProps = { timestamp?: number };
 
 /**
@@ -50,7 +51,8 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
 
 const DefaultIcon = ({ chainId }: CustomIconProps) => (
   <div className="h-8 w-8 text-[var(--tuwa-text-secondary)]">
-    <Web3Icon chainId={chainId} />
+    {/* TODO: temporary fix this after bgd icons update */}
+    {typeof chainId === 'string' ? <SolanaIcon chainId={chainId} /> : <Web3Icon chainId={chainId} />}
   </div>
 );
 const DefaultTimestamp = ({ timestamp }: CustomTimestampProps) => (
@@ -91,7 +93,7 @@ export function TransactionHistoryItem<T extends Transaction>({
         {/* --- Main Info: Icon, Title, Timestamp, Description --- */}
         <div className="flex items-center gap-4">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--tuwa-bg-muted)]">
-            <Icon chainId={tx.chainId as number} />
+            <Icon chainId={tx.chainId} />
           </div>
           <div>
             <Title txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />

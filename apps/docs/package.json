@@ -16,7 +16,7 @@
     "ethereum-blockies-base64": "^1.0.2"
   },
   "devDependencies": {
-    "@bgd-labs/react-web3-icons": "^1.35.0",
+    "@bgd-labs/react-web3-icons": "^1.41.0",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@storybook/addon-mdx-gfm": "^9.0.0-alpha.13",
@@ -50,7 +50,7 @@
     "tailwindcss": "^4.1.13",
     "tsup": "^8.5.0",
     "typescript": "~5.9.2",
-    "viem": "^2.37.7",
+    "viem": "^2.37.8",
     "vite": "^7.1.7",
     "zustand": "^5.0.8"
   }

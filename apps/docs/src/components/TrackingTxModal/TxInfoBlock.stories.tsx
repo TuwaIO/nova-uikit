@@ -126,7 +126,7 @@ export const WithCustomization: Story = {
  */
 export const SolanaTransaction: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true }),
+    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true, chainId: 'solana:mainnet' }),
     adapter: [mockSolanaAdapter],
   },
 };

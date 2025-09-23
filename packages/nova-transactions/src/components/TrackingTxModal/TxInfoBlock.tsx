@@ -18,6 +18,7 @@ import { ComponentType, ReactNode } from 'react';
 
 import { NovaProviderProps, useLabels } from '../../providers';
 import { HashLink } from '../HashLink';
+import { getSolanaChainName, SolanaIcon } from '../SolanaIcon';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
@@ -63,7 +64,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
   const { InfoRow = DefaultInfoRow } = customization?.components ?? {};
 
   // Determine the chain ID, falling back from the final chainId to the desiredChainID for initial transactions.
-  const chainId = ('chainId' in tx ? tx.chainId : tx.desiredChainID) as number;
+  const chainId = 'chainId' in tx ? tx.chainId : tx.desiredChainID;
 
   const isSolanaTransaction = tx.adapter === TransactionAdapter.SOLANA;
   const solanaTx = isSolanaTransaction ? (tx as SolanaTransaction) : undefined;
@@ -81,9 +82,10 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         value={
           <div className="flex items-center justify-end gap-2">
             <div className="h-4 w-4">
-              <Web3Icon chainId={chainId} />
+              {/* TODO: temporary fix this after bgd icons update */}
+              {typeof chainId === 'string' ? <SolanaIcon chainId={chainId} /> : <Web3Icon chainId={chainId} />}
             </div>
-            <span>{getChainName(chainId)}</span>
+            <span>{typeof chainId === 'string' ? getSolanaChainName(chainId) : getChainName(chainId)}</span>
           </div>
         }
       />

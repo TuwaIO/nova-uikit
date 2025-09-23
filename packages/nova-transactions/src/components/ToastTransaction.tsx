@@ -10,6 +10,7 @@ import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
 import { NovaProviderProps, useLabels } from '../providers';
+import { getSolanaChainName, SolanaIcon } from './SolanaIcon';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -120,8 +121,16 @@ export function ToastTransaction<T extends Transaction>({
     <div className={cn('flex w-full flex-col gap-3 rounded-lg bg-[var(--tuwa-bg-primary)] p-4 shadow-md', className)}>
       {/* --- Header: Icon + Title/Description --- */}
       <div className="flex items-start gap-3">
-        <div className="w-[40px] flex-shrink-0" title={getChainName(tx.chainId as number)}>
-          {icon ?? <Web3Icon chainId={tx.chainId as number} />}
+        {/* TODO: temporary fix this after bgd icons update */}
+        <div
+          className="w-[40px] flex-shrink-0"
+          title={typeof tx.chainId === 'string' ? getSolanaChainName(tx.chainId) : getChainName(tx.chainId)}
+        >
+          {(icon ?? typeof tx.chainId === 'string') ? (
+            <SolanaIcon chainId={tx.chainId as string} />
+          ) : (
+            <Web3Icon chainId={tx.chainId} />
+          )}
         </div>
         <div className="flex-1">
           <CStatusAwareText txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />

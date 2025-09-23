@@ -80,7 +80,7 @@ const createMockSolanaTx = (overrides: Partial<SolanaTransaction> = {}): SolanaT
   walletType: 'Phantom',
   status: undefined,
   localTimestamp: dayjs().unix(),
-  chainId: 'devnet',
+  chainId: 'solana:devnet',
   from: '0x0',
   type: 'Test Transaction',
   title: 'Solana Test',
