@@ -85,8 +85,8 @@ importers:
         version: 1.0.2
     devDependencies:
       '@bgd-labs/react-web3-icons':
-        specifier: ^1.41.0
-        version: 1.41.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^1.50.0
+        version: 1.50.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.1.1)
@@ -238,8 +238,8 @@ importers:
   packages/nova-transactions:
     devDependencies:
       '@bgd-labs/react-web3-icons':
-        specifier: ^1.41.0
-        version: 1.41.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^1.50.0
+        version: 1.50.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.1.1)
@@ -409,8 +409,8 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
-  '@bgd-labs/react-web3-icons@1.41.0':
-    resolution: {integrity: sha512-d3oLx1JQxHCg7UMJSfwoTDAJGC4xLPl2yXrlO1micnLGgOzMswBCQODOUxVt5jt/18i+ImZTTb7SAyPc640hjg==}
+  '@bgd-labs/react-web3-icons@1.50.0':
+    resolution: {integrity: sha512-vAmaxNNjTg2p+j7zPYTozFSNnD9TF+AxAauV5MmJrJxAlG3Cp1cmkisGswiOQ0/8AnN9on7dKm6ZA+oeD2VGmw==}
     engines: {node: '>=18'}
     peerDependencies:
       react: '>=18.3.1 || ^19.0.0'
@@ -4221,7 +4221,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@bgd-labs/react-web3-icons@1.41.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@bgd-labs/react-web3-icons@1.50.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@loadable/component': 5.16.4(react@19.1.1)
       react: 19.1.1

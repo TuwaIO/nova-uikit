@@ -5,13 +5,12 @@
 
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { cn } from '@tuwaio/nova-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import { setChainId, Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ComponentType, JSX } from 'react';
 
 import { NovaProviderProps } from '../providers';
-import { SolanaIcon } from './SolanaIcon';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -51,8 +50,7 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
 
 const DefaultIcon = ({ chainId }: CustomIconProps) => (
   <div className="h-8 w-8 text-[var(--tuwa-text-secondary)]">
-    {/* TODO: temporary fix this after bgd icons update */}
-    {typeof chainId === 'string' ? <SolanaIcon chainId={chainId} /> : <Web3Icon chainId={chainId} />}
+    <Web3Icon chainId={setChainId(chainId)} />
   </div>
 );
 const DefaultTimestamp = ({ timestamp }: CustomTimestampProps) => (

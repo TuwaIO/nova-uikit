@@ -9,6 +9,7 @@ import { cn } from '@tuwaio/nova-core';
 import {
   InitialTransaction,
   selectAdapterByKey,
+  setChainId,
   SolanaTransaction,
   Transaction,
   TransactionAdapter,
@@ -18,7 +19,6 @@ import { ComponentType, ReactNode } from 'react';
 
 import { NovaProviderProps, useLabels } from '../../providers';
 import { HashLink } from '../HashLink';
-import { getSolanaChainName, SolanaIcon } from '../SolanaIcon';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
@@ -82,10 +82,9 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         value={
           <div className="flex items-center justify-end gap-2">
             <div className="h-4 w-4">
-              {/* TODO: temporary fix this after bgd icons update */}
-              {typeof chainId === 'string' ? <SolanaIcon chainId={chainId} /> : <Web3Icon chainId={chainId} />}
+              <Web3Icon chainId={setChainId(chainId)} />
             </div>
-            <span>{typeof chainId === 'string' ? getSolanaChainName(chainId) : getChainName(chainId)}</span>
+            <span>{getChainName(setChainId(chainId))}</span>
           </div>
         }
       />
