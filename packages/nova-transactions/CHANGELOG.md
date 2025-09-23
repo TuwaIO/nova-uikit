@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.27](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.26...nova-transactions-v0.0.27) (2025-09-23)
+
+
+### Bug Fixes
+
+* chain icons ([0676c23](https://github.com/TuwaIO/nova-uikit/commit/0676c23f92f4e8ef93c7e0d71d80586c061d7172))
+
 ## [0.0.26](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.25...nova-transactions-v0.0.26) (2025-09-23)
 
 
