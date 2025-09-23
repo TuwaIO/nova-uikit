@@ -1,8 +1,9 @@
+import { setChainId } from '@tuwaio/pulsar-core';
 import { ComponentProps } from 'react';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function getSolanaChainName(chainId: string) {
-  switch (chainId) {
+  switch (setChainId(chainId)) {
     case 'solana:mainnet':
       return 'Solana Mainnet';
     case 'solana:devnet':
@@ -28,7 +29,7 @@ const Image = ({ svgCode, ...props }: { svgCode: string } & ComponentProps<'img'
 };
 
 export function SolanaIcon({ chainId, ...props }: { chainId: string } & ComponentProps<'img'>) {
-  switch (chainId) {
+  switch (setChainId(chainId)) {
     case 'solana:mainnet':
       return (
         <Image
