@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.26](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.25...nova-transactions-v0.0.26) (2025-09-23)
+
+
+### Bug Fixes
+
+* solana icon ([57fce47](https://github.com/TuwaIO/nova-uikit/commit/57fce475a544ed8622e658d414aad05a28a3a95f))
+
 ## [0.0.25](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.0.24...nova-transactions-v0.0.25) (2025-09-23)
 
 
