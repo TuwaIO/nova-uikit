@@ -4,7 +4,8 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { selectAdapterByKey, Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey } from '@tuwaio/orbit-core';
+import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
 import { NovaProviderProps, useLabels } from '../providers';

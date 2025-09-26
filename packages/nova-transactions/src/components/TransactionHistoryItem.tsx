@@ -5,7 +5,8 @@
 
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { cn } from '@tuwaio/nova-core';
-import { setChainId, Transaction } from '@tuwaio/pulsar-core';
+import { setChainId } from '@tuwaio/orbit-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ComponentType, JSX } from 'react';

@@ -3,7 +3,8 @@
  */
 
 import { cn, textCenterEllipsis } from '@tuwaio/nova-core';
-import { selectAdapterByKey, Transaction } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey } from '@tuwaio/orbit-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import { ReactNode, useEffect, useState } from 'react';
 
 import { NovaProviderProps, useLabels } from '../../providers';

@@ -6,14 +6,8 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
-import {
-  InitialTransaction,
-  selectAdapterByKey,
-  setChainId,
-  SolanaTransaction,
-  Transaction,
-  TransactionAdapter,
-} from '@tuwaio/pulsar-core';
+import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
+import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
@@ -66,7 +60,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
   // Determine the chain ID, falling back from the final chainId to the desiredChainID for initial transactions.
   const chainId = 'chainId' in tx ? tx.chainId : tx.desiredChainID;
 
-  const isSolanaTransaction = tx.adapter === TransactionAdapter.SOLANA;
+  const isSolanaTransaction = tx.adapter === OrbitAdapter.SOLANA;
   const solanaTx = isSolanaTransaction ? (tx as SolanaTransaction) : undefined;
 
   return (

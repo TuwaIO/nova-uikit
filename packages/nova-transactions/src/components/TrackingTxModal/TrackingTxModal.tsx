@@ -6,13 +6,8 @@
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import * as Dialog from '@radix-ui/react-dialog';
 import { cn } from '@tuwaio/nova-core';
-import {
-  InitialTransaction,
-  InitialTransactionParams,
-  selectAdapterByKey,
-  Transaction,
-  TransactionStatus,
-} from '@tuwaio/pulsar-core';
+import { selectAdapterByKey } from '@tuwaio/orbit-core';
+import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
 

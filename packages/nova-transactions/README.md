@@ -31,13 +31,13 @@ Next, you need to install a peer dependencies that `nova-transactions` relies on
 
 ```bash
 # Using pnpm
-pnpm add react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge
+pnpm add react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge @tuwaio/orbit-core
 
 # Using npm
-npm install react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge
+npm install react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge @tuwaio/orbit-core
 
 # Using yarn
-yarn add react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge
+yarn add react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons @tuwaio/pulsar-core @tuwaio/nova-core dayjs ethereum-blockies-base64 react immer zustand clsx tailwind-merge @tuwaio/orbit-core
 ````
 
 -----

@@ -5,7 +5,8 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
-import { selectAdapterByKey, setChainId, Transaction } from '@tuwaio/pulsar-core';
+import { selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 

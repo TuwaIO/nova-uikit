@@ -5,14 +5,8 @@
  */
 
 import { deepMerge, useMediaQuery } from '@tuwaio/nova-core';
-import {
-  ITxTrackingStore,
-  Transaction,
-  TransactionAdapter,
-  TransactionPool,
-  TransactionStatus,
-  TxAdapter,
-} from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { ITxTrackingStore, Transaction, TransactionPool, TransactionStatus, TxAdapter } from '@tuwaio/pulsar-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
 
@@ -44,7 +38,7 @@ const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
 export type NovaProviderProps<T extends Transaction> = {
   adapter: TxAdapter<T> | TxAdapter<T>[];
   connectedWalletAddress?: string;
-  connectedAdapterType?: TransactionAdapter;
+  connectedAdapterType?: OrbitAdapter;
   transactionsPool: TransactionPool<T>;
   labels?: Partial<TuwaLabels>;
   features?: {
