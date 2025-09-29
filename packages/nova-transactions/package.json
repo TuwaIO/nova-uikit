@@ -78,8 +78,8 @@
     "ethereum-blockies-base64": ">=1"
   },
   "devDependencies": {
-    "@tuwaio/orbit-core": "1.0.0-fix-test-alpha.4.d5f27c9",
-    "@tuwaio/pulsar-core": "1.0.0-fix-orbit-integration-alpha.1.e926d5f",
+    "@tuwaio/orbit-core": "1.0.0-fix-test-alpha.7.13eb435",
+    "@tuwaio/pulsar-core": "1.0.0-fix-orbit-integration-alpha.2.568e8f7",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.18",
     "ethereum-blockies-base64": "^1.0.2",

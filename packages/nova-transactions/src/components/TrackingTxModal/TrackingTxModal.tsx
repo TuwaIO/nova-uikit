@@ -47,7 +47,7 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
 
 export type TrackingTxModalProps<T extends Transaction> = Pick<
   NovaProviderProps<T>,
-  'handleTransaction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
+  'executeTxAction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
   onOpenWalletInfo: () => void;
@@ -66,7 +66,7 @@ export function TrackingTxModal<T extends Transaction>({
   className,
   customization,
   transactionsPool,
-  handleTransaction,
+  executeTxAction,
   initialTx,
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
@@ -99,7 +99,7 @@ export function TrackingTxModal<T extends Transaction>({
     [txToDisplay, adapter],
   );
 
-  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && handleTransaction);
+  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && executeTxAction);
   const canReplace = !!(
     foundAdapter?.speedUpTxAction &&
     foundAdapter?.cancelTxAction &&
@@ -121,7 +121,7 @@ export function TrackingTxModal<T extends Transaction>({
       payload: txToDisplay.payload,
       withTrackedModal: true,
     };
-    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, handleTransaction });
+    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
   const handleCancel = () => {
     if (canReplace && activeTx) foundAdapter.cancelTxAction!(activeTx);

@@ -78,11 +78,11 @@ importers:
         specifier: workspace:^
         version: link:../../packages/nova-transactions
       '@tuwaio/orbit-core':
-        specifier: 1.0.0-fix-test-alpha.4.d5f27c9
-        version: 1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-fix-test-alpha.7.13eb435
+        version: 1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@tuwaio/pulsar-core':
-        specifier: ^0.1.10
-        version: 0.1.10(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-fix-orbit-integration-alpha.2.568e8f7
+        version: 1.0.0-fix-orbit-integration-alpha.2.568e8f7(@tuwaio/orbit-core@1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       ethereum-blockies-base64:
         specifier: ^1.0.2
         version: 1.0.2
@@ -256,11 +256,11 @@ importers:
         specifier: workspace:^
         version: link:../nova-core
       '@tuwaio/orbit-core':
-        specifier: 1.0.0-fix-test-alpha.4.d5f27c9
-        version: 1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-fix-test-alpha.7.13eb435
+        version: 1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@tuwaio/pulsar-core':
-        specifier: 1.0.0-fix-orbit-integration-alpha.1.e926d5f
-        version: 1.0.0-fix-orbit-integration-alpha.1.e926d5f(@tuwaio/orbit-core@1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-fix-orbit-integration-alpha.2.568e8f7
+        version: 1.0.0-fix-orbit-integration-alpha.2.568e8f7(@tuwaio/orbit-core@1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@types/react':
         specifier: ^19.1.13
         version: 19.1.13
@@ -1357,20 +1357,13 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@tuwaio/orbit-core@1.0.0-fix-test-alpha.4.d5f27c9':
-    resolution: {integrity: sha512-RlisnplUk/3p3G2nFP4XD1ZaMsoaz+YCngr1hODQBT2VIvLT7t+R1benze8nzQQ8TdRDhxs0kL4aKku4AtNyig==}
+  '@tuwaio/orbit-core@1.0.0-fix-test-alpha.7.13eb435':
+    resolution: {integrity: sha512-pHfqpaqnd8cYFbARcb6FS/AzGuUBEzIjowMK++U8cCfRCdeOHAh03jBkFqGZGEs/dLaAteU+En91/5VDF6TzIw==}
     peerDependencies:
       zustand: ^5.0.8
 
-  '@tuwaio/pulsar-core@0.1.10':
-    resolution: {integrity: sha512-RIBgO7nqX6PLv3iEycH6uA+1DKlim6xFLbLPzJjuhw8d/ACl4eGG6/iZ+NVl6yJTkZQlG/B8/PLMs+nb2vYNNQ==}
-    peerDependencies:
-      dayjs: '>=1'
-      immer: '>=10'
-      zustand: '>=5'
-
-  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.1.e926d5f':
-    resolution: {integrity: sha512-lhAFANn2qjFzlZMWNqyxjpMKAsmQgaxWeAvVZlmvJ27RzTy5GcpZCbqkHbCSI/2p+7HmEdb2kHQV/5j0X4kvNg==}
+  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.2.568e8f7':
+    resolution: {integrity: sha512-W6wr5F7qBRHYrMKlDF9q2TX8XrpPh8IjUjqEJGq0OzNXw2gp6khLoBE0JYv4UkYMkbkioXGyWrAh/iYTBViIcA==}
     peerDependencies:
       '@tuwaio/orbit-core': '>=0'
       dayjs: '>=1'
@@ -5117,19 +5110,13 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.1
 
-  '@tuwaio/orbit-core@1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
+  '@tuwaio/orbit-core@1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
     dependencies:
       zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
 
-  '@tuwaio/pulsar-core@0.1.10(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
+  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.2.568e8f7(@tuwaio/orbit-core@1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
     dependencies:
-      dayjs: 1.11.18
-      immer: 10.1.3
-      zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
-
-  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.1.e926d5f(@tuwaio/orbit-core@1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
-    dependencies:
-      '@tuwaio/orbit-core': 1.0.0-fix-test-alpha.4.d5f27c9(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+      '@tuwaio/orbit-core': 1.0.0-fix-test-alpha.7.13eb435(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       dayjs: 1.11.18
       immer: 10.1.3
       zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))

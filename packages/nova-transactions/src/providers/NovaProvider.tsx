@@ -51,7 +51,7 @@ export type NovaProviderProps<T extends Transaction> = {
     walletInfoModal?: WalletInfoModalCustomization<T>;
     trackingTxModal?: TrackingTxModalCustomization<T>;
   };
-} & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'handleTransaction' | 'initialTx'> &
+} & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'executeTxAction' | 'initialTx'> &
   ToastContainerProps;
 
 /**
@@ -64,7 +64,7 @@ export function NovaProvider<T extends Transaction>({
   connectedAdapterType,
   transactionsPool,
   initialTx,
-  handleTransaction,
+  executeTxAction,
   closeTxTrackedModal,
   labels,
   features,
@@ -187,7 +187,7 @@ export function NovaProvider<T extends Transaction>({
           onOpenWalletInfo={() => setIsWalletInfoModalOpen(true)}
           transactionsPool={transactionsPool}
           customization={customization?.trackingTxModal}
-          handleTransaction={handleTransaction}
+          executeTxAction={executeTxAction}
           adapter={adapter}
           connectedWalletAddress={connectedWalletAddress}
         />
