@@ -121,8 +121,11 @@ export function ToastTransaction<T extends Transaction>({
     <div className={cn('flex w-full flex-col gap-3 rounded-lg bg-[var(--tuwa-bg-primary)] p-4 shadow-md', className)}>
       {/* --- Header: Icon + Title/Description --- */}
       <div className="flex items-center gap-3">
-        <div className="w-[40px] flex-shrink-0" title={getChainName(setChainId(tx.chainId))}>
-          {icon ?? <Web3Icon className="w-full h-full" chainId={setChainId(tx.chainId)} />}
+        <div
+          className="w-[40px] flex-shrink-0 [&>img]:w-full [&>img]:h-auto"
+          title={getChainName(setChainId(tx.chainId))}
+        >
+          {icon ?? <Web3Icon chainId={setChainId(tx.chainId)} />}
         </div>
         <div className="flex-1">
           <CStatusAwareText txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />
