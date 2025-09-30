@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory, WalletHeader, WalletInfoModal } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Address } from 'viem';
@@ -23,19 +24,19 @@ const MOCK_DATA = {
 
 const mockTransactionsPool = {
   ...[
-    createMockTx(TransactionAdapter.EVM, {
+    createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       localTimestamp: dayjs().subtract(2, 'minutes').unix(),
       from: MOCK_DATA.ens.address,
     }),
-    createMockTx(TransactionAdapter.EVM, {
+    createMockTx(OrbitAdapter.EVM, {
       pending: true,
       status: undefined,
       hash: undefined,
       from: MOCK_DATA.ens.address,
       localTimestamp: dayjs().subtract(30, 'seconds').unix(),
     }),
-    createMockTx(TransactionAdapter.EVM, {
+    createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Failed,
       from: MOCK_DATA.ens.address,
       localTimestamp: dayjs().subtract(1, 'hour').unix(),
@@ -73,7 +74,7 @@ const meta: Meta<typeof WalletInfoModal> = {
     isOpen: true,
     setIsOpen: () => {},
     adapter: [createInteractiveMockAdapter(true)],
-    connectedAdapterType: TransactionAdapter.EVM,
+    connectedAdapterType: OrbitAdapter.EVM,
     connectedWalletAddress: MOCK_DATA.ens.address,
     transactionsPool: mockTransactionsPool,
   },
@@ -169,10 +170,10 @@ export const WithSolanaWallet: Story = {
   name: 'Solana Wallet',
   args: {
     adapter: [mockSolanaAdapter],
-    connectedAdapterType: TransactionAdapter.SOLANA,
+    connectedAdapterType: OrbitAdapter.SOLANA,
     connectedWalletAddress: 'mockedSolanaWalletAddress' as Address,
     transactionsPool: {
-      mock_solana_tx_key: createMockTx(TransactionAdapter.SOLANA, { from: 'mockedSolanaWalletAddress' }),
+      mock_solana_tx_key: createMockTx(OrbitAdapter.SOLANA, { from: 'mockedSolanaWalletAddress' }),
     },
   },
 };

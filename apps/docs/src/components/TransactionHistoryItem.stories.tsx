@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionHistoryItem } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
@@ -21,7 +22,7 @@ const meta: Meta<typeof TransactionHistoryItem> = {
     return <TransactionHistoryItem {...args} />;
   },
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       pending: false,
     }),
@@ -50,7 +51,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Success: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { status: TransactionStatus.Success }),
+    tx: createMockTx(OrbitAdapter.EVM, { status: TransactionStatus.Success }),
     adapter: [mockEvmAdapter],
   },
 };
@@ -60,7 +61,7 @@ export const Success: Story = {
  */
 export const Pending: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       pending: true,
       status: undefined,
       hash: undefined,
@@ -75,7 +76,7 @@ export const Pending: Story = {
  */
 export const Failed: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Failed,
       errorMessage: 'Transaction failed due to an unexpected error.',
     }),
@@ -89,7 +90,7 @@ export const Failed: Story = {
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Replaced,
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
     }),
@@ -102,7 +103,7 @@ export const Replaced: Story = {
  */
 export const Gelato: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
       hash: '0x_on_chain_hash_from_gelato',
@@ -116,7 +117,7 @@ export const Gelato: Story = {
  */
 export const Solana: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true, status: undefined }),
+    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, status: undefined }),
     adapter: [mockSolanaAdapter],
   },
 };
@@ -127,7 +128,7 @@ export const Solana: Story = {
 export const WithCustomization: Story = {
   name: 'With Custom Components',
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       pending: false,
     }),

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
@@ -25,7 +26,7 @@ const meta: Meta<typeof TransactionsHistory> = {
     connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     transactionsPool: {
       ...[
-        createMockTx(TransactionAdapter.EVM, {
+        createMockTx(OrbitAdapter.EVM, {
           status: TransactionStatus.Success,
           localTimestamp: dayjs().subtract(2, 'minutes').unix(),
         }),
@@ -64,30 +65,30 @@ export const Default: Story = {
     connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: {
       ...[
-        createMockTx(TransactionAdapter.EVM, {
+        createMockTx(OrbitAdapter.EVM, {
           status: TransactionStatus.Success,
           localTimestamp: dayjs().subtract(2, 'minutes').unix(),
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
         }),
-        createMockTx(TransactionAdapter.EVM, {
+        createMockTx(OrbitAdapter.EVM, {
           pending: true,
           status: undefined,
           hash: undefined,
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(30, 'seconds').unix(),
         }),
-        createMockTx(TransactionAdapter.EVM, {
+        createMockTx(OrbitAdapter.EVM, {
           status: TransactionStatus.Failed,
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(1, 'hour').unix(),
         }),
-        createMockTx(TransactionAdapter.EVM, {
+        createMockTx(OrbitAdapter.EVM, {
           tracker: TransactionTracker.Gelato,
           txKey: 'gelato_task_123',
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(15, 'minutes').unix(),
         }),
-        createMockTx(TransactionAdapter.SOLANA, {
+        createMockTx(OrbitAdapter.SOLANA, {
           from: 'mockedSolanaWalletAddress',
           localTimestamp: dayjs().subtract(5, 'minutes').unix(),
         }),
@@ -126,7 +127,7 @@ export const WithScrolling: Story = {
   args: {
     connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: Array.from({ length: 15 }, (_, i) =>
-      createMockTx(TransactionAdapter.EVM, {
+      createMockTx(OrbitAdapter.EVM, {
         from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
         localTimestamp: dayjs()
           .subtract(i * 10, 'minutes')

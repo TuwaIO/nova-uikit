@@ -1,22 +1,24 @@
-'use client';
-
 /**
  * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single transaction.
  */
-import { XMarkIcon } from '@heroicons/react/24/solid';
-import * as Dialog from '@radix-ui/react-dialog';
-import { cn } from '@tuwaio/nova-core';
+import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
-import { AnimatePresence, motion, MotionProps } from 'framer-motion';
+import { MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
 
 import { NovaProviderProps, useLabels } from '../../providers';
+import {
+  TxErrorBlock,
+  TxErrorBlockProps,
+  TxInfoBlock,
+  TxInfoBlockProps,
+  TxProgressIndicator,
+  TxProgressIndicatorProps,
+  TxStatusVisual,
+  TxStatusVisualProps,
+} from '../';
 import { StatusAwareText } from '../StatusAwareText';
-import { TxErrorBlock, TxErrorBlockProps } from './TxErrorBlock';
-import { TxInfoBlock, TxInfoBlockProps } from './TxInfoBlock';
-import { TxProgressIndicator, TxProgressIndicatorProps } from './TxProgressIndicator';
-import { TxStatusVisual, TxStatusVisualProps } from './TxStatusVisual';
 
 // --- Prop Types for Customization ---
 type CustomHeaderProps = { onClose: () => void; title: ReactNode };
@@ -33,8 +35,9 @@ type CustomFooterProps = {
 };
 
 export type TrackingTxModalCustomization<T extends Transaction> = {
-  modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
-  motionProps?: MotionProps;
+  // Use the new DialogContent type
+  modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
+  motionProps?: MotionProps; // Kept for API contract, but unused in default render
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
     Footer?: ComponentType<CustomFooterProps>;
@@ -138,130 +141,89 @@ export function TrackingTxModal<T extends Transaction>({
   const CustomInfoBlock = customization?.components?.InfoBlock;
   const CustomErrorBlock = customization?.components?.ErrorBlock;
 
-  const motionProps: MotionProps = {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-    transition: { duration: 0.2, ease: 'easeOut' },
-    ...customization?.motionProps,
-  };
-
   if (!txToDisplay) return null;
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
-      <Dialog.Portal>
-        <AnimatePresence>
-          {isOpen && (
-            <>
-              <Dialog.Overlay asChild>
-                <motion.div
-                  className="fixed inset-0 z-50 bg-black/60"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-              </Dialog.Overlay>
-              <Dialog.Content
-                className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 outline-none"
-                {...customization?.modalProps}
-                asChild
-              >
-                <motion.div {...motionProps}>
-                  <div
-                    className={cn(
-                      'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl bg-[var(--tuwa-bg-primary)] p-5 pt-0 shadow-2xl',
-                      className,
-                    )}
-                  >
-                    {CustomHeader ? (
-                      <CustomHeader
-                        onClose={() => onClose(activeTx?.txKey)}
-                        title={<DefaultHeaderTitle tx={txToDisplay} />}
-                      />
-                    ) : (
-                      <DefaultHeader
-                        onClose={() => onClose(activeTx?.txKey)}
-                        title={<DefaultHeaderTitle tx={txToDisplay} />}
-                      />
-                    )}
-
-                    <main className="flex flex-col gap-3">
-                      {CustomStatusVisual ? (
-                        <CustomStatusVisual
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      ) : (
-                        <TxStatusVisual
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      )}
-                      {CustomProgressIndicator ? (
-                        <CustomProgressIndicator
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      ) : (
-                        <TxProgressIndicator
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      )}
-                      {CustomInfoBlock ? (
-                        <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
-                      ) : (
-                        <TxInfoBlock tx={txToDisplay} adapter={adapter} />
-                      )}
-                      {CustomErrorBlock ? (
-                        <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
-                      ) : (
-                        <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
-                      )}
-                    </main>
-
-                    {CustomFooter ? (
-                      <CustomFooter
-                        onClose={() => onClose(activeTx?.txKey)}
-                        onOpenWalletInfo={onOpenWalletInfo}
-                        isProcessing={isProcessing}
-                        isFailed={isFailed}
-                        canReplace={canReplace}
-                        onRetry={canRetry ? handleRetry : undefined}
-                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
-                        onCancel={canReplace ? handleCancel : undefined}
-                        connectedWalletAddress={connectedWalletAddress}
-                      />
-                    ) : (
-                      <DefaultFooter
-                        onClose={() => onClose(activeTx?.txKey)}
-                        onOpenWalletInfo={onOpenWalletInfo}
-                        isProcessing={isProcessing}
-                        isFailed={isFailed}
-                        canReplace={canReplace}
-                        onRetry={canRetry ? handleRetry : undefined}
-                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
-                        onCancel={canReplace ? handleCancel : undefined}
-                        connectedWalletAddress={connectedWalletAddress}
-                      />
-                    )}
-                  </div>
-                </motion.div>
-              </Dialog.Content>
-            </>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
+      <DialogContent className={cn('max-w-md', customization?.modalProps?.className)} {...customization?.modalProps}>
+        <div className={cn('relative flex w-full flex-col', className)}>
+          {CustomHeader ? (
+            <CustomHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
+          ) : (
+            <DefaultHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
           )}
-        </AnimatePresence>
-      </Dialog.Portal>
-    </Dialog.Root>
+
+          <main className="flex flex-col gap-4 p-4">
+            {CustomStatusVisual ? (
+              <CustomStatusVisual
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            ) : (
+              <TxStatusVisual
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            )}
+            {CustomProgressIndicator ? (
+              <CustomProgressIndicator
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            ) : (
+              <TxProgressIndicator
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            )}
+            {CustomInfoBlock ? (
+              <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
+            ) : (
+              <TxInfoBlock tx={txToDisplay} adapter={adapter} />
+            )}
+            {CustomErrorBlock ? (
+              <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+            ) : (
+              <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+            )}
+          </main>
+
+          {CustomFooter ? (
+            <CustomFooter
+              onClose={() => onClose(activeTx?.txKey)}
+              onOpenWalletInfo={onOpenWalletInfo}
+              isProcessing={isProcessing}
+              isFailed={isFailed}
+              canReplace={canReplace}
+              onRetry={canRetry ? handleRetry : undefined}
+              onSpeedUp={canReplace ? handleSpeedUp : undefined}
+              onCancel={canReplace ? handleCancel : undefined}
+              connectedWalletAddress={connectedWalletAddress}
+            />
+          ) : (
+            <DefaultFooter
+              onClose={() => onClose(activeTx?.txKey)}
+              onOpenWalletInfo={onOpenWalletInfo}
+              isProcessing={isProcessing}
+              isFailed={isFailed}
+              canReplace={canReplace}
+              onRetry={canRetry ? handleRetry : undefined}
+              onSpeedUp={canReplace ? handleSpeedUp : undefined}
+              onCancel={canReplace ? handleCancel : undefined}
+              connectedWalletAddress={connectedWalletAddress}
+            />
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -282,19 +244,22 @@ function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
 const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   const { actions } = useLabels();
   return (
-    <header className="sticky top-0 z-10 flex w-full items-start justify-between bg-[var(--tuwa-bg-primary)] pt-5 pb-2">
-      <Dialog.Title>{title}</Dialog.Title>
-      <Dialog.Close asChild>
+    <DialogHeader>
+      <DialogTitle>{title}</DialogTitle>
+
+      <DialogClose asChild>
         <button
           type="button"
           onClick={() => onClose()}
           aria-label={actions.close}
-          className="cursor-pointer -mt-1 ml-2 rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+          className="cursor-pointer rounded-full p-1
+                     text-[var(--tuwa-text-tertiary)] transition-colors
+                     hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
         >
-          <XMarkIcon className="h-5 w-5" />
+          <CloseIcon />
         </button>
-      </Dialog.Close>
-    </header>
+      </DialogClose>
+    </DialogHeader>
   );
 };
 
@@ -317,7 +282,10 @@ const DefaultFooter = ({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-button-gradient-from)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity hover:opacity-90"
+          className="cursor-pointer rounded-md
+                     bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)]
+                     px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity
+                     hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)]"
         >
           {trackingModal.retry}
         </button>
@@ -328,7 +296,9 @@ const DefaultFooter = ({
         <button
           type="button"
           onClick={onOpenWalletInfo}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]"
+          className="cursor-pointer rounded-md
+                     bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)]
+                     transition-colors hover:bg-[var(--tuwa-border-primary)]"
         >
           {trackingModal.walletInfo}
         </button>
@@ -338,21 +308,26 @@ const DefaultFooter = ({
   };
 
   return (
-    <footer className="mt-2 flex w-full items-center justify-between border-t border-[var(--tuwa-border-primary)] pt-4">
+    <footer
+      className="flex w-full items-center justify-between
+                       border-t border-[var(--tuwa-border-primary)] p-4"
+    >
       <div className="flex items-center gap-4">
         {canReplace && onSpeedUp && onCancel && (
           <>
             <button
               type="button"
               onClick={onSpeedUp}
-              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
+              className="cursor-pointer text-sm font-medium
+                         text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
             >
               {actions.speedUp}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
+              className="cursor-pointer text-sm font-medium
+                         text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
             >
               {actions.cancel}
             </button>
@@ -365,7 +340,9 @@ const DefaultFooter = ({
           type="button"
           onClick={onClose}
           disabled={isProcessing && !canReplace}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold
+                     text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]
+                     disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
         </button>

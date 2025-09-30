@@ -1,7 +1,7 @@
 import { StarIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WalletAvatar, WalletHeader } from '@tuwaio/nova-transactions';
-import { TransactionAdapter } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { useState } from 'react';
 import { Address } from 'viem';
 
@@ -49,7 +49,7 @@ const meta: Meta<typeof WalletHeader> = {
   },
   args: {
     adapter: [createInteractiveMockAdapter(true)],
-    connectedAdapterType: TransactionAdapter.EVM,
+    connectedAdapterType: OrbitAdapter.EVM,
     walletAddress: MOCK_DATA.ens.address,
   },
   argTypes: {

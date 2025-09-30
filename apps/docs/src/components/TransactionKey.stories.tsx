@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionKey } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionTracker } from '@tuwaio/pulsar-core';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
 import { createMockTx } from '../utils/mockTransactions';
@@ -18,7 +19,7 @@ const meta: Meta<typeof TransactionKey> = {
     return <TransactionKey {...args} adapter={args.adapter} />;
   },
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {}),
+    tx: createMockTx(OrbitAdapter.EVM, {}),
     adapter: mockEvmAdapter,
     variant: 'toast',
   },
@@ -55,7 +56,7 @@ type Story = StoryObj<typeof meta>;
 export const DefaultEVM: Story = {
   name: 'Default (EVM)',
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {}),
+    tx: createMockTx(OrbitAdapter.EVM, {}),
     adapter: mockEvmAdapter,
   },
 };
@@ -66,7 +67,7 @@ export const DefaultEVM: Story = {
 export const DefaultSolana: Story = {
   name: 'Default (Solana)',
   args: {
-    tx: createMockTx(TransactionAdapter.SOLANA, {}),
+    tx: createMockTx(OrbitAdapter.SOLANA, {}),
     adapter: mockSolanaAdapter,
   },
 };
@@ -76,7 +77,7 @@ export const DefaultSolana: Story = {
  */
 export const Gelato: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),
@@ -89,7 +90,7 @@ export const Gelato: Story = {
  */
 export const Safe: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Safe,
       txKey: 'safe_0xabc...def_nonce_123',
     }),
@@ -102,7 +103,7 @@ export const Safe: Story = {
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
     }),
     adapter: mockEvmAdapter,
@@ -124,7 +125,7 @@ export const HistoryVariant: Story = {
  */
 export const WithCustomRender: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),

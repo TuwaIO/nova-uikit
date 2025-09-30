@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxActionButton } from '@tuwaio/nova-transactions';
-import { EvmTransaction, TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { EvmTransaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
 
@@ -72,12 +73,12 @@ export const FullLifecycle: Story = {
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate signing
 
       // 2. After signing, a pending transaction appears in the pool.
-      const pendingTx = createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }) as EvmTransaction;
+      const pendingTx = createMockTx(OrbitAdapter.EVM, { pending: true, status: undefined }) as EvmTransaction;
       setTransactionsPool({ [MOCK_TX_KEY]: pendingTx });
       await new Promise((resolve) => setTimeout(resolve, 2500)); // Simulate mining
 
       // 3. The transaction is successful.
-      const successTx = createMockTx(TransactionAdapter.EVM, {
+      const successTx = createMockTx(OrbitAdapter.EVM, {
         pending: false,
         status: TransactionStatus.Success,
       }) as EvmTransaction;
@@ -122,7 +123,7 @@ export const Loading: Story = {
 export const Success: Story = {
   args: {
     transactionsPool: {
-      '0x_storybook_tx_hash_action_button': createMockTx(TransactionAdapter.EVM, {
+      '0x_storybook_tx_hash_action_button': createMockTx(OrbitAdapter.EVM, {
         status: TransactionStatus.Success,
       }),
     },
@@ -138,7 +139,7 @@ export const Success: Story = {
 export const Failed: Story = {
   args: {
     transactionsPool: {
-      '0x_storybook_tx_hash_action_button': createMockTx(TransactionAdapter.EVM, {
+      '0x_storybook_tx_hash_action_button': createMockTx(OrbitAdapter.EVM, {
         status: TransactionStatus.Failed,
       }),
     },
