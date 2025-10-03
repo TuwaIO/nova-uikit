@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "1.0.0-fix-test-alpha.9.ca7229f",
-    "@tuwaio/pulsar-core": "1.0.0-fix-orbit-integration-alpha.6.0303e0c",
+    "@tuwaio/pulsar-core": "1.0.0-fix-orbit-integration-alpha.8.bdceb94",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.18",
     "ethereum-blockies-base64": "^1.0.2",

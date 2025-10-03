@@ -265,8 +265,8 @@ importers:
         specifier: 1.0.0-fix-test-alpha.9.ca7229f
         version: 1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@tuwaio/pulsar-core':
-        specifier: 1.0.0-fix-orbit-integration-alpha.6.0303e0c
-        version: 1.0.0-fix-orbit-integration-alpha.6.0303e0c(@tuwaio/orbit-core@1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+        specifier: 1.0.0-fix-orbit-integration-alpha.8.bdceb94
+        version: 1.0.0-fix-orbit-integration-alpha.8.bdceb94(@tuwaio/orbit-core@1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       '@types/react':
         specifier: ^19.1.13
         version: 19.1.13
@@ -1370,6 +1370,14 @@ packages:
 
   '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.6.0303e0c':
     resolution: {integrity: sha512-sJSv8BScMbY+SjUPDeplhhnU0YAfVZPw9OF9l7Yt3EFAc8upfM2+yXybVWMkm6hsuOKHeh2J95LnIYNQK7fIIg==}
+    peerDependencies:
+      '@tuwaio/orbit-core': '>=0'
+      dayjs: '>=1'
+      immer: '>=10'
+      zustand: '>=5'
+
+  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.8.bdceb94':
+    resolution: {integrity: sha512-HInEb9FURaM2zYqURb1WHUlaD9U5b/JXac7IGSG5RA4YvaFLbegKkAftJZr8espJb8IFpm24f3Elr24ZBWIFAg==}
     peerDependencies:
       '@tuwaio/orbit-core': '>=0'
       dayjs: '>=1'
@@ -5138,6 +5146,13 @@ snapshots:
       zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
 
   '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.6.0303e0c(@tuwaio/orbit-core@1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
+    dependencies:
+      '@tuwaio/orbit-core': 1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
+      dayjs: 1.11.18
+      immer: 10.1.3
+      zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))
+
+  '@tuwaio/pulsar-core@1.0.0-fix-orbit-integration-alpha.8.bdceb94(@tuwaio/orbit-core@1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1))))(dayjs@1.11.18)(immer@10.1.3)(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))':
     dependencies:
       '@tuwaio/orbit-core': 1.0.0-fix-test-alpha.9.ca7229f(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)(use-sync-external-store@1.4.0(react@19.1.1)))
       dayjs: 1.11.18

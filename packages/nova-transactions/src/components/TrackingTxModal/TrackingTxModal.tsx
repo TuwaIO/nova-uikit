@@ -122,7 +122,13 @@ export function TrackingTxModal<T extends Transaction>({
       title: txToDisplay.title,
       description: txToDisplay.description,
       payload: txToDisplay.payload,
-      withTrackedModal: true,
+      rpcUrl:
+        'rpcUrl' in txToDisplay
+          ? txToDisplay?.rpcUrl
+          : 'desiredChainID' in txToDisplay
+            ? (txToDisplay.desiredChainID as string)
+            : (txToDisplay.chainId as string).split(':')[1],
+      withTrackedModal: 'withTrackedModal' in txToDisplay ? txToDisplay.withTrackedModal : false,
     };
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
