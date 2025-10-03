@@ -65,17 +65,17 @@
     }
   ],
   "peerDependencies": {
-    "@bgd-labs/react-web3-icons": ">=1",
-    "@heroicons/react": ">=2",
-    "@radix-ui/react-dialog": ">=1",
-    "framer-motion": ">=12",
-    "react": ">=19",
+    "@bgd-labs/react-web3-icons": ">=1.5",
+    "@heroicons/react": "2.x.x",
+    "@radix-ui/react-dialog": "1.x.x",
+    "framer-motion": "12.x.x",
+    "react": "19.x.x",
     "react-toastify": ">=11",
     "@tuwaio/pulsar-core": ">=0",
     "@tuwaio/nova-core": ">=0",
     "@tuwaio/orbit-core": ">=0",
-    "dayjs": ">=1",
-    "ethereum-blockies-base64": ">=1"
+    "dayjs": "1.x.x",
+    "ethereum-blockies-base64": "1.x.x"
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "1.0.0-fix-test-alpha.9.ca7229f",

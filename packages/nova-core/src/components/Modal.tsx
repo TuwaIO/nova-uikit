@@ -1,4 +1,5 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 import * as React from 'react';
 
 import { cn } from '../utils';
@@ -8,28 +9,58 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
 
+const defaultModalAnimation: Variants = {
+  initial: { opacity: 0, scale: 0.9, y: 20 },
+  animate: { opacity: 1, scale: 1, y: 0 },
+  exit: {
+    opacity: 0,
+    scale: 0.9,
+    transition: {
+      duration: 0.2,
+    },
+  },
+};
+
+const defaultModalBackdropAnimation: Variants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      'fixed inset-0 z-50 bg-black/55 backdrop-blur-sm backdrop-saturate-150',
-      'animate-in fade-in-0',
-      className,
-    )}
-    {...props}
-  />
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & {
+    backdropAnimation?: Variants;
+  }
+>(({ className, backdropAnimation, ...props }, ref) => (
+  <AnimatePresence>
+    <motion.div
+      variants={backdropAnimation ?? defaultModalBackdropAnimation}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
+      animate="animate"
+      initial="initial"
+      exit="exit"
+      className="relative rounded-2xl overflow-hidden"
+    >
+      <DialogPrimitive.Overlay
+        ref={ref}
+        className={cn('fixed inset-0 z-50 bg-black/55 backdrop-blur-sm backdrop-saturate-150', className)}
+        {...props}
+      />
+    </motion.div>
+  </AnimatePresence>
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    modalAnimation?: Variants;
+    backdropAnimation?: Variants;
+  }
+>(({ className, children, modalAnimation, backdropAnimation, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
+    <DialogOverlay backdropAnimation={backdropAnimation} />
 
     <DialogPrimitive.Content
       aria-describedby="tuwa:modal-content"
@@ -40,17 +71,36 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="relative rounded-2xl overflow-hidden">
-        <div
-          className={cn(
-            'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl shadow-2xl',
-            'border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
-            'animate-in fade-in-0 zoom-in-95 lide-in-from-top-[48%] duration-350',
-          )}
-        >
-          {children}
-        </div>
-      </div>
+      <motion.div
+        layout
+        className="relative overflow-hidden"
+        transition={{
+          layout: {
+            duration: 0.2,
+            ease: [0.1, 0.1, 0.2, 1],
+          },
+        }}
+      >
+        <AnimatePresence>
+          <motion.div
+            variants={modalAnimation ?? defaultModalAnimation}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            animate="animate"
+            initial="initial"
+            exit="exit"
+            className="relative rounded-2xl overflow-hidden"
+          >
+            <div
+              className={cn(
+                'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl shadow-2xl',
+                'border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
+              )}
+            >
+              {children}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
     </DialogPrimitive.Content>
   </DialogPortal>
 ));
