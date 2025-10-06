@@ -52,7 +52,7 @@ export type NovaProviderProps<T extends Transaction> = {
     trackingTxModal?: TrackingTxModalCustomization<T>;
   };
 } & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'executeTxAction' | 'initialTx'> &
-  ToastContainerProps;
+  Omit<ToastContainerProps, 'containerId'>;
 
 /**
  * The main component for the Nova UI ecosystem. It renders and orchestrates all
@@ -73,6 +73,8 @@ export function NovaProvider<T extends Transaction>({
 }: NovaProviderProps<T>) {
   const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
+
+  const toastContainerId = 'nova-transactions';
 
   const isMobile = useMediaQuery('(max-width: 767px)');
 
@@ -106,9 +108,9 @@ export function NovaProvider<T extends Transaction>({
       );
 
       if (toast.isActive(tx.txKey)) {
-        toast.update(tx.txKey, { render: content, type });
+        toast.update(tx.txKey, { render: content, type, containerId: toastContainerId });
       } else {
-        toast(content, { toastId: tx.txKey, type, closeOnClick: false });
+        toast(content, { toastId: tx.txKey, type, closeOnClick: false, containerId: toastContainerId });
       }
     },
     [transactionsPool, enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
@@ -141,7 +143,7 @@ export function NovaProvider<T extends Transaction>({
     // This ensures that visible toasts re-render to show/hide wallet-specific actions
     // like "Speed Up", even for completed transactions.
     Object.values(transactionsPool).forEach((tx) => {
-      if (toast.isActive(tx.txKey)) {
+      if (toast.isActive(tx.txKey, toastContainerId)) {
         showOrUpdateToast(tx);
       }
     });
@@ -163,6 +165,7 @@ export function NovaProvider<T extends Transaction>({
           closeOnClick={false}
           icon={false}
           closeButton={ToastCloseButton}
+          containerId={toastContainerId}
           toastClassName="!p-0 !bg-transparent !shadow-none !min-h-0"
           {...toastProps}
         />

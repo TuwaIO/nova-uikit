@@ -138,6 +138,12 @@ export function WalletHeader<T extends Transaction>({
     fetchNameData();
   }, [walletAddress, adapter, connectedAdapterType]);
 
+  const ensNameAbbreviated = ensName
+    ? ensName.length > 30
+      ? textCenterEllipsis(ensName, 12, 12)
+      : ensName
+    : undefined;
+
   // --- Render "Not Connected" State ---
   if (!walletAddress) {
     if (renderNoWalletContent) return <>{renderNoWalletContent()}</>;
@@ -152,12 +158,6 @@ export function WalletHeader<T extends Transaction>({
       </div>
     );
   }
-
-  const ensNameAbbreviated = ensName
-    ? ensName.length > 30
-      ? textCenterEllipsis(ensName, 12, 12)
-      : ensName
-    : undefined;
 
   // --- Render "Connected" State ---
   return (
