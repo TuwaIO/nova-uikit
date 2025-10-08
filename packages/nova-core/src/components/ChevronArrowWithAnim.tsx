@@ -1,5 +1,6 @@
-import { cn } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { cn } from '../utils';
 
 export function ChevronArrowWithAnim({
   className,
