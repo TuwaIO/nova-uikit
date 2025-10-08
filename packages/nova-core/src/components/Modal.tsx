@@ -40,7 +40,7 @@ const DialogOverlay = React.forwardRef<
       animate="animate"
       initial="initial"
       exit="exit"
-      className="relative rounded-2xl overflow-hidden"
+      className="relative rounded-t-2xl sm:rounded-2xl overflow-hidden"
     >
       <DialogPrimitive.Overlay
         ref={ref}
@@ -66,7 +66,7 @@ const DialogContent = React.forwardRef<
       aria-describedby="tuwa:modal-content"
       ref={ref}
       className={cn(
-        'fixed left-[50%] top-[50%] z-50 w-full max-w-full translate-x-[-50%] translate-y-[-50%] p-4 outline-none',
+        'fixed bottom-0 left-0 p-0 sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] z-50 sm:p-4 outline-none',
         className,
       )}
       {...props}
@@ -88,11 +88,11 @@ const DialogContent = React.forwardRef<
             animate="animate"
             initial="initial"
             exit="exit"
-            className="relative rounded-2xl overflow-hidden"
+            className="relative rounded-t-2xl sm:rounded-2xl overflow-hidden"
           >
             <div
               className={cn(
-                'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl shadow-2xl',
+                'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-t-2xl sm:rounded-2xl shadow-2xl',
                 'border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
               )}
             >

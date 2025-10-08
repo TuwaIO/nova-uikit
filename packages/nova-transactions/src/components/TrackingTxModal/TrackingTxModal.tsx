@@ -151,7 +151,10 @@ export function TrackingTxModal<T extends Transaction>({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
-      <DialogContent className={cn('max-w-md', customization?.modalProps?.className)} {...customization?.modalProps}>
+      <DialogContent
+        className={cn('w-full sm:max-w-md', customization?.modalProps?.className)}
+        {...customization?.modalProps}
+      >
         <div className={cn('relative flex w-full flex-col', className)}>
           {CustomHeader ? (
             <CustomHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
@@ -288,7 +291,7 @@ const DefaultFooter = ({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-md
+          className="cursor-pointer rounded-t-md sm:rounded-md
                      bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)]
                      px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity
                      hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)]"

@@ -97,7 +97,10 @@ export function WalletInfoModal<T extends Transaction>({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className={cn('max-w-2xl', customization?.modalProps?.className)} {...customization?.modalProps}>
+      <DialogContent
+        className={cn('w-full sm:max-w-2xl', customization?.modalProps?.className)}
+        {...customization?.modalProps}
+      >
         <div className={cn('relative max-h-[95dvh] w-full flex flex-col', customization?.classNames?.contentWrapper)}>
           {CustomHeader ? (
             <CustomHeader closeModal={closeModal} />
