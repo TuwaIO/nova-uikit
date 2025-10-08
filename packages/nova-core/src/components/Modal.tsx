@@ -66,7 +66,7 @@ const DialogContent = React.forwardRef<
       aria-describedby="tuwa:modal-content"
       ref={ref}
       className={cn(
-        'fixed bottom-0 left-0 p-0 sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] z-50 sm:p-4 outline-none',
+        'fixed bottom-0 left-0 p-0 sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] z-50 sm:p-4 outline-none',
         className,
       )}
       {...props}
