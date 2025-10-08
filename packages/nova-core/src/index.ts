@@ -1,3 +1,4 @@
+export * from './components/ChevronArrowWithAnim';
 export * from './components/CloseIcon';
 export * from './components/Modal';
 export * from './components/StarsBackground';
