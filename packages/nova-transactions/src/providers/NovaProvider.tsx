@@ -138,7 +138,7 @@ export function NovaProvider<T extends Transaction>({
     prevTransactionsRef.current = transactionsPool;
   }, [transactionsPool, showOrUpdateToast]);
 
-  // Effect 2: Handles toast UPDATES when the connected wallet address changes.
+  // Effect 2: Handles toast UPDATES when the connected wallet address change.
   useEffect(() => {
     // This ensures that visible toasts re-render to show/hide wallet-specific actions
     // like "Speed Up", even for completed transactions.
