@@ -37,6 +37,9 @@
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.700');
   --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+
+  --tuwa-standart-button-bg: theme('colors.gray.100');
+  --tuwa-standart-button-hover: theme('colors.gray.200');
 }
 
 .dark {
@@ -74,4 +77,7 @@
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.600');
   --tuwa-button-gradient-to-hover: theme('colors.purple.600');
+
+  --tuwa-standart-button-bg: theme('colors.gray.700');
+  --tuwa-standart-button-hover: theme('colors.gray.800');
 }
