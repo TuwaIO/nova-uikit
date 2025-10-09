@@ -1,0 +1,41 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# TransactionsInfoModalProps\<T\>
+
+> **TransactionsInfoModalProps**\<`T`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`T`\>, `"adapter"` \| `"connectedAdapterType"` \| `"connectedWalletAddress"` \| `"transactionsPool"`\> & `object`
+
+Defined in: [nova-transactions/src/components/TransactionsInfoModal.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/bb57d95d18f8de8b14211d55bcd6b5765a378a6e/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L33)
+
+Defines the core props for the TransactionsInfoModal.
+
+## Type Declaration
+
+### customization?
+
+> `optional` **customization**: [`TransactionsInfoModalCustomization`](TransactionsInfoModalCustomization.md)\<`T`\>
+
+### isOpen?
+
+> `optional` **isOpen**: `boolean`
+
+### setIsOpen()
+
+> **setIsOpen**: (`value`) => `void`
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+#### Returns
+
+`void`
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`

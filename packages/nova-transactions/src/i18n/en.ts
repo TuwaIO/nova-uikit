@@ -11,12 +11,7 @@ import { TuwaLabels } from './types';
  * for creating other language translations.
  */
 export const defaultLabels: TuwaLabels = {
-  walletModal: {
-    title: 'Wallet & Transactions',
-    header: {
-      notConnected: 'Wallet not connected',
-      avatarAlt: 'Avatar for',
-    },
+  transactionsModal: {
     history: {
       title: 'Transactions History',
       connectWalletTitle: 'Connect Wallet',
@@ -26,7 +21,7 @@ export const defaultLabels: TuwaLabels = {
     },
   },
   toast: {
-    openWalletInfo: 'Open wallet info',
+    openTransactionsInfo: 'Open transactions',
   },
   statuses: {
     pending: 'Pending',
@@ -59,7 +54,7 @@ export const defaultLabels: TuwaLabels = {
     title: 'Transaction Overview',
     processing: 'Processing...',
     close: 'Close',
-    walletInfo: 'Wallet Info',
+    allTransactions: 'All transactions',
     retry: 'Retry',
     progressIndicator: {
       created: 'Created',

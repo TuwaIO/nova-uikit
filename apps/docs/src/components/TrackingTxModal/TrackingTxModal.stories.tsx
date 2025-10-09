@@ -100,7 +100,7 @@ const meta: Meta<typeof TrackingTxModal> = {
   args: {
     adapter: [mockEvmAdapter, mockSolanaAdapter],
     onClose: action('onClose'),
-    onOpenWalletInfo: action('onOpenWalletInfo'),
+    onOpenAllTransactions: action('onOpenAllTransactions'),
   },
   argTypes: {
     initialTx: { control: false },

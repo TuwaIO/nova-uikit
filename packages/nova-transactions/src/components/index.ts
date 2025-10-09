@@ -6,6 +6,6 @@ export * from './TrackingTxModal';
 export * from './TransactionHistoryItem';
 export * from './TransactionKey';
 export * from './TransactionsHistory';
+export * from './TransactionsInfoModal';
 export * from './TransactionStatusBadge';
 export * from './TxActionButton';
-export * from './WalletInfoModal';

@@ -9,15 +9,7 @@
  */
 export type TuwaLabels = {
   /** Labels for the main wallet information modal. */
-  walletModal: {
-    /** The title displayed at the top of the wallet modal. */
-    title: string;
-    header: {
-      /** Text displayed when no wallet is connected. */
-      notConnected: string;
-      /** Alt text for the wallet's avatar image. */
-      avatarAlt: string;
-    };
+  transactionsModal: {
     history: {
       /** The title for the transaction history section. */
       title: string;
@@ -34,7 +26,7 @@ export type TuwaLabels = {
   /** Labels related to toast notifications. */
   toast: {
     /** Text for the button/link within a toast to open the wallet modal. */
-    openWalletInfo: string;
+    openTransactionsInfo: string;
   };
   /** Standard labels for transaction statuses. */
   statuses: {
@@ -95,7 +87,7 @@ export type TuwaLabels = {
     /** Label for the close button. */
     close: string;
     /** Label for the button to open the main wallet info modal. */
-    walletInfo: string;
+    allTransactions: string;
     /** Label for a button to retry a transaction. */
     retry: string;
     /** Labels for the step-by-step progress indicator. */

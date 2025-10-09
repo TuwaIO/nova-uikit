@@ -24,7 +24,7 @@ const meta: Meta<typeof ToastTransaction> = {
     }),
     adapter: [mockEvmAdapter],
     connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-    openWalletInfoModal: () => console.log('openWalletInfoModal called'),
+    openTxInfoModal: () => console.log('openWalletInfoModal called'),
   },
   argTypes: {
     tx: {
@@ -148,7 +148,7 @@ export const FullyCustomized: Story = {
         StatusBadge: () => (
           <div className="rounded-full bg-purple-500 px-3 py-1 text-xs font-bold text-white">CUSTOM</div>
         ),
-        WalletInfoButton: ({ onClick, children }) => (
+        TxInfoButton: ({ onClick, children }) => (
           <button onClick={onClick} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
             {children}
           </button>

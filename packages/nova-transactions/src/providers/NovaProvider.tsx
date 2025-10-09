@@ -16,8 +16,8 @@ import {
   ToastTransactionCustomization,
   TrackingTxModal,
   TrackingTxModalCustomization,
-  WalletInfoModal,
-  WalletInfoModalCustomization,
+  TransactionsInfoModal,
+  TransactionsInfoModalCustomization,
 } from '../components';
 import { defaultLabels } from '../i18n/en';
 import { TuwaLabels } from '../i18n/types';
@@ -43,12 +43,12 @@ export type NovaProviderProps<T extends Transaction> = {
   labels?: Partial<TuwaLabels>;
   features?: {
     toasts?: boolean;
-    walletInfoModal?: boolean;
+    transactionsModal?: boolean;
     trackingTxModal?: boolean;
   };
   customization?: {
     toast?: ToastTransactionCustomization<T>;
-    walletInfoModal?: WalletInfoModalCustomization<T>;
+    transactionsInfoModal?: TransactionsInfoModalCustomization<T>;
     trackingTxModal?: TrackingTxModalCustomization<T>;
   };
 } & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'executeTxAction' | 'initialTx'> &
@@ -71,7 +71,7 @@ export function NovaProvider<T extends Transaction>({
   customization,
   ...toastProps
 }: NovaProviderProps<T>) {
-  const [isWalletInfoModalOpen, setIsWalletInfoModalOpen] = useState(false);
+  const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
 
   const toastContainerId = 'nova-transactions';
@@ -81,7 +81,7 @@ export function NovaProvider<T extends Transaction>({
   const enabledFeatures = useMemo(
     () => ({
       toasts: features?.toasts ?? true,
-      walletInfoModal: features?.walletInfoModal ?? true,
+      transactionsModal: features?.transactionsModal ?? true,
       trackingTxModal: features?.trackingTxModal ?? true,
     }),
     [features],
@@ -100,7 +100,7 @@ export function NovaProvider<T extends Transaction>({
         <ToastTransaction
           {...props}
           tx={tx}
-          openWalletInfoModal={enabledFeatures.walletInfoModal ? () => setIsWalletInfoModalOpen(true) : undefined}
+          openTxInfoModal={enabledFeatures.transactionsModal ? () => setIsTransactionsInfoModalOpen(true) : undefined}
           customization={customization?.toast}
           adapter={adapter}
           connectedWalletAddress={connectedWalletAddress}
@@ -152,7 +152,8 @@ export function NovaProvider<T extends Transaction>({
   const isTrackingModalOpen =
     !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
 
-  const shouldShowToasts = enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isWalletInfoModalOpen));
+  const shouldShowToasts =
+    enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isTransactionsInfoModalOpen));
 
   return (
     <LabelsProvider labels={mergedLabels}>
@@ -171,11 +172,11 @@ export function NovaProvider<T extends Transaction>({
         />
       )}
 
-      {enabledFeatures.walletInfoModal && (
-        <WalletInfoModal
-          isOpen={isWalletInfoModalOpen}
-          setIsOpen={setIsWalletInfoModalOpen}
-          customization={customization?.walletInfoModal}
+      {enabledFeatures.transactionsModal && (
+        <TransactionsInfoModal
+          isOpen={isTransactionsInfoModalOpen}
+          setIsOpen={setIsTransactionsInfoModalOpen}
+          customization={customization?.transactionsInfoModal}
           adapter={adapter}
           connectedWalletAddress={connectedWalletAddress}
           connectedAdapterType={connectedAdapterType}
@@ -187,7 +188,7 @@ export function NovaProvider<T extends Transaction>({
         <TrackingTxModal
           initialTx={initialTx}
           onClose={closeTxTrackedModal}
-          onOpenWalletInfo={() => setIsWalletInfoModalOpen(true)}
+          onOpenAllTransactions={() => setIsTransactionsInfoModalOpen(true)}
           transactionsPool={transactionsPool}
           customization={customization?.trackingTxModal}
           executeTxAction={executeTxAction}

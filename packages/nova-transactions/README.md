@@ -16,7 +16,7 @@ This package provides the **View Layer** for TUWA's transaction tracking ecosyst
 
 ## ✨ Core Features
 
--   **🧩 Pre-built UI Suite:** A set of accessible components including `TrackingTxModal`, `WalletInfoModal`, and `ToastTransaction`, all managed internally by the `NovaProvider`.
+-   **🧩 Pre-built UI Suite:** A set of accessible components including `TrackingTxModal`, `TransactionsInfoModal`, and `ToastTransaction`, all managed internally by the `NovaProvider`.
 -   **🔌 Plug-and-Play Integration:** Once connected to your Pulsar store, the UI automatically reacts to all transaction state changes.
 -   **🌐 Internationalization (i18n):** Built-in support for multiple languages with easy overrides for all text content via the `labels` prop.
 -   **🎨 Highly Customizable:** Styled with `@tuwaio/nova-core` to be easily themed using CSS variables. Almost every sub-component can be replaced with your own implementation via the `customization` prop.

@@ -17,6 +17,7 @@ type CustomPlaceholderProps = { title: string; message: string };
  * Defines the customization options for the TransactionsHistory component.
  */
 export type TransactionsHistoryCustomization<T extends Transaction> = {
+  title?: string;
   classNames?: {
     listWrapper?: string;
   };
@@ -60,7 +61,7 @@ export function TransactionsHistory<T extends Transaction>({
   className,
   customization,
 }: TransactionsHistoryProps<T>) {
-  const { walletModal } = useLabels();
+  const { transactionsModal } = useLabels();
 
   // Memoize the filtered and sorted transactions to prevent re-computation on every render.
   const sortedTransactions = useMemo(() => {
@@ -77,8 +78,8 @@ export function TransactionsHistory<T extends Transaction>({
     if (!connectedWalletAddress) {
       return (
         <Placeholder
-          title={walletModal.history.connectWalletTitle}
-          message={walletModal.history.connectWalletMessage}
+          title={transactionsModal.history.connectWalletTitle}
+          message={transactionsModal.history.connectWalletMessage}
         />
       );
     }
@@ -100,15 +101,17 @@ export function TransactionsHistory<T extends Transaction>({
 
     return (
       <Placeholder
-        title={walletModal.history.noTransactionsTitle}
-        message={walletModal.history.noTransactionsMessage}
+        title={transactionsModal.history.noTransactionsTitle}
+        message={transactionsModal.history.noTransactionsMessage}
       />
     );
   };
 
   return (
     <div className={cn('flex flex-col gap-y-3', className)}>
-      <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{walletModal.history.title}</h3>
+      {customization?.title && (
+        <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{customization?.title}</h3>
+      )}
       {renderContent()}
     </div>
   );

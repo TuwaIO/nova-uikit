@@ -23,7 +23,7 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
     StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
-    WalletInfoButton?: ComponentType<CustomActionButtonProps>;
+    TxInfoButton?: ComponentType<CustomActionButtonProps>;
     SpeedUpButton?: ComponentType<CustomActionButtonProps>;
     CancelButton?: ComponentType<CustomActionButtonProps>;
   };
@@ -31,7 +31,7 @@ export type ToastTransactionCustomization<T extends Transaction> = {
 
 export type ToastTransactionProps<T extends Transaction> = {
   tx: T;
-  openWalletInfoModal?: () => void;
+  openTxInfoModal?: () => void;
   icon?: ReactNode;
   className?: string;
   customization?: ToastTransactionCustomization<T>;
@@ -61,7 +61,7 @@ const DefaultCancelButton = ({ onClick, children }: CustomActionButtonProps) => 
   </button>
 );
 
-const DefaultWalletInfoButton = ({ onClick, children }: CustomActionButtonProps) => (
+const DefaultTxInfoButton = ({ onClick, children }: CustomActionButtonProps) => (
   <button
     className="cursor-pointer rounded-md bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)] px-3 py-1 text-xs font-bold text-[var(--tuwa-text-on-accent)] shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)] active:scale-95"
     onClick={onClick}
@@ -76,7 +76,7 @@ const DefaultWalletInfoButton = ({ onClick, children }: CustomActionButtonProps)
  * It is highly customizable and leverages the adapter to show relevant actions like "Speed Up".
  */
 export function ToastTransaction<T extends Transaction>({
-  openWalletInfoModal,
+  openTxInfoModal,
   tx,
   icon,
   className,
@@ -114,7 +114,7 @@ export function ToastTransaction<T extends Transaction>({
     StatusBadge: CStatusBadge = TransactionStatusBadge,
     SpeedUpButton = DefaultSpeedUpButton,
     CancelButton = DefaultCancelButton,
-    WalletInfoButton = DefaultWalletInfoButton,
+    TxInfoButton = DefaultTxInfoButton,
   } = customization?.components ?? {};
 
   return (
@@ -145,9 +145,9 @@ export function ToastTransaction<T extends Transaction>({
               <CancelButton onClick={handleCancel}>{actions.cancel}</CancelButton>
             </div>
           ) : (
-            openWalletInfoModal &&
+            openTxInfoModal &&
             !!connectedWalletAddress && (
-              <WalletInfoButton onClick={openWalletInfoModal}>{toast.openWalletInfo}</WalletInfoButton>
+              <TxInfoButton onClick={openTxInfoModal}>{toast.openTransactionsInfo}</TxInfoButton>
             )
           )}
         </div>

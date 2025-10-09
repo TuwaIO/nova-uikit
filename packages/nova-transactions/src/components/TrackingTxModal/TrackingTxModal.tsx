@@ -24,7 +24,7 @@ import { StatusAwareText } from '../StatusAwareText';
 type CustomHeaderProps = { onClose: () => void; title: ReactNode };
 type CustomFooterProps = {
   onClose: () => void;
-  onOpenWalletInfo: () => void;
+  onOpenAllTransactions: () => void;
   onRetry?: () => void;
   onSpeedUp?: () => void;
   onCancel?: () => void;
@@ -53,7 +53,7 @@ export type TrackingTxModalProps<T extends Transaction> = Pick<
   'executeTxAction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
-  onOpenWalletInfo: () => void;
+  onOpenAllTransactions: () => void;
   className?: string;
   customization?: TrackingTxModalCustomization<T>;
 };
@@ -65,7 +65,7 @@ export type TrackingTxModalProps<T extends Transaction> = Pick<
 export function TrackingTxModal<T extends Transaction>({
   adapter,
   onClose,
-  onOpenWalletInfo,
+  onOpenAllTransactions,
   className,
   customization,
   transactionsPool,
@@ -208,7 +208,7 @@ export function TrackingTxModal<T extends Transaction>({
           {CustomFooter ? (
             <CustomFooter
               onClose={() => onClose(activeTx?.txKey)}
-              onOpenWalletInfo={onOpenWalletInfo}
+              onOpenAllTransactions={onOpenAllTransactions}
               isProcessing={isProcessing}
               isFailed={isFailed}
               canReplace={canReplace}
@@ -220,7 +220,7 @@ export function TrackingTxModal<T extends Transaction>({
           ) : (
             <DefaultFooter
               onClose={() => onClose(activeTx?.txKey)}
-              onOpenWalletInfo={onOpenWalletInfo}
+              onOpenAllTransactions={onOpenAllTransactions}
               isProcessing={isProcessing}
               isFailed={isFailed}
               canReplace={canReplace}
@@ -274,7 +274,7 @@ const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
 
 const DefaultFooter = ({
   onClose,
-  onOpenWalletInfo,
+  onOpenAllTransactions,
   isProcessing,
   onRetry,
   onSpeedUp,
@@ -304,12 +304,12 @@ const DefaultFooter = ({
       return (
         <button
           type="button"
-          onClick={onOpenWalletInfo}
+          onClick={onOpenAllTransactions}
           className="cursor-pointer rounded-md
                      bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)]
                      transition-colors hover:bg-[var(--tuwa-border-primary)]"
         >
-          {trackingModal.walletInfo}
+          {trackingModal.allTransactions}
         </button>
       );
     }
