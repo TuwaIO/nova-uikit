@@ -27,12 +27,7 @@ const defaultModalBackdropAnimation: Variants = {
   exit: { opacity: 0 },
 };
 
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & {
-    backdropAnimation?: Variants;
-  }
->(({ className, backdropAnimation, ...props }, ref) => (
+const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: Variants; className?: string }) => (
   <AnimatePresence>
     <motion.div
       variants={backdropAnimation ?? defaultModalBackdropAnimation}
@@ -42,14 +37,10 @@ const DialogOverlay = React.forwardRef<
       exit="exit"
       className="relative rounded-t-2xl sm:rounded-2xl overflow-hidden"
     >
-      <DialogPrimitive.Overlay
-        ref={ref}
-        className={cn('fixed inset-0 z-50 bg-black/55 backdrop-blur-sm backdrop-saturate-150', className)}
-        {...props}
-      />
+      <div className={cn('fixed inset-0 z-50 bg-black/55 backdrop-blur-sm backdrop-saturate-150', className)} />
     </motion.div>
   </AnimatePresence>
-));
+);
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
