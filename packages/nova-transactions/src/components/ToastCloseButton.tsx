@@ -32,12 +32,12 @@ export function ToastCloseButton({ closeToast }: ToastCloseButtonProps) {
       aria-label={actions.close}
       title={actions.close}
       className={cn(
-        'absolute top-2 right-2 cursor-pointer rounded-full p-1',
-        'text-[var(--tuwa-text-tertiary)] transition-colors',
-        'hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]',
+        'novatx:absolute novatx:top-2 novatx:right-2 novatx:cursor-pointer novatx:rounded-full novatx:p-1',
+        'novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors',
+        'novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
       )}
     >
-      <XMarkIcon className="h-5 w-5" />
+      <XMarkIcon className="novatx:h-5 novatx:w-5" />
     </button>
   );
 }

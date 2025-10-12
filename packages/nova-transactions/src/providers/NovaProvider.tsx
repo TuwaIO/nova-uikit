@@ -167,7 +167,7 @@ export function NovaProvider<T extends Transaction>({
           icon={false}
           closeButton={ToastCloseButton}
           containerId={toastContainerId}
-          toastClassName="!p-0 !bg-transparent !shadow-none !min-h-0"
+          toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
           {...toastProps}
         />
       )}

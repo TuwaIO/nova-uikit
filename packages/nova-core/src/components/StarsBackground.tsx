@@ -18,10 +18,11 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
       delay: Math.random() * 10,
       duration: 5 + Math.random() * 5,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
   return (
-    <div className="absolute inset-0 z-1 h-full w-full overflow-hidden">
+    <div className="novacore:absolute novacore:inset-0 novacore:z-1 novacore:h-full novacore:w-full novacore:overflow-hidden">
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <style>

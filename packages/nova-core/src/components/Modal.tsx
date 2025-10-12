@@ -35,9 +35,14 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
       animate="animate"
       initial="initial"
       exit="exit"
-      className="relative rounded-t-2xl sm:rounded-2xl overflow-hidden"
+      className="novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
     >
-      <div className={cn('fixed inset-0 z-50 bg-black/55 backdrop-blur-sm backdrop-saturate-150', className)} />
+      <div
+        className={cn(
+          'novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-black/55 novacore:backdrop-blur-sm novacore:backdrop-saturate-150',
+          className,
+        )}
+      />
     </motion.div>
   </AnimatePresence>
 );
@@ -57,14 +62,14 @@ const DialogContent = React.forwardRef<
       aria-describedby="tuwa:modal-content"
       ref={ref}
       className={cn(
-        'NovaNoScrolling fixed bottom-0 left-0 p-0 sm:bottom-auto sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] z-50 sm:p-4 outline-none',
+        'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
         className,
       )}
       {...props}
     >
       <motion.div
         layout
-        className="NovaNoScrolling relative overflow-hidden"
+        className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
         transition={{
           layout: {
             duration: 0.2,
@@ -79,12 +84,12 @@ const DialogContent = React.forwardRef<
             animate="animate"
             initial="initial"
             exit="exit"
-            className="NovaNoScrolling relative rounded-t-2xl sm:rounded-2xl overflow-hidden"
+            className="NovaNoScrolling novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
           >
             <div
               className={cn(
-                'NovaNoScrolling relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-t-2xl sm:rounded-2xl shadow-2xl',
-                'border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
+                'NovaCustomScrollNoPadding novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:gap-3 novacore:overflow-y-auto novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:shadow-2xl',
+                'novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)]',
               )}
             >
               {children}
@@ -101,8 +106,8 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   <div
     aria-describedby="tuwa:modal-header"
     className={cn(
-      'sticky flex top-0 z-11 w-full flex-row items-center justify-between',
-      'border-b border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] p-4',
+      'novacore:sticky novacore:flex novacore:top-0 novacore:z-11 novacore:w-full novacore:flex-row novacore:items-center novacore:justify-between',
+      'novacore:border-b novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)] novacore:p-4',
       className,
     )}
     {...props}
@@ -113,7 +118,10 @@ DialogHeader.displayName = 'DialogHeader';
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     aria-describedby="tuwa:modal-footer"
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn(
+      'novacore:flex novacore:flex-col-reverse novacore:sm:flex-row novacore:sm:justify-end novacore:sm:space-x-2',
+      className,
+    )}
     {...props}
   />
 );
@@ -126,7 +134,10 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     aria-describedby="tuwa:modal-title"
-    className={cn('text-lg font-bold leading-none tracking-tight text-[var(--tuwa-text-primary)] m-0', className)}
+    className={cn(
+      'novacore:text-lg novacore:font-bold novacore:leading-none novacore:tracking-tight novacore:text-[var(--tuwa-text-primary)] novacore:m-0',
+      className,
+    )}
     {...props}
   />
 ));
@@ -139,7 +150,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     aria-describedby="tuwa:modal-description"
     ref={ref}
-    className={cn('text-sm text-[var(--tuwa-text-secondary)]', className)}
+    className={cn('novacore:text-sm novacore:text-[var(--tuwa-text-secondary)]', className)}
     {...props}
   />
 ));

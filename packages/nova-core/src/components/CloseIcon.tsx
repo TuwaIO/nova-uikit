@@ -16,7 +16,10 @@ export const CloseIcon = React.forwardRef<SVGSVGElement, React.SVGAttributes<SVG
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn('h-5 w-5 text-[var(--tuwa-text-primary)] transition-colors', className)}
+      className={cn(
+        'novacore:h-5 novacore:w-5 novacore:text-[var(--tuwa-text-primary)] novacore:transition-colors',
+        className,
+      )}
       {...props}
     >
       <path d="M18 6 6 18" />

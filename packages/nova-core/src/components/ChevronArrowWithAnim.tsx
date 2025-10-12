@@ -18,7 +18,7 @@ export function ChevronArrowWithAnim({
       viewBox="0 0 24 24"
       strokeWidth={strokeWidth ?? 2}
       stroke="currentColor"
-      className={cn('w-4 h-4 text-[var(--tuwa-text-secondary)]', className)}
+      className={cn('novacore:w-4 novacore:h-4 novacore:text-[var(--tuwa-text-secondary)]', className)}
     >
       <AnimatePresence>
         {isOpen && (
@@ -43,7 +43,7 @@ export function ChevronArrowWithAnim({
             strokeLinecap="round"
             strokeLinejoin="round"
             d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            className="relative"
+            className="novacore:relative"
             variants={{
               hidden: { translateY: -3, scaleY: 0.8, opacity: 0 },
               visible: { translateY: 0, scaleY: 1, opacity: 1 },

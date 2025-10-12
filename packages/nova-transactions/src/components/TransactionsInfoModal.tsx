@@ -10,12 +10,8 @@ import { ComponentPropsWithoutRef, ComponentType } from 'react';
 import { NovaProviderProps, useLabels } from '../providers';
 import { TransactionsHistory, TransactionsHistoryProps } from './TransactionsHistory';
 
-// --- Prop Types for Customization ---
 type CustomHeaderProps = { closeModal: () => void };
 
-/**
- * Defines the customization options for the TransactionsInfoModal.
- */
 export type TransactionsInfoModalCustomization<T extends Transaction> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   classNames?: {
@@ -27,9 +23,6 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
   };
 };
 
-/**
- * Defines the core props for the TransactionsInfoModal.
- */
 export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   NovaProviderProps<T>,
   'adapter' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
@@ -39,9 +32,6 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   customization?: TransactionsInfoModalCustomization<T>;
 };
 
-/**
- * The default header component, customized for TUWA modal styles.
- */
 const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: string }) => {
   const { actions } = useLabels();
   return (
@@ -53,9 +43,9 @@ const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: strin
           type="button"
           onClick={closeModal}
           aria-label={actions.close}
-          className="cursor-pointer rounded-full p-1
-                     text-[var(--tuwa-text-tertiary)] transition-colors
-                     hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+          className="novatx:cursor-pointer novatx:rounded-full novatx:p-1
+                     novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors
+                     novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]"
         >
           <CloseIcon />
         </button>
@@ -64,9 +54,6 @@ const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: strin
   );
 };
 
-/**
- * The main modal component for displaying wallet information and transaction history.
- */
 export function TransactionsInfoModal<T extends Transaction>({
   isOpen,
   setIsOpen,
@@ -85,10 +72,15 @@ export function TransactionsInfoModal<T extends Transaction>({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
       <DialogContent
-        className={cn('w-full sm:max-w-2xl', customization?.modalProps?.className)}
+        className={cn('novatx:w-full novatx:sm:max-w-2xl', customization?.modalProps?.className)}
         {...customization?.modalProps}
       >
-        <div className={cn('relative max-h-[95dvh] w-full flex flex-col', customization?.classNames?.contentWrapper)}>
+        <div
+          className={cn(
+            'novatx:relative novatx:max-h-[95dvh] novatx:w-full novatx:flex novatx:flex-col',
+            customization?.classNames?.contentWrapper,
+          )}
+        >
           {CustomHeader ? (
             <CustomHeader closeModal={closeModal} />
           ) : (

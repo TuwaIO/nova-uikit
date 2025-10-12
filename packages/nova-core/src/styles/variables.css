@@ -1,6 +1,6 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme) theme(inline);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss/theme.css" layer(theme) prefix(novacore);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(novacore);
 
 :root {
   --tuwa-success-bg: theme('colors.green.100');
@@ -120,5 +120,20 @@
     0%,to{
       padding-right: 2px;
     }
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 4px;
+    background-color: var(--tuwa-border-primary);
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar-thumb {
+    background-color: var(--tuwa-text-secondary);
+    border-radius: 4px;
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tuwa-text-primary);
   }
 }

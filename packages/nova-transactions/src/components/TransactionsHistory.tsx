@@ -9,13 +9,8 @@ import { ComponentType, useMemo } from 'react';
 import { NovaProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
-// --- Types for Customization & Props ---
-
 type CustomPlaceholderProps = { title: string; message: string };
 
-/**
- * Defines the customization options for the TransactionsHistory component.
- */
 export type TransactionsHistoryCustomization<T extends Transaction> = {
   title?: string;
   classNames?: {
@@ -27,10 +22,6 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
   };
 };
 
-/**
- * Defines the props for the TransactionsHistory component.
- * @template T - The transaction type.
- */
 export type TransactionsHistoryProps<T extends Transaction> = Pick<
   NovaProviderProps<T>,
   'adapter' | 'transactionsPool' | 'connectedWalletAddress'
@@ -39,21 +30,15 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   customization?: TransactionsHistoryCustomization<T>;
 };
 
-// --- Default Sub-Components ---
-
 function HistoryPlaceholder({ title, message, className }: CustomPlaceholderProps & { className?: string }) {
   return (
-    <div className={cn('rounded-lg bg-[var(--tuwa-bg-muted)] p-8 text-center', className)}>
-      <h4 className="font-semibold text-[var(--tuwa-text-primary)]">{title}</h4>
-      <p className="mt-1 text-sm text-[var(--tuwa-text-secondary)]">{message}</p>
+    <div className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}>
+      <h4 className="novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]">{title}</h4>
+      <p className="novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]">{message}</p>
     </div>
   );
 }
 
-/**
- * A component that displays a scrollable list of transactions for the connected wallet.
- * It handles states for when a wallet is not connected or when the history is empty.
- */
 export function TransactionsHistory<T extends Transaction>({
   adapter,
   connectedWalletAddress,
@@ -63,15 +48,12 @@ export function TransactionsHistory<T extends Transaction>({
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
 
-  // Memoize the filtered and sorted transactions to prevent re-computation on every render.
   const sortedTransactions = useMemo(() => {
     if (!connectedWalletAddress) return [];
     const transactions = selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress);
-    // Sort by timestamp, newest first.
     return transactions.sort((a, b) => (b.localTimestamp ?? 0) - (a.localTimestamp ?? 0));
   }, [transactionsPool, connectedWalletAddress]);
 
-  // Use custom components if provided, otherwise fall back to the defaults.
   const { Placeholder = HistoryPlaceholder, HistoryItem = TransactionHistoryItem } = customization?.components ?? {};
 
   const renderContent = () => {
@@ -88,7 +70,7 @@ export function TransactionsHistory<T extends Transaction>({
       return (
         <div
           className={cn(
-            'NovaCustomScroll max-h-[400px] overflow-y-auto rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
+            'NovaCustomScroll novatx:max-h-[400px] novatx:overflow-y-auto novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
@@ -108,9 +90,11 @@ export function TransactionsHistory<T extends Transaction>({
   };
 
   return (
-    <div className={cn('flex flex-col gap-y-3', className)}>
+    <div className={cn('novatx:flex novatx:flex-col novatx:gap-y-3', className)}>
       {customization?.title && (
-        <h3 className="text-lg font-bold text-[var(--tuwa-text-primary)]">{customization?.title}</h3>
+        <h3 className="novatx:text-lg novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
+          {customization?.title}
+        </h3>
       )}
       {renderContent()}
     </div>

@@ -15,7 +15,6 @@ import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
 
-// --- Prop Types for Customization ---
 type CustomActionButtonProps = { onClick: () => void; children: ReactNode };
 
 export type ToastTransactionCustomization<T extends Transaction> = {
@@ -39,13 +38,11 @@ export type ToastTransactionProps<T extends Transaction> = {
   toastProps?: ToastContainerProps;
 } & Pick<NovaProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
 
-// --- Default Sub-Components ---
-
 const DefaultSpeedUpButton = ({ onClick, children }: CustomActionButtonProps) => (
   <button
     onClick={onClick}
     type="button"
-    className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
+    className="novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
   >
     {children}
   </button>
@@ -55,7 +52,7 @@ const DefaultCancelButton = ({ onClick, children }: CustomActionButtonProps) => 
   <button
     onClick={onClick}
     type="button"
-    className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
+    className="novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80"
   >
     {children}
   </button>
@@ -63,7 +60,7 @@ const DefaultCancelButton = ({ onClick, children }: CustomActionButtonProps) => 
 
 const DefaultTxInfoButton = ({ onClick, children }: CustomActionButtonProps) => (
   <button
-    className="cursor-pointer rounded-md bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)] px-3 py-1 text-xs font-bold text-[var(--tuwa-text-on-accent)] shadow-lg transition-all duration-200 ease-in-out hover:shadow-xl hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)] active:scale-95"
+    className="novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95"
     onClick={onClick}
     type="button"
   >
@@ -71,10 +68,6 @@ const DefaultTxInfoButton = ({ onClick, children }: CustomActionButtonProps) => 
   </button>
 );
 
-/**
- * A composite component that renders the content for a transaction toast notification.
- * It is highly customizable and leverages the adapter to show relevant actions like "Speed Up".
- */
 export function ToastTransaction<T extends Transaction>({
   openTxInfoModal,
   tx,
@@ -88,8 +81,6 @@ export function ToastTransaction<T extends Transaction>({
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
-  // A transaction can be replaced only if it's a standard on-chain transaction (not Safe or Gelato),
-  // is pending, the adapter supports the actions, and it belongs to the connected wallet.
   const canBeReplaced = !!(
     tx.tracker === 'ethereum' &&
     tx.pending &&
@@ -98,7 +89,6 @@ export function ToastTransaction<T extends Transaction>({
     tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase()
   );
 
-  // --- Action Handlers ---
   const handleCancel = () => {
     if (canBeReplaced) foundAdapter.cancelTxAction!(tx);
   };
@@ -107,7 +97,6 @@ export function ToastTransaction<T extends Transaction>({
     if (canBeReplaced) foundAdapter.speedUpTxAction!(tx);
   };
 
-  // --- Component Overrides ---
   const {
     StatusAwareText: CStatusAwareText = StatusAwareText,
     TransactionKey: CTransactionKey = TransactionKey,
@@ -118,29 +107,32 @@ export function ToastTransaction<T extends Transaction>({
   } = customization?.components ?? {};
 
   return (
-    <div className={cn('flex w-full flex-col gap-3 rounded-lg bg-[var(--tuwa-bg-primary)] p-4 shadow-md', className)}>
-      {/* --- Header: Icon + Title/Description --- */}
-      <div className="flex items-center gap-3">
+    <div
+      className={cn(
+        'novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        className,
+      )}
+    >
+      <div className="novatx:flex novatx:items-center novatx:gap-3">
         <div
-          className="w-[40px] flex-shrink-0 [&>img]:w-full [&>img]:h-auto"
+          className="novatx:w-[40px] novatx:flex-shrink-0 [&>img]:novatx:w-full [&>img]:novatx:h-auto"
           title={getChainName(setChainId(tx.chainId))}
         >
           {icon ?? <Web3Icon chainId={setChainId(tx.chainId)} />}
         </div>
-        <div className="flex-1">
+        <div className="novatx:flex-1">
           <CStatusAwareText txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />
           <CStatusAwareText txStatus={tx.status} source={tx.description} variant="description" />
         </div>
       </div>
 
-      {/* --- Body: Hashes + Status/Actions --- */}
       <div>
         <CTransactionKey adapter={adapter} tx={tx} variant="toast" />
-        <div className="mt-3 flex items-center justify-between">
+        <div className="novatx:mt-3 novatx:flex novatx:items-center novatx:justify-between">
           <CStatusBadge tx={tx} />
 
           {canBeReplaced ? (
-            <div className="flex items-center gap-4">
+            <div className="novatx:flex novatx:items-center novatx:gap-4">
               <SpeedUpButton onClick={handleSpeedUp}>{actions.speedUp}</SpeedUpButton>
               <CancelButton onClick={handleCancel}>{actions.cancel}</CancelButton>
             </div>

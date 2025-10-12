@@ -8,74 +8,67 @@ import { ComponentType, useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
-// --- Sub-component: Step ---
-
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';
 export type StepProps = { status: StepStatus; label: string; isFirst?: boolean; isLast?: boolean };
 
-/**
- * A configuration map for styling each step based on its status.
- * Defined outside the component to prevent re-creation.
- */
 const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; border: string; fill: string; pulse?: string }> = {
   completed: {
-    line: 'bg-[var(--tuwa-success-icon)]',
-    border: 'border-[var(--tuwa-success-icon)]',
-    fill: 'bg-[var(--tuwa-success-icon)]',
+    line: 'novatx:bg-[var(--tuwa-success-icon)]',
+    border: 'novatx:border-[var(--tuwa-success-icon)]',
+    fill: 'novatx:bg-[var(--tuwa-success-icon)]',
   },
   error: {
-    line: 'bg-[var(--tuwa-error-icon)]',
-    border: 'border-[var(--tuwa-error-icon)]',
-    fill: 'bg-[var(--tuwa-error-icon)]',
+    line: 'novatx:bg-[var(--tuwa-error-icon)]',
+    border: 'novatx:border-[var(--tuwa-error-icon)]',
+    fill: 'novatx:bg-[var(--tuwa-error-icon)]',
   },
   replaced: {
-    line: 'bg-[var(--tuwa-info-icon)]',
-    border: 'border-[var(--tuwa-info-icon)]',
-    fill: 'bg-[var(--tuwa-info-icon)]',
+    line: 'novatx:bg-[var(--tuwa-info-icon)]',
+    border: 'novatx:border-[var(--tuwa-info-icon)]',
+    fill: 'novatx:bg-[var(--tuwa-info-icon)]',
   },
   active: {
-    line: 'bg-[var(--tuwa-pending-icon)]',
-    border: 'border-[var(--tuwa-pending-icon)]',
-    fill: 'bg-transparent',
-    pulse: 'bg-[var(--tuwa-pending-icon)]',
+    line: 'novatx:bg-[var(--tuwa-pending-icon)]',
+    border: 'novatx:border-[var(--tuwa-pending-icon)]',
+    fill: 'novatx:bg-transparent',
+    pulse: 'novatx:bg-[var(--tuwa-pending-icon)]',
   },
   inactive: {
-    line: 'bg-[var(--tuwa-border-primary)]',
-    border: 'border-[var(--tuwa-border-primary)]',
-    fill: 'bg-transparent',
+    line: 'novatx:bg-[var(--tuwa-border-primary)]',
+    border: 'novatx:border-[var(--tuwa-border-primary)]',
+    fill: 'novatx:bg-transparent',
   },
 };
 
-/**
- * Renders a single step in the progress indicator.
- */
 function Step({ status, label, isFirst = false }: StepProps) {
   const styles = STEP_STYLE_CONFIG[status];
 
   const renderIcon = () => {
     switch (status) {
       case 'completed':
-        return <CheckIcon className="h-3 w-3 text-white" />;
+        return <CheckIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
       case 'error':
-        return <ExclamationTriangleIcon className="h-3 w-3 text-white" />;
+        return <ExclamationTriangleIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
       case 'replaced':
-        return <ArrowPathIcon className="h-3 w-3 text-white" />;
+        return <ArrowPathIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
       case 'active':
-        return <div className={cn('h-2 w-2 animate-pulse rounded-full', styles.pulse)} />;
+        return <div className={cn('novatx:h-2 novatx:w-2 novatx:animate-pulse novatx:rounded-full', styles.pulse)} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="relative flex min-w-[80px] flex-1 flex-col items-center">
-      {/* Connecting line */}
-      {!isFirst && <div className={cn('absolute right-1/2 top-[10px] h-0.5 w-full', styles.line)} />}
+    <div className="novatx:relative novatx:flex novatx:min-w-[80px] novatx:flex-1 novatx:flex-col novatx:items-center">
+      {!isFirst && (
+        <div
+          className={cn('novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full', styles.line)}
+        />
+      )}
 
-      {/* Circle and Icon */}
       <div
         className={cn(
-          'relative z-10 flex h-5 w-5 items-center justify-center rounded-full border-2',
+          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border-2',
           styles.border,
           styles.fill,
         )}
@@ -83,11 +76,12 @@ function Step({ status, label, isFirst = false }: StepProps) {
         {renderIcon()}
       </div>
 
-      {/* Label */}
       <span
         className={cn(
-          'mt-2 text-center text-xs',
-          status !== 'inactive' ? 'font-semibold text-[var(--tuwa-text-primary)]' : 'text-[var(--tuwa-text-secondary)]',
+          'novatx:mt-2 novatx:text-center novatx:text-xs',
+          status !== 'inactive'
+            ? 'novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
+            : 'novatx:text-[var(--tuwa-text-secondary)]',
         )}
       >
         {label}
@@ -95,8 +89,6 @@ function Step({ status, label, isFirst = false }: StepProps) {
     </div>
   );
 }
-
-// --- Main Component: TxProgressIndicator ---
 
 export interface TxProgressIndicatorProps {
   isProcessing?: boolean;
@@ -107,9 +99,6 @@ export interface TxProgressIndicatorProps {
   StepComponent?: ComponentType<StepProps>;
 }
 
-/**
- * A 3-step progress indicator that visually represents the lifecycle of a transaction.
- */
 export function TxProgressIndicator({
   isProcessing,
   isSucceed,
@@ -120,17 +109,14 @@ export function TxProgressIndicator({
 }: TxProgressIndicatorProps) {
   const { trackingModal, statuses } = useLabels();
 
-  // Memoize the steps array to avoid re-calculating on every render.
   const steps = useMemo((): StepProps[] => {
     const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
-      if (stepIndex === 1) return 'completed'; // "Created" is always complete
+      if (stepIndex === 1) return 'completed';
       if (stepIndex === 2) {
-        // "Processing"
         if (isSucceed || isFailed || isReplaced) return 'completed';
         if (isProcessing) return 'active';
       }
       if (stepIndex === 3) {
-        // "Final"
         if (isSucceed) return 'completed';
         if (isFailed) return 'error';
         if (isReplaced) return 'replaced';
@@ -155,7 +141,7 @@ export function TxProgressIndicator({
   }, [isProcessing, isSucceed, isFailed, isReplaced, trackingModal, statuses]);
 
   return (
-    <div className={cn('flex w-full items-start px-4 pt-2 pb-1', className)}>
+    <div className={cn('novatx:flex novatx:w-full novatx:items-start novatx:px-4 novatx:pt-2 novatx:pb-1', className)}>
       {steps.map((stepProps, index) => (
         <StepComponent key={index} {...stepProps} />
       ))}

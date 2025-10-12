@@ -35,9 +35,8 @@ type CustomFooterProps = {
 };
 
 export type TrackingTxModalCustomization<T extends Transaction> = {
-  // Use the new DialogContent type
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
-  motionProps?: MotionProps; // Kept for API contract, but unused in default render
+  motionProps?: MotionProps;
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
     Footer?: ComponentType<CustomFooterProps>;
@@ -58,10 +57,6 @@ export type TrackingTxModalProps<T extends Transaction> = Pick<
   customization?: TrackingTxModalCustomization<T>;
 };
 
-/**
- * A detailed modal that displays the real-time status and lifecycle of a transaction.
- * It opens automatically for transactions initiated with `withTrackedModal: true`.
- */
 export function TrackingTxModal<T extends Transaction>({
   adapter,
   onClose,
@@ -73,17 +68,14 @@ export function TrackingTxModal<T extends Transaction>({
   initialTx,
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
-  // --- State Derivation ---
   const activeTx = useMemo(
     () => (initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined),
     [transactionsPool, initialTx],
   );
 
   const txToDisplay = activeTx ?? initialTx;
-
   const isOpen = (initialTx?.withTrackedModal && !activeTx) || (activeTx?.isTrackedModalOpen ?? false);
 
-  // --- Derived Status Flags ---
   const { isProcessing, isSucceed, isFailed, isReplaced } = useMemo(() => {
     const txStatus = activeTx?.status;
     const isInitializing = initialTx?.isInitializing ?? false;
@@ -96,7 +88,6 @@ export function TrackingTxModal<T extends Transaction>({
     };
   }, [activeTx, initialTx]);
 
-  // --- Adapter and Action Logic ---
   const foundAdapter = useMemo(
     () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined),
     [txToDisplay, adapter],
@@ -110,7 +101,6 @@ export function TrackingTxModal<T extends Transaction>({
     activeTx.tracker === 'ethereum'
   );
 
-  // --- Action Handlers ---
   const handleRetry = () => {
     if (!canRetry || !foundAdapter?.retryTxAction) return;
 
@@ -132,14 +122,15 @@ export function TrackingTxModal<T extends Transaction>({
     };
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
+
   const handleCancel = () => {
     if (canReplace && activeTx) foundAdapter.cancelTxAction!(activeTx);
   };
+
   const handleSpeedUp = () => {
     if (canReplace && activeTx) foundAdapter.speedUpTxAction!(activeTx);
   };
 
-  // --- Customization & Rendering ---
   const CustomHeader = customization?.components?.Header;
   const CustomFooter = customization?.components?.Footer;
   const CustomStatusVisual = customization?.components?.StatusVisual;
@@ -152,17 +143,17 @@ export function TrackingTxModal<T extends Transaction>({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
       <DialogContent
-        className={cn('w-full sm:max-w-md', customization?.modalProps?.className)}
+        className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
         {...customization?.modalProps}
       >
-        <div className={cn('relative flex w-full flex-col', className)}>
+        <div className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', className)}>
           {CustomHeader ? (
             <CustomHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
           ) : (
             <DefaultHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
           )}
 
-          <main className="flex flex-col gap-4 p-4">
+          <main className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
             {CustomStatusVisual ? (
               <CustomStatusVisual
                 isProcessing={isProcessing}
@@ -236,8 +227,6 @@ export function TrackingTxModal<T extends Transaction>({
   );
 }
 
-// --- Default Sub-Components ---
-
 function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
   return (
     <StatusAwareText
@@ -245,7 +234,7 @@ function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
       source={tx.title}
       fallback={tx.type}
       variant="title"
-      className="text-lg"
+      className="novatx:text-lg"
     />
   );
 }
@@ -255,15 +244,14 @@ const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   return (
     <DialogHeader>
       <DialogTitle>{title}</DialogTitle>
-
       <DialogClose asChild>
         <button
           type="button"
           onClick={() => onClose()}
           aria-label={actions.close}
-          className="cursor-pointer rounded-full p-1
-                     text-[var(--tuwa-text-tertiary)] transition-colors
-                     hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+          className="novatx:cursor-pointer novatx:rounded-full novatx:p-1
+                   novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors
+                   novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]"
         >
           <CloseIcon />
         </button>
@@ -291,10 +279,10 @@ const DefaultFooter = ({
         <button
           type="button"
           onClick={onRetry}
-          className="cursor-pointer rounded-t-md sm:rounded-md
-                     bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)]
-                     px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity
-                     hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)]"
+          className="novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md
+                   novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)]
+                   novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity
+                   novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]"
         >
           {trackingModal.retry}
         </button>
@@ -305,9 +293,9 @@ const DefaultFooter = ({
         <button
           type="button"
           onClick={onOpenAllTransactions}
-          className="cursor-pointer rounded-md
-                     bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)]
-                     transition-colors hover:bg-[var(--tuwa-border-primary)]"
+          className="novatx:cursor-pointer novatx:rounded-md
+                   novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]
+                   novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]"
         >
           {trackingModal.allTransactions}
         </button>
@@ -318,40 +306,40 @@ const DefaultFooter = ({
 
   return (
     <footer
-      className="flex w-full items-center justify-between
-                       border-t border-[var(--tuwa-border-primary)] p-4"
+      className="novatx:flex novatx:w-full novatx:items-center novatx:justify-between
+                     novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:p-4"
     >
-      <div className="flex items-center gap-4">
+      <div className="novatx:flex novatx:items-center novatx:gap-4">
         {canReplace && onSpeedUp && onCancel && (
           <>
             <button
               type="button"
               onClick={onSpeedUp}
-              className="cursor-pointer text-sm font-medium
-                         text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
+              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
+                       novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
             >
               {actions.speedUp}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="cursor-pointer text-sm font-medium
-                         text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
+              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
+                       novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80"
             >
               {actions.cancel}
             </button>
           </>
         )}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="novatx:flex novatx:items-center novatx:gap-3">
         <MainActionButton />
         <button
           type="button"
           onClick={onClose}
           disabled={isProcessing && !canReplace}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold
-                     text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]
-                     disabled:cursor-not-allowed disabled:opacity-50"
+          className="novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold
+                   novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]
+                   novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50"
         >
           {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
         </button>

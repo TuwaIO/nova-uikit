@@ -8,9 +8,6 @@ import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 
 import { useLabels } from '../providers';
 
-/**
- * Defines the props for the HashLink component.
- */
 export type HashLinkProps = {
   /** The full hash string to display and copy (e.g., a transaction hash or wallet address). */
   hash: string;
@@ -24,61 +21,56 @@ export type HashLinkProps = {
   className?: string;
 };
 
-/**
- * A component to display a hash string with an optional label, a link to a block explorer,
- * and a copy-to-clipboard button. It automatically ellipsizes the hash for readability.
- */
 export function HashLink({ label, hash, explorerUrl, variant = 'default', className }: HashLinkProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
   const containerClasses = cn(
-    'flex items-center justify-between',
+    'novatx:flex novatx:items-center novatx:justify-between',
     {
-      'text-sm': variant === 'default',
-      'text-xs': variant === 'compact',
+      'novatx:text-sm': variant === 'default',
+      'novatx:text-xs': variant === 'compact',
     },
     className,
   );
 
-  const labelClasses = cn('pr-1', {
-    'font-bold text-[var(--tuwa-text-primary)]': variant === 'default',
-    'font-medium text-[var(--tuwa-text-secondary)]': variant === 'compact',
+  const labelClasses = cn('novatx:pr-1', {
+    'novatx:font-bold novatx:text-[var(--tuwa-text-primary)]': variant === 'default',
+    'novatx:font-medium novatx:text-[var(--tuwa-text-secondary)]': variant === 'compact',
   });
 
-  // The ellipsized hash content, memoized for clarity.
-  const hashContent = <span className="font-mono">{textCenterEllipsis(hash, 5, 5)}</span>;
+  const hashContent = <span className="novatx:font-mono">{textCenterEllipsis(hash, 5, 5)}</span>;
 
   return (
     <div className={containerClasses}>
       {label && <span className={labelClasses}>{label}:</span>}
-      <div className="flex items-center gap-x-2">
+      <div className="novatx:flex novatx:items-center novatx:gap-x-2">
         {explorerUrl ? (
           <a
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-x-1 text-[var(--tuwa-text-accent)] transition-colors hover:underline"
+            className="novatx:flex novatx:items-center novatx:gap-x-1 novatx:text-[var(--tuwa-text-accent)] novatx:transition-colors novatx:hover:underline"
             title={actions.viewOnExplorer}
             aria-label={actions.viewOnExplorer}
           >
             {hashContent}
-            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+            <ArrowTopRightOnSquareIcon className="novatx:h-4 novatx:w-4" />
           </a>
         ) : (
-          <span className="text-[var(--tuwa-text-primary)]">{hashContent}</span>
+          <span className="novatx:text-[var(--tuwa-text-primary)]">{hashContent}</span>
         )}
         <button
           type="button"
           onClick={() => copy(hash)}
-          className="cursor-pointer text-[var(--tuwa-text-tertiary)] transition-colors hover:text-[var(--tuwa-text-secondary)]"
+          className="novatx:cursor-pointer novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:text-[var(--tuwa-text-secondary)]"
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : actions.copy}
         >
           {isCopied ? (
-            <CheckIcon className="h-4 w-4 text-[var(--tuwa-success-icon)]" />
+            <CheckIcon className="novatx:h-4 novatx:w-4 novatx:text-[var(--tuwa-success-icon)]" />
           ) : (
-            <DocumentDuplicateIcon className="h-4 w-4" />
+            <DocumentDuplicateIcon className="novatx:h-4 novatx:w-4" />
           )}
         </button>
       </div>
