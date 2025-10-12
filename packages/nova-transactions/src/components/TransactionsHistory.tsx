@@ -88,7 +88,7 @@ export function TransactionsHistory<T extends Transaction>({
       return (
         <div
           className={cn(
-            'max-h-[400px] overflow-y-auto rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
+            'NovaCustomScroll max-h-[400px] overflow-y-auto rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
