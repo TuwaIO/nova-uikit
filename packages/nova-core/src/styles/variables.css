@@ -81,3 +81,44 @@
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');
 }
+
+.Toastify {
+  pointer-events: auto;
+}
+
+.Toastify__toast {
+  padding: 0;
+  background: transparent;
+}
+
+@media (hover: hover) {
+  .NovaNoScrolling {
+    scrollbar-width: none;
+  }
+
+  .NovaCustomScroll {
+    animation: scrolling forwards;
+    animation-timeline: scroll(self);
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 4px;
+    background-color: var(--tuwa-border-primary);
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar-thumb {
+    background-color: var(--tuwa-text-secondary);
+    border-radius: 4px;
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tuwa-text-primary);
+  }
+
+  @keyframes scrolling {
+    0%,to{
+      padding-right: 2px;
+    }
+  }
+}
