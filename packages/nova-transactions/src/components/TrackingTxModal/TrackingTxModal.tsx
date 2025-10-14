@@ -123,12 +123,14 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
+  const isWithActions = canReplace && activeTx && ['phantom', 'metamask'].includes(activeTx?.walletType.split(':')[1]);
+
   const handleCancel = () => {
-    if (canReplace && activeTx) foundAdapter.cancelTxAction!(activeTx);
+    if (isWithActions) foundAdapter.cancelTxAction!(activeTx);
   };
 
   const handleSpeedUp = () => {
-    if (canReplace && activeTx) foundAdapter.speedUpTxAction!(activeTx);
+    if (isWithActions) foundAdapter.speedUpTxAction!(activeTx);
   };
 
   const CustomHeader = customization?.components?.Header;
@@ -204,8 +206,8 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={canReplace ? handleSpeedUp : undefined}
-              onCancel={canReplace ? handleCancel : undefined}
+              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onCancel={isWithActions ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
             />
           ) : (
@@ -216,8 +218,8 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={canReplace ? handleSpeedUp : undefined}
-              onCancel={canReplace ? handleCancel : undefined}
+              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onCancel={isWithActions ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
             />
           )}

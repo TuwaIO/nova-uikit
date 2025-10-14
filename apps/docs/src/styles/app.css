@@ -1,2 +1,2 @@
-@import "tailwindcss";
 @import '@tuwaio/nova-transactions/dist/index.css';
+@import "tailwindcss";

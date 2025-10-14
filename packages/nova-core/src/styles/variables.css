@@ -137,3 +137,7 @@
     background-color: var(--tuwa-text-primary);
   }
 }
+
+.NovaModalOpen {
+  overflow: hidden;
+}

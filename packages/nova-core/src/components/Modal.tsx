@@ -27,25 +27,37 @@ const defaultModalBackdropAnimation: Variants = {
   exit: { opacity: 0 },
 };
 
-const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: Variants; className?: string }) => (
-  <AnimatePresence>
-    <motion.div
-      variants={backdropAnimation ?? defaultModalBackdropAnimation}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-      animate="animate"
-      initial="initial"
-      exit="exit"
-      className="novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
-    >
-      <div
-        className={cn(
-          'novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-black/55 novacore:backdrop-blur-sm novacore:backdrop-saturate-150',
-          className,
-        )}
-      />
-    </motion.div>
-  </AnimatePresence>
-);
+const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: Variants; className?: string }) => {
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.document.body.classList.add('NovaModalOpen');
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.document.body.classList.remove('NovaModalOpen');
+      }
+    };
+  }, []);
+  return (
+    <AnimatePresence>
+      <motion.div
+        variants={backdropAnimation ?? defaultModalBackdropAnimation}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+        animate="animate"
+        initial="initial"
+        exit="exit"
+        className="novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
+      >
+        <div
+          className={cn(
+            'novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-black/55 novacore:backdrop-blur-sm novacore:backdrop-saturate-150',
+            className,
+          )}
+        />
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
