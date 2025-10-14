@@ -123,7 +123,7 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
-  const isWithActions = canReplace && activeTx && ['phantom', 'metamask'].includes(activeTx?.walletType.split(':')[1]);
+  const isWithActions = canReplace && activeTx && ['metamask'].includes(activeTx?.walletType.split(':')[1]);
 
   const handleCancel = () => {
     if (isWithActions) foundAdapter.cancelTxAction!(activeTx);

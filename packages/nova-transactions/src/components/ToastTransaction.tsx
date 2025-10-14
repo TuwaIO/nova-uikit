@@ -87,7 +87,7 @@ export function ToastTransaction<T extends Transaction>({
     foundAdapter?.speedUpTxAction &&
     foundAdapter?.cancelTxAction &&
     tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() &&
-    ['phantom', 'metamask'].includes(tx.walletType.split(':')[1])
+    ['metamask'].includes(tx.walletType.split(':')[1])
   );
 
   const handleCancel = () => {
