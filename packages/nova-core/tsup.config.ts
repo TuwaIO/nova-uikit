@@ -15,5 +15,6 @@ export default defineConfig([
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,
       };
     },
+    external: ['@radix-ui/react-dialog', 'clsx', 'framer-motion', 'react', 'tailwind-merge'],
   },
 ]);
