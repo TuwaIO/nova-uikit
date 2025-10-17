@@ -7,7 +7,7 @@
  * Represents the set of labels used for various UI elements and features in a Tuwa-based application.
  * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
-export type TuwaLabels = {
+export type NovaTransactionsLabels = {
   /** Labels for the main wallet information modal. */
   transactionsModal: {
     history: {

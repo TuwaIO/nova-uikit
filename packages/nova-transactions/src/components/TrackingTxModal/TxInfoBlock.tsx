@@ -11,7 +11,7 @@ import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/puls
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
-import { NovaProviderProps, useLabels } from '../../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../../providers';
 import { HashLink } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
@@ -30,7 +30,7 @@ export type TxInfoBlockProps<T extends Transaction> = {
   tx: T | InitialTransaction;
   className?: string;
   customization?: TxInfoBlockCustomization<T>;
-} & Pick<NovaProviderProps<T>, 'adapter'>;
+} & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Component ---
 function DefaultInfoRow({ label, value }: CustomInfoRowProps) {

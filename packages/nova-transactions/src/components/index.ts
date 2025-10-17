@@ -1,6 +1,5 @@
 export * from './HashLink';
 export * from './StatusAwareText';
-export * from './ToastCloseButton';
 export * from './ToastTransaction';
 export * from './TrackingTxModal';
 export * from './TransactionHistoryItem';

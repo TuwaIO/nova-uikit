@@ -1,10 +1,10 @@
-# NovaProvider
+# NovaTransactionsProvider
 
-The **NovaProvider** is the centerpiece of the `@tuwaio/nova-transactions` library. It's a comprehensive, all-in-one solution that orchestrates the entire transaction tracking UI experience in your dApp. 🎯
+The **NovaTransactionsProvider** is the centerpiece of the `@tuwaio/nova-transactions` library. It's a comprehensive, all-in-one solution that orchestrates the entire transaction tracking UI experience in your dApp. 🎯
 
-## What is NovaProvider?
+## What is NovaTransactionsProvider?
 
-`NovaProvider` is a powerful React component that combines all transaction tracking UI features into a single, easy-to-use instance. It acts as the central coordinator for:
+`NovaTransactionsProvider` is a powerful React component that combines all transaction tracking UI features into a single, easy-to-use instance. It acts as the central coordinator for:
 
 -   🍞 **Smart toast notifications** with live updates.
 -   📱 **An interactive modal** for detailed transaction progress tracking.
@@ -18,13 +18,13 @@ Think of it as your dApp's transaction UI control center: include it **once** in
 
 ## Setup and Usage
 
-To use the provider, you first need to create the Pulsar store using the EVM adapter (in example) or any other and a custom hook, as shown in `txTrackingHooks.tsx`. This setup allows you to pass the store's state and functions to the NovaProvider. Then, you can use the `NovaProvider` as a standalone component in your root layout.
+To use the provider, you first need to create the Pulsar store using the EVM adapter (in example) or any other and a custom hook, as shown in `txTrackingHooks.tsx`. This setup allows you to pass the store's state and functions to the NovaTransactionsProvider. Then, you can use the `NovaTransactionsProvider` as a standalone component in your root layout.
 
 ```tsx
 // src/hooks/txTrackingHooks.tsx
 'use client';
 
-import { createBoundedUseStore, createPulsarStore } from '@tuwaio/pulsar-core';
+import { createBoundedUseStore, createPulsarStore, Transaction } from '@tuwaio/pulsar-core';
 import { evmAdapter } from '@tuwaio/pulsar-evm';
 
 import { appChains, config } from '@/configs/wagmiConfig';
@@ -53,15 +53,15 @@ export const usePulsarStore = createBoundedUseStore(
 ```
 
 ```tsx
-// src/providers/NovaProvider.tsx
-import { NovaProvider as NP } from '@tuwaio/nova-transactions/providers';
+// src/providers/NovaTransactionsProvider.tsx
+import { NovaTransactionsProvider as NP } from '@tuwaio/nova-transactions/providers';
 import { TransactionAdapter } from '@tuwaio/pulsar-core';
 import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
 import { useAccount } from 'wagmi';
 
 import { usePulsarStore } from '@/hooks/txTrackingHooks';
 
-export function NovaProvider() {
+export function NovaTransactionsProvider() {
   const transactionsPool = usePulsarStore((state) => state.transactionsPool);
   const initialTx = usePulsarStore((state) => state.initialTx);
   const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
@@ -99,7 +99,7 @@ import { WagmiProvider } from 'wagmi';
 
 import { config } from '@/configs/wagmiConfig';
 
-import { NovaProvider } from './NovaProvider';
+import { NovaTransactionsProvider } from './NovaTransactionsProvider';
 
 const queryClient = new QueryClient();
 
@@ -108,7 +108,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <NovaProvider />
+          <NovaTransactionsProvider />
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>
@@ -126,7 +126,7 @@ export function Providers({ children }: { children: ReactNode }) {
 Enable or disable the main UI elements using the `features` prop. All are enabled by default.
 
 ```tsx
-<NovaProvider
+<NovaTransactionsProvider
   // ...other props
   features={{
     toasts: true,
@@ -143,7 +143,7 @@ The `customization` prop allows you to replace any internal component with your 
 ```tsx
 import { MyCustomBadge } from './MyCustomBadge';
 
-<NovaProvider
+<NovaTransactionsProvider
   // ...other props
   customization={{
     toast: {
@@ -158,10 +158,10 @@ import { MyCustomBadge } from './MyCustomBadge';
 
 ### Toast Container Customization
 
-`NovaProvider` uses `react-toastify` under the hood. You can pass any props for its `ToastContainer` directly to `NovaProvider` to control its behavior.
+`NovaTransactionsProvider` uses `react-toastify` under the hood. You can pass any props for its `ToastContainer` directly to `NovaTransactionsProvider` to control its behavior.
 
 ```tsx
-<NovaProvider
+<NovaTransactionsProvider
   // ...other props
   // --- Props for react-toastify's ToastContainer ---
   position="top-right"
@@ -184,7 +184,7 @@ const germanLabels = {
   },
 };
 
-<NovaProvider
+<NovaTransactionsProvider
   // ...other props
   labels={germanLabels}
 />
@@ -207,4 +207,4 @@ const germanLabels = {
 | `features`               | `object`                           |    -     | An object to enable or disable UI features like toasts or modals.        |
 | `customization`          | `object`                           |    -     | An object for deep styling and component replacement.                    |
 
-> **Note**: All props for `ToastContainer` from `react-toastify` are also supported and can be passed directly to `NovaProvider`.
+> **Note**: All props for `ToastContainer` from `react-toastify` are also supported and can be passed directly to `NovaTransactionsProvider`.

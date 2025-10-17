@@ -2,10 +2,7 @@
  * @file This file contains a reusable close button component, designed primarily for toast notifications.
  */
 
-import { XMarkIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
-
-import { useLabels } from '../providers';
+import { cn } from '../utils';
 
 /**
  * Defines the props for the ToastCloseButton component.
@@ -23,21 +20,28 @@ export type ToastCloseButtonProps = {
  * It uses theme-aware CSS variables for styling and i18n labels for accessibility.
  */
 export function ToastCloseButton({ closeToast }: ToastCloseButtonProps) {
-  const { actions } = useLabels();
-
   return (
     <button
       type="button"
       onClick={closeToast}
-      aria-label={actions.close}
-      title={actions.close}
+      aria-label="Close toast notification"
+      title="Close toast notification"
       className={cn(
-        'novatx:absolute novatx:top-2 novatx:right-2 novatx:cursor-pointer novatx:rounded-full novatx:p-1',
-        'novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors',
-        'novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
+        'novacore:absolute novacore:top-2 novacore:right-2 novacore:cursor-pointer novacore:rounded-full novacore:p-1',
+        'novacore:text-[var(--tuwa-text-tertiary)] novacore:transition-colors',
+        'novacore:hover:bg-[var(--tuwa-bg-muted)] novacore:hover:text-[var(--tuwa-text-primary)]',
       )}
     >
-      <XMarkIcon className="novatx:h-5 novatx:w-5" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="novacore:h-5 novatx:w-5"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
     </button>
   );
 }

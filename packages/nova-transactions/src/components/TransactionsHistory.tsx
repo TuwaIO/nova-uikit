@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction } from '@tuwaio/pulsar-core';
 import { ComponentType, useMemo } from 'react';
 
-import { NovaProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
 type CustomPlaceholderProps = { title: string; message: string };
@@ -23,7 +23,7 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
 };
 
 export type TransactionsHistoryProps<T extends Transaction> = Pick<
-  NovaProviderProps<T>,
+  NovaTransactionsProviderProps<T>,
   'adapter' | 'transactionsPool' | 'connectedWalletAddress'
 > & {
   className?: string;

@@ -1,17 +1,16 @@
 /**
- * @file This file contains the main `NovaProvider` component, which is the root
+ * @file This file contains the main `NovaTransactionsProvider` component, which is the root
  * for the Nova UI library. It should be placed at the top level of your application
  * to orchestrate modals, toasts, and internationalization.
  */
 
-import { deepMerge, useMediaQuery } from '@tuwaio/nova-core';
+import { deepMerge, ToastCloseButton, useMediaQuery } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { ITxTrackingStore, Transaction, TransactionPool, TransactionStatus, TxAdapter } from '@tuwaio/pulsar-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
 
 import {
-  ToastCloseButton,
   ToastTransaction,
   ToastTransactionCustomization,
   TrackingTxModal,
@@ -20,8 +19,8 @@ import {
   TransactionsInfoModalCustomization,
 } from '../components';
 import { defaultLabels } from '../i18n/en';
-import { TuwaLabels } from '../i18n/types';
-import { LabelsProvider } from './LabelsProvider';
+import { NovaTransactionsLabels } from '../i18n/types';
+import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
 
 /**
  * Maps a transaction's final status to the corresponding toast type for visual feedback.
@@ -33,14 +32,14 @@ const STATUS_TO_TOAST_TYPE: Record<string, TypeOptions> = {
 };
 
 /**
- * Defines the props for the NovaProvider component.
+ * Defines the props for the NovaTransactionsProvider component.
  */
-export type NovaProviderProps<T extends Transaction> = {
+export type NovaTransactionsProviderProps<T extends Transaction> = {
   adapter: TxAdapter<T> | TxAdapter<T>[];
   connectedWalletAddress?: string;
   connectedAdapterType?: OrbitAdapter;
   transactionsPool: TransactionPool<T>;
-  labels?: Partial<TuwaLabels>;
+  labels?: Partial<NovaTransactionsLabels>;
   features?: {
     toasts?: boolean;
     transactionsModal?: boolean;
@@ -58,7 +57,7 @@ export type NovaProviderProps<T extends Transaction> = {
  * The main component for the Nova UI ecosystem. It renders and orchestrates all
  * UI elements like toasts and modals, and provides the i18n context.
  */
-export function NovaProvider<T extends Transaction>({
+export function NovaTransactionsProvider<T extends Transaction>({
   adapter,
   connectedWalletAddress,
   connectedAdapterType,
@@ -70,7 +69,7 @@ export function NovaProvider<T extends Transaction>({
   features,
   customization,
   ...toastProps
-}: NovaProviderProps<T>) {
+}: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
   const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
 
@@ -113,6 +112,7 @@ export function NovaProvider<T extends Transaction>({
         toast(content, { toastId: tx.txKey, type, closeOnClick: false, containerId: toastContainerId });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [transactionsPool, enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
   );
 
@@ -156,7 +156,7 @@ export function NovaProvider<T extends Transaction>({
     enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isTransactionsInfoModalOpen));
 
   return (
-    <LabelsProvider labels={mergedLabels}>
+    <NovaTransactionsLabelsProvider labels={mergedLabels}>
       {shouldShowToasts && (
         <ToastContainer
           position="bottom-right"
@@ -196,6 +196,6 @@ export function NovaProvider<T extends Transaction>({
           connectedWalletAddress={connectedWalletAddress}
         />
       )}
-    </LabelsProvider>
+    </NovaTransactionsLabelsProvider>
   );
 }

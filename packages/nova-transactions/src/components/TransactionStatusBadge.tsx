@@ -7,10 +7,10 @@ import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { useMemo } from 'react';
 
-import { TuwaLabels } from '../i18n/types';
+import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
 
-const getStatusConfig = (labels: TuwaLabels['statuses']) => ({
+const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
   Pending: {
     label: labels.pending,
     Icon: ArrowPathIcon,

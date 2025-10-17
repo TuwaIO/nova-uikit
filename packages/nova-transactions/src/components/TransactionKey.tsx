@@ -8,10 +8,10 @@ import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
-import { NovaProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { HashLink, HashLinkProps } from './HashLink';
 
-export type TransactionKeyProps<T extends Transaction> = Pick<NovaProviderProps<T>, 'adapter'> & {
+export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsProviderProps<T>, 'adapter'> & {
   tx: T;
   variant?: 'toast' | 'history';
   className?: string;

@@ -10,13 +10,13 @@ The official React UI component library for the Pulsar transaction engine. It pr
 
 ## 🏛️ Architecture
 
-This package provides the **View Layer** for TUWA's transaction tracking ecosystem. It works by consuming the state from your headless Pulsar store and rendering the appropriate UI. You must connect your Pulsar store's state and actions to the `<NovaProvider />` component, which acts as a self-contained UI manager that renders modals and toasts.
+This package provides the **View Layer** for TUWA's transaction tracking ecosystem. It works by consuming the state from your headless Pulsar store and rendering the appropriate UI. You must connect your Pulsar store's state and actions to the `<NovaTransactionsProvider />` component, which acts as a self-contained UI manager that renders modals and toasts.
 
 ---
 
 ## ✨ Core Features
 
--   **🧩 Pre-built UI Suite:** A set of accessible components including `TrackingTxModal`, `TransactionsInfoModal`, and `ToastTransaction`, all managed internally by the `NovaProvider`.
+-   **🧩 Pre-built UI Suite:** A set of accessible components including `TrackingTxModal`, `TransactionsInfoModal`, and `ToastTransaction`, all managed internally by the `NovaTransactionsProvider`.
 -   **🔌 Plug-and-Play Integration:** Once connected to your Pulsar store, the UI automatically reacts to all transaction state changes.
 -   **🌐 Internationalization (i18n):** Built-in support for multiple languages with easy overrides for all text content via the `labels` prop.
 -   **🎨 Highly Customizable:** Styled with `@tuwaio/nova-core` to be easily themed using CSS variables. Almost every sub-component can be replaced with your own implementation via the `customization` prop.
@@ -44,7 +44,7 @@ yarn add react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @b
 
 ## 🚀 Getting Started
 
-To use this library, you must render the `<NovaProvider />` component at a high level in your application and pass the state and actions from your Pulsar store to it as props.
+To use this library, you must render the `<NovaTransactionsProvider />` component at a high level in your application and pass the state and actions from your Pulsar store to it as props.
 
 Here is a complete example of a `src/providers/index.tsx` file that configures the entire system.
 
@@ -81,15 +81,15 @@ export const usePulsarStore = createBoundedUseStore(
 ```
 
 ```tsx
-// src/providers/NovaProvider.tsx
-import { NovaProvider as NP } from '@tuwaio/nova-transactions/providers';
+// src/providers/NovaTransactionsProvider.tsx
+import { NovaTransactionsProvider as NP } from '@tuwaio/nova-transactions/providers';
 import { TransactionAdapter } from '@tuwaio/pulsar-core';
 import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
 import { useAccount } from 'wagmi';
 
 import { usePulsarStore } from '@/hooks/txTrackingHooks';
 
-export function NovaProvider() {
+export function NovaTransactionsProvider() {
   const transactionsPool = usePulsarStore((state) => state.transactionsPool);
   const initialTx = usePulsarStore((state) => state.initialTx);
   const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
@@ -127,7 +127,7 @@ import { WagmiProvider } from 'wagmi';
 
 import { config } from '@/configs/wagmiConfig';
 
-import { NovaProvider } from './NovaProvider';
+import { NovaTransactionsProvider } from './NovaTransactionsProvider';
 
 const queryClient = new QueryClient();
 
@@ -136,7 +136,7 @@ export function Providers({ children }: { children: ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <NovaProvider />
+          <NovaTransactionsProvider />
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>
@@ -150,7 +150,7 @@ export function Providers({ children }: { children: ReactNode }) {
 You can easily override the default English text by passing a `labels` prop, or replace entire components using the `customization` prop.
 
 ```tsx
-<NovaProvider
+<NovaTransactionsProvider
   // 1. Override text labels
   labels={{
     statuses: {

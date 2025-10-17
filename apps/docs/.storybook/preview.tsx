@@ -2,7 +2,7 @@ import '../src/styles/app.css';
 
 import type { Preview } from '@storybook/react-vite';
 import { defaultLabels } from '@tuwaio/nova-transactions';
-import { LabelsProvider } from '@tuwaio/nova-transactions/providers';
+import { NovaTransactionsLabelsProvider } from '@tuwaio/nova-transactions/providers';
 
 // @ts-expect-error - theme is a valid option
 import { tuwaTheme } from './manager';
@@ -11,7 +11,7 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Introduction', 'NovaProvider', 'Theming', 'Components', 'API_Reference'],
+        order: ['Introduction', 'NovaTransactionsProvider', 'Theming', 'Components', 'API_Reference'],
       },
     },
     controls: {
@@ -57,9 +57,9 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <LabelsProvider labels={defaultLabels}>
+      <NovaTransactionsLabelsProvider labels={defaultLabels}>
         <Story />
-      </LabelsProvider>
+      </NovaTransactionsLabelsProvider>
     ),
   ],
 };

@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { ComponentType, JSX } from 'react';
 
-import { NovaProviderProps } from '../providers';
+import { NovaTransactionsProviderProps } from '../providers';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -39,7 +39,7 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
   customization?: TransactionHistoryItemCustomization<T>;
   /** Optional additional CSS classes for the container. */
   className?: string;
-} & Pick<NovaProviderProps<T>, 'adapter'>;
+} & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 const DefaultIcon = ({ chainId }: CustomIconProps) => (
   <div className="novatx:h-8 novatx:w-8 novatx:text-[var(--tuwa-text-secondary)]">

@@ -7,7 +7,7 @@ import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, Dialog
 import { Transaction } from '@tuwaio/pulsar-core';
 import { ComponentPropsWithoutRef, ComponentType } from 'react';
 
-import { NovaProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionsHistory, TransactionsHistoryProps } from './TransactionsHistory';
 
 type CustomHeaderProps = { closeModal: () => void };
@@ -24,7 +24,7 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
 };
 
 export type TransactionsInfoModalProps<T extends Transaction> = Pick<
-  NovaProviderProps<T>,
+  NovaTransactionsProviderProps<T>,
   'adapter' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
 > & {
   isOpen?: boolean;

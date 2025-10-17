@@ -7,12 +7,12 @@ import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useMemo, useState } from 'react';
 
-import { TuwaLabels } from '../i18n/types';
+import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
-const getDefaultContent = (labels: TuwaLabels['trackedTxButton']) => ({
+const getDefaultContent = (labels: NovaTransactionsLabels['trackedTxButton']) => ({
   replaced: (
     <>
       <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
@@ -73,6 +73,7 @@ export function TxActionButton<T extends Transaction>({
   const defaultContent = useMemo(() => getDefaultContent(trackedTxButton), [trackedTxButton]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus('idle');
     setTrackedTxKey(undefined);
   }, [walletAddress]);
@@ -85,6 +86,7 @@ export function TxActionButton<T extends Transaction>({
     if (trackedTx) {
       switch (trackedTx.status) {
         case TransactionStatus.Success:
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setStatus('succeed');
           break;
         case TransactionStatus.Replaced:

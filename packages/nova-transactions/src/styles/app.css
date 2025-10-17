@@ -1,4 +1,3 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme) theme(inline) prefix(novatx);
+@import "tailwindcss/theme.css" layer(theme) prefix(novatx);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(novatx);
-@import '@tuwaio/nova-core/dist/index.css';

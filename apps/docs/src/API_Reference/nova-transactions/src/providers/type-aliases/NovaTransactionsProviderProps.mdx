@@ -2,13 +2,13 @@
 
 ***
 
-# NovaProviderProps\<T\>
+# NovaTransactionsProviderProps\<T\>
 
-> **NovaProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
+> **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [nova-transactions/src/providers/NovaProvider.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/ece038bfcc92e1d5da07dbae62f4eccfaef52328/packages/nova-transactions/src/providers/NovaProvider.tsx#L38)
+Defined in: [nova-transactions/src/providers/NovaTransactionsProvider.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/5a66ae19854e84e32f7dbfe0778450e3efe4af98/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L37)
 
-Defines the props for the NovaProvider component.
+Defines the props for the NovaTransactionsProvider component.
 
 ## Type Declaration
 
@@ -58,7 +58,7 @@ Defines the props for the NovaProvider component.
 
 ### labels?
 
-> `optional` **labels**: `Partial`\<[`TuwaLabels`](../../type-aliases/TuwaLabels.md)\>
+> `optional` **labels**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
 
 ### transactionsPool
 

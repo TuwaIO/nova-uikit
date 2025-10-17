@@ -10,7 +10,7 @@ import { Transaction } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
-import { NovaProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -36,7 +36,7 @@ export type ToastTransactionProps<T extends Transaction> = {
   customization?: ToastTransactionCustomization<T>;
   closeToast?: ToastContentProps['closeToast'];
   toastProps?: ToastContainerProps;
-} & Pick<NovaProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
+} & Pick<NovaTransactionsProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
 
 const DefaultSpeedUpButton = ({ onClick, children }: CustomActionButtonProps) => (
   <button

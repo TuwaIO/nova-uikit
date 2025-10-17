@@ -3,14 +3,14 @@
  * It serves as the default language pack for the library.
  */
 
-import { TuwaLabels } from './types';
+import { NovaTransactionsLabels } from './types';
 
 /**
  * An object containing the default English text for all labels used in the UI.
  * This object implements the `TuwaLabels` type and can be used as a template
  * for creating other language translations.
  */
-export const defaultLabels: TuwaLabels = {
+export const defaultLabels: NovaTransactionsLabels = {
   transactionsModal: {
     history: {
       title: 'Transactions History',

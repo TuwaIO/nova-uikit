@@ -7,7 +7,7 @@ import { InitialTransaction, InitialTransactionParams, Transaction, TransactionS
 import { MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
 
-import { NovaProviderProps, useLabels } from '../../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../../providers';
 import {
   TxErrorBlock,
   TxErrorBlockProps,
@@ -48,7 +48,7 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
 };
 
 export type TrackingTxModalProps<T extends Transaction> = Pick<
-  NovaProviderProps<T>,
+  NovaTransactionsProviderProps<T>,
   'executeTxAction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
@@ -262,6 +262,49 @@ const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   );
 };
 
+const MainActionButton = ({
+  isFailed,
+  onRetry,
+  isProcessing,
+  canReplace,
+  connectedWalletAddress,
+  onOpenAllTransactions,
+}: Pick<
+  CustomFooterProps,
+  'isFailed' | 'onRetry' | 'isProcessing' | 'canReplace' | 'connectedWalletAddress' | 'onOpenAllTransactions'
+>) => {
+  const { trackingModal } = useLabels();
+
+  if (isFailed && onRetry) {
+    return (
+      <button
+        type="button"
+        onClick={onRetry}
+        className="novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md
+                   novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)]
+                   novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity
+                   novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]"
+      >
+        {trackingModal.retry}
+      </button>
+    );
+  }
+  if (!isProcessing && !canReplace && !!connectedWalletAddress) {
+    return (
+      <button
+        type="button"
+        onClick={onOpenAllTransactions}
+        className="novatx:cursor-pointer novatx:rounded-md
+                   novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]
+                   novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]"
+      >
+        {trackingModal.allTransactions}
+      </button>
+    );
+  }
+  return null;
+};
+
 const DefaultFooter = ({
   onClose,
   onOpenAllTransactions,
@@ -274,37 +317,6 @@ const DefaultFooter = ({
   connectedWalletAddress,
 }: CustomFooterProps) => {
   const { trackingModal, actions } = useLabels();
-
-  const MainActionButton = () => {
-    if (isFailed && onRetry) {
-      return (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md
-                   novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)]
-                   novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity
-                   novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]"
-        >
-          {trackingModal.retry}
-        </button>
-      );
-    }
-    if (!isProcessing && !canReplace && !!connectedWalletAddress) {
-      return (
-        <button
-          type="button"
-          onClick={onOpenAllTransactions}
-          className="novatx:cursor-pointer novatx:rounded-md
-                   novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]
-                   novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]"
-        >
-          {trackingModal.allTransactions}
-        </button>
-      );
-    }
-    return null;
-  };
 
   return (
     <footer
@@ -334,7 +346,14 @@ const DefaultFooter = ({
         )}
       </div>
       <div className="novatx:flex novatx:items-center novatx:gap-3">
-        <MainActionButton />
+        <MainActionButton
+          isFailed={isFailed}
+          onRetry={onRetry}
+          isProcessing={isProcessing}
+          canReplace={canReplace}
+          connectedWalletAddress={connectedWalletAddress}
+          onOpenAllTransactions={onOpenAllTransactions}
+        />
         <button
           type="button"
           onClick={onClose}
