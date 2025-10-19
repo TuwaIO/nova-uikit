@@ -26,7 +26,6 @@ export default defineConfig([
       '@tuwaio/nova-core',
       '@tuwaio/orbit-core',
       'dayjs',
-      'ethereum-blockies-base64',
     ],
   },
 ]);

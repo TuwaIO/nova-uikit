@@ -74,15 +74,13 @@
     "@tuwaio/pulsar-core": ">=0",
     "@tuwaio/nova-core": ">=0",
     "@tuwaio/orbit-core": ">=0",
-    "dayjs": "1.x.x",
-    "ethereum-blockies-base64": "1.x.x"
+    "dayjs": "1.x.x"
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "1.0.0-fix-test-alpha.50.f997a2c",
     "@tuwaio/pulsar-core": "1.0.0-fix-orbit-integration-alpha.18.e3594e7",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.18",
-    "ethereum-blockies-base64": "^1.0.2",
     "@bgd-labs/react-web3-icons": "^1.51.0",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
