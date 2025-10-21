@@ -3,7 +3,10 @@
   "entryPoints": [
     "packages/nova-core/src/index.ts",
     "packages/nova-transactions/src/index.ts",
-    "packages/nova-transactions/src/providers/index.ts"
+    "packages/nova-transactions/src/providers/index.ts",
+    "packages/nova-connect/src/hooks/index.ts",
+    "packages/nova-connect/src/evm/index.ts",
+    "packages/nova-connect/src/solana/index.ts"
   ],
   "entryPointStrategy": "expand",
   "tsconfig": "tsconfig.json",

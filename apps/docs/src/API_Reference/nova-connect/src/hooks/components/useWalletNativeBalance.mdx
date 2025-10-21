@@ -1,0 +1,47 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useWalletNativeBalance()
+
+> **useWalletNativeBalance**(`__namedParameters`): `NativeBalanceData`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:65](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L65)
+
+Custom hook to fetch the native token balance for the currently connected wallet
+on the active chain. It includes a local cache layer to prevent redundant network calls
+when switching between components or on re-renders for the same wallet/chain.
+
+## Parameters
+
+### \_\_namedParameters
+
+`Pick`\<`NovaConnectProviderProps`, `"store"`\> & `Pick`\<`NovaConnectProviderType`, `"activeWallet"`\>
+
+## Returns
+
+`NativeBalanceData`
+
+An object containing the balance data and loading state.
+
+## Example
+
+```typescript
+import { useWalletNativeBalance } from './useWalletNativeBalance';
+
+function NativeTokenDisplay() {
+  const { balance, isLoading, refetch } = useWalletNativeBalance();
+
+  if (isLoading) {
+    return <p>Loading balance...</p>;
+  }
+
+  // Display the formatted balance and symbol
+  return (
+    <div>
+      <p>Balance: {balance ? `${balance.value} ${balance.symbol}` : '0.00'}</p>
+      <button onClick={refetch}>Refresh</button>
+    </div>
+  );
+}
+```

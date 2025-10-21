@@ -1,0 +1,58 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useGetWalletNameAndAvatar()
+
+> **useGetWalletNameAndAvatar**(`options`): [`WalletNameAndAvatarData`](../interfaces/WalletNameAndAvatarData.md)
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:73](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L73)
+
+A custom hook to fetch the Name Service (e.g., ENS) name and avatar
+for the currently active wallet.
+
+This hook automatically detects the active wallet and its corresponding
+adapter via the `useSatelliteConnectStore` and attempts to resolve the
+wallet address to a human-readable name and avatar.
+
+## Parameters
+
+### options
+
+`UseGetWalletNameAndAvatarOptions`
+
+Configuration options for the hook
+
+## Returns
+
+[`WalletNameAndAvatarData`](../interfaces/WalletNameAndAvatarData.md)
+
+An object containing the resolved name, avatar, loading state, and utility functions
+
+## Example
+
+```typescript
+import { useGetWalletNameAndAvatar } from './useGetWalletNameAndAvatar';
+
+function DisplayWalletInfo() {
+  const { ensName, ensAvatar, isLoading, ensNameAbbreviated, error, retry } = useGetWalletNameAndAvatar({
+    abbreviateSymbols: 8,
+    maxNameLength: 25
+  });
+
+  if (isLoading) {
+    return <div>Resolving name...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error} <button onClick={retry}>Retry</button></div>;
+  }
+
+  return (
+    <div className="wallet-info">
+      {ensAvatar && <img src={ensAvatar} alt="Wallet Avatar" />}
+      <p title={ensName || ''}>{ensNameAbbreviated || 'No Name Found'}</p>
+    </div>
+  );
+}
+```
