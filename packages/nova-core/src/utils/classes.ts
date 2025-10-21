@@ -1,0 +1,2 @@
+export const standardButtonClasses =
+  'novacore:cursor-pointer novacore:rounded-md novacore:bg-[var(--tuwa-standart-button-bg)] novacore:px-3 novacore:py-2 novacore:flex novacore:items-center novacore:gap-1 novacore:text-sm novacore:font-semibold novacore:text-[var(--tuwa-text-primary)] novacore:transition-colors novacore:hover:bg-[var(--tuwa-standart-button-hover)] novacore:disabled:cursor-not-allowed novacore:disabled:opacity-50';

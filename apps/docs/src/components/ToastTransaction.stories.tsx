@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ToastTransaction } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../utils/mockAdapters';
 import { createMockTx } from '../utils/mockTransactions';
@@ -15,7 +16,7 @@ const meta: Meta<typeof ToastTransaction> = {
     layout: 'padded',
   },
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
       hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
       status: TransactionStatus.Success,
@@ -23,7 +24,7 @@ const meta: Meta<typeof ToastTransaction> = {
     }),
     adapter: [mockEvmAdapter],
     connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-    openWalletInfoModal: () => console.log('openWalletInfoModal called'),
+    openTxInfoModal: () => console.log('openWalletInfoModal called'),
   },
   argTypes: {
     tx: {
@@ -52,7 +53,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Success: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { status: TransactionStatus.Success }),
+    tx: createMockTx(OrbitAdapter.EVM, { status: TransactionStatus.Success }),
   },
 };
 
@@ -62,7 +63,7 @@ export const Success: Story = {
  */
 export const PendingWithActions: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       pending: true,
       status: undefined,
       tracker: TransactionTracker.Ethereum,
@@ -77,7 +78,7 @@ export const PendingWithActions: Story = {
 export const PendingGelato: Story = {
   name: 'Pending (Gelato)',
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       pending: true,
       status: undefined,
       tracker: TransactionTracker.Gelato,
@@ -93,7 +94,7 @@ export const PendingGelato: Story = {
  */
 export const Failed: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Failed,
       errorMessage: 'Transaction failed due to an unexpected error. Please try again.',
     }),
@@ -105,7 +106,7 @@ export const Failed: Story = {
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Replaced,
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
     }),
@@ -117,7 +118,7 @@ export const Replaced: Story = {
  */
 export const Solana: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true, status: undefined }),
+    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, status: undefined }),
     adapter: [mockSolanaAdapter],
   },
 };
@@ -141,13 +142,13 @@ export const WithCustomIcon: Story = {
 export const FullyCustomized: Story = {
   name: 'With Full Customization',
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { pending: true, tracker: TransactionTracker.Ethereum }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: true, tracker: TransactionTracker.Ethereum }),
     customization: {
       components: {
         StatusBadge: () => (
           <div className="rounded-full bg-purple-500 px-3 py-1 text-xs font-bold text-white">CUSTOM</div>
         ),
-        WalletInfoButton: ({ onClick, children }) => (
+        TxInfoButton: ({ onClick, children }) => (
           <button onClick={onClick} className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600">
             {children}
           </button>

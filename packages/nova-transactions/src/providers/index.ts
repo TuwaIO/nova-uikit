@@ -1,2 +1,2 @@
-export * from './LabelsProvider';
-export * from './NovaProvider';
+export * from './NovaTransactionsLabelsProvider';
+export * from './NovaTransactionsProvider';

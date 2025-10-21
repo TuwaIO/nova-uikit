@@ -15,5 +15,17 @@ export default defineConfig([
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,
       };
     },
+    external: [
+      '@bgd-labs/react-web3-icons',
+      '@heroicons/react',
+      '@radix-ui/react-dialog',
+      'framer-motion',
+      'react',
+      'react-toastify',
+      '@tuwaio/pulsar-core',
+      '@tuwaio/nova-core',
+      '@tuwaio/orbit-core',
+      'dayjs',
+    ],
   },
 ]);

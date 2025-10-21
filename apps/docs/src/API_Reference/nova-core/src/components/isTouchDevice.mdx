@@ -1,0 +1,32 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# isTouchDevice()
+
+> **isTouchDevice**(`maxWidth?`): `boolean`
+
+Defined in: [packages/nova-core/src/utils/isTouchDevice.ts:19](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-core/src/utils/isTouchDevice.ts#L19)
+
+Determines if the current browsing device supports touch input,
+while also excluding large screens (typically desktop-sized touch monitors).
+
+It checks for:
+1. The presence of 'ontouchstart' or navigator.maxTouchPoints > 0 or '(pointer: coarse)'.
+2. ONLY returns true if the screen width is less than or equal to the specified threshold (e.g., 1200px).
+
+This function is safe for server-side rendering (SSR) environments like Next.js.
+
+## Parameters
+
+### maxWidth?
+
+`number` = `1200`
+
+The maximum screen width (in pixels) for a device to be considered 'touch' (default is 1200).
+
+## Returns
+
+`boolean`
+
+Returns true if the environment is determined to support touch input AND is within the width limit, otherwise false.

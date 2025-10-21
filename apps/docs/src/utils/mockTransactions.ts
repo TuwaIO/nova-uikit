@@ -1,10 +1,5 @@
-import {
-  EvmTransaction,
-  InitialTransaction,
-  SolanaTransaction,
-  TransactionAdapter,
-  TransactionTracker,
-} from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { EvmTransaction, InitialTransaction, SolanaTransaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { action } from 'storybook/actions';
 import { zeroAddress } from 'viem';
@@ -15,12 +10,12 @@ import { mainnet } from 'viem/chains';
  * Dynamically adjusts fields based on the adapter.
  */
 export const createMockTx = (
-  adapterKey: TransactionAdapter,
+  adapterKey: OrbitAdapter,
   overrides: Partial<EvmTransaction | SolanaTransaction>,
 ): EvmTransaction | SolanaTransaction => {
   const baseTx = {
     adapter: adapterKey,
-    tracker: adapterKey === TransactionAdapter.SOLANA ? TransactionTracker.Solana : TransactionTracker.Ethereum,
+    tracker: adapterKey === OrbitAdapter.SOLANA ? TransactionTracker.Solana : TransactionTracker.Ethereum,
     txKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
     type: 'storybook-action',
     chainId: mainnet.id,
@@ -39,7 +34,7 @@ export const createMockTx = (
     ],
     ...overrides,
   };
-  return adapterKey === TransactionAdapter.EVM
+  return adapterKey === OrbitAdapter.EVM
     ? (baseTx as EvmTransaction)
     : ({
         ...baseTx,
@@ -54,12 +49,12 @@ export const createMockTx = (
  * Dynamically adjusts fields based on the adapter.
  */
 export const createInitialTx = (
-  adapterKey: TransactionAdapter,
+  adapterKey: OrbitAdapter,
   overrides: Partial<InitialTransaction> = {},
 ): InitialTransaction => {
   const baseInitialTx = {
     adapter: adapterKey,
-    desiredChainID: adapterKey === TransactionAdapter.SOLANA ? 'devnet' : mainnet.id,
+    desiredChainID: adapterKey === OrbitAdapter.SOLANA ? 'devnet' : mainnet.id,
     type: 'Token Swap',
     title: 'Preparing Swap...',
     description: 'Please confirm in your wallet',
@@ -78,5 +73,5 @@ export const createInitialTx = (
 
 // This is no longer necessary as it is being handled by the main createMockTx function
 export const createMockSolanaTx = (overrides: Partial<SolanaTransaction> = {}): SolanaTransaction => {
-  return createMockTx(TransactionAdapter.SOLANA, overrides) as SolanaTransaction;
+  return createMockTx(OrbitAdapter.SOLANA, overrides) as SolanaTransaction;
 };

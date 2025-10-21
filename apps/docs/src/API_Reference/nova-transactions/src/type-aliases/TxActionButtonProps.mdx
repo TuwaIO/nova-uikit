@@ -6,15 +6,13 @@
 
 > **TxActionButtonProps**\<`T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
 
-Defined in: [nova-transactions/src/components/TxActionButton.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/858912fffa0bf561cb7bacaa58997e31e14a1e2a/packages/nova-transactions/src/components/TxActionButton.tsx#L50)
+Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-transactions/src/components/TxActionButton.tsx#L42)
 
 ## Type Declaration
 
 ### action()
 
 > **action**: () => `Promise`\<`void`\>
-
-The async function to execute when the button is clicked to initiate the transaction.
 
 #### Returns
 
@@ -24,19 +22,13 @@ The async function to execute when the button is clicked to initiate the transac
 
 > **children**: `ReactNode`
 
-The default content to display when the button is 'idle'.
-
 ### failedContent?
 
 > `optional` **failedContent**: `ReactNode`
 
-Optional custom content for the 'failed' state.
-
 ### getLastTxKey()
 
 > **getLastTxKey**: () => `string` \| `undefined`
-
-A function that returns the unique key of the most recently initiated transaction.
 
 #### Returns
 
@@ -46,37 +38,25 @@ A function that returns the unique key of the most recently initiated transactio
 
 > `optional` **loadingContent**: `ReactNode`
 
-Optional custom content for the 'loading' state.
-
 ### replacedContent?
 
 > `optional` **replacedContent**: `ReactNode`
-
-Optional custom content for the 'replaced' state.
 
 ### resetTimeout?
 
 > `optional` **resetTimeout**: `number`
 
-The duration (in ms) to display a final state before resetting to 'idle'. Defaults to 2500ms.
-
 ### succeedContent?
 
 > `optional` **succeedContent**: `ReactNode`
-
-Optional custom content for the 'succeed' state.
 
 ### transactionsPool
 
 > **transactionsPool**: `TransactionPool`\<`T`\>
 
-The global transaction pool from the Pulsar store.
-
 ### walletAddress?
 
 > `optional` **walletAddress**: `string`
-
-Optional active wallet address. If provided, the button will only track transactions from this address.
 
 ## Type Parameters
 

@@ -6,18 +6,12 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { cn } from '@tuwaio/nova-core';
-import {
-  InitialTransaction,
-  selectAdapterByKey,
-  setChainId,
-  SolanaTransaction,
-  Transaction,
-  TransactionAdapter,
-} from '@tuwaio/pulsar-core';
+import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
+import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
-import { NovaProviderProps, useLabels } from '../../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../../providers';
 import { HashLink } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
@@ -36,14 +30,14 @@ export type TxInfoBlockProps<T extends Transaction> = {
   tx: T | InitialTransaction;
   className?: string;
   customization?: TxInfoBlockCustomization<T>;
-} & Pick<NovaProviderProps<T>, 'adapter'>;
+} & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Component ---
 function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
   return (
-    <div className="flex items-center justify-between text-sm">
-      <span className="text-[var(--tuwa-text-secondary)]">{label}</span>
-      <span className="font-medium text-[var(--tuwa-text-primary)]">{value}</span>
+    <div className="novatx:flex novatx:items-center novatx:justify-between novatx:text-sm">
+      <span className="novatx:text-[var(--tuwa-text-secondary)]">{label}</span>
+      <span className="novatx:font-medium novatx:text-[var(--tuwa-text-primary)]">{value}</span>
     </div>
   );
 }
@@ -55,33 +49,27 @@ function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
 export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, customization }: TxInfoBlockProps<T>) {
   const { txInfo, statuses, hashLabels } = useLabels();
 
-  // Select the correct adapter for the given transaction.
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
   if (!foundAdapter) return null;
 
-  // Use the custom InfoRow component if provided, otherwise fall back to the default.
   const { InfoRow = DefaultInfoRow } = customization?.components ?? {};
-
-  // Determine the chain ID, falling back from the final chainId to the desiredChainID for initial transactions.
   const chainId = 'chainId' in tx ? tx.chainId : tx.desiredChainID;
-
-  const isSolanaTransaction = tx.adapter === TransactionAdapter.SOLANA;
+  const isSolanaTransaction = tx.adapter === OrbitAdapter.SOLANA;
   const solanaTx = isSolanaTransaction ? (tx as SolanaTransaction) : undefined;
 
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] p-3',
+        'novatx:flex novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
         className,
       )}
     >
-      {/* --- Network and Timestamp Info --- */}
       <InfoRow
         label={txInfo.network}
         value={
-          <div className="flex items-center justify-end gap-2">
-            <div className="h-4 w-4">
+          <div className="novatx:flex novatx:items-center novatx:justify-end novatx:gap-2">
+            <div className="novatx:h-4 novatx:w-4">
               <Web3Icon chainId={setChainId(chainId)} />
             </div>
             <span>{getChainName(setChainId(chainId))}</span>
@@ -92,7 +80,6 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         <InfoRow label={txInfo.started} value={dayjs.unix(tx.localTimestamp).format('MMM D, HH:mm:ss')} />
       )}
 
-      {/* --- Solana-specific Details (if applicable) --- */}
       {isSolanaTransaction && (
         <>
           {solanaTx?.slot && (
@@ -119,13 +106,12 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         </>
       )}
 
-      {/* --- Transaction Hashes/Keys --- */}
       {'txKey' in tx && tx.txKey && (
-        <div className="border-t border-[var(--tuwa-border-primary)] pt-3">
+        <div className="novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:pt-3">
           <TransactionKey
             tx={tx as T}
             adapter={adapter}
-            variant="history" // 'history' variant provides suitable styling for this block
+            variant="history"
             renderHashLink={customization?.components?.transactionKey}
           />
         </div>

@@ -11,10 +11,10 @@ import { ReactNode } from 'react';
  * The index corresponds to the position in the `source` array prop: `[pending, success, error, replaced]`.
  */
 const STATUS_CONFIG = {
-  [TransactionStatus.Success]: { index: 1, colorClass: 'text-[var(--tuwa-success-text)]' },
-  [TransactionStatus.Failed]: { index: 2, colorClass: 'text-[var(--tuwa-error-text)]' },
-  [TransactionStatus.Replaced]: { index: 3, colorClass: 'text-[var(--tuwa-text-secondary)]' },
-  default: { index: 0, colorClass: 'text-[var(--tuwa-text-primary)]' }, // For pending or undefined status
+  [TransactionStatus.Success]: { index: 1, colorClass: 'novatx:text-[var(--tuwa-success-text)]' },
+  [TransactionStatus.Failed]: { index: 2, colorClass: 'novatx:text-[var(--tuwa-error-text)]' },
+  [TransactionStatus.Replaced]: { index: 3, colorClass: 'novatx:text-[var(--tuwa-text-secondary)]' },
+  default: { index: 0, colorClass: 'novatx:text-[var(--tuwa-text-primary)]' }, // For pending or undefined status
 } as const;
 
 export type StatusAwareTextProps = {
@@ -50,7 +50,6 @@ export function StatusAwareText({
   let displayText: string | undefined;
   let colorClass = '';
 
-  // 1. Determine the text to display based on the source type.
   if (typeof source === 'string') {
     displayText = source;
   } else if (Array.isArray(source)) {
@@ -64,17 +63,14 @@ export function StatusAwareText({
     displayText = fallback;
   }
 
-  // If no text could be determined, render nothing.
   if (!displayText) {
     return null;
   }
 
-  // 2. Determine the base styling based on the variant.
   const baseClasses =
     variant === 'title'
-      ? 'text-sm font-semibold text-[var(--tuwa-text-primary)]'
-      : 'mt-1 text-xs text-[var(--tuwa-text-secondary)]';
+      ? 'novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
+      : 'novatx:mt-1 novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]';
 
-  // 3. Combine classes and render the final output.
   return <div className={cn(baseClasses, colorClass, className)}>{displayText}</div>;
 }

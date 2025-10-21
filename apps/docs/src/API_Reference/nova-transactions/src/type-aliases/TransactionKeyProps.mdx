@@ -4,11 +4,9 @@
 
 # TransactionKeyProps\<T\>
 
-> **TransactionKeyProps**\<`T`\> = `Pick`\<[`NovaProviderProps`](../providers/type-aliases/NovaProviderProps.md)\<`T`\>, `"adapter"`\> & `object`
+> **TransactionKeyProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"`\> & `object`
 
-Defined in: [nova-transactions/src/components/TransactionKey.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/858912fffa0bf561cb7bacaa58997e31e14a1e2a/packages/nova-transactions/src/components/TransactionKey.tsx#L19)
-
-Defines the props for the TransactionKey component.
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-transactions/src/components/TransactionKey.tsx#L14)
 
 ## Type Declaration
 
@@ -16,20 +14,13 @@ Defines the props for the TransactionKey component.
 
 > `optional` **className**: `string`
 
-Optional additional CSS classes for the container.
-
 ### confirmations?
 
 > `optional` **confirmations**: `number`
 
-Optional number of confirmations for a transaction.
-
 ### renderHashLink()?
 
 > `optional` **renderHashLink**: (`props`) => `ReactNode`
-
-An optional render prop to allow for complete customization of how the hash link is rendered.
-If not provided, the default `HashLink` component will be used.
 
 #### Parameters
 
@@ -45,26 +36,12 @@ If not provided, the default `HashLink` component will be used.
 
 > **tx**: `T`
 
-The transaction object to display identifiers for.
-
 ### variant?
 
 > `optional` **variant**: `"toast"` \| `"history"`
-
-The visual variant, which applies different container styles.
 
 ## Type Parameters
 
 ### T
 
 `T` *extends* `Transaction`
-
-The transaction type.
-
-## Template
-
-The type of the tracker identifier.
-
-## Template
-
-The type of the key returned by an action function.

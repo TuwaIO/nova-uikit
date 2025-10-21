@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrackingTxModal } from '@tuwaio/nova-transactions';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   InitialTransaction,
   SolanaTransaction,
-  TransactionAdapter,
   TransactionStatus,
   TransactionTracker,
 } from '@tuwaio/pulsar-core';
@@ -32,7 +32,7 @@ const MOCK_DATA = {
 // --- EVM --- //
 
 const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTransaction => ({
-  adapter: TransactionAdapter.EVM,
+  adapter: OrbitAdapter.EVM,
   desiredChainID: mainnet.id,
   type: 'Token Swap',
   title: 'Swapping Tokens',
@@ -45,7 +45,7 @@ const createInitialTx = (overrides: Partial<InitialTransaction> = {}): InitialTr
 });
 
 const createMockTx = (overrides: Partial<EvmTransaction>): EvmTransaction => ({
-  adapter: TransactionAdapter.EVM,
+  adapter: OrbitAdapter.EVM,
   tracker: TransactionTracker.Ethereum,
   txKey: MOCK_DATA.txKey,
   type: 'Token Swap',
@@ -70,7 +70,7 @@ const createMockTx = (overrides: Partial<EvmTransaction>): EvmTransaction => ({
 // --- Solana --- //
 
 const createMockSolanaTx = (overrides: Partial<SolanaTransaction> = {}): SolanaTransaction => ({
-  adapter: TransactionAdapter.SOLANA,
+  adapter: OrbitAdapter.SOLANA,
   tracker: TransactionTracker.Solana,
   txKey: MOCK_DATA.txKey,
   slot: Math.floor(Math.random() * 1000000),
@@ -100,7 +100,7 @@ const meta: Meta<typeof TrackingTxModal> = {
   args: {
     adapter: [mockEvmAdapter, mockSolanaAdapter],
     onClose: action('onClose'),
-    onOpenWalletInfo: action('onOpenWalletInfo'),
+    onOpenAllTransactions: action('onOpenAllTransactions'),
   },
   argTypes: {
     initialTx: { control: false },

@@ -1,0 +1,71 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NovaTransactionsProviderProps\<T\>
+
+> **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
+
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/3fe83b313b340e94fe267aac4ea7faa1db5af0df/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L37)
+
+Defines the props for the NovaTransactionsProvider component.
+
+## Type Declaration
+
+### adapter
+
+> **adapter**: `TxAdapter`\<`T`\> \| `TxAdapter`\<`T`\>[]
+
+### connectedAdapterType?
+
+> `optional` **connectedAdapterType**: `OrbitAdapter`
+
+### connectedWalletAddress?
+
+> `optional` **connectedWalletAddress**: `string`
+
+### customization?
+
+> `optional` **customization**: `object`
+
+#### customization.toast?
+
+> `optional` **toast**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`T`\>
+
+#### customization.trackingTxModal?
+
+> `optional` **trackingTxModal**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`T`\>
+
+#### customization.transactionsInfoModal?
+
+> `optional` **transactionsInfoModal**: [`TransactionsInfoModalCustomization`](../../type-aliases/TransactionsInfoModalCustomization.md)\<`T`\>
+
+### features?
+
+> `optional` **features**: `object`
+
+#### features.toasts?
+
+> `optional` **toasts**: `boolean`
+
+#### features.trackingTxModal?
+
+> `optional` **trackingTxModal**: `boolean`
+
+#### features.transactionsModal?
+
+> `optional` **transactionsModal**: `boolean`
+
+### labels?
+
+> `optional` **labels**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
+
+### transactionsPool
+
+> **transactionsPool**: `TransactionPool`\<`T`\>
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`

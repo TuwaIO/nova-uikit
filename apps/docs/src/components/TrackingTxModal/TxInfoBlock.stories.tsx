@@ -1,7 +1,8 @@
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxInfoBlock } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import { sepolia } from 'viem/chains';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../../utils/mockAdapters';
@@ -20,7 +21,7 @@ const meta: Meta<typeof TxInfoBlock> = {
     return <TxInfoBlock {...args} adapter={args.adapter} />;
   },
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       pending: false,
     }),
@@ -49,7 +50,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       pending: false,
     }),
@@ -63,7 +64,7 @@ export const Default: Story = {
  */
 export const InitialState: Story = {
   args: {
-    tx: createInitialTx(TransactionAdapter.EVM),
+    tx: createInitialTx(OrbitAdapter.EVM),
     adapter: [mockEvmAdapter],
   },
 };
@@ -74,7 +75,7 @@ export const InitialState: Story = {
  */
 export const GelatoTransaction: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Gelato,
       txKey: 'gelato_task_id_abcdef123456',
     }),
@@ -87,7 +88,7 @@ export const GelatoTransaction: Story = {
  */
 export const DifferentNetwork: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, {
+    tx: createMockTx(OrbitAdapter.EVM, {
       chainId: sepolia.id,
     }),
     adapter: [mockEvmAdapter],
@@ -122,7 +123,7 @@ export const WithCustomization: Story = {
  */
 export const SolanaTransaction: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.SOLANA, { pending: true, chainId: 'solana:mainnet' }),
+    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, chainId: 'solana:mainnet' }),
     adapter: [mockSolanaAdapter],
   },
 };

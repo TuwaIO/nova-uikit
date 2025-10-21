@@ -3,20 +3,15 @@
  * It serves as the default language pack for the library.
  */
 
-import { TuwaLabels } from './types';
+import { NovaTransactionsLabels } from './types';
 
 /**
  * An object containing the default English text for all labels used in the UI.
  * This object implements the `TuwaLabels` type and can be used as a template
  * for creating other language translations.
  */
-export const defaultLabels: TuwaLabels = {
-  walletModal: {
-    title: 'Wallet & Transactions',
-    header: {
-      notConnected: 'Wallet not connected',
-      avatarAlt: 'Avatar for',
-    },
+export const defaultLabels: NovaTransactionsLabels = {
+  transactionsModal: {
     history: {
       title: 'Transactions History',
       connectWalletTitle: 'Connect Wallet',
@@ -26,7 +21,7 @@ export const defaultLabels: TuwaLabels = {
     },
   },
   toast: {
-    openWalletInfo: 'Open wallet info',
+    openTransactionsInfo: 'Open transactions',
   },
   statuses: {
     pending: 'Pending',
@@ -59,7 +54,7 @@ export const defaultLabels: TuwaLabels = {
     title: 'Transaction Overview',
     processing: 'Processing...',
     close: 'Close',
-    walletInfo: 'Wallet Info',
+    allTransactions: 'All transactions',
     retry: 'Retry',
     progressIndicator: {
       created: 'Created',

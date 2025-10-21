@@ -1,33 +1,30 @@
-'use client';
-
 /**
  * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single transaction.
  */
-import { XMarkIcon } from '@heroicons/react/24/solid';
-import * as Dialog from '@radix-ui/react-dialog';
-import { cn } from '@tuwaio/nova-core';
-import {
-  InitialTransaction,
-  InitialTransactionParams,
-  selectAdapterByKey,
-  Transaction,
-  TransactionStatus,
-} from '@tuwaio/pulsar-core';
-import { AnimatePresence, motion, MotionProps } from 'framer-motion';
+import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
+import { selectAdapterByKey } from '@tuwaio/orbit-core';
+import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import { MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
 
-import { NovaProviderProps, useLabels } from '../../providers';
+import { NovaTransactionsProviderProps, useLabels } from '../../providers';
+import {
+  TxErrorBlock,
+  TxErrorBlockProps,
+  TxInfoBlock,
+  TxInfoBlockProps,
+  TxProgressIndicator,
+  TxProgressIndicatorProps,
+  TxStatusVisual,
+  TxStatusVisualProps,
+} from '../';
 import { StatusAwareText } from '../StatusAwareText';
-import { TxErrorBlock, TxErrorBlockProps } from './TxErrorBlock';
-import { TxInfoBlock, TxInfoBlockProps } from './TxInfoBlock';
-import { TxProgressIndicator, TxProgressIndicatorProps } from './TxProgressIndicator';
-import { TxStatusVisual, TxStatusVisualProps } from './TxStatusVisual';
 
 // --- Prop Types for Customization ---
 type CustomHeaderProps = { onClose: () => void; title: ReactNode };
 type CustomFooterProps = {
   onClose: () => void;
-  onOpenWalletInfo: () => void;
+  onOpenAllTransactions: () => void;
   onRetry?: () => void;
   onSpeedUp?: () => void;
   onCancel?: () => void;
@@ -38,7 +35,7 @@ type CustomFooterProps = {
 };
 
 export type TrackingTxModalCustomization<T extends Transaction> = {
-  modalProps?: Partial<ComponentPropsWithoutRef<typeof Dialog.Content>>;
+  modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   motionProps?: MotionProps;
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
@@ -51,41 +48,34 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
 };
 
 export type TrackingTxModalProps<T extends Transaction> = Pick<
-  NovaProviderProps<T>,
-  'handleTransaction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
+  NovaTransactionsProviderProps<T>,
+  'executeTxAction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
   onClose: (txKey?: string) => void;
-  onOpenWalletInfo: () => void;
+  onOpenAllTransactions: () => void;
   className?: string;
   customization?: TrackingTxModalCustomization<T>;
 };
 
-/**
- * A detailed modal that displays the real-time status and lifecycle of a transaction.
- * It opens automatically for transactions initiated with `withTrackedModal: true`.
- */
 export function TrackingTxModal<T extends Transaction>({
   adapter,
   onClose,
-  onOpenWalletInfo,
+  onOpenAllTransactions,
   className,
   customization,
   transactionsPool,
-  handleTransaction,
+  executeTxAction,
   initialTx,
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
-  // --- State Derivation ---
   const activeTx = useMemo(
     () => (initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined),
     [transactionsPool, initialTx],
   );
 
   const txToDisplay = activeTx ?? initialTx;
-
   const isOpen = (initialTx?.withTrackedModal && !activeTx) || (activeTx?.isTrackedModalOpen ?? false);
 
-  // --- Derived Status Flags ---
   const { isProcessing, isSucceed, isFailed, isReplaced } = useMemo(() => {
     const txStatus = activeTx?.status;
     const isInitializing = initialTx?.isInitializing ?? false;
@@ -98,13 +88,12 @@ export function TrackingTxModal<T extends Transaction>({
     };
   }, [activeTx, initialTx]);
 
-  // --- Adapter and Action Logic ---
   const foundAdapter = useMemo(
     () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined),
     [txToDisplay, adapter],
   );
 
-  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && handleTransaction);
+  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && executeTxAction);
   const canReplace = !!(
     foundAdapter?.speedUpTxAction &&
     foundAdapter?.cancelTxAction &&
@@ -112,7 +101,6 @@ export function TrackingTxModal<T extends Transaction>({
     activeTx.tracker === 'ethereum'
   );
 
-  // --- Action Handlers ---
   const handleRetry = () => {
     if (!canRetry || !foundAdapter?.retryTxAction) return;
 
@@ -124,18 +112,27 @@ export function TrackingTxModal<T extends Transaction>({
       title: txToDisplay.title,
       description: txToDisplay.description,
       payload: txToDisplay.payload,
-      withTrackedModal: true,
+      rpcUrl:
+        'rpcUrl' in txToDisplay
+          ? txToDisplay?.rpcUrl
+          : 'desiredChainID' in txToDisplay
+            ? (txToDisplay.desiredChainID as string)
+            : (txToDisplay.chainId as string).split(':')[1],
+      withTrackedModal: 'withTrackedModal' in txToDisplay ? txToDisplay.withTrackedModal : false,
     };
-    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, handleTransaction });
-  };
-  const handleCancel = () => {
-    if (canReplace && activeTx) foundAdapter.cancelTxAction!(activeTx);
-  };
-  const handleSpeedUp = () => {
-    if (canReplace && activeTx) foundAdapter.speedUpTxAction!(activeTx);
+    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
-  // --- Customization & Rendering ---
+  const isWithActions = canReplace && activeTx && ['metamask'].includes(activeTx?.walletType.split(':')[1]);
+
+  const handleCancel = () => {
+    if (isWithActions) foundAdapter.cancelTxAction!(activeTx);
+  };
+
+  const handleSpeedUp = () => {
+    if (isWithActions) foundAdapter.speedUpTxAction!(activeTx);
+  };
+
   const CustomHeader = customization?.components?.Header;
   const CustomFooter = customization?.components?.Footer;
   const CustomStatusVisual = customization?.components?.StatusVisual;
@@ -143,134 +140,94 @@ export function TrackingTxModal<T extends Transaction>({
   const CustomInfoBlock = customization?.components?.InfoBlock;
   const CustomErrorBlock = customization?.components?.ErrorBlock;
 
-  const motionProps: MotionProps = {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-    transition: { duration: 0.2, ease: 'easeOut' },
-    ...customization?.motionProps,
-  };
-
   if (!txToDisplay) return null;
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
-      <Dialog.Portal>
-        <AnimatePresence>
-          {isOpen && (
-            <>
-              <Dialog.Overlay asChild>
-                <motion.div
-                  className="fixed inset-0 z-50 bg-black/60"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-              </Dialog.Overlay>
-              <Dialog.Content
-                className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 outline-none"
-                {...customization?.modalProps}
-                asChild
-              >
-                <motion.div {...motionProps}>
-                  <div
-                    className={cn(
-                      'relative flex max-h-[98dvh] w-full flex-col gap-3 overflow-y-auto rounded-2xl bg-[var(--tuwa-bg-primary)] p-5 pt-0 shadow-2xl',
-                      className,
-                    )}
-                  >
-                    {CustomHeader ? (
-                      <CustomHeader
-                        onClose={() => onClose(activeTx?.txKey)}
-                        title={<DefaultHeaderTitle tx={txToDisplay} />}
-                      />
-                    ) : (
-                      <DefaultHeader
-                        onClose={() => onClose(activeTx?.txKey)}
-                        title={<DefaultHeaderTitle tx={txToDisplay} />}
-                      />
-                    )}
-
-                    <main className="flex flex-col gap-3">
-                      {CustomStatusVisual ? (
-                        <CustomStatusVisual
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      ) : (
-                        <TxStatusVisual
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      )}
-                      {CustomProgressIndicator ? (
-                        <CustomProgressIndicator
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      ) : (
-                        <TxProgressIndicator
-                          isProcessing={isProcessing}
-                          isSucceed={isSucceed}
-                          isFailed={isFailed}
-                          isReplaced={isReplaced}
-                        />
-                      )}
-                      {CustomInfoBlock ? (
-                        <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
-                      ) : (
-                        <TxInfoBlock tx={txToDisplay} adapter={adapter} />
-                      )}
-                      {CustomErrorBlock ? (
-                        <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
-                      ) : (
-                        <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
-                      )}
-                    </main>
-
-                    {CustomFooter ? (
-                      <CustomFooter
-                        onClose={() => onClose(activeTx?.txKey)}
-                        onOpenWalletInfo={onOpenWalletInfo}
-                        isProcessing={isProcessing}
-                        isFailed={isFailed}
-                        canReplace={canReplace}
-                        onRetry={canRetry ? handleRetry : undefined}
-                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
-                        onCancel={canReplace ? handleCancel : undefined}
-                        connectedWalletAddress={connectedWalletAddress}
-                      />
-                    ) : (
-                      <DefaultFooter
-                        onClose={() => onClose(activeTx?.txKey)}
-                        onOpenWalletInfo={onOpenWalletInfo}
-                        isProcessing={isProcessing}
-                        isFailed={isFailed}
-                        canReplace={canReplace}
-                        onRetry={canRetry ? handleRetry : undefined}
-                        onSpeedUp={canReplace ? handleSpeedUp : undefined}
-                        onCancel={canReplace ? handleCancel : undefined}
-                        connectedWalletAddress={connectedWalletAddress}
-                      />
-                    )}
-                  </div>
-                </motion.div>
-              </Dialog.Content>
-            </>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
+      <DialogContent
+        className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
+        {...customization?.modalProps}
+      >
+        <div className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', className)}>
+          {CustomHeader ? (
+            <CustomHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
+          ) : (
+            <DefaultHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
           )}
-        </AnimatePresence>
-      </Dialog.Portal>
-    </Dialog.Root>
+
+          <main className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
+            {CustomStatusVisual ? (
+              <CustomStatusVisual
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            ) : (
+              <TxStatusVisual
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            )}
+            {CustomProgressIndicator ? (
+              <CustomProgressIndicator
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            ) : (
+              <TxProgressIndicator
+                isProcessing={isProcessing}
+                isSucceed={isSucceed}
+                isFailed={isFailed}
+                isReplaced={isReplaced}
+              />
+            )}
+            {CustomInfoBlock ? (
+              <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
+            ) : (
+              <TxInfoBlock tx={txToDisplay} adapter={adapter} />
+            )}
+            {CustomErrorBlock ? (
+              <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+            ) : (
+              <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+            )}
+          </main>
+
+          {CustomFooter ? (
+            <CustomFooter
+              onClose={() => onClose(activeTx?.txKey)}
+              onOpenAllTransactions={onOpenAllTransactions}
+              isProcessing={isProcessing}
+              isFailed={isFailed}
+              canReplace={canReplace}
+              onRetry={canRetry ? handleRetry : undefined}
+              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onCancel={isWithActions ? handleCancel : undefined}
+              connectedWalletAddress={connectedWalletAddress}
+            />
+          ) : (
+            <DefaultFooter
+              onClose={() => onClose(activeTx?.txKey)}
+              onOpenAllTransactions={onOpenAllTransactions}
+              isProcessing={isProcessing}
+              isFailed={isFailed}
+              canReplace={canReplace}
+              onRetry={canRetry ? handleRetry : undefined}
+              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onCancel={isWithActions ? handleCancel : undefined}
+              connectedWalletAddress={connectedWalletAddress}
+            />
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-
-// --- Default Sub-Components ---
 
 function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
   return (
@@ -279,7 +236,7 @@ function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
       source={tx.title}
       fallback={tx.type}
       variant="title"
-      className="text-lg"
+      className="novatx:text-lg"
     />
   );
 }
@@ -287,25 +244,70 @@ function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
 const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
   const { actions } = useLabels();
   return (
-    <header className="sticky top-0 z-10 flex w-full items-start justify-between bg-[var(--tuwa-bg-primary)] pt-5 pb-2">
-      <Dialog.Title>{title}</Dialog.Title>
-      <Dialog.Close asChild>
+    <DialogHeader>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogClose asChild>
         <button
           type="button"
           onClick={() => onClose()}
           aria-label={actions.close}
-          className="cursor-pointer -mt-1 ml-2 rounded-full p-1 text-[var(--tuwa-text-tertiary)] transition-colors hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]"
+          className="novatx:cursor-pointer novatx:rounded-full novatx:p-1
+                   novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors
+                   novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]"
         >
-          <XMarkIcon className="h-5 w-5" />
+          <CloseIcon />
         </button>
-      </Dialog.Close>
-    </header>
+      </DialogClose>
+    </DialogHeader>
   );
+};
+
+const MainActionButton = ({
+  isFailed,
+  onRetry,
+  isProcessing,
+  canReplace,
+  connectedWalletAddress,
+  onOpenAllTransactions,
+}: Pick<
+  CustomFooterProps,
+  'isFailed' | 'onRetry' | 'isProcessing' | 'canReplace' | 'connectedWalletAddress' | 'onOpenAllTransactions'
+>) => {
+  const { trackingModal } = useLabels();
+
+  if (isFailed && onRetry) {
+    return (
+      <button
+        type="button"
+        onClick={onRetry}
+        className="novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md
+                   novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)]
+                   novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity
+                   novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]"
+      >
+        {trackingModal.retry}
+      </button>
+    );
+  }
+  if (!isProcessing && !canReplace && !!connectedWalletAddress) {
+    return (
+      <button
+        type="button"
+        onClick={onOpenAllTransactions}
+        className="novatx:cursor-pointer novatx:rounded-md
+                   novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]
+                   novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]"
+      >
+        {trackingModal.allTransactions}
+      </button>
+    );
+  }
+  return null;
 };
 
 const DefaultFooter = ({
   onClose,
-  onOpenWalletInfo,
+  onOpenAllTransactions,
   isProcessing,
   onRetry,
   onSpeedUp,
@@ -316,61 +318,49 @@ const DefaultFooter = ({
 }: CustomFooterProps) => {
   const { trackingModal, actions } = useLabels();
 
-  const MainActionButton = () => {
-    if (isFailed && onRetry) {
-      return (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-button-gradient-from)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-on-accent)] transition-opacity hover:opacity-90"
-        >
-          {trackingModal.retry}
-        </button>
-      );
-    }
-    if (!isProcessing && !canReplace && !!connectedWalletAddress) {
-      return (
-        <button
-          type="button"
-          onClick={onOpenWalletInfo}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)]"
-        >
-          {trackingModal.walletInfo}
-        </button>
-      );
-    }
-    return null;
-  };
-
   return (
-    <footer className="mt-2 flex w-full items-center justify-between border-t border-[var(--tuwa-border-primary)] pt-4">
-      <div className="flex items-center gap-4">
+    <footer
+      className="novatx:flex novatx:w-full novatx:items-center novatx:justify-between
+                     novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:p-4"
+    >
+      <div className="novatx:flex novatx:items-center novatx:gap-4">
         {canReplace && onSpeedUp && onCancel && (
           <>
             <button
               type="button"
               onClick={onSpeedUp}
-              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-accent)] transition-opacity hover:opacity-80"
+              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
+                       novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
             >
               {actions.speedUp}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="cursor-pointer text-sm font-medium text-[var(--tuwa-text-secondary)] transition-opacity hover:opacity-80"
+              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
+                       novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80"
             >
               {actions.cancel}
             </button>
           </>
         )}
       </div>
-      <div className="flex items-center gap-3">
-        <MainActionButton />
+      <div className="novatx:flex novatx:items-center novatx:gap-3">
+        <MainActionButton
+          isFailed={isFailed}
+          onRetry={onRetry}
+          isProcessing={isProcessing}
+          canReplace={canReplace}
+          connectedWalletAddress={connectedWalletAddress}
+          onOpenAllTransactions={onOpenAllTransactions}
+        />
         <button
           type="button"
           onClick={onClose}
           disabled={isProcessing && !canReplace}
-          className="cursor-pointer rounded-md bg-[var(--tuwa-bg-muted)] px-4 py-2 text-sm font-semibold text-[var(--tuwa-text-primary)] transition-colors hover:bg-[var(--tuwa-border-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold
+                   novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]
+                   novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50"
         >
           {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
         </button>

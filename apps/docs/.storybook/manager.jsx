@@ -6,7 +6,7 @@ export const tuwaTheme = create({
 
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://docs.tuwa.io/',
-  brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwaLogoDark.svg',
+  brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwa_logo.svg',
   brandTarget: '_self',
 
   colorPrimary: '#6366f1',
@@ -35,7 +35,7 @@ export const tuwaDarkTheme = create({
 
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://docs.tuwa.io/',
-  brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwaLogoDark.svg',
+  brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwa_logo.svg',
   brandTarget: '_self',
 
   colorPrimary: '#8b5cf6',

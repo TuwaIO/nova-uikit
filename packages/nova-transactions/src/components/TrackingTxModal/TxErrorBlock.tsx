@@ -31,14 +31,14 @@ export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-[var(--tuwa-error-icon)]/30 bg-[var(--tuwa-error-bg)] p-3 text-sm',
+        'novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
         className,
       )}
     >
       {/* --- Header with Title and Copy Button --- */}
-      <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-2 font-bold text-[var(--tuwa-error-icon)]">
-          <ExclamationTriangleIcon className="h-5 w-5" />
+      <div className="novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between">
+        <div className="novatx:flex novatx:items-center novatx:gap-2 novatx:font-bold novatx:text-[var(--tuwa-error-icon)]">
+          <ExclamationTriangleIcon className="novatx:h-5 novatx:w-5" />
           <span>{txError.title}</span>
         </div>
         <button
@@ -46,19 +46,19 @@ export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
           onClick={() => copy(error)}
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : `${actions.copy} error message`}
-          className="cursor-pointer text-[var(--tuwa-error-icon)]/50 transition-colors hover:text-[var(--tuwa-error-icon)]"
+          className="novatx:cursor-pointer novatx:text-[var(--tuwa-error-icon)]/50 novatx:transition-colors novatx:hover:text-[var(--tuwa-error-icon)]"
         >
           {isCopied ? (
-            <CheckIcon className="h-5 w-5 text-[var(--tuwa-success-icon)]" />
+            <CheckIcon className="novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-success-icon)]" />
           ) : (
-            <DocumentDuplicateIcon className="h-5 w-5" />
+            <DocumentDuplicateIcon className="novatx:h-5 novatx:w-5" />
           )}
         </button>
       </div>
 
       {/* --- Scrollable Error Message --- */}
-      <div className="max-h-24 overflow-y-auto rounded bg-[var(--tuwa-bg-primary)] p-2">
-        <p className="font-mono text-xs text-[var(--tuwa-error-text)] break-all">{error}</p>
+      <div className="novatx:max-h-24 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2">
+        <p className="novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-error-text)] novatx:break-all">{error}</p>
       </div>
     </div>
   );

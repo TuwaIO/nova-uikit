@@ -1,4 +1,5 @@
-import { Transaction, TransactionAdapter, TransactionTracker } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { action } from 'storybook/actions';
 import { zeroAddress } from 'viem';
 
@@ -7,14 +8,14 @@ import { zeroAddress } from 'viem';
  * @template T The specific EVM transaction type.
  */
 export const mockEvmAdapter = {
-  key: TransactionAdapter.EVM,
+  key: OrbitAdapter.EVM,
 
   /**
    * Get transaction explorer URL based on pool and transaction key.
    * @template T The specific transaction type.
    */
   getExplorerTxUrl: (tx: Transaction): string => {
-    return `https://etherscan.io/tx/${tx.adapter === TransactionAdapter.EVM ? tx?.hash : tx.txKey}`;
+    return `https://etherscan.io/tx/${tx.adapter === OrbitAdapter.EVM ? tx?.hash : tx.txKey}`;
   },
 
   /**
@@ -83,14 +84,14 @@ export const mockEvmAdapter = {
  * @template T The specific Solana transaction type.
  */
 export const mockSolanaAdapter = {
-  key: TransactionAdapter.SOLANA,
+  key: OrbitAdapter.SOLANA,
 
   /**
    * Returns the explorer URL for a specific transaction based on the pool.
    * @template T The specific transaction type.
    */
   getExplorerTxUrl: (tx: Transaction): string => {
-    return `https://solscan.io/tx/${tx.adapter === TransactionAdapter.EVM ? tx?.hash : tx.txKey}`;
+    return `https://solscan.io/tx/${tx.adapter === OrbitAdapter.EVM ? tx?.hash : tx.txKey}`;
   },
 
   /**

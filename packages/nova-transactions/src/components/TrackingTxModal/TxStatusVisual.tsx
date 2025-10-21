@@ -17,31 +17,29 @@ export type TxStatusVisualProps = {
   isReplaced?: boolean;
 };
 
-// A configuration map that links a status to its corresponding icon and styles.
-// Defined outside the component to prevent re-creation on every render.
 const STATUS_VISUAL_CONFIG: Record<
   'succeed' | 'failed' | 'replaced' | 'processing' | 'initializing',
   { Icon: ComponentType<{ className?: string }>; className: string }
 > = {
   succeed: {
     Icon: CheckCircleIcon,
-    className: 'text-[var(--tuwa-success-icon)]',
+    className: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   failed: {
     Icon: ExclamationCircleIcon,
-    className: 'text-[var(--tuwa-error-icon)]',
+    className: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   replaced: {
     Icon: ArrowPathIcon,
-    className: 'text-[var(--tuwa-info-icon)]',
+    className: 'novatx:text-[var(--tuwa-info-icon)]',
   },
   processing: {
     Icon: ArrowPathIcon,
-    className: 'animate-spin text-[var(--tuwa-text-accent)]',
+    className: 'novatx:animate-spin novatx:text-[var(--tuwa-text-accent)]',
   },
   initializing: {
     Icon: ClockIcon,
-    className: 'animate-pulse text-[var(--tuwa-pending-icon)]',
+    className: 'novatx:animate-pulse novatx:text-[var(--tuwa-pending-icon)]',
   },
 };
 
@@ -50,7 +48,6 @@ const STATUS_VISUAL_CONFIG: Record<
  * current state of a transaction within the tracking modal.
  */
 export function TxStatusVisual({ isProcessing, isSucceed, isFailed, isReplaced }: TxStatusVisualProps) {
-  // Determine the current status key based on the props.
   const statusKey =
     (isSucceed && 'succeed') ||
     (isFailed && 'failed') ||
@@ -61,8 +58,8 @@ export function TxStatusVisual({ isProcessing, isSucceed, isFailed, isReplaced }
   const { Icon, className } = STATUS_VISUAL_CONFIG[statusKey];
 
   return (
-    <div className="flex justify-center py-4">
-      <Icon className={cn('h-16 w-16', className)} />
+    <div className="novatx:flex novatx:justify-center novatx:py-4">
+      <Icon className={cn('novatx:h-16 novatx:w-16', className)} />
     </div>
   );
 }

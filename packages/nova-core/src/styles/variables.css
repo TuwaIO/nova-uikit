@@ -1,3 +1,7 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(novacore);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(novacore);
+
 :root {
   --tuwa-success-bg: theme('colors.green.100');
   --tuwa-success-text: theme('colors.green.700');
@@ -33,6 +37,9 @@
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.700');
   --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+
+  --tuwa-standart-button-bg: theme('colors.gray.100');
+  --tuwa-standart-button-hover: theme('colors.gray.200');
 }
 
 .dark {
@@ -70,4 +77,67 @@
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.600');
   --tuwa-button-gradient-to-hover: theme('colors.purple.600');
+
+  --tuwa-standart-button-bg: theme('colors.gray.700');
+  --tuwa-standart-button-hover: theme('colors.gray.800');
+}
+
+.Toastify {
+  pointer-events: auto;
+}
+
+.Toastify__toast {
+  padding: 0;
+  background: transparent;
+}
+
+@media (hover: hover) {
+  .NovaNoScrolling {
+    scrollbar-width: none;
+  }
+
+  .NovaCustomScroll {
+    animation: scrolling forwards;
+    animation-timeline: scroll(self);
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 4px;
+    background-color: var(--tuwa-border-primary);
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar-thumb {
+    background-color: var(--tuwa-text-secondary);
+    border-radius: 4px;
+  }
+
+  .NovaCustomScroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tuwa-text-primary);
+  }
+
+  @keyframes scrolling {
+    0%,to{
+      padding-right: 2px;
+    }
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 4px;
+    background-color: var(--tuwa-border-primary);
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar-thumb {
+    background-color: var(--tuwa-text-secondary);
+    border-radius: 4px;
+  }
+
+  .NovaCustomScrollNoPadding::-webkit-scrollbar-thumb:hover {
+    background-color: var(--tuwa-text-primary);
+  }
+}
+
+.NovaModalOpen {
+  overflow: hidden;
 }

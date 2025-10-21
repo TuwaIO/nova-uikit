@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionStatusBadge } from '@tuwaio/nova-transactions';
-import { TransactionAdapter, TransactionStatus } from '@tuwaio/pulsar-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 
 import { createMockTx } from '../utils/mockTransactions';
 
@@ -15,7 +16,7 @@ const meta: Meta<typeof TransactionStatusBadge> = {
   },
   args: {
     // Default to the 'Pending' state for the main component view
-    tx: createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: true, status: undefined }),
   },
   argTypes: {
     tx: {
@@ -40,7 +41,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Pending: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { pending: true, status: undefined }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: true, status: undefined }),
   },
 };
 
@@ -49,7 +50,7 @@ export const Pending: Story = {
  */
 export const Success: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Success }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: false, status: TransactionStatus.Success }),
   },
 };
 
@@ -58,7 +59,7 @@ export const Success: Story = {
  */
 export const Failed: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Failed, isError: true }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: false, status: TransactionStatus.Failed, isError: true }),
   },
 };
 
@@ -67,6 +68,6 @@ export const Failed: Story = {
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx(TransactionAdapter.EVM, { pending: false, status: TransactionStatus.Replaced }),
+    tx: createMockTx(OrbitAdapter.EVM, { pending: false, status: TransactionStatus.Replaced }),
   },
 };
