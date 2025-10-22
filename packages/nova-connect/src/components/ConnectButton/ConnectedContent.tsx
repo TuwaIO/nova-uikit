@@ -15,8 +15,7 @@ import React, {
   useRef,
 } from 'react';
 
-import { useGetWalletNameAndAvatar, useWalletNativeBalance } from '../../hooks';
-import { ButtonTxStatus, useNovaConnect } from '../../hooks/useNovaConnect';
+import { ButtonTxStatus, useGetWalletNameAndAvatar, useNovaConnect, useWalletNativeBalance } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
 import { ConnectButtonProps } from './ConnectButton';

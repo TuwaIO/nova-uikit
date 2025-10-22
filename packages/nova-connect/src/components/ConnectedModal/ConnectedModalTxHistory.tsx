@@ -17,7 +17,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
 

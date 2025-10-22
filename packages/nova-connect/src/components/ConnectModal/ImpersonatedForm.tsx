@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isAddress } from 'viem';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
 

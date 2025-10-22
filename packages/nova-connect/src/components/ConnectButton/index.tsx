@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef, ComponentType, memo, useMemo } from 'react';
 
-import { NovaConnectProviderProps } from '../../hooks/useNovaConnect';
+import { NovaConnectProviderProps } from '../../hooks';
 import { NovaConnectProvider, NovaConnectProviderCustomization } from '../../providers';
 import {
   ConnectButton as InternalConnectButton,

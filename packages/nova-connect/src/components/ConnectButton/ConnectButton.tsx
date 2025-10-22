@@ -1,9 +1,10 @@
 import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
+import { useSatelliteConnectStore } from '@tuwaio/satellite-react';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { NovaConnectProviderProps, useNovaConnect } from '../../hooks/useNovaConnect';
+import { NovaConnectProviderProps, useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { InitialChains } from '../../types';
 import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
@@ -287,6 +288,10 @@ export const ConnectButton = memo<ConnectButtonProps>(
   }) => {
     const labels = useNovaConnectLabels();
     const { setIsConnectedModalOpen, setIsConnectModalOpen, activeWallet } = useNovaConnect();
+
+    const walletConnecting = useSatelliteConnectStore((store) => store.walletConnecting);
+
+    console.log('walletConnecting', walletConnecting);
 
     const isConnected = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
 

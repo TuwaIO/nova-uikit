@@ -7,7 +7,7 @@ import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';
 

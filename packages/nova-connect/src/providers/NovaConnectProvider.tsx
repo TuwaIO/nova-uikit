@@ -122,7 +122,7 @@ export type NovaConnectProviderCustomization = {
 /**
  * Extended props for NovaConnectProvider with full customization capabilities
  */
-export interface NovaConnectProviderProps extends BaseNovaConnectProviderProps {
+export interface NovaConnectProviderPropsWithCustomization extends BaseNovaConnectProviderProps {
   /** Comprehensive customization options for the provider and its sub-components */
   customization?: NovaConnectProviderCustomization;
 }
@@ -253,7 +253,12 @@ const defaultProviderTreeRenderer = (
  *
  * @param props - Provider configuration and customization options
  */
-export function NovaConnectProvider({ labels, store, children, customization }: NovaConnectProviderProps) {
+export function NovaConnectProvider({
+  labels,
+  store,
+  children,
+  customization,
+}: NovaConnectProviderPropsWithCustomization) {
   // Extract custom components
   const { LabelsProvider = DefaultLabelsProvider, ErrorsProvider: CustomErrorsProvider = DefaultErrorsProvider } =
     customization?.components ?? {};

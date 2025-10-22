@@ -15,11 +15,6 @@
       "import": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./hooks": {
-      "types": "./dist/hooks/index.d.ts",
-      "import": "./dist/hooks/index.cjs",
-      "default": "./dist/hooks/index.js"
-    },
     "./providers": {
       "types": "./dist/providers/index.d.ts",
       "import": "./dist/providers/index.cjs",

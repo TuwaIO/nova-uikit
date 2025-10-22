@@ -8,8 +8,7 @@ import { Transaction } from '@tuwaio/pulsar-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { NativeBalanceResult } from '../../hooks';
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { NativeBalanceResult, useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
 import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';

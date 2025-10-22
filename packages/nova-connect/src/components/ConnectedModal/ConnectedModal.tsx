@@ -8,8 +8,13 @@ import { formatWalletChainId, getAdapterFromWalletType, OrbitAdapter, WalletType
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
 
-import { NativeBalanceResult, useGetWalletNameAndAvatar, useWalletNativeBalance } from '../../hooks';
-import { NovaConnectProviderType, useNovaConnect } from '../../hooks/useNovaConnect';
+import {
+  NativeBalanceResult,
+  NovaConnectProviderType,
+  useGetWalletNameAndAvatar,
+  useNovaConnect,
+  useWalletNativeBalance,
+} from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { getChainsListByWalletType, getWalletChains } from '../../utils';
 import { ScrollableChainList, type ScrollableChainListProps } from '../Chains/ScrollableChainList';

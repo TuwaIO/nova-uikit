@@ -7,7 +7,7 @@ import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
 

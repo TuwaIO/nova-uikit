@@ -30,7 +30,7 @@ import React, {
   useState,
 } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { InitialChains } from '../../types';
 import { getChainsListByWalletType, getChainsListByWalletTypeAsync, getWalletChains } from '../../utils';

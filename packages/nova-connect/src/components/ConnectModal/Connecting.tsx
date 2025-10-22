@@ -7,7 +7,7 @@ import { cn } from '@tuwaio/nova-core';
 import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
+import { useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { WalletIcon } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';

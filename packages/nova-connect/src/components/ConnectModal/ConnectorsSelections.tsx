@@ -7,7 +7,7 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { formatWalletName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { ConnectContentType } from '../../hooks/useNovaConnect';
+import { ConnectContentType } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { InitialChains } from '../../types';
 import { ConnectButtonProps } from '../ConnectButton/ConnectButton';

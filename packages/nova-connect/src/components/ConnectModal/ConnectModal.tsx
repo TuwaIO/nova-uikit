@@ -30,7 +30,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { ConnectContentType, useNovaConnect } from '../../hooks/useNovaConnect';
+import { ConnectContentType, useNovaConnect } from '../../hooks';
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { Connector, InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
