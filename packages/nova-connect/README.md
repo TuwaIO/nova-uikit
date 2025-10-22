@@ -57,11 +57,12 @@ yarn add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { EVMWalletsWatcher, SatelliteConnectProvider, SolanaWalletsWatcher } from '@tuwaio/satellite-react';
+import { EVMWalletsWatcher, SatelliteConnectProvider, SolanaWalletsWatcher } from '@tuwaio/nova-connect';
 import { initializeSolanaMobileConnectors, satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
+import { createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
+import { createConfig } from '@wagmi/core';
 import { ReactNode } from 'react';
 import { WagmiProvider } from 'wagmi';
-import { createWagmiConfig } from '@tuwaio/satellite-evm';
 import { Chain, mainnet, polygon, arbitrum } from 'viem/chains';
 
 export const appConfig = {
@@ -74,8 +75,11 @@ export const solanaRPCUrls = {
 
 export const appEVMChains = [mainnet, polygon, arbitrum] as readonly [Chain, ...Chain[]];
 
-export const wagmiConfig = createWagmiConfig({
-  ...appConfig,
+export const wagmiConfig = createConfig({
+  connectors: initAllConnectors({
+    ...appConfig,
+  }),
+  transports: createDefaultTransports(appEVMChains),
   chains: appEVMChains,
   ssr: true,
   syncConnectedChain: true,
@@ -106,25 +110,20 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-### Using NovaConnectButton
+### Using ConnectButton
 
 ```tsx
-import { NovaConnectButton } from '@tuwaio/nova-connect';
-import { SatelliteStoreContext } from '@tuwaio/satellite-react';
-import { useContext } from 'react';
+import { ConnectButton } from '@tuwaio/nova-connect';
 
 function App() {
-  const store = useContext(SatelliteStoreContext);
-
   return (
     <div>
-      <NovaConnectButton
-        store={store}
+      <ConnectButton
         appChains={appEVMChains}
         solanaRPCUrls={solanaRPCUrls}
+        withImpersonated
         withBalance
         withChain
-        withImpersonated
       />
     </div>
   );
@@ -137,26 +136,10 @@ function App() {
 
 Nova Connect provides three levels of customization:
 
-### Basic Customization
-
-```tsx
-<NovaConnectButton
-  store={store}
-  appChains={appEVMChains}
-  solanaRPCUrls={solanaRPCUrls}
-  className="custom-button"
-  labels={{
-    connectWallet: 'Connect Wallet',
-    disconnect: 'Disconnect',
-  }}
-/>
-```
-
 ### Advanced Customization
 
 ```tsx
-<NovaConnectButton
-  store={store}
+<ConnectButton
   appChains={appEVMChains}
   solanaRPCUrls={solanaRPCUrls}
   customization={{
@@ -179,7 +162,6 @@ Nova Connect provides three levels of customization:
 
 ```tsx
 <NovaConnectButton
-  store={store}
   appChains={appEVMChains}
   solanaRPCUrls={solanaRPCUrls}
   customization={{
@@ -212,7 +194,7 @@ Nova Connect provides three levels of customization:
 
 ## 🧩 Key Components
 
-### 1. **NovaConnectButton**
+### 1. **ConnectButton**
 
 - Main component for wallet connection.
 - Built-in support for balance display and network selector.
@@ -243,8 +225,7 @@ const customLabels = {
   // ... other labels
 };
 
-<NovaConnectButton
-  store={store}
+<NovaConnectProvider
   labels={customLabels}
   // ... other props
 />
