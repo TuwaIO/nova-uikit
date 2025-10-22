@@ -2,7 +2,7 @@ import { textCenterEllipsis } from '@tuwaio/nova-core';
 import { getAdapterFromWalletType, OrbitAdapter } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSatelliteConnectStore } from '../index';
+import { useSatelliteConnectStore } from '../satellite';
 
 export interface WalletNameAndAvatarData {
   /** The resolved name from the Name Service (e.g., ENS, like "alice.eth"), or null if not found. */

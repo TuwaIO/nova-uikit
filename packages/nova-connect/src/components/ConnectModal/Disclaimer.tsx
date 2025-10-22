@@ -5,7 +5,7 @@
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import React, { ComponentType, forwardRef, useCallback, useId, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
 // --- Types ---
 /**

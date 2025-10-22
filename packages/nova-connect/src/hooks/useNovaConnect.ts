@@ -1,7 +1,7 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { createContext, useContext } from 'react';
 
-import { NovaConnectLabels } from '../index';
+import { NovaConnectLabels } from '../i18n';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';

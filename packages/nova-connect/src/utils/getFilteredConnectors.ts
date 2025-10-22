@@ -1,6 +1,6 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { Connector } from '../index';
+import { Connector } from '../satellite';
 import { getGroupedConnectors, GroupedConnector } from './getGroupedConnectors';
 
 interface GetFilteredConnectorsParams {

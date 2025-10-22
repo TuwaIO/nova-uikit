@@ -31,33 +31,18 @@ import React, {
   useMemo,
 } from 'react';
 
-import {
-  AboutWallets,
-  AboutWalletsCustomization,
-  ConnectButtonProps,
-  ConnectContentType,
-  Connecting,
-  ConnectingCustomization,
-  Connector,
-  ConnectorsSelections,
-  ConnectorsSelectionsCustomization,
-  getConnectChainId,
-  getFilteredConnectors,
-  GetWallet,
-  GetWalletCustomization,
-  ImpersonateForm,
-  ImpersonateFormCustomization,
-  InitialChains,
-  NetworkSelections,
-  NetworkSelectionsCustomization,
-  networksLinks,
-  NetworkTabs,
-  NetworkTabsCustomization,
-  SatelliteStoreContext,
-  useNovaConnect,
-  useNovaConnectLabels,
-  useSatelliteConnectStore,
-} from '../../index';
+import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
+import { InitialChains } from '../../types';
+import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
+import { ConnectButtonProps } from '../ConnectButton';
+import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
+import { Connecting, ConnectingCustomization } from './Connecting';
+import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
+import { GetWallet, GetWalletCustomization } from './GetWallet';
+import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedForm';
+import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
+import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
 
 /**
  * Interface for grouped wallet connectors
@@ -760,7 +745,7 @@ export const ConnectModal = memo<ConnectModalProps>(
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [connect],
+      [connect, appChains, selectedAdapter, solanaRPCUrls],
     );
 
     /**
@@ -835,7 +820,6 @@ export const ConnectModal = memo<ConnectModalProps>(
                 solanaRPCUrls={solanaRPCUrls}
                 setIsConnected={setIsConnected}
                 setIsOpen={setIsConnectModalOpen}
-                waitForPredict={() => store?.getState().activeWallet?.isConnected}
                 withImpersonated={withImpersonated}
                 customization={childComponents.connectorsSelections}
               />

@@ -12,16 +12,14 @@ import {
   ButtonTxStatus,
   ConnectContentType,
   ConnectedContentType,
-  defaultLabels,
-  ErrorsProvider,
-  ErrorsProviderCustomization,
-  NovaConnectLabels,
-  NovaConnectLabelsProvider,
   NovaConnectProviderContext,
-  NovaConnectProviderProps as BaseNovaConnectProviderProps,
+  NovaConnectProviderProps,
   NovaConnectProviderType,
-  useSatelliteConnectStore,
-} from '../index';
+} from '../hooks';
+import { defaultLabels, NovaConnectLabels } from '../i18n';
+import { useSatelliteConnectStore } from '../satellite';
+import { ErrorsProvider, ErrorsProviderCustomization } from './ErrorsProvider';
+import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
 
 // --- Customization Types ---
 
@@ -111,7 +109,7 @@ export type NovaConnectProviderCustomization = {
 /**
  * Extended props for NovaConnectProvider with full customization capabilities
  */
-export interface NovaConnectProviderPropsWithCustomization extends BaseNovaConnectProviderProps {
+export interface NovaConnectProviderPropsWithCustomization extends NovaConnectProviderProps {
   /** Comprehensive customization options for the provider and its sub-components */
   customization?: NovaConnectProviderCustomization;
 }

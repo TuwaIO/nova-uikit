@@ -4,21 +4,14 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import {
-  ChainSelector,
-  ChainSelectorCustomization,
-  ConnectedContent,
-  ConnectedContentCustomization,
-  ConnectedModal,
-  ConnectedModalCustomization,
-  InitialChains,
-  useNovaConnect,
-  useNovaConnectLabels,
-  useSatelliteConnectStore,
-  WaitForConnectionContent,
-  WaitForConnectionContentCustomization,
-} from '../../index';
+import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { InitialChains } from '../../types';
+import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
+import { ConnectedModal, ConnectedModalCustomization } from '../ConnectedModal/ConnectedModal';
 import { ConnectModal, ConnectModalCustomization } from '../ConnectModal/ConnectModal';
+import { ConnectedContent, ConnectedContentCustomization } from './ConnectedContent';
+import { WaitForConnectionContent, WaitForConnectionContentCustomization } from './WaitForConnectionContent';
 
 /**
  * Connect button data for customization context

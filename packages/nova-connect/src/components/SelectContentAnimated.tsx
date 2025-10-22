@@ -8,13 +8,9 @@ import { cn } from '@tuwaio/nova-core';
 import { AnimatePresence, type Easing, motion } from 'framer-motion';
 import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, useMemo } from 'react';
 
-import {
-  ToBottomButton,
-  type ToBottomButtonCustomization,
-  ToTopButton,
-  type ToTopButtonCustomization,
-  useNovaConnectLabels,
-} from '../index';
+import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { ToBottomButton, ToBottomButtonCustomization } from './ToBottomButton';
+import { ToTopButton, ToTopButtonCustomization } from './ToTopButton';
 
 /**
  * Props for the SelectContentAnimated component

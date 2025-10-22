@@ -7,19 +7,14 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { formatWalletName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import {
-  ConnectButtonProps,
-  ConnectCard,
-  ConnectCardCustomization,
-  ConnectContentType,
-  ConnectorsBlock,
-  ConnectorsBlockCustomization,
-  Disclaimer,
-  GroupedConnector,
-  InitialChains,
-  useNovaConnectLabels,
-  WalletIcon,
-} from '../../index';
+import { ConnectContentType, useNovaConnectLabels } from '../../hooks';
+import { InitialChains } from '../../types';
+import { ConnectButtonProps } from '../ConnectButton';
+import { WalletIcon } from '../WalletIcon';
+import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
+import { GroupedConnector } from './ConnectModal';
+import { ConnectorsBlock, ConnectorsBlockCustomization } from './ConnectorsBlock';
+import { Disclaimer } from './Disclaimer';
 
 // --- Types ---
 
@@ -226,8 +221,6 @@ export interface ConnectorsSelectionsProps extends Pick<ConnectButtonProps, 'wit
   setIsConnected: (value: boolean) => void;
   /** Function to control modal open state */
   setIsOpen: (value: boolean) => void;
-  /** Function to wait for connection prediction */
-  waitForPredict: () => boolean | undefined;
   /** Function to set modal content type */
   setContentType: (contentType: ConnectContentType) => void;
   /** Whether only one network is available */
@@ -433,7 +426,6 @@ export const ConnectorsSelections = memo(
         onClick,
         appChains,
         solanaRPCUrls,
-        waitForPredict,
         setContentType,
         withImpersonated,
         isOnlyOneNetwork = false,
@@ -679,7 +671,6 @@ export const ConnectorsSelections = memo(
                 title={labels.installed}
                 selectedAdapter={selectedAdapter}
                 onClick={onClick}
-                waitForPredict={waitForPredict}
                 solanaRPCUrls={solanaRPCUrls}
                 setIsConnected={setIsConnected}
                 setIsOpen={setIsOpen}
@@ -694,7 +685,6 @@ export const ConnectorsSelections = memo(
                   title={labels.popular}
                   selectedAdapter={selectedAdapter}
                   onClick={onClick}
-                  waitForPredict={waitForPredict}
                   solanaRPCUrls={solanaRPCUrls}
                   setIsConnected={setIsConnected}
                   setIsOpen={setIsOpen}

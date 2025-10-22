@@ -7,7 +7,7 @@ import { cn, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
 // --- Types ---
 
