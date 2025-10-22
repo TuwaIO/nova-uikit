@@ -31,11 +31,10 @@ import React, {
   useMemo,
 } from 'react';
 
-import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { ConnectContentType, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
-import { ConnectButtonProps } from '../ConnectButton';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
@@ -475,7 +474,7 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
 /**
  * Props for the ConnectModal component
  */
-export interface ConnectModalProps extends InitialChains, Pick<ConnectButtonProps, 'withImpersonated'> {
+export interface ConnectModalProps extends InitialChains, Pick<NovaConnectProviderProps, 'withImpersonated'> {
   /** Customization options */
   customization?: ConnectModalCustomization;
 }

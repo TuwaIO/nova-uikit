@@ -1,7 +1,9 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
 import { createContext, useContext } from 'react';
 
 import { NovaConnectLabels } from '../i18n';
+import { InitialChains } from '../types';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';
@@ -9,6 +11,20 @@ export type ConnectedContentType = 'main' | 'transactions' | 'chains';
 
 // Provider props interface
 export interface NovaConnectProviderProps {
+  /** Configuration for supported blockchain networks */
+  appChains?: InitialChains;
+  /** RPC URLs configuration for Solana network */
+  solanaRPCUrls?: Record<string, string>;
+  /** Transaction pool for pending transactions display */
+  transactionPool?: TransactionPool<Transaction>;
+  /** Pulsar adapter(s) for transaction handling */
+  pulsarAdapter?: TxAdapter<Transaction> | TxAdapter<Transaction>[];
+  /** Whether balance should be shown */
+  withBalance?: boolean;
+  /** Whether chain selector should be shown */
+  withChain?: boolean;
+  /** Whether impersonated wallets are enabled */
+  withImpersonated?: boolean;
   children: React.ReactNode;
   labels?: Partial<NovaConnectLabels>;
 }
@@ -20,7 +36,8 @@ export interface WalletBalance {
 }
 
 // Provider context type with better organization
-export interface NovaConnectProviderType {
+export interface NovaConnectProviderType
+  extends Omit<NovaConnectProviderProps, 'pulsarAdapter' | 'children' | 'labels'> {
   // Modal states
   isConnectModalOpen: boolean;
   setIsConnectModalOpen: (value: boolean) => void;

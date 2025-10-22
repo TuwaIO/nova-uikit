@@ -10,6 +10,7 @@ import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback
 
 import {
   NativeBalanceResult,
+  NovaConnectProviderProps,
   useGetWalletNameAndAvatar,
   useNovaConnect,
   useNovaConnectLabels,
@@ -74,7 +75,7 @@ type CloseButtonProps = {
   className?: string;
 };
 
-type MainContentProps = Pick<ConnectButtonProps, 'transactionPool' | 'pulsarAdapter'> & {
+type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
   contentType: ConnectedModalContentType;
   balance: NativeBalanceResult | null;
   ensNameAbbreviated: string | undefined;
@@ -244,7 +245,9 @@ export type ConnectedModalCustomization = {
 /**
  * Props for the ConnectedModal component
  */
-export interface ConnectedModalProps extends Omit<ConnectButtonProps, 'className' | 'customization'> {
+export interface ConnectedModalProps
+  extends Omit<ConnectButtonProps, 'className' | 'customization'>,
+    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> {
   /** Additional CSS classes for the modal */
   className?: string;
   /** Customization options */

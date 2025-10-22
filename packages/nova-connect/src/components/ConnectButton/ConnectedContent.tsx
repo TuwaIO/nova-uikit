@@ -17,6 +17,7 @@ import React, {
 
 import {
   ButtonTxStatus,
+  NovaConnectProviderProps,
   useGetWalletNameAndAvatar,
   useNovaConnect,
   useNovaConnectLabels,
@@ -24,7 +25,6 @@ import {
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
-import { ConnectButtonProps } from './ConnectButton';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
@@ -121,7 +121,7 @@ export type ConnectedContentCustomization = {
   };
 };
 
-export interface ConnectedContentProps extends Pick<ConnectButtonProps, 'transactionPool' | 'withBalance'> {
+export interface ConnectedContentProps extends Pick<NovaConnectProviderProps, 'transactionPool' | 'withBalance'> {
   /** Custom CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */
