@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.3...nova-connect-v0.1.4) (2025-10-22)
+
+
+### Bug Fixes
+
+* remove transactionsPool from nova connect store ([99d6c39](https://github.com/TuwaIO/nova-uikit/commit/99d6c3943bea6839c7beb4c4c58514f08456d7b4))
+
 ## [0.1.3](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.2...nova-connect-v0.1.3) (2025-10-22)
 
 
