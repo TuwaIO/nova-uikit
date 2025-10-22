@@ -30,18 +30,31 @@ import React, {
   useMemo,
 } from 'react';
 
-import { ConnectContentType, useNovaConnect } from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { Connector, InitialChains } from '../../types';
-import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
-import { Connecting, ConnectingCustomization } from './Connecting';
-import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
-import { GetWallet, GetWalletCustomization } from './GetWallet';
-import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedForm';
-import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
-import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
+import {
+  AboutWallets,
+  AboutWalletsCustomization,
+  ConnectButtonProps,
+  ConnectContentType,
+  Connecting,
+  ConnectingCustomization,
+  Connector,
+  ConnectorsSelections,
+  ConnectorsSelectionsCustomization,
+  getConnectChainId,
+  getFilteredConnectors,
+  GetWallet,
+  GetWalletCustomization,
+  ImpersonateForm,
+  ImpersonateFormCustomization,
+  InitialChains,
+  NetworkSelections,
+  NetworkSelectionsCustomization,
+  networksLinks,
+  NetworkTabs,
+  NetworkTabsCustomization,
+  useNovaConnect,
+  useNovaConnectLabels,
+} from '../../index';
 
 /**
  * Interface for grouped wallet connectors

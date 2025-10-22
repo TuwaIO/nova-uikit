@@ -12,14 +12,16 @@ import {
   ButtonTxStatus,
   ConnectContentType,
   ConnectedContentType,
+  defaultLabels,
+  ErrorsProvider,
+  ErrorsProviderCustomization,
+  ErrorsProviderProps,
+  NovaConnectLabels,
+  NovaConnectLabelsProvider,
   NovaConnectProviderContext,
   NovaConnectProviderProps as BaseNovaConnectProviderProps,
   NovaConnectProviderType,
-} from '../hooks/useNovaConnect';
-import { defaultLabels } from '../i18n/en';
-import { NovaConnectLabels } from '../i18n/types';
-import { ErrorsProvider, ErrorsProviderCustomization, ErrorsProviderProps } from './ErrorsProvider';
-import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
+} from '../index';
 
 // --- Customization Types ---
 

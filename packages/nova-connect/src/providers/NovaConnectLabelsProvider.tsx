@@ -5,8 +5,7 @@
 
 import { ReactNode, useMemo } from 'react';
 
-import { NovaConnectLabelsContext } from '../hooks/useNovaConnectLabels';
-import { NovaConnectLabels } from '../i18n/types';
+import { NovaConnectLabels, NovaConnectLabelsContext } from '../index';
 
 interface NovaConnectLabelsProviderProps {
   /** An object containing the custom labels */

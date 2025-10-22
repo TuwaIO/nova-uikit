@@ -6,7 +6,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels } from '../index';
 
 // --- Types for Customization ---
 type CustomIconProps = {

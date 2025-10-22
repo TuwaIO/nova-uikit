@@ -4,8 +4,7 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { createContext, useContext } from 'react';
 import { StoreApi } from 'zustand/index';
 
-import { NovaConnectLabels } from '../i18n/types';
-import { Connector, Wallet } from '../types';
+import { Connector, NovaConnectLabels, Wallet } from '../index';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';

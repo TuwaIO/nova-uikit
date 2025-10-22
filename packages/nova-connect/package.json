@@ -15,11 +15,6 @@
       "import": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./providers": {
-      "types": "./dist/providers/index.d.ts",
-      "import": "./dist/providers/index.cjs",
-      "default": "./dist/providers/index.js"
-    },
     "./evm": {
       "types": "./dist/evm/index.d.ts",
       "import": "./dist/evm/index.cjs",

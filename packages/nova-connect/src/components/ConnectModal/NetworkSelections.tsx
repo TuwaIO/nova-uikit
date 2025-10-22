@@ -8,11 +8,16 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { formatWalletName, getWalletTypeFromConnectorName, OrbitAdapter, WalletType } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { getNetworkIcon, networksLinks } from '../../utils';
-import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
-import { GroupedConnector } from './ConnectModal';
-import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
+import {
+  ConnectCard,
+  ConnectCardCustomization,
+  Disclaimer,
+  DisclaimerCustomization,
+  getNetworkIcon,
+  GroupedConnector,
+  networksLinks,
+  useNovaConnectLabels,
+} from '../../index';
 
 // --- Types ---
 

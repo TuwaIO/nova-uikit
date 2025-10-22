@@ -1,7 +1,7 @@
 import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NovaConnectProviderProps, NovaConnectProviderType } from './useNovaConnect';
+import { NovaConnectProviderProps, NovaConnectProviderType } from '../index';
 
 /**
  * @interface NativeBalanceResult

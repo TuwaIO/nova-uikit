@@ -1,7 +1,7 @@
 import { defaultRpcUrlsByMoniker, SolanaRPCUrls } from '@tuwaio/orbit-solana';
 import type { SolanaClusterMoniker } from 'gill';
 
-import { ChainIdentifierArray } from '../types';
+import { ChainIdentifierArray } from '../index';
 
 /**
  * Extracts Solana cluster from chain identifier

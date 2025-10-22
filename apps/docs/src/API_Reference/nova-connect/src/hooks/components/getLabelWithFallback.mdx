@@ -1,0 +1,43 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getLabelWithFallback()
+
+> **getLabelWithFallback**(`labels`, `key`, `fallback?`): `string`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:203](https://github.com/TuwaIO/nova-uikit/blob/3c61c838515a620036eb16b3b54fdb35a7c0f04b/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L203)
+
+Utility function to get a formatted label with fallback
+
+## Parameters
+
+### labels
+
+`NovaConnectLabels`
+
+The labels object
+
+### key
+
+keyof `NovaConnectLabels`
+
+The label key
+
+### fallback?
+
+`string`
+
+Optional fallback text
+
+## Returns
+
+`string`
+
+The label value or fallback
+
+## Example
+
+```typescript
+const buttonText = getLabelWithFallback(labels, 'connectWallet', 'Connect');
+```

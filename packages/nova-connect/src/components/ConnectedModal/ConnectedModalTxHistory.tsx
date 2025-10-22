@@ -17,9 +17,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { useNovaConnect } from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
+import { ConnectButtonProps, useNovaConnect, useNovaConnectLabels } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {

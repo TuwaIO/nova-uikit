@@ -8,16 +8,19 @@ import { Transaction } from '@tuwaio/pulsar-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { NativeBalanceResult, useNovaConnect } from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
 import {
+  ConnectButtonProps,
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
   ConnectedModalNameAndBalanceProps,
-} from './ConnectedModalNameAndBalance';
-import { IconButton, IconButtonProps } from './IconButton';
+  IconButton,
+  IconButtonProps,
+  NativeBalanceResult,
+  useNovaConnect,
+  useNovaConnectLabels,
+  WalletAvatar,
+  WalletAvatarProps,
+} from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {

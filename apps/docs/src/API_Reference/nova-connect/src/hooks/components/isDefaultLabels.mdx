@@ -1,0 +1,36 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# isDefaultLabels()
+
+> **isDefaultLabels**(`labels`): `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:186](https://github.com/TuwaIO/nova-uikit/blob/3c61c838515a620036eb16b3b54fdb35a7c0f04b/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L186)
+
+Utility function to check if labels are default ones (for external use)
+This is a regular function, not a hook, so it can be used anywhere
+
+## Parameters
+
+### labels
+
+`NovaConnectLabels`
+
+The labels to check
+
+## Returns
+
+`boolean`
+
+Whether the labels are the default English labels
+
+## Example
+
+```typescript
+function SomeUtilityFunction(labels: NovaConnectLabels) {
+  if (isDefaultLabels(labels)) {
+    console.log('Using default English labels');
+  }
+}
+```

@@ -4,14 +4,21 @@ import { useSatelliteConnectStore } from '@tuwaio/satellite-react';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { NovaConnectProviderProps, useNovaConnect } from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { InitialChains } from '../../types';
-import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
-import { ConnectedModal, ConnectedModalCustomization } from '../ConnectedModal/ConnectedModal';
+import {
+  ChainSelector,
+  ChainSelectorCustomization,
+  ConnectedContent,
+  ConnectedContentCustomization,
+  ConnectedModal,
+  ConnectedModalCustomization,
+  InitialChains,
+  NovaConnectProviderProps,
+  useNovaConnect,
+  useNovaConnectLabels,
+  WaitForConnectionContent,
+  WaitForConnectionContentCustomization,
+} from '../../index';
 import { ConnectModal, ConnectModalCustomization } from '../ConnectModal/ConnectModal';
-import { ConnectedContent, ConnectedContentCustomization } from './ConnectedContent';
-import { WaitForConnectionContent, WaitForConnectionContentCustomization } from './WaitForConnectionContent';
 
 /**
  * Connect button data for customization context
@@ -287,7 +294,10 @@ export const ConnectButton = memo<ConnectButtonProps>(
     customization = {},
   }) => {
     const labels = useNovaConnectLabels();
+
     const { setIsConnectedModalOpen, setIsConnectModalOpen, activeWallet } = useNovaConnect();
+
+    console.log('activeWallet', activeWallet);
 
     const walletConnecting = useSatelliteConnectStore((store) => store.walletConnecting);
 

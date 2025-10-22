@@ -9,23 +9,25 @@ import { type Easing, motion, type Transition, type Variants } from 'framer-moti
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
 
 import {
-  NativeBalanceResult,
-  NovaConnectProviderType,
-  useGetWalletNameAndAvatar,
-  useNovaConnect,
-  useWalletNativeBalance,
-} from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { getChainsListByWalletType, getWalletChains } from '../../utils';
-import { ScrollableChainList, type ScrollableChainListProps } from '../Chains/ScrollableChainList';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { ConnectedModalFooter, type ConnectedModalFooterProps } from './ConnectedModalFooter';
-import {
+  ConnectButtonProps,
+  ConnectedModalFooter,
+  type ConnectedModalFooterProps,
   ConnectedModalMainContent,
   type ConnectedModalMainContentCustomization,
   type ConnectedModalMainContentProps,
-} from './ConnectedModalMainContent';
-import { ConnectedModalTxHistory, type ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
+  ConnectedModalTxHistory,
+  type ConnectedModalTxHistoryProps,
+  getChainsListByWalletType,
+  getWalletChains,
+  NativeBalanceResult,
+  NovaConnectProviderType,
+  ScrollableChainList,
+  type ScrollableChainListProps,
+  useGetWalletNameAndAvatar,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useWalletNativeBalance,
+} from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {

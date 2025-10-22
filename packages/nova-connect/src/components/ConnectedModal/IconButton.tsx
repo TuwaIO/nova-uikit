@@ -8,8 +8,7 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { WalletIcon, type WalletIconCustomization } from '../WalletIcon';
+import { useNovaConnectLabels, WalletIcon, type WalletIconCustomization } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_BUTTON_ANIMATION_VARIANTS: Variants = {

@@ -15,11 +15,18 @@ import React, {
   useRef,
 } from 'react';
 
-import { ButtonTxStatus, useGetWalletNameAndAvatar, useNovaConnect, useWalletNativeBalance } from '../../hooks';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
-import { ConnectButtonProps } from './ConnectButton';
-import { StatusIcon, type StatusIconCustomization } from './StatusIcon';
+import {
+  ButtonTxStatus,
+  ConnectButtonProps,
+  StatusIcon,
+  type StatusIconCustomization,
+  useGetWalletNameAndAvatar,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useWalletNativeBalance,
+  WalletAvatar,
+  WalletAvatarCustomization,
+} from '../../index';
 
 // --- Types for Customization ---
 type StatusDisplayData = {

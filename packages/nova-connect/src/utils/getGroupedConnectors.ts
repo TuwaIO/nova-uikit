@@ -1,6 +1,6 @@
 import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { Connector } from '../types';
+import { Connector } from '../index';
 
 export interface GroupedConnector {
   name: string;
