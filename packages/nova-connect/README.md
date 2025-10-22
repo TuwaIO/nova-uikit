@@ -57,7 +57,9 @@ yarn add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { EVMWalletsWatcher, SatelliteConnectProvider, SolanaWalletsWatcher } from '@tuwaio/nova-connect';
+import { SatelliteConnectProvider, NovaConnectProvider } from '@tuwaio/nova-connect';
+import { EVMWalletsWatcher } from '@tuwaio/nova-connect/evm';
+import { SolanaWalletsWatcher } from '@tuwaio/nova-connect/solana';
 import { initializeSolanaMobileConnectors, satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
 import { createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
 import { createConfig } from '@wagmi/core';
@@ -70,7 +72,7 @@ export const appConfig = {
 };
 
 export const solanaRPCUrls = {
-  mainnet: '[https://api.mainnet-beta.solana.com](https://api.mainnet-beta.solana.com)',
+  mainnet: 'https://api.mainnet-beta.solana.com',
 };
 
 export const appEVMChains = [mainnet, polygon, arbitrum] as readonly [Chain, ...Chain[]];
@@ -97,12 +99,14 @@ export function Providers({ children }: { children: ReactNode }) {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <SatelliteConnectProvider
-          adapters={[satelliteEVMAdapter({ wagmiConfig }), satelliteSolanaAdapter()]}
+          adapters={[satelliteEVMAdapter({ wagmiConfig }), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
           appName={appConfig.appName}
         >
           <EVMWalletsWatcher />
           <SolanaWalletsWatcher />
-          {children}
+          <NovaConnectProvider>
+            {children}
+          </NovaConnectProvider>
         </SatelliteConnectProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -161,7 +165,7 @@ Nova Connect provides three levels of customization:
 ### Full Provider Customization
 
 ```tsx
-<NovaConnectButton
+<ConnectButton
   appChains={appEVMChains}
   solanaRPCUrls={solanaRPCUrls}
   customization={{
