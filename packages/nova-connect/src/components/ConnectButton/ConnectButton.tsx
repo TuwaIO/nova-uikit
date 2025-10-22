@@ -3,9 +3,8 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { InitialChains } from '../../types';
 import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
 import { ConnectedContent, ConnectedContentCustomization } from './ConnectedContent';
 import { WaitForConnectionContent, WaitForConnectionContentCustomization } from './WaitForConnectionContent';
@@ -184,7 +183,7 @@ DefaultButton.displayName = 'DefaultButton';
 /**
  * Base props for ConnectButton component
  */
-export type ConnectButtonProps = InitialChains & {
+export type ConnectButtonProps = Pick<NovaConnectProviderProps, 'transactionPool'> & {
   /** CSS classes to apply to the button */
   className?: string;
   /** Customization options */
@@ -236,7 +235,7 @@ export type ConnectButtonProps = InitialChains & {
  *
  * @public
  */
-export const ConnectButton = memo<ConnectButtonProps>(({ className, customization = {} }) => {
+export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionPool, customization = {} }) => {
   const labels = useNovaConnectLabels();
 
   const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
@@ -245,7 +244,6 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, customizatio
     setIsConnectModalOpen,
     withBalance,
     withChain,
-    transactionPool,
     appChains,
     solanaRPCUrls,
     withImpersonated,

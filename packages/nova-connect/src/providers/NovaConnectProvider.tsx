@@ -332,7 +332,6 @@ export function NovaConnectProvider({
     const defaultContextValue: NovaConnectProviderType = {
       appChains,
       solanaRPCUrls,
-      transactionPool,
       withImpersonated,
       withBalance,
       withChain,
@@ -364,7 +363,6 @@ export function NovaConnectProvider({
   }, [
     appChains,
     solanaRPCUrls,
-    transactionPool,
     withImpersonated,
     withBalance,
     withChain,

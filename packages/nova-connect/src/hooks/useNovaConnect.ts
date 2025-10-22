@@ -33,7 +33,7 @@ export interface WalletBalance {
 
 // Provider context type with better organization
 export interface NovaConnectProviderType
-  extends Omit<NovaConnectProviderProps, 'pulsarAdapter' | 'children' | 'labels'> {
+  extends Omit<NovaConnectProviderProps, 'pulsarAdapter' | 'children' | 'labels' | 'transactionPool'> {
   // Modal states
   isConnectModalOpen: boolean;
   setIsConnectModalOpen: (value: boolean) => void;

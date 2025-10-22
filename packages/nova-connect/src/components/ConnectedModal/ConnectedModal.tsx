@@ -247,7 +247,7 @@ export type ConnectedModalCustomization = {
  */
 export interface ConnectedModalProps
   extends Omit<ConnectButtonProps, 'className' | 'customization'>,
-    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> {
+    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls'> {
   /** Additional CSS classes for the modal */
   className?: string;
   /** Customization options */
