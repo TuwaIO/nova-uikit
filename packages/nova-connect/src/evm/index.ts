@@ -1,3 +1,6 @@
+export * from './utils';
+export * from '@tuwaio/satellite-react/evm';
+
 // Re-export viem types directly when available
 export type { Chain } from 'viem/chains';
 // Import types for extension
@@ -13,9 +16,8 @@ declare module '@tuwaio/nova-connect' {
      * EVM chains configuration - enhanced from default any type
      * @override Replaces default `any` with specific Chain typing when viem is available
      */
+    // eslint-disable-next-line
+    // @ts-ignore - Need for declaration merging
     appChains?: readonly [Chain, ...Chain[]];
   }
 }
-
-export * from './satellite';
-export * from './utils';

@@ -6,9 +6,19 @@ export * from './i18n/en';
 export * from './i18n/types';
 export * from './i18n/ua';
 export * from './providers';
-export * from './satellite';
 export * from './types';
 export * from './utils';
+export {
+  AllConnectors,
+  AllWallets,
+  Connector,
+  SatelliteConnectProvider,
+  SatelliteConnectProviderProps,
+  SatelliteStoreContext,
+  useInitializeAutoConnect,
+  useSatelliteConnectStore,
+  Wallet,
+} from '@tuwaio/satellite-react';
 
 // ========================================
 // Modern Conditional Export System

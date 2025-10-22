@@ -1,3 +1,6 @@
+export * from './utils';
+export * from '@tuwaio/satellite-react/solana';
+
 // Re-export gill types directly when available
 export type { SolanaClusterMoniker } from 'gill';
 // Import types for extension
@@ -13,9 +16,8 @@ declare module '@tuwaio/nova-connect' {
      * Solana RPC URLs configuration - enhanced from default any type
      * @override Replaces default `any` with specific SolanaClusterMoniker typing when gill is available
      */
+    // eslint-disable-next-line
+    // @ts-ignore - Need for declaration merging
     solanaRPCUrls?: Partial<Record<SolanaClusterMoniker, string>>;
   }
 }
-
-export * from './satellite';
-export * from './utils';

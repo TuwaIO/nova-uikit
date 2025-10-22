@@ -34,12 +34,13 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
 
   const connectorObj = connector as Record<string, Connector>;
 
-  if (!connectorObj.name || typeof connectorObj.name !== 'string' || typeof connectorObj.icon !== 'string') {
+  if (!connectorObj.name || typeof connectorObj.name !== 'string') {
     return null;
   }
 
   return {
     name: connectorObj.name,
+    // @ts-expect-error - types on available correctly on the package level
     icon: connectorObj.icon,
     adapter,
     originalConnector: connectorObj as Connector,
