@@ -4,15 +4,37 @@
 
 # NovaConnectProviderProps
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:11](https://github.com/TuwaIO/nova-uikit/blob/c5966b47098fadfcd351ee0f3acccb5fb074cf44/packages/nova-connect/src/hooks/useNovaConnect.ts#L11)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:13](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L13)
+
+## Extends
+
+- `InitialChains`
 
 ## Properties
+
+### appChains?
+
+> `optional` **appChains**: `any`
+
+Defined in: [packages/nova-connect/src/types.ts:16](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/types.ts#L16)
+
+App chains configuration - defaults to any, gets enhanced by chain-specific packages
+
+#### Default
+
+any - Will be typed as `readonly [Chain, ...Chain[]]` when viem is available
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
 
 ### children
 
 > **children**: `ReactNode`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:12](https://github.com/TuwaIO/nova-uikit/blob/c5966b47098fadfcd351ee0f3acccb5fb074cf44/packages/nova-connect/src/hooks/useNovaConnect.ts#L12)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:24](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L24)
 
 ***
 
@@ -20,4 +42,72 @@ Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:12](https://githu
 
 > `optional` **labels**: `Partial`\<`NovaConnectLabels`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:13](https://github.com/TuwaIO/nova-uikit/blob/c5966b47098fadfcd351ee0f3acccb5fb074cf44/packages/nova-connect/src/hooks/useNovaConnect.ts#L13)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:25](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L25)
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:17](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L17)
+
+Pulsar adapter(s) for transaction handling
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls**: `any`
+
+Defined in: [packages/nova-connect/src/types.ts:23](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/types.ts#L23)
+
+Solana RPC URLs configuration - defaults to any, gets enhanced by Solana packages
+
+#### Default
+
+any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when gill is available
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:15](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L15)
+
+Transaction pool for pending transactions display
+
+***
+
+### withBalance?
+
+> `optional` **withBalance**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:19](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L19)
+
+Whether balance should be shown
+
+***
+
+### withChain?
+
+> `optional` **withChain**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:21](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L21)
+
+Whether chain selector should be shown
+
+***
+
+### withImpersonated?
+
+> `optional` **withImpersonated**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:23](https://github.com/TuwaIO/nova-uikit/blob/5f1e95d847f3167f7fdf0c6c0d7ff505cccf90d4/packages/nova-connect/src/hooks/useNovaConnect.ts#L23)
+
+Whether impersonated wallets are enabled

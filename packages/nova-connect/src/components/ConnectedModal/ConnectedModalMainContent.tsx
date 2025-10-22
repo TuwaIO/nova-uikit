@@ -9,9 +9,8 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { NativeBalanceResult, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { ConnectButtonProps } from '../ConnectButton';
 import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
@@ -272,7 +271,7 @@ export type ConnectedModalMainContentCustomization = {
 /**
  * Props for the ConnectedModalMainContent component
  */
-export interface ConnectedModalMainContentProps extends Pick<ConnectButtonProps, 'transactionPool'> {
+export interface ConnectedModalMainContentProps extends Pick<NovaConnectProviderProps, 'transactionPool'> {
   /** List of available chains for the current wallet */
   chainsList: (string | number)[];
   ensAvatar: string | null;

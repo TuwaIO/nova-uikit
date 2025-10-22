@@ -7,9 +7,8 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { formatWalletName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { ConnectContentType, useNovaConnectLabels } from '../../hooks';
+import { ConnectContentType, NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
 import { InitialChains } from '../../types';
-import { ConnectButtonProps } from '../ConnectButton';
 import { WalletIcon } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
@@ -210,7 +209,7 @@ export type ConnectorsSelectionsCustomization = {
 /**
  * Props for the ConnectorsSelections component
  */
-export interface ConnectorsSelectionsProps extends Pick<ConnectButtonProps, 'withImpersonated'>, InitialChains {
+export interface ConnectorsSelectionsProps extends Pick<NovaConnectProviderProps, 'withImpersonated'>, InitialChains {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors */

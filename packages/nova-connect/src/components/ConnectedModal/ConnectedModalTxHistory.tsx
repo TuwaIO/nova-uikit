@@ -17,9 +17,8 @@ import React, {
   useMemo,
 } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks';
+import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { ConnectButtonProps } from '../ConnectButton';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -51,8 +50,8 @@ type CustomNoWalletContainerProps = {
 type CustomTransactionsHistoryWrapperProps = {
   children: ReactNode;
   activeWalletAddress: string;
-  transactionPool: NonNullable<ConnectButtonProps['transactionPool']>;
-  pulsarAdapter: NonNullable<ConnectButtonProps['pulsarAdapter']>;
+  transactionPool: NonNullable<NovaConnectProviderProps['transactionPool']>;
+  pulsarAdapter: NonNullable<NovaConnectProviderProps['pulsarAdapter']>;
   labels: Record<string, string>;
   className?: string;
 };
@@ -199,7 +198,8 @@ export type ConnectedModalTxHistoryCustomization = {
 /**
  * Props for the ConnectedModalTxHistory component
  */
-export interface ConnectedModalTxHistoryProps extends Pick<ConnectButtonProps, 'transactionPool' | 'pulsarAdapter'> {
+export interface ConnectedModalTxHistoryProps
+  extends Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> {
   /** Additional CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */

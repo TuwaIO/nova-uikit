@@ -8,6 +8,8 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { BaseWallet } from '@tuwaio/satellite-core';
 import { ComponentType, ReactNode, useMemo, useState } from 'react';
 
+import { ConnectedModal, ConnectedModalCustomization } from '../components/ConnectedModal/ConnectedModal';
+import { ConnectModal, ConnectModalCustomization } from '../components/ConnectModal/ConnectModal';
 import {
   ButtonTxStatus,
   ConnectContentType,
@@ -100,9 +102,18 @@ export type NovaConnectProviderCustomization = {
         ErrorsProvider: ReactNode;
         LabelsProvider: ReactNode;
         MainContent: ReactNode;
+        ConnectModal: ReactNode;
+        ConnectedModal: ReactNode;
       },
       context: ProviderContext,
     ) => ReactNode;
+  };
+  /** Modal customizations */
+  modals?: {
+    /** ConnectModal customization */
+    connectModal?: ConnectModalCustomization;
+    /** ConnectedModal customization */
+    connectedModal?: ConnectedModalCustomization;
   };
 };
 
@@ -163,6 +174,8 @@ const defaultProviderTreeRenderer = (
     ErrorsProvider: ReactNode;
     LabelsProvider: ReactNode;
     MainContent: ReactNode;
+    ConnectModal: ReactNode;
+    ConnectedModal: ReactNode;
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   context: ProviderContext,
@@ -174,11 +187,12 @@ const defaultProviderTreeRenderer = (
  * Main NovaConnect provider component with comprehensive customization capabilities.
  *
  * This provider manages wallet connection state, error handling, internationalization,
- * and modal states while offering extensive customization options for all sub-components
- * and behaviors.
+ * modal states, and renders the modal components centrally while offering extensive
+ * customization options for all sub-components and behaviors.
  *
  * Features:
  * - Complete wallet connection state management
+ * - Centralized modal rendering and state management
  * - Customizable error handling through ErrorsProvider
  * - Flexible internationalization system
  * - Modal and UI state coordination
@@ -187,7 +201,13 @@ const defaultProviderTreeRenderer = (
  *
  * @example Basic usage
  * ```tsx
- * <NovaConnectProvider store={store}>
+ * <NovaConnectProvider
+ *   store={store}
+ *   appChains={[mainnet, sepolia, polygon]} // Viem chains
+ *   solanaRPCUrls={{
+ *     'mainnet': 'https://api.mainnet-beta.solana.com'
+ *   }}
+ * >
  *   <App />
  * </NovaConnectProvider>
  * ```
@@ -195,16 +215,26 @@ const defaultProviderTreeRenderer = (
  * @example With customization
  * ```tsx
  * <NovaConnectProvider
- *   store={store}
  *   labels={customLabels}
+ *   appChains={appChains}
+ *   solanaRPCUrls={solanaRPCUrls}
+ *   transactionPool={txPool}
+ *   pulsarAdapter={adapters}
+ *   withImpersonated
+ *   withBalance
+ *   withChain
  *   customization={{
  *     errors: {
  *       position: 'bottom-right',
  *       autoClose: 5000,
- *       components: {
- *         ToastError: CustomToastError
- *       }
  *     },
+ *     modals: {
+ *       connectModal: {
+ *         classNames: {
+ *           container: () => 'custom-modal-style'
+ *         }
+ *       }
+ *     }
  *   }}
  * >
  *   <App />
@@ -213,7 +243,18 @@ const defaultProviderTreeRenderer = (
  *
  * @param props - Provider configuration and customization options
  */
-export function NovaConnectProvider({ labels, children, customization }: NovaConnectProviderPropsWithCustomization) {
+export function NovaConnectProvider({
+  labels,
+  children,
+  appChains,
+  solanaRPCUrls,
+  transactionPool,
+  pulsarAdapter,
+  withImpersonated,
+  withBalance,
+  withChain,
+  customization,
+}: NovaConnectProviderPropsWithCustomization) {
   const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
   const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
 
@@ -289,6 +330,12 @@ export function NovaConnectProvider({ labels, children, customization }: NovaCon
   // Create and transform context value using custom logic if provided - moved inside useMemo
   const contextValue = useMemo(() => {
     const defaultContextValue: NovaConnectProviderType = {
+      appChains,
+      solanaRPCUrls,
+      transactionPool,
+      withImpersonated,
+      withBalance,
+      withChain,
       isConnectModalOpen,
       setIsConnectModalOpen,
       isConnectedModalOpen,
@@ -315,6 +362,12 @@ export function NovaConnectProvider({ labels, children, customization }: NovaCon
 
     return customContextValueTransform(defaultContextValue, providerContext);
   }, [
+    appChains,
+    solanaRPCUrls,
+    transactionPool,
+    withImpersonated,
+    withBalance,
+    withChain,
     isConnectModalOpen,
     setIsConnectModalOpen,
     isConnectedModalOpen,
@@ -346,18 +399,44 @@ export function NovaConnectProvider({ labels, children, customization }: NovaCon
 
   const labelsProviderElement = <LabelsProvider labels={finalLabels}>{children}</LabelsProvider>;
 
+  // Create modal elements - only render if we have the required props
+  const connectModalElement =
+    appChains && solanaRPCUrls ? (
+      <ConnectModal
+        withImpersonated={withImpersonated}
+        solanaRPCUrls={solanaRPCUrls}
+        appChains={appChains}
+        customization={customization?.modals?.connectModal}
+      />
+    ) : null;
+
+  const connectedModalElement =
+    appChains && solanaRPCUrls ? (
+      <ConnectedModal
+        solanaRPCUrls={solanaRPCUrls}
+        appChains={appChains}
+        transactionPool={transactionPool}
+        pulsarAdapter={pulsarAdapter}
+        customization={customization?.modals?.connectedModal}
+      />
+    ) : null;
+
   const mainContentElement = (
     <NovaConnectProviderContext.Provider value={contextValue}>
       {errorsProviderElement}
       {labelsProviderElement}
+      {connectModalElement}
+      {connectedModalElement}
     </NovaConnectProviderContext.Provider>
   );
 
-  // Create default provider tree
+  // Create default provider tree with modals
   const defaultProviderTree = (
     <NovaConnectProviderContext.Provider value={contextValue}>
       {errorsProviderElement}
       {labelsProviderElement}
+      {connectModalElement}
+      {connectedModalElement}
     </NovaConnectProviderContext.Provider>
   );
 
@@ -368,6 +447,8 @@ export function NovaConnectProvider({ labels, children, customization }: NovaCon
       ErrorsProvider: errorsProviderElement,
       LabelsProvider: labelsProviderElement,
       MainContent: mainContentElement,
+      ConnectModal: connectModalElement || <></>,
+      ConnectedModal: connectedModalElement || <></>,
     },
     providerContext,
   );
