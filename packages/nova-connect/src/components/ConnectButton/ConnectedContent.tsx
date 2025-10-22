@@ -17,17 +17,15 @@ import React, {
 
 import {
   ButtonTxStatus,
-  ConnectButtonProps,
-  StatusIcon,
-  type StatusIconCustomization,
   useGetWalletNameAndAvatar,
   useNovaConnect,
   useNovaConnectLabels,
-  useSatelliteConnectStore,
   useWalletNativeBalance,
-  WalletAvatar,
-  WalletAvatarCustomization,
-} from '../../index';
+} from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
+import { ConnectButtonProps } from './ConnectButton';
+import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
 type StatusDisplayData = {

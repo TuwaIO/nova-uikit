@@ -15,6 +15,26 @@
       "import": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.cjs",
+      "default": "./dist/components/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.cjs",
+      "default": "./dist/hooks/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.cjs",
+      "default": "./dist/i18n/index.js"
+    },
+    "./satellite": {
+      "types": "./dist/satellite/index.d.ts",
+      "import": "./dist/satellite/index.cjs",
+      "default": "./dist/satellite/index.js"
+    },
     "./evm": {
       "types": "./dist/evm/index.d.ts",
       "import": "./dist/evm/index.cjs",

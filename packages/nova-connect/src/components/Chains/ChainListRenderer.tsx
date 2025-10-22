@@ -25,7 +25,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
 // === TYPES AND INTERFACES ===
 

@@ -9,20 +9,16 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
+import { NativeBalanceResult, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { ConnectButtonProps } from '../ConnectButton';
+import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
 import {
-  ConnectButtonProps,
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
   ConnectedModalNameAndBalanceProps,
-  IconButton,
-  IconButtonProps,
-  NativeBalanceResult,
-  useNovaConnect,
-  useNovaConnectLabels,
-  useSatelliteConnectStore,
-  WalletAvatar,
-  WalletAvatarProps,
-} from '../../index';
+} from './ConnectedModalNameAndBalance';
+import { IconButton, IconButtonProps } from './IconButton';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {

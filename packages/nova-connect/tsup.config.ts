@@ -3,7 +3,15 @@ import { defineConfig } from 'tsup';
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
-    entry: ['./src/index.ts', './src/evm/index.ts', './src/solana/index.ts'],
+    entry: [
+      './src/index.ts',
+      './src/components/index.ts',
+      './src/satellite/index.ts',
+      './src/hooks/index.ts',
+      './src/i18n/index.ts',
+      './src/evm/index.ts',
+      './src/solana/index.ts',
+    ],
     treeshake: true,
     sourcemap: true,
     minify: true,

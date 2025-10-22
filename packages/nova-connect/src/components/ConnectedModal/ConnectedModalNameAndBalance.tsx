@@ -8,7 +8,9 @@ import { BaseWallet } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { ConnectedModalMainContentProps, useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
+import { useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {

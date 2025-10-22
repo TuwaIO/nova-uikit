@@ -17,7 +17,9 @@ import React, {
   useMemo,
 } from 'react';
 
-import { ConnectButtonProps, useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
+import { useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { ConnectButtonProps } from '../ConnectButton';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {

@@ -6,7 +6,8 @@ import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
 
-import { useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
+import { useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---
 const DEFAULT_PATH_ANIMATION_VARIANTS: Variants = {

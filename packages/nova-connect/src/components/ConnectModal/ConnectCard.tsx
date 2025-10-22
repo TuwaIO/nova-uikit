@@ -9,7 +9,9 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { getNetworkIcon, RecentBadge, useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels } from '../../hooks';
+import { getNetworkIcon } from '../../utils/getNetworIcon';
+import { RecentBadge } from './RecentBadge';
 
 // --- Types ---
 

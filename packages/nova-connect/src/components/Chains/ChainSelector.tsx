@@ -30,21 +30,13 @@ import React, {
   useState,
 } from 'react';
 
-import {
-  ChainListRenderer,
-  ChainListRendererCustomization,
-  getChainsListByWalletType,
-  getChainsListByWalletTypeAsync,
-  getWalletChains,
-  InitialChains,
-  ScrollableChainList,
-  ScrollableChainListCustomization,
-  SelectContentAnimated,
-  SelectContentAnimatedProps,
-  useNovaConnect,
-  useNovaConnectLabels,
-  useSatelliteConnectStore,
-} from '../../index';
+import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
+import { InitialChains } from '../../types';
+import { getChainsListByWalletType, getChainsListByWalletTypeAsync, getWalletChains } from '../../utils';
+import { SelectContentAnimated, SelectContentAnimatedProps } from '../SelectContentAnimated';
+import { ChainListRenderer, ChainListRendererCustomization } from './ChainListRenderer';
+import { ScrollableChainList, ScrollableChainListCustomization } from './ScrollableChainList';
 
 /**
  * Context for the chain selection trigger button.

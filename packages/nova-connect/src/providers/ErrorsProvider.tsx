@@ -6,7 +6,9 @@ import { ToastCloseButton } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition } from 'react-toastify';
 
-import { ToastError, ToastErrorCustomization, useNovaConnectLabels, useSatelliteConnectStore } from '../index';
+import { ToastError, ToastErrorCustomization } from '../components';
+import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { useSatelliteConnectStore } from '../satellite';
 
 // --- Types for Customization ---
 type CustomToastErrorProps = {

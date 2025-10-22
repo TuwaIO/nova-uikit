@@ -1,6 +1,6 @@
 import { getAdapterFromWalletType, OrbitAdapter, WalletType } from '@tuwaio/orbit-core';
 
-import { ChainIdentifierArray, InitialChains } from '../index';
+import { ChainIdentifierArray, InitialChains } from '../types';
 import { adapterRegistry } from './adapters/registry';
 
 /**

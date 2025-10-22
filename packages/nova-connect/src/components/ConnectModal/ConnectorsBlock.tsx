@@ -14,15 +14,12 @@ import {
 } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 
-import {
-  ConnectCard,
-  ConnectCardCustomization,
-  ConnectorsSelectionsProps,
-  getConnectChainId,
-  GroupedConnector,
-  useSatelliteConnectStore,
-  WalletIcon,
-} from '../../index';
+import { useSatelliteConnectStore } from '../../satellite';
+import { getConnectChainId } from '../../utils/getConnectedChainId';
+import { WalletIcon } from '../WalletIcon';
+import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
+import { GroupedConnector } from './ConnectModal';
+import { ConnectorsSelectionsProps } from './ConnectorsSelections';
 
 // --- Types ---
 

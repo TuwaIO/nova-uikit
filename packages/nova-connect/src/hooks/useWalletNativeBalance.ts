@@ -1,7 +1,7 @@
 import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSatelliteConnectStore } from '../index';
+import { useSatelliteConnectStore } from '../satellite';
 
 /**
  * @interface NativeBalanceResult

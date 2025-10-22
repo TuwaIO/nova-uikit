@@ -9,7 +9,8 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
 
-import { getNetworkIcon, useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { getNetworkIcon } from '../../utils/getNetworIcon';
 
 // --- Types ---
 
