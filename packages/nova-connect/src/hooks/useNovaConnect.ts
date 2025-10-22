@@ -10,11 +10,7 @@ export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet
 export type ConnectedContentType = 'main' | 'transactions' | 'chains';
 
 // Provider props interface
-export interface NovaConnectProviderProps {
-  /** Configuration for supported blockchain networks */
-  appChains?: InitialChains;
-  /** RPC URLs configuration for Solana network */
-  solanaRPCUrls?: Record<string, string>;
+export interface NovaConnectProviderProps extends InitialChains {
   /** Transaction pool for pending transactions display */
   transactionPool?: TransactionPool<Transaction>;
   /** Pulsar adapter(s) for transaction handling */
