@@ -236,6 +236,10 @@ importers:
         version: 7.1.11(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1)
 
   packages/nova-connect:
+    dependencies:
+      '@tuwaio/satellite-react':
+        specifier: 1.0.0-fix-watchers-alpha.1.39245f5
+        version: 1.0.0-fix-watchers-alpha.1.39245f5(tshbfnas5izyesqmqpfkrp3kcu)
     devDependencies:
       '@bgd-labs/react-web3-icons':
         specifier: ^1.51.0
@@ -282,9 +286,6 @@ importers:
       '@tuwaio/satellite-evm':
         specifier: ^0.1.0
         version: 0.1.0(zr4w2iwdmqpgs4boewgflii35u)
-      '@tuwaio/satellite-react':
-        specifier: 1.0.0-fix-watchers-alpha.1.39245f5
-        version: 1.0.0-fix-watchers-alpha.1.39245f5(tshbfnas5izyesqmqpfkrp3kcu)
       '@tuwaio/satellite-solana':
         specifier: ^0.1.0
         version: 0.1.0(pdtit5oeuxc2z2nnonbfyj3soe)

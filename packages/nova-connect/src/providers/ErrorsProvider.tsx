@@ -6,13 +6,7 @@ import { ToastCloseButton } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition } from 'react-toastify';
 
-import {
-  NovaConnectProviderProps,
-  ToastError,
-  ToastErrorCustomization,
-  useNovaConnect,
-  useNovaConnectLabels,
-} from '../index';
+import { ToastError, ToastErrorCustomization, useNovaConnectLabels, useSatelliteConnectStore } from '../index';
 
 // --- Types for Customization ---
 type CustomToastErrorProps = {
@@ -76,7 +70,7 @@ export type ErrorsProviderCustomization = {
   ) => string | null;
 };
 
-export interface ErrorsProviderProps extends Pick<NovaConnectProviderProps, 'store'> {
+export interface ErrorsProviderProps {
   /** Custom container ID for toast notifications */
   containerId?: string;
   /** Custom position for toast notifications */
@@ -137,7 +131,6 @@ const defaultErrorHashGenerator = (defaultHash: string | null) => defaultHash;
  * Provides comprehensive customization for appearance, behavior, and error handling logic while maintaining accessibility.
  */
 export function ErrorsProvider({
-  store,
   containerId = 'nova-connect-errors',
   position = 'top-center',
   autoClose = 7000,
@@ -145,9 +138,10 @@ export function ErrorsProvider({
   customization,
 }: ErrorsProviderProps) {
   const labels = useNovaConnectLabels();
-  const { activeWallet, walletConnectionError } = useNovaConnect();
 
-  const switchNetworkError = store.getState().switchNetworkError;
+  const switchNetworkError = useSatelliteConnectStore((store) => store.switchNetworkError);
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
 
   // Extract custom components and handlers
   const { ToastError: CustomToastError = DefaultToastError, Container = DefaultContainer } =

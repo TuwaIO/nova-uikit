@@ -1,9 +1,6 @@
 // Re-export gill types directly when available
 export type { SolanaClusterMoniker } from 'gill';
-
 // Import types for extension
-import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { ConnectorSolana, SolanaWallet } from '@tuwaio/satellite-solana';
 import type { SolanaClusterMoniker } from 'gill';
 
 // Extend the main interface with Solana-specific config
@@ -18,12 +15,7 @@ declare module '@tuwaio/nova-connect' {
      */
     solanaRPCUrls?: Partial<Record<SolanaClusterMoniker, string>>;
   }
-  export interface AllWallets {
-    [OrbitAdapter.SOLANA]: SolanaWallet;
-  }
-  export interface AllConnectors {
-    [OrbitAdapter.SOLANA]: ConnectorSolana;
-  }
 }
 
+export * from './satellite';
 export * from './utils';

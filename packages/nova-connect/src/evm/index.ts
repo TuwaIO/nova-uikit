@@ -1,8 +1,6 @@
 // Re-export viem types directly when available
-import { OrbitAdapter } from '@tuwaio/orbit-core';
 export type { Chain } from 'viem/chains';
 // Import types for extension
-import { ConnectorEVM, EVMWallet } from '@tuwaio/satellite-evm';
 import type { Chain } from 'viem/chains';
 
 // Extend the main interface with EVM-specific config
@@ -17,12 +15,7 @@ declare module '@tuwaio/nova-connect' {
      */
     appChains?: readonly [Chain, ...Chain[]];
   }
-  export interface AllWallets {
-    [OrbitAdapter.EVM]: EVMWallet;
-  }
-  export interface AllConnectors {
-    [OrbitAdapter.EVM]: ConnectorEVM;
-  }
 }
 
+export * from './satellite';
 export * from './utils';

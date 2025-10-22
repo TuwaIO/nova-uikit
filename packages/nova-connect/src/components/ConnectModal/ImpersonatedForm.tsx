@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isAddress } from 'viem';
 
-import { ConnectButtonProps, useNovaConnect, useNovaConnectLabels } from '../../index';
+import { useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
 
 // --- Types ---
 
@@ -121,7 +121,7 @@ export type ImpersonateFormCustomization = {
 /**
  * Props for the ImpersonateForm component
  */
-export interface ImpersonateFormProps extends Pick<ConnectButtonProps, 'store'> {
+export interface ImpersonateFormProps {
   /** Current impersonated wallet address value */
   impersonatedAddress: string;
   /** Callback to update the impersonated address */
@@ -250,10 +250,14 @@ DefaultErrorMessage.displayName = 'DefaultErrorMessage';
  * ```
  */
 export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
-  ({ impersonatedAddress, setImpersonatedAddress, store, className, customization }, ref) => {
+  ({ impersonatedAddress, setImpersonatedAddress, className, customization }, ref) => {
     // Get labels from context
     const labels = useNovaConnectLabels();
-    const { activeWallet, walletConnectionError } = useNovaConnect();
+
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+    const resetWalletConnectionError = useSatelliteConnectStore((store) => store.resetWalletConnectionError);
+    const setWalletConnectionError = useSatelliteConnectStore((store) => store.setWalletConnectionError);
 
     // Extract customization options
     const {
@@ -265,10 +269,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
     const customHandlers = customization?.handlers;
     const customConfig = customization?.config;
-
-    // Access store state and methods
-    const resetWalletConnectionError = store.getState().resetWalletConnectionError;
-    const setWalletConnectionError = store.getState().setWalletConnectionError;
 
     // Local state to track if user has interacted with the field
     const [hasInteracted, setHasInteracted] = useState(false);

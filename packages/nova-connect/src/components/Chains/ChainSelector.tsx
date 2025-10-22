@@ -33,7 +33,6 @@ import React, {
 import {
   ChainListRenderer,
   ChainListRendererCustomization,
-  ConnectButtonProps,
   getChainsListByWalletType,
   getChainsListByWalletTypeAsync,
   getWalletChains,
@@ -44,6 +43,7 @@ import {
   SelectContentAnimatedProps,
   useNovaConnect,
   useNovaConnectLabels,
+  useSatelliteConnectStore,
 } from '../../index';
 
 /**
@@ -661,7 +661,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 /**
  * Props for the ChainSelector component.
  */
-export interface ChainSelectorProps extends InitialChains, Pick<ConnectButtonProps, 'store'> {
+export interface ChainSelectorProps extends InitialChains {
   /** Comprehensive customization options */
   customization?: ChainSelectorCustomization;
   /** Custom CSS classes for the main container */
@@ -680,13 +680,13 @@ export interface ChainSelectorProps extends InitialChains, Pick<ConnectButtonPro
 export function ChainSelector({
   appChains,
   solanaRPCUrls,
-  store,
   customization,
   className,
   'aria-label': ariaLabel,
 }: ChainSelectorProps) {
   const labels = useNovaConnectLabels();
-  const { activeWallet } = useNovaConnect();
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
   const { isChainsListOpen, setIsChainsListOpen, isChainsListOpenMobile, setIsChainsListOpenMobile } = useNovaConnect();
 
   // State to manage dynamic chain loading
@@ -777,12 +777,12 @@ export function ChainSelector({
   const handleChainChange = useCallback(
     (newChainId: string) => {
       const originalHandler = (chainId: string) => {
-        store?.getState().switchNetwork(chainId);
+        switchNetwork(chainId);
       };
 
       customChainChangeHandler(originalHandler, newChainId);
     },
-    [store, customChainChangeHandler],
+    [switchNetwork, customChainChangeHandler],
   );
 
   /**

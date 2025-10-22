@@ -7,7 +7,7 @@ import { cn } from '@tuwaio/nova-core';
 import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 
-import { GroupedConnector, useNovaConnect, useNovaConnectLabels, WalletIcon } from '../../index';
+import { GroupedConnector, useNovaConnectLabels, useSatelliteConnectStore, WalletIcon } from '../../index';
 
 // --- Types ---
 
@@ -413,7 +413,7 @@ export const Connecting = memo(
       ref,
     ) => {
       const labels = useNovaConnectLabels();
-      const { walletConnectionError } = useNovaConnect();
+      const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
 
       const isMountedRef = useRef(true);
       const prevStateRef = useRef<ConnectionState | null>(null);

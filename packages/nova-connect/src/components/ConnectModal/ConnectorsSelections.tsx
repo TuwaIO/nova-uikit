@@ -215,9 +215,7 @@ export type ConnectorsSelectionsCustomization = {
 /**
  * Props for the ConnectorsSelections component
  */
-export interface ConnectorsSelectionsProps
-  extends Pick<ConnectButtonProps, 'withImpersonated' | 'store'>,
-    InitialChains {
+export interface ConnectorsSelectionsProps extends Pick<ConnectButtonProps, 'withImpersonated'>, InitialChains {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors */
@@ -439,7 +437,6 @@ export const ConnectorsSelections = memo(
         setContentType,
         withImpersonated,
         isOnlyOneNetwork = false,
-        store,
         customization,
       },
       ref,
@@ -689,7 +686,6 @@ export const ConnectorsSelections = memo(
                 appChains={appChains}
                 isOnlyOneNetwork={isOnlyOneNetwork}
                 isTitleBold
-                store={store}
                 customization={customization?.connectorsBlock?.installed}
               />
               {!!connectorGroups.popular.length && (
@@ -704,7 +700,6 @@ export const ConnectorsSelections = memo(
                   setIsOpen={setIsOpen}
                   appChains={appChains}
                   isOnlyOneNetwork={isOnlyOneNetwork}
-                  store={store}
                   customization={customization?.connectorsBlock?.popular}
                 />
               )}

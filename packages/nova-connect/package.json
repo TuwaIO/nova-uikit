@@ -69,6 +69,9 @@
       "url": "https://github.com/Argeare5"
     }
   ],
+  "dependencies": {
+    "@tuwaio/satellite-react": "1.0.0-fix-watchers-alpha.1.39245f5"
+  },
   "peerDependencies": {
     "@bgd-labs/react-web3-icons": ">=1.5",
     "@heroicons/react": "2.x.x",
@@ -115,9 +118,6 @@
       "optional": false
     },
     "@tuwaio/satellite-core": {
-      "optional": false
-    },
-    "@tuwaio/satellite-react": {
       "optional": false
     },
     "@tuwaio/pulsar-core": {
@@ -191,7 +191,6 @@
     "@tuwaio/orbit-solana": "^0.1.0",
     "@tuwaio/satellite-core": "^0.1.0",
     "@tuwaio/satellite-evm": "^0.1.0",
-    "@tuwaio/satellite-react": "1.0.0-fix-watchers-alpha.1.39245f5",
     "@tuwaio/satellite-solana": "^0.1.0",
     "@tuwaio/pulsar-core": "^0.2.0",
     "@tuwaio/nova-core": "workspace:^",

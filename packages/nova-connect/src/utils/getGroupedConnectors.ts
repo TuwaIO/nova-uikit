@@ -34,7 +34,7 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
 
   const connectorObj = connector as Record<string, Connector>;
 
-  if (!connectorObj.name || typeof connectorObj.name !== 'string') {
+  if (!connectorObj.name || typeof connectorObj.name !== 'string' || typeof connectorObj.icon !== 'string') {
     return null;
   }
 
@@ -101,7 +101,7 @@ export function getGroupedConnectors(
     if (!group.adapters.includes(processed.adapter)) {
       group.adapters.push(processed.adapter);
     }
-    // @ts-expect-error - connectors property is not typed on package level
+
     group.connectors.push({ ...(processed.originalConnector as Connector), adapter: processed.adapter } as Connector & {
       adapter: OrbitAdapter;
     });

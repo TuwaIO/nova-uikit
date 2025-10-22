@@ -20,7 +20,6 @@ export default defineConfig([
       '@tuwaio/orbit-solana',
       '@tuwaio/satellite-core',
       '@tuwaio/satellite-evm',
-      '@tuwaio/satellite-react',
       '@tuwaio/satellite-solana',
       '@tuwaio/pulsar-core',
       '@tuwaio/nova-core',

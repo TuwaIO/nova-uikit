@@ -1,10 +1,7 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { ISatelliteConnectStore } from '@tuwaio/satellite-core';
-import { BaseWallet } from '@tuwaio/satellite-core';
 import { createContext, useContext } from 'react';
-import { StoreApi } from 'zustand/index';
 
-import { Connector, NovaConnectLabels, Wallet } from '../index';
+import { NovaConnectLabels } from '../index';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';
@@ -12,7 +9,6 @@ export type ConnectedContentType = 'main' | 'transactions' | 'chains';
 
 // Provider props interface
 export interface NovaConnectProviderProps {
-  store: StoreApi<ISatelliteConnectStore<Connector, Wallet>>;
   children: React.ReactNode;
   labels?: Partial<NovaConnectLabels>;
 }
@@ -25,8 +21,6 @@ export interface WalletBalance {
 
 // Provider context type with better organization
 export interface NovaConnectProviderType {
-  activeWallet: BaseWallet | undefined;
-  walletConnectionError: string | undefined;
   // Modal states
   isConnectModalOpen: boolean;
   setIsConnectModalOpen: (value: boolean) => void;

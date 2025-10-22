@@ -6,6 +6,7 @@ export * from './i18n/en';
 export * from './i18n/types';
 export * from './i18n/ua';
 export * from './providers';
+export * from './satellite';
 export * from './types';
 export * from './utils';
 
@@ -305,12 +306,4 @@ export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean
  *
  * @since 1.0.0
  */
-export type {
-  AllChainConfigs,
-  AllConnectors,
-  AllWallets,
-  ChainIdentifierArray,
-  Connector,
-  InitialChains,
-  Wallet,
-} from './types';
+export type { AllChainConfigs, ChainIdentifierArray, InitialChains } from './types';
