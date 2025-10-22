@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.2...nova-connect-v0.1.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* moved modals from button to provider ([#37](https://github.com/TuwaIO/nova-uikit/issues/37)) ([c8adb40](https://github.com/TuwaIO/nova-uikit/commit/c8adb40832adf4e989f78131d8760e2f135d1e23))
+
 ## [0.1.2](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.1...nova-connect-v0.1.2) (2025-10-22)
 
 
