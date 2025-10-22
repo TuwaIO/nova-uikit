@@ -12,9 +12,9 @@ import {
   waitFor,
   WalletType,
 } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
-import { useSatelliteConnectStore } from '../../satellite';
+import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
@@ -186,10 +186,7 @@ export type ConnectorsBlockCustomization = {
  * Props for the ConnectorsBlock component
  */
 interface ConnectorsBlockProps
-  extends Pick<
-    ConnectorsSelectionsProps,
-    'waitForPredict' | 'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'
-  > {
+  extends Pick<ConnectorsSelectionsProps, 'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'> {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors to display */
@@ -356,7 +353,6 @@ export const ConnectorsBlock = memo(
         connectors,
         solanaRPCUrls,
         appChains,
-        waitForPredict,
         setIsConnected,
         setIsOpen,
         onClick,
@@ -391,6 +387,7 @@ export const ConnectorsBlock = memo(
        * Memoized store functions
        */
       const connect = useSatelliteConnectStore((store) => store.connect);
+      const store = useContext(SatelliteStoreContext);
 
       /**
        * Memoized recent wallets data with proper type handling
@@ -494,7 +491,7 @@ export const ConnectorsBlock = memo(
               chainId: getConnectChainId({ appChains, selectedAdapter: targetAdapter, solanaRPCUrls }),
             });
 
-            await waitFor(waitForPredict);
+            await waitFor(() => store?.getState().activeWallet?.isConnected);
             setIsConnected(true);
             const modalCloseTime = setTimeout(() => setIsOpen(false), 400);
             const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);
@@ -507,7 +504,8 @@ export const ConnectorsBlock = memo(
             connectInProgressRef.current = false;
           }
         },
-        [selectedAdapter, onClick, connect, appChains, solanaRPCUrls, waitForPredict, setIsConnected, setIsOpen],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [selectedAdapter, onClick, connect, appChains, solanaRPCUrls, setIsConnected, setIsOpen],
       );
 
       /**

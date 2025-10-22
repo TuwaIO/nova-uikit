@@ -745,7 +745,7 @@ export const ConnectModal = memo<ConnectModalProps>(
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [connect],
+      [connect, appChains, selectedAdapter, solanaRPCUrls],
     );
 
     /**
@@ -820,7 +820,6 @@ export const ConnectModal = memo<ConnectModalProps>(
                 solanaRPCUrls={solanaRPCUrls}
                 setIsConnected={setIsConnected}
                 setIsOpen={setIsConnectModalOpen}
-                waitForPredict={() => store?.getState().activeWallet?.isConnected}
                 withImpersonated={withImpersonated}
                 customization={childComponents.connectorsSelections}
               />

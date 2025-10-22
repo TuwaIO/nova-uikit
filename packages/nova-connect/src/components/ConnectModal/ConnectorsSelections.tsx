@@ -221,8 +221,6 @@ export interface ConnectorsSelectionsProps extends Pick<ConnectButtonProps, 'wit
   setIsConnected: (value: boolean) => void;
   /** Function to control modal open state */
   setIsOpen: (value: boolean) => void;
-  /** Function to wait for connection prediction */
-  waitForPredict: () => boolean | undefined;
   /** Function to set modal content type */
   setContentType: (contentType: ConnectContentType) => void;
   /** Whether only one network is available */
@@ -428,7 +426,6 @@ export const ConnectorsSelections = memo(
         onClick,
         appChains,
         solanaRPCUrls,
-        waitForPredict,
         setContentType,
         withImpersonated,
         isOnlyOneNetwork = false,
@@ -674,7 +671,6 @@ export const ConnectorsSelections = memo(
                 title={labels.installed}
                 selectedAdapter={selectedAdapter}
                 onClick={onClick}
-                waitForPredict={waitForPredict}
                 solanaRPCUrls={solanaRPCUrls}
                 setIsConnected={setIsConnected}
                 setIsOpen={setIsOpen}
@@ -689,7 +685,6 @@ export const ConnectorsSelections = memo(
                   title={labels.popular}
                   selectedAdapter={selectedAdapter}
                   onClick={onClick}
-                  waitForPredict={waitForPredict}
                   solanaRPCUrls={solanaRPCUrls}
                   setIsConnected={setIsConnected}
                   setIsOpen={setIsOpen}
