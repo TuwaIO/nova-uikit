@@ -196,7 +196,7 @@
     "@tuwaio/orbit-solana": "^0.1.0",
     "@tuwaio/satellite-core": "^0.1.0",
     "@tuwaio/satellite-evm": "^0.1.0",
-    "@tuwaio/satellite-react": "^0.1.0",
+    "@tuwaio/satellite-react": "1.0.0-fix-watchers-alpha.1.39245f5",
     "@tuwaio/satellite-solana": "^0.1.0",
     "@tuwaio/pulsar-core": "^0.2.0",
     "@tuwaio/nova-core": "workspace:^",
