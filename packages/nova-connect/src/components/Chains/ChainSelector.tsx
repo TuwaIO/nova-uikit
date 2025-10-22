@@ -30,14 +30,21 @@ import React, {
   useState,
 } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { InitialChains } from '../../types';
-import { getChainsListByWalletType, getChainsListByWalletTypeAsync, getWalletChains } from '../../utils';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { SelectContentAnimated, SelectContentAnimatedProps } from '../SelectContentAnimated';
-import { ChainListRenderer, ChainListRendererCustomization } from './ChainListRenderer';
-import { ScrollableChainList, ScrollableChainListCustomization } from './ScrollableChainList';
+import {
+  ChainListRenderer,
+  ChainListRendererCustomization,
+  getChainsListByWalletType,
+  getChainsListByWalletTypeAsync,
+  getWalletChains,
+  InitialChains,
+  ScrollableChainList,
+  ScrollableChainListCustomization,
+  SelectContentAnimated,
+  SelectContentAnimatedProps,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+} from '../../index';
 
 /**
  * Context for the chain selection trigger button.
@@ -654,7 +661,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 /**
  * Props for the ChainSelector component.
  */
-export interface ChainSelectorProps extends InitialChains, Pick<ConnectButtonProps, 'store'> {
+export interface ChainSelectorProps extends InitialChains {
   /** Comprehensive customization options */
   customization?: ChainSelectorCustomization;
   /** Custom CSS classes for the main container */
@@ -673,13 +680,13 @@ export interface ChainSelectorProps extends InitialChains, Pick<ConnectButtonPro
 export function ChainSelector({
   appChains,
   solanaRPCUrls,
-  store,
   customization,
   className,
   'aria-label': ariaLabel,
 }: ChainSelectorProps) {
   const labels = useNovaConnectLabels();
-  const { activeWallet } = useNovaConnect();
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
   const { isChainsListOpen, setIsChainsListOpen, isChainsListOpenMobile, setIsChainsListOpenMobile } = useNovaConnect();
 
   // State to manage dynamic chain loading
@@ -770,12 +777,12 @@ export function ChainSelector({
   const handleChainChange = useCallback(
     (newChainId: string) => {
       const originalHandler = (chainId: string) => {
-        store?.getState().switchNetwork(chainId);
+        switchNetwork(chainId);
       };
 
       customChainChangeHandler(originalHandler, newChainId);
     },
-    [store, customChainChangeHandler],
+    [switchNetwork, customChainChangeHandler],
   );
 
   /**

@@ -7,7 +7,7 @@ import { cn } from '@tuwaio/nova-core';
 import { formatWalletName } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
 
-import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels } from '../index';
 
 // --- Types for Customization ---
 type CustomLoadingOverlayProps = {

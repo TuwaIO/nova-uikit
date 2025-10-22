@@ -57,11 +57,14 @@ yarn add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { EVMWalletsWatcher, SatelliteConnectProvider, SolanaWalletsWatcher } from '@tuwaio/satellite-react';
+import { SatelliteConnectProvider, NovaConnectProvider } from '@tuwaio/nova-connect';
+import { EVMWalletsWatcher } from '@tuwaio/nova-connect/evm';
+import { SolanaWalletsWatcher } from '@tuwaio/nova-connect/solana';
 import { initializeSolanaMobileConnectors, satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
+import { createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
+import { createConfig } from '@wagmi/core';
 import { ReactNode } from 'react';
 import { WagmiProvider } from 'wagmi';
-import { createWagmiConfig } from '@tuwaio/satellite-evm';
 import { Chain, mainnet, polygon, arbitrum } from 'viem/chains';
 
 export const appConfig = {
@@ -69,13 +72,16 @@ export const appConfig = {
 };
 
 export const solanaRPCUrls = {
-  mainnet: '[https://api.mainnet-beta.solana.com](https://api.mainnet-beta.solana.com)',
+  mainnet: 'https://api.mainnet-beta.solana.com',
 };
 
 export const appEVMChains = [mainnet, polygon, arbitrum] as readonly [Chain, ...Chain[]];
 
-export const wagmiConfig = createWagmiConfig({
-  ...appConfig,
+export const wagmiConfig = createConfig({
+  connectors: initAllConnectors({
+    ...appConfig,
+  }),
+  transports: createDefaultTransports(appEVMChains),
   chains: appEVMChains,
   ssr: true,
   syncConnectedChain: true,
@@ -93,12 +99,14 @@ export function Providers({ children }: { children: ReactNode }) {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <SatelliteConnectProvider
-          adapters={[satelliteEVMAdapter({ wagmiConfig }), satelliteSolanaAdapter()]}
+          adapters={[satelliteEVMAdapter({ wagmiConfig }), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
           appName={appConfig.appName}
         >
           <EVMWalletsWatcher />
           <SolanaWalletsWatcher />
-          {children}
+          <NovaConnectProvider>
+            {children}
+          </NovaConnectProvider>
         </SatelliteConnectProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -106,25 +114,20 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-### Using NovaConnectButton
+### Using ConnectButton
 
 ```tsx
-import { NovaConnectButton } from '@tuwaio/nova-connect';
-import { SatelliteStoreContext } from '@tuwaio/satellite-react';
-import { useContext } from 'react';
+import { ConnectButton } from '@tuwaio/nova-connect';
 
 function App() {
-  const store = useContext(SatelliteStoreContext);
-
   return (
     <div>
-      <NovaConnectButton
-        store={store}
+      <ConnectButton
         appChains={appEVMChains}
         solanaRPCUrls={solanaRPCUrls}
+        withImpersonated
         withBalance
         withChain
-        withImpersonated
       />
     </div>
   );
@@ -133,86 +136,9 @@ function App() {
 
 -----
 
-## 🎨 Customization
-
-Nova Connect provides three levels of customization:
-
-### Basic Customization
-
-```tsx
-<NovaConnectButton
-  store={store}
-  appChains={appEVMChains}
-  solanaRPCUrls={solanaRPCUrls}
-  className="custom-button"
-  labels={{
-    connectWallet: 'Connect Wallet',
-    disconnect: 'Disconnect',
-  }}
-/>
-```
-
-### Advanced Customization
-
-```tsx
-<NovaConnectButton
-  store={store}
-  appChains={appEVMChains}
-  solanaRPCUrls={solanaRPCUrls}
-  customization={{
-    connectButton: {
-      classNames: {
-        button: ({ buttonData }) => `btn ${buttonData.isConnected ? 'btn-connected' : 'btn-connect'}`,
-      },
-    },
-    provider: {
-      errors: {
-        position: 'bottom-right',
-        autoClose: 5000,
-      },
-    },
-  }}
-/>
-```
-
-### Full Provider Customization
-
-```tsx
-<NovaConnectButton
-  store={store}
-  appChains={appEVMChains}
-  solanaRPCUrls={solanaRPCUrls}
-  customization={{
-    provider: {
-      // Custom components
-      components: {
-        ErrorsProvider: CustomErrorsProvider,
-        LabelsProvider: CustomLabelsProvider,
-      },
-      // Label customization
-      labels: {
-        merge: (defaultLabels, userLabels) => ({ ...defaultLabels, ...userLabels }),
-        transform: (mergedLabels, context) => ({
-          ...mergedLabels,
-          connectWallet: context.isConnected ? 'Reconnect' : 'Connect Wallet',
-        }),
-      },
-      // Lifecycle hooks
-      initialization: {
-        onConnectionStateChange: (isConnected, wallet, context) => {
-          console.log('Connection state changed:', isConnected);
-        },
-      },
-    },
-  }}
-/>
-```
-
------
-
 ## 🧩 Key Components
 
-### 1. **NovaConnectButton**
+### 1. **ConnectButton**
 
 - Main component for wallet connection.
 - Built-in support for balance display and network selector.
@@ -243,8 +169,7 @@ const customLabels = {
   // ... other labels
 };
 
-<NovaConnectButton
-  store={store}
+<NovaConnectProvider
   labels={customLabels}
   // ... other props
 />

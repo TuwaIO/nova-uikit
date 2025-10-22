@@ -1,0 +1,42 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useNovaConnectLabel()
+
+> **useNovaConnectLabel**\<`K`\>(`key`): `NovaConnectLabels`\[`K`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:72](https://github.com/TuwaIO/nova-uikit/blob/941686f5cef2d9d428cf81a1b76de3074dd4e31d/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L72)
+
+Hook to get a specific label by key path with type safety
+
+## Type Parameters
+
+### K
+
+`K` *extends* keyof `NovaConnectLabels`
+
+## Parameters
+
+### key
+
+`K`
+
+The label key to retrieve
+
+## Returns
+
+`NovaConnectLabels`\[`K`\]
+
+The specific label value
+
+## Example
+
+```typescript
+function MyComponent() {
+  const connectLabel = useNovaConnectLabel('connectWallet');
+  const errorLabel = useNovaConnectLabel('connectionError');
+
+  return <button>{connectLabel}</button>;
+}
+```

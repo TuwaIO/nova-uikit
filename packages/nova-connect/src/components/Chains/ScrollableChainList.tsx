@@ -14,10 +14,15 @@ import {
 } from 'framer-motion';
 import React, { type ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ToBottomButton, type ToBottomButtonCustomization } from '../ToBottomButton';
-import { ToTopButton, type ToTopButtonCustomization } from '../ToTopButton';
-import { ChainListRenderer, type ChainListRendererCustomization } from './ChainListRenderer';
+import {
+  ChainListRenderer,
+  type ChainListRendererCustomization,
+  ToBottomButton,
+  type ToBottomButtonCustomization,
+  ToTopButton,
+  type ToTopButtonCustomization,
+  useNovaConnectLabels,
+} from '../../index';
 
 // === TYPES AND INTERFACES ===
 

@@ -2,19 +2,23 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 
 // Re-export core modules
 export * from './components';
-export {
-  ConnectButtonCustomization,
-  ConnectButtonData,
-  ConnectButtonProps,
-} from './components/ConnectButton/ConnectButton';
-export * from './components/ConnectButton/ConnectedContent';
-export * from './components/ConnectButton/StatusIcon';
-export * from './components/ConnectButton/WaitForConnectionContent';
 export * from './i18n/en';
 export * from './i18n/types';
 export * from './i18n/ua';
+export * from './providers';
 export * from './types';
 export * from './utils';
+export {
+  AllConnectors,
+  AllWallets,
+  Connector,
+  SatelliteConnectProvider,
+  SatelliteConnectProviderProps,
+  SatelliteStoreContext,
+  useInitializeAutoConnect,
+  useSatelliteConnectStore,
+  Wallet,
+} from '@tuwaio/satellite-react';
 
 // ========================================
 // Modern Conditional Export System
@@ -312,12 +316,4 @@ export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean
  *
  * @since 1.0.0
  */
-export type {
-  AllChainConfigs,
-  AllConnectors,
-  AllWallets,
-  ChainIdentifierArray,
-  Connector,
-  InitialChains,
-  Wallet,
-} from './types';
+export type { AllChainConfigs, ChainIdentifierArray, InitialChains } from './types';

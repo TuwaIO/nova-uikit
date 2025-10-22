@@ -1,0 +1,43 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# createLabelsSubset()
+
+> **createLabelsSubset**\<`K`\>(`labels`, `keys`): `Pick`\<`NovaConnectLabels`, `K`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:227](https://github.com/TuwaIO/nova-uikit/blob/941686f5cef2d9d428cf81a1b76de3074dd4e31d/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L227)
+
+Utility function to create a labels subset (for use outside of React components)
+
+## Type Parameters
+
+### K
+
+`K` *extends* keyof `NovaConnectLabels`
+
+## Parameters
+
+### labels
+
+`NovaConnectLabels`
+
+The source labels object
+
+### keys
+
+`K`[]
+
+Array of keys to extract
+
+## Returns
+
+`Pick`\<`NovaConnectLabels`, `K`\>
+
+Object with only the requested labels
+
+## Example
+
+```typescript
+const actionLabels = createLabelsSubset(labels, ['connect', 'disconnect', 'tryAgain']);
+```

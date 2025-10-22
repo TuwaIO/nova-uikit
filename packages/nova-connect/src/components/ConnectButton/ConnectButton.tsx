@@ -1,16 +1,24 @@
 import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
+import { BaseWallet } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { NovaConnectProviderProps, useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { InitialChains } from '../../types';
-import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
-import { ConnectedModal, ConnectedModalCustomization } from '../ConnectedModal/ConnectedModal';
+import {
+  ChainSelector,
+  ChainSelectorCustomization,
+  ConnectedContent,
+  ConnectedContentCustomization,
+  ConnectedModal,
+  ConnectedModalCustomization,
+  InitialChains,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+  WaitForConnectionContent,
+  WaitForConnectionContentCustomization,
+} from '../../index';
 import { ConnectModal, ConnectModalCustomization } from '../ConnectModal/ConnectModal';
-import { ConnectedContent, ConnectedContentCustomization } from './ConnectedContent';
-import { WaitForConnectionContent, WaitForConnectionContentCustomization } from './WaitForConnectionContent';
 
 /**
  * Connect button data for customization context
@@ -27,7 +35,7 @@ export interface ConnectButtonData {
   /** Current labels from i18n */
   labels: ReturnType<typeof useNovaConnectLabels>;
   /** Active wallet information */
-  activeWallet: ReturnType<typeof useNovaConnect>['activeWallet'];
+  activeWallet: BaseWallet | undefined;
 }
 
 // --- Component Props Types ---
@@ -190,23 +198,22 @@ DefaultButton.displayName = 'DefaultButton';
 /**
  * Base props for ConnectButton component
  */
-export type ConnectButtonProps = InitialChains &
-  Pick<NovaConnectProviderProps, 'store'> & {
-    /** CSS classes to apply to the button */
-    className?: string;
-    /** Transaction pool for pending transactions display */
-    transactionPool?: TransactionPool<Transaction>;
-    /** Pulsar adapter(s) for transaction handling */
-    pulsarAdapter?: TxAdapter<Transaction> | TxAdapter<Transaction>[];
-    /** Show wallet balance in button */
-    withBalance?: boolean;
-    /** Show chain selector when connected */
-    withChain?: boolean;
-    /** Enable impersonated wallet functionality */
-    withImpersonated?: boolean;
-    /** Customization options */
-    customization?: ConnectButtonCustomization;
-  };
+export type ConnectButtonProps = InitialChains & {
+  /** CSS classes to apply to the button */
+  className?: string;
+  /** Transaction pool for pending transactions display */
+  transactionPool?: TransactionPool<Transaction>;
+  /** Pulsar adapter(s) for transaction handling */
+  pulsarAdapter?: TxAdapter<Transaction> | TxAdapter<Transaction>[];
+  /** Show wallet balance in button */
+  withBalance?: boolean;
+  /** Show chain selector when connected */
+  withChain?: boolean;
+  /** Enable impersonated wallet functionality */
+  withImpersonated?: boolean;
+  /** Customization options */
+  customization?: ConnectButtonCustomization;
+};
 
 /**
  * ConnectButton component - Main wallet connection button with full customization
@@ -281,12 +288,13 @@ export const ConnectButton = memo<ConnectButtonProps>(
     withImpersonated,
     withBalance,
     withChain,
-    store,
     className,
     customization = {},
   }) => {
     const labels = useNovaConnectLabels();
-    const { setIsConnectedModalOpen, setIsConnectModalOpen, activeWallet } = useNovaConnect();
+
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const { setIsConnectedModalOpen, setIsConnectModalOpen } = useNovaConnect();
 
     const isConnected = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
 
@@ -438,7 +446,6 @@ export const ConnectButton = memo<ConnectButtonProps>(
           {/* Chain Selector - only show when connected and withChain is enabled */}
           {withChain && isConnected && (
             <ChainSelector
-              store={store}
               appChains={appChains}
               solanaRPCUrls={solanaRPCUrls}
               customization={childComponents.chainSelector}
@@ -458,7 +465,6 @@ export const ConnectButton = memo<ConnectButtonProps>(
               >
                 {isConnected ? (
                   <ConnectedContent
-                    store={store}
                     withBalance={withBalance}
                     transactionPool={transactionPool}
                     customization={childComponents.connectedContent}
@@ -472,7 +478,6 @@ export const ConnectButton = memo<ConnectButtonProps>(
 
           {/* Hidden modals - these will be shown based on application state */}
           <ConnectModal
-            store={store}
             withImpersonated={withImpersonated}
             solanaRPCUrls={solanaRPCUrls}
             appChains={appChains}
@@ -483,7 +488,6 @@ export const ConnectButton = memo<ConnectButtonProps>(
             appChains={appChains}
             transactionPool={transactionPool}
             pulsarAdapter={pulsarAdapter}
-            store={store}
             customization={childComponents.connectedModal}
           />
         </Container>

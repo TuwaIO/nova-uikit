@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
 
-import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels } from '../index';
 
 // --- Types for Customization ---
 type CustomLoadingOverlayProps = {

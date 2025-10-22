@@ -1,6 +1,6 @@
 import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { Connector } from '../types';
+import { Connector } from '../index';
 
 export interface GroupedConnector {
   name: string;
@@ -40,6 +40,7 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
 
   return {
     name: connectorObj.name,
+    // @ts-expect-error - types on available correctly on the package level
     icon: connectorObj.icon,
     adapter,
     originalConnector: connectorObj as Connector,
@@ -101,7 +102,7 @@ export function getGroupedConnectors(
     if (!group.adapters.includes(processed.adapter)) {
       group.adapters.push(processed.adapter);
     }
-    // @ts-expect-error - connectors property is not typed on package level
+
     group.connectors.push({ ...(processed.originalConnector as Connector), adapter: processed.adapter } as Connector & {
       adapter: OrbitAdapter;
     });

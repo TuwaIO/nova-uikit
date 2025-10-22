@@ -1,6 +1,6 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { InitialChains } from '../types';
+import { InitialChains } from '../index';
 
 // Default fallback chain IDs
 const DEFAULT_CHAIN_IDS = {

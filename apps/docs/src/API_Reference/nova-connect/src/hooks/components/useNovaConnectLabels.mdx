@@ -1,0 +1,52 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useNovaConnectLabels()
+
+> **useNovaConnectLabels**(): `NovaConnectLabels`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:52](https://github.com/TuwaIO/nova-uikit/blob/941686f5cef2d9d428cf81a1b76de3074dd4e31d/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L52)
+
+A custom hook to easily access the i18n labels from any component
+within the `NovaConnectLabelsProvider` tree.
+
+This hook provides type-safe access to all UI labels and automatically
+falls back to default English labels if no provider is found.
+
+## Returns
+
+`NovaConnectLabels`
+
+The complete object of UI labels for the current locale.
+
+## Examples
+
+```typescript
+import { useNovaConnectLabels } from './hooks/useNovaConnectLabels';
+
+function MyComponent() {
+  const labels = useNovaConnectLabels();
+
+  return (
+    <div>
+      <h1>{labels.connectWallet}</h1>
+      <button>{labels.connect}</button>
+      <p aria-label={labels.walletBalance}>{formattedBalance}</p>
+    </div>
+  );
+}
+```
+
+```typescript
+// Destructuring specific labels for better performance
+function ConnectButton() {
+  const { connectWallet, connecting, connected } = useNovaConnectLabels();
+
+  return (
+    <button>
+      {isConnecting ? connecting : isConnected ? connected : connectWallet}
+    </button>
+  );
+}
+```

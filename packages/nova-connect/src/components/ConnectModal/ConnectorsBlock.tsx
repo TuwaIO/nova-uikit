@@ -14,12 +14,15 @@ import {
 } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 
-import { getConnectChainId } from '../../utils';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { WalletIcon } from '../WalletIcon';
-import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
-import { GroupedConnector } from './ConnectModal';
-import { ConnectorsSelectionsProps } from './ConnectorsSelections';
+import {
+  ConnectCard,
+  ConnectCardCustomization,
+  ConnectorsSelectionsProps,
+  getConnectChainId,
+  GroupedConnector,
+  useSatelliteConnectStore,
+  WalletIcon,
+} from '../../index';
 
 // --- Types ---
 
@@ -187,10 +190,9 @@ export type ConnectorsBlockCustomization = {
  */
 interface ConnectorsBlockProps
   extends Pick<
-      ConnectorsSelectionsProps,
-      'waitForPredict' | 'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'
-    >,
-    Pick<ConnectButtonProps, 'store'> {
+    ConnectorsSelectionsProps,
+    'waitForPredict' | 'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'
+  > {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors to display */
@@ -364,7 +366,6 @@ export const ConnectorsBlock = memo(
         title,
         isTitleBold = false,
         isOnlyOneNetwork = false,
-        store,
         customization,
       },
       ref,
@@ -392,7 +393,7 @@ export const ConnectorsBlock = memo(
       /**
        * Memoized store functions
        */
-      const connect = useMemo(() => store.getState().connect, [store]);
+      const connect = useSatelliteConnectStore((store) => store.connect);
 
       /**
        * Memoized recent wallets data with proper type handling

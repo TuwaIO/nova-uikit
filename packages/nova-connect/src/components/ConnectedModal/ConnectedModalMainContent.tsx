@@ -5,20 +5,24 @@
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
+import { BaseWallet } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { NativeBalanceResult } from '../../hooks';
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
 import {
+  ConnectButtonProps,
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
   ConnectedModalNameAndBalanceProps,
-} from './ConnectedModalNameAndBalance';
-import { IconButton, IconButtonProps } from './IconButton';
+  IconButton,
+  IconButtonProps,
+  NativeBalanceResult,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+  WalletAvatar,
+  WalletAvatarProps,
+} from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -69,7 +73,7 @@ type LoadingIndicatorProps = {
 };
 
 type AvatarSectionProps = {
-  activeWallet: NonNullable<ReturnType<typeof useNovaConnect>['activeWallet']>;
+  activeWallet: BaseWallet;
   ensAvatar: string | null;
   walletName: string;
   connectorsCount: number;
@@ -272,7 +276,7 @@ export type ConnectedModalMainContentCustomization = {
 /**
  * Props for the ConnectedModalMainContent component
  */
-export interface ConnectedModalMainContentProps extends Pick<ConnectButtonProps, 'transactionPool' | 'store'> {
+export interface ConnectedModalMainContentProps extends Pick<ConnectButtonProps, 'transactionPool'> {
   /** List of available chains for the current wallet */
   chainsList: (string | number)[];
   ensAvatar: string | null;
@@ -547,7 +551,6 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       balanceLoading,
       ensNameAbbreviated,
       balance,
-      store,
       className,
       'aria-label': ariaLabel,
       customization,
@@ -558,11 +561,9 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     // Get localized labels for UI text
     const labels = useNovaConnectLabels();
     // Get modal controls and state from hook
-    const { setConnectedModalContentType, setIsConnectedModalOpen, setIsConnectModalOpen, activeWallet } =
-      useNovaConnect();
-
-    // Get wallet state from store
-    const getConnectors = store.getState().getConnectors;
+    const { setConnectedModalContentType, setIsConnectedModalOpen, setIsConnectModalOpen } = useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
 
     // Extract custom components and config with stable references
     const customComponents = customization?.components;

@@ -2,7 +2,7 @@ import { textCenterEllipsis } from '@tuwaio/nova-core';
 import { getAdapterFromWalletType, OrbitAdapter } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NovaConnectProviderProps, NovaConnectProviderType } from './useNovaConnect';
+import { useSatelliteConnectStore } from '../index';
 
 export interface WalletNameAndAvatarData {
   /** The resolved name from the Name Service (e.g., ENS, like "alice.eth"), or null if not found. */
@@ -19,9 +19,7 @@ export interface WalletNameAndAvatarData {
   retry: () => void;
 }
 
-interface UseGetWalletNameAndAvatarOptions
-  extends Pick<NovaConnectProviderProps, 'store'>,
-    Pick<NovaConnectProviderType, 'activeWallet'> {
+interface UseGetWalletNameAndAvatarOptions {
   /** Number of characters to show on each side when abbreviating (default: 12) */
   abbreviateSymbols?: number;
   /** Maximum length before abbreviation is applied (default: 30) */
@@ -71,14 +69,15 @@ interface UseGetWalletNameAndAvatarOptions
  * ```
  */
 export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOptions): WalletNameAndAvatarData {
-  const { abbreviateSymbols = 12, maxNameLength = 30, autoRetry = false, retryDelay = 3000, store } = options;
+  const { abbreviateSymbols = 12, maxNameLength = 30, autoRetry = false, retryDelay = 3000 } = options;
 
   // Store state selectors - memoized for performance
-  const getAdapter = store.getState().getAdapter;
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
   // Memoize wallet address and adapter for dependency tracking
-  const walletAddress = useMemo(() => options.activeWallet?.address, [options.activeWallet?.address]);
-  const walletType = useMemo(() => options.activeWallet?.walletType, [options.activeWallet?.walletType]);
+  const walletAddress = useMemo(() => activeWallet?.address, [activeWallet?.address]);
+  const walletType = useMemo(() => activeWallet?.walletType, [activeWallet?.walletType]);
 
   const foundAdapter = useMemo(() => {
     if (!walletType) return null;

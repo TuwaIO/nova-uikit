@@ -15,12 +15,19 @@ import React, {
   useRef,
 } from 'react';
 
-import { useGetWalletNameAndAvatar, useWalletNativeBalance } from '../../hooks';
-import { ButtonTxStatus, useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
-import { ConnectButtonProps } from './ConnectButton';
-import { StatusIcon, type StatusIconCustomization } from './StatusIcon';
+import {
+  ButtonTxStatus,
+  ConnectButtonProps,
+  StatusIcon,
+  type StatusIconCustomization,
+  useGetWalletNameAndAvatar,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+  useWalletNativeBalance,
+  WalletAvatar,
+  WalletAvatarCustomization,
+} from '../../index';
 
 // --- Types for Customization ---
 type StatusDisplayData = {
@@ -116,7 +123,7 @@ export type ConnectedContentCustomization = {
   };
 };
 
-export interface ConnectedContentProps extends Pick<ConnectButtonProps, 'transactionPool' | 'store' | 'withBalance'> {
+export interface ConnectedContentProps extends Pick<ConnectButtonProps, 'transactionPool' | 'withBalance'> {
   /** Custom CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */
@@ -267,21 +274,20 @@ const DefaultBalanceDivider = ({ className }: CustomBalanceDividerProps) => {
  * ```
  */
 export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps>(
-  ({ transactionPool, withBalance, store, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
+  ({ transactionPool, withBalance, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
 
-    const { isConnectedModalOpen, setConnectedButtonStatus, connectedButtonStatus, activeWallet } = useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const { isConnectedModalOpen, setConnectedButtonStatus, connectedButtonStatus } = useNovaConnect();
 
     const { ensAvatar, ensNameAbbreviated } = useGetWalletNameAndAvatar({
-      activeWallet,
-      store,
       abbreviateSymbols: 6,
       maxNameLength: 30,
       autoRetry: false,
       retryDelay: 3000,
     });
 
-    const { balance } = useWalletNativeBalance({ store, activeWallet });
+    const { balance } = useWalletNativeBalance();
 
     const formattedBalance = balance?.value ? parseFloat(balance.value).toFixed(3) : '0.000';
 

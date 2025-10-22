@@ -8,19 +8,26 @@ import { formatWalletChainId, getAdapterFromWalletType, OrbitAdapter, WalletType
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
 
-import { NativeBalanceResult, useGetWalletNameAndAvatar, useWalletNativeBalance } from '../../hooks';
-import { NovaConnectProviderType, useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { getChainsListByWalletType, getWalletChains } from '../../utils';
-import { ScrollableChainList, type ScrollableChainListProps } from '../Chains/ScrollableChainList';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { ConnectedModalFooter, type ConnectedModalFooterProps } from './ConnectedModalFooter';
 import {
+  ConnectButtonProps,
+  ConnectedModalFooter,
+  type ConnectedModalFooterProps,
   ConnectedModalMainContent,
   type ConnectedModalMainContentCustomization,
   type ConnectedModalMainContentProps,
-} from './ConnectedModalMainContent';
-import { ConnectedModalTxHistory, type ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
+  ConnectedModalTxHistory,
+  type ConnectedModalTxHistoryProps,
+  getChainsListByWalletType,
+  getWalletChains,
+  NativeBalanceResult,
+  ScrollableChainList,
+  type ScrollableChainListProps,
+  useGetWalletNameAndAvatar,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+  useWalletNativeBalance,
+} from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
@@ -69,20 +76,19 @@ type CloseButtonProps = {
   className?: string;
 };
 
-type MainContentProps = Pick<ConnectButtonProps, 'transactionPool' | 'store' | 'pulsarAdapter'> &
-  Pick<NovaConnectProviderType, 'activeWallet'> & {
-    contentType: ConnectedModalContentType;
-    balance: NativeBalanceResult | null;
-    ensNameAbbreviated: string | undefined;
-    avatarIsLoading: boolean;
-    balanceLoading: boolean;
-    ensAvatar: string | null;
-    chainsList: (string | number)[];
-    onChainChange: (chainId: string) => void;
-    onBack: () => void;
-    getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
-    className?: string;
-  };
+type MainContentProps = Pick<ConnectButtonProps, 'transactionPool' | 'pulsarAdapter'> & {
+  contentType: ConnectedModalContentType;
+  balance: NativeBalanceResult | null;
+  ensNameAbbreviated: string | undefined;
+  avatarIsLoading: boolean;
+  balanceLoading: boolean;
+  ensAvatar: string | null;
+  chainsList: (string | number)[];
+  onChainChange: (chainId: string) => void;
+  onBack: () => void;
+  getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
+  className?: string;
+};
 
 // --- Wallet Name Hook Config Type ---
 type WalletNameConfig = {
@@ -306,17 +312,17 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
   ensNameAbbreviated,
   avatarIsLoading,
   balanceLoading,
-  store,
   ensAvatar,
   chainsList,
   transactionPool,
   pulsarAdapter,
-  activeWallet,
   onChainChange,
   onBack,
   getChainData,
   className,
 }) => {
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+
   const renderContent = () => {
     switch (contentType) {
       case 'main':
@@ -326,7 +332,6 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             ensNameAbbreviated={ensNameAbbreviated}
             avatarIsLoading={avatarIsLoading}
             balanceLoading={balanceLoading}
-            store={store}
             ensAvatar={ensAvatar}
             chainsList={chainsList}
             transactionPool={transactionPool}
@@ -396,18 +401,15 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
  * ```
  */
 export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
-  ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, store, customization }, ref) => {
+  ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, customization }, ref) => {
     // Get localized labels for UI text
     const labels = useNovaConnectLabels();
 
     // Get modal state and controls from hook
-    const {
-      setConnectedModalContentType,
-      isConnectedModalOpen,
-      setIsConnectedModalOpen,
-      connectedModalContentType,
-      activeWallet,
-    } = useNovaConnect();
+    const { setConnectedModalContentType, isConnectedModalOpen, setIsConnectedModalOpen, connectedModalContentType } =
+      useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
 
     // Extract customization options with stable references
     const {
@@ -447,12 +449,10 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       ensNameAbbreviated,
       isLoading: avatarIsLoading,
     } = useGetWalletNameAndAvatar({
-      activeWallet,
-      store,
       ...walletNameConfig,
     });
 
-    const { balance, isLoading: balanceLoading } = useWalletNativeBalance({ store, activeWallet });
+    const { balance, isLoading: balanceLoading } = useWalletNativeBalance();
 
     /**
      * Handles network switching when user selects a different chain
@@ -462,10 +462,10 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         if (customHandlers?.onChainChange) {
           customHandlers.onChainChange(newChainId);
         } else {
-          (store?.getState() as { switchNetwork: (chainId: string) => void })?.switchNetwork(newChainId);
+          switchNetwork(newChainId);
         }
       },
-      [customHandlers, store],
+      [customHandlers, switchNetwork],
     );
 
     /**
@@ -663,12 +663,10 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           ensNameAbbreviated={ensNameAbbreviated}
           avatarIsLoading={avatarIsLoading}
           balanceLoading={balanceLoading}
-          store={store}
           ensAvatar={ensAvatar}
           chainsList={chainsList}
           transactionPool={transactionPool}
           pulsarAdapter={pulsarAdapter}
-          activeWallet={activeWallet}
           onChainChange={handleChainChange}
           onBack={handleBackToMain}
           getChainData={getChainData}
@@ -676,11 +674,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         />
 
         {/* Footer with additional controls */}
-        <CustomFooter
-          store={store}
-          setIsOpen={setIsConnectedModalOpen}
-          className={customization?.classNames?.footer?.()}
-        />
+        <CustomFooter setIsOpen={setIsConnectedModalOpen} className={customization?.classNames?.footer?.()} />
       </>
     );
 

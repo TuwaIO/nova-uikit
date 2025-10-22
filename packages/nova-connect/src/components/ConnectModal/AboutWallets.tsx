@@ -14,7 +14,7 @@ import React, {
   useState,
 } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels } from '../../index';
 import { digitalPassportImage } from './images/digitalPassportImage';
 import { walletImage } from './images/walletImage';
 

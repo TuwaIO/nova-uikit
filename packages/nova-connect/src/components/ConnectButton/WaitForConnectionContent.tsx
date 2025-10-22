@@ -6,8 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_PATH_ANIMATION_VARIANTS: Variants = {
@@ -278,7 +277,7 @@ const DefaultContent = ({ icon, text }: Pick<CustomContentProps, 'icon' | 'text'
 export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnectionContentProps>(
   ({ className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
-    const { activeWallet } = useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
 
     // Memoize connection status check for better performance
     const isConnected = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);

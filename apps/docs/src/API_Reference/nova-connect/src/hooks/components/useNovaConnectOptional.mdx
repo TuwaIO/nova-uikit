@@ -1,0 +1,31 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useNovaConnectOptional()
+
+> **useNovaConnectOptional**(): [`NovaConnectProviderType`](../interfaces/NovaConnectProviderType.md) \| `null`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:140](https://github.com/TuwaIO/nova-uikit/blob/941686f5cef2d9d428cf81a1b76de3074dd4e31d/packages/nova-connect/src/hooks/useNovaConnect.ts#L140)
+
+Optional hook that returns null if provider is not available
+
+## Returns
+
+[`NovaConnectProviderType`](../interfaces/NovaConnectProviderType.md) \| `null`
+
+Context value or null if not available
+
+## Example
+
+```typescript
+function OptionalComponent() {
+  const context = useNovaConnectOptional();
+
+  if (!context) {
+    return <div>No wallet provider available</div>;
+  }
+
+  return <div>Connected: {context.isConnected}</div>;
+}
+```

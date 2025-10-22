@@ -7,9 +7,7 @@ import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
+import { useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_PATH_ANIMATION_VARIANTS: Variants = {
@@ -216,7 +214,7 @@ export type ConnectedModalFooterCustomization = {
 /**
  * Props for the ConnectedModalFooter component
  */
-export interface ConnectedModalFooterProps extends Pick<ConnectButtonProps, 'store'> {
+export interface ConnectedModalFooterProps {
   /** Callback to control modal visibility */
   setIsOpen: (isOpen: boolean) => void;
   /** Custom CSS classes for the container */
@@ -494,13 +492,12 @@ const DefaultFooterContent: React.FC<Pick<CustomFooterContentProps, 'disconnectB
  * ```
  */
 export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooterProps>(
-  ({ setIsOpen, store, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
+  ({ setIsOpen, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
-    const { activeWallet } = useNovaConnect();
 
-    // Get wallet state and actions from store
-    const getAdapter = store.getState().getAdapter;
-    const disconnect = store.getState().disconnect;
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
+    const disconnect = useSatelliteConnectStore((store) => store.disconnect);
 
     // Extract custom components and config
     const {

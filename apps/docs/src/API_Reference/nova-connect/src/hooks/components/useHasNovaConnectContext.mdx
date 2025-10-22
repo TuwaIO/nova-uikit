@@ -1,0 +1,31 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useHasNovaConnectContext()
+
+> **useHasNovaConnectContext**(): `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:117](https://github.com/TuwaIO/nova-uikit/blob/941686f5cef2d9d428cf81a1b76de3074dd4e31d/packages/nova-connect/src/hooks/useNovaConnect.ts#L117)
+
+Hook to check if NovaConnect context is available
+
+## Returns
+
+`boolean`
+
+True if context is available, false otherwise
+
+## Example
+
+```typescript
+function ConditionalComponent() {
+  const hasContext = useHasNovaConnectContext();
+
+  if (!hasContext) {
+    return <div>NovaConnect provider not found</div>;
+  }
+
+  return <ConnectedComponent />;
+}
+```

@@ -15,16 +15,6 @@
       "import": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./hooks": {
-      "types": "./dist/hooks/index.d.ts",
-      "import": "./dist/hooks/index.cjs",
-      "default": "./dist/hooks/index.js"
-    },
-    "./providers": {
-      "types": "./dist/providers/index.d.ts",
-      "import": "./dist/providers/index.cjs",
-      "default": "./dist/providers/index.js"
-    },
     "./evm": {
       "types": "./dist/evm/index.d.ts",
       "import": "./dist/evm/index.cjs",
@@ -79,6 +69,9 @@
       "url": "https://github.com/Argeare5"
     }
   ],
+  "dependencies": {
+    "@tuwaio/satellite-react": "^0.1.1"
+  },
   "peerDependencies": {
     "@bgd-labs/react-web3-icons": ">=1.5",
     "@heroicons/react": "2.x.x",
@@ -89,7 +82,6 @@
     "@tuwaio/orbit-solana": ">=0.1",
     "@tuwaio/satellite-core": ">=0.1",
     "@tuwaio/satellite-evm": ">=0.1",
-    "@tuwaio/satellite-react": ">=0.1",
     "@tuwaio/satellite-solana": ">=0.1",
     "@tuwaio/pulsar-core": ">=0.2",
     "@tuwaio/nova-core": ">=0",
@@ -125,9 +117,6 @@
       "optional": false
     },
     "@tuwaio/satellite-core": {
-      "optional": false
-    },
-    "@tuwaio/satellite-react": {
       "optional": false
     },
     "@tuwaio/pulsar-core": {
@@ -201,7 +190,6 @@
     "@tuwaio/orbit-solana": "^0.1.0",
     "@tuwaio/satellite-core": "^0.1.0",
     "@tuwaio/satellite-evm": "^0.1.0",
-    "@tuwaio/satellite-react": "^0.1.0",
     "@tuwaio/satellite-solana": "^0.1.0",
     "@tuwaio/pulsar-core": "^0.2.0",
     "@tuwaio/nova-core": "workspace:^",

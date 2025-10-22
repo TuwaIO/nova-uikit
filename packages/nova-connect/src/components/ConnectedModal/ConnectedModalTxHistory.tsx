@@ -17,9 +17,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
+import { ConnectButtonProps, useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -467,7 +465,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModalTxHistoryProps>(
   ({ transactionPool, pulsarAdapter, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
-    const { activeWallet } = useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
 
     // Extract custom components and config
     const {

@@ -4,12 +4,11 @@
 
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import { BaseWallet } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
-import { useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';
+import { ConnectedModalMainContentProps, useNovaConnectLabels, useSatelliteConnectStore } from '../../index';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -39,7 +38,7 @@ const DEFAULT_LOADING_ANIMATION_VARIANTS: Variants = {
 // --- Types for Customization ---
 type WalletNameDisplayProps = {
   ensNameAbbreviated?: string;
-  activeWallet: NonNullable<ReturnType<typeof useNovaConnect>['activeWallet']>;
+  activeWallet: BaseWallet;
   labels: Record<string, string>;
   className?: string;
 };
@@ -47,7 +46,7 @@ type WalletNameDisplayProps = {
 type CopyButtonProps = {
   isCopied: boolean;
   onCopy: () => Promise<void>;
-  activeWallet: NonNullable<ReturnType<typeof useNovaConnect>['activeWallet']>;
+  activeWallet: BaseWallet;
   labels: Record<string, string>;
   className?: string;
   disabled?: boolean;
@@ -62,7 +61,7 @@ type BalanceDisplayProps = {
 
 type ScreenReaderFeedbackProps = {
   isCopied: boolean;
-  activeWallet: NonNullable<ReturnType<typeof useNovaConnect>['activeWallet']>;
+  activeWallet: BaseWallet;
   labels: Record<string, string>;
   className?: string;
 };
@@ -479,7 +478,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     ref,
   ) => {
     const labels = useNovaConnectLabels();
-    const { activeWallet } = useNovaConnect();
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
     const { copy, isCopied } = useCopyToClipboard();
 
     // Extract custom components and config

@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { defaultLabels } from '../i18n/en';
-import { NovaConnectLabels } from '../i18n/types';
+import { defaultLabels, NovaConnectLabels } from '../index';
 
 /**
  * React Context for storing and providing the UI labels.

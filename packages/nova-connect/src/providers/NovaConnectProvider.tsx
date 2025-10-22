@@ -6,20 +6,22 @@
 import { deepMerge } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { BaseWallet } from '@tuwaio/satellite-core';
-import { ComponentType, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ComponentType, ReactNode, useMemo, useState } from 'react';
 
 import {
   ButtonTxStatus,
   ConnectContentType,
   ConnectedContentType,
+  defaultLabels,
+  ErrorsProvider,
+  ErrorsProviderCustomization,
+  NovaConnectLabels,
+  NovaConnectLabelsProvider,
   NovaConnectProviderContext,
   NovaConnectProviderProps as BaseNovaConnectProviderProps,
   NovaConnectProviderType,
-} from '../hooks/useNovaConnect';
-import { defaultLabels } from '../i18n/en';
-import { NovaConnectLabels } from '../i18n/types';
-import { ErrorsProvider, ErrorsProviderCustomization, ErrorsProviderProps } from './ErrorsProvider';
-import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
+  useSatelliteConnectStore,
+} from '../index';
 
 // --- Customization Types ---
 
@@ -34,7 +36,7 @@ type CustomLabelsProviderProps = {
 /**
  * Props for custom ErrorsProvider component
  */
-type CustomErrorsProviderProps = Pick<ErrorsProviderProps, 'store'> & {
+type CustomErrorsProviderProps = {
   customization?: ErrorsProviderCustomization;
 };
 
@@ -86,19 +88,6 @@ export type NovaConnectProviderCustomization = {
   };
   /** ErrorsProvider customization - passed through to ErrorsProvider */
   errors?: ErrorsProviderCustomization;
-  /** Custom initialization logic */
-  initialization?: {
-    /** Custom logic after store subscription setup */
-    onStoreSubscribed?: (context: ProviderContext) => void;
-    /** Custom logic when connection state changes */
-    onConnectionStateChange?: (
-      isConnected: boolean,
-      activeWallet: BaseWallet | undefined,
-      context: ProviderContext,
-    ) => void;
-    /** Custom logic when error state changes */
-    onErrorStateChange?: (error: string | undefined, context: ProviderContext) => void;
-  };
   /** Custom context value transformation */
   contextValue?: {
     /** Transform context value before providing to children */
@@ -122,7 +111,7 @@ export type NovaConnectProviderCustomization = {
 /**
  * Extended props for NovaConnectProvider with full customization capabilities
  */
-export interface NovaConnectProviderProps extends BaseNovaConnectProviderProps {
+export interface NovaConnectProviderPropsWithCustomization extends BaseNovaConnectProviderProps {
   /** Comprehensive customization options for the provider and its sub-components */
   customization?: NovaConnectProviderCustomization;
 }
@@ -139,8 +128,8 @@ const DefaultLabelsProvider = ({ labels, children }: CustomLabelsProviderProps) 
 /**
  * Default errors provider component
  */
-const DefaultErrorsProvider = ({ store, customization }: CustomErrorsProviderProps) => {
-  return <ErrorsProvider store={store} customization={customization} />;
+const DefaultErrorsProvider = ({ customization }: CustomErrorsProviderProps) => {
+  return <ErrorsProvider customization={customization} />;
 };
 
 // --- Default Handlers ---
@@ -159,27 +148,6 @@ const defaultLabelsMerge = (
  * Default labels transform function (identity)
  */
 const defaultLabelsTransform = (mergedLabels: NovaConnectLabels): NovaConnectLabels => mergedLabels;
-
-/**
- * Default store subscription handler
- */
-const defaultStoreSubscribedHandler = () => {
-  // No-op by default
-};
-
-/**
- * Default connection state change handler
- */
-const defaultConnectionStateChangeHandler = () => {
-  // No-op by default
-};
-
-/**
- * Default error state change handler
- */
-const defaultErrorStateChangeHandler = () => {
-  // No-op by default
-};
 
 /**
  * Default context value transform function (identity)
@@ -218,7 +186,6 @@ const defaultProviderTreeRenderer = (
  * - Modal and UI state coordination
  * - Extensive customization API for all aspects
  * - Custom component replacement capabilities
- * - Advanced initialization and lifecycle hooks
  *
  * @example Basic usage
  * ```tsx
@@ -240,11 +207,6 @@ const defaultProviderTreeRenderer = (
  *         ToastError: CustomToastError
  *       }
  *     },
- *     initialization: {
- *       onConnectionStateChange: (isConnected, wallet) => {
- *         console.log('Connection state:', isConnected, wallet);
- *       }
- *     }
  *   }}
  * >
  *   <App />
@@ -253,7 +215,10 @@ const defaultProviderTreeRenderer = (
  *
  * @param props - Provider configuration and customization options
  */
-export function NovaConnectProvider({ labels, store, children, customization }: NovaConnectProviderProps) {
+export function NovaConnectProvider({ labels, children, customization }: NovaConnectProviderPropsWithCustomization) {
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+
   // Extract custom components
   const { LabelsProvider = DefaultLabelsProvider, ErrorsProvider: CustomErrorsProvider = DefaultErrorsProvider } =
     customization?.components ?? {};
@@ -261,12 +226,6 @@ export function NovaConnectProvider({ labels, store, children, customization }: 
   // Extract custom handlers
   const { merge: customLabelsMerge = defaultLabelsMerge, transform: customLabelsTransform = defaultLabelsTransform } =
     customization?.labels ?? {};
-
-  const {
-    onStoreSubscribed: customStoreSubscribedHandler = defaultStoreSubscribedHandler,
-    onConnectionStateChange: customConnectionStateChangeHandler = defaultConnectionStateChangeHandler,
-    onErrorStateChange: customErrorStateChangeHandler = defaultErrorStateChangeHandler,
-  } = customization?.initialization ?? {};
 
   const { transform: customContextValueTransform = defaultContextValueTransform } = customization?.contextValue ?? {};
 
@@ -278,10 +237,6 @@ export function NovaConnectProvider({ labels, store, children, customization }: 
   }, [labels, customLabelsMerge]);
 
   // State management - all existing state
-  const [activeWallet, setActiveWallet] = useState<BaseWallet | undefined>(store.getState().activeWallet);
-  const [walletConnectionError, setWalletConnectionError] = useState<string | undefined>(
-    store.getState().walletConnectionError,
-  );
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [isConnectedModalOpen, setIsConnectedModalOpen] = useState(false);
   const [isChainsListOpen, setIsChainsListOpen] = useState(false);
@@ -333,53 +288,9 @@ export function NovaConnectProvider({ labels, store, children, customization }: 
     return customLabelsTransform(mergedLabels, providerContext);
   }, [mergedLabels, customLabelsTransform, providerContext]);
 
-  // Handle connection state changes
-  const handleConnectionStateChange = useCallback(
-    (newIsConnected: boolean, newActiveWallet: BaseWallet | undefined) => {
-      customConnectionStateChangeHandler(newIsConnected, newActiveWallet, providerContext);
-    },
-    [customConnectionStateChangeHandler, providerContext],
-  );
-
-  // Handle error state changes
-  const handleErrorStateChange = useCallback(
-    (newError: string | undefined) => {
-      customErrorStateChangeHandler(newError, providerContext);
-    },
-    [customErrorStateChangeHandler, providerContext],
-  );
-
-  // Store subscription effect
-  useEffect(() => {
-    if (!store) return undefined;
-    const unsubscribe = store.subscribe((state) => {
-      const newActiveWallet = state.activeWallet;
-      const newError = state.walletConnectionError;
-      const newIsConnected = Boolean(newActiveWallet?.isConnected);
-      // Update state
-      setActiveWallet(newActiveWallet);
-      setWalletConnectionError(newError);
-      // Handle state changes
-      if (newIsConnected !== isConnected || newActiveWallet !== activeWallet) {
-        handleConnectionStateChange(newIsConnected, newActiveWallet);
-      }
-      if (newError !== walletConnectionError) {
-        handleErrorStateChange(newError);
-      }
-    });
-
-    // Custom initialization logic
-    customStoreSubscribedHandler(providerContext);
-
-    return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store]);
-
   // Create and transform context value using custom logic if provided - moved inside useMemo
   const contextValue = useMemo(() => {
     const defaultContextValue: NovaConnectProviderType = {
-      walletConnectionError,
-      activeWallet,
       isConnectModalOpen,
       setIsConnectModalOpen,
       isConnectedModalOpen,
@@ -406,8 +317,6 @@ export function NovaConnectProvider({ labels, store, children, customization }: 
 
     return customContextValueTransform(defaultContextValue, providerContext);
   }, [
-    walletConnectionError,
-    activeWallet,
     isConnectModalOpen,
     setIsConnectModalOpen,
     isConnectedModalOpen,
@@ -435,7 +344,7 @@ export function NovaConnectProvider({ labels, store, children, customization }: 
   ]);
 
   // Create component tree elements
-  const errorsProviderElement = <CustomErrorsProvider store={store} customization={customization?.errors} />;
+  const errorsProviderElement = <CustomErrorsProvider customization={customization?.errors} />;
 
   const labelsProviderElement = <LabelsProvider labels={finalLabels}>{children}</LabelsProvider>;
 

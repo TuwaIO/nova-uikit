@@ -6,7 +6,7 @@ import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo, useState } from 'react';
 
-import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
+import { useNovaConnectLabels } from '../index';
 
 // --- Types for Customization ---
 type CustomIconProps = {

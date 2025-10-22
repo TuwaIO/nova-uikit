@@ -26,22 +26,38 @@ import React, {
   forwardRef,
   memo,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
 } from 'react';
 
-import { ConnectContentType, useNovaConnect } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { Connector, InitialChains } from '../../types';
-import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
-import { Connecting, ConnectingCustomization } from './Connecting';
-import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
-import { GetWallet, GetWalletCustomization } from './GetWallet';
-import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedForm';
-import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
-import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
+import {
+  AboutWallets,
+  AboutWalletsCustomization,
+  ConnectButtonProps,
+  ConnectContentType,
+  Connecting,
+  ConnectingCustomization,
+  Connector,
+  ConnectorsSelections,
+  ConnectorsSelectionsCustomization,
+  getConnectChainId,
+  getFilteredConnectors,
+  GetWallet,
+  GetWalletCustomization,
+  ImpersonateForm,
+  ImpersonateFormCustomization,
+  InitialChains,
+  NetworkSelections,
+  NetworkSelectionsCustomization,
+  networksLinks,
+  NetworkTabs,
+  NetworkTabsCustomization,
+  SatelliteStoreContext,
+  useNovaConnect,
+  useNovaConnectLabels,
+  useSatelliteConnectStore,
+} from '../../index';
 
 /**
  * Interface for grouped wallet connectors
@@ -303,17 +319,14 @@ function getConnectorName(
   }
 
   const connector = connectors.find((c) => {
-    // @ts-expect-error - no types for connector on package level
     if (c && typeof c === 'object' && 'name' in c && typeof c.name === 'string') {
-      // @ts-expect-error - no types for connector on package level
       return formatWalletName(c.name) === activeConnector;
     }
     return false;
   });
-  // @ts-expect-error - no types for connector on package level
+
   return connector && typeof connector === 'object' && 'name' in connector && typeof connector.name === 'string'
-    ? // @ts-expect-error - no types for connector on package level
-      connector.name
+    ? connector.name
     : undefined;
 }
 
@@ -477,7 +490,7 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
 /**
  * Props for the ConnectModal component
  */
-export interface ConnectModalProps extends InitialChains, Pick<ConnectButtonProps, 'store' | 'withImpersonated'> {
+export interface ConnectModalProps extends InitialChains, Pick<ConnectButtonProps, 'withImpersonated'> {
   /** Customization options */
   customization?: ConnectModalCustomization;
 }
@@ -548,7 +561,7 @@ export interface ConnectModalProps extends InitialChains, Pick<ConnectButtonProp
  * @public
  */
 export const ConnectModal = memo<ConnectModalProps>(
-  ({ appChains, solanaRPCUrls, store, withImpersonated, customization = {} }) => {
+  ({ appChains, solanaRPCUrls, withImpersonated, customization = {} }) => {
     const {
       isConnectModalOpen,
       setIsConnectModalOpen,
@@ -562,28 +575,21 @@ export const ConnectModal = memo<ConnectModalProps>(
       isConnected,
       activeConnector,
       impersonatedAddress,
-      walletConnectionError,
     } = useNovaConnect();
-
-    // Memoize store methods to prevent unnecessary re-renders
-    const storeGetters = useMemo(
-      () => ({
-        getConnectors: store.getState().getConnectors,
-        connect: store.getState().connect,
-      }),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [],
-    );
+    const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+    const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+    const connect = useSatelliteConnectStore((store) => store.connect);
+    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
 
     const labels = useNovaConnectLabels();
+    const store = useContext(SatelliteStoreContext);
 
     // Memoize connectors to avoid recalculation on every render
     const connectors = useMemo(() => {
       if (isConnectModalOpen) {
-        return storeGetters.getConnectors();
+        return getConnectors();
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isConnectModalOpen]);
+    }, [isConnectModalOpen, getConnectors]);
 
     const filteredConnectors = useMemo(
       () => getFilteredConnectors({ connectors: connectors!, selectedAdapter }),
@@ -736,7 +742,7 @@ export const ConnectModal = memo<ConnectModalProps>(
      */
     const handleConnect = useCallback(
       async (walletType: WalletType, adapter: OrbitAdapter) => {
-        await storeGetters.connect({
+        await connect({
           walletType,
           chainId: getConnectChainId({ appChains, selectedAdapter: adapter, solanaRPCUrls }),
         });
@@ -754,7 +760,7 @@ export const ConnectModal = memo<ConnectModalProps>(
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [storeGetters],
+      [connect],
     );
 
     /**
@@ -831,7 +837,6 @@ export const ConnectModal = memo<ConnectModalProps>(
                 setIsOpen={setIsConnectModalOpen}
                 waitForPredict={() => store?.getState().activeWallet?.isConnected}
                 withImpersonated={withImpersonated}
-                store={store}
                 customization={childComponents.connectorsSelections}
               />
             </>
@@ -857,7 +862,6 @@ export const ConnectModal = memo<ConnectModalProps>(
         case 'impersonate':
           return (
             <ImpersonateForm
-              store={store}
               impersonatedAddress={impersonatedAddress}
               setImpersonatedAddress={setImpersonatedAddress}
               customization={childComponents.impersonateForm}
@@ -936,7 +940,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                   walletConnectionError ||
                   !trimmedAddress ||
                   isAddress(trimmedAddress) ||
-                  !!store?.getState().activeWallet?.isConnected
+                  !!activeWallet?.isConnected
                 )
                   return;
 

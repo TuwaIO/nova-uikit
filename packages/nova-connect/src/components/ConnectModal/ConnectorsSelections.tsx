@@ -7,15 +7,19 @@ import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { formatWalletName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
-import { ConnectContentType } from '../../hooks/useNovaConnect';
-import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { InitialChains } from '../../types';
-import { ConnectButtonProps } from '../ConnectButton/ConnectButton';
-import { WalletIcon } from '../WalletIcon';
-import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
-import { GroupedConnector } from './ConnectModal';
-import { ConnectorsBlock, ConnectorsBlockCustomization } from './ConnectorsBlock';
-import { Disclaimer } from './Disclaimer';
+import {
+  ConnectButtonProps,
+  ConnectCard,
+  ConnectCardCustomization,
+  ConnectContentType,
+  ConnectorsBlock,
+  ConnectorsBlockCustomization,
+  Disclaimer,
+  GroupedConnector,
+  InitialChains,
+  useNovaConnectLabels,
+  WalletIcon,
+} from '../../index';
 
 // --- Types ---
 
@@ -211,9 +215,7 @@ export type ConnectorsSelectionsCustomization = {
 /**
  * Props for the ConnectorsSelections component
  */
-export interface ConnectorsSelectionsProps
-  extends Pick<ConnectButtonProps, 'withImpersonated' | 'store'>,
-    InitialChains {
+export interface ConnectorsSelectionsProps extends Pick<ConnectButtonProps, 'withImpersonated'>, InitialChains {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors */
@@ -435,7 +437,6 @@ export const ConnectorsSelections = memo(
         setContentType,
         withImpersonated,
         isOnlyOneNetwork = false,
-        store,
         customization,
       },
       ref,
@@ -685,7 +686,6 @@ export const ConnectorsSelections = memo(
                 appChains={appChains}
                 isOnlyOneNetwork={isOnlyOneNetwork}
                 isTitleBold
-                store={store}
                 customization={customization?.connectorsBlock?.installed}
               />
               {!!connectorGroups.popular.length && (
@@ -700,7 +700,6 @@ export const ConnectorsSelections = memo(
                   setIsOpen={setIsOpen}
                   appChains={appChains}
                   isOnlyOneNetwork={isOnlyOneNetwork}
-                  store={store}
                   customization={customization?.connectorsBlock?.popular}
                 />
               )}

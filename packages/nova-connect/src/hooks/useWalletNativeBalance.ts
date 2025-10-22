@@ -1,7 +1,7 @@
 import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { NovaConnectProviderProps, NovaConnectProviderType } from './useNovaConnect';
+import { useSatelliteConnectStore } from '../index';
 
 /**
  * @interface NativeBalanceResult
@@ -62,10 +62,7 @@ interface NativeBalanceData {
  * }
  * ```
  */
-export function useWalletNativeBalance({
-  store,
-  activeWallet,
-}: Pick<NovaConnectProviderProps, 'store'> & Pick<NovaConnectProviderType, 'activeWallet'>): NativeBalanceData {
+export function useWalletNativeBalance(): NativeBalanceData {
   // --- 1. STATE & CACHE SETUP ---
 
   // Local cache storage. Keys combine wallet address and chain ID.
@@ -78,7 +75,8 @@ export function useWalletNativeBalance({
   const fetchOperationRef = useRef<string | null>(null);
 
   // Store state selectors - memoized for performance
-  const getAdapter = store.getState().getAdapter;
+  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
   // --- 2. COMPUTED INPUTS ---
 
