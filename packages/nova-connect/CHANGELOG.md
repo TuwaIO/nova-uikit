@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.4...nova-connect-v0.1.5) (2025-10-23)
+
+
+### Bug Fixes
+
+* added blur bg to about wallet slider description ([a6b4cd4](https://github.com/TuwaIO/nova-uikit/commit/a6b4cd42ae73619fb4e71b5b0bd64af084ce09f1))
+
 ## [0.1.4](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.3...nova-connect-v0.1.4) (2025-10-22)
 
 
