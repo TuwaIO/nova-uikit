@@ -399,7 +399,7 @@ export function NovaConnectProvider({
 
   // Create modal elements - only render if we have the required props
   const connectModalElement =
-    appChains && solanaRPCUrls ? (
+    appChains || solanaRPCUrls ? (
       <ConnectModal
         withImpersonated={withImpersonated}
         solanaRPCUrls={solanaRPCUrls}
@@ -409,7 +409,7 @@ export function NovaConnectProvider({
     ) : null;
 
   const connectedModalElement =
-    appChains && solanaRPCUrls ? (
+    appChains || solanaRPCUrls ? (
       <ConnectedModal
         solanaRPCUrls={solanaRPCUrls}
         appChains={appChains}
