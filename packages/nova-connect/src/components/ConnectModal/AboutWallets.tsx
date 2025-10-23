@@ -129,7 +129,7 @@ const DEFAULT_SLIDES_CONFIG: SlideConfig[] = [
 // --- Default motion variants ---
 const DEFAULT_SLIDE_VARIANTS: Variants = {
   enter: (direction: SlideDirection) => ({
-    x: direction > 0 ? '35%' : '-35%',
+    x: direction > 0 ? '15%' : '-15%',
     opacity: 0,
   }),
   center: {
@@ -139,7 +139,7 @@ const DEFAULT_SLIDE_VARIANTS: Variants = {
   },
   exit: (direction: SlideDirection) => ({
     zIndex: 0,
-    x: direction < 0 ? '35%' : '-35%',
+    x: direction < 0 ? '15%' : '-15%',
     opacity: 0,
     top: 0,
     left: 0,
@@ -165,7 +165,7 @@ const ANIMATION_CONFIG = {
   autoPlayInterval: 25000,
   resumeDelay: 10000,
   slideTransition: {
-    x: { type: 'spring' as const, stiffness: 200, damping: 20, duration: 0.1 },
+    x: { type: 'spring' as const, stiffness: 200, damping: 30, duration: 0.1 },
     opacity: { duration: 0.2 },
   } as Transition,
   imageTransition: {
@@ -369,7 +369,12 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
 );
 
 const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels }) => (
-  <div className={cn('novacon:text-center novacon:relative novacon:p-4', className)}>
+  <div
+    className={cn(
+      'novacon:text-center novacon:relative novacon:p-4 novacon:bg-white/[0.19] novacon:backdrop-blur-[8.5px]',
+      className,
+    )}
+  >
     <h2
       className="novacon:text-xl novacon:font-bold novacon:text-[var(--tuwa-text-primary)] novacon:mb-2"
       id={`slide-title-${slideIndex}`}
