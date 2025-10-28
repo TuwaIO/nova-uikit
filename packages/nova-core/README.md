@@ -20,10 +20,9 @@ Building design systems requires consistent foundations: colors, spacing, typogr
 
 Nova Core solves this by:
 
-1.  **Providing Unified Design Tokens:** A comprehensive CSS variable system that ensures visual consistency across all components.
-2.  **Offering Smart Utilities:** Battle-tested helper functions like the `cn` utility that combines `clsx` and `tailwind-merge` for conflict-free styling.
-3.  **Supplying Common Hooks:** A collection of reusable React hooks for common Web3 UI patterns.
-4.  **Ensuring Tailwind CSS v4 Integration:** Seamless compatibility with modern Tailwind CSS workflows.
+1.  **Offering Smart Utilities:** Battle-tested helper functions like the `cn` utility that combines `clsx` and `tailwind-merge` for conflict-free styling.
+2.  **Supplying Common Hooks:** A collection of reusable React hooks for common Web3 UI patterns.
+3.  **Ensuring Tailwind CSS v4 Integration:** Seamless compatibility with modern Tailwind CSS workflows.
 
 -----
 
@@ -227,9 +226,9 @@ function App() {
 
 #### Utilities
 
-| Function | Description | Usage |
-| :--- | :--- | :--- |
-| **`cn(...classes)`** | Merges class names intelligently, resolving Tailwind conflicts | `cn('p-4 text-sm', 'p-6', conditional && 'hidden')` |
+| Function | Description | Usage                                     |
+| :--- | :--- |:------------------------------------------|
+| **`cn(...classes)`** | Merges class names intelligently, resolving Tailwind conflicts | `cn('p-4 text-sm', 'p-6',  {'hidden': conditional})` |
 
 #### Hooks
 

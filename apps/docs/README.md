@@ -25,7 +25,6 @@ This is the **interactive documentation hub** for the entire Nova UI Kit ecosyst
 
 - **Live Component Playground** - Interactive controls for testing all component variations
 - **Auto-Generated Documentation** - Comprehensive props tables and usage examples
-- **Design Tokens Showcase** - Visual guide to colors, spacing, typography, and animations
 - **Multi-Chain Examples** - Real-world scenarios for EVM and Solana interactions
 - **Accessibility Testing** - Built-in a11y validation and keyboard navigation demos
 
@@ -202,7 +201,6 @@ Our Storybook is organized into logical sections:
 | Section             | Description                             | Components                                             |
 | ------------------- | --------------------------------------- |--------------------------------------------------------|
 | **🏠 Introduction** | Getting started guide and ecosystem overview | Welcome, Setup guides                                  |
-| **🎨 Design System** | Visual design language and tokens       | Colors, Typography, Spacing                            |
 | **🔌 Nova Connect** | Wallet connection components            | ConnectButton, WalletModal, NetworkSelector, etc...    |
 | **📊 Nova Transactions** | Transaction tracking UI                 | TransactionModal, ProgressToast, HistoryWidget, etc... |
 | **⚙️ Nova Core** | Foundational utilities and hooks        | Utils, Hooks, Base components                          |
