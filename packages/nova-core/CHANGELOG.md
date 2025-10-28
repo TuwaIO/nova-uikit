@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.1.1...nova-core-v0.1.2) (2025-10-28)
+
+
+### Bug Fixes
+
+* update readme's ([a082436](https://github.com/TuwaIO/nova-uikit/commit/a082436d1008070d4b196092f877b45b3f65b172))
+
 ## [0.1.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.1.0...nova-core-v0.1.1) (2025-10-28)
 
 
