@@ -1,4 +1,4 @@
-# Nova Connect
+# TUWA Nova Connect
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-connect.svg)](./LICENSE)
@@ -26,7 +26,6 @@ Built on top of the Satellite Connect ecosystem, Nova Connect offers a unified i
 - **♿ Accessibility**: Full ARIA and keyboard navigation support.
 - **🎭 Internationalization**: Support for multiple languages.
 - **🔄 State Management**: Zustand-based store for efficient state management.
-- **📱 Responsiveness**: Mobile-first design.
 
 ---
 
@@ -34,7 +33,7 @@ Built on top of the Satellite Connect ecosystem, Nova Connect offers a unified i
 
 ### Requirements
 - React 19+
-- Node.js 24+
+- Node.js 20+
 - TypeScript 5.9+
 
 ```bash
@@ -56,55 +55,66 @@ yarn add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/
 
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { SatelliteConnectProvider, NovaConnectProvider } from '@tuwaio/nova-connect';
+import { satelliteEVMAdapter, createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
+import { SatelliteConnectProvider } from '@tuwaio/nova-connect/satellite';
 import { EVMWalletsWatcher } from '@tuwaio/nova-connect/evm';
 import { SolanaWalletsWatcher } from '@tuwaio/nova-connect/solana';
-import { initializeSolanaMobileConnectors, satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
-import { createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
-import { createConfig } from '@wagmi/core';
-import { ReactNode } from 'react';
+import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
 import { WagmiProvider } from 'wagmi';
-import { Chain, mainnet, polygon, arbitrum } from 'viem/chains';
+import { ReactNode } from 'react';
+import { createConfig, http } from '@wagmi/core';
+import { mainnet, sepolia } from 'viem/chains';
+import type { Chain } from 'viem/chains';
 
 export const appConfig = {
-  appName: 'My Nova Connect App',
+  appName: 'Satellite EVM Test App',
+  // Ensure you have WalletConnect Project ID in your environment variables
+  projectId: process.env.NEXT_PUBLIC_WALLET_PROJECT_ID ?? 'YOUR_OWN_PROJECT_ID',
 };
 
-export const solanaRPCUrls = {
-  mainnet: 'https://api.mainnet-beta.solana.com',
-};
-
-export const appEVMChains = [mainnet, polygon, arbitrum] as readonly [Chain, ...Chain[]];
+export const appEVMChains = [
+  mainnet,
+  sepolia,
+] as readonly [Chain, ...Chain[]];
 
 export const wagmiConfig = createConfig({
   connectors: initAllConnectors({
     ...appConfig,
+    // Optional: Add app details for WalletConnect modal
+    description: 'My awesome dApp',
+    appUrl: '[https://my-dapp.com](https://my-dapp.com)',
+    appIcons: ['[https://my-dapp.com/icon.png](https://my-dapp.com/icon.png)'],
   }),
-  transports: createDefaultTransports(appEVMChains),
+  transports: createDefaultTransports(appEVMChains), // Automatically creates http transports
   chains: appEVMChains,
-  ssr: true,
-  syncConnectedChain: true,
+  ssr: true, // Enable SSR support if needed (e.g., in Next.js)
 });
+
+export const solanaRPCUrls = {
+  devnet: 'https://api.devnet.solana.com',
+};
+
 
 const queryClient = new QueryClient();
-
-initializeSolanaMobileConnectors({
-  rpcUrls: solanaRPCUrls,
-  ...appConfig,
-});
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <SatelliteConnectProvider
-          adapters={[satelliteEVMAdapter({ wagmiConfig }), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
-          appName={appConfig.appName}
+          adapter={[satelliteEVMAdapter(wagmiConfig), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
+          autoConnect={true}
         >
-          <EVMWalletsWatcher />
+          <EVMWalletsWatcher wagmiConfig={wagmiConfig} />
           <SolanaWalletsWatcher />
-          <NovaConnectProvider>
+          <NovaConnectProvider
+            appChains={appEVMChains}
+            solanaRPCUrls={solanaRPCUrls}
+            withImpersonated
+            withBalance
+            withChain
+          >
             {children}
           </NovaConnectProvider>
         </SatelliteConnectProvider>
@@ -117,18 +127,12 @@ export function Providers({ children }: { children: ReactNode }) {
 ### Using ConnectButton
 
 ```tsx
-import { ConnectButton } from '@tuwaio/nova-connect';
+import { ConnectButton } from '@tuwaio/nova-connect/components';
 
 function App() {
   return (
     <div>
-      <ConnectButton
-        appChains={appEVMChains}
-        solanaRPCUrls={solanaRPCUrls}
-        withImpersonated
-        withBalance
-        withChain
-      />
+      <ConnectButton />
     </div>
   );
 }
@@ -141,7 +145,6 @@ function App() {
 ### 1. **ConnectButton**
 
 - Main component for wallet connection.
-- Built-in support for balance display and network selector.
 - Full customization system.
 
 ### 2. **NovaConnectProvider**
@@ -149,10 +152,6 @@ function App() {
 - Context provider with state management.
 - Customizable error handling.
 - Flexible internationalization system.
-
-### 3. **Hooks**
-
-- `useWalletBalance`: Get the wallet balance.
 
 -----
 
@@ -198,7 +197,3 @@ If you find this library useful, please consider supporting its development. Eve
 ## 📄 License
 
 This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.
-
-## 👥 Contributors
-
-- **Oleksandr Tkach** - [GitHub](https://github.com/Argeare5)
