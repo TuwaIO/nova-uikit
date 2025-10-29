@@ -707,7 +707,9 @@ export const Connecting = memo(
             <CustomWalletIconContainer
               className={
                 customization?.classNames?.walletIconContainer?.({ statusData }) ??
-                cn('novacon:[&_img]:w-[60px]! novacon:[&_img]:h-[auto]! novacon:md:[&_img]:w-[80px]!')
+                cn(
+                  'novacon:[&_img]:w-[60px]! novacon:[&_img]:h-[auto]!  novacon:md:[&_img]:w-[80px]! novacon:leading-[0]',
+                )
               }
               statusData={statusData}
             >

@@ -316,6 +316,20 @@ const DefaultDisclaimerSection = forwardRef<HTMLDivElement, DisclaimerSectionPro
 );
 DefaultDisclaimerSection.displayName = 'DefaultDisclaimerSection';
 
+function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrder: string[]): T[] {
+  return [...items].sort((a, b) => {
+    const keyA = getKey(a);
+    const keyB = getKey(b);
+    const indexA = desiredOrder.indexOf(keyA);
+    const indexB = desiredOrder.indexOf(keyB);
+
+    const priorityA = indexA === -1 ? Infinity : indexA;
+    const priorityB = indexB === -1 ? Infinity : indexB;
+
+    return priorityA !== priorityB ? priorityA - priorityB : keyA.localeCompare(keyB);
+  });
+}
+
 /**
  * ConnectorsSelections component - Main wallet selection interface with categorized connectors
  *
@@ -456,12 +470,16 @@ export const ConnectorsSelections = memo(
        * Memoized connector filtering
        */
       const connectorGroups = useMemo(() => {
+        const popularDesiredOrder = ['walletconnect', 'porto', 'coinbasewallet', 'geminiwallet'];
+
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatWalletName(group.name);
           return (
             formattedName !== 'impersonatedwallet' &&
-            formattedName !== 'coinbasewallet' &&
-            formattedName !== 'walletconnect'
+            formattedName !== popularDesiredOrder[0] &&
+            formattedName !== popularDesiredOrder[1] &&
+            formattedName !== popularDesiredOrder[2] &&
+            formattedName !== popularDesiredOrder[3]
           );
         });
 
@@ -471,14 +489,23 @@ export const ConnectorsSelections = memo(
 
         const popularConnectors = connectors.filter((group) => {
           const formattedName = formatWalletName(group.name);
-          return formattedName === 'coinbasewallet' || formattedName === 'walletconnect';
+          return (
+            formattedName === popularDesiredOrder[0] ||
+            formattedName === popularDesiredOrder[1] ||
+            formattedName === popularDesiredOrder[2] ||
+            formattedName === popularDesiredOrder[3]
+          );
         });
 
         const impersonatedConnector = connectors.find((group) => formatWalletName(group.name) === 'impersonatedwallet');
 
         return {
           installed: installedConnectors,
-          popular: popularConnectors,
+          popular: createCustomSort(
+            popularConnectors,
+            (connector) => formatWalletName(connector.name),
+            popularDesiredOrder,
+          ),
           impersonated: impersonatedConnector,
         };
       }, [connectors]);

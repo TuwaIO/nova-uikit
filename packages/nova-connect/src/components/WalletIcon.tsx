@@ -249,8 +249,6 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
         onError: handleImageError,
         loading: (lazy ? 'lazy' : 'eager') as 'lazy' | 'eager',
         decoding: 'async' as const,
-        crossOrigin: 'anonymous' as const,
-        referrerPolicy: 'no-referrer' as const,
       }),
       [customization?.imageProps, cleanIconUrl, imageClasses, imageStyle, handleImageLoad, handleImageError, lazy],
     );
