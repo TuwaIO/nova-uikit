@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.8...nova-connect-v0.1.9) (2025-10-30)
+
+
+### Bug Fixes
+
+* nova-connect about wallet styles ([#46](https://github.com/TuwaIO/nova-uikit/issues/46)) ([8206206](https://github.com/TuwaIO/nova-uikit/commit/8206206905cb5935ad25ccb25042963b9e856679))
+
 ## [0.1.8](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.7...nova-connect-v0.1.8) (2025-10-29)
 
 
