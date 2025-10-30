@@ -371,7 +371,7 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
 const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels }) => (
   <div
     className={cn(
-      'novacon:text-center novacon:relative novacon:p-4 novacon:bg-white/[0.19] novacon:backdrop-blur-[8.5px]',
+      'novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]/[0.19] novacon:backdrop-blur-[8.5px]',
       className,
     )}
   >
