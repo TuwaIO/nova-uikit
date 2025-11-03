@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.1.3...nova-core-v0.1.4) (2025-11-03)
+
+
+### Bug Fixes
+
+* optimized stars backgrounds; fix mobile modal anim ([#48](https://github.com/TuwaIO/nova-uikit/issues/48)) ([1e04101](https://github.com/TuwaIO/nova-uikit/commit/1e04101db104a540d9afbdf63f5b1bcfa770d1c5))
+
 ## [0.1.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.1.2...nova-core-v0.1.3) (2025-10-29)
 
 
