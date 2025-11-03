@@ -2,7 +2,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import * as React from 'react';
 
-import { cn } from '../utils';
+import { cn, isTouchDevice } from '../utils';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -15,6 +15,18 @@ const defaultModalAnimation: Variants = {
   exit: {
     opacity: 0,
     scale: 0.9,
+    transition: {
+      duration: 0.2,
+    },
+  },
+};
+
+const mobileModalAnimation: Variants = {
+  initial: { opacity: 0, y: '100%' },
+  animate: { opacity: 1, y: '0%' },
+  exit: {
+    opacity: 0,
+    y: '100%',
     transition: {
       duration: 0.2,
     },
@@ -66,52 +78,62 @@ const DialogContent = React.forwardRef<
     modalAnimation?: Variants;
     backdropAnimation?: Variants;
   }
->(({ className, children, modalAnimation, backdropAnimation, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay backdropAnimation={backdropAnimation} />
+>(({ className, children, modalAnimation, backdropAnimation, ...props }, ref) => {
+  const [isMobile, setIsMobile] = React.useState(false);
 
-    <DialogPrimitive.Content
-      aria-describedby="tuwa:modal-content"
-      ref={ref}
-      className={cn(
-        'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
-        className,
-      )}
-      {...props}
-    >
-      <motion.div
-        layout
-        className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
-        transition={{
-          layout: {
-            duration: 0.2,
-            ease: [0.1, 0.1, 0.2, 1],
-          },
-        }}
+  React.useEffect(() => {
+    setIsMobile(isTouchDevice());
+  }, []);
+
+  const selectedAnimation = modalAnimation ?? (isMobile ? mobileModalAnimation : defaultModalAnimation);
+
+  return (
+    <DialogPortal>
+      <DialogOverlay backdropAnimation={backdropAnimation} />
+
+      <DialogPrimitive.Content
+        aria-describedby="tuwa:modal-content"
+        ref={ref}
+        className={cn(
+          'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
+          className,
+        )}
+        {...props}
       >
-        <AnimatePresence>
-          <motion.div
-            variants={modalAnimation ?? defaultModalAnimation}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-            animate="animate"
-            initial="initial"
-            exit="exit"
-            className="NovaNoScrolling novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
-          >
-            <div
-              className={cn(
-                'NovaNoScrolling novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:gap-3 novacore:overflow-y-auto novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:shadow-2xl',
-                'novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)]',
-              )}
+        <motion.div
+          layout
+          className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
+          transition={{
+            layout: {
+              duration: 0.2,
+              ease: [0.1, 0.1, 0.2, 1],
+            },
+          }}
+        >
+          <AnimatePresence>
+            <motion.div
+              variants={selectedAnimation}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              animate="animate"
+              initial="initial"
+              exit="exit"
+              className="NovaNoScrolling novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
             >
-              {children}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
+              <div
+                className={cn(
+                  'NovaNoScrolling novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:gap-3 novacore:overflow-y-auto novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:shadow-2xl',
+                  'novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)]',
+                )}
+              >
+                {children}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  );
+});
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

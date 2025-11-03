@@ -305,7 +305,7 @@ DefaultSection.displayName = 'DefaultSection';
 
 const DefaultSlideContainer: React.FC<SlideContainerProps> = ({ children, className, ...props }) => (
   <div className={cn('novacon:relative novacon:z-1 novacon:overflow-hidden novacon:h-full', className)} {...props}>
-    <StarsBackground starsCount={250} />
+    <StarsBackground starsCount={50} />
     <div
       className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]"
       aria-hidden="true"
@@ -370,10 +370,7 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
 
 const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels }) => (
   <div
-    className={cn(
-      'novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]/[0.19] novacon:backdrop-blur-[8.5px]',
-      className,
-    )}
+    className={cn('novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]', className)}
   >
     <h2
       className="novacon:text-xl novacon:font-bold novacon:text-[var(--tuwa-text-primary)] novacon:mb-2"

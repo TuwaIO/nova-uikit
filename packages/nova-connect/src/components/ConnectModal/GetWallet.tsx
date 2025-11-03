@@ -341,7 +341,7 @@ const DefaultStarsBackground: React.FC<StarsBackgroundProps> = ({ className, sho
   <>
     {show && (
       <div className={className} {...props}>
-        <StarsBackground />
+        <StarsBackground starsCount={50} />
       </div>
     )}
   </>
