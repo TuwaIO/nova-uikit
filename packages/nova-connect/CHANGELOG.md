@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.9...nova-connect-v0.1.10) (2025-11-03)
+
+
+### Bug Fixes
+
+* optimized stars backgrounds; fix mobile modal anim ([#48](https://github.com/TuwaIO/nova-uikit/issues/48)) ([1e04101](https://github.com/TuwaIO/nova-uikit/commit/1e04101db104a540d9afbdf63f5b1bcfa770d1c5))
+
 ## [0.1.9](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.8...nova-connect-v0.1.9) (2025-10-30)
 
 
