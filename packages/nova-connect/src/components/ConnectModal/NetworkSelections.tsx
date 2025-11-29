@@ -5,7 +5,7 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { formatWalletName, getWalletTypeFromConnectorName, OrbitAdapter, WalletType } from '@tuwaio/orbit-core';
+import { formatConnectorName, getConnectorTypeFromName, OrbitAdapter, ConnectorType } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -212,7 +212,7 @@ interface NetworkSelectionsProps {
   /** Array of grouped wallet connectors with their supported networks */
   connectors: GroupedConnector[];
   /** Click handler for network selection */
-  onClick: (adapter: OrbitAdapter, walletType: WalletType) => Promise<void>;
+  onClick: (adapter: OrbitAdapter, connectorType: ConnectorType) => Promise<void>;
   /** Customization options */
   customization?: NetworkSelectionsCustomization;
 }
@@ -350,8 +350,8 @@ DefaultErrorMessage.displayName = 'DefaultErrorMessage';
  * <NetworkSelections
  *   activeConnector="metamask"
  *   connectors={multiNetworkConnectors}
- *   onClick={async (adapter, walletType) => {
- *     await connectToNetwork(adapter, walletType);
+ *   onClick={async (adapter, connectorType) => {
+ *     await connectToNetwork(adapter, connectorType);
  *   }}
  * />
  * ```
@@ -410,7 +410,7 @@ export const NetworkSelections = memo(
      * Memoized active connector configuration
      */
     const activeConnectors = useMemo(
-      () => connectors.find((connector) => formatWalletName(connector.name) === activeConnector),
+      () => connectors.find((connector) => formatConnectorName(connector.name) === activeConnector),
       [connectors, activeConnector],
     );
 
@@ -484,7 +484,7 @@ export const NetworkSelections = memo(
         const originalHandler = (selectedNetwork: OrbitAdapter) => {
           onClick(
             selectedNetwork,
-            getWalletTypeFromConnectorName(selectedNetwork, formatWalletName(activeConnector)) as WalletType,
+            getConnectorTypeFromName(selectedNetwork, formatConnectorName(activeConnector)) as ConnectorType,
           );
         };
 

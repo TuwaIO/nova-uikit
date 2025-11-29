@@ -6,6 +6,7 @@ export type NovaConnectLabels = {
   // Core actions - Primary user interactions
   connectWallet: string;
   disconnect: string;
+  disconnectAll: string;
   connecting: string;
   connected: string;
   tryAgain: string;
@@ -13,6 +14,7 @@ export type NovaConnectLabels = {
   connect: string;
   close: string;
   all: string;
+  active: string;
 
   // Connection states - Status messages for wallet connection flow
   connectionError: string;
@@ -40,6 +42,7 @@ export type NovaConnectLabels = {
   switchNetwork: string;
   switchNetworks: string;
   connectingEllipsis: string;
+  connectedWallets: string;
 
   // Wallet sections - Categories for wallet connector grouping
   installed: string;

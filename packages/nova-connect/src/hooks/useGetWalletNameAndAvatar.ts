@@ -1,5 +1,5 @@
 import { textCenterEllipsis } from '@tuwaio/nova-core';
-import { getAdapterFromWalletType, OrbitAdapter } from '@tuwaio/orbit-core';
+import { getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
@@ -72,17 +72,17 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
   const { abbreviateSymbols = 12, maxNameLength = 30, autoRetry = false, retryDelay = 3000 } = options;
 
   // Store state selectors - memoized for performance
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
   // Memoize wallet address and adapter for dependency tracking
-  const walletAddress = useMemo(() => activeWallet?.address, [activeWallet?.address]);
-  const walletType = useMemo(() => activeWallet?.walletType, [activeWallet?.walletType]);
+  const walletAddress = useMemo(() => activeConnection?.address, [activeConnection?.address]);
+  const connectorType = useMemo(() => activeConnection?.connectorType, [activeConnection?.connectorType]);
 
   const foundAdapter = useMemo(() => {
-    if (!walletType) return null;
-    return getAdapter(getAdapterFromWalletType(walletType ?? `${OrbitAdapter.EVM}:not-connected`));
-  }, [getAdapter, walletType]);
+    if (!connectorType) return null;
+    return getAdapter(getAdapterFromConnectorType(connectorType ?? `${OrbitAdapter.EVM}:not-connected`));
+  }, [getAdapter, connectorType]);
 
   // State variables
   const [ensName, setEnsName] = useState<string | null>(null);

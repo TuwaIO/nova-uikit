@@ -4,7 +4,7 @@
 
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
-import { BaseWallet } from '@tuwaio/satellite-core';
+import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
@@ -40,7 +40,7 @@ const DEFAULT_LOADING_ANIMATION_VARIANTS: Variants = {
 // --- Types for Customization ---
 type WalletNameDisplayProps = {
   ensNameAbbreviated?: string;
-  activeWallet: BaseWallet;
+  activeConnection: BaseConnector;
   labels: Record<string, string>;
   className?: string;
 };
@@ -48,7 +48,7 @@ type WalletNameDisplayProps = {
 type CopyButtonProps = {
   isCopied: boolean;
   onCopy: () => Promise<void>;
-  activeWallet: BaseWallet;
+  activeConnection: BaseConnector;
   labels: Record<string, string>;
   className?: string;
   disabled?: boolean;
@@ -63,7 +63,7 @@ type BalanceDisplayProps = {
 
 type ScreenReaderFeedbackProps = {
   isCopied: boolean;
-  activeWallet: BaseWallet;
+  activeConnection: BaseConnector;
   labels: Record<string, string>;
   className?: string;
 };
@@ -252,7 +252,7 @@ const DefaultWalletNameDisplay: React.FC<WalletNameDisplayProps> = ({ ensNameAbb
 const DefaultCopyButton: React.FC<CopyButtonProps> = ({
   isCopied,
   onCopy,
-  activeWallet,
+  activeConnection,
   labels,
   className,
   disabled,
@@ -269,9 +269,9 @@ const DefaultCopyButton: React.FC<CopyButtonProps> = ({
 
   const getCopyButtonAriaLabel = useCallback(() => {
     const baseLabel = isCopied ? labels.copied : `Copy ${labels.walletAddress}`;
-    const addressInfo = activeWallet?.address ? ` (${activeWallet.address})` : '';
+    const addressInfo = activeConnection?.address ? ` (${activeConnection.address})` : '';
     return `${baseLabel}${addressInfo}`;
-  }, [isCopied, labels, activeWallet]);
+  }, [isCopied, labels, activeConnection]);
 
   return (
     <button
@@ -390,13 +390,13 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({ balance, balance
 
 const DefaultScreenReaderFeedback: React.FC<ScreenReaderFeedbackProps> = ({
   isCopied,
-  activeWallet,
+  activeConnection,
   labels,
   className,
 }) => {
   return (
     <span id="copy-feedback" className={cn('novacon:sr-only', className)} aria-live="polite" role="status">
-      {isCopied ? `${labels.copied} ${activeWallet.address}` : ''}
+      {isCopied ? `${labels.copied} ${activeConnection.address}` : ''}
     </span>
   );
 };
@@ -480,7 +480,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     ref,
   ) => {
     const labels = useNovaConnectLabels();
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
     const { copy, isCopied } = useCopyToClipboard();
 
     // Extract custom components and config
@@ -497,26 +497,26 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     /**
      * Memoized calculations for state
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
+    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
     const hasBalance = useMemo(() => Boolean(balance?.value && balance?.symbol), [balance]);
 
     /**
      * Handle copying wallet address with proper error handling and custom handlers
      */
     const handleCopyAddress = useCallback(async () => {
-      if (!activeWallet?.address) {
+      if (!activeConnection?.address) {
         console.warn('No wallet address available to copy');
         return;
       }
 
       try {
-        await copy(activeWallet.address);
-        customization?.handlers?.onCopySuccess?.(activeWallet.address);
+        await copy(activeConnection.address);
+        customization?.handlers?.onCopySuccess?.(activeConnection.address);
       } catch (error) {
         console.error('Failed to copy wallet address:', error);
-        customization?.handlers?.onCopyError?.(error as Error, activeWallet.address);
+        customization?.handlers?.onCopyError?.(error as Error, activeConnection.address);
       }
-    }, [activeWallet?.address, copy, customization?.handlers]);
+    }, [activeConnection?.address, copy, customization?.handlers]);
 
     /**
      * Generate container classes with custom generator
@@ -568,7 +568,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     );
 
     // Early return if no active wallet
-    if (!hasActiveWallet || !activeWallet) {
+    if (!hasActiveWallet || !activeConnection) {
       return null;
     }
 
@@ -586,7 +586,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
           {/* Wallet Name/ENS Display */}
           <WalletNameDisplay
             ensNameAbbreviated={ensNameAbbreviated}
-            activeWallet={activeWallet}
+            activeConnection={activeConnection}
             labels={labels}
             className={customization?.classNames?.walletNameDisplay?.({ ensNameAbbreviated })}
           />
@@ -595,19 +595,19 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
           <CopyButton
             isCopied={isCopied}
             onCopy={handleCopyAddress}
-            activeWallet={activeWallet}
+            activeConnection={activeConnection}
             labels={labels}
             className={customization?.classNames?.copyButton?.({
               isCopied,
-              disabled: !activeWallet?.address,
+              disabled: !activeConnection?.address,
             })}
-            disabled={!activeWallet?.address}
+            disabled={!activeConnection?.address}
           />
 
           {/* Screen Reader Only Feedback */}
           <ScreenReaderFeedback
             isCopied={isCopied}
-            activeWallet={activeWallet}
+            activeConnection={activeConnection}
             labels={labels}
             className={customization?.classNames?.screenReaderFeedback?.()}
           />

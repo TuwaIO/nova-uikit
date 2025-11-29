@@ -16,24 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@tuwaio/nova-core';
-import { formatWalletChainId } from '@tuwaio/orbit-core';
-import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
-import { motion, type Transition } from 'framer-motion';
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
+import React, { ComponentPropsWithoutRef, ComponentType, ReactNode, useCallback, useMemo } from 'react';
 
-import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useNovaConnect, useNovaConnectLabels, useWalletChainsList } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
-import { getChainsListByWalletType, getChainsListByWalletTypeAsync, getWalletChains } from '../../utils';
 import { SelectContentAnimated, SelectContentAnimatedProps } from '../SelectContentAnimated';
 import { ChainListRenderer, ChainListRendererCustomization } from './ChainListRenderer';
 import { ScrollableChainList, ScrollableChainListCustomization } from './ScrollableChainList';
@@ -92,16 +80,6 @@ type CustomTriggerArrowProps = {
   className?: string;
   /** Whether hidden from screen readers */
   'aria-hidden'?: boolean;
-};
-
-/**
- * Props for a custom loading state display.
- */
-type CustomLoadingStateProps = {
-  /** CSS class */
-  className?: string;
-  /** ARIA label */
-  'aria-label': string;
 };
 
 /**
@@ -226,8 +204,6 @@ export type ChainTriggerButtonCustomization = {
 export type ChainSelectorCustomization = {
   /** Custom component overrides */
   components?: {
-    /** Custom loading state component */
-    LoadingState?: ComponentType<CustomLoadingStateProps>;
     /** Custom component for displaying a single chain */
     SingleChainDisplay?: ComponentType<CustomSingleChainDisplayProps>;
     /** Custom wrapper for the desktop selector */
@@ -329,18 +305,6 @@ const DefaultTriggerContent = ({ icon, chainName, isMobile }: CustomTriggerConte
  */
 const DefaultTriggerArrow = ({ isOpen, className, ...props }: CustomTriggerArrowProps) => {
   return <ChevronArrowWithAnim isOpen={isOpen} className={className} {...props} />;
-};
-
-/**
- * Default loading state component.
- */
-const DefaultLoadingState = ({ className, 'aria-label': ariaLabel }: CustomLoadingStateProps) => {
-  return (
-    <div className={className} role="status" aria-label={ariaLabel}>
-      <div className="novacon:w-6 novacon:h-6 novacon:bg-gray-300 novacon:rounded-full" aria-hidden="true" />
-      <div className="novacon:w-20 novacon:h-4 novacon:bg-gray-300 novacon:rounded" aria-hidden="true" />
-    </div>
-  );
 };
 
 /**
@@ -473,16 +437,6 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   const { onClick: customClickHandler = defaultClickHandler, onKeyDown: customKeyDownHandler = defaultKeyDownHandler } =
     customization?.handlers ?? {};
 
-  // Animation configuration
-  const layoutAnimation = customization?.animations?.layout ?? {
-    duration: 0.2,
-    ease: [0.4, 1, 0.4, 1] as AnimationEasing,
-  };
-  const innerContentAnimation = useMemo(
-    () => customization?.animations?.innerContent ?? { duration: 0.0001 },
-    [customization?.animations?.innerContent],
-  );
-
   /**
    * Handles keyboard navigation for the trigger button.
    */
@@ -566,18 +520,14 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   }, [customization, isMobile, isChainsListOpen]);
 
   /**
-   * Creates the inner content with the correct motion wrapper.
+   * Creates the inner content without layout animation to prevent text movement.
    */
   const innerContent = useMemo(() => {
     const iconElement = <Icon chainId={currentFormattedChainId} aria-hidden={true} />;
     const arrowElement = <Arrow isOpen={isChainsListOpen} aria-hidden={true} />;
 
     return (
-      <motion.div
-        layout
-        className={innerContentClasses}
-        transition={{ layout: { duration: innerContentAnimation.duration } }}
-      >
+      <div className={innerContentClasses}>
         <Content
           icon={iconElement}
           chainName={chainName}
@@ -593,19 +543,9 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
             <div aria-hidden="true">{arrowElement}</div>
           </Select.Icon>
         )}
-      </motion.div>
+      </div>
     );
-  }, [
-    Icon,
-    Arrow,
-    Content,
-    currentFormattedChainId,
-    isChainsListOpen,
-    chainName,
-    isMobile,
-    innerContentClasses,
-    innerContentAnimation,
-  ]);
+  }, [Icon, Arrow, Content, currentFormattedChainId, isChainsListOpen, chainName, isMobile, innerContentClasses]);
 
   /**
    * Accessibility attributes for screen readers.
@@ -640,13 +580,13 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   );
 
   return (
-    <motion.div layout className={wrapperClasses} transition={{ layout: layoutAnimation } as Transition}>
+    <div className={wrapperClasses}>
       {isMobile ? (
         <button {...mobileButtonProps}>{innerContent}</button>
       ) : (
         <Select.Trigger {...selectTriggerProps}>{innerContent}</Select.Trigger>
       )}
-    </motion.div>
+    </div>
   );
 };
 
@@ -677,21 +617,12 @@ export function ChainSelector({
   'aria-label': ariaLabel,
 }: ChainSelectorProps) {
   const labels = useNovaConnectLabels();
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
   const { isChainsListOpen, setIsChainsListOpen, isChainsListOpenMobile, setIsChainsListOpenMobile } = useNovaConnect();
 
-  // State to manage dynamic chain loading
-  const [chainsList, setChainsList] = useState<(string | number)[]>([]);
-  const [isLoadingChains, setIsLoadingChains] = useState(false);
-
-  // Use refs to track loading state and prevent parallel fetches
-  const loadingRef = useRef(false);
-  const walletTypeRef = useRef<string | null>(null);
-
   // Extract custom components
   const {
-    LoadingState = DefaultLoadingState,
     SingleChainDisplay = DefaultSingleChainDisplay,
     DesktopSelector = DefaultDesktopSelector,
     MobileSelector = DefaultMobileSelector,
@@ -703,32 +634,34 @@ export function ChainSelector({
     onDialogClose: customDialogCloseHandler = defaultDialogCloseHandler,
   } = customization?.handlers ?? {};
 
+  /**
+   * Use custom hook to fetch chains list asynchronously
+   * This handles the async nature of getChainsListByConnectorType
+   */
+  const { chainsList } = useWalletChainsList({
+    activeConnection,
+    appChains,
+    solanaRPCUrls,
+  });
+
   // Generate all classes and styles upfront to avoid conditional useMemo
   const containerClasses = useMemo(() => {
     if (customization?.classNames?.container) {
       return customization.classNames.container({
         hasMultipleChains: chainsList.length > 1,
-        isLoading: isLoadingChains,
+        isLoading: false,
       });
     }
     return className;
-    // eslint-disable-next-line
-  }, [customization?.classNames?.container, chainsList.length, isLoadingChains, className]);
-
-  const loadingStateClasses = useMemo(() => {
-    if (customization?.classNames?.loadingState) {
-      return customization.classNames.loadingState();
-    }
-    return 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_img]:w-6 novacon:[&_img]:h-6 novacon:animate-pulse';
-    // eslint-disable-next-line
-  }, [customization?.classNames?.loadingState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customization?.classNames?.container, chainsList.length, className]);
 
   const singleChainDisplayClasses = useMemo(() => {
     if (customization?.classNames?.singleChainDisplay) {
       return customization.classNames.singleChainDisplay();
     }
     return 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_img]:w-6 novacon:[&_img]:h-6';
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.singleChainDisplay]);
 
   const desktopWrapperClasses = useMemo(() => {
@@ -736,7 +669,7 @@ export function ChainSelector({
       return customization.classNames.desktopWrapper({ chainCount: chainsList.length });
     }
     return 'novacon:hidden novacon:sm:block';
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.desktopWrapper, chainsList.length]);
 
   const mobileWrapperClasses = useMemo(() => {
@@ -744,7 +677,7 @@ export function ChainSelector({
       return customization.classNames.mobileWrapper({ chainCount: chainsList.length });
     }
     return 'novacon:sm:hidden';
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.mobileWrapper, chainsList.length]);
 
   const dialogContentClasses = useMemo(() => {
@@ -752,7 +685,7 @@ export function ChainSelector({
       return customization.classNames.dialogContent({ chainCount: chainsList.length });
     }
     return cn('novacon:w-full novacon:sm:max-w-md');
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.dialogContent, chainsList.length]);
 
   const dialogInnerContainerClasses = useMemo(() => {
@@ -760,7 +693,7 @@ export function ChainSelector({
       return customization.classNames.dialogInnerContainer();
     }
     return cn('novacon:relative novacon:flex novacon:w-full novacon:flex-col');
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.dialogInnerContainer]);
 
   /**
@@ -768,8 +701,8 @@ export function ChainSelector({
    */
   const handleChainChange = useCallback(
     (newChainId: string) => {
-      const originalHandler = (chainId: string) => {
-        switchNetwork(chainId);
+      const originalHandler = async (chainId: string) => {
+        await switchNetwork(chainId);
       };
 
       customChainChangeHandler(originalHandler, newChainId);
@@ -782,82 +715,15 @@ export function ChainSelector({
    */
   const getChainData = useCallback(
     (chain: string | number) => {
-      if (!activeWallet) return { formattedChainId: chain, chain };
+      if (!activeConnection) return { formattedChainId: chain, chain };
 
       return {
-        formattedChainId: formatWalletChainId(chain, getAdapterFromWalletType(activeWallet.walletType)),
+        formattedChainId: formatConnectorChainId(chain, getAdapterFromConnectorType(activeConnection.connectorType)),
         chain,
       };
     },
-    [activeWallet],
+    [activeConnection],
   );
-
-  /**
-   * Loads the chain list dynamically with async and fallback support.
-   */
-  useEffect(() => {
-    // Reset state on wallet change/disconnect
-    if (!activeWallet) {
-      setChainsList([]);
-      setIsLoadingChains(false);
-      loadingRef.current = false;
-      walletTypeRef.current = null;
-      return;
-    }
-
-    // Don't fetch if same wallet type and already loading/loaded
-    if (walletTypeRef.current === activeWallet.walletType && (loadingRef.current || chainsList.length > 0)) {
-      return;
-    }
-
-    // Setup loading state
-    if (loadingRef.current) return;
-    loadingRef.current = true;
-    walletTypeRef.current = activeWallet.walletType;
-    setIsLoadingChains(true);
-
-    // Safely extract wallet chains using common utility
-    const walletChains = getWalletChains(activeWallet);
-
-    const loadChains = async () => {
-      try {
-        // Try async version first for better functionality
-        const asyncChains = await getChainsListByWalletTypeAsync({
-          walletType: activeWallet.walletType,
-          appChains,
-          solanaRPCUrls,
-          chains: walletChains,
-        });
-
-        if (asyncChains.length > 0) {
-          setChainsList(asyncChains);
-          return;
-        }
-      } catch (asyncError) {
-        console.warn('Async chain loading failed, falling back to sync method:', asyncError);
-      }
-
-      // Fallback to sync version
-      try {
-        const syncChains = getChainsListByWalletType({
-          walletType: activeWallet.walletType,
-          appChains,
-          solanaRPCUrls,
-          chains: walletChains,
-        });
-
-        setChainsList(syncChains);
-      } catch (syncError) {
-        console.error('Both async and sync chain loading failed:', syncError);
-        setChainsList([]); // Ensure valid array
-      } finally {
-        setIsLoadingChains(false);
-        loadingRef.current = false;
-      }
-    };
-
-    loadChains();
-  }, [activeWallet, appChains, solanaRPCUrls, chainsList.length]);
 
   /**
    * Handles closing the mobile dialog.
@@ -867,27 +733,17 @@ export function ChainSelector({
     customDialogCloseHandler(originalHandler);
   }, [customDialogCloseHandler, setIsChainsListOpenMobile]);
 
-  /**
-   * Memoized loading state check.
-   */
-  const isLoading = useMemo(() => isLoadingChains && chainsList.length === 0, [isLoadingChains, chainsList.length]);
-
   // Early return if no wallet is connected
-  if (!activeWallet) return null;
+  if (!activeConnection) return null;
 
   // Current chain info
-  const currentFormattedChainId = formatWalletChainId(
-    activeWallet.chainId,
-    getAdapterFromWalletType(activeWallet.walletType),
+  const currentFormattedChainId = formatConnectorChainId(
+    activeConnection.chainId,
+    getAdapterFromConnectorType(activeConnection.connectorType),
   );
 
   const selectValue = String(currentFormattedChainId);
   const chainName = getChainName(currentFormattedChainId);
-
-  // Show loading state while chains are fetching
-  if (isLoading) {
-    return <LoadingState className={loadingStateClasses} aria-label={`${labels.loading}...`} />;
-  }
 
   // Display single chain - no selector needed
   if (chainsList.length <= 1) {

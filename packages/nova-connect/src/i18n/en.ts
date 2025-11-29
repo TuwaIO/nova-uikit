@@ -8,6 +8,7 @@ export const defaultLabels: NovaConnectLabels = {
   // Core actions - Primary user interactions
   connectWallet: 'Connect Wallet',
   disconnect: 'Disconnect',
+  disconnectAll: 'Disconnect all',
   connecting: 'Connecting...',
   connected: 'Connected',
   tryAgain: 'Try again',
@@ -15,6 +16,7 @@ export const defaultLabels: NovaConnectLabels = {
   connect: 'Connect',
   close: 'Close',
   all: 'All',
+  active: 'Active',
 
   // Connection states - Status messages for wallet connection flow
   connectionError: 'Connection error',
@@ -42,6 +44,7 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetwork: 'Switch network',
   switchNetworks: 'Switch Networks',
   connectingEllipsis: 'Connecting...',
+  connectedWallets: 'Connected Wallets',
 
   // Wallet sections - Categories for wallet connector grouping
   installed: 'Installed',

@@ -278,10 +278,10 @@ const DefaultContent = ({ icon, text }: Pick<CustomContentProps, 'icon' | 'text'
 export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnectionContentProps>(
   ({ className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
     // Memoize connection status check for better performance
-    const isConnected = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
+    const isConnected = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
 
     // Extract custom components
     const {

@@ -255,10 +255,10 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     // Get labels from context
     const labels = useNovaConnectLabels();
 
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
-    const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
-    const resetWalletConnectionError = useSatelliteConnectStore((store) => store.resetWalletConnectionError);
-    const setWalletConnectionError = useSatelliteConnectStore((store) => store.setWalletConnectionError);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+    const connectionError = useSatelliteConnectStore((store) => store.connectionError);
+    const resetConnectionError = useSatelliteConnectStore((store) => store.resetConnectionError);
+    const setConnectionError = useSatelliteConnectStore((store) => store.setConnectionError);
 
     // Extract customization options
     const {
@@ -307,7 +307,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           if (!isAddress(address)) {
             return labels.impersonateAddressNotCorrect;
           }
-          if (activeWallet?.isConnected) {
+          if (activeConnection?.isConnected) {
             return labels.impersonateAddressConnected;
           }
 
@@ -319,7 +319,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         labels.impersonateAddressEmpty,
         labels.impersonateAddressNotCorrect,
         labels.impersonateAddressConnected,
-        activeWallet?.isConnected,
+        activeConnection?.isConnected,
       ],
     );
 
@@ -346,9 +346,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           if (hasInteracted) {
             const error = validateAddress(address);
             if (error) {
-              setWalletConnectionError(error);
-            } else if (walletConnectionError) {
-              resetWalletConnectionError();
+              setConnectionError(error);
+            } else if (connectionError) {
+              resetConnectionError();
             }
             customHandlers?.onValidationComplete?.(address, error);
           }
@@ -360,9 +360,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         validationConfig.debounceDelay,
         hasInteracted,
         validateAddress,
-        setWalletConnectionError,
-        resetWalletConnectionError,
-        walletConnectionError,
+        setConnectionError,
+        resetConnectionError,
+        connectionError,
         customHandlers?.onValidationStart,
         customHandlers?.onValidationComplete,
       ],
@@ -383,9 +383,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         setImpersonatedAddress(newValue);
 
         // Clear error immediately if field becomes valid
-        if (newValue.trim() && walletConnectionError) {
+        if (newValue.trim() && connectionError) {
           if (isAddress(newValue)) {
-            resetWalletConnectionError();
+            resetConnectionError();
           }
         }
 
@@ -398,8 +398,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         setImpersonatedAddress,
-        walletConnectionError,
-        resetWalletConnectionError,
+        connectionError,
+        resetConnectionError,
         debouncedValidate,
         customHandlers?.onInputChange,
       ],
@@ -427,9 +427,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // Validate immediately on blur without debounce
         const error = validateAddress(impersonatedAddress);
         if (error) {
-          setWalletConnectionError(error);
-        } else if (walletConnectionError) {
-          resetWalletConnectionError();
+          setConnectionError(error);
+        } else if (connectionError) {
+          resetConnectionError();
         }
 
         // Call custom handler
@@ -441,9 +441,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         validationConfig.validateOnBlur,
         validateAddress,
         impersonatedAddress,
-        setWalletConnectionError,
-        resetWalletConnectionError,
-        walletConnectionError,
+        setConnectionError,
+        resetConnectionError,
+        connectionError,
         customHandlers?.onInputBlur,
         customHandlers?.onValidationComplete,
       ],
@@ -489,7 +489,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
      */
     const getInputClasses = useCallback(() => {
       if (customization?.classNames?.input) {
-        return customization.classNames.input({ hasError: !!walletConnectionError, hasInteracted });
+        return customization.classNames.input({ hasError: !!connectionError, hasInteracted });
       }
 
       return cn(
@@ -504,13 +504,13 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
         // Error state styling
         {
-          'novacon:border-red-500 novacon:focus:ring-red-500': walletConnectionError,
+          'novacon:border-red-500 novacon:focus:ring-red-500': connectionError,
         },
         // Transition for smooth state changes
         'novacon:transition-colors novacon:duration-200',
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.input, walletConnectionError, hasInteracted]);
+    }, [customization?.classNames?.input, connectionError, hasInteracted]);
 
     /**
      * Memoized input classes
@@ -540,11 +540,11 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
-        resetWalletConnectionError();
+        resetConnectionError();
         customHandlers?.onUnmount?.();
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetWalletConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
+    }, [resetConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
 
     // Input configuration
     const inputId = 'impersonated-address';
@@ -569,17 +569,17 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           onChange={handleAddressChange}
           onBlur={handleBlur}
           placeholder={placeholder}
-          aria-describedby={walletConnectionError ? errorId : undefined}
-          aria-invalid={walletConnectionError ? 'true' : 'false'}
+          aria-describedby={connectionError ? errorId : undefined}
+          aria-invalid={connectionError ? 'true' : 'false'}
           autoComplete={autoComplete}
           spellCheck={spellCheck}
-          hasError={!!walletConnectionError}
+          hasError={!!connectionError}
         />
 
         {/* Error message display */}
-        {walletConnectionError && (
+        {connectionError && (
           <CustomErrorMessage className={errorMessageClasses} id={errorId} role="alert" aria-live="polite">
-            {walletConnectionError}
+            {connectionError}
           </CustomErrorMessage>
         )}
       </CustomContainer>

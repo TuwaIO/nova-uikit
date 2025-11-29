@@ -4,7 +4,7 @@
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { formatWalletName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
 import { ConnectContentType, NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
@@ -473,7 +473,7 @@ export const ConnectorsSelections = memo(
         const popularDesiredOrder = ['walletconnect', 'porto', 'coinbasewallet', 'geminiwallet'];
 
         const installedConnectorsInitial = connectors.filter((group) => {
-          const formattedName = formatWalletName(group.name);
+          const formattedName = formatConnectorName(group.name);
           return (
             formattedName !== 'impersonatedwallet' &&
             formattedName !== popularDesiredOrder[0] &&
@@ -485,10 +485,10 @@ export const ConnectorsSelections = memo(
 
         const installedConnectors = isSafeApp
           ? installedConnectorsInitial
-          : installedConnectorsInitial.filter((group) => formatWalletName(group.name) !== 'safewallet');
+          : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== 'safewallet');
 
         const popularConnectors = connectors.filter((group) => {
-          const formattedName = formatWalletName(group.name);
+          const formattedName = formatConnectorName(group.name);
           return (
             formattedName === popularDesiredOrder[0] ||
             formattedName === popularDesiredOrder[1] ||
@@ -497,13 +497,13 @@ export const ConnectorsSelections = memo(
           );
         });
 
-        const impersonatedConnector = connectors.find((group) => formatWalletName(group.name) === 'impersonatedwallet');
+        const impersonatedConnector = connectors.find((group) => formatConnectorName(group.name) === 'impersonatedwallet');
 
         return {
           installed: installedConnectors,
           popular: createCustomSort(
             popularConnectors,
-            (connector) => formatWalletName(connector.name),
+            (connector) => formatConnectorName(connector.name),
             popularDesiredOrder,
           ),
           impersonated: impersonatedConnector,

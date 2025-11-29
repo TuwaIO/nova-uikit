@@ -49,7 +49,7 @@ type CustomNoWalletContainerProps = {
 
 type CustomTransactionsHistoryWrapperProps = {
   children: ReactNode;
-  activeWalletAddress: string;
+  activeConnectionAddress: string;
   transactionPool: NonNullable<NovaConnectProviderProps['transactionPool']>;
   pulsarAdapter: NonNullable<NovaConnectProviderProps['pulsarAdapter']>;
   labels: Record<string, string>;
@@ -286,14 +286,14 @@ const DefaultNoWalletContainer: React.FC<CustomNoWalletContainerProps> = ({ clas
 
 const DefaultTransactionsHistoryWrapper: React.FC<CustomTransactionsHistoryWrapperProps> = ({
   children,
-  activeWalletAddress,
+  activeConnectionAddress,
   labels,
   className,
 }) => {
   return (
     <div
       className={cn('novacon:w-full', className)}
-      aria-label={`${labels.transactionsInApp} for ${activeWalletAddress}`}
+      aria-label={`${labels.transactionsInApp} for ${activeConnectionAddress}`}
     >
       {children}
     </div>
@@ -467,7 +467,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModalTxHistoryProps>(
   ({ transactionPool, pulsarAdapter, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
     // Extract custom components and config
     const {
@@ -487,7 +487,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
     /**
      * Memoized check for active wallet availability
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
+    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
 
     /**
      * Memoized check for adapter availability
@@ -580,7 +580,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
           <Suspense fallback={loadingComponent}>
             <ErrorBoundary fallback={errorComponent} onError={handlePackageLoadingFailure}>
               <TransactionsHistoryWrapper
-                activeWalletAddress={activeWallet!.address}
+                activeConnectionAddress={activeConnection!.address}
                 transactionPool={transactionPool}
                 pulsarAdapter={pulsarAdapter}
                 labels={labels}
@@ -589,7 +589,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                 <TransactionsHistory
                   transactionsPool={transactionPool}
                   adapter={pulsarAdapter}
-                  connectedWalletAddress={activeWallet!.address}
+                  connectedWalletAddress={activeConnection!.address}
                   className="novacon:w-full"
                 />
               </TransactionsHistoryWrapper>
@@ -604,7 +604,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
       hasValidAdapter,
       transactionPool,
       pulsarAdapter,
-      activeWallet,
+      activeConnection,
       noWalletComponent,
       loadingComponent,
       errorComponent,

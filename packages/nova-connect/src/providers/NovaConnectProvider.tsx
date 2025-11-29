@@ -5,7 +5,7 @@
 
 import { deepMerge } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { BaseWallet } from '@tuwaio/satellite-core';
+import { BaseConnector } from '@tuwaio/satellite-core';
 import { ComponentType, ReactNode, useMemo, useState } from 'react';
 
 import { ConnectedModal, ConnectedModalCustomization } from '../components/ConnectedModal/ConnectedModal';
@@ -47,9 +47,9 @@ type ProviderContext = {
   /** Current wallet connection state */
   isConnected: boolean;
   /** Active wallet instance */
-  activeWallet: BaseWallet | undefined;
+  activeConnection: BaseConnector | undefined;
   /** Current wallet connection error */
-  walletConnectionError: string | undefined;
+  connectionError: string | undefined;
   /** All modal and UI states */
   modalStates: {
     isConnectModalOpen: boolean;
@@ -255,8 +255,8 @@ export function NovaConnectProvider({
   withChain,
   customization,
 }: NovaConnectProviderPropsWithCustomization) {
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
-  const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+  const connectionError = useSatelliteConnectStore((store) => store.connectionError);
 
   // Extract custom components
   const { LabelsProvider = DefaultLabelsProvider, ErrorsProvider: CustomErrorsProvider = DefaultErrorsProvider } =
@@ -292,8 +292,8 @@ export function NovaConnectProvider({
   const providerContext = useMemo(
     (): ProviderContext => ({
       isConnected,
-      activeWallet,
-      walletConnectionError,
+      activeConnection,
+      connectionError,
       modalStates: {
         isConnectModalOpen,
         isConnectedModalOpen,
@@ -310,8 +310,8 @@ export function NovaConnectProvider({
     }),
     [
       isConnected,
-      activeWallet,
-      walletConnectionError,
+      activeConnection,
+      connectionError,
       isConnectModalOpen,
       isConnectedModalOpen,
       isChainsListOpen,

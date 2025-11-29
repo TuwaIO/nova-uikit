@@ -275,7 +275,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
   ({ transactionPool, withBalance, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
 
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
     const { isConnectedModalOpen, setConnectedButtonStatus, connectedButtonStatus } = useNovaConnect();
 
     const { ensAvatar, ensNameAbbreviated } = useGetWalletNameAndAvatar({
@@ -291,7 +291,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     const prevTxPoolRef = useRef<Transaction[]>(
       Object.values(transactionPool ?? {}).filter(
-        (tx) => tx.from.toLowerCase() === activeWallet?.address.toLowerCase(),
+        (tx) => tx.from.toLowerCase() === activeConnection?.address.toLowerCase(),
       ),
     );
 
@@ -317,13 +317,13 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     // Monitor transaction pool changes
     useEffect(() => {
-      if (!activeWallet || !activeWallet?.isConnected) {
+      if (!activeConnection || !activeConnection?.isConnected) {
         return;
       }
 
       const currentPool =
         Object.values(transactionPool ?? {}).filter(
-          (tx) => tx.from.toLowerCase() === activeWallet?.address.toLowerCase(),
+          (tx) => tx.from.toLowerCase() === activeConnection?.address.toLowerCase(),
         ) || [];
       const prevPool = prevTxPoolRef.current || [];
       let newStatus: ButtonTxStatus = 'idle';
@@ -358,7 +358,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
       prevTxPoolRef.current = currentPool;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [transactionPool, activeWallet?.address, activeWallet?.isConnected, setConnectedButtonStatus]);
+    }, [transactionPool, activeConnection?.address, activeConnection?.isConnected, setConnectedButtonStatus]);
 
     // Auto-reset status after showing success/error states
     useEffect(() => {
@@ -391,7 +391,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     // Memoized status display configuration
     const statusDisplay = useMemo(() => {
-      if (!activeWallet) return { displayName: null, avatarIcon: null, ariaLabel: '' };
+      if (!activeConnection) return { displayName: null, avatarIcon: null, ariaLabel: '' };
 
       const baseAriaLabel = `${labels.transactionStatus}: ${getStatusAriaLabel(connectedButtonStatus)}`;
 
@@ -454,7 +454,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                   />
                 )}
                 <WalletAvatar
-                  address={activeWallet?.address}
+                  address={activeConnection?.address}
                   ensAvatar={ensAvatar}
                   className="novacon:relative novacon:z-2"
                   aria-label={`${labels.walletAvatar}: ${ensNameAbbreviated}`}
@@ -470,7 +470,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
             displayName: ensNameAbbreviated,
             avatarIcon: (
               <WalletAvatar
-                address={activeWallet?.address}
+                address={activeConnection?.address}
                 ensAvatar={ensAvatar}
                 className="novacon:relative novacon:z-2"
                 aria-label={`${labels.walletAvatar}: ${ensNameAbbreviated}`}
@@ -483,7 +483,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     }, [
       connectedButtonStatus,
       ensNameAbbreviated,
-      activeWallet,
+      activeConnection,
       ensAvatar,
       labels,
       getStatusAriaLabel,
@@ -526,7 +526,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       [customization, props, ref, containerClasses, ariaLabel, statusDisplay.ariaLabel],
     );
 
-    if (!activeWallet) return null;
+    if (!activeConnection) return null;
 
     return (
       <div {...containerProps}>

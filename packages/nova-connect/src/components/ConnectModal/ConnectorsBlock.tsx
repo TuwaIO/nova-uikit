@@ -5,12 +5,13 @@
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import {
   delay,
-  formatWalletName,
-  getWalletTypeFromConnectorName,
+  formatConnectorName,
+  getConnectorTypeFromName,
   OrbitAdapter,
-  recentConnectedWalletHelpers,
+  recentlyConnectedConnectorsListHelpers,
   waitFor,
-  WalletType,
+  ConnectorType,
+  RecentlyConnectedConnectorData,
 } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
@@ -42,7 +43,7 @@ export interface ConnectorsBlockData {
   /** Whether there are connectors to display */
   hasConnectors: boolean;
   /** Recent wallets data */
-  recentWallets: Record<string, Record<string, boolean>> | null;
+  recentWallets: [string, RecentlyConnectedConnectorData][] | null;
   /** Section ID for accessibility */
   sectionId: string;
 }
@@ -393,8 +394,10 @@ export const ConnectorsBlock = memo(
        * Memoized recent wallets data with proper type handling
        */
       const recentWallets = useMemo(() => {
-        const result = recentConnectedWalletHelpers.getRecentConnectedWallet();
-        return result ?? null;
+        const sortedConnectors = recentlyConnectedConnectorsListHelpers.getConnectorsSortedByTime();
+        // Take top 3 most recent
+        const top3Recent = sortedConnectors.slice(0, 3);
+        return top3Recent;
       }, []);
 
       /**
@@ -447,11 +450,16 @@ export const ConnectorsBlock = memo(
         if (!connectors?.length) return [];
 
         return connectors.map((group, index) => {
-          const name = formatWalletName(group.name);
-          const isRecent =
-            customConfig?.features?.showRecentIndicators !== false
-              ? Boolean(recentWallets && recentWallets[group.adapters[0]] && recentWallets[group.adapters[0]][name])
-              : false;
+          const name = formatConnectorName(group.name);
+          
+          let isRecent = false;
+          if (customConfig?.features?.showRecentIndicators !== false && recentWallets && recentWallets.length > 0) {
+             // Check if any adapter in the group matches a recent connector
+             isRecent = group.adapters.some(adapter => {
+                 const typeToCheck = getConnectorTypeFromName(adapter, name);
+                 return recentWallets.some(([recentType]) => recentType === typeToCheck);
+             });
+          }
 
           return {
             group,
@@ -469,7 +477,7 @@ export const ConnectorsBlock = memo(
         async (group: GroupedConnector) => {
           if (!isMountedRef.current || connectInProgressRef.current) return;
 
-          const name = formatWalletName(group.name);
+          const name = formatConnectorName(group.name);
 
           try {
             connectInProgressRef.current = true;
@@ -482,16 +490,16 @@ export const ConnectorsBlock = memo(
 
             // Use the selected adapter or the first available adapter
             const targetAdapter = selectedAdapter || group.adapters[0];
-            const walletType = getWalletTypeFromConnectorName(targetAdapter, name) as WalletType;
+            const connectorType = getConnectorTypeFromName(targetAdapter, name) as ConnectorType;
 
             onClick(group);
 
             await connect({
-              walletType,
+              connectorType,
               chainId: getConnectChainId({ appChains, selectedAdapter: targetAdapter, solanaRPCUrls }),
             });
 
-            await waitFor(() => store?.getState().activeWallet?.isConnected);
+            await waitFor(() => store?.getState().activeConnection?.isConnected);
             setIsConnected(true);
             const modalCloseTime = setTimeout(() => setIsOpen(false), 400);
             const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);

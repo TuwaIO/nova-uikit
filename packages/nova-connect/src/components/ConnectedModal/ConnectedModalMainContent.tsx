@@ -3,9 +3,9 @@
  */
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
-import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
-import { BaseWallet } from '@tuwaio/satellite-core';
+import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
@@ -68,7 +68,7 @@ type LoadingIndicatorProps = {
 };
 
 type AvatarSectionProps = {
-  activeWallet: BaseWallet;
+  activeConnection: BaseConnector;
   ensAvatar: string | null;
   walletName: string;
   connectorsCount: number;
@@ -308,7 +308,7 @@ const DefaultLoadingIndicator: React.FC<LoadingIndicatorProps> = ({ isLoading, l
 };
 
 const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
-  activeWallet,
+  activeConnection,
   ensAvatar,
   walletName,
   connectorsCount,
@@ -328,7 +328,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
       {/* Wallet Switch Button */}
       <IconButton
         className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]"
-        walletIcon={activeWallet.walletIcon}
+        walletIcon={activeConnection.icon}
         walletName={walletName}
         items={connectorsCount}
         onClick={onSwitchWallet}
@@ -339,7 +339,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
       {/* Network Switch Button */}
       <IconButton
         className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]"
-        walletChainId={activeWallet.chainId}
+        walletChainId={activeConnection.chainId}
         items={chainsList.length}
         onClick={onSwitchNetwork}
         aria-label={`${labels.switchNetwork} - ${chainsList.length} ${labels.listOfNetworks.toLowerCase()} available`}
@@ -349,7 +349,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
       {/* Main Wallet Avatar */}
       <WalletAvatar
         ensAvatar={ensAvatar}
-        address={activeWallet.address}
+        address={activeConnection.address}
         className="novacon:w-28 novacon:h-28 novacon:sm:w-32 novacon:sm:h-32"
         aria-describedby="wallet-info"
       />
@@ -501,8 +501,8 @@ const DefaultNoTransactionsIndicator: React.FC<NoTransactionsIndicatorProps> = (
  *     components: {
  *       LoadingIndicator: ({ isLoading }) =>
  *         isLoading ? <div className="custom-spinner" /> : null,
- *       AvatarSection: ({ activeWallet, onSwitchWallet }) => (
- *         <div onClick={onSwitchWallet}>Custom Avatar: {activeWallet.address}</div>
+ *       AvatarSection: ({ activeConnection, onSwitchWallet }) => (
+ *         <div onClick={onSwitchWallet}>Custom Avatar: {activeConnection.address}</div>
  *       ),
  *     },
  *     childCustomizations: {
@@ -557,7 +557,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     const labels = useNovaConnectLabels();
     // Get modal controls and state from hook
     const { setConnectedModalContentType, setIsConnectedModalOpen, setIsConnectModalOpen } = useNovaConnect();
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
     const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
 
     // Extract custom components and config with stable references
@@ -589,8 +589,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       if (customHandlers?.onSwitchWallet) {
         customHandlers.onSwitchWallet();
       } else {
-        setIsConnectedModalOpen(false);
-        setIsConnectModalOpen(true);
+        setConnectedModalContentType('connections');
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customHandlers?.onSwitchWallet, setIsConnectedModalOpen, setIsConnectModalOpen]);
@@ -629,12 +628,12 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      * Only includes transactions from the currently connected wallet
      */
     const walletTransactions = useMemo(() => {
-      if (!activeWallet || !transactionPool) return [];
+      if (!activeConnection || !transactionPool) return [];
       return Object.values(transactionPool).filter(
-        (tx) => tx.from.toLowerCase() === activeWallet.address.toLowerCase(),
+        (tx) => tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeWallet?.address, transactionPool]);
+    }, [activeConnection?.address, transactionPool]);
 
     /**
      * Check if there are pending transactions for loading indicator
@@ -647,22 +646,22 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      * Get number of available connectors for the current wallet type
      */
     const connectorsCount = useMemo(() => {
-      if (!activeWallet) return 0;
-      return connectors[getAdapterFromWalletType(activeWallet.walletType)]?.length || 0;
+      if (!activeConnection) return 0;
+      return connectors[getAdapterFromConnectorType(activeConnection.connectorType)]?.length || 0;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeWallet?.walletType, connectors]);
+    }, [activeConnection?.connectorType, connectors]);
 
     /**
      * Get wallet name from wallet type for display
      */
     const walletName = useMemo(() => {
-      return activeWallet?.walletType?.split(':')[1] || labels.unknownWallet;
-    }, [activeWallet?.walletType, labels.unknownWallet]);
+      return activeConnection?.connectorType?.split(':')[1] || labels.unknownWallet;
+    }, [activeConnection?.connectorType, labels.unknownWallet]);
 
     /**
      * Memoized calculations for state
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
+    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
     const isLoading = useMemo(() => avatarIsLoading || balanceLoading, [avatarIsLoading, balanceLoading]);
     const hasTransactions = useMemo(() => walletTransactions.length > 0, [walletTransactions]);
 
@@ -746,7 +745,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     );
 
     // Early return if no active wallet
-    if (!hasActiveWallet || !activeWallet) {
+    if (!hasActiveWallet || !activeConnection) {
       return null;
     }
 
@@ -765,7 +764,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
 
         {/* Wallet Avatar with Control Buttons */}
         <AvatarSection
-          activeWallet={activeWallet}
+          activeConnection={activeConnection}
           ensAvatar={ensAvatar}
           walletName={walletName}
           connectorsCount={connectorsCount}

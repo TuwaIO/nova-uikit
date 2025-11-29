@@ -1,4 +1,4 @@
-import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
@@ -75,21 +75,21 @@ export function useWalletNativeBalance(): NativeBalanceData {
   const fetchOperationRef = useRef<string | null>(null);
 
   // Store state selectors - memoized for performance
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
   // --- 2. COMPUTED INPUTS ---
 
   // Create the unique key for cache lookups: "address-chainId".
   const cacheKey = useMemo(() => {
-    return activeWallet?.chainId && activeWallet?.address ? `${activeWallet.address}-${activeWallet.chainId}` : null;
-  }, [activeWallet?.chainId, activeWallet?.address]);
+    return activeConnection?.chainId && activeConnection?.address ? `${activeConnection.address}-${activeConnection.chainId}` : null;
+  }, [activeConnection?.chainId, activeConnection?.address]);
 
   // Find the actual adapter object from the adapter map.
   const foundAdapter = useMemo(() => {
-    if (!activeWallet?.walletType) return null;
-    return getAdapter(getAdapterFromWalletType(activeWallet.walletType));
-  }, [getAdapter, activeWallet?.walletType]);
+    if (!activeConnection?.connectorType) return null;
+    return getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
+  }, [getAdapter, activeConnection?.connectorType]);
 
   // Check if the adapter has balance functionality
   const hasBalanceResolver = useMemo(() => {
@@ -101,7 +101,7 @@ export function useWalletNativeBalance(): NativeBalanceData {
   const fetchBalance = useCallback(
     async (forceRefresh = false) => {
       // Exit early if essential data is missing (not connected).
-      if (!activeWallet?.address || !foundAdapter || !activeWallet?.chainId || !cacheKey || !hasBalanceResolver) {
+      if (!activeConnection?.address || !foundAdapter || !activeConnection?.chainId || !cacheKey || !hasBalanceResolver) {
         setIsLoading(false);
         return;
       }
@@ -124,8 +124,8 @@ export function useWalletNativeBalance(): NativeBalanceData {
       try {
         // Call the adapter's getBalance method
         const balanceResult: NativeBalanceResult = await foundAdapter.getBalance(
-          activeWallet.address,
-          activeWallet.chainId,
+          activeConnection.address,
+          activeConnection.chainId,
         );
 
         // Only update if this operation is still the latest one
@@ -153,7 +153,7 @@ export function useWalletNativeBalance(): NativeBalanceData {
         }
       }
     },
-    [activeWallet?.address, foundAdapter, activeWallet?.chainId, cacheKey, hasBalanceResolver, balanceCache],
+    [activeConnection?.address, foundAdapter, activeConnection?.chainId, cacheKey, hasBalanceResolver, balanceCache],
   );
 
   // Memoized refetch function that forces a refresh
