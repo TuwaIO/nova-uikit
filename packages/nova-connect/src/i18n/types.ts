@@ -15,6 +15,9 @@ export type NovaConnectLabels = {
   close: string;
   all: string;
   active: string;
+  connectors: string;
+  wallet: string;
+  connectNewWallet: string;
 
   // Connection states - Status messages for wallet connection flow
   connectionError: string;

@@ -77,6 +77,7 @@ type CloseButtonProps = {
 type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
   contentType: ConnectedContentType;
   balance: NativeBalanceResult | null;
+  refetch: () => void;
   ensNameAbbreviated: string | undefined;
   avatarIsLoading: boolean;
   balanceLoading: boolean;
@@ -310,6 +311,7 @@ const DefaultHeader: React.FC<HeaderProps> = ({ contentType, title, onBack, onCl
 const DefaultMainContent: React.FC<MainContentProps> = ({
   contentType,
   balance,
+  refetch,
   ensNameAbbreviated,
   avatarIsLoading,
   balanceLoading,
@@ -330,6 +332,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
         return (
           <ConnectedModalMainContent
             balance={balance}
+            refetch={refetch}
             ensNameAbbreviated={ensNameAbbreviated}
             avatarIsLoading={avatarIsLoading}
             balanceLoading={balanceLoading}
@@ -455,7 +458,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       ...walletNameConfig,
     });
 
-    const { balance, isLoading: balanceLoading } = useWalletNativeBalance();
+    const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance();
 
     /**
      * Handles network switching when user selects a different chain
@@ -650,6 +653,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         <CustomMainContent
           contentType={connectedModalContentType}
           balance={balance}
+          refetch={refetch}
           ensNameAbbreviated={ensNameAbbreviated}
           avatarIsLoading={avatarIsLoading}
           balanceLoading={balanceLoading}

@@ -82,6 +82,7 @@ type AvatarSectionProps = {
 type InfoSectionProps = {
   balanceLoading: boolean;
   balance: NativeBalanceResult | null;
+  refetch: () => void;
   ensNameAbbreviated: string | undefined;
   labels: Record<string, string>;
   className?: string;
@@ -279,6 +280,7 @@ export interface ConnectedModalMainContentProps extends Pick<NovaConnectProvider
   balanceLoading: boolean;
   ensNameAbbreviated: string | undefined;
   balance: NativeBalanceResult | null;
+  refetch: () => void;
   /** Additional CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */
@@ -360,6 +362,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
 const DefaultInfoSection: React.FC<InfoSectionProps> = ({
   balanceLoading,
   balance,
+  refetch,
   ensNameAbbreviated,
   labels,
   className,
@@ -375,6 +378,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
       <ConnectedModalNameAndBalance
         balanceLoading={balanceLoading}
         balance={balance}
+        refetch={refetch}
         ensNameAbbreviated={ensNameAbbreviated}
       />
     </motion.div>
@@ -546,6 +550,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       balanceLoading,
       ensNameAbbreviated,
       balance,
+      refetch,
       className,
       'aria-label': ariaLabel,
       customization,
@@ -779,6 +784,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
         <InfoSection
           balanceLoading={balanceLoading}
           balance={balance}
+          refetch={refetch}
           ensNameAbbreviated={ensNameAbbreviated}
           labels={labels}
           className={customization?.classNames?.infoSection?.()}

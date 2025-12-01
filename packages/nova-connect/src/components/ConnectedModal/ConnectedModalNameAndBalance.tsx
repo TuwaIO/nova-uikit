@@ -2,11 +2,11 @@
  * @file ConnectedModalNameAndBalance component with comprehensive customization options for wallet name and balance display.
  */
 
-import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
+import { ArrowPathIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -57,6 +57,7 @@ type CopyButtonProps = {
 type BalanceDisplayProps = {
   balance?: ConnectedModalMainContentProps['balance'];
   balanceLoading: boolean;
+  refetch: () => void;
   labels: Record<string, string>;
   className?: string;
 };
@@ -227,6 +228,8 @@ export type ConnectedModalNameAndBalanceCustomization = {
  */
 export interface ConnectedModalNameAndBalanceProps
   extends Pick<ConnectedModalMainContentProps, 'balanceLoading' | 'ensNameAbbreviated' | 'balance'> {
+  /** Function to manually trigger a balance refresh */
+  refetch: () => void;
   /** Additional CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */
@@ -328,13 +331,31 @@ const DefaultCopyButton: React.FC<CopyButtonProps> = ({
   );
 };
 
-const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({ balance, balanceLoading, labels, className }) => {
+const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
+  balance,
+  balanceLoading,
+  refetch,
+  labels,
+  className,
+}) => {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const prevLoading = useRef(balanceLoading);
+
+  useEffect(() => {
+    if (prevLoading.current && !balanceLoading) {
+      setShowSuccess(true);
+      const timer = setTimeout(() => setShowSuccess(false), 1500);
+      return () => clearTimeout(timer);
+    }
+    prevLoading.current = balanceLoading;
+  }, [balanceLoading]);
+
   const balanceDisplay = useMemo(() => {
     if (!balance?.value || !balance?.symbol) return null;
     return `${balance.value} ${balance.symbol}`;
   }, [balance]);
 
-  if (balanceLoading) {
+  if (balanceLoading && !balanceDisplay) {
     return (
       <motion.div
         variants={DEFAULT_LOADING_ANIMATION_VARIANTS}
@@ -355,36 +376,85 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({ balance, balance
     );
   }
 
+  const renderRefetchButton = () => (
+    <button
+      type="button"
+      onClick={refetch}
+      disabled={balanceLoading}
+      className={cn(
+        'novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors novacon:absolute novacon:right-[-30px]',
+        'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-tertiary)]',
+        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)]',
+        showSuccess && 'novacon:text-[var(--tuwa-success-text)]',
+      )}
+      aria-label="Refresh balance"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {showSuccess ? (
+          <motion.div
+            key="success"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <CheckIcon className="novacon:w-4 novacon:h-4" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="refresh"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, rotate: balanceLoading ? 360 : 0 }}
+            exit={{ opacity: 0 }}
+            transition={
+              balanceLoading
+                ? { repeat: Infinity, duration: 1, ease: 'linear' }
+                : { duration: 0.2 }
+            }
+          >
+            <ArrowPathIcon className="novacon:w-4 novacon:h-4" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </button>
+  );
+
   if (balanceDisplay) {
     return (
-      <p
-        className={cn(
-          'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)]',
-          className,
-        )}
-        role="text"
-        aria-label={`${labels.walletBalance}: ${balanceDisplay}`}
-      >
-        <span aria-hidden="true">{balance?.value}</span>
-        <span aria-hidden="true">{balance?.symbol}</span>
+      <div className="novacon:flex novacon:items-center novacon:relative">
+        <p
+          className={cn(
+            'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)]',
+            className,
+          )}
+          role="text"
+          aria-label={`${labels.walletBalance}: ${balanceDisplay}`}
+        >
+          <span aria-hidden="true">{balance?.value}</span>
+          <span aria-hidden="true">{balance?.symbol}</span>
 
-        {/* Screen reader friendly version */}
-        <span className="novacon:sr-only">
-          {labels.walletBalance}: {balanceDisplay}
-        </span>
-      </p>
+          {/* Screen reader friendly version */}
+          <span className="novacon:sr-only">
+            {labels.walletBalance}: {balanceDisplay}
+          </span>
+        </p>
+        {renderRefetchButton()}
+      </div>
     );
   }
 
   return (
-    <p
-      className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)] novacon:opacity-75', className)}
-      role="text"
-      aria-label="No balance information available"
-    >
-      <span aria-hidden="true">—</span>
-      <span className="novacon:sr-only">No balance information available</span>
-    </p>
+    <div className="novacon:flex novacon:items-center novacon:relative">
+      <p
+        className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)] novacon:opacity-75', className)}
+        role="text"
+        aria-label="No balance information available"
+      >
+        <span aria-hidden="true">—</span>
+        <span className="novacon:sr-only">No balance information available</span>
+      </p>
+      {renderRefetchButton()}
+    </div>
   );
 };
 
@@ -438,6 +508,7 @@ const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance,
  *   ensNameAbbreviated="wallet.eth"
  *   balanceLoading={false}
  *   balance={{ value: "1.23", symbol: "ETH" }}
+ *   refetch={() => {}}
  * />
  * ```
  *
@@ -447,6 +518,7 @@ const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance,
  *   ensNameAbbreviated="wallet.eth"
  *   balanceLoading={false}
  *   balance={{ value: "1.23", symbol: "ETH" }}
+ *   refetch={() => {}}
  *   customization={{
  *     classNames: {
  *       container: ({ hasActiveWallet }) =>
@@ -476,7 +548,7 @@ const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance,
  */
 export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedModalNameAndBalanceProps>(
   (
-    { ensNameAbbreviated, balanceLoading, balance, className, 'aria-label': ariaLabel, customization, ...props },
+    { ensNameAbbreviated, balanceLoading, balance, refetch, className, 'aria-label': ariaLabel, customization, ...props },
     ref,
   ) => {
     const labels = useNovaConnectLabels();
@@ -625,6 +697,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
           <BalanceDisplay
             balance={balance}
             balanceLoading={balanceLoading}
+            refetch={refetch}
             labels={labels}
             className={customization?.classNames?.balanceDisplay?.()}
           />
