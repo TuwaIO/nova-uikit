@@ -28,7 +28,7 @@ import {
   ConnectedModalMainContentProps,
 } from './ConnectedModalMainContent';
 import { ConnectedModalTxHistory, ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
-import { ConnectionsContent } from './ConnectionsContent';
+import { ConnectionsContent, ConnectionsContentCustomization } from './ConnectionsContent';
 
 // --- Default Motion Variants ---
 const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
@@ -87,6 +87,7 @@ type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'puls
   onBack: () => void;
   getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
   className?: string;
+  childCustomizations?: ConnectedModalCustomization['childCustomizations'];
 };
 
 // --- Wallet Name Hook Config Type ---
@@ -211,6 +212,8 @@ export type ConnectedModalCustomization = {
   childCustomizations?: {
     /** Customization for ConnectedModalMainContent component */
     mainContent?: ConnectedModalMainContentCustomization;
+    /** Customization for ConnectionsContent component */
+    connections?: ConnectionsContentCustomization;
     /** Customization for ConnectedModalTxHistory component */
     txHistory?: Record<string, unknown>; // Will be properly typed when that component is updated
     /** Customization for ScrollableChainList component */
@@ -323,6 +326,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
   onBack,
   getChainData,
   className,
+  childCustomizations,
 }) => {
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
@@ -360,7 +364,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
           />
         );
       case 'connections':
-        return <ConnectionsContent />;
+        return <ConnectionsContent customization={childCustomizations?.connections} />;
       default:
         return null;
     }
@@ -664,6 +668,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           onChainChange={handleChainChange}
           onBack={handleBackToMain}
           getChainData={getChainData}
+          childCustomizations={customization?.childCustomizations}
           className={customization?.classNames?.mainContent?.({ contentType: connectedModalContentType })}
         />
 
