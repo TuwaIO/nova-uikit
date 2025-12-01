@@ -1,0 +1,54 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getAdapterStatus()
+
+> **getAdapterStatus**(`type`): [`AdapterLoadStatus`](../type-aliases/AdapterLoadStatus.md)
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:518](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L518)
+
+Gets the current loading status of a specific adapter.
+
+Returns the current state of an adapter in the loading lifecycle. Useful
+for UI indicators, debugging, or conditional logic based on adapter
+availability.
+
+## Parameters
+
+### type
+
+`OrbitAdapter`
+
+The adapter type to check
+
+## Returns
+
+[`AdapterLoadStatus`](../type-aliases/AdapterLoadStatus.md)
+
+Current loading status of the adapter
+
+## Example
+
+```typescript
+const evmStatus = getAdapterStatus(OrbitAdapter.EVM);
+
+switch (evmStatus) {
+  case 'idle':
+    console.log('EVM adapter not yet requested');
+    break;
+  case 'loading':
+    // Show loading spinner
+    break;
+  case 'loaded':
+    // Enable EVM features
+    break;
+  case 'error':
+    // Show fallback UI
+    break;
+}
+```
+
+## Since
+
+1.0.0

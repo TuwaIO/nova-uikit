@@ -1,0 +1,40 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# isSolanaChainListAsync()
+
+> **isSolanaChainListAsync**(`chains`): `Promise`\<`boolean`\>
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:271](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L271)
+
+Validates if a chain list conforms to Solana format (with adapter loading).
+
+Uses the Solana adapter to perform comprehensive validation, falling back to
+basic type checking if the adapter isn't available. Solana chains typically
+use string cluster names.
+
+## Parameters
+
+### chains
+
+(`string` \| `number`)[]
+
+Array of chain identifiers to validate
+
+## Returns
+
+`Promise`\<`boolean`\>
+
+Promise resolving to true if chains are valid for Solana
+
+## Example
+
+```typescript
+const isSolana = await isSolanaChainList(['mainnet-beta', 'devnet']); // true
+const notSolana = await isSolanaChainList([1, 137]); // false
+```
+
+## Since
+
+1.0.0

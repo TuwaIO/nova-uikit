@@ -1,0 +1,401 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectorsSelectionsCustomization
+
+> **ConnectorsSelectionsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L117)
+
+Customization options for ConnectorsSelections component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L136)
+
+Custom class name generators
+
+#### connectorsArea()?
+
+> `optional` **connectorsArea**: (`params`) => `string`
+
+Function to generate connectors area classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### contentWrapper()?
+
+> `optional` **contentWrapper**: (`params`) => `string`
+
+Function to generate content wrapper classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### disclaimerSection()?
+
+> `optional` **disclaimerSection**: (`params`) => `string`
+
+Function to generate disclaimer section classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### emptyState()?
+
+> `optional` **emptyState**: (`params`) => `string`
+
+Function to generate empty state classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### impersonateSection()?
+
+> `optional` **impersonateSection**: (`params`) => `string`
+
+Function to generate impersonate section classes
+
+##### Parameters
+
+###### params
+
+###### impersonateData
+
+[`ImpersonateSectionData`](../interfaces/ImpersonateSectionData.md)
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### impersonateTitle()?
+
+> `optional` **impersonateTitle**: (`params`) => `string`
+
+Function to generate impersonate title classes
+
+##### Parameters
+
+###### params
+
+###### impersonateData
+
+[`ImpersonateSectionData`](../interfaces/ImpersonateSectionData.md)
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L119)
+
+Custom components
+
+#### ConnectorsArea?
+
+> `optional` **ConnectorsArea**: `ComponentType`\<`ConnectorsAreaProps`\>
+
+Custom connectors area wrapper
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### ContentWrapper?
+
+> `optional` **ContentWrapper**: `ComponentType`\<`ContentWrapperProps`\>
+
+Custom content wrapper
+
+#### DisclaimerSection?
+
+> `optional` **DisclaimerSection**: `ComponentType`\<`DisclaimerSectionProps`\>
+
+Custom disclaimer section
+
+#### EmptyState?
+
+> `optional` **EmptyState**: `ComponentType`\<`EmptyStateProps`\>
+
+Custom empty state
+
+#### ImpersonateSection?
+
+> `optional` **ImpersonateSection**: `ComponentType`\<`ImpersonateSectionProps`\>
+
+Custom impersonate section
+
+#### ImpersonateTitle?
+
+> `optional` **ImpersonateTitle**: `ComponentType`\<`ImpersonateTitleProps`\>
+
+Custom impersonate title
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:170](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L170)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.connectorsArea()?
+
+> `optional` **connectorsArea**: (`selectionsData`) => `string`
+
+###### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.container()?
+
+> `optional` **container**: (`selectionsData`) => `string`
+
+###### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.impersonateSection()?
+
+> `optional` **impersonateSection**: (`impersonateData`) => `string`
+
+###### Parameters
+
+###### impersonateData
+
+[`ImpersonateSectionData`](../interfaces/ImpersonateSectionData.md)
+
+###### Returns
+
+`string`
+
+#### features?
+
+> `optional` **features**: `object`
+
+Show/hide features
+
+##### features.showDisclaimer?
+
+> `optional` **showDisclaimer**: `boolean`
+
+Whether to show disclaimer on touch devices
+
+##### features.showEmptyState?
+
+> `optional` **showEmptyState**: `boolean`
+
+Whether to show empty state
+
+##### features.showImpersonate?
+
+> `optional` **showImpersonate**: `boolean`
+
+Whether to show impersonate section
+
+#### layout?
+
+> `optional` **layout**: `object`
+
+Layout configuration
+
+##### layout.mouseConnectorsClasses?
+
+> `optional` **mouseConnectorsClasses**: `string`[]
+
+Mouse device classes for connectors area
+
+##### layout.mouseContentClasses?
+
+> `optional` **mouseContentClasses**: `string`[]
+
+Mouse device classes for content wrapper
+
+##### layout.touchConnectorsClasses?
+
+> `optional` **touchConnectorsClasses**: `string`[]
+
+Touch device classes for connectors area
+
+##### layout.touchContentClasses?
+
+> `optional` **touchContentClasses**: `string`[]
+
+Touch device classes for content wrapper
+
+***
+
+### connectorsBlock?
+
+> `optional` **connectorsBlock**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L199)
+
+ConnectorsBlock customization for each connector block
+
+#### installed?
+
+> `optional` **installed**: [`ConnectorsBlockCustomization`](ConnectorsBlockCustomization.md)
+
+Customization for installed connectors block
+
+#### popular?
+
+> `optional` **popular**: [`ConnectorsBlockCustomization`](ConnectorsBlockCustomization.md)
+
+Customization for popular connectors block
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L159)
+
+Custom event handlers
+
+#### onEmptyStateAction()?
+
+> `optional` **onEmptyStateAction**: (`selectionsData`) => `void`
+
+Custom empty state action handler
+
+##### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+##### Returns
+
+`void`
+
+#### onImpersonateClick()?
+
+> `optional` **onImpersonateClick**: (`impersonateData`, `selectionsData`, `originalHandler`) => `void`
+
+Custom impersonate click handler
+
+##### Parameters
+
+###### impersonateData
+
+[`ImpersonateSectionData`](../interfaces/ImpersonateSectionData.md)
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+###### originalHandler
+
+() => `void`
+
+##### Returns
+
+`void`
+
+***
+
+### impersonateCard?
+
+> `optional` **impersonateCard**: [`ConnectCardCustomization`](ConnectCardCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L206)
+
+ConnectCard customization for impersonate card

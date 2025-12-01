@@ -1,0 +1,121 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# WalletIconCustomization
+
+> **WalletIconCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/WalletIcon.tsx#L32)
+
+Customization options for WalletIcon component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/WalletIcon.tsx#L47)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### isLoading
+
+`boolean`
+
+###### showLoading
+
+`boolean`
+
+###### size
+
+`number`
+
+##### Returns
+
+`string`
+
+#### image()?
+
+> `optional` **image**: (`params`) => `string`
+
+Function to generate image classes
+
+##### Parameters
+
+###### params
+
+###### hasError
+
+`boolean`
+
+###### isLoading
+
+`boolean`
+
+###### showLoading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/WalletIcon.tsx#L38)
+
+Custom components
+
+#### ErrorIndicator?
+
+> `optional` **ErrorIndicator**: `ComponentType`\<`CustomErrorIndicatorProps`\>
+
+Custom error indicator component (only shown in development)
+
+#### FallbackIcon?
+
+> `optional` **FallbackIcon**: `ComponentType`\<`CustomFallbackIconProps`\>
+
+Custom fallback icon component
+
+#### LoadingOverlay?
+
+> `optional` **LoadingOverlay**: `ComponentType`\<`CustomLoadingOverlayProps`\>
+
+Custom loading overlay component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/WalletIcon.tsx#L34)
+
+Override container element props
+
+***
+
+### imageProps?
+
+> `optional` **imageProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"img"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/WalletIcon.tsx#L36)
+
+Override image element props

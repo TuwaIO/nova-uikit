@@ -1,0 +1,62 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# StatusIcon
+
+> `const` **StatusIcon**: `ForwardRefExoticComponent`\<`Omit`\<[`StatusIconProps`](../interfaces/StatusIconProps.md), `"ref"`\> & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:252](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L252)
+
+A highly customizable animated status icon component with comprehensive styling and animation options.
+Provides visual feedback for transaction states with smooth animations and full accessibility support.
+
+Features:
+- Animated container and path with Framer Motion
+- Comprehensive customization for all visual elements and animations
+- Full accessibility support with ARIA labels and proper roles
+- Status-based styling with CSS custom properties
+- Configurable animation timing and easing
+- Reduced motion support for accessibility
+- Custom SVG properties and path styling
+- Performance-optimized with memoized calculations
+
+## Examples
+
+```tsx
+<StatusIcon txStatus="succeed" colorVar="success">
+  m4.5 12.75 6 6 9-13.5
+</StatusIcon>
+```
+
+```tsx
+<StatusIcon
+  txStatus="failed"
+  colorVar="error"
+  customization={{
+    classNames: {
+      container: ({ txStatus }) => `custom-status-${txStatus} novacon:shadow-lg`,
+      svg: () => "custom-svg-styling",
+    },
+    animation: {
+      container: { duration: 0.5, ease: "easeOut" },
+      path: { duration: 1, delay: 0.2 },
+    },
+    variants: {
+      container: {
+        initial: { rotate: -180, scale: 0 },
+        animate: { rotate: 0, scale: 1 },
+      },
+    },
+    svg: {
+      strokeWidth: 3,
+      strokeLinecap: "square",
+    },
+    config: {
+      reduceMotion: false,
+    },
+  }}
+>
+  M6 18 18 6M6 6l12 12
+</StatusIcon>
+```

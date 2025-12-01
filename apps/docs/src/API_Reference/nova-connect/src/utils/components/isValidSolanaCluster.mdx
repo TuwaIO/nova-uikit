@@ -1,0 +1,48 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ~~isValidSolanaCluster()~~
+
+> **isValidSolanaCluster**(`cluster`): `boolean`
+
+Defined in: [packages/nova-connect/src/utils/index.ts:164](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/index.ts#L164)
+
+Synchronous fallback for Solana cluster validation.
+
+This function provides basic validation against known cluster names but
+lacks the comprehensive validation logic of the async version. It performs
+a simple lookup against standard Solana cluster monikers.
+
+## Parameters
+
+### cluster
+
+`string`
+
+Cluster name to validate
+
+## Returns
+
+`boolean`
+
+True if cluster name matches known standard clusters
+
+## Example
+
+```typescript
+// Synchronous fallback (basic validation)
+const isValid = isValidSolanaCluster('mainnet-beta'); // true
+const isCustom = isValidSolanaCluster('custom-cluster'); // false
+
+// Preferred async version (comprehensive validation)
+const isValidAsync = await isValidSolanaClusterAsync('custom-cluster');
+```
+
+## Since
+
+1.0.0
+
+## Deprecated
+
+Use isValidSolanaClusterAsync for comprehensive validation

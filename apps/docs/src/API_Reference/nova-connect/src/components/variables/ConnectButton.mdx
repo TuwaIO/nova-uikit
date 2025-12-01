@@ -1,0 +1,60 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectButton
+
+> `const` **ConnectButton**: `NamedExoticComponent`\<[`ConnectButtonProps`](../type-aliases/ConnectButtonProps.md)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:238](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L238)
+
+ConnectButton component - Main wallet connection button with full customization
+
+This component provides a comprehensive wallet connection interface with:
+- Connect/disconnect wallet functionality
+- Balance display when connected
+- Chain selector for multi-network support
+- Transaction pool integration
+- Impersonated wallet support
+- Full accessibility features
+- Comprehensive customization system
+
+Features:
+- Responsive design with smooth animations
+- Keyboard navigation support
+- Screen reader compatibility
+- Proper ARIA labels and roles
+- Loading states and error handling
+- Memoized performance optimizations
+
+Accessibility:
+- Semantic HTML structure with proper roles
+- ARIA labels for screen readers
+- Keyboard navigation with Enter and Space
+- Focus management and visual indicators
+- High contrast compatible styling
+
+## Param
+
+Additional CSS classes for the button
+
+## Param
+
+Customization options
+
+## Returns
+
+JSX element representing the connection button
+
+## Example
+
+```tsx
+<ConnectButton
+  customization={{
+    classNames: {
+      button: ({ buttonData }) =>
+        buttonData.isConnected ? 'custom-connected-style' : 'custom-disconnected-style'
+    }
+  }}
+/>
+```

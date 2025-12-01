@@ -1,0 +1,86 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ImpersonateForm
+
+> `const` **ImpersonateForm**: `ForwardRefExoticComponent`\<[`ImpersonateFormProps`](../interfaces/ImpersonateFormProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:253](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L253)
+
+Form component for entering wallet address to impersonate with comprehensive customization
+
+This component provides a validated form input with:
+- Debounced validation with configurable timing
+- Real-time address format validation using viem's isAddress
+- Full accessibility support with proper ARIA labeling
+- Error state management with immediate visual feedback
+- Touch-friendly design with proper focus states
+- Full customization of all child components
+- Comprehensive validation with custom validation support
+
+Validation features:
+- Empty address detection
+- Invalid address format detection using viem
+- Connected wallet conflict detection
+- Custom validation function support
+- Debounced validation to prevent excessive API calls
+- Immediate validation on blur for better UX
+
+Accessibility features:
+- Proper form labeling with htmlFor association
+- ARIA invalid and describedby attributes
+- Live region for error announcements
+- Screen reader friendly error messages
+- Proper focus management
+
+## Examples
+
+```tsx
+<ImpersonateForm
+  impersonatedAddress={address}
+  setImpersonatedAddress={setAddress}
+  store={novaConnectStore}
+/>
+```
+
+```tsx
+<ImpersonateForm
+  impersonatedAddress={address}
+  setImpersonatedAddress={setAddress}
+  store={novaConnectStore}
+  customization={{
+    config: {
+      validation: {
+        debounceDelay: 300,
+        customValidator: (addr) => {
+          if (addr === '0x...') return 'This address is not allowed';
+          return null;
+        }
+      }
+    }
+  }}
+/>
+```
+
+```tsx
+<ImpersonateForm
+  impersonatedAddress={address}
+  setImpersonatedAddress={setAddress}
+  store={novaConnectStore}
+  customization={{
+    components: {
+      Input: CustomInput,
+      ErrorMessage: CustomErrorMessage
+    },
+    classNames: {
+      input: ({ hasError }) => hasError ? 'custom-error' : 'custom-normal'
+    },
+    handlers: {
+      onValidationComplete: (value, error) => {
+        console.log('Validation result:', { value, error });
+      }
+    }
+  }}
+/>
+```

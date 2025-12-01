@@ -1,0 +1,82 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalFooter
+
+> `const` **ConnectedModalFooter**: `ForwardRefExoticComponent`\<[`ConnectedModalFooterProps`](../interfaces/ConnectedModalFooterProps.md) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:497](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L497)
+
+ConnectedModalFooter provides wallet control actions with comprehensive customization options.
+Displays disconnect button and explorer link with full accessibility support and animation capabilities.
+
+Features:
+- Disconnect button with animated icon and modal closure
+- Explorer link with external indicator and validation
+- Comprehensive customization for all UI elements and behaviors
+- Full accessibility support with ARIA labels and screen reader descriptions
+- Responsive design with mobile-first approach
+- Custom event handlers for enhanced interactivity
+- Animation customization with reduced motion support
+- Custom SVG icons and paths
+- Error handling for explorer URL generation
+- Disabled state for unavailable explorer links
+- Performance-optimized with memoized calculations
+
+## Examples
+
+```tsx
+<ConnectedModalFooter
+  setIsOpen={(open) => setModalOpen(open)}
+  store={walletStore}
+/>
+```
+
+```tsx
+<ConnectedModalFooter
+  setIsOpen={setModalOpen}
+  store={walletStore}
+  customization={{
+    classNames: {
+      container: ({ isValidExplorerUrl }) =>
+        `custom-footer ${isValidExplorerUrl ? 'with-explorer' : 'no-explorer'}`,
+      disconnectButton: () => "custom-disconnect-btn bg-red-500 text-white",
+      explorerLink: ({ isValidUrl }) =>
+        `custom-explorer-link ${isValidUrl ? 'active' : 'disabled'}`,
+    },
+    components: {
+      DisconnectButton: ({ onClick, labels, className }) =>
+        <button className={className} onClick={onClick}>Custom {labels.disconnect}</button>,
+    },
+    handlers: {
+      onDisconnectClick: (originalHandler, event) => {
+        console.log("Disconnecting...");
+        originalHandler();
+      },
+      onBeforeDisconnect: async () => {
+        const confirmed = await showConfirmDialog();
+        return confirmed;
+      },
+      onAfterDisconnect: () => {
+        showNotification("Wallet disconnected");
+      },
+    },
+    animation: {
+      disconnectIcon: { duration: 0.8, ease: "easeOut" },
+      explorerIcon: { duration: 0.6, delay: 0.1 },
+    },
+    svg: {
+      disconnectIconPath: "M12 2L2 7v10l10 5 10-5V7L12 2z",
+      explorerIconPath: "M8 2L2 8v8l6 6h8l6-6V8L16 2H8z",
+      disconnectIconStrokeWidth: 2,
+    },
+    config: {
+      closeModalAfterDisconnect: false,
+      showDisconnectButton: true,
+      showExplorerLink: true,
+      reduceMotion: false,
+    },
+  }}
+/>
+```

@@ -1,0 +1,283 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# WaitForConnectionContentCustomization
+
+> **WaitForConnectionContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L58)
+
+Customization options for WaitForConnectionContent component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L91)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### path?
+
+> `optional` **path**: `object`
+
+Path animation configuration
+
+##### path.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### path.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### path.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L73)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### isConnected
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### icon()?
+
+> `optional` **icon**: (`params`) => `string`
+
+Function to generate icon classes
+
+##### Parameters
+
+###### params
+
+###### isConnected
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### path()?
+
+> `optional` **path**: () => `string`
+
+Function to generate path classes
+
+##### Returns
+
+`string`
+
+#### text()?
+
+> `optional` **text**: (`params`) => `string`
+
+Function to generate text classes
+
+##### Parameters
+
+###### params
+
+###### isConnected
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L62)
+
+Custom components
+
+#### Content?
+
+> `optional` **Content**: `ComponentType`\<`CustomContentProps`\>
+
+Custom content component (wraps everything)
+
+#### Icon?
+
+> `optional` **Icon**: `ComponentType`\<`CustomIconProps`\>
+
+Custom icon SVG component
+
+#### Path?
+
+> `optional` **Path**: `ComponentType`\<`CustomPathProps`\>
+
+Custom path component
+
+#### Text?
+
+> `optional` **Text**: `ComponentType`\<`CustomTextProps`\>
+
+Custom text component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:125](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L125)
+
+Configuration options
+
+#### customText?
+
+> `optional` **customText**: `string`
+
+Custom text to display
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### hideWhenConnected?
+
+> `optional` **hideWhenConnected**: `boolean`
+
+Whether to hide the component when connected
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`Omit`\<`HTMLMotionProps`\<`"div"`\>, `"initial"` \| `"animate"` \| `"exit"` \| `"variants"` \| `"transition"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L60)
+
+Override container element props
+
+***
+
+### svg?
+
+> `optional` **svg**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L112)
+
+Custom SVG properties
+
+#### pathData?
+
+> `optional` **pathData**: `string`
+
+Custom wallet icon path
+
+#### strokeLinecap?
+
+> `optional` **strokeLinecap**: `"butt"` \| `"round"` \| `"square"`
+
+Custom stroke linecap
+
+#### strokeLinejoin?
+
+> `optional` **strokeLinejoin**: `"miter"` \| `"bevel"` \| `"round"`
+
+Custom stroke linejoin
+
+#### strokeWidth?
+
+> `optional` **strokeWidth**: `string` \| `number`
+
+Custom stroke width
+
+#### viewBox?
+
+> `optional` **viewBox**: `string`
+
+Custom viewBox
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L84)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container**: `Variants`
+
+Container motion variants
+
+#### path?
+
+> `optional` **path**: `Variants`
+
+Path motion variants

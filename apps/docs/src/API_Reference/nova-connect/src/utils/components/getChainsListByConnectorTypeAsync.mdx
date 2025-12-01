@@ -1,0 +1,62 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getChainsListByConnectorTypeAsync()
+
+> **getChainsListByConnectorTypeAsync**(`params`): `Promise`\<(`string` \| `number`)[]\>
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:97](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L97)
+
+Retrieves chain list for a specific connectorType type with automatic adapter loading.
+
+This is the primary function for getting blockchain-compatible chains based on
+wallet type and configuration. It automatically determines the correct adapter,
+loads it if necessary, and falls back to safe defaults if loading fails.
+
+The function supports all major blockchain types:
+- EVM chains: Returns numeric chain IDs from app configuration
+- Solana clusters: Returns string cluster names from RPC configuration
+- Future blockchains: Extensible through the adapter pattern
+
+## Parameters
+
+### params
+
+`GetChainsListParams`
+
+Configuration object with connectorType type and chain data
+
+## Returns
+
+`Promise`\<(`string` \| `number`)[]\>
+
+Promise resolving to array of chain identifiers
+
+## Example
+
+```typescript
+// Get EVM chains for MetaMask
+const evmChains = await getChainsListByConnectorType({
+  connectorType: ConnectorType.EVM_METAMASK,
+  appChains: [
+    { id: 1, name: 'Ethereum' },
+    { id: 137, name: 'Polygon' }
+  ]
+});
+// Returns: [1, 137]
+
+// Get Solana clusters for Phantom
+const solanaClusters = await getChainsListByConnectorType({
+  connectorType: ConnectorType.SOLANA_PHANTOM,
+  solanaRPCUrls: {
+    'mainnet-beta': 'https://api.mainnet-beta.solana.com',
+    'devnet': 'https://api.devnet.solana.com'
+  }
+});
+// Returns: ['mainnet-beta', 'devnet']
+```
+
+## Since
+
+1.0.0

@@ -1,0 +1,309 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ScrollableChainListCustomization
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L90)
+
+Comprehensive customization options for ScrollableChainList
+
+## Properties
+
+### animations?
+
+> `optional` **animations**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:130](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L130)
+
+Animation configuration
+
+#### scrollButtons?
+
+> `optional` **scrollButtons**: `ScrollButtonAnimationConfig`
+
+Button animation
+
+***
+
+### buttons?
+
+> `optional` **buttons**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L146)
+
+Button customization
+
+#### bottomButton?
+
+> `optional` **bottomButton**: [`ToBottomButtonCustomization`](../type-aliases/ToBottomButtonCustomization.md)
+
+Bottom button customization
+
+#### hideWhenContentFits?
+
+> `optional` **hideWhenContentFits**: `boolean`
+
+Hide buttons when content fits
+
+#### topButton?
+
+> `optional` **topButton**: [`ToTopButtonCustomization`](../type-aliases/ToTopButtonCustomization.md)
+
+Top button customization
+
+***
+
+### chainListRenderer?
+
+> `optional` **chainListRenderer**: [`ChainListRendererCustomization`](ChainListRendererCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:155](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L155)
+
+Chain list renderer customization
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L101)
+
+Custom class name generators
+
+#### buttonWrapper()?
+
+> `optional` **buttonWrapper**: (`params`) => `string`
+
+Button animation wrapper classes
+
+##### Parameters
+
+###### params
+
+###### isVisible
+
+`boolean`
+
+###### position
+
+`"bottom"` \| `"top"`
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Scroll container classes
+
+##### Parameters
+
+###### params
+
+###### hasScrollableContent
+
+`boolean`
+
+###### itemCount
+
+`number`
+
+###### showBottomButton
+
+`boolean`
+
+###### showTopButton
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### wrapper()?
+
+> `optional` **wrapper**: (`params`) => `string`
+
+Wrapper classes
+
+##### Parameters
+
+###### params
+
+###### hasScrollableContent
+
+`boolean`
+
+###### itemCount
+
+`number`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L92)
+
+Custom components
+
+#### ButtonAnimationWrapper?
+
+> `optional` **ButtonAnimationWrapper**: `ComponentType`\<`CustomButtonAnimationWrapperProps`\>
+
+Custom button animation wrapper
+
+#### ScrollContainer?
+
+> `optional` **ScrollContainer**: `ComponentType`\<`CustomScrollContainerProps`\>
+
+Custom scroll container component
+
+#### Wrapper?
+
+> `optional` **Wrapper**: `ComponentType`\<`CustomWrapperProps`\>
+
+Custom wrapper component
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L115)
+
+Custom event handlers
+
+#### onBottomButtonClick()?
+
+> `optional` **onBottomButtonClick**: (`originalHandler`, `context`) => `void`
+
+Custom bottom button click handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### context
+
+`ScrollButtonContext`
+
+##### Returns
+
+`void`
+
+#### onKeyDown()?
+
+> `optional` **onKeyDown**: (`originalHandler`, `event`, `context`) => `void`
+
+Custom key handler wrapper for container
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`KeyboardEvent`\<`HTMLDivElement`\>
+
+###### context
+
+###### scrollContainer
+
+`HTMLDivElement` \| `null`
+
+##### Returns
+
+`void`
+
+#### onScroll()?
+
+> `optional` **onScroll**: (`originalHandler`, `event`, `context`) => `void`
+
+Custom scroll handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### event
+
+`Event`
+
+###### context
+
+`ScrollButtonContext`
+
+##### Returns
+
+`void`
+
+#### onTopButtonClick()?
+
+> `optional` **onTopButtonClick**: (`originalHandler`, `context`) => `void`
+
+Custom top button click handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### context
+
+`ScrollButtonContext`
+
+##### Returns
+
+`void`
+
+***
+
+### scrollBehavior?
+
+> `optional` **scrollBehavior**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:135](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L135)
+
+Scroll behavior configuration
+
+#### autoScrollToActive?
+
+> `optional` **autoScrollToActive**: `boolean`
+
+Enable auto-scroll to active item
+
+#### behavior?
+
+> `optional` **behavior**: `ScrollBehavior`
+
+Scroll behavior type
+
+#### pageScrollPercentage?
+
+> `optional` **pageScrollPercentage**: `number`
+
+Page scroll percentage (0-1)
+
+#### updateThrottle?
+
+> `optional` **updateThrottle**: `number`
+
+Scroll update throttle in ms

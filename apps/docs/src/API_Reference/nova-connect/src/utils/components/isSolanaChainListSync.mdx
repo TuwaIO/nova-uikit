@@ -1,0 +1,38 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# isSolanaChainListSync()
+
+> **isSolanaChainListSync**(`chains`): `boolean`
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:313](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L313)
+
+Synchronous Solana chain list validation using pre-loaded adapters.
+
+Provides immediate validation results without triggering adapter loading.
+Falls back to basic type checking if adapter isn't pre-loaded.
+
+## Parameters
+
+### chains
+
+(`string` \| `number`)[]
+
+Array of chain identifiers to validate
+
+## Returns
+
+`boolean`
+
+True if chains are valid for Solana
+
+## Example
+
+```typescript
+const isSolana = isSolanaChainListSync(['mainnet-beta', 'devnet']); // true
+```
+
+## Since
+
+1.0.0

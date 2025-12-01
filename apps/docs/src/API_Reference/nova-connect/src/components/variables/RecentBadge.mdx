@@ -1,0 +1,78 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# RecentBadge
+
+> `const` **RecentBadge**: `NamedExoticComponent`\<[`RecentBadgeProps`](../interfaces/RecentBadgeProps.md) & `RefAttributes`\<`HTMLSpanElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:294](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L294)
+
+Badge component with animated gradient border effect and comprehensive customization
+
+This component provides a visually appealing badge with:
+- Animated gradient border effect with customizable timing and colors
+- Touch-device responsive sizing for optimal mobile experience
+- Full accessibility support with proper ARIA labeling
+- Performance optimizations with memoized calculations
+- Customizable animations and gradient configurations
+- Full customization of all child components
+- Proper semantic HTML structure
+
+Visual features:
+- Smooth animated gradient border effect
+- Touch-responsive sizing (smaller on touch devices)
+- Customizable gradient colors and direction
+- Configurable animation timing and easing
+- Proper z-index layering for visual effects
+
+Accessibility features:
+- Proper ARIA role and labels
+- Screen reader friendly content structure
+- Semantic HTML with appropriate roles
+- Motion reduction respect (can be controlled via customization)
+
+## Examples
+
+```tsx
+<RecentBadge>Recent</RecentBadge>
+```
+
+```tsx
+<RecentBadge
+  animated={false}
+  customization={{
+    config: {
+      animation: {
+        duration: 2,
+        ease: 'easeInOut'
+      }
+    }
+  }}
+>
+  Custom
+</RecentBadge>
+```
+
+```tsx
+<RecentBadge
+  customization={{
+    components: {
+      AnimatedGradient: CustomGradient,
+      Content: CustomContent
+    },
+    config: {
+      gradient: {
+        direction: '45deg',
+        stops: [
+          { position: 0, color: 'transparent' },
+          { position: 50, color: 'rgba(59, 130, 246, 0.8)' },
+          { position: 100, color: 'transparent' }
+        ]
+      }
+    }
+  }}
+>
+  Premium
+</RecentBadge>
+```

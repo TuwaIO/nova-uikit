@@ -1,0 +1,59 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectCard
+
+> `const` **ConnectCard**: `NamedExoticComponent`\<`ConnectCardProps` & `RefAttributes`\<`HTMLButtonElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:615](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L615)
+
+ConnectCard component - Interactive card for wallet connection options with comprehensive customization
+
+This component provides a clickable card interface for wallet connectors with:
+- Responsive design adapting to touch/mouse interfaces
+- Network icons overlay showing supported networks
+- Recent usage indicator badge
+- Information link with external documentation
+- Hover animations and visual feedback
+- Full accessibility support with ARIA labels
+- Keyboard navigation support
+- Complete customization of all child components and styling
+
+## Examples
+
+```tsx
+<ConnectCard
+  onClick={() => connect('metamask')}
+  title="MetaMask"
+  subtitle="Browser Extension"
+  icon={<MetaMaskIcon />}
+  adapters={[evm]}
+  isRecent={true}
+  infoLink="https://metamask.io/learn"
+/>
+```
+
+```tsx
+<ConnectCard
+  onClick={() => connect('walletconnect')}
+  title="WalletConnect"
+  icon={<WalletConnectIcon />}
+  adapters={[ethereum, polygon]}
+  customization={{
+    components: {
+      Container: CustomCardContainer,
+      Title: CustomTitle
+    },
+    classNames: {
+      container: ({ cardData }) => cardData.isTouch ? 'touch-card' : 'desktop-card'
+    },
+    handlers: {
+      onClick: (cardData, originalHandler) => {
+        analytics.track('card_clicked', { title: cardData.title });
+        originalHandler();
+      }
+    }
+  }}
+/>
+```

@@ -1,0 +1,525 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# AboutWalletsCustomization
+
+> **AboutWalletsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:179](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L179)
+
+Customization options for AboutWallets component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:238](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L238)
+
+Custom animation configuration
+
+#### autoPlayInterval?
+
+> `optional` **autoPlayInterval**: `number`
+
+Auto-play interval in milliseconds
+
+#### imageTransition?
+
+> `optional` **imageTransition**: `Transition`
+
+Image transition configuration
+
+#### resumeDelay?
+
+> `optional` **resumeDelay**: `number`
+
+Resume delay after user interaction in milliseconds
+
+#### slideTransition?
+
+> `optional` **slideTransition**: `Transition`
+
+Slide transition configuration
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L206)
+
+Custom class name generators
+
+#### contentSection()?
+
+> `optional` **contentSection**: (`params`) => `string`
+
+Function to generate content section classes
+
+##### Parameters
+
+###### params
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`string`
+
+#### description()?
+
+> `optional` **description**: (`params`) => `string`
+
+Function to generate description classes
+
+##### Parameters
+
+###### params
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`string`
+
+#### image()?
+
+> `optional` **image**: (`params`) => `string`
+
+Function to generate image classes
+
+##### Parameters
+
+###### params
+
+###### imageLoaded
+
+`boolean`
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`string`
+
+#### imageSection()?
+
+> `optional` **imageSection**: (`params`) => `string`
+
+Function to generate image section classes
+
+##### Parameters
+
+###### params
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`string`
+
+#### indicator()?
+
+> `optional` **indicator**: (`params`) => `string`
+
+Function to generate indicator classes
+
+##### Parameters
+
+###### params
+
+###### index
+
+`number`
+
+###### isActive
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### navigation()?
+
+> `optional` **navigation**: () => `string`
+
+Function to generate navigation classes
+
+##### Returns
+
+`string`
+
+#### section()?
+
+> `optional` **section**: () => `string`
+
+Function to generate section classes
+
+##### Returns
+
+`string`
+
+#### slide()?
+
+> `optional` **slide**: (`params`) => `string`
+
+Function to generate slide classes
+
+##### Parameters
+
+###### params
+
+###### slideIndex
+
+`number`
+
+###### totalSlides
+
+`number`
+
+##### Returns
+
+`string`
+
+#### slideContainer()?
+
+> `optional` **slideContainer**: () => `string`
+
+Function to generate slide container classes
+
+##### Returns
+
+`string`
+
+#### status()?
+
+> `optional` **status**: () => `string`
+
+Function to generate status classes
+
+##### Returns
+
+`string`
+
+#### title()?
+
+> `optional` **title**: (`params`) => `string`
+
+Function to generate title classes
+
+##### Parameters
+
+###### params
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:183](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L183)
+
+Custom components
+
+#### ContentSection?
+
+> `optional` **ContentSection**: `ComponentType`\<`ContentSectionProps`\>
+
+Custom content section
+
+#### ImageSection?
+
+> `optional` **ImageSection**: `ComponentType`\<`ImageSectionProps`\>
+
+Custom image section
+
+#### Indicator?
+
+> `optional` **Indicator**: `ComponentType`\<`IndicatorProps`\>
+
+Custom indicator
+
+#### MotionDiv?
+
+> `optional` **MotionDiv**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
+
+Custom motion container
+
+#### Navigation?
+
+> `optional` **Navigation**: `ComponentType`\<`NavigationProps`\>
+
+Custom navigation
+
+#### Section?
+
+> `optional` **Section**: `ComponentType`\<`SectionProps`\>
+
+Custom section wrapper
+
+#### Slide?
+
+> `optional` **Slide**: `ComponentType`\<`SlideProps`\>
+
+Custom slide component
+
+#### SlideContainer?
+
+> `optional` **SlideContainer**: `ComponentType`\<`SlideContainerProps`\>
+
+Custom slide container
+
+#### StarsBackground?
+
+> `optional` **StarsBackground**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `StarsBackground`\>\>
+
+Custom stars background
+
+#### Status?
+
+> `optional` **Status**: `ComponentType`\<`StatusProps`\>
+
+Custom status announcer
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:273](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L273)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.carousel?
+
+> `optional` **carousel**: `string`
+
+##### ariaLabels.indicator()?
+
+> `optional` **indicator**: (`slideIndex`, `slideTitle`) => `string`
+
+###### Parameters
+
+###### slideIndex
+
+`number`
+
+###### slideTitle
+
+`string`
+
+###### Returns
+
+`string`
+
+##### ariaLabels.navigation?
+
+> `optional` **navigation**: `string`
+
+##### ariaLabels.slide()?
+
+> `optional` **slide**: (`slideIndex`, `totalSlides`) => `string`
+
+###### Parameters
+
+###### slideIndex
+
+`number`
+
+###### totalSlides
+
+`number`
+
+###### Returns
+
+`string`
+
+#### disableAutoPlay?
+
+> `optional` **disableAutoPlay**: `boolean`
+
+Whether to disable auto-play
+
+#### initialSlide?
+
+> `optional` **initialSlide**: `number`
+
+Initial slide index
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:260](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L260)
+
+Custom event handlers
+
+#### onAutoPlayChange()?
+
+> `optional` **onAutoPlayChange**: (`isPlaying`) => `void`
+
+Custom handler for auto-play state change
+
+##### Parameters
+
+###### isPlaying
+
+`boolean`
+
+##### Returns
+
+`void`
+
+#### onImageError()?
+
+> `optional` **onImageError**: (`slideIndex`) => `void`
+
+Custom handler for image error
+
+##### Parameters
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`void`
+
+#### onImageLoad()?
+
+> `optional` **onImageLoad**: (`slideIndex`) => `void`
+
+Custom handler for image load
+
+##### Parameters
+
+###### slideIndex
+
+`number`
+
+##### Returns
+
+`void`
+
+#### onSlideChange()?
+
+> `optional` **onSlideChange**: (`index`) => `void`
+
+Custom handler for slide change
+
+##### Parameters
+
+###### index
+
+`number`
+
+##### Returns
+
+`void`
+
+#### onUserInteraction()?
+
+> `optional` **onUserInteraction**: () => `void`
+
+Custom handler for user interaction
+
+##### Returns
+
+`void`
+
+***
+
+### slidesConfig?
+
+> `optional` **slidesConfig**: `SlideConfig`[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:181](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L181)
+
+Override slide configuration
+
+***
+
+### touch?
+
+> `optional` **touch**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:249](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L249)
+
+Touch interaction configuration
+
+#### dampingFactor?
+
+> `optional` **dampingFactor**: `number`
+
+How much to dampen the drag
+
+#### enabled?
+
+> `optional` **enabled**: `boolean`
+
+Enable/disable touch interactions
+
+#### threshold?
+
+> `optional` **threshold**: `number`
+
+Minimum distance to trigger slide change
+
+#### velocityThreshold?
+
+> `optional` **velocityThreshold**: `number`
+
+Minimum velocity for quick swipe
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:231](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L231)
+
+Custom animation variants
+
+#### image?
+
+> `optional` **image**: `Variants`
+
+Image animation variants
+
+#### slide?
+
+> `optional` **slide**: `Variants`
+
+Slide animation variants

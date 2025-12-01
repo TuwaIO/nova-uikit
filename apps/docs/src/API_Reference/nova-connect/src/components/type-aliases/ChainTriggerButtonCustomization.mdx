@@ -1,0 +1,289 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ChainTriggerButtonCustomization
+
+> **ChainTriggerButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:143](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L143)
+
+Customization options for the ChainTriggerButton.
+
+## Properties
+
+### animations?
+
+> `optional` **animations**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:188](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L188)
+
+Animation settings
+
+#### innerContent?
+
+> `optional` **innerContent**: `object`
+
+Inner content animation settings
+
+##### innerContent.duration?
+
+> `optional` **duration**: `number`
+
+#### layout?
+
+> `optional` **layout**: `object`
+
+Layout animation settings
+
+##### layout.duration?
+
+> `optional` **duration**: `number`
+
+##### layout.ease?
+
+> `optional` **ease**: `AnimationEasing`
+
+***
+
+### buttonProps?
+
+> `optional` **buttonProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"button"`\>\>
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:145](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L145)
+
+Overrides for the button/trigger props
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:158](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L158)
+
+Custom CSS class generators
+
+#### arrowWrapper()?
+
+> `optional` **arrowWrapper**: (`params`) => `string`
+
+Function to generate arrow wrapper classes
+
+##### Parameters
+
+###### params
+
+###### isMobile
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### button()?
+
+> `optional` **button**: (`params`) => `string`
+
+Function to generate button/trigger classes
+
+##### Parameters
+
+###### params
+
+###### hasMultipleChains
+
+`boolean`
+
+###### isMobile
+
+`boolean`
+
+###### isOpen
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### chainName()?
+
+> `optional` **chainName**: (`params`) => `string`
+
+Function to generate chain name classes
+
+##### Parameters
+
+###### params
+
+###### isMobile
+
+`boolean`
+
+###### isVisible
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### iconWrapper()?
+
+> `optional` **iconWrapper**: (`params`) => `string`
+
+Function to generate icon wrapper classes
+
+##### Parameters
+
+###### params
+
+###### isMobile
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### innerContent()?
+
+> `optional` **innerContent**: (`params`) => `string`
+
+Function to generate inner content classes
+
+##### Parameters
+
+###### params
+
+###### isMobile
+
+`boolean`
+
+###### isOpen
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### wrapper()?
+
+> `optional` **wrapper**: (`params`) => `string`
+
+Function to generate wrapper classes
+
+##### Parameters
+
+###### params
+
+###### isMobile
+
+`boolean`
+
+###### isOpen
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L149)
+
+Custom component overrides
+
+#### Arrow?
+
+> `optional` **Arrow**: `ComponentType`\<`CustomTriggerArrowProps`\>
+
+Custom arrow/chevron component
+
+#### Content?
+
+> `optional` **Content**: `ComponentType`\<`CustomTriggerContentProps`\>
+
+Custom trigger content wrapper
+
+#### Icon?
+
+> `optional` **Icon**: `ComponentType`\<`CustomTriggerIconProps`\>
+
+Custom chain icon component
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L173)
+
+Custom event handlers
+
+#### onClick()?
+
+> `optional` **onClick**: (`originalHandler`, `event`, `context`) => `void`
+
+Wrapper for the click handler
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+###### context
+
+`ChainTriggerButtonContext`
+
+##### Returns
+
+`void`
+
+#### onKeyDown()?
+
+> `optional` **onKeyDown**: (`originalHandler`, `event`, `context`) => `void`
+
+Wrapper for the key down handler
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`React.KeyboardEvent`
+
+###### context
+
+`ChainTriggerButtonContext`
+
+##### Returns
+
+`void`
+
+***
+
+### selectTriggerProps?
+
+> `optional` **selectTriggerProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Select.Trigger`\>\>
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:147](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L147)
+
+Overrides for the Select.Trigger props (desktop only)

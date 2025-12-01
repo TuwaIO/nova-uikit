@@ -1,0 +1,97 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalMainContent
+
+> `const` **ConnectedModalMainContent**: `ForwardRefExoticComponent`\<[`ConnectedModalMainContentProps`](../interfaces/ConnectedModalMainContentProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:543](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L543)
+
+Main content component for the connected wallet modal with comprehensive customization options.
+
+This component displays the primary interface for connected wallet management:
+- Large wallet avatar with ENS support
+- Wallet and network switching controls via IconButton components
+- Loading indicators for avatar and balance states
+- Transaction history access when transactions are available
+- Animated pending transaction indicator
+- Comprehensive customization for all UI elements and behaviors
+- Animation support with reduced motion options
+- Custom event handlers for enhanced interactivity
+- Performance-optimized with memoized calculations
+- Full customization of child components through parent
+
+The component provides full WCAG compliance with proper ARIA labels,
+semantic HTML structure, and keyboard navigation support.
+
+## Examples
+
+```tsx
+<ConnectedModalMainContent
+  transactionPool={transactionPool}
+  chainsList={availableChains}
+  ensAvatar={ensAvatar}
+  avatarIsLoading={false}
+  balanceLoading={false}
+  ensNameAbbreviated="wallet.eth"
+  balance={{ value: "1.23", symbol: "ETH" }}
+  store={store}
+/>
+```
+
+```tsx
+<ConnectedModalMainContent
+  transactionPool={transactionPool}
+  chainsList={availableChains}
+  ensAvatar={ensAvatar}
+  avatarIsLoading={false}
+  balanceLoading={false}
+  ensNameAbbreviated="wallet.eth"
+  balance={{ value: "1.23", symbol: "ETH" }}
+  store={store}
+  customization={{
+    classNames: {
+      container: ({ hasActiveWallet }) =>
+        `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
+      avatarSection: () => "custom-avatar-section",
+      transactionsSection: ({ transactionsCount }) =>
+        `transactions-section transactions-count-${transactionsCount}`,
+    },
+    components: {
+      LoadingIndicator: ({ isLoading }) =>
+        isLoading ? <div className="custom-spinner" /> : null,
+      AvatarSection: ({ activeConnection, onSwitchWallet }) => (
+        <div onClick={onSwitchWallet}>Custom Avatar: {activeConnection.address}</div>
+      ),
+    },
+    childCustomizations: {
+      nameAndBalance: {
+        classNames: {
+          container: () => "custom-name-balance-container",
+        },
+        components: {
+          WalletNameDisplay: ({ ensNameAbbreviated }) =>
+            <h2>{ensNameAbbreviated}</h2>,
+        },
+      },
+      walletAvatar: {
+        className: "custom-wallet-avatar",
+      },
+    },
+    handlers: {
+      onSwitchWallet: () => console.log('Custom wallet switch'),
+      onViewTransactions: () => console.log('Custom view transactions'),
+      onTransactionsUpdate: (transactions, pendingCount) =>
+        console.log(`Transactions: ${transactions.length}, Pending: ${pendingCount}`),
+    },
+    config: {
+      showLoadingIndicators: true,
+      showPendingIndicators: true,
+      ariaLabels: {
+        container: 'Wallet management interface',
+      },
+    },
+  }}
+/>
+```

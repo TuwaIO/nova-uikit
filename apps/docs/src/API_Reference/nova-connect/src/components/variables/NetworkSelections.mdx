@@ -1,0 +1,81 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NetworkSelections
+
+> `const` **NetworkSelections**: `NamedExoticComponent`\<`NetworkSelectionsProps` & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:384](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L384)
+
+NetworkSelections component - Network/blockchain selection interface for multi-network wallets with full customization
+
+This component provides a network selection interface when a wallet supports multiple blockchains:
+- Visual network cards with blockchain icons and names
+- Responsive layout adapting to touch/mouse interfaces
+- Error handling for invalid connector states
+- Educational content about blockchain networks
+- Full accessibility support with semantic structure
+- External documentation links for each network
+- Complete customization of all child components and styling
+
+Use cases:
+- Multi-network wallets (e.g., MetaMask supporting EVM chains)
+- Cross-chain wallets supporting both EVM and Solana
+- Network-specific connection requirements
+- User education about blockchain differences
+
+Layout features:
+- Touch devices: Horizontal scrolling layout for easy mobile navigation
+- Mouse devices: Vertical layout with fixed height scrolling
+- Network icons with Web3Icon integration for consistency
+- External links for additional network information
+
+Error handling:
+- Graceful fallback when active connector is not found
+- Clear error messaging with actionable guidance
+- Visual error indicators with warning icons
+- Accessible error state announcements
+
+Accessibility features:
+- Semantic heading structure for network selection
+- Proper ARIA labels for error states and selections
+- Screen reader friendly network descriptions
+- Keyboard navigation support for all interactive elements
+- Error announcements with live regions
+
+## Examples
+
+```tsx
+<NetworkSelections
+  activeConnector="metamask"
+  connectors={multiNetworkConnectors}
+  onClick={async (adapter, connectorType) => {
+    await connectToNetwork(adapter, connectorType);
+  }}
+/>
+```
+
+```tsx
+<NetworkSelections
+  activeConnector="phantom"
+  connectors={crossChainConnectors}
+  onClick={(adapter, type) => handleNetworkConnection(adapter, type)}
+  customization={{
+    components: {
+      Container: CustomNetworkContainer,
+      NetworkIcon: CustomNetworkIcon
+    },
+    classNames: {
+      networkList: ({ selectionsData }) =>
+        selectionsData.isTouch ? 'touch-network-list' : 'desktop-network-list'
+    },
+    handlers: {
+      onNetworkClick: (networkData, selectionsData, originalHandler) => {
+        analytics.track('network_selected', { network: networkData.name });
+        originalHandler(networkData.adapter);
+      }
+    }
+  }}
+/>
+```

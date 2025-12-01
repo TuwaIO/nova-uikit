@@ -1,0 +1,257 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# StatusIconCustomization
+
+> **StatusIconCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L50)
+
+Customization options for StatusIcon component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L81)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### path?
+
+> `optional` **path**: `object`
+
+Path animation configuration
+
+##### path.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### path.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### path.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L65)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### colorVar
+
+`string`
+
+###### txStatus
+
+`"succeed"` \| `"failed"` \| `"replaced"`
+
+##### Returns
+
+`string`
+
+#### path()?
+
+> `optional` **path**: (`params`) => `string`
+
+Function to generate path classes
+
+##### Parameters
+
+###### params
+
+###### txStatus
+
+`"succeed"` \| `"failed"` \| `"replaced"`
+
+##### Returns
+
+`string`
+
+#### svg()?
+
+> `optional` **svg**: (`params`) => `string`
+
+Function to generate SVG classes
+
+##### Parameters
+
+###### params
+
+###### colorVar
+
+`string`
+
+###### txStatus
+
+`"succeed"` \| `"failed"` \| `"replaced"`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L56)
+
+Custom components
+
+#### Content?
+
+> `optional` **Content**: `ComponentType`\<`CustomContentProps`\>
+
+Custom content component (wraps everything)
+
+#### Path?
+
+> `optional` **Path**: `ComponentType`\<`CustomPathProps`\>
+
+Custom path component
+
+#### Svg?
+
+> `optional` **Svg**: `ComponentType`\<`CustomSvgProps`\>
+
+Custom SVG component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:113](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L113)
+
+Configuration options
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`Omit`\<`HTMLMotionProps`\<`"div"`\>, `"initial"` \| `"animate"` \| `"exit"` \| `"variants"` \| `"transition"` \| `"style"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L52)
+
+Override container element props
+
+***
+
+### svg?
+
+> `optional` **svg**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L102)
+
+Custom SVG properties
+
+#### strokeLinecap?
+
+> `optional` **strokeLinecap**: `"butt"` \| `"round"` \| `"square"`
+
+Custom stroke linecap
+
+#### strokeLinejoin?
+
+> `optional` **strokeLinejoin**: `"miter"` \| `"bevel"` \| `"round"`
+
+Custom stroke linejoin
+
+#### strokeWidth?
+
+> `optional` **strokeWidth**: `string` \| `number`
+
+Custom stroke width
+
+#### viewBox?
+
+> `optional` **viewBox**: `string`
+
+Custom viewBox
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L74)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container**: `Variants`
+
+Container motion variants
+
+#### path?
+
+> `optional` **path**: `Variants`
+
+Path motion variants

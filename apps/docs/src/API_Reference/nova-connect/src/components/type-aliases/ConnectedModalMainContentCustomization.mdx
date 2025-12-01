@@ -1,0 +1,591 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalMainContentCustomization
+
+> **ConnectedModalMainContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L107)
+
+Customization options for ConnectedModalMainContent component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:195](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L195)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+##### container.staggerChildren?
+
+> `optional` **staggerChildren**: `number`
+
+Children stagger delay
+
+#### loading?
+
+> `optional` **loading**: `object`
+
+Loading animation configuration
+
+##### loading.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### loading.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### loading.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### sections?
+
+> `optional` **sections**: `object`
+
+Sections animation configuration
+
+##### sections.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### sections.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### sections.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### childCustomizations?
+
+> `optional` **childCustomizations**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:240](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L240)
+
+Child component customizations
+
+#### nameAndBalance?
+
+> `optional` **nameAndBalance**: [`ConnectedModalNameAndBalanceCustomization`](ConnectedModalNameAndBalanceCustomization.md)
+
+Customization for ConnectedModalNameAndBalance component
+
+#### switchNetworkButton?
+
+> `optional` **switchNetworkButton**: `Partial`\<[`IconButtonProps`](../interfaces/IconButtonProps.md)\>
+
+Customization for switch network IconButton
+
+#### switchWalletButton?
+
+> `optional` **switchWalletButton**: `Partial`\<[`IconButtonProps`](../interfaces/IconButtonProps.md)\>
+
+Customization for switch wallet IconButton
+
+#### walletAvatar?
+
+> `optional` **walletAvatar**: `Partial`\<[`WalletAvatarProps`](../interfaces/WalletAvatarProps.md)\>
+
+Customization for WalletAvatar component
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L148)
+
+Custom class name generators
+
+#### avatarSection()?
+
+> `optional` **avatarSection**: () => `string`
+
+Function to generate avatar section classes
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### hasActiveWallet
+
+`boolean`
+
+###### hasPendingTransactions
+
+`boolean`
+
+###### hasTransactions
+
+`boolean`
+
+###### isLoading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### infoSection()?
+
+> `optional` **infoSection**: () => `string`
+
+Function to generate info section classes
+
+##### Returns
+
+`string`
+
+#### loadingIndicator()?
+
+> `optional` **loadingIndicator**: (`params`) => `string`
+
+Function to generate loading indicator classes
+
+##### Parameters
+
+###### params
+
+###### isLoading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### loadingSpinner()?
+
+> `optional` **loadingSpinner**: () => `string`
+
+Function to generate loading spinner classes
+
+##### Returns
+
+`string`
+
+#### noTransactions()?
+
+> `optional` **noTransactions**: () => `string`
+
+Function to generate no transactions classes
+
+##### Returns
+
+`string`
+
+#### pendingIndicator()?
+
+> `optional` **pendingIndicator**: () => `string`
+
+Function to generate pending indicator classes
+
+##### Returns
+
+`string`
+
+#### pendingSpinner()?
+
+> `optional` **pendingSpinner**: () => `string`
+
+Function to generate pending spinner classes
+
+##### Returns
+
+`string`
+
+#### switchNetworkButton()?
+
+> `optional` **switchNetworkButton**: (`params`) => `string`
+
+Function to generate switch network button classes
+
+##### Parameters
+
+###### params
+
+###### chainsCount
+
+`number`
+
+##### Returns
+
+`string`
+
+#### switchWalletButton()?
+
+> `optional` **switchWalletButton**: (`params`) => `string`
+
+Function to generate switch wallet button classes
+
+##### Parameters
+
+###### params
+
+###### connectorsCount
+
+`number`
+
+##### Returns
+
+`string`
+
+#### transactionsButton()?
+
+> `optional` **transactionsButton**: () => `string`
+
+Function to generate transactions button classes
+
+##### Returns
+
+`string`
+
+#### transactionsSection()?
+
+> `optional` **transactionsSection**: (`params`) => `string`
+
+Function to generate transactions section classes
+
+##### Parameters
+
+###### params
+
+###### hasPendingTransactions
+
+`boolean`
+
+###### transactionsCount
+
+`number`
+
+##### Returns
+
+`string`
+
+#### walletAvatar()?
+
+> `optional` **walletAvatar**: (`params`) => `string`
+
+Function to generate wallet avatar classes
+
+##### Parameters
+
+###### params
+
+###### ensAvatar
+
+`string` \| `null`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L127)
+
+Custom components
+
+#### AvatarSection?
+
+> `optional` **AvatarSection**: `ComponentType`\<`AvatarSectionProps`\>
+
+Custom avatar section component
+
+#### InfoSection?
+
+> `optional` **InfoSection**: `ComponentType`\<`InfoSectionProps`\>
+
+Custom info section component
+
+#### LoadingIndicator?
+
+> `optional` **LoadingIndicator**: `ComponentType`\<`LoadingIndicatorProps`\>
+
+Custom loading indicator component
+
+#### NameAndBalance?
+
+> `optional` **NameAndBalance**: `ComponentType`\<[`ConnectedModalNameAndBalanceProps`](../interfaces/ConnectedModalNameAndBalanceProps.md)\>
+
+Custom name and balance component
+
+#### NoTransactionsIndicator?
+
+> `optional` **NoTransactionsIndicator**: `ComponentType`\<`NoTransactionsIndicatorProps`\>
+
+Custom no transactions indicator component
+
+#### SwitchNetworkButton?
+
+> `optional` **SwitchNetworkButton**: `ComponentType`\<[`IconButtonProps`](../interfaces/IconButtonProps.md)\>
+
+Custom switch network icon button component
+
+#### SwitchWalletButton?
+
+> `optional` **SwitchWalletButton**: `ComponentType`\<[`IconButtonProps`](../interfaces/IconButtonProps.md)\>
+
+Custom switch wallet icon button component
+
+#### TransactionsSection?
+
+> `optional` **TransactionsSection**: `ComponentType`\<`TransactionsSectionProps`\>
+
+Custom transactions section component
+
+#### WalletAvatar?
+
+> `optional` **WalletAvatar**: `ComponentType`\<[`WalletAvatarProps`](../interfaces/WalletAvatarProps.md)\>
+
+Custom wallet avatar component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:251](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L251)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels for different states
+
+##### ariaLabels.avatarSection?
+
+> `optional` **avatarSection**: `string`
+
+##### ariaLabels.container?
+
+> `optional` **container**: `string`
+
+##### ariaLabels.infoSection?
+
+> `optional` **infoSection**: `string`
+
+##### ariaLabels.loadingIndicator?
+
+> `optional` **loadingIndicator**: `string`
+
+##### ariaLabels.noTransactions?
+
+> `optional` **noTransactions**: `string`
+
+##### ariaLabels.transactionsSection?
+
+> `optional` **transactionsSection**: `string`
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+#### showLoadingIndicators?
+
+> `optional` **showLoadingIndicators**: `boolean`
+
+Whether to show loading indicators
+
+#### showPendingIndicators?
+
+> `optional` **showPendingIndicators**: `boolean`
+
+Whether to show pending transaction indicators
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:109](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L109)
+
+Override root container props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:227](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L227)
+
+Custom event handlers
+
+#### onLoadingStateChange()?
+
+> `optional` **onLoadingStateChange**: (`isLoading`) => `void`
+
+Custom handler for loading state changes
+
+##### Parameters
+
+###### isLoading
+
+`boolean`
+
+##### Returns
+
+`void`
+
+#### onSwitchNetwork()?
+
+> `optional` **onSwitchNetwork**: () => `void`
+
+Custom handler for network switch
+
+##### Returns
+
+`void`
+
+#### onSwitchWallet()?
+
+> `optional` **onSwitchWallet**: () => `void`
+
+Custom handler for wallet switch
+
+##### Returns
+
+`void`
+
+#### onTransactionsUpdate()?
+
+> `optional` **onTransactionsUpdate**: (`transactions`, `pendingCount`) => `void`
+
+Custom handler for transaction updates
+
+##### Parameters
+
+###### transactions
+
+`Transaction`[]
+
+###### pendingCount
+
+`number`
+
+##### Returns
+
+`void`
+
+#### onViewTransactions()?
+
+> `optional` **onViewTransactions**: () => `void`
+
+Custom handler for view transactions
+
+##### Returns
+
+`void`
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L182)
+
+Custom animation variants
+
+#### avatarSection?
+
+> `optional` **avatarSection**: `Variants`
+
+Avatar section animation variants
+
+#### container?
+
+> `optional` **container**: `Variants`
+
+Container animation variants
+
+#### infoSection?
+
+> `optional` **infoSection**: `Variants`
+
+Info section animation variants
+
+#### loading?
+
+> `optional` **loading**: `Variants`
+
+Loading animation variants
+
+#### transactions?
+
+> `optional` **transactions**: `Variants`
+
+Transactions animation variants

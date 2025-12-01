@@ -1,0 +1,195 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# RecentBadgeCustomization
+
+> **RecentBadgeCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L82)
+
+Customization options for RecentBadge component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L95)
+
+Custom class name generators
+
+#### animatedGradient()?
+
+> `optional` **animatedGradient**: () => `string`
+
+Function to generate animated gradient classes
+
+##### Returns
+
+`string`
+
+#### backgroundOverlay()?
+
+> `optional` **backgroundOverlay**: () => `string`
+
+Function to generate background overlay classes
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### animated
+
+`boolean`
+
+###### isTouch
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### content()?
+
+> `optional` **content**: () => `string`
+
+Function to generate content classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L84)
+
+Custom components
+
+#### AnimatedGradient?
+
+> `optional` **AnimatedGradient**: `ComponentType`\<`AnimatedGradientProps`\>
+
+Custom animated gradient component
+
+#### BackgroundOverlay?
+
+> `optional` **BackgroundOverlay**: `ComponentType`\<`BackgroundOverlayProps`\>
+
+Custom background overlay
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### Content?
+
+> `optional` **Content**: `ComponentType`\<`ContentProps`\>
+
+Custom content wrapper
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L117)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation**: `Partial`\<[`BadgeAnimationConfig`](../interfaces/BadgeAnimationConfig.md)\>
+
+Custom animation configuration
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container?
+
+> `optional` **container**: `string`
+
+#### gradient?
+
+> `optional` **gradient**: `Partial`\<[`BadgeGradientConfig`](../interfaces/BadgeGradientConfig.md)\>
+
+Custom gradient configuration
+
+#### touchDevice?
+
+> `optional` **touchDevice**: `boolean`
+
+Touch device detection override
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L106)
+
+Custom event handlers
+
+#### onAnimationComplete()?
+
+> `optional` **onAnimationComplete**: () => `void`
+
+Custom handler for animation complete
+
+##### Returns
+
+`void`
+
+#### onAnimationStart()?
+
+> `optional` **onAnimationStart**: () => `void`
+
+Custom handler for animation start
+
+##### Returns
+
+`void`
+
+#### onMount()?
+
+> `optional` **onMount**: () => `void`
+
+Custom handler for component mount
+
+##### Returns
+
+`void`
+
+#### onUnmount()?
+
+> `optional` **onUnmount**: () => `void`
+
+Custom handler for component unmount
+
+##### Returns
+
+`void`

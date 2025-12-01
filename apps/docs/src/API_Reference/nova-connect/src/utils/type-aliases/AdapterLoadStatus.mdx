@@ -1,0 +1,44 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# AdapterLoadStatus
+
+> **AdapterLoadStatus** = `"idle"` \| `"loading"` \| `"loaded"` \| `"error"`
+
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:155](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/adapters/types.ts#L155)
+
+Represents the current loading state of a blockchain adapter.
+
+The adapter lifecycle progresses through these states:
+- `idle`: Adapter hasn't been requested yet
+- `loading`: Adapter is currently being loaded/initialized
+- `loaded`: Adapter is successfully loaded and ready for use
+- `error`: Adapter failed to load due to missing dependencies or errors
+
+## Since
+
+1.0.0
+
+## Example
+
+```typescript
+import { adapterRegistry } from './registry';
+
+const status = adapterRegistry.getAdapterStatus(OrbitAdapter.EVM);
+
+switch (status) {
+  case 'idle':
+    console.log('EVM adapter not yet requested');
+    break;
+  case 'loading':
+    console.log('EVM adapter is loading...');
+    break;
+  case 'loaded':
+    console.log('EVM adapter ready for use');
+    break;
+  case 'error':
+    console.log('EVM adapter failed to load');
+    break;
+}
+```

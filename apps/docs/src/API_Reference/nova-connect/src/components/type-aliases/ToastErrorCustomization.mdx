@@ -1,0 +1,223 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ToastErrorCustomization
+
+> **ToastErrorCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L40)
+
+Customization options for ToastError component
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"button"`\>, `"style"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L44)
+
+Override button element props
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L57)
+
+Custom class name generators
+
+#### button()?
+
+> `optional` **button**: (`params`) => `string`
+
+Function to generate button classes
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### isCopied
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### hasError
+
+`boolean`
+
+###### hasTitle
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### description()?
+
+> `optional` **description**: (`params`) => `string`
+
+Function to generate description classes
+
+##### Parameters
+
+###### params
+
+###### rawError
+
+`string`
+
+##### Returns
+
+`string`
+
+#### icon()?
+
+> `optional` **icon**: (`params`) => `string`
+
+Function to generate icon classes
+
+##### Parameters
+
+###### params
+
+###### isCopied
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### title()?
+
+> `optional` **title**: (`params`) => `string`
+
+Function to generate title classes
+
+##### Parameters
+
+###### params
+
+###### title
+
+`string`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L46)
+
+Custom components
+
+#### ButtonContent?
+
+> `optional` **ButtonContent**: `ComponentType`\<`CustomButtonContentProps`\>
+
+Custom button content component
+
+#### Description?
+
+> `optional` **Description**: `ComponentType`\<`CustomDescriptionProps`\>
+
+Custom description component
+
+#### Icon?
+
+> `optional` **Icon**: `ComponentType`\<`CustomIconProps`\>
+
+Custom icon component
+
+#### Title?
+
+> `optional` **Title**: `ComponentType`\<`CustomTitleProps`\>
+
+Custom title component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"style"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L42)
+
+Override container element props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ToastError.tsx#L70)
+
+Custom event handlers
+
+#### onClick()?
+
+> `optional` **onClick**: (`originalHandler`, `event`) => `void`
+
+Custom click handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onKeyDown()?
+
+> `optional` **onKeyDown**: (`originalHandler`, `event`) => `void`
+
+Custom keydown handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`React.KeyboardEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`

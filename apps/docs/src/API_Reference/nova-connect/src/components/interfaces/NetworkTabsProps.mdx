@@ -1,0 +1,69 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NetworkTabsProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L180)
+
+Props for the NetworkTabs component
+
+## Properties
+
+### className?
+
+> `optional` **className**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:188](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L188)
+
+Custom CSS classes for styling the container
+
+***
+
+### customization?
+
+> `optional` **customization**: [`NetworkTabsCustomization`](../type-aliases/NetworkTabsCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:190](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L190)
+
+Customization options
+
+***
+
+### networks
+
+> **networks**: `OrbitAdapter`[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L182)
+
+Array of available network adapters
+
+***
+
+### onSelect()
+
+> **onSelect**: (`adapter`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:186](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L186)
+
+Handler for network selection changes
+
+#### Parameters
+
+##### adapter
+
+`OrbitAdapter` | `undefined`
+
+#### Returns
+
+`void`
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:184](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L184)
+
+Currently selected network adapter (undefined means "All" is selected)

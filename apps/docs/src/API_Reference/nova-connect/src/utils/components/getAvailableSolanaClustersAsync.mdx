@@ -1,0 +1,39 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getAvailableSolanaClustersAsync()
+
+> **getAvailableSolanaClustersAsync**(): `Promise`\<`string`[]\>
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:346](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L346)
+
+Retrieves all available Solana clusters from the current configuration.
+
+This function loads the Solana adapter and queries it for all configured
+cluster names. Useful for populating UI dropdowns or validating cluster
+availability before connection attempts.
+
+## Returns
+
+`Promise`\<`string`[]\>
+
+Promise resolving to array of available cluster names
+
+## Example
+
+```typescript
+const clusters = await getAvailableSolanaClusters();
+console.log('Available clusters:', clusters);
+// Might log: ['mainnet-beta', 'devnet', 'testnet', 'localnet']
+
+// Use for UI population
+const clusterOptions = clusters.map(cluster => ({
+  value: cluster,
+  label: cluster.replace('-', ' ').toUpperCase()
+}));
+```
+
+## Since
+
+1.0.0

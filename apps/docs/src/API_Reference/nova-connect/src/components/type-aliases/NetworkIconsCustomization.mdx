@@ -1,0 +1,111 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NetworkIconsCustomization
+
+> **NetworkIconsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L88)
+
+NetworkIcons customization options
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L99)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### cardData
+
+[`ConnectCardData`](../interfaces/ConnectCardData.md)
+
+##### Returns
+
+`string`
+
+#### networkIcon()?
+
+> `optional` **networkIcon**: (`params`) => `string`
+
+Function to generate network icon classes
+
+##### Parameters
+
+###### params
+
+###### cardData
+
+[`ConnectCardData`](../interfaces/ConnectCardData.md)
+
+###### networkData
+
+`NetworkData`
+
+##### Returns
+
+`string`
+
+#### overflowIndicator()?
+
+> `optional` **overflowIndicator**: (`params`) => `string`
+
+Function to generate overflow indicator classes
+
+##### Parameters
+
+###### params
+
+###### cardData
+
+[`ConnectCardData`](../interfaces/ConnectCardData.md)
+
+###### overflowCount
+
+`number`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L90)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`NetworkIconsContainerProps`\>
+
+Custom container wrapper
+
+#### NetworkIcon?
+
+> `optional` **NetworkIcon**: `ComponentType`\<`NetworkIconProps`\>
+
+Custom network icon
+
+#### OverflowIndicator?
+
+> `optional` **OverflowIndicator**: `ComponentType`\<`NetworkOverflowProps`\>
+
+Custom overflow indicator

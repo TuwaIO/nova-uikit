@@ -6,7 +6,9 @@
     "packages/nova-transactions/src/providers/index.ts",
     "packages/nova-connect/src/hooks/index.ts",
     "packages/nova-connect/src/evm/index.ts",
-    "packages/nova-connect/src/solana/index.ts"
+    "packages/nova-connect/src/solana/index.ts",
+    "packages/nova-connect/src/utils/index.ts",
+    "packages/nova-connect/src/components/index.ts"
   ],
   "entryPointStrategy": "expand",
   "tsconfig": "tsconfig.json",

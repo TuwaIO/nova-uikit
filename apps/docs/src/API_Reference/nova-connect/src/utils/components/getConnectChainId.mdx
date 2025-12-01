@@ -1,0 +1,26 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getConnectChainId()
+
+> **getConnectChainId**(`params`): `string` \| `number`
+
+Defined in: [packages/nova-connect/src/utils/getConnectedChainId.ts:30](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getConnectedChainId.ts#L30)
+
+Gets the appropriate chain ID for connecting based on the selected adapter.
+Returns the first available chain for the adapter, or a sensible default.
+
+## Parameters
+
+### params
+
+`object` & `AllChainConfigs`
+
+Configuration object
+
+## Returns
+
+`string` \| `number`
+
+Chain ID (number for EVM/Starknet, string for Solana)

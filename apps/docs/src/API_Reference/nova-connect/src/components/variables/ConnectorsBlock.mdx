@@ -1,0 +1,92 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectorsBlock
+
+> `const` **ConnectorsBlock**: `NamedExoticComponent`\<`ConnectorsBlockProps` & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:349](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L349)
+
+ConnectorsBlock component - Displays a grouped section of wallet connectors with full customization
+
+This component renders a section of wallet connectors with:
+- Responsive layout adapting to touch/mouse interfaces
+- Support for multi-network wallet selection
+- Automatic connection handling for single-network wallets
+- Recent wallet indicators and prioritization
+- Full accessibility support with proper labeling
+- Error handling and connection retry logic
+- Complete customization of all child components and styling
+
+Layout features:
+- Touch devices: Horizontal scrolling layout with cards
+- Mouse devices: Vertical stacked layout for better readability
+- Dynamic title styling based on section importance
+- Consistent spacing and visual hierarchy
+- Customizable layout parameters and responsive behavior
+
+Connection flow:
+- Single adapter: Direct connection attempt
+- Multiple adapters without selection: Triggers network selection
+- Selected adapter: Uses specific adapter for connection
+- Recent wallets: Visual indicators for previously used wallets
+- Error handling with retry mechanisms
+
+Accessibility features:
+- Semantic heading structure with proper levels
+- Group labeling for related connector sets
+- Screen reader friendly section descriptions
+- Proper focus management and keyboard navigation
+- ARIA live regions for dynamic content updates
+
+## Examples
+
+```tsx
+<ConnectorsBlock
+  selectedAdapter={OrbitAdapter.EVM}
+  connectors={installedConnectors}
+  title="Installed"
+  isTitleBold={true}
+  isOnlyOneNetwork={false}
+  onClick={(group) => handleWalletSelection(group)}
+  appChains={appConfiguration}
+  solanaRPCUrls={rpcConfig}
+  store={walletStore}
+/>
+```
+
+```tsx
+<ConnectorsBlock
+  selectedAdapter={undefined}
+  connectors={popularConnectors}
+  title="Popular"
+  isTitleBold={false}
+  isOnlyOneNetwork={true}
+  onClick={(group) => initiateConnection(group)}
+  customization={{
+    components: {
+      Container: CustomConnectorsContainer,
+      Title: CustomSectionTitle
+    },
+    classNames: {
+      connectorsList: ({ blockData }) =>
+        blockData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
+      connectorItem: ({ itemData, blockData }) =>
+        itemData.isRecent ? 'recent-connector' : 'standard-connector'
+    },
+    handlers: {
+      onConnectorClick: (itemData, blockData, originalHandler) => {
+        analytics.track('connector_clicked', { wallet: itemData.name });
+        originalHandler(itemData.group);
+      }
+    },
+    connectCard: {
+      classNames: {
+        container: ({ cardData }) =>
+          cardData.isRecent ? 'bg-accent' : 'bg-default'
+      }
+    }
+  }}
+/>
+```

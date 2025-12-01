@@ -1,0 +1,39 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getAllAdaptersStatus()
+
+> **getAllAdaptersStatus**(): `Record`\<`string`, [`AdapterLoadStatus`](../type-aliases/AdapterLoadStatus.md)\>
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:546](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L546)
+
+Gets comprehensive status information for all registered adapters.
+
+Returns a complete overview of all adapter states, useful for debugging,
+monitoring, or displaying system status in admin interfaces.
+
+## Returns
+
+`Record`\<`string`, [`AdapterLoadStatus`](../type-aliases/AdapterLoadStatus.md)\>
+
+Record mapping adapter types to their current loading status
+
+## Example
+
+```typescript
+const allStatuses = getAllAdaptersStatus();
+console.log('System overview:', allStatuses);
+// Output: { "evm": "loaded", "solana": "loading", "starknet": "idle" }
+
+// Use for system health monitoring
+const loadedAdapters = Object.entries(allStatuses)
+  .filter(([_, status]) => status === 'loaded')
+  .map(([type, _]) => type);
+
+console.log('Available blockchain support:', loadedAdapters);
+```
+
+## Since
+
+1.0.0

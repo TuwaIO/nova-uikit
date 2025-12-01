@@ -1,0 +1,283 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectButtonCustomization
+
+> **ConnectButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L65)
+
+Customization options for ConnectButton component
+
+## Properties
+
+### childComponents?
+
+> `optional` **childComponents**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L119)
+
+Child component customizations
+
+#### chainSelector?
+
+> `optional` **chainSelector**: [`ChainSelectorCustomization`](ChainSelectorCustomization.md)
+
+ChainSelector customization
+
+#### connectedContent?
+
+> `optional` **connectedContent**: [`ConnectedContentCustomization`](ConnectedContentCustomization.md)
+
+ConnectedContent customization
+
+#### waitForConnectionContent?
+
+> `optional` **waitForConnectionContent**: [`WaitForConnectionContentCustomization`](WaitForConnectionContentCustomization.md)
+
+WaitForConnectionContent customization
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L80)
+
+Custom class name generators
+
+#### button()?
+
+> `optional` **button**: (`params`) => `string`
+
+Function to generate button classes
+
+##### Parameters
+
+###### params
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+##### Returns
+
+`string`
+
+#### buttonContainer()?
+
+> `optional` **buttonContainer**: (`params`) => `string`
+
+Function to generate button container classes
+
+##### Parameters
+
+###### params
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+##### Returns
+
+`string`
+
+#### navigation()?
+
+> `optional` **navigation**: (`params`) => `string`
+
+Function to generate navigation classes
+
+##### Parameters
+
+###### params
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L67)
+
+Custom components
+
+#### Button?
+
+> `optional` **Button**: `ComponentType`\<`ButtonProps`\>
+
+Custom button element
+
+#### ButtonContainer?
+
+> `optional` **ButtonContainer**: `ComponentType`\<`ButtonContainerProps`\>
+
+Custom button container with motion
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container div
+
+#### MotionDiv?
+
+> `optional` **MotionDiv**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
+
+Custom motion div
+
+#### Navigation?
+
+> `optional` **Navigation**: `ComponentType`\<`NavigationProps`\>
+
+Custom navigation wrapper
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L102)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation**: `object`
+
+Animation configuration
+
+##### animation.disabled?
+
+> `optional` **disabled**: `boolean`
+
+Disable animations
+
+##### animation.layoutDuration?
+
+> `optional` **layoutDuration**: `number`
+
+Layout transition duration
+
+##### animation.layoutEase?
+
+> `optional` **layoutEase**: \[`number`, `number`, `number`, `number`\]
+
+Layout transition easing
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.button()?
+
+> `optional` **button**: (`buttonData`) => `string`
+
+###### Parameters
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.navigation()?
+
+> `optional` **navigation**: (`buttonData`) => `string`
+
+###### Parameters
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+###### Returns
+
+`string`
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L91)
+
+Custom event handlers
+
+#### onButtonClick()?
+
+> `optional` **onButtonClick**: (`buttonData`, `originalHandler`) => `void`
+
+Custom button click handler
+
+##### Parameters
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+###### originalHandler
+
+() => `void`
+
+##### Returns
+
+`void`
+
+#### onKeyDown()?
+
+> `optional` **onKeyDown**: (`event`, `buttonData`, `originalHandler`) => `void`
+
+Custom key down handler
+
+##### Parameters
+
+###### event
+
+`React.KeyboardEvent`
+
+###### buttonData
+
+[`ConnectButtonData`](../interfaces/ConnectButtonData.md)
+
+###### originalHandler
+
+(`event`) => `void`
+
+##### Returns
+
+`void`

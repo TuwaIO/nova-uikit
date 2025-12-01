@@ -1,0 +1,343 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectorsBlockCustomization
+
+> **ConnectorsBlockCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:113](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L113)
+
+Customization options for ConnectorsBlock component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L128)
+
+Custom class name generators
+
+#### connectorItem()?
+
+> `optional` **connectorItem**: (`params`) => `string`
+
+Function to generate connector item classes
+
+##### Parameters
+
+###### params
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+###### itemData
+
+[`ConnectorItemData`](../interfaces/ConnectorItemData.md)
+
+##### Returns
+
+`string`
+
+#### connectorsList()?
+
+> `optional` **connectorsList**: (`params`) => `string`
+
+Function to generate connectors list classes
+
+##### Parameters
+
+###### params
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`string`
+
+#### emptyState()?
+
+> `optional` **emptyState**: (`params`) => `string`
+
+Function to generate empty state classes
+
+##### Parameters
+
+###### params
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`string`
+
+#### title()?
+
+> `optional` **title**: (`params`) => `string`
+
+Function to generate title classes
+
+##### Parameters
+
+###### params
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L115)
+
+Custom components
+
+#### ConnectorItem?
+
+> `optional` **ConnectorItem**: `ComponentType`\<`ConnectorItemProps`\>
+
+Custom connector item wrapper
+
+#### ConnectorsList?
+
+> `optional` **ConnectorsList**: `ComponentType`\<`ConnectorsListProps`\>
+
+Custom connectors list
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### EmptyState?
+
+> `optional` **EmptyState**: `ComponentType`\<`EmptyStateProps`\>
+
+Custom empty state component
+
+#### Title?
+
+> `optional` **Title**: `ComponentType`\<`TitleProps`\>
+
+Custom title component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L154)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.connectorsList()?
+
+> `optional` **connectorsList**: (`blockData`) => `string`
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.container()?
+
+> `optional` **container**: (`blockData`) => `string`
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.emptyState()?
+
+> `optional` **emptyState**: (`blockData`) => `string`
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+###### Returns
+
+`string`
+
+#### features?
+
+> `optional` **features**: `object`
+
+Show/hide features
+
+##### features.showEmptyState?
+
+> `optional` **showEmptyState**: `boolean`
+
+Whether to show empty state
+
+##### features.showRecentIndicators?
+
+> `optional` **showRecentIndicators**: `boolean`
+
+Whether to show recent indicators
+
+##### features.showTitleWhenEmpty?
+
+> `optional` **showTitleWhenEmpty**: `boolean`
+
+Whether to show title when no connectors
+
+#### layout?
+
+> `optional` **layout**: `object`
+
+Custom layout configuration
+
+##### layout.mouseClasses?
+
+> `optional` **mouseClasses**: `string`[]
+
+Custom mouse layout classes
+
+##### layout.mouseGap?
+
+> `optional` **mouseGap**: `string`
+
+Mouse device gap between items
+
+##### layout.touchClasses?
+
+> `optional` **touchClasses**: `string`[]
+
+Custom touch layout classes
+
+##### layout.touchGap?
+
+> `optional` **touchGap**: `string`
+
+Touch device gap between items
+
+***
+
+### connectCard?
+
+> `optional` **connectCard**: [`ConnectCardCustomization`](ConnectCardCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:183](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L183)
+
+ConnectCard customization for each connector card
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L141)
+
+Custom event handlers
+
+#### onConnectorClick()?
+
+> `optional` **onConnectorClick**: (`itemData`, `blockData`, `originalHandler`) => `void`
+
+Custom connector click handler
+
+##### Parameters
+
+###### itemData
+
+[`ConnectorItemData`](../interfaces/ConnectorItemData.md)
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+###### originalHandler
+
+(`group`) => `Promise`\<`void`\>
+
+##### Returns
+
+`void`
+
+#### onEmptyStateAction()?
+
+> `optional` **onEmptyStateAction**: (`blockData`) => `void`
+
+Custom empty state action handler
+
+##### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`void`
+
+#### onTitleClick()?
+
+> `optional` **onTitleClick**: (`blockData`) => `void`
+
+Custom title click handler
+
+##### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](../interfaces/ConnectorsBlockData.md)
+
+##### Returns
+
+`void`

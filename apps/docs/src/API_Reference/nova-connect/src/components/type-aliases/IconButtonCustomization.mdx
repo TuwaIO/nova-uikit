@@ -1,0 +1,527 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# IconButtonCustomization
+
+> **IconButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L63)
+
+Customization options for IconButton component
+
+## Properties
+
+### accessibility?
+
+> `optional` **accessibility**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L160)
+
+Custom aria labels and accessibility
+
+#### ariaDescribedBy?
+
+> `optional` **ariaDescribedBy**: `string`
+
+Custom aria-describedby
+
+#### ariaLabel()?
+
+> `optional` **ariaLabel**: (`params`) => `string`
+
+Custom aria-label generator
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### isClickable
+
+`boolean`
+
+###### loading
+
+`boolean`
+
+###### walletChainId?
+
+`string` \| `number`
+
+###### walletName?
+
+`string`
+
+##### Returns
+
+`string`
+
+#### role?
+
+> `optional` **role**: `string`
+
+Custom role attribute
+
+#### tooltip()?
+
+> `optional` **tooltip**: (`params`) => `string`
+
+Custom tooltip generator
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### isClickable
+
+`boolean`
+
+###### loading
+
+`boolean`
+
+###### walletChainId?
+
+`string` \| `number`
+
+###### walletName?
+
+`string`
+
+##### Returns
+
+`string`
+
+***
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L128)
+
+Custom animation configuration
+
+#### button?
+
+> `optional` **button**: `object`
+
+Button animation configuration
+
+##### button.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### button.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### button.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### chevron?
+
+> `optional` **chevron**: `object`
+
+Chevron animation configuration
+
+##### chevron.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### chevron.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### chevron.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### buttonProps?
+
+> `optional` **buttonProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"button"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L65)
+
+Override button element props
+
+***
+
+### childCustomizations?
+
+> `optional` **childCustomizations**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:116](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L116)
+
+Customization options for child components
+
+#### walletIcon?
+
+> `optional` **walletIcon**: [`WalletIconCustomization`](WalletIconCustomization.md)
+
+WalletIcon customization
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:96](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L96)
+
+Custom class name generators
+
+#### button()?
+
+> `optional` **button**: (`params`) => `string`
+
+Function to generate button classes
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### hasMultipleIcons
+
+`boolean`
+
+###### isClickable
+
+`boolean`
+
+###### loading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### chainIconContainer()?
+
+> `optional` **chainIconContainer**: (`params`) => `string`
+
+Function to generate chain icon container classes
+
+##### Parameters
+
+###### params
+
+###### hasChainIcon
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### chevronContainer()?
+
+> `optional` **chevronContainer**: (`params`) => `string`
+
+Function to generate chevron container classes
+
+##### Parameters
+
+###### params
+
+###### isClickable
+
+`boolean`
+
+###### isOpen
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### loadingOverlay()?
+
+> `optional` **loadingOverlay**: (`params`) => `string`
+
+Function to generate loading overlay classes
+
+##### Parameters
+
+###### params
+
+###### loading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### loadingSpinner()?
+
+> `optional` **loadingSpinner**: () => `string`
+
+Function to generate loading spinner classes
+
+##### Returns
+
+`string`
+
+#### walletIconContainer()?
+
+> `optional` **walletIconContainer**: (`params`) => `string`
+
+Function to generate wallet icon container classes
+
+##### Parameters
+
+###### params
+
+###### hasWalletIcon
+
+`boolean`
+
+###### showLoading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:83](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L83)
+
+Custom components
+
+#### ButtonContent?
+
+> `optional` **ButtonContent**: `ComponentType`\<`CustomButtonContentProps`\>
+
+Custom button content wrapper component
+
+#### ChainIconContainer?
+
+> `optional` **ChainIconContainer**: `ComponentType`\<`CustomChainIconContainerProps`\>
+
+Custom chain icon container component
+
+#### ChevronContainer?
+
+> `optional` **ChevronContainer**: `ComponentType`\<`CustomChevronContainerProps`\>
+
+Custom chevron container component
+
+#### LoadingOverlay?
+
+> `optional` **LoadingOverlay**: `ComponentType`\<`CustomLoadingOverlayProps`\>
+
+Custom loading overlay component
+
+#### WalletIconContainer?
+
+> `optional` **WalletIconContainer**: `ComponentType`\<`CustomWalletIconContainerProps`\>
+
+Custom wallet icon container component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:183](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L183)
+
+Configuration options
+
+#### buttonTestId?
+
+> `optional` **buttonTestId**: `string`
+
+Custom button test id
+
+#### chainIdFormatter()?
+
+> `optional` **chainIdFormatter**: (`chainId`) => `string` \| `number`
+
+Custom chain ID formatting
+
+##### Parameters
+
+###### chainId
+
+`string` | `number`
+
+##### Returns
+
+`string` \| `number`
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+#### showChainIcon?
+
+> `optional` **showChainIcon**: `boolean`
+
+Whether to show chain icon
+
+#### showChevron?
+
+> `optional` **showChevron**: `boolean`
+
+Whether to show chevron
+
+#### showLoadingOverlay?
+
+> `optional` **showLoadingOverlay**: `boolean`
+
+Whether to show loading overlay
+
+#### showWalletIcon?
+
+> `optional` **showWalletIcon**: `boolean`
+
+Whether to show wallet icon
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L149)
+
+Custom event handlers
+
+#### onBlur()?
+
+> `optional` **onBlur**: (`event`) => `void`
+
+Custom handler for button blur
+
+##### Parameters
+
+###### event
+
+`React.FocusEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onClick()?
+
+> `optional` **onClick**: (`originalHandler`, `event`) => `void`
+
+Custom handler for button click
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onFocus()?
+
+> `optional` **onFocus**: (`event`) => `void`
+
+Custom handler for button focus
+
+##### Parameters
+
+###### event
+
+`React.FocusEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onHover()?
+
+> `optional` **onHover**: (`isHovering`, `event`) => `void`
+
+Custom handler for button hover
+
+##### Parameters
+
+###### isHovering
+
+`boolean`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:121](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L121)
+
+Custom animation variants
+
+#### button?
+
+> `optional` **button**: `Variants`
+
+Button animation variants
+
+#### chevron?
+
+> `optional` **chevron**: `Variants`
+
+Chevron animation variants

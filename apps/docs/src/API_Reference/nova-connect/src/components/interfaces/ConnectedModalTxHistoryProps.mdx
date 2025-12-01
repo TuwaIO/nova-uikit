@@ -1,0 +1,71 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalTxHistoryProps
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L201)
+
+Props for the ConnectedModalTxHistory component
+
+## Extends
+
+- `Pick`\<[`NovaConnectProviderProps`](../../hooks/interfaces/NovaConnectProviderProps.md), `"transactionPool"` \| `"pulsarAdapter"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L206)
+
+Custom aria-label for the container
+
+***
+
+### className?
+
+> `optional` **className**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:204](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L204)
+
+Additional CSS classes for the container
+
+***
+
+### customization?
+
+> `optional` **customization**: [`ConnectedModalTxHistoryCustomization`](../type-aliases/ConnectedModalTxHistoryCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L208)
+
+Customization options
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:17](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/hooks/useNovaConnect.ts#L17)
+
+Pulsar adapter(s) for transaction handling
+
+#### Inherited from
+
+`Pick.pulsarAdapter`
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:15](https://github.com/TuwaIO/nova-uikit/blob/a65039bc5aa9af003026a71a72b20e52ba5f8bed/packages/nova-connect/src/hooks/useNovaConnect.ts#L15)
+
+Transaction pool for pending transactions display
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](../../hooks/interfaces/NovaConnectProviderProps.md).[`transactionPool`](../../hooks/interfaces/NovaConnectProviderProps.md#transactionpool)
