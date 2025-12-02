@@ -924,6 +924,10 @@ export const ConnectModal = memo<ConnectModalProps>(
                   return;
                 impersonatedHelpers.setImpersonated(trimmedAddress);
                 setConnectModalContentType('connecting');
+                await handleConnect(
+                  getConnectorTypeFromName(selectedAdapter ?? OrbitAdapter.EVM, activeConnector ?? '') as ConnectorType,
+                  selectedAdapter ?? OrbitAdapter.EVM,
+                );
               }
             },
           };
