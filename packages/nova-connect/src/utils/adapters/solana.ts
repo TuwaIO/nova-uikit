@@ -34,7 +34,7 @@ interface SolanaUtilsModule {
 async function getSolanaUtils(): Promise<SolanaUtilsModule | null> {
   try {
     // Dynamic import of Solana utilities - fails gracefully if package not installed
-    const solanaUtils = await import('../../solana/utils');
+    const solanaUtils = await import('../../solana');
     return solanaUtils;
   } catch (error) {
     console.warn('Solana utilities not available:', error);
@@ -180,7 +180,7 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
  */
 export async function isSolanaAdapterAvailable(): Promise<boolean> {
   try {
-    await import('../../solana/utils');
+    await import('../../solana');
     return true;
   } catch {
     return false;

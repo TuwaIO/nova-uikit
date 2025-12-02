@@ -3,6 +3,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isAddress } from 'viem';
 
@@ -44,6 +45,7 @@ type InputProps = {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
+  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   'aria-describedby'?: string;
   'aria-invalid'?: 'true' | 'false';
@@ -89,13 +91,17 @@ export type ImpersonateFormCustomization = {
   /** Custom event handlers */
   handlers?: {
     /** Custom handler for input change (called after default logic) */
-    onInputChange?: (value: string) => void;
+    onInputChange?: (displayValue: string, resolvedAddress: string | null) => void;
     /** Custom handler for input blur (called after default logic) */
-    onInputBlur?: (value: string) => void;
+    onInputBlur?: (displayValue: string, resolvedAddress: string | null) => void;
+    /** Custom handler for paste events */
+    onInputPaste?: (displayValue: string, resolvedAddress: string | null) => void;
     /** Custom handler for validation start */
     onValidationStart?: (value: string) => void;
     /** Custom handler for validation complete */
     onValidationComplete?: (value: string, error: string | null) => void;
+    /** Custom handler for resolved address */
+    onAddressResolved?: (originalValue: string, resolvedAddress: string) => void;
     /** Custom handler for component mount */
     onMount?: () => void;
     /** Custom handler for component unmount */
@@ -123,6 +129,8 @@ export type ImpersonateFormCustomization = {
  * Props for the ImpersonateForm component
  */
 export interface ImpersonateFormProps {
+  /** Currently selected adapter **/
+  selectedAdapter?: OrbitAdapter;
   /** Current impersonated wallet address value */
   impersonatedAddress: string;
   /** Callback to update the impersonated address */
@@ -156,6 +164,7 @@ const DefaultLabel = forwardRef<HTMLLabelElement, LabelProps>(({ children, class
   </label>
 ));
 DefaultLabel.displayName = 'DefaultLabel';
+
 // eslint-disable-next-line
 const DefaultInput = forwardRef<HTMLInputElement, InputProps>(({ className, hasError: _, ...props }, ref) => (
   <input ref={ref} className={className} {...props} />
@@ -172,93 +181,51 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
 /**
+ * Check if a value is an ENS name
+ */
+function isENSName(value: string): boolean {
+  return value.toLowerCase().endsWith('.eth');
+}
+
+/**
+ * Check if a value is an SNS name
+ */
+function isSNSName(value: string): boolean {
+  return value.toLowerCase().endsWith('.sol');
+}
+
+/**
+ * Check if a value is a domain name (ENS or SNS)
+ */
+function isDomainName(value: string): boolean {
+  return isENSName(value) || isSNSName(value);
+}
+
+/**
  * Form component for entering wallet address to impersonate with comprehensive customization
- *
- * This component provides a validated form input with:
- * - Debounced validation with configurable timing
- * - Real-time address format validation using viem's isAddress
- * - Full accessibility support with proper ARIA labeling
- * - Error state management with immediate visual feedback
- * - Touch-friendly design with proper focus states
- * - Full customization of all child components
- * - Comprehensive validation with custom validation support
- *
- * Validation features:
- * - Empty address detection
- * - Invalid address format detection using viem
- * - Connected wallet conflict detection
- * - Custom validation function support
- * - Debounced validation to prevent excessive API calls
- * - Immediate validation on blur for better UX
- *
- * Accessibility features:
- * - Proper form labeling with htmlFor association
- * - ARIA invalid and describedby attributes
- * - Live region for error announcements
- * - Screen reader friendly error messages
- * - Proper focus management
- *
- * @example Basic usage
- * ```tsx
- * <ImpersonateForm
- *   impersonatedAddress={address}
- *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
- * />
- * ```
- *
- * @example With custom validation
- * ```tsx
- * <ImpersonateForm
- *   impersonatedAddress={address}
- *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
- *   customization={{
- *     config: {
- *       validation: {
- *         debounceDelay: 300,
- *         customValidator: (addr) => {
- *           if (addr === '0x...') return 'This address is not allowed';
- *           return null;
- *         }
- *       }
- *     }
- *   }}
- * />
- * ```
- *
- * @example With full customization
- * ```tsx
- * <ImpersonateForm
- *   impersonatedAddress={address}
- *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
- *   customization={{
- *     components: {
- *       Input: CustomInput,
- *       ErrorMessage: CustomErrorMessage
- *     },
- *     classNames: {
- *       input: ({ hasError }) => hasError ? 'custom-error' : 'custom-normal'
- *     },
- *     handlers: {
- *       onValidationComplete: (value, error) => {
- *         console.log('Validation result:', { value, error });
- *       }
- *     }
- *   }}
- * />
- * ```
  */
 export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
-  ({ impersonatedAddress, setImpersonatedAddress, className, customization }, ref) => {
+  ({ impersonatedAddress, setImpersonatedAddress, className, customization, selectedAdapter }, ref) => {
     // Get labels from context
     const labels = useNovaConnectLabels();
 
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
-    const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
-    const resetWalletConnectionError = useSatelliteConnectStore((store) => store.resetWalletConnectionError);
-    const setWalletConnectionError = useSatelliteConnectStore((store) => store.setWalletConnectionError);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+    const connectionError = useSatelliteConnectStore((store) => store.connectionError);
+    const resetConnectionError = useSatelliteConnectStore((store) => store.resetConnectionError);
+    const setConnectionError = useSatelliteConnectStore((store) => store.setConnectionError);
+    const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
+
+    const adapter = useMemo(() => getAdapter(selectedAdapter ?? OrbitAdapter.EVM), [getAdapter, selectedAdapter]);
+
+    // Core state - separated concerns
+    const [inputValue, setInputValue] = useState(''); // What user sees in input
+    const [resolvedAddress, setResolvedAddress] = useState<string | null>(null); // Resolved domain address
+    const [isResolving, setIsResolving] = useState(false);
+    const [hasInteracted, setHasInteracted] = useState(false);
+
+    // Validation timeout ref
+    const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isInitializedRef = useRef(false);
 
     // Extract customization options
     const {
@@ -270,12 +237,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
     const customHandlers = customization?.handlers;
     const customConfig = customization?.config;
-
-    // Local state to track if user has interacted with the field
-    const [hasInteracted, setHasInteracted] = useState(false);
-
-    // Use ref to store timeout ID
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     /**
      * Memoized validation configuration with customization
@@ -289,207 +250,305 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
-     * Generate validation function with proper memoization dependencies
+     * Check if adapter supports domain name resolution
      */
-    const getValidateAddress = useCallback(
-      () =>
-        (address: string): string | null => {
-          // Custom validation first
-          if (validationConfig.customValidator) {
-            const customError = validationConfig.customValidator(address);
-            if (customError) return customError;
-          }
+    const supportsNameResolution = useMemo(() => {
+      return adapter && typeof adapter.getAddress === 'function';
+    }, [adapter]);
 
-          // Standard validations
-          if (!address.trim()) {
-            return labels.impersonateAddressEmpty;
-          }
-          if (!isAddress(address)) {
-            return labels.impersonateAddressNotCorrect;
-          }
-          if (activeWallet?.isConnected) {
-            return labels.impersonateAddressConnected;
-          }
+    /**
+     * Clear validation timeout
+     */
+    const clearValidationTimeout = useCallback(() => {
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+        validationTimeoutRef.current = null;
+      }
+    }, []);
 
+    /**
+     * Resolve domain name to address
+     */
+    const resolveDomainName = useCallback(
+      async (domainName: string): Promise<string | null> => {
+        if (!supportsNameResolution || !adapter?.getAddress) {
           return null;
-        },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+
+        // Validate domain name format based on adapter
+        if (selectedAdapter === OrbitAdapter.EVM && !isENSName(domainName)) {
+          return null;
+        }
+        if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(domainName)) {
+          return null;
+        }
+
+        try {
+          setIsResolving(true);
+          const resolved = await adapter.getAddress(domainName);
+          return resolved;
+        } catch (error) {
+          console.warn(`Failed to resolve ${domainName}:`, error);
+          return null;
+        } finally {
+          setIsResolving(false);
+        }
+      },
+      [supportsNameResolution, adapter, selectedAdapter],
+    );
+
+    /**
+     * Update parent with final address (what goes to localStorage)
+     */
+    const updateParentAddress = useCallback(
+      (displayValue: string, resolved: string | null) => {
+        // Parent always gets the actual address, not the display value
+        const finalAddress = resolved || displayValue;
+        setImpersonatedAddress(finalAddress);
+      },
+      [setImpersonatedAddress],
+    );
+
+    /**
+     * Validate a value and update state accordingly
+     */
+    const validateValue = useCallback(
+      async (value: string): Promise<string | null> => {
+        customHandlers?.onValidationStart?.(value);
+
+        // Custom validation first
+        if (validationConfig.customValidator) {
+          const customError = validationConfig.customValidator(value);
+          if (customError) {
+            customHandlers?.onValidationComplete?.(value, customError);
+            return customError;
+          }
+        }
+
+        // Empty validation
+        if (!value.trim()) {
+          const error = labels.impersonateAddressEmpty;
+          customHandlers?.onValidationComplete?.(value, error);
+          return error;
+        }
+
+        // Domain name validation and resolution
+        if (isDomainName(value)) {
+          if (!supportsNameResolution) {
+            const error = labels.impersonateAddressNotCorrect;
+            customHandlers?.onValidationComplete?.(value, error);
+            return error;
+          }
+
+          // Validate domain format based on adapter
+          if (selectedAdapter === OrbitAdapter.EVM && !isENSName(value)) {
+            const error = labels.impersonateAddressNotCorrect;
+            customHandlers?.onValidationComplete?.(value, error);
+            return error;
+          }
+          if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(value)) {
+            const error = labels.impersonateAddressNotCorrect;
+            customHandlers?.onValidationComplete?.(value, error);
+            return error;
+          }
+
+          // Try to resolve the domain name
+          const resolved = await resolveDomainName(value);
+          if (!resolved) {
+            const error = labels.impersonateAddressNotCorrect;
+            customHandlers?.onValidationComplete?.(value, error);
+            return error;
+          }
+
+          // Update resolved address state and parent
+          setResolvedAddress(resolved);
+          updateParentAddress(value, resolved);
+          customHandlers?.onAddressResolved?.(value, resolved);
+          customHandlers?.onValidationComplete?.(value, null);
+          return null;
+        }
+
+        // Regular address validation
+        if (!isAddress(value)) {
+          const error = labels.impersonateAddressNotCorrect;
+          customHandlers?.onValidationComplete?.(value, error);
+          return error;
+        }
+
+        // Connected wallet check
+        if (activeConnection?.isConnected) {
+          const error = labels.impersonateAddressConnected;
+          customHandlers?.onValidationComplete?.(value, error);
+          return error;
+        }
+
+        // Clear resolved address for regular addresses
+        setResolvedAddress(null);
+        updateParentAddress(value, null);
+        customHandlers?.onValidationComplete?.(value, null);
+        return null;
+      },
       [
+        customHandlers,
         validationConfig.customValidator,
         labels.impersonateAddressEmpty,
         labels.impersonateAddressNotCorrect,
         labels.impersonateAddressConnected,
-        activeWallet?.isConnected,
+        supportsNameResolution,
+        selectedAdapter,
+        resolveDomainName,
+        activeConnection?.isConnected,
+        updateParentAddress,
       ],
     );
 
     /**
-     * Memoized validation function
+     * Trigger validation with debounce control
      */
-    const validateAddress = useMemo(() => getValidateAddress(), [getValidateAddress]);
+    const triggerValidation = useCallback(
+      (value: string, immediate = false) => {
+        clearValidationTimeout();
 
-    /**
-     * Generate debounced validation function with proper memoization dependencies
-     */
-    const getDebouncedValidate = useCallback(
-      () => (address: string) => {
-        if (!validationConfig.validateOnChange) return;
-
-        // Clear previous timeout
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
+        if (!validationConfig.validateOnChange && !immediate) {
+          return;
         }
 
-        customHandlers?.onValidationStart?.(address);
+        const delay = immediate ? 0 : validationConfig.debounceDelay;
 
-        timeoutRef.current = setTimeout(() => {
-          if (hasInteracted) {
-            const error = validateAddress(address);
+        validationTimeoutRef.current = setTimeout(async () => {
+          if (hasInteracted || immediate) {
+            const error = await validateValue(value);
             if (error) {
-              setWalletConnectionError(error);
-            } else if (walletConnectionError) {
-              resetWalletConnectionError();
+              setConnectionError(error);
+            } else {
+              resetConnectionError();
             }
-            customHandlers?.onValidationComplete?.(address, error);
           }
-        }, validationConfig.debounceDelay);
+        }, delay);
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
+        clearValidationTimeout,
         validationConfig.validateOnChange,
         validationConfig.debounceDelay,
         hasInteracted,
-        validateAddress,
-        setWalletConnectionError,
-        resetWalletConnectionError,
-        walletConnectionError,
-        customHandlers?.onValidationStart,
-        customHandlers?.onValidationComplete,
+        validateValue,
+        setConnectionError,
+        resetConnectionError,
       ],
     );
 
     /**
-     * Memoized debounced validation function
+     * Handle input change events
      */
-    const debouncedValidate = useMemo(() => getDebouncedValidate(), [getDebouncedValidate]);
-
-    /**
-     * Generate input change handler with proper memoization dependencies
-     */
-    const getHandleAddressChange = useCallback(
-      () => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
+        setInputValue(newValue);
         setHasInteracted(true);
-        setImpersonatedAddress(newValue);
 
-        // Clear error immediately if field becomes valid
-        if (newValue.trim() && walletConnectionError) {
-          if (isAddress(newValue)) {
-            resetWalletConnectionError();
+        // Clear error immediately if user is typing valid input
+        if (newValue.trim() && connectionError) {
+          if (isAddress(newValue) || isDomainName(newValue)) {
+            resetConnectionError();
           }
         }
 
-        // Trigger debounced validation for invalid cases
-        debouncedValidate(newValue);
+        // Trigger debounced validation
+        triggerValidation(newValue);
 
         // Call custom handler
-        customHandlers?.onInputChange?.(newValue);
+        customHandlers?.onInputChange?.(newValue, resolvedAddress);
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        setImpersonatedAddress,
-        walletConnectionError,
-        resetWalletConnectionError,
-        debouncedValidate,
-        customHandlers?.onInputChange,
-      ],
+      [connectionError, resetConnectionError, triggerValidation, customHandlers, resolvedAddress],
     );
 
     /**
-     * Memoized input change handler
+     * Handle paste events
      */
-    const handleAddressChange = useMemo(() => getHandleAddressChange(), [getHandleAddressChange]);
+    const handlePaste = useCallback(
+      (event: React.ClipboardEvent<HTMLInputElement>) => {
+        const pastedValue = event.clipboardData.getData('text').trim();
 
-    /**
-     * Generate blur handler with proper memoization dependencies
-     */
-    const getHandleBlur = useCallback(
-      () => () => {
-        if (!validationConfig.validateOnBlur) return;
+        if (pastedValue) {
+          // Prevent default paste to avoid double value
+          event.preventDefault();
 
-        setHasInteracted(true);
+          setInputValue(pastedValue);
+          setHasInteracted(true);
 
-        // Clear any pending debounced validation
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
+          // Trigger immediate validation for pasted content
+          triggerValidation(pastedValue, true);
+
+          // Call custom handler
+          customHandlers?.onInputPaste?.(pastedValue, resolvedAddress);
         }
-
-        // Validate immediately on blur without debounce
-        const error = validateAddress(impersonatedAddress);
-        if (error) {
-          setWalletConnectionError(error);
-        } else if (walletConnectionError) {
-          resetWalletConnectionError();
-        }
-
-        // Call custom handler
-        customHandlers?.onInputBlur?.(impersonatedAddress);
-        customHandlers?.onValidationComplete?.(impersonatedAddress, error);
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        validationConfig.validateOnBlur,
-        validateAddress,
-        impersonatedAddress,
-        setWalletConnectionError,
-        resetWalletConnectionError,
-        walletConnectionError,
-        customHandlers?.onInputBlur,
-        customHandlers?.onValidationComplete,
-      ],
+      [triggerValidation, customHandlers, resolvedAddress],
     );
 
     /**
-     * Memoized blur handler
+     * Handle input blur events
      */
-    const handleBlur = useMemo(() => getHandleBlur(), [getHandleBlur]);
+    const handleBlur = useCallback(async () => {
+      if (!validationConfig.validateOnBlur) return;
 
-    /**
-     * Generate container classes with proper memoization dependencies
-     */
-    const getContainerClasses = useCallback(
+      setHasInteracted(true);
+      clearValidationTimeout();
+
+      // Immediate validation on blur
+      const error = await validateValue(inputValue);
+      if (error) {
+        setConnectionError(error);
+      } else {
+        resetConnectionError();
+      }
+
+      // Call custom handler
+      customHandlers?.onInputBlur?.(inputValue, resolvedAddress);
+    }, [
+      validationConfig.validateOnBlur,
+      clearValidationTimeout,
+      validateValue,
+      inputValue,
+      setConnectionError,
+      resetConnectionError,
+      customHandlers,
+      resolvedAddress,
+    ]);
+
+    // Initialize input value from parent prop
+    useEffect(() => {
+      if (!isInitializedRef.current && impersonatedAddress) {
+        setInputValue(impersonatedAddress);
+        isInitializedRef.current = true;
+      }
+    }, [impersonatedAddress]);
+
+    // Handle parent prop changes (but don't override user input)
+    useEffect(() => {
+      if (isInitializedRef.current && impersonatedAddress && !hasInteracted) {
+        setInputValue(impersonatedAddress);
+        // Auto-validate parent-provided values
+        triggerValidation(impersonatedAddress, true);
+      }
+    }, [impersonatedAddress, hasInteracted, triggerValidation]);
+
+    // Generate classes
+    const containerClasses = useMemo(
       () => customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.container, className],
     );
 
-    /**
-     * Memoized container classes
-     */
-    const containerClasses = useMemo(getContainerClasses, [getContainerClasses]);
-
-    /**
-     * Generate label classes with proper memoization dependencies
-     */
-    const getLabelClasses = useCallback(
+    const labelClasses = useMemo(
       () =>
         customization?.classNames?.label?.() ??
         'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.label],
     );
 
-    /**
-     * Memoized label classes
-     */
-    const labelClasses = useMemo(() => getLabelClasses(), [getLabelClasses]);
-
-    /**
-     * Generate input classes with proper memoization dependencies
-     */
-    const getInputClasses = useCallback(() => {
+    const inputClasses = useMemo(() => {
       if (customization?.classNames?.input) {
-        return customization.classNames.input({ hasError: !!walletConnectionError, hasInteracted });
+        return customization.classNames.input({ hasError: !!connectionError, hasInteracted });
       }
 
       return cn(
@@ -504,52 +563,53 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
         // Error state styling
         {
-          'novacon:border-red-500 novacon:focus:ring-red-500': walletConnectionError,
+          'novacon:border-red-500 novacon:focus:ring-red-500': connectionError,
+        },
+        // Resolving state styling
+        {
+          'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving,
         },
         // Transition for smooth state changes
         'novacon:transition-colors novacon:duration-200',
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.input, walletConnectionError, hasInteracted]);
+    }, [customization?.classNames?.input, connectionError, hasInteracted, isResolving]);
 
-    /**
-     * Memoized input classes
-     */
-    const inputClasses = useMemo(() => getInputClasses(), [getInputClasses]);
-
-    /**
-     * Generate error message classes with proper memoization dependencies
-     */
-    const getErrorMessageClasses = useCallback(
+    const errorMessageClasses = useMemo(
       () => customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.errorMessage],
     );
 
-    /**
-     * Memoized error message classes
-     */
-    const errorMessageClasses = useMemo(() => getErrorMessageClasses(), [getErrorMessageClasses]);
+    const placeholder = useMemo(() => {
+      if (customConfig?.input?.placeholder) {
+        return customConfig.input.placeholder;
+      }
 
-    // Cleanup effect and mount/unmount handlers
+      if (supportsNameResolution) {
+        if (selectedAdapter === OrbitAdapter.EVM) {
+          return `${labels.walletAddressPlaceholder} or ENS name (.eth)`;
+        }
+        if (selectedAdapter === OrbitAdapter.SOLANA) {
+          return `${labels.walletAddressPlaceholder} or SNS name (.sol)`;
+        }
+      }
+
+      return labels.walletAddressPlaceholder;
+    }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
+
+    // Cleanup effect
     useEffect(() => {
       customHandlers?.onMount?.();
 
       return () => {
-        // Clear timeout on unmount
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-        resetWalletConnectionError();
+        clearValidationTimeout();
+        resetConnectionError();
         customHandlers?.onUnmount?.();
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resetWalletConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
+    }, [clearValidationTimeout, resetConnectionError, customHandlers]);
 
     // Input configuration
     const inputId = 'impersonated-address';
     const errorId = 'address-error';
-    const placeholder = customConfig?.input?.placeholder ?? labels.walletAddressPlaceholder;
     const autoComplete = customConfig?.input?.autoComplete ?? 'off';
     const spellCheck = customConfig?.input?.spellCheck ?? false;
 
@@ -557,7 +617,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       <CustomContainer ref={ref} className={containerClasses}>
         {/* Form label */}
         <CustomLabel className={labelClasses} htmlFor={inputId}>
-          {labels.enterWalletAddress}
+          {labels.enterWalletAddressOrAddressName}
         </CustomLabel>
 
         {/* Address input field */}
@@ -565,21 +625,34 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           className={inputClasses}
           id={inputId}
           type="text"
-          value={impersonatedAddress}
-          onChange={handleAddressChange}
+          value={inputValue}
+          onChange={handleInputChange}
           onBlur={handleBlur}
+          onPaste={handlePaste}
           placeholder={placeholder}
-          aria-describedby={walletConnectionError ? errorId : undefined}
-          aria-invalid={walletConnectionError ? 'true' : 'false'}
+          aria-describedby={connectionError ? errorId : undefined}
+          aria-invalid={connectionError ? 'true' : 'false'}
           autoComplete={autoComplete}
           spellCheck={spellCheck}
-          hasError={!!walletConnectionError}
+          hasError={!!connectionError}
         />
 
+        {/* Resolution status */}
+        {isResolving && (
+          <p className="novacon:mt-1 novacon:text-sm novacon:text-blue-500">
+            Resolving {isDomainName(inputValue) ? (isENSName(inputValue) ? 'ENS' : 'SNS') : ''} name...
+          </p>
+        )}
+
+        {/* Resolved address display */}
+        {resolvedAddress && isDomainName(inputValue) && !isResolving && (
+          <p className="novacon:mt-1 novacon:text-sm novacon:text-green-600">Resolved to: {resolvedAddress}</p>
+        )}
+
         {/* Error message display */}
-        {walletConnectionError && (
+        {connectionError && (
           <CustomErrorMessage className={errorMessageClasses} id={errorId} role="alert" aria-live="polite">
-            {walletConnectionError}
+            {connectionError}
           </CustomErrorMessage>
         )}
       </CustomContainer>

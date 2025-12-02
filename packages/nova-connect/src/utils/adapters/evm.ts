@@ -32,7 +32,7 @@ interface EvmUtilsModule {
 async function getEvmUtils(): Promise<EvmUtilsModule | null> {
   try {
     // Dynamic import of EVM utilities - fails gracefully if package not installed
-    const evmUtils = await import('../../evm/utils');
+    const evmUtils = await import('../../evm');
     return evmUtils;
   } catch (error) {
     console.warn('EVM utilities not available:', error);
@@ -143,7 +143,7 @@ export async function createEvmAdapter(): Promise<ChainAdapter> {
  */
 export async function isEvmAdapterAvailable(): Promise<boolean> {
   try {
-    await import('../../evm/utils');
+    await import('../../evm');
     return true;
   } catch {
     return false;

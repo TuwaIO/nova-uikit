@@ -14,7 +14,7 @@
  * @example
  * ```typescript
  * // Import synchronous version (backward compatible)
- * import { getChainsListByWalletType, isEvmChainList } from './utils';
+ * import { getChainsListByConnectorType, isEvmChainList } from './utils';
  *
  * // Import asynchronous version (better performance)
  * import {
@@ -40,7 +40,7 @@
  * Re-export all functions from the main chain utilities module.
  * This includes both sync and async versions with proper naming.
  */
-export * from './getChainsListByWalletType';
+export * from './getChainsListByConnectorType';
 
 // ========================================
 // Type Exports
@@ -60,7 +60,7 @@ export type { AdapterInfo, AdapterLoadStatus, ChainAdapter } from './adapters/ty
  * Export adapter management utilities from the main utilities module.
  * These functions provide control over adapter loading and status monitoring.
  */
-export { getAdapterStatus, getAllAdaptersStatus, preloadChainAdapters } from './getChainsListByWalletType';
+export { getAdapterStatus, getAllAdaptersStatus, preloadChainAdapters } from './getChainsListByConnectorType';
 
 // ========================================
 // Backward Compatibility Layer
@@ -71,16 +71,16 @@ export { getAdapterStatus, getAllAdaptersStatus, preloadChainAdapters } from './
  * This ensures existing code continues to work without modifications.
  *
  * Mapping:
- * - getChainsListByWalletType -> getChainsListByWalletTypeSync
+ * - getChainsListByConnectorType -> getChainsListByWalletTypeSync
  * - isEvmChainList -> isEvmChainListSync
  * - isSolanaChainList -> isSolanaChainListSync
  */
 export {
-  getChainsListByWalletTypeSync as getChainsListByWalletType,
+  getChainsListByConnectorTypeSync as getChainsListByConnectorType,
   getWalletChains,
   isEvmChainListSync as isEvmChainList,
   isSolanaChainListSync as isSolanaChainList,
-} from './getChainsListByWalletType';
+} from './getChainsListByConnectorType';
 
 // ========================================
 // Async Versions with Explicit Naming
@@ -99,11 +99,11 @@ export {
  */
 export {
   getAvailableSolanaClusters as getAvailableSolanaClustersAsync,
-  getChainsListByWalletType as getChainsListByWalletTypeAsync,
+  getChainsListByConnectorType as getChainsListByConnectorTypeAsync,
   isEvmChainList as isEvmChainListAsync,
   isSolanaChainList as isSolanaChainListAsync,
   isValidSolanaCluster as isValidSolanaClusterAsync,
-} from './getChainsListByWalletType';
+} from './getChainsListByConnectorType';
 
 // ========================================
 // Fallback Implementations

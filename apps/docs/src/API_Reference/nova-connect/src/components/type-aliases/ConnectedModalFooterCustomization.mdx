@@ -1,0 +1,537 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalFooterCustomization
+
+> **ConnectedModalFooterCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L81)
+
+Customization options for ConnectedModalFooter component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:126](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L126)
+
+Custom animation configuration
+
+#### disconnectIcon?
+
+> `optional` **disconnectIcon**: `object`
+
+Disconnect icon animation configuration
+
+##### disconnectIcon.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### disconnectIcon.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### disconnectIcon.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### explorerIcon?
+
+> `optional` **explorerIcon**: `object`
+
+Explorer icon animation configuration
+
+##### explorerIcon.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### explorerIcon.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### explorerIcon.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L98)
+
+Custom class name generators
+
+#### buttonText()?
+
+> `optional` **buttonText**: (`params`) => `string`
+
+Function to generate button text classes
+
+##### Parameters
+
+###### params
+
+###### buttonType
+
+`"disconnect"` \| `"explorer"`
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### isValidExplorerUrl
+
+`boolean`
+
+###### walletAddress
+
+`string`
+
+##### Returns
+
+`string`
+
+#### disconnectButton()?
+
+> `optional` **disconnectButton**: (`params`) => `string`
+
+Function to generate disconnect button classes
+
+##### Parameters
+
+###### params
+
+###### disabled?
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### disconnectIcon()?
+
+> `optional` **disconnectIcon**: () => `string`
+
+Function to generate disconnect icon classes
+
+##### Returns
+
+`string`
+
+#### disconnectIconContainer()?
+
+> `optional` **disconnectIconContainer**: () => `string`
+
+Function to generate disconnect icon container classes
+
+##### Returns
+
+`string`
+
+#### explorerIcon()?
+
+> `optional` **explorerIcon**: (`params`) => `string`
+
+Function to generate explorer icon classes
+
+##### Parameters
+
+###### params
+
+###### isValidUrl
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### explorerIconContainer()?
+
+> `optional` **explorerIconContainer**: () => `string`
+
+Function to generate explorer icon container classes
+
+##### Returns
+
+`string`
+
+#### explorerLink()?
+
+> `optional` **explorerLink**: (`params`) => `string`
+
+Function to generate explorer link classes
+
+##### Parameters
+
+###### params
+
+###### disabled?
+
+`boolean`
+
+###### isValidUrl
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### screenReaderText()?
+
+> `optional` **screenReaderText**: () => `string`
+
+Function to generate screen reader text classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:85](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L85)
+
+Custom components
+
+#### DisconnectButton?
+
+> `optional` **DisconnectButton**: `ComponentType`\<`CustomDisconnectButtonProps`\>
+
+Custom disconnect button component
+
+#### DisconnectIcon?
+
+> `optional` **DisconnectIcon**: `ComponentType`\<`CustomDisconnectIconProps`\>
+
+Custom disconnect icon component
+
+#### ExplorerIcon?
+
+> `optional` **ExplorerIcon**: `ComponentType`\<`CustomExplorerIconProps`\>
+
+Custom explorer icon component
+
+#### ExplorerLink?
+
+> `optional` **ExplorerLink**: `ComponentType`\<`CustomExplorerLinkProps`\>
+
+Custom explorer link component
+
+#### FooterContent?
+
+> `optional` **FooterContent**: `ComponentType`\<`CustomFooterContentProps`\>
+
+Custom footer content component (wraps everything)
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:196](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L196)
+
+Configuration options
+
+#### closeModalAfterDisconnect?
+
+> `optional` **closeModalAfterDisconnect**: `boolean`
+
+Whether to close modal after disconnect
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### disconnectButtonTestId?
+
+> `optional` **disconnectButtonTestId**: `string`
+
+Custom disconnect button test id
+
+#### explorerLinkTestId?
+
+> `optional` **explorerLinkTestId**: `string`
+
+Custom explorer link test id
+
+#### explorerUrlFallback?
+
+> `optional` **explorerUrlFallback**: `string`
+
+Custom explorer URL fallback
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+#### showDisconnectButton?
+
+> `optional` **showDisconnectButton**: `boolean`
+
+Whether to show disconnect button
+
+#### showExplorerLink?
+
+> `optional` **showExplorerLink**: `boolean`
+
+Whether to show explorer link
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"footer"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:83](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L83)
+
+Override container element props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:170](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L170)
+
+Custom event handlers
+
+#### onAfterDisconnect()?
+
+> `optional` **onAfterDisconnect**: () => `void`
+
+Custom handler after disconnect
+
+##### Returns
+
+`void`
+
+#### onBeforeDisconnect()?
+
+> `optional` **onBeforeDisconnect**: () => `boolean` \| `Promise`\<`boolean`\>
+
+Custom handler before disconnect
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+#### onDisconnectClick()?
+
+> `optional` **onDisconnectClick**: (`originalHandler`, `event`) => `void`
+
+Custom handler for disconnect button click
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onExplorerClick()?
+
+> `optional` **onExplorerClick**: (`explorerUrl`, `walletAddress`, `event`) => `void`
+
+Custom handler for explorer link click
+
+##### Parameters
+
+###### explorerUrl
+
+`string`
+
+###### walletAddress
+
+`string`
+
+###### event
+
+`React.MouseEvent`\<`HTMLAnchorElement`\>
+
+##### Returns
+
+`void`
+
+***
+
+### labels?
+
+> `optional` **labels**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:181](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L181)
+
+Custom text and aria labels
+
+#### disconnectDescription?
+
+> `optional` **disconnectDescription**: `string`
+
+Custom disconnect description for screen readers
+
+#### disconnectText?
+
+> `optional` **disconnectText**: `string`
+
+Custom disconnect button text
+
+#### explorerDescription?
+
+> `optional` **explorerDescription**: `string`
+
+Custom explorer description for screen readers
+
+#### explorerText?
+
+> `optional` **explorerText**: `string`
+
+Custom explorer link text
+
+#### explorerUnavailableMessage?
+
+> `optional` **explorerUnavailableMessage**: `string`
+
+Custom explorer unavailable message
+
+#### footerAriaLabel?
+
+> `optional` **footerAriaLabel**: `string`
+
+Custom footer aria label
+
+***
+
+### svg?
+
+> `optional` **svg**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:147](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L147)
+
+Custom SVG properties
+
+#### disconnectIconPath?
+
+> `optional` **disconnectIconPath**: `string`
+
+Custom disconnect icon path
+
+#### disconnectIconStrokeLinecap?
+
+> `optional` **disconnectIconStrokeLinecap**: `"butt"` \| `"round"` \| `"square"`
+
+Custom disconnect icon stroke linecap
+
+#### disconnectIconStrokeLinejoin?
+
+> `optional` **disconnectIconStrokeLinejoin**: `"miter"` \| `"bevel"` \| `"round"`
+
+Custom disconnect icon stroke linejoin
+
+#### disconnectIconStrokeWidth?
+
+> `optional` **disconnectIconStrokeWidth**: `string` \| `number`
+
+Custom disconnect icon stroke width
+
+#### disconnectIconViewBox?
+
+> `optional` **disconnectIconViewBox**: `string`
+
+Custom disconnect icon viewBox
+
+#### explorerIconPath?
+
+> `optional` **explorerIconPath**: `string`
+
+Custom explorer icon path
+
+#### explorerIconStrokeLinecap?
+
+> `optional` **explorerIconStrokeLinecap**: `"butt"` \| `"round"` \| `"square"`
+
+Custom explorer icon stroke linecap
+
+#### explorerIconStrokeLinejoin?
+
+> `optional` **explorerIconStrokeLinejoin**: `"miter"` \| `"bevel"` \| `"round"`
+
+Custom explorer icon stroke linejoin
+
+#### explorerIconStrokeWidth?
+
+> `optional` **explorerIconStrokeWidth**: `string` \| `number`
+
+Custom explorer icon stroke width
+
+#### explorerIconViewBox?
+
+> `optional` **explorerIconViewBox**: `string`
+
+Custom explorer icon viewBox
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L119)
+
+Custom animation variants
+
+#### disconnectIcon?
+
+> `optional` **disconnectIcon**: `Variants`
+
+Disconnect icon animation variants
+
+#### explorerIcon?
+
+> `optional` **explorerIcon**: `Variants`
+
+Explorer icon animation variants

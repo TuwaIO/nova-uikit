@@ -1,11 +1,10 @@
 export {
   AllConnectors,
-  AllWallets,
   Connector,
+  Connection,
   SatelliteConnectProvider,
   SatelliteConnectProviderProps,
   SatelliteStoreContext,
   useInitializeAutoConnect,
   useSatelliteConnectStore,
-  Wallet,
 } from '@tuwaio/satellite-react';

@@ -1,0 +1,64 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# getWalletChains()
+
+> **getWalletChains**(`activeWallet`): (`string` \| `number`)[] \| `undefined`
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:426](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L426)
+
+Safely extracts chain information from a wallet object.
+
+This utility function handles the complex nested structure of wallet objects
+and safely extracts chain information without throwing errors. It performs
+comprehensive type checking to ensure data integrity.
+
+The function expects wallet objects with this structure:
+```
+{
+  connectedWallet: {
+    chains: [chain1, chain2, ...]
+  }
+}
+```
+
+## Parameters
+
+### activeWallet
+
+`any`
+
+Wallet object to extract chains from
+
+## Returns
+
+(`string` \| `number`)[] \| `undefined`
+
+Array of chain identifiers or undefined if not found/invalid
+
+## Example
+
+```typescript
+// With valid wallet structure
+const wallet = {
+  connectedWallet: {
+    chains: [1, 137, 56]
+  }
+};
+const chains = getWalletChains(wallet); // [1, 137, 56]
+
+// With invalid/missing structure
+const invalidWallet = { someOtherProperty: true };
+const noChains = getWalletChains(invalidWallet); // undefined
+
+// Use in conditional logic
+const walletChains = getWalletChains(activeWallet);
+if (walletChains) {
+  console.log('Wallet supports chains:', walletChains);
+}
+```
+
+## Since
+
+1.0.0

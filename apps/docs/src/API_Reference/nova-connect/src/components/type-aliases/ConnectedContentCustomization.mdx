@@ -1,0 +1,267 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedContentCustomization
+
+> **ConnectedContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L65)
+
+Customization options for ConnectedContent component
+
+## Properties
+
+### childCustomizations?
+
+> `optional` **childCustomizations**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L95)
+
+Customization options for child components
+
+#### statusIcon?
+
+> `optional` **statusIcon**: `object`
+
+StatusIcon customization for transaction states
+
+##### statusIcon.failed?
+
+> `optional` **failed**: [`StatusIconCustomization`](StatusIconCustomization.md)
+
+StatusIcon customization for failed state
+
+##### statusIcon.replaced?
+
+> `optional` **replaced**: [`StatusIconCustomization`](StatusIconCustomization.md)
+
+StatusIcon customization for replaced state
+
+##### statusIcon.succeed?
+
+> `optional` **succeed**: [`StatusIconCustomization`](StatusIconCustomization.md)
+
+StatusIcon customization for success state
+
+#### walletAvatar?
+
+> `optional` **walletAvatar**: [`WalletAvatarCustomization`](WalletAvatarCustomization.md)
+
+WalletAvatar customization for idle and loading states
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L80)
+
+Custom class name generators
+
+#### balanceContainer()?
+
+> `optional` **balanceContainer**: (`params`) => `string`
+
+Function to generate balance container classes
+
+##### Parameters
+
+###### params
+
+###### formattedBalance
+
+`string`
+
+##### Returns
+
+`string`
+
+#### balanceDivider()?
+
+> `optional` **balanceDivider**: () => `string`
+
+Function to generate balance divider classes
+
+##### Returns
+
+`string`
+
+#### balanceText()?
+
+> `optional` **balanceText**: (`params`) => `string`
+
+Function to generate balance text classes
+
+##### Parameters
+
+###### params
+
+###### formattedBalance
+
+`string`
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### connectedButtonStatus
+
+[`ButtonTxStatus`](../../hooks/type-aliases/ButtonTxStatus.md)
+
+###### withBalance
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### loadingAnimation()?
+
+> `optional` **loadingAnimation**: (`params`) => `string`
+
+Function to generate loading animation classes
+
+##### Parameters
+
+###### params
+
+###### connectedButtonStatus
+
+[`ButtonTxStatus`](../../hooks/type-aliases/ButtonTxStatus.md)
+
+##### Returns
+
+`string`
+
+#### mainContent()?
+
+> `optional` **mainContent**: (`params`) => `string`
+
+Function to generate main content classes
+
+##### Parameters
+
+###### params
+
+###### withBalance
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L69)
+
+Custom components
+
+#### BalanceContainer?
+
+> `optional` **BalanceContainer**: `ComponentType`\<`CustomBalanceContainerProps`\>
+
+Custom balance container component
+
+#### BalanceDivider?
+
+> `optional` **BalanceDivider**: `ComponentType`\<`CustomBalanceDividerProps`\>
+
+Custom balance divider component
+
+#### LoadingAnimation?
+
+> `optional` **LoadingAnimation**: `ComponentType`\<`CustomLoadingAnimationProps`\>
+
+Custom loading animation component
+
+#### MainContent?
+
+> `optional` **MainContent**: `ComponentType`\<`CustomMainContentProps`\>
+
+Custom main content wrapper component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L114)
+
+Configuration options
+
+#### showBalanceDivider?
+
+> `optional` **showBalanceDivider**: `boolean`
+
+Whether to show balance divider
+
+#### showLoadingAnimation?
+
+> `optional` **showLoadingAnimation**: `boolean`
+
+Whether to show loading animation
+
+#### statusResetTimeout?
+
+> `optional` **statusResetTimeout**: `number`
+
+Custom timeout for auto-reset status (in milliseconds)
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L67)
+
+Override root container props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:109](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L109)
+
+Custom event handlers
+
+#### onBalanceClick()?
+
+> `optional` **onBalanceClick**: (`formattedBalance`, `event`) => `void`
+
+Custom handler for balance click events
+
+##### Parameters
+
+###### formattedBalance
+
+`string`
+
+###### event
+
+`React.MouseEvent`\<`HTMLDivElement`\>
+
+##### Returns
+
+`void`

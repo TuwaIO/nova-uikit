@@ -8,6 +8,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   // Основні дії - Основні взаємодії користувача
   connectWallet: 'Підключити Гаманець',
   disconnect: 'Відключити',
+  disconnectAll: 'Відключити всі',
   connecting: 'Підключення...',
   connected: 'Підключено',
   tryAgain: 'Спробувати знову',
@@ -15,6 +16,10 @@ export const ukrainianLabels: NovaConnectLabels = {
   connect: 'Підключити',
   close: 'Закрити',
   all: 'Всі',
+  active: 'Активний',
+  connectors: 'Конектори',
+  wallet: 'Гаманець',
+  connectNewWallet: 'Підключити новий гаманець',
 
   // Стани підключення - Статусні повідомлення для процесу підключення гаманця
   connectionError: 'Помилка підключення',
@@ -42,6 +47,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   switchNetwork: 'Змінити мережу',
   switchNetworks: 'Змінити Мережі',
   connectingEllipsis: 'Підключення...',
+  connectedWallets: 'Підключені Гаманці',
 
   // Секції гаманців - Категорії для групування з'єднувачів гаманців
   installed: 'Встановлені',
@@ -62,7 +68,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   viewTransactions: 'Переглянути транзакції',
 
   // Форма імітації - Підписи для функції імітації адреси гаманця
-  enterWalletAddress: 'Введіть адресу гаманця для імітації',
+  enterWalletAddressOrAddressName: 'Введіть адресу гаманця або його імя для імітації',
   walletAddressPlaceholder: '0x...',
 
   // Повідомлення про помилки - Повідомлення про помилки для користувача
@@ -127,7 +133,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   walletIcon: 'Іконка гаманця',
 
   // Помилки імітації
-  impersonateAddressEmpty: 'Введіть адресу гаманця для імітації.',
-  impersonateAddressNotCorrect: 'Введена адреса гаманця неправильна. Спробуйте знову.',
+  impersonateAddressEmpty: 'Введіть адресу або імя гаманця для імітації.',
+  impersonateAddressNotCorrect: 'Введена адреса або імя гаманця неправильна. Спробуйте знову.',
   impersonateAddressConnected: 'Спочатку відключіть гаманець для імітації іншої адреси.',
 };

@@ -1,0 +1,423 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NetworkSelectionsCustomization
+
+> **NetworkSelectionsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L127)
+
+NetworkSelections customization options
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L150)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### errorContainer()?
+
+> `optional` **errorContainer**: (`params`) => `string`
+
+Function to generate error container classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### errorIcon()?
+
+> `optional` **errorIcon**: (`params`) => `string`
+
+Function to generate error icon classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### errorMessage()?
+
+> `optional` **errorMessage**: (`params`) => `string`
+
+Function to generate error message classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### errorTitle()?
+
+> `optional` **errorTitle**: (`params`) => `string`
+
+Function to generate error title classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### networkIcon()?
+
+> `optional` **networkIcon**: (`params`) => `string`
+
+Function to generate network icon classes
+
+##### Parameters
+
+###### params
+
+###### networkData
+
+`NetworkData`
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### networkItem()?
+
+> `optional` **networkItem**: (`params`) => `string`
+
+Function to generate network item classes
+
+##### Parameters
+
+###### params
+
+###### networkData
+
+`NetworkData`
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### networkList()?
+
+> `optional` **networkList**: (`params`) => `string`
+
+Function to generate network list classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+#### title()?
+
+> `optional` **title**: (`params`) => `string`
+
+Function to generate title classes
+
+##### Parameters
+
+###### params
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:129](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L129)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### ErrorContainer?
+
+> `optional` **ErrorContainer**: `ComponentType`\<`ErrorContainerProps`\>
+
+Custom error container
+
+#### ErrorIcon?
+
+> `optional` **ErrorIcon**: `ComponentType`\<`ErrorIconProps`\>
+
+Custom error icon wrapper
+
+#### ErrorMessage?
+
+> `optional` **ErrorMessage**: `ComponentType`\<`ErrorMessageProps`\>
+
+Custom error message
+
+#### ErrorTitle?
+
+> `optional` **ErrorTitle**: `ComponentType`\<`ErrorTitleProps`\>
+
+Custom error title
+
+#### NetworkIcon?
+
+> `optional` **NetworkIcon**: `ComponentType`\<`NetworkIconProps`\>
+
+Custom network icon wrapper
+
+#### NetworkItem?
+
+> `optional` **NetworkItem**: `ComponentType`\<`NetworkItemProps`\>
+
+Custom network item wrapper
+
+#### NetworkList?
+
+> `optional` **NetworkList**: `ComponentType`\<`NetworkListProps`\>
+
+Custom network list
+
+#### Title?
+
+> `optional` **Title**: `ComponentType`\<`TitleProps`\>
+
+Custom title
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L182)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container()?
+
+> `optional` **container**: (`selectionsData`) => `string`
+
+###### Parameters
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.errorContainer()?
+
+> `optional` **errorContainer**: (`selectionsData`) => `string`
+
+###### Parameters
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+###### Returns
+
+`string`
+
+##### ariaLabels.networkIcon()?
+
+> `optional` **networkIcon**: (`networkData`) => `string`
+
+###### Parameters
+
+###### networkData
+
+`NetworkData`
+
+###### Returns
+
+`string`
+
+##### ariaLabels.networkList()?
+
+> `optional` **networkList**: (`selectionsData`) => `string`
+
+###### Parameters
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+###### Returns
+
+`string`
+
+#### scroll?
+
+> `optional` **scroll**: `object`
+
+Custom scroll behavior
+
+##### scroll.gap?
+
+> `optional` **gap**: `object`
+
+##### scroll.gap.mouse?
+
+> `optional` **mouse**: `string`
+
+##### scroll.gap.touch?
+
+> `optional` **touch**: `string`
+
+##### scroll.mouseMaxHeight?
+
+> `optional` **mouseMaxHeight**: `string`
+
+##### scroll.touchMaxHeight?
+
+> `optional` **touchMaxHeight**: `string`
+
+***
+
+### connectCard?
+
+> `optional` **connectCard**: [`ConnectCardCustomization`](ConnectCardCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L201)
+
+ConnectCard customization for network cards
+
+***
+
+### disclaimer?
+
+> `optional` **disclaimer**: [`DisclaimerCustomization`](DisclaimerCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L203)
+
+Disclaimer customization
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L171)
+
+Custom event handlers
+
+#### onErrorRetry()?
+
+> `optional` **onErrorRetry**: (`selectionsData`) => `void`
+
+Custom error retry handler
+
+##### Parameters
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+##### Returns
+
+`void`
+
+#### onNetworkClick()?
+
+> `optional` **onNetworkClick**: (`networkData`, `selectionsData`, `originalHandler`) => `void`
+
+Custom network click handler
+
+##### Parameters
+
+###### networkData
+
+`NetworkData`
+
+###### selectionsData
+
+[`NetworkSelectionsData`](../interfaces/NetworkSelectionsData.md)
+
+###### originalHandler
+
+(`network`) => `void`
+
+##### Returns
+
+`void`

@@ -95,14 +95,10 @@ Create your main CSS file using Tailwind CSS v4 (for example):
 ```tsx
 // src/config/appConfig.ts
 import { createConfig } from '@wagmi/core';
+import { injected } from '@wagmi/connectors';
 import { mainnet, sepolia } from 'viem/chains';
 import type { Chain } from 'viem/chains';
-import { createDefaultTransports, initAllConnectors } from '@tuwaio/satellite-evm';
-
-export const appConfig = {
-  appName: 'My Web3 App',
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? 'YOUR_PROJECT_ID',
-};
+import { createDefaultTransports } from '@tuwaio/satellite-evm';
 
 export const appEVMChains = [
   mainnet,
@@ -110,12 +106,7 @@ export const appEVMChains = [
 ] as readonly [Chain, ...Chain[]];
 
 export const wagmiConfig = createConfig({
-  connectors: initAllConnectors({
-    ...appConfig,
-    description: 'My awesome dApp',
-    appUrl: 'https://my-dapp.com',
-    appIcons: ['https://my-dapp.com/icon.png'],
-  }),
+  connectors: [injected()],
   transports: createDefaultTransports(appEVMChains),
   chains: appEVMChains,
   ssr: true,

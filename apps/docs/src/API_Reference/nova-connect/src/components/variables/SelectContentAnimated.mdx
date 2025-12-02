@@ -1,0 +1,64 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# SelectContentAnimated
+
+> `const` **SelectContentAnimated**: `ForwardRefExoticComponent`\<[`SelectContentAnimatedProps`](../interfaces/SelectContentAnimatedProps.md) & `RefAttributes`\<`Omit`\<`HTMLDivElement`, `"style"`\>\>\>
+
+Defined in: [packages/nova-connect/src/components/SelectContentAnimated.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/SelectContentAnimated.tsx#L101)
+
+Animated select content component with smooth enter/exit animations.
+
+This component provides animated dropdown content for select components
+with accessibility support and extensive customization capabilities.
+
+Features:
+- Smooth enter/exit animations with Framer Motion
+- Accessibility-first design with ARIA support
+- Fully customizable scroll buttons with ToTopButton/ToBottomButton
+- Reduced motion support for accessibility
+- Customizable max height and animation duration
+- Full control over styling via className props (additive, not replacement)
+- Separate styling for container, content, and viewport
+- Custom button props and customization options
+
+## Examples
+
+```tsx
+<Select.Root>
+  <Select.Trigger>Select an option</Select.Trigger>
+  <SelectContentAnimated>
+    <Select.Item value="option1">Option 1</Select.Item>
+    <Select.Item value="option2">Option 2</Select.Item>
+  </SelectContentAnimated>
+</Select.Root>
+```
+
+```tsx
+<SelectContentAnimated
+  className="novacon:shadow-2xl novacon:border-2"
+  contentClassName="novacon:p-4 novacon:bg-gradient-to-b"
+  viewportClassName="novacon:scrollbar-thin"
+  maxHeight={400}
+  animationDuration={0.3}
+  reduceMotion={false}
+  showScrollButtons={true}
+  topButtonProps={{
+    className: "novacon:bg-blue-500",
+    onClick: () => console.log("Top button clicked"),
+  }}
+  topButtonCustomization={{
+    classNames: {
+      button: () => "novacon:bg-red-500 novacon:hover:bg-red-600",
+    },
+  }}
+  bottomButtonCustomization={{
+    components: {
+      Icon: ({ className }) => <div className={className}>⬇️</div>,
+    },
+  }}
+>
+  <Select.Item value="item1">Item 1</Select.Item>
+</SelectContentAnimated>
+```

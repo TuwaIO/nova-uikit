@@ -1,0 +1,561 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalCustomization
+
+> **ConnectedModalCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:104](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L104)
+
+Customization options for ConnectedModal component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L171)
+
+Custom animation configuration
+
+#### content?
+
+> `optional` **content**: `object`
+
+Content animation configuration
+
+##### content.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### content.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### content.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### layout?
+
+> `optional` **layout**: `object`
+
+Layout animation configuration
+
+##### layout.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### layout.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### modal?
+
+> `optional` **modal**: `object`
+
+Modal animation configuration
+
+##### modal.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### modal.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### modal.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### childCustomizations?
+
+> `optional` **childCustomizations**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:212](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L212)
+
+Child component customizations
+
+#### chainList?
+
+> `optional` **chainList**: `Record`\<`string`, `unknown`\>
+
+Customization for ScrollableChainList component
+
+#### connections?
+
+> `optional` **connections**: `ConnectionsContentCustomization`
+
+Customization for ConnectionsContent component
+
+#### footer?
+
+> `optional` **footer**: `Record`\<`string`, `unknown`\>
+
+Customization for ConnectedModalFooter component
+
+#### mainContent?
+
+> `optional` **mainContent**: [`ConnectedModalMainContentCustomization`](ConnectedModalMainContentCustomization.md)
+
+Customization for ConnectedModalMainContent component
+
+#### txHistory?
+
+> `optional` **txHistory**: `Record`\<`string`, `unknown`\>
+
+Customization for ConnectedModalTxHistory component
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L141)
+
+Custom class name generators
+
+#### backButton()?
+
+> `optional` **backButton**: () => `string`
+
+Function to generate back button classes
+
+##### Returns
+
+`string`
+
+#### closeButton()?
+
+> `optional` **closeButton**: () => `string`
+
+Function to generate close button classes
+
+##### Returns
+
+`string`
+
+#### contentContainer()?
+
+> `optional` **contentContainer**: (`params`) => `string`
+
+Function to generate content container classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`string`
+
+#### dialog()?
+
+> `optional` **dialog**: () => `string`
+
+Function to generate dialog classes
+
+##### Returns
+
+`string`
+
+#### dialogContent()?
+
+> `optional` **dialogContent**: (`params`) => `string`
+
+Function to generate dialog content classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+###### hasActiveWallet
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### footer()?
+
+> `optional` **footer**: () => `string`
+
+Function to generate footer classes
+
+##### Returns
+
+`string`
+
+#### header()?
+
+> `optional` **header**: (`params`) => `string`
+
+Function to generate header classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`string`
+
+#### mainContent()?
+
+> `optional` **mainContent**: (`params`) => `string`
+
+Function to generate main content classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`string`
+
+#### motionContainer()?
+
+> `optional` **motionContainer**: () => `string`
+
+Function to generate motion container classes
+
+##### Returns
+
+`string`
+
+#### title()?
+
+> `optional` **title**: (`params`) => `string`
+
+Function to generate title classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:110](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L110)
+
+Custom components
+
+#### BackButton?
+
+> `optional` **BackButton**: `ComponentType`\<`BackButtonProps`\>
+
+Custom back button component
+
+#### ChainsContentRenderer?
+
+> `optional` **ChainsContentRenderer**: `ComponentType`\<[`ScrollableChainListProps`](../interfaces/ScrollableChainListProps.md)\>
+
+Custom chains content renderer
+
+#### CloseButton?
+
+> `optional` **CloseButton**: `ComponentType`\<`CloseButtonProps`\>
+
+Custom close button component
+
+#### Dialog?
+
+> `optional` **Dialog**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog`\>\>
+
+Custom dialog component
+
+#### DialogContent?
+
+> `optional` **DialogContent**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `DialogContent`\>\>
+
+Custom dialog content component
+
+#### DialogHeader?
+
+> `optional` **DialogHeader**: `ComponentType`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Custom dialog header component
+
+#### DialogTitle?
+
+> `optional` **DialogTitle**: `ComponentType`\<`ComponentPropsWithoutRef`\<`"h2"`\>\>
+
+Custom dialog title component
+
+#### Footer?
+
+> `optional` **Footer**: `ComponentType`\<[`ConnectedModalFooterProps`](../interfaces/ConnectedModalFooterProps.md)\>
+
+Custom footer component
+
+#### Header?
+
+> `optional` **Header**: `ComponentType`\<`HeaderProps`\>
+
+Custom header component
+
+#### MainContent?
+
+> `optional` **MainContent**: `ComponentType`\<`MainContentProps`\>
+
+Custom main content component
+
+#### MainContentRenderer?
+
+> `optional` **MainContentRenderer**: `ComponentType`\<[`ConnectedModalMainContentProps`](../interfaces/ConnectedModalMainContentProps.md)\>
+
+Custom main content renderer for main view
+
+#### MotionContainer?
+
+> `optional` **MotionContainer**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
+
+Custom motion container
+
+#### Title?
+
+> `optional` **Title**: `ComponentType`\<`TitleProps`\>
+
+Custom title component
+
+#### TransactionsContentRenderer?
+
+> `optional` **TransactionsContentRenderer**: `ComponentType`\<[`ConnectedModalTxHistoryProps`](../interfaces/ConnectedModalTxHistoryProps.md)\>
+
+Custom transactions content renderer
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:225](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L225)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels for different states
+
+##### ariaLabels.backButton?
+
+> `optional` **backButton**: `string`
+
+##### ariaLabels.closeButton?
+
+> `optional` **closeButton**: `string`
+
+##### ariaLabels.dialog?
+
+> `optional` **dialog**: `string`
+
+##### ariaLabels.header?
+
+> `optional` **header**: `string`
+
+##### ariaLabels.mainContent?
+
+> `optional` **mainContent**: `string`
+
+#### autoResetToMain?
+
+> `optional` **autoResetToMain**: `boolean`
+
+Whether to auto-reset to main view when opening
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### hooks?
+
+> `optional` **hooks**: `object`
+
+Hook configurations
+
+##### hooks.walletNameAndAvatar?
+
+> `optional` **walletNameAndAvatar**: `WalletNameConfig`
+
+Configuration for wallet name and avatar hook
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+***
+
+### dialogContentProps?
+
+> `optional` **dialogContentProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `DialogContent`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:108](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L108)
+
+Override dialog content props
+
+***
+
+### dialogProps?
+
+> `optional` **dialogProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L106)
+
+Override root dialog props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L199)
+
+Custom event handlers
+
+#### onBack()?
+
+> `optional` **onBack**: () => `void`
+
+Custom handler for back navigation
+
+##### Returns
+
+`void`
+
+#### onChainChange()?
+
+> `optional` **onChainChange**: (`chainId`) => `void`
+
+Custom handler for chain change
+
+##### Parameters
+
+###### chainId
+
+`string`
+
+##### Returns
+
+`void`
+
+#### onClose()?
+
+> `optional` **onClose**: () => `void`
+
+Custom handler for modal close
+
+##### Returns
+
+`void`
+
+#### onContentTypeChange()?
+
+> `optional` **onContentTypeChange**: (`type`) => `void`
+
+Custom handler for content type change
+
+##### Parameters
+
+###### type
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`void`
+
+#### onOpenChange()?
+
+> `optional` **onOpenChange**: (`open`) => `void`
+
+Custom handler for modal open state change
+
+##### Parameters
+
+###### open
+
+`boolean`
+
+##### Returns
+
+`void`
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L164)
+
+Custom animation variants
+
+#### content?
+
+> `optional` **content**: `Variants`
+
+Content animation variants
+
+#### modal?
+
+> `optional` **modal**: `Variants`
+
+Modal animation variants

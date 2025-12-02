@@ -1,0 +1,523 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalNameAndBalanceCustomization
+
+> **ConnectedModalNameAndBalanceCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L82)
+
+Customization options for ConnectedModalNameAndBalance component
+
+## Properties
+
+### animation?
+
+> `optional` **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:162](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L162)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### icon?
+
+> `optional` **icon**: `object`
+
+Icon animation configuration
+
+##### icon.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### icon.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### icon.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### loading?
+
+> `optional` **loading**: `object`
+
+Loading animation configuration
+
+##### loading.delay?
+
+> `optional` **delay**: `number`
+
+Animation delay in seconds
+
+##### loading.duration?
+
+> `optional` **duration**: `number`
+
+Animation duration in seconds
+
+##### loading.ease?
+
+> `optional` **ease**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L115)
+
+Custom class name generators
+
+#### balanceContainer()?
+
+> `optional` **balanceContainer**: () => `string`
+
+Function to generate balance container classes
+
+##### Returns
+
+`string`
+
+#### balanceDisplay()?
+
+> `optional` **balanceDisplay**: () => `string`
+
+Function to generate balance display classes
+
+##### Returns
+
+`string`
+
+#### balanceLoading()?
+
+> `optional` **balanceLoading**: () => `string`
+
+Function to generate balance loading classes
+
+##### Returns
+
+`string`
+
+#### balanceSymbol()?
+
+> `optional` **balanceSymbol**: () => `string`
+
+Function to generate balance symbol classes
+
+##### Returns
+
+`string`
+
+#### balanceValue()?
+
+> `optional` **balanceValue**: () => `string`
+
+Function to generate balance value classes
+
+##### Returns
+
+`string`
+
+#### checkIcon()?
+
+> `optional` **checkIcon**: () => `string`
+
+Function to generate check icon classes
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### balanceLoading
+
+`boolean`
+
+###### hasActiveWallet
+
+`boolean`
+
+###### hasBalance
+
+`boolean`
+
+###### isCopied
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### copyButton()?
+
+> `optional` **copyButton**: (`params`) => `string`
+
+Function to generate copy button classes
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### isCopied
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### copyIcon()?
+
+> `optional` **copyIcon**: () => `string`
+
+Function to generate copy icon classes
+
+##### Returns
+
+`string`
+
+#### liveRegion()?
+
+> `optional` **liveRegion**: () => `string`
+
+Function to generate live region classes
+
+##### Returns
+
+`string`
+
+#### noBalance()?
+
+> `optional` **noBalance**: () => `string`
+
+Function to generate no balance classes
+
+##### Returns
+
+`string`
+
+#### screenReaderFeedback()?
+
+> `optional` **screenReaderFeedback**: () => `string`
+
+Function to generate screen reader feedback classes
+
+##### Returns
+
+`string`
+
+#### walletNameDisplay()?
+
+> `optional` **walletNameDisplay**: (`params`) => `string`
+
+Function to generate wallet name display classes
+
+##### Parameters
+
+###### params
+
+###### ensNameAbbreviated?
+
+`string`
+
+##### Returns
+
+`string`
+
+#### walletNameHeaderContainer()?
+
+> `optional` **walletNameHeaderContainer**: () => `string`
+
+Function to generate wallet name header container classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L102)
+
+Custom components
+
+#### BalanceDisplay?
+
+> `optional` **BalanceDisplay**: `ComponentType`\<`BalanceDisplayProps`\>
+
+Custom balance display component
+
+#### CopyButton?
+
+> `optional` **CopyButton**: `ComponentType`\<`CopyButtonProps`\>
+
+Custom copy button component
+
+#### LiveRegion?
+
+> `optional` **LiveRegion**: `ComponentType`\<`LiveRegionProps`\>
+
+Custom live region component
+
+#### ScreenReaderFeedback?
+
+> `optional` **ScreenReaderFeedback**: `ComponentType`\<`ScreenReaderFeedbackProps`\>
+
+Custom screen reader feedback component
+
+#### WalletNameDisplay?
+
+> `optional` **WalletNameDisplay**: `ComponentType`\<`WalletNameDisplayProps`\>
+
+Custom wallet name display component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L203)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels for different states
+
+##### ariaLabels.balanceContainer?
+
+> `optional` **balanceContainer**: `string`
+
+##### ariaLabels.balanceDisplay?
+
+> `optional` **balanceDisplay**: `string`
+
+##### ariaLabels.balanceLoading?
+
+> `optional` **balanceLoading**: `string`
+
+##### ariaLabels.container?
+
+> `optional` **container**: `string`
+
+##### ariaLabels.copyButton?
+
+> `optional` **copyButton**: `string`
+
+##### ariaLabels.liveRegion?
+
+> `optional` **liveRegion**: `string`
+
+##### ariaLabels.noBalance?
+
+> `optional` **noBalance**: `string`
+
+##### ariaLabels.screenReaderFeedback?
+
+> `optional` **screenReaderFeedback**: `string`
+
+##### ariaLabels.walletNameDisplay?
+
+> `optional` **walletNameDisplay**: `string`
+
+##### ariaLabels.walletNameHeader?
+
+> `optional` **walletNameHeader**: `string`
+
+#### copyButtonPosition?
+
+> `optional` **copyButtonPosition**: `"right"` \| `"left"` \| `"top"` \| `"bottom"`
+
+Custom copy button position
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"section"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L84)
+
+Override root container props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:192](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L192)
+
+Custom event handlers
+
+#### onBalanceFormat()?
+
+> `optional` **onBalanceFormat**: (`balance`) => `string` \| `null`
+
+Custom handler for balance format
+
+##### Parameters
+
+###### balance
+
+[`ConnectedModalMainContentProps`](../interfaces/ConnectedModalMainContentProps.md)\[`"balance"`\]
+
+##### Returns
+
+`string` \| `null`
+
+#### onCopyError()?
+
+> `optional` **onCopyError**: (`error`, `address`) => `void`
+
+Custom handler for copy error
+
+##### Parameters
+
+###### error
+
+`Error`
+
+###### address
+
+`string`
+
+##### Returns
+
+`void`
+
+#### onCopySuccess()?
+
+> `optional` **onCopySuccess**: (`address`) => `void`
+
+Custom handler for copy success
+
+##### Parameters
+
+###### address
+
+`string`
+
+##### Returns
+
+`void`
+
+#### onKeyboardInteraction()?
+
+> `optional` **onKeyboardInteraction**: (`event`, `action`) => `void`
+
+Custom handler for keyboard interactions
+
+##### Parameters
+
+###### event
+
+`React.KeyboardEvent`
+
+###### action
+
+`"copy"`
+
+##### Returns
+
+`void`
+
+***
+
+### variants?
+
+> `optional` **variants**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:151](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L151)
+
+Custom animation variants
+
+#### checkIcon?
+
+> `optional` **checkIcon**: `Variants`
+
+Check icon animation variants
+
+#### container?
+
+> `optional` **container**: `Variants`
+
+Container animation variants
+
+#### copyIcon?
+
+> `optional` **copyIcon**: `Variants`
+
+Copy icon animation variants
+
+#### loading?
+
+> `optional` **loading**: `Variants`
+
+Loading animation variants

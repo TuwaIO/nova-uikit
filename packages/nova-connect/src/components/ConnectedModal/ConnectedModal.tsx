@@ -4,20 +4,21 @@
 
 import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
-import { formatWalletChainId, getAdapterFromWalletType, OrbitAdapter, WalletType } from '@tuwaio/orbit-core';
+import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
 
 import {
+  ConnectedContentType,
   NativeBalanceResult,
   NovaConnectProviderProps,
   useGetWalletNameAndAvatar,
   useNovaConnect,
   useNovaConnectLabels,
+  useWalletChainsList,
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { getChainsListByWalletType, getWalletChains } from '../../utils';
 import { ScrollableChainList, ScrollableChainListProps } from '../Chains/ScrollableChainList';
 import { ConnectButtonProps } from '../ConnectButton';
 import { ConnectedModalFooter, ConnectedModalFooterProps } from './ConnectedModalFooter';
@@ -27,6 +28,7 @@ import {
   ConnectedModalMainContentProps,
 } from './ConnectedModalMainContent';
 import { ConnectedModalTxHistory, ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
+import { ConnectionsContent, ConnectionsContentCustomization } from './ConnectionsContent';
 
 // --- Default Motion Variants ---
 const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
@@ -45,12 +47,9 @@ const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
   },
 };
 
-// --- Content Types ---
-type ConnectedModalContentType = 'main' | 'transactions' | 'chains';
-
 // --- Component Props Types ---
 type HeaderProps = {
-  contentType: ConnectedModalContentType;
+  contentType: ConnectedContentType;
   title: string;
   onBack: () => void;
   onClose: () => void;
@@ -76,8 +75,9 @@ type CloseButtonProps = {
 };
 
 type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
-  contentType: ConnectedModalContentType;
+  contentType: ConnectedContentType;
   balance: NativeBalanceResult | null;
+  refetch: () => void;
   ensNameAbbreviated: string | undefined;
   avatarIsLoading: boolean;
   balanceLoading: boolean;
@@ -87,6 +87,7 @@ type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'puls
   onBack: () => void;
   getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
   className?: string;
+  childCustomizations?: ConnectedModalCustomization['childCustomizations'];
 };
 
 // --- Wallet Name Hook Config Type ---
@@ -141,21 +142,21 @@ export type ConnectedModalCustomization = {
     /** Function to generate dialog classes */
     dialog?: () => string;
     /** Function to generate dialog content classes */
-    dialogContent?: (params: { contentType: ConnectedModalContentType; hasActiveWallet: boolean }) => string;
+    dialogContent?: (params: { contentType: ConnectedContentType; hasActiveWallet: boolean }) => string;
     /** Function to generate motion container classes */
     motionContainer?: () => string;
     /** Function to generate content container classes */
-    contentContainer?: (params: { contentType: ConnectedModalContentType }) => string;
+    contentContainer?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate header classes */
-    header?: (params: { contentType: ConnectedModalContentType }) => string;
+    header?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate back button classes */
     backButton?: () => string;
     /** Function to generate title classes */
-    title?: (params: { contentType: ConnectedModalContentType }) => string;
+    title?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate close button classes */
     closeButton?: () => string;
     /** Function to generate main content classes */
-    mainContent?: (params: { contentType: ConnectedModalContentType }) => string;
+    mainContent?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate footer classes */
     footer?: () => string;
   };
@@ -205,12 +206,14 @@ export type ConnectedModalCustomization = {
     /** Custom handler for chain change */
     onChainChange?: (chainId: string) => void;
     /** Custom handler for content type change */
-    onContentTypeChange?: (type: ConnectedModalContentType) => void;
+    onContentTypeChange?: (type: ConnectedContentType) => void;
   };
   /** Child component customizations */
   childCustomizations?: {
     /** Customization for ConnectedModalMainContent component */
     mainContent?: ConnectedModalMainContentCustomization;
+    /** Customization for ConnectionsContent component */
+    connections?: ConnectionsContentCustomization;
     /** Customization for ConnectedModalTxHistory component */
     txHistory?: Record<string, unknown>; // Will be properly typed when that component is updated
     /** Customization for ScrollableChainList component */
@@ -246,7 +249,8 @@ export type ConnectedModalCustomization = {
  * Props for the ConnectedModal component
  */
 export interface ConnectedModalProps
-  extends Omit<ConnectButtonProps, 'className' | 'customization'>,
+  extends
+    Omit<ConnectButtonProps, 'className' | 'customization'>,
     Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls'> {
   /** Additional CSS classes for the modal */
   className?: string;
@@ -310,6 +314,7 @@ const DefaultHeader: React.FC<HeaderProps> = ({ contentType, title, onBack, onCl
 const DefaultMainContent: React.FC<MainContentProps> = ({
   contentType,
   balance,
+  refetch,
   ensNameAbbreviated,
   avatarIsLoading,
   balanceLoading,
@@ -321,8 +326,9 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
   onBack,
   getChainData,
   className,
+  childCustomizations,
 }) => {
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
   const renderContent = () => {
     switch (contentType) {
@@ -330,6 +336,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
         return (
           <ConnectedModalMainContent
             balance={balance}
+            refetch={refetch}
             ensNameAbbreviated={ensNameAbbreviated}
             avatarIsLoading={avatarIsLoading}
             balanceLoading={balanceLoading}
@@ -341,14 +348,14 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
       case 'transactions':
         return <ConnectedModalTxHistory transactionPool={transactionPool} pulsarAdapter={pulsarAdapter} />;
       case 'chains':
-        if (!activeWallet) return null;
+        if (!activeConnection) return null;
         return (
           <ScrollableChainList
             chainsList={chainsList}
             selectValue={String(
-              formatWalletChainId(
-                (activeWallet as { chainId: string | number }).chainId,
-                getAdapterFromWalletType((activeWallet as { walletType: WalletType }).walletType),
+              formatConnectorChainId(
+                (activeConnection as { chainId: string | number }).chainId,
+                getAdapterFromConnectorType((activeConnection as { connectorType: ConnectorType }).connectorType),
               ),
             )}
             handleValueChange={onChainChange}
@@ -356,6 +363,8 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             onClose={onBack}
           />
         );
+      case 'connections':
+        return <ConnectionsContent customization={childCustomizations?.connections} />;
       default:
         return null;
     }
@@ -409,7 +418,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     // Get modal state and controls from hook
     const { setConnectedModalContentType, isConnectedModalOpen, setIsConnectedModalOpen, connectedModalContentType } =
       useNovaConnect();
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
     const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
 
     // Extract customization options with stable references
@@ -453,7 +462,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       ...walletNameConfig,
     });
 
-    const { balance, isLoading: balanceLoading } = useWalletNativeBalance();
+    const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance();
 
     /**
      * Handles network switching when user selects a different chain
@@ -494,29 +503,14 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     }, [isConnectedModalOpen, autoResetToMain, setConnectedModalContentType]);
 
     /**
-     * Memoized chains list to prevent unnecessary recalculations
-     * Only recalculates when wallet type or configuration changes
+     * Use custom hook to fetch chains list asynchronously
+     * This handles the async nature of getChainsListByConnectorType
      */
-    const chainsList = useMemo(() => {
-      if (!activeWallet) {
-        return getChainsListByWalletType({
-          walletType: `${OrbitAdapter.EVM}:not-connected`,
-          appChains,
-          solanaRPCUrls,
-          chains: [],
-        });
-      }
-
-      // Safely extract wallet chains using shared utility
-      const walletChains = getWalletChains(activeWallet);
-
-      return getChainsListByWalletType({
-        walletType: (activeWallet as { walletType: WalletType }).walletType,
-        appChains,
-        solanaRPCUrls,
-        chains: walletChains,
-      });
-    }, [activeWallet, appChains, solanaRPCUrls]);
+    const { chainsList } = useWalletChainsList({
+      activeConnection,
+      appChains,
+      solanaRPCUrls,
+    });
 
     /**
      * Helper function to format chain data for display and selection
@@ -525,20 +519,20 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
      */
     const getChainData = useCallback(
       (chain: string | number) => {
-        if (!activeWallet) {
+        if (!activeConnection) {
           return { formattedChainId: chain, chain };
         }
 
         return {
-          formattedChainId: formatWalletChainId(
+          formattedChainId: formatConnectorChainId(
             chain,
-            getAdapterFromWalletType((activeWallet as { walletType: WalletType }).walletType),
+            getAdapterFromConnectorType((activeConnection as { connectorType: ConnectorType }).connectorType),
           ),
           chain,
         };
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [activeWallet?.walletType],
+      [activeConnection?.connectorType],
     );
 
     /**
@@ -551,6 +545,8 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           return labels.transactionsInApp;
         case 'chains':
           return labels.switchNetwork;
+        case 'connections':
+          return labels.connectedWallets;
         default:
           return labels.connected;
       }
@@ -586,8 +582,8 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
      * Memoized state calculations
      */
     const hasActiveWallet = useMemo(
-      () => Boolean(activeWallet && (activeWallet as { isConnected?: boolean }).isConnected),
-      [activeWallet],
+      () => Boolean(activeConnection && (activeConnection as { isConnected?: boolean }).isConnected),
+      [activeConnection],
     );
     const currentTitle = useMemo(() => getTitle(), [getTitle]);
 
@@ -641,7 +637,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     }, [disableAnimation, reduceMotion, modalVariants, customization]);
 
     // Early return if no active wallet - prevents rendering empty modal
-    if (!hasActiveWallet || !activeWallet) {
+    if (!hasActiveWallet || !activeConnection) {
       return null;
     }
 
@@ -661,6 +657,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         <CustomMainContent
           contentType={connectedModalContentType}
           balance={balance}
+          refetch={refetch}
           ensNameAbbreviated={ensNameAbbreviated}
           avatarIsLoading={avatarIsLoading}
           balanceLoading={balanceLoading}
@@ -671,6 +668,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           onChainChange={handleChainChange}
           onBack={handleBackToMain}
           getChainData={getChainData}
+          childCustomizations={customization?.childCustomizations}
           className={customization?.classNames?.mainContent?.({ contentType: connectedModalContentType })}
         />
 

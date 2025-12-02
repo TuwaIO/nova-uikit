@@ -1,0 +1,183 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectorsSelectionsProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:212](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L212)
+
+Props for the ConnectorsSelections component
+
+## Extends
+
+- `Pick`\<[`NovaConnectProviderProps`](../../hooks/interfaces/NovaConnectProviderProps.md), `"withImpersonated"`\>.`InitialChains`
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains**: `any`
+
+Defined in: [packages/nova-connect/src/types.ts:16](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/types.ts#L16)
+
+App chains configuration - defaults to any, gets enhanced by chain-specific packages
+
+#### Default
+
+any - Will be typed as `readonly [Chain, ...Chain[]]` when viem is available
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
+
+### connectors
+
+> **connectors**: `GroupedConnector`[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:216](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L216)
+
+Array of grouped wallet connectors
+
+***
+
+### customization?
+
+> `optional` **customization**: [`ConnectorsSelectionsCustomization`](../type-aliases/ConnectorsSelectionsCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:228](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L228)
+
+Customization options
+
+***
+
+### isOnlyOneNetwork?
+
+> `optional` **isOnlyOneNetwork**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:226](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L226)
+
+Whether only one network is available
+
+***
+
+### onClick()
+
+> **onClick**: (`connector`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:218](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L218)
+
+Click handler for connector selection
+
+#### Parameters
+
+##### connector
+
+`GroupedConnector`
+
+#### Returns
+
+`void`
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:214](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L214)
+
+Currently selected network adapter
+
+***
+
+### setContentType()
+
+> **setContentType**: (`contentType`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:224](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L224)
+
+Function to set modal content type
+
+#### Parameters
+
+##### contentType
+
+[`ConnectContentType`](../../hooks/type-aliases/ConnectContentType.md)
+
+#### Returns
+
+`void`
+
+***
+
+### setIsConnected()
+
+> **setIsConnected**: (`value`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:220](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L220)
+
+Function to set connection status
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+#### Returns
+
+`void`
+
+***
+
+### setIsOpen()
+
+> **setIsOpen**: (`value`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:222](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L222)
+
+Function to control modal open state
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+#### Returns
+
+`void`
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls**: `any`
+
+Defined in: [packages/nova-connect/src/types.ts:23](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/types.ts#L23)
+
+Solana RPC URLs configuration - defaults to any, gets enhanced by Solana packages
+
+#### Default
+
+any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when gill is available
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`
+
+***
+
+### withImpersonated?
+
+> `optional` **withImpersonated**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:23](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/hooks/useNovaConnect.ts#L23)
+
+Whether impersonated wallets are enabled
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](../../hooks/interfaces/NovaConnectProviderProps.md).[`withImpersonated`](../../hooks/interfaces/NovaConnectProviderProps.md#withimpersonated)

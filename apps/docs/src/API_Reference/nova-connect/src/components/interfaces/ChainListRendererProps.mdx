@@ -1,0 +1,153 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ChainListRendererProps
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:158](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L158)
+
+Props for the ChainListRenderer component
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:178](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L178)
+
+ARIA label for the list container
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L160)
+
+List of chain identifiers to render
+
+***
+
+### className?
+
+> `optional` **className**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:172](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L172)
+
+Custom CSS classes for container (added to defaults)
+
+***
+
+### customization?
+
+> `optional` **customization**: [`ChainListRendererCustomization`](ChainListRendererCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:176](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L176)
+
+Comprehensive customization options
+
+***
+
+### error?
+
+> `optional` **error**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L182)
+
+Error state
+
+***
+
+### getChainData()
+
+> **getChainData**: (`chain`) => `ChainData`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:166](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L166)
+
+Function to get formatted chain data
+
+#### Parameters
+
+##### chain
+
+`string` | `number`
+
+#### Returns
+
+`ChainData`
+
+***
+
+### handleValueChange()
+
+> **handleValueChange**: (`newChainId`) => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L164)
+
+Handler for chain selection changes
+
+#### Parameters
+
+##### newChainId
+
+`string`
+
+#### Returns
+
+`void`
+
+***
+
+### isLoading?
+
+> `optional` **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L180)
+
+Loading state
+
+***
+
+### isMobile?
+
+> `optional` **isMobile**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:170](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L170)
+
+Whether this is being rendered on mobile
+
+***
+
+### itemClassName?
+
+> `optional` **itemClassName**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L174)
+
+Custom CSS classes for individual items (added to defaults)
+
+***
+
+### onClose()
+
+> **onClose**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:168](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L168)
+
+Handler called when list should close
+
+#### Returns
+
+`void`
+
+***
+
+### selectValue
+
+> **selectValue**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:162](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L162)
+
+Currently selected chain value

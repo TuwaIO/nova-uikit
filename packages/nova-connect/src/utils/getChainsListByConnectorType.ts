@@ -1,4 +1,4 @@
-import { getAdapterFromWalletType, OrbitAdapter, WalletType } from '@tuwaio/orbit-core';
+import { ConnectorType, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
 
 import { ChainIdentifierArray, InitialChains } from '../types';
 import { adapterRegistry } from './adapters/registry';
@@ -16,7 +16,7 @@ import { adapterRegistry } from './adapters/registry';
  * @example
  * ```typescript
  * const params: GetChainsListParams = {
- *   walletType: WalletType.EVM_METAMASK,
+ *   connectorType: WalletType.EVM_METAMASK,
  *   appChains: [
  *     { id: 1, name: 'Ethereum' },
  *     { id: 137, name: 'Polygon' }
@@ -27,7 +27,7 @@ import { adapterRegistry } from './adapters/registry';
  */
 interface GetChainsListParams extends InitialChains {
   /** The wallet type to determine chain compatibility */
-  walletType: WalletType;
+  connectorType: ConnectorType;
   /** Optional array of specific chain identifiers to filter or validate */
   chains?: ChainIdentifierArray;
 }
@@ -55,7 +55,7 @@ function isValidChainId(id: unknown): id is string | number {
 }
 
 /**
- * Retrieves chain list for a specific wallet type with automatic adapter loading.
+ * Retrieves chain list for a specific connectorType type with automatic adapter loading.
  *
  * This is the primary function for getting blockchain-compatible chains based on
  * wallet type and configuration. It automatically determines the correct adapter,
@@ -66,14 +66,14 @@ function isValidChainId(id: unknown): id is string | number {
  * - Solana clusters: Returns string cluster names from RPC configuration
  * - Future blockchains: Extensible through the adapter pattern
  *
- * @param params - Configuration object with wallet type and chain data
+ * @param params - Configuration object with connectorType type and chain data
  * @returns Promise resolving to array of chain identifiers
  *
  * @example
  * ```typescript
  * // Get EVM chains for MetaMask
- * const evmChains = await getChainsListByWalletType({
- *   walletType: WalletType.EVM_METAMASK,
+ * const evmChains = await getChainsListByConnectorType({
+ *   connectorType: ConnectorType.EVM_METAMASK,
  *   appChains: [
  *     { id: 1, name: 'Ethereum' },
  *     { id: 137, name: 'Polygon' }
@@ -82,8 +82,8 @@ function isValidChainId(id: unknown): id is string | number {
  * // Returns: [1, 137]
  *
  * // Get Solana clusters for Phantom
- * const solanaClusters = await getChainsListByWalletType({
- *   walletType: WalletType.SOLANA_PHANTOM,
+ * const solanaClusters = await getChainsListByConnectorType({
+ *   connectorType: ConnectorType.SOLANA_PHANTOM,
  *   solanaRPCUrls: {
  *     'mainnet-beta': 'https://api.mainnet-beta.solana.com',
  *     'devnet': 'https://api.devnet.solana.com'
@@ -94,15 +94,15 @@ function isValidChainId(id: unknown): id is string | number {
  *
  * @since 1.0.0
  */
-export async function getChainsListByWalletType(params: GetChainsListParams): Promise<(string | number)[]> {
-  const { walletType, chains = [], ...config } = params;
+export async function getChainsListByConnectorType(params: GetChainsListParams): Promise<(string | number)[]> {
+  const { connectorType, chains = [], ...config } = params;
 
-  if (!walletType) {
-    console.warn('getChainsListByWalletType: walletType is required');
+  if (!connectorType) {
+    console.warn('getChainsListByConnectorType: connectorType is required');
     return [];
   }
 
-  const adapterType = getAdapterFromWalletType(walletType);
+  const adapterType = getAdapterFromConnectorType(connectorType);
   const adapter = await adapterRegistry.getAdapter(adapterType);
 
   if (!adapter) {
@@ -145,22 +145,22 @@ export async function getChainsListByWalletType(params: GetChainsListParams): Pr
  *
  * // Now safe to use sync version
  * const chains = getChainsListByWalletTypeSync({
- *   walletType: WalletType.EVM_METAMASK,
+ *   connectorType: ConnectorType.EVM_METAMASK,
  *   appChains: evmConfiguration
  * });
  * ```
  *
  * @since 1.0.0
  */
-export function getChainsListByWalletTypeSync(params: GetChainsListParams): (string | number)[] {
-  const { walletType, chains = [], ...config } = params;
+export function getChainsListByConnectorTypeSync(params: GetChainsListParams): (string | number)[] {
+  const { connectorType, chains = [], ...config } = params;
 
-  if (!walletType) {
-    console.warn('getChainsListByWalletType: walletType is required');
+  if (!connectorType) {
+    console.warn('getChainsListByConnectorType: connectorType is required');
     return [];
   }
 
-  const adapterType = getAdapterFromWalletType(walletType);
+  const adapterType = getAdapterFromConnectorType(connectorType);
   const adapter = adapterRegistry.getLoadedAdapter(adapterType);
 
   if (adapter) {

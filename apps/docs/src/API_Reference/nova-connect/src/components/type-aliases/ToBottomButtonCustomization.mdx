@@ -1,0 +1,143 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ToBottomButtonCustomization
+
+> **ToBottomButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ToBottomButton.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ToBottomButton.tsx#L27)
+
+Customization options for ToBottomButton component
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"button"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToBottomButton.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ToBottomButton.tsx#L29)
+
+Override button element props
+
+***
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToBottomButton.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ToBottomButton.tsx#L38)
+
+Custom class name generators
+
+#### button()?
+
+> `optional` **button**: (`params`) => `string`
+
+Function to generate button classes
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+###### hasOnClick
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### icon()?
+
+> `optional` **icon**: (`params`) => `string`
+
+Function to generate icon classes
+
+##### Parameters
+
+###### params
+
+###### disabled
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToBottomButton.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ToBottomButton.tsx#L31)
+
+Custom components
+
+#### Content?
+
+> `optional` **Content**: `ComponentType`\<`CustomContentProps`\>
+
+Custom button content component (wraps the icon)
+
+#### Icon?
+
+> `optional` **Icon**: `ComponentType`\<`CustomIconProps`\>
+
+Custom icon component
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToBottomButton.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ToBottomButton.tsx#L45)
+
+Custom event handlers
+
+#### onClick()?
+
+> `optional` **onClick**: (`originalHandler`, `event`) => `void`
+
+Custom click handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`
+
+#### onKeyDown()?
+
+> `optional` **onKeyDown**: (`originalHandler`, `event`) => `void`
+
+Custom keydown handler wrapper
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+###### event
+
+`React.KeyboardEvent`\<`HTMLButtonElement`\>
+
+##### Returns
+
+`void`

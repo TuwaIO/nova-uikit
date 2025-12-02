@@ -1,0 +1,69 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalNameAndBalance
+
+> `const` **ConnectedModalNameAndBalance**: `ForwardRefExoticComponent`\<[`ConnectedModalNameAndBalanceProps`](../interfaces/ConnectedModalNameAndBalanceProps.md) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:549](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L549)
+
+Component that displays wallet name/ENS and balance information with copy functionality and comprehensive customization options.
+
+This component provides a comprehensive display of wallet identification and balance:
+- ENS name or abbreviated wallet address
+- Animated copy button with visual feedback
+- Loading states for balance information
+- Proper accessibility support with ARIA labels
+- Smooth animations for state transitions
+- Comprehensive customization for all UI elements and behaviors
+- Animation support with reduced motion options
+- Custom event handlers for enhanced interactivity
+- Performance-optimized with memoized calculations
+
+The component automatically handles wallet address copying with visual feedback
+and provides screen reader friendly content throughout all interactions.
+
+## Examples
+
+```tsx
+<ConnectedModalNameAndBalance
+  ensNameAbbreviated="wallet.eth"
+  balanceLoading={false}
+  balance={{ value: "1.23", symbol: "ETH" }}
+  refetch={() => {}}
+/>
+```
+
+```tsx
+<ConnectedModalNameAndBalance
+  ensNameAbbreviated="wallet.eth"
+  balanceLoading={false}
+  balance={{ value: "1.23", symbol: "ETH" }}
+  refetch={() => {}}
+  customization={{
+    classNames: {
+      container: ({ hasActiveWallet }) =>
+        `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
+      walletNameDisplay: () => "text-2xl font-bold text-blue-600",
+      copyButton: ({ isCopied }) =>
+        `copy-btn ${isCopied ? 'success' : 'default'}`,
+    },
+    components: {
+      WalletNameDisplay: ({ ensNameAbbreviated, className }) =>
+        <h2 className={className}>{ensNameAbbreviated}</h2>,
+    },
+    handlers: {
+      onCopySuccess: (address) => console.log(`Copied: ${address}`),
+      onCopyError: (error, address) =>
+        console.error(`Failed to copy ${address}:`, error),
+    },
+    config: {
+      copyButtonPosition: 'left',
+      ariaLabels: {
+        container: 'Wallet information section',
+      },
+    },
+  }}
+/>
+```

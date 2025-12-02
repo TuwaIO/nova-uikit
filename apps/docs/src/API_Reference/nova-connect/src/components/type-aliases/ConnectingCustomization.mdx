@@ -1,0 +1,441 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectingCustomization
+
+> **ConnectingCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:121](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L121)
+
+Customization options for Connecting component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L146)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### errorDetails()?
+
+> `optional` **errorDetails**: (`params`) => `string`
+
+Function to generate error details classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### errorMessage()?
+
+> `optional` **errorMessage**: (`params`) => `string`
+
+Function to generate error message classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### loadingPlaceholder()?
+
+> `optional` **loadingPlaceholder**: (`params`) => `string`
+
+Function to generate loading placeholder classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### messageContainer()?
+
+> `optional` **messageContainer**: (`params`) => `string`
+
+Function to generate message container classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### spinner()?
+
+> `optional` **spinner**: (`params`) => `string`
+
+Function to generate spinner classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### statusContainer()?
+
+> `optional` **statusContainer**: (`params`) => `string`
+
+Function to generate status container classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### statusIcon()?
+
+> `optional` **statusIcon**: (`params`) => `string`
+
+Function to generate status icon classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### statusMessage()?
+
+> `optional` **statusMessage**: (`params`) => `string`
+
+Function to generate status message classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+#### walletIconContainer()?
+
+> `optional` **walletIconContainer**: (`params`) => `string`
+
+Function to generate wallet icon container classes
+
+##### Parameters
+
+###### params
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:123](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L123)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### ErrorDetails?
+
+> `optional` **ErrorDetails**: `ComponentType`\<`ErrorDetailsProps`\>
+
+Custom error details
+
+#### ErrorMessage?
+
+> `optional` **ErrorMessage**: `ComponentType`\<`ErrorMessageProps`\>
+
+Custom error message
+
+#### LoadingPlaceholder?
+
+> `optional` **LoadingPlaceholder**: `ComponentType`\<`LoadingPlaceholderProps`\>
+
+Custom loading placeholder
+
+#### MessageContainer?
+
+> `optional` **MessageContainer**: `ComponentType`\<`MessageContainerProps`\>
+
+Custom message container
+
+#### Spinner?
+
+> `optional` **Spinner**: `ComponentType`\<`SpinnerProps`\>
+
+Custom loading spinner
+
+#### StatusContainer?
+
+> `optional` **StatusContainer**: `ComponentType`\<`StatusContainerProps`\>
+
+Custom status container
+
+#### StatusIcon?
+
+> `optional` **StatusIcon**: `ComponentType`\<`StatusIconProps`\>
+
+Custom status icon
+
+#### StatusMessage?
+
+> `optional` **StatusMessage**: `ComponentType`\<`StatusMessageProps`\>
+
+Custom status message
+
+#### WalletIconContainer?
+
+> `optional` **WalletIconContainer**: `ComponentType`\<`WalletIconContainerProps`\>
+
+Custom wallet icon container
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L182)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation**: `object`
+
+Custom animation settings
+
+##### animation.spinnerDuration?
+
+> `optional` **spinnerDuration**: `string`
+
+##### animation.transitionDuration?
+
+> `optional` **transitionDuration**: `string`
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container?
+
+> `optional` **container**: `string`
+
+##### ariaLabels.errorIcon?
+
+> `optional` **errorIcon**: `string`
+
+##### ariaLabels.loading?
+
+> `optional` **loading**: `string`
+
+##### ariaLabels.spinner?
+
+> `optional` **spinner**: `string`
+
+##### ariaLabels.successIcon?
+
+> `optional` **successIcon**: `string`
+
+#### icons?
+
+> `optional` **icons**: `object`
+
+Custom icon settings
+
+##### icons.customErrorIcon?
+
+> `optional` **customErrorIcon**: `ComponentType`\<\{ `className?`: `string`; \}\>
+
+##### icons.customSuccessIcon?
+
+> `optional` **customSuccessIcon**: `ComponentType`\<\{ `className?`: `string`; \}\>
+
+##### icons.showErrorIcon?
+
+> `optional` **showErrorIcon**: `boolean`
+
+##### icons.showSuccessIcon?
+
+> `optional` **showSuccessIcon**: `boolean`
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L169)
+
+Custom event handlers
+
+#### onCleanup()?
+
+> `optional` **onCleanup**: (`statusData`) => `void`
+
+Custom cleanup handler called on unmount
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`void`
+
+#### onConnectingStart()?
+
+> `optional` **onConnectingStart**: (`statusData`) => `void`
+
+Custom handler for connection start
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`void`
+
+#### onError()?
+
+> `optional` **onError**: (`error`, `statusData`) => `void`
+
+Custom handler for error occurrence
+
+##### Parameters
+
+###### error
+
+`unknown`
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`void`
+
+#### onStateChange()?
+
+> `optional` **onStateChange**: (`state`, `statusData`) => `void`
+
+Custom handler for state change
+
+##### Parameters
+
+###### state
+
+[`ConnectionState`](ConnectionState.md)
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`void`
+
+#### onSuccess()?
+
+> `optional` **onSuccess**: (`statusData`) => `void`
+
+Custom handler for successful connection
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](../interfaces/ConnectingStatusData.md)
+
+##### Returns
+
+`void`

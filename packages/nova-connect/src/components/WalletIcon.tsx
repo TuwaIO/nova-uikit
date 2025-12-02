@@ -4,7 +4,7 @@
 
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { cn } from '@tuwaio/nova-core';
-import { formatWalletName } from '@tuwaio/orbit-core';
+import { formatConnectorName } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
@@ -134,7 +134,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
     } = customization?.components ?? {};
 
     // Format wallet name for consistency
-    const walletName = useMemo(() => formatWalletName(name), [name]);
+    const walletName = useMemo(() => formatConnectorName(name), [name]);
 
     // Generate alt text for accessibility
     const imageAltText = useMemo(() => {

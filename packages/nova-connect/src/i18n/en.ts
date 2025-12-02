@@ -8,6 +8,7 @@ export const defaultLabels: NovaConnectLabels = {
   // Core actions - Primary user interactions
   connectWallet: 'Connect Wallet',
   disconnect: 'Disconnect',
+  disconnectAll: 'Disconnect all',
   connecting: 'Connecting...',
   connected: 'Connected',
   tryAgain: 'Try again',
@@ -15,6 +16,10 @@ export const defaultLabels: NovaConnectLabels = {
   connect: 'Connect',
   close: 'Close',
   all: 'All',
+  active: 'Active',
+  connectors: 'Connectors',
+  wallet: 'Wallet',
+  connectNewWallet: 'Connect new wallet',
 
   // Connection states - Status messages for wallet connection flow
   connectionError: 'Connection error',
@@ -42,6 +47,7 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetwork: 'Switch network',
   switchNetworks: 'Switch Networks',
   connectingEllipsis: 'Connecting...',
+  connectedWallets: 'Connected Wallets',
 
   // Wallet sections - Categories for wallet connector grouping
   installed: 'Installed',
@@ -62,7 +68,7 @@ export const defaultLabels: NovaConnectLabels = {
   viewTransactions: 'View transactions',
 
   // Impersonation form - Labels for wallet address impersonation feature
-  enterWalletAddress: 'Enter wallet address to impersonate',
+  enterWalletAddressOrAddressName: 'Enter wallet address or address name to impersonate',
   walletAddressPlaceholder: '0x...',
 
   // Error messages - User-facing error notifications and descriptions
@@ -127,7 +133,7 @@ export const defaultLabels: NovaConnectLabels = {
   walletIcon: 'Wallet icon',
 
   // Impersonate errors
-  impersonateAddressEmpty: 'Enter a wallet address to impersonate.',
-  impersonateAddressNotCorrect: 'Entered wallet address is not correct. Please try again.',
+  impersonateAddressEmpty: 'Enter a wallet address or name to impersonate.',
+  impersonateAddressNotCorrect: 'Entered wallet address or name is not correct. Please try again.',
   impersonateAddressConnected: 'First disconnect the wallet to impersonate another address.',
 };

@@ -1,0 +1,301 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ImpersonateFormCustomization
+
+> **ImpersonateFormCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L68)
+
+Customization options for ImpersonateForm component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L81)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: () => `string`
+
+Function to generate container classes
+
+##### Returns
+
+`string`
+
+#### errorMessage()?
+
+> `optional` **errorMessage**: () => `string`
+
+Function to generate error message classes
+
+##### Returns
+
+`string`
+
+#### input()?
+
+> `optional` **input**: (`params`) => `string`
+
+Function to generate input classes
+
+##### Parameters
+
+###### params
+
+###### hasError
+
+`boolean`
+
+###### hasInteracted
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### label()?
+
+> `optional` **label**: () => `string`
+
+Function to generate label classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L70)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### ErrorMessage?
+
+> `optional` **ErrorMessage**: `ComponentType`\<`ErrorMessageProps`\>
+
+Custom error message component
+
+#### Input?
+
+> `optional` **Input**: `ComponentType`\<`InputProps`\>
+
+Custom input component
+
+#### Label?
+
+> `optional` **Label**: `ComponentType`\<`LabelProps`\>
+
+Custom label component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L111)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.errorRegion?
+
+> `optional` **errorRegion**: `string`
+
+##### ariaLabels.input?
+
+> `optional` **input**: `string`
+
+#### input?
+
+> `optional` **input**: `object`
+
+Custom input attributes
+
+##### input.autoComplete?
+
+> `optional` **autoComplete**: `string`
+
+##### input.placeholder?
+
+> `optional` **placeholder**: `string`
+
+##### input.spellCheck?
+
+> `optional` **spellCheck**: `boolean`
+
+#### validation?
+
+> `optional` **validation**: `Partial`\<[`ValidationConfig`](../interfaces/ValidationConfig.md)\>
+
+Custom validation configuration
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L92)
+
+Custom event handlers
+
+#### onAddressResolved()?
+
+> `optional` **onAddressResolved**: (`originalValue`, `resolvedAddress`) => `void`
+
+Custom handler for resolved address
+
+##### Parameters
+
+###### originalValue
+
+`string`
+
+###### resolvedAddress
+
+`string`
+
+##### Returns
+
+`void`
+
+#### onInputBlur()?
+
+> `optional` **onInputBlur**: (`displayValue`, `resolvedAddress`) => `void`
+
+Custom handler for input blur (called after default logic)
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+###### resolvedAddress
+
+`string` | `null`
+
+##### Returns
+
+`void`
+
+#### onInputChange()?
+
+> `optional` **onInputChange**: (`displayValue`, `resolvedAddress`) => `void`
+
+Custom handler for input change (called after default logic)
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+###### resolvedAddress
+
+`string` | `null`
+
+##### Returns
+
+`void`
+
+#### onInputPaste()?
+
+> `optional` **onInputPaste**: (`displayValue`, `resolvedAddress`) => `void`
+
+Custom handler for paste events
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+###### resolvedAddress
+
+`string` | `null`
+
+##### Returns
+
+`void`
+
+#### onMount()?
+
+> `optional` **onMount**: () => `void`
+
+Custom handler for component mount
+
+##### Returns
+
+`void`
+
+#### onUnmount()?
+
+> `optional` **onUnmount**: () => `void`
+
+Custom handler for component unmount
+
+##### Returns
+
+`void`
+
+#### onValidationComplete()?
+
+> `optional` **onValidationComplete**: (`value`, `error`) => `void`
+
+Custom handler for validation complete
+
+##### Parameters
+
+###### value
+
+`string`
+
+###### error
+
+`string` | `null`
+
+##### Returns
+
+`void`
+
+#### onValidationStart()?
+
+> `optional` **onValidationStart**: (`value`) => `void`
+
+Custom handler for validation start
+
+##### Parameters
+
+###### value
+
+`string`
+
+##### Returns
+
+`void`

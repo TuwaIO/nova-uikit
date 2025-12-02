@@ -1,0 +1,69 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModalTxHistory
+
+> `const` **ConnectedModalTxHistory**: `ForwardRefExoticComponent`\<[`ConnectedModalTxHistoryProps`](../interfaces/ConnectedModalTxHistoryProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:467](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L467)
+
+Component for displaying transaction history with comprehensive customization options.
+
+This component provides comprehensive transaction history functionality:
+- Conditional loading of the @tuwaio/nova-transactions package
+- Graceful fallback when the package is not available
+- Loading states with proper accessibility support
+- Error handling for missing configuration
+- Full WCAG compliance with ARIA labels
+- Comprehensive customization for all UI elements and behaviors
+- Animation support with reduced motion options
+- Custom event handlers for enhanced interactivity
+- Performance-optimized with memoized calculations
+
+The component automatically detects if the required dependencies are available
+and provides appropriate fallbacks for different scenarios.
+
+## Examples
+
+```tsx
+<ConnectedModalTxHistory
+  transactionPool={txPool}
+  pulsarAdapter={adapter}
+  className="custom-styling"
+/>
+```
+
+```tsx
+<ConnectedModalTxHistory
+  transactionPool={txPool}
+  pulsarAdapter={adapter}
+  customization={{
+    classNames: {
+      container: ({ hasActiveWallet }) =>
+        `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
+      loadingContainer: () => "custom-loading bg-blue-100",
+      errorContainer: () => "custom-error bg-red-100",
+    },
+    components: {
+      LoadingContainer: ({ className }) =>
+        <div className={cn("custom-spinner", className)} />,
+    },
+    handlers: {
+      onPackageLoadingFailure: (packageName, error) =>
+        console.error(`Failed to load ${packageName}:`, error),
+    },
+    config: {
+      packageName: '@custom/transactions',
+      ariaLabels: {
+        loading: 'Loading transaction history...',
+        error: 'Error loading transactions',
+      },
+    },
+    animation: {
+      container: { duration: 0.3, ease: 'easeOut' },
+      error: { duration: 0.2, ease: 'easeIn' },
+    },
+  }}
+/>
+```

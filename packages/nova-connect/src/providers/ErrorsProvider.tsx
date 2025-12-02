@@ -142,8 +142,8 @@ export function ErrorsProvider({
   const labels = useNovaConnectLabels();
 
   const switchNetworkError = useSatelliteConnectStore((store) => store.switchNetworkError);
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
-  const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+  const connectionError = useSatelliteConnectStore((store) => store.connectionError);
 
   // Extract custom components and handlers
   const { ToastError: CustomToastError = DefaultToastError, Container = DefaultContainer } =
@@ -166,25 +166,25 @@ export function ErrorsProvider({
 
   // Memoize error state
   const errorState = useMemo(() => {
-    const hasWalletError = Boolean(walletConnectionError);
+    const hasWalletError = Boolean(connectionError);
     const hasSwitchError = Boolean(switchNetworkError);
-    const isConnected = Boolean(activeWallet?.isConnected);
+    const isConnected = Boolean(activeConnection?.isConnected);
 
     return {
       hasWalletError,
       hasSwitchError,
       isConnected,
       hasAnyError: hasWalletError || hasSwitchError,
-      primaryError: walletConnectionError || switchNetworkError || null,
+      primaryError: connectionError || switchNetworkError || null,
       errorType: (hasWalletError ? 'wallet' : hasSwitchError ? 'switch' : null) as 'wallet' | 'switch' | null,
     };
-  }, [walletConnectionError, switchNetworkError, activeWallet?.isConnected]);
+  }, [connectionError, switchNetworkError, activeConnection?.isConnected]);
 
   // Memoize default error title based on type (using labels, NOT customizing them)
   const defaultErrorTitle = useMemo(() => {
     switch (errorState.errorType) {
       case 'wallet':
-        return labels.walletConnectionError;
+        return labels.connectionError;
       case 'switch':
         return labels.errorWhenChainSwitching;
       default:

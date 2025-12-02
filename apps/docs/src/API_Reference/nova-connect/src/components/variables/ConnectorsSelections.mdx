@@ -1,0 +1,106 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectorsSelections
+
+> `const` **ConnectorsSelections**: `NamedExoticComponent`\<[`ConnectorsSelectionsProps`](../interfaces/ConnectorsSelectionsProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:431](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L431)
+
+ConnectorsSelections component - Main wallet selection interface with categorized connectors
+
+This component provides the primary wallet selection interface with:
+- Categorized wallet sections (Installed, Popular, Impersonate)
+- Responsive layout adapting to touch/mouse interfaces
+- Safe App environment detection and filtering
+- Empty state handling for missing connectors
+- Educational content integration for touch devices
+- Full accessibility support with semantic structure
+- Complete customization of all child components and styling
+
+Wallet categorization:
+- Installed: Detected browser extension wallets (excluding popular ones)
+- Popular: Coinbase Wallet and WalletConnect for broader compatibility
+- Impersonate: Development/testing wallet for address simulation
+- Safe App filtering: Conditional Safe Wallet display based on environment
+
+Layout features:
+- Touch devices: Horizontal scrolling with educational disclaimer
+- Mouse devices: Vertical scrolling with fixed height container
+- Responsive grid adapting to screen size and device capabilities
+- Custom scrollbar styling with NovaCustomScroll class
+- Customizable layout parameters and responsive behavior
+
+Empty state handling:
+- Clear error messaging when no connectors found
+- Contextual help text explaining the issue
+- Visual indicators with warning icons
+- Proper error state accessibility
+- Customizable empty state content and styling
+
+Accessibility features:
+- Semantic HTML structure with proper headings
+- ARIA labels for screen readers
+- Role-based navigation support
+- Focus management for keyboard users
+- Error states with descriptive messaging
+- Customizable ARIA labels and descriptions
+
+## Examples
+
+```tsx
+<ConnectorsSelections
+  selectedAdapter={OrbitAdapter.EVM}
+  connectors={availableConnectors}
+  onClick={(connector) => handleWalletSelection(connector)}
+  setIsConnected={setConnectionStatus}
+  setIsOpen={setModalOpen}
+  waitForPredict={() => checkConnectionState()}
+  setContentType={setModalContent}
+  withImpersonated={true}
+  isOnlyOneNetwork={false}
+  appChains={chainConfiguration}
+  solanaRPCUrls={solanaConfig}
+  store={walletStore}
+/>
+```
+
+```tsx
+<ConnectorsSelections
+  selectedAdapter={undefined}
+  connectors={allConnectors}
+  onClick={(connector) => initiateConnection(connector)}
+  setIsConnected={updateConnectionState}
+  setIsOpen={toggleModal}
+  waitForPredict={predictConnection}
+  setContentType={changeContent}
+  withImpersonated={false}
+  isOnlyOneNetwork={true}
+  customization={{
+    components: {
+      Container: CustomSelectionsContainer,
+      EmptyState: CustomEmptyStateComponent
+    },
+    classNames: {
+      connectorsArea: ({ selectionsData }) =>
+        selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
+      impersonateSection: ({ impersonateData }) =>
+        impersonateData.isTouch ? 'touch-impersonate' : 'mouse-impersonate'
+    },
+    handlers: {
+      onImpersonateClick: (impersonateData, selectionsData, originalHandler) => {
+        analytics.track('impersonate_clicked');
+        originalHandler();
+      }
+    },
+    connectorsBlock: {
+      installed: {
+        classNames: {
+          title: () => 'custom-installed-title'
+        }
+      }
+    }
+  }}
+/>
+```

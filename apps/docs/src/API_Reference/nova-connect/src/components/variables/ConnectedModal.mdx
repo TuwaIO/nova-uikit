@@ -1,0 +1,37 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectedModal
+
+> `const` **ConnectedModal**: `ForwardRefExoticComponent`\<[`ConnectedModalProps`](../interfaces/ConnectedModalProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:413](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L413)
+
+Modal component that displays wallet connection status and provides access to wallet controls with comprehensive customization options.
+
+This modal serves as the main interface for connected wallet management, offering:
+- Wallet connection status and information
+- Network switching capabilities
+- Transaction history viewing
+- Wallet disconnection controls
+- Comprehensive customization for all UI elements and behaviors
+- Animation support with reduced motion options
+- Custom event handlers for enhanced interactivity
+- Performance-optimized with memoized calculations
+- Full customization of child components through parent
+
+The modal adapts its content based on the current view state and provides
+full WCAG compliance with proper ARIA labels and keyboard navigation support.
+
+## Example
+
+```tsx
+<ConnectedModal
+  solanaRPCUrls={solanaConfig}
+  transactionPool={txPool}
+  pulsarAdapter={adapter}
+  appChains={chainConfig}
+  store={store}
+/>
+```

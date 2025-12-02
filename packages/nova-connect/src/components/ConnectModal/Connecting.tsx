@@ -4,7 +4,7 @@
 
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
-import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
@@ -416,7 +416,7 @@ export const Connecting = memo(
       ref,
     ) => {
       const labels = useNovaConnectLabels();
-      const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+      const connectionError = useSatelliteConnectStore((store) => store.connectionError);
 
       const isMountedRef = useRef(true);
       const prevStateRef = useRef<ConnectionState | null>(null);
@@ -448,17 +448,21 @@ export const Connecting = memo(
           performDefaultCleanup();
           return null;
         }
-        return connectors.find((connector) => formatWalletName(connector.name) === activeConnector) || null;
+        return (
+          connectors.find((connector) =>
+            formatConnectorName(connector.name).toLowerCase().includes(activeConnector.toLowerCase()),
+          ) || null
+        );
       }, [connectors, activeConnector]);
 
       /**
        * Determine current connection state
        */
       const connectionState = useMemo((): ConnectionState => {
-        if (walletConnectionError || customErrorMessage) return 'error';
+        if (connectionError || customErrorMessage) return 'error';
         if (isConnected) return 'success';
         return 'connecting';
-      }, [walletConnectionError, customErrorMessage, isConnected]);
+      }, [connectionError, customErrorMessage, isConnected]);
 
       /**
        * Memoized display message
@@ -500,7 +504,7 @@ export const Connecting = memo(
           selectedAdapter,
           currentConnector,
           showDetailedError,
-          rawError: walletConnectionError,
+          rawError: connectionError,
         }),
         [
           connectionState,
@@ -510,7 +514,7 @@ export const Connecting = memo(
           selectedAdapter,
           currentConnector,
           showDetailedError,
-          walletConnectionError,
+          connectionError,
         ],
       );
 
@@ -584,7 +588,7 @@ export const Connecting = memo(
           customHandlers?.onStateChange?.(connectionState, statusData);
 
           if (connectionState === 'error') {
-            customHandlers?.onError?.(walletConnectionError, statusData);
+            customHandlers?.onError?.(connectionError, statusData);
           } else if (connectionState === 'success') {
             customHandlers?.onSuccess?.(statusData);
           } else if (connectionState === 'connecting') {
@@ -595,7 +599,7 @@ export const Connecting = memo(
         }
 
         prevStatusDataRef.current = statusData;
-      }, [connectionState, statusData, customHandlers, walletConnectionError]);
+      }, [connectionState, statusData, customHandlers, connectionError]);
 
       useEffect(() => {
         isMountedRef.current = true;
@@ -765,7 +769,7 @@ export const Connecting = memo(
             )}
 
             {/* Additional Error Information */}
-            {connectionState === 'error' && showDetailedError && walletConnectionError && (
+            {connectionState === 'error' && showDetailedError && connectionError && (
               <CustomErrorDetails
                 className={
                   customization?.classNames?.errorDetails?.({ statusData }) ?? cn('novacon:mt-3 novacon:text-left')
@@ -776,7 +780,7 @@ export const Connecting = memo(
                   {labels.copyRawError}
                 </summary>
                 <pre className="novacon:mt-2 novacon:p-3 novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-md novacon:text-xs novacon:font-mono novacon:text-[var(--tuwa-text-secondary)] novacon:overflow-auto novacon:max-h-32">
-                  {JSON.stringify(walletConnectionError, null, 2)}
+                  {JSON.stringify(connectionError, null, 2)}
                 </pre>
               </CustomErrorDetails>
             )}

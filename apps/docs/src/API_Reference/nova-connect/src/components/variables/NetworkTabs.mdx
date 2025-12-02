@@ -1,0 +1,95 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NetworkTabs
+
+> `const` **NetworkTabs**: `NamedExoticComponent`\<[`NetworkTabsProps`](../interfaces/NetworkTabsProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:417](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L417)
+
+NetworkTabs component - Animated tab navigation for network selection with comprehensive customization
+
+This component provides an animated tab interface for selecting blockchain networks:
+- Animated tab transitions with smooth layouts powered by Framer Motion
+- Visual network icons with Web3Icon integration and fallbacks
+- Configurable "All networks" option for viewing all connectors
+- Responsive horizontal scrolling for mobile-friendly experience
+- Full accessibility support with proper ARIA labels and keyboard navigation
+- Motion-based UI feedback with customizable animation timing
+- Complete customization of all child components and animations
+
+Key features:
+- Framer Motion powered animations with configurable timing and easing
+- Dynamic tab indicator that smoothly morphs between selections
+- Network icons with proper Web3Icon integration and fallback support
+- Conditional rendering based on configurable minimum network threshold
+- Touch-friendly interface with horizontal scrolling support
+- Full component tree customization through render prop pattern
+
+Animation system:
+- Layout animations for smooth tab movement with configurable duration
+- Text fade transitions with customizable timing when switching tabs
+- Morphing background indicator with layoutId for smooth transitions
+- Optimized animation durations tuned for natural feel
+- Support for reduced motion preferences
+
+Accessibility features:
+- Proper tablist and tab ARIA semantics for screen readers
+- Keyboard navigation support (Tab, Space, Enter, Arrow keys)
+- Dynamic ARIA labels with selection state announcements
+- Focus management with visible focus indicators
+- Meaningful tooltips and descriptions for each network
+- Screen reader friendly icon descriptions
+
+## Examples
+
+```tsx
+<NetworkTabs
+  networks={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
+  selectedAdapter={OrbitAdapter.EVM}
+  onSelect={(adapter) => handleNetworkChange(adapter)}
+/>
+```
+
+```tsx
+<NetworkTabs
+  networks={networks}
+  selectedAdapter={selectedNetwork}
+  onSelect={setSelectedNetwork}
+  customization={{
+    config: {
+      animation: {
+        layoutDuration: 0.3,
+        textDuration: 0.15
+      }
+    }
+  }}
+/>
+```
+
+```tsx
+<NetworkTabs
+  networks={networks}
+  selectedAdapter={selectedNetwork}
+  onSelect={setSelectedNetwork}
+  customization={{
+    components: {
+      TabButton: CustomTabButton,
+      Indicator: CustomIndicator
+    },
+    classNames: {
+      tabButton: ({ isSelected }) => isSelected ? 'custom-selected' : 'custom-normal'
+    },
+    handlers: {
+      onTabSelect: (network, tabData) => {
+        analytics.track('network_tab_selected', { network: network?.name });
+      }
+    },
+    config: {
+      minNetworksToShow: 2,
+      showAllOption: false
+    }
+  }}
+/>
+```

@@ -1,4 +1,4 @@
-import { formatWalletName, OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 
 import { Connector } from '../satellite';
 
@@ -60,7 +60,7 @@ export function getGroupedConnectors(
   }
 
   // Create exclusion set for efficient lookup
-  const excludeSet = new Set(excludeConnectors.map((name) => formatWalletName(name)));
+  const excludeSet = new Set(excludeConnectors.map((name) => formatConnectorName(name)));
 
   // Process and collect all valid connectors
   const processedConnectors: ProcessedConnector[] = [];
@@ -72,7 +72,7 @@ export function getGroupedConnectors(
       adapterConnectors.forEach((connector) => {
         const processed = processConnector(connector, adapter);
         if (processed) {
-          const formattedName = formatWalletName(processed.name);
+          const formattedName = formatConnectorName(processed.name);
           if (!excludeSet.has(formattedName)) {
             processedConnectors.push(processed);
           }
@@ -85,7 +85,7 @@ export function getGroupedConnectors(
   const groupedMap = new Map<string, GroupedConnector>();
 
   processedConnectors.forEach((processed) => {
-    const formattedName = formatWalletName(processed.name);
+    const formattedName = formatConnectorName(processed.name);
 
     if (!groupedMap.has(formattedName)) {
       groupedMap.set(formattedName, {

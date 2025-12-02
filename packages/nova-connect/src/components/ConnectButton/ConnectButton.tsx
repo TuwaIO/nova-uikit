@@ -1,5 +1,5 @@
 import { cn } from '@tuwaio/nova-core';
-import { BaseWallet } from '@tuwaio/satellite-core';
+import { BaseConnector } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
@@ -24,7 +24,7 @@ export interface ConnectButtonData {
   /** Current labels from i18n */
   labels: ReturnType<typeof useNovaConnectLabels>;
   /** Active wallet information */
-  activeWallet: BaseWallet | undefined;
+  activeConnection: BaseConnector | undefined;
 }
 
 // --- Component Props Types ---
@@ -238,7 +238,7 @@ export type ConnectButtonProps = Pick<NovaConnectProviderProps, 'transactionPool
 export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionPool, customization = {} }) => {
   const labels = useNovaConnectLabels();
 
-  const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const {
     setIsConnectedModalOpen,
     setIsConnectModalOpen,
@@ -249,19 +249,19 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     withImpersonated,
   } = useNovaConnect();
 
-  const isConnected = useMemo(() => Boolean(activeWallet?.isConnected), [activeWallet?.isConnected]);
+  const isConnected = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
 
   // Memoize button data for customization context
   const buttonData = useMemo<ConnectButtonData>(
     () => ({
       isConnected,
       labels,
-      activeWallet,
+      activeConnection,
       withChain,
       withBalance,
       withImpersonated,
     }),
-    [isConnected, withChain, withBalance, withImpersonated, labels, activeWallet],
+    [isConnected, withChain, withBalance, withImpersonated, labels, activeConnection],
   );
 
   // Extract customization options

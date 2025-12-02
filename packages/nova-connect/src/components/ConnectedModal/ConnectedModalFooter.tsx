@@ -3,7 +3,7 @@
  */
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
-import { getAdapterFromWalletType } from '@tuwaio/orbit-core';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
@@ -24,6 +24,7 @@ type CustomDisconnectButtonProps = {
   'data-testid'?: string;
   'aria-describedby'?: string;
   disabled?: boolean;
+  connectionsCount: number;
 };
 
 type CustomExplorerLinkProps = {
@@ -236,6 +237,7 @@ const DefaultDisconnectButton: React.FC<
   'data-testid': testId,
   'aria-describedby': ariaDescribedBy,
   disabled = false,
+  connectionsCount,
   ...props
 }) => {
   const iconPath =
@@ -253,9 +255,9 @@ const DefaultDisconnectButton: React.FC<
     >
       <DefaultDisconnectIcon pathData={iconPath} />
       <span id={ariaDescribedBy} className="novacon:sr-only">
-        {labels.disconnect} wallet and close modal
+        {labels.disconnectAll} wallet and close modal
       </span>
-      {labels.disconnect}
+      {connectionsCount > 1 ? labels.disconnectAll : labels.disconnect}
     </button>
   );
 };
@@ -496,7 +498,8 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
   ({ setIsOpen, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
 
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+    const connections = useSatelliteConnectStore((store) => store.connections);
     const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
     const disconnect = useSatelliteConnectStore((store) => store.disconnect);
 
@@ -534,17 +537,26 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
      * Memoized to prevent unnecessary recalculations
      */
     const explorerUrl = useMemo(() => {
-      if (!activeWallet) return explorerUrlFallback;
+      if (!activeConnection) return explorerUrlFallback;
 
       try {
-        const adapter = getAdapter(getAdapterFromWalletType(activeWallet.walletType));
-        return adapter?.getExplorerUrl(`/address/${activeWallet.address}`, activeWallet.chainId) || explorerUrlFallback;
+        const adapter = getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
+        return (
+          adapter?.getExplorerUrl(`/address/${activeConnection.address}`, activeConnection.chainId) ||
+          explorerUrlFallback
+        );
       } catch (error) {
         console.warn('Failed to generate explorer URL:', error);
         return explorerUrlFallback;
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeWallet?.walletType, activeWallet?.address, activeWallet?.chainId, getAdapter, explorerUrlFallback]);
+    }, [
+      activeConnection?.connectorType,
+      activeConnection?.address,
+      activeConnection?.chainId,
+      getAdapter,
+      explorerUrlFallback,
+    ]);
 
     /**
      * Check if explorer URL is valid for link functionality
@@ -596,20 +608,20 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
      */
     const handleExplorerClick = useCallback(
       (event: React.MouseEvent<HTMLAnchorElement>) => {
-        if (customization?.handlers?.onExplorerClick && activeWallet) {
-          customization.handlers.onExplorerClick(explorerUrl, activeWallet.address, event);
+        if (customization?.handlers?.onExplorerClick && activeConnection) {
+          customization.handlers.onExplorerClick(explorerUrl, activeConnection.address, event);
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [customization?.handlers?.onExplorerClick, explorerUrl, activeWallet?.address],
+      [customization?.handlers?.onExplorerClick, explorerUrl, activeConnection?.address],
     );
 
     // Generate container classes
     const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container && activeWallet) {
+      if (customization?.classNames?.container && activeConnection) {
         return customization.classNames.container({
           isValidExplorerUrl,
-          walletAddress: activeWallet.address,
+          walletAddress: activeConnection.address,
         });
       }
       return cn(
@@ -617,11 +629,11 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
         className,
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isValidExplorerUrl, activeWallet?.address, className]);
+    }, [customization?.classNames?.container, isValidExplorerUrl, activeConnection?.address, className]);
 
     // Generate disconnect button element
     const disconnectButtonElement = useMemo(() => {
-      if (!showDisconnectButton || !activeWallet) return null;
+      if (!showDisconnectButton || !activeConnection) return null;
 
       return (
         <DisconnectButton
@@ -630,12 +642,13 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           className={customization?.classNames?.disconnectButton?.({})}
           data-testid={disconnectButtonTestId}
           aria-describedby="disconnect-description"
+          connectionsCount={Object.keys(connections).length}
         />
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       showDisconnectButton,
-      activeWallet,
+      activeConnection,
       DisconnectButton,
       handleDisconnect,
       finalLabels,
@@ -645,13 +658,13 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
 
     // Generate explorer link element
     const explorerLinkElement = useMemo(() => {
-      if (!showExplorerLink || !activeWallet) return null;
+      if (!showExplorerLink || !activeConnection) return null;
 
       return (
         <ExplorerLink
           href={explorerUrl}
           labels={finalLabels}
-          walletAddress={activeWallet.address}
+          walletAddress={activeConnection.address}
           isValidUrl={isValidExplorerUrl}
           className={customization?.classNames?.explorerLink?.({
             isValidUrl: isValidExplorerUrl,
@@ -665,7 +678,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       showExplorerLink,
-      activeWallet,
+      activeConnection,
       ExplorerLink,
       explorerUrl,
       finalLabels,
@@ -689,7 +702,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     );
 
     // Early return if no active wallet
-    if (!activeWallet) return null;
+    if (!activeConnection) return null;
 
     return (
       <footer {...containerProps}>
@@ -697,7 +710,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           disconnectButton={disconnectButtonElement}
           explorerLink={explorerLinkElement}
           isValidExplorerUrl={isValidExplorerUrl}
-          walletAddress={activeWallet.address}
+          walletAddress={activeConnection.address}
           labels={finalLabels}
         />
       </footer>

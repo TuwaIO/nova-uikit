@@ -7,7 +7,7 @@ import { InitialChains } from '../types';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';
-export type ConnectedContentType = 'main' | 'transactions' | 'chains';
+export type ConnectedContentType = 'main' | 'transactions' | 'chains' | 'connections';
 
 // Provider props interface
 export interface NovaConnectProviderProps extends InitialChains {

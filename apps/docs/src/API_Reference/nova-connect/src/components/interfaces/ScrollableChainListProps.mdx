@@ -1,0 +1,123 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ScrollableChainListProps
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:161](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L161)
+
+Props for the ScrollableChainList component
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:175](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L175)
+
+ARIA label for the wrapper
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:163](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L163)
+
+List of chain identifiers to render
+
+***
+
+### customization?
+
+> `optional` **customization**: [`ScrollableChainListCustomization`](ScrollableChainListCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L173)
+
+Comprehensive customization options
+
+***
+
+### error?
+
+> `optional` **error**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:179](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L179)
+
+Error state
+
+***
+
+### getChainData()
+
+> **getChainData**: (`chain`) => `ChainData`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L169)
+
+Function to get formatted chain data
+
+#### Parameters
+
+##### chain
+
+`string` | `number`
+
+#### Returns
+
+`ChainData`
+
+***
+
+### handleValueChange()
+
+> **handleValueChange**: (`newChainId`) => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:167](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L167)
+
+Handler for chain selection changes
+
+#### Parameters
+
+##### newChainId
+
+`string`
+
+#### Returns
+
+`void`
+
+***
+
+### isLoading?
+
+> `optional` **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:177](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L177)
+
+Loading state
+
+***
+
+### onClose()
+
+> **onClose**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L171)
+
+Handler called when list should close
+
+#### Returns
+
+`void`
+
+***
+
+### selectValue
+
+> **selectValue**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:165](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L165)
+
+Currently selected chain value

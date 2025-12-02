@@ -10,9 +10,15 @@ function extractSolanaCluster(chainId: string): SolanaClusterMoniker | null {
   const parts = chainId.split(':');
   if (parts.length < 2) return null;
 
-  const cluster = parts[1] as SolanaClusterMoniker;
+  let cluster = parts[1];
+  // Map mainnet-beta to mainnet to match orbit-solana keys
+  if (cluster === 'mainnet-beta') {
+    cluster = 'mainnet';
+  }
+
+  const moniker = cluster as SolanaClusterMoniker;
   // Validate that it's a known cluster
-  return cluster in defaultRpcUrlsByMoniker ? cluster : null;
+  return moniker in defaultRpcUrlsByMoniker ? moniker : null;
 }
 
 /**
@@ -24,11 +30,18 @@ function buildSolanaRpcUrls(
 ): SolanaRPCUrls['rpcUrls'] {
   const availableRpcUrls: SolanaRPCUrls['rpcUrls'] = {};
 
+  // If config is provided, we only consider clusters defined in it.
+  // If not provided, we consider all default clusters.
+  const allowedClusters = solanaRPCUrls ? Object.keys(solanaRPCUrls) : Object.keys(defaultRpcUrlsByMoniker);
+
   for (const chainId of chains) {
     if (typeof chainId !== 'string') continue;
 
     const cluster = extractSolanaCluster(chainId);
     if (!cluster) continue;
+
+    // Check if this cluster is allowed by app config
+    if (!allowedClusters.includes(cluster)) continue;
 
     // Get RPC URL with fallback to default
     const rpcUrl = solanaRPCUrls?.[cluster] ?? defaultRpcUrlsByMoniker[cluster];

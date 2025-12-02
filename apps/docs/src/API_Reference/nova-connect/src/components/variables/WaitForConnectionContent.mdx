@@ -1,0 +1,61 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# WaitForConnectionContent
+
+> `const` **WaitForConnectionContent**: `ForwardRefExoticComponent`\<`Omit`\<[`WaitForConnectionContentProps`](../interfaces/WaitForConnectionContentProps.md), `"ref"`\> & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:278](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L278)
+
+A highly customizable connection prompt component with extensive styling options and accessibility features.
+Displays an animated wallet icon and text prompting users to connect their wallet, with comprehensive customization support.
+
+Features:
+- Animated container and wallet icon with Framer Motion
+- Comprehensive customization for all visual elements and animations
+- Full accessibility support with ARIA labels and proper roles
+- Configurable animation timing and easing
+- Reduced motion support for accessibility
+- Custom SVG properties and path styling
+- Conditional rendering based on connection status
+- Performance-optimized with memoized calculations
+- Custom text and icon support
+
+## Examples
+
+```tsx
+<WaitForConnectionContent />
+```
+
+```tsx
+<WaitForConnectionContent
+  customization={{
+    classNames: {
+      container: ({ isConnected }) =>
+        `custom-container ${isConnected ? 'connected' : 'disconnected'}`,
+      text: () => "custom-text-styling text-blue-500",
+    },
+    animation: {
+      container: { duration: 0.8, ease: "easeOut" },
+      path: { duration: 1.2, delay: 0.3 },
+    },
+    variants: {
+      container: {
+        initial: { scale: 0, rotate: -180 },
+        animate: { scale: 1, rotate: 0 },
+      },
+    },
+    svg: {
+      strokeWidth: 2,
+      strokeLinecap: "square",
+      pathData: "M12 2L2 7v10l10 5 10-5V7L12 2z", // Custom wallet icon
+    },
+    config: {
+      customText: "Please Connect Your Wallet",
+      hideWhenConnected: true,
+      reduceMotion: false,
+    },
+  }}
+/>
+```

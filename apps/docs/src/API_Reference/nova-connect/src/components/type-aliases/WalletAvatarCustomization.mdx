@@ -1,0 +1,231 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# WalletAvatarCustomization
+
+> **WalletAvatarCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L40)
+
+Customization options for WalletAvatar component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L55)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### address
+
+`string`
+
+###### bgColor
+
+`string`
+
+###### size
+
+[`WalletAvatarSize`](WalletAvatarSize.md)
+
+##### Returns
+
+`string`
+
+#### fallbackContent()?
+
+> `optional` **fallbackContent**: (`params`) => `string`
+
+Function to generate fallback content classes
+
+##### Parameters
+
+###### params
+
+###### address
+
+`string`
+
+###### size
+
+[`WalletAvatarSize`](WalletAvatarSize.md)
+
+##### Returns
+
+`string`
+
+#### image()?
+
+> `optional` **image**: (`params`) => `string`
+
+Function to generate image classes
+
+##### Parameters
+
+###### params
+
+###### hasError
+
+`boolean`
+
+###### isLoading
+
+`boolean`
+
+###### size
+
+[`WalletAvatarSize`](WalletAvatarSize.md)
+
+##### Returns
+
+`string`
+
+#### loadingOverlay()?
+
+> `optional` **loadingOverlay**: (`params`) => `string`
+
+Function to generate loading overlay classes
+
+##### Parameters
+
+###### params
+
+###### disableAnimation
+
+`boolean`
+
+###### isLoading
+
+`boolean`
+
+###### showLoading
+
+`boolean`
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L46)
+
+Custom components
+
+#### AvatarImage?
+
+> `optional` **AvatarImage**: `ComponentType`\<`CustomAvatarImageProps`\>
+
+Custom avatar image component
+
+#### FallbackContent?
+
+> `optional` **FallbackContent**: `ComponentType`\<`CustomFallbackContentProps`\>
+
+Custom fallback content component for extreme error cases
+
+#### LoadingOverlay?
+
+> `optional` **LoadingOverlay**: `ComponentType`\<`CustomLoadingOverlayProps`\>
+
+Custom loading overlay component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L42)
+
+Override container element props
+
+***
+
+### imageProps?
+
+> `optional` **imageProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"img"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L44)
+
+Override image element props
+
+***
+
+### utils?
+
+> `optional` **utils**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/0170c260d47c77e8c6c28078147cdc52b5eb75b8/packages/nova-connect/src/components/WalletAvatar.tsx#L66)
+
+Custom utilities
+
+#### formatAddress()?
+
+> `optional` **formatAddress**: (`address`, `labels`) => `string`
+
+Custom address formatter function
+
+##### Parameters
+
+###### address
+
+`string`
+
+###### labels
+
+`any`
+
+##### Returns
+
+`string`
+
+#### generateBgColor()?
+
+> `optional` **generateBgColor**: (`address`) => `string`
+
+Custom background color generator function
+
+##### Parameters
+
+###### address
+
+`string`
+
+##### Returns
+
+`string`
+
+#### generateBlockie()?
+
+> `optional` **generateBlockie**: (`address`) => `string` \| `null`
+
+Custom blockie generator function
+
+##### Parameters
+
+###### address
+
+`string`
+
+##### Returns
+
+`string` \| `null`

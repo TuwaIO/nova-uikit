@@ -10,13 +10,13 @@ import {
   standardButtonClasses,
 } from '@tuwaio/nova-core';
 import {
+  ConnectorType,
   delay,
-  formatWalletName,
-  getWalletTypeFromConnectorName,
+  formatConnectorName,
+  getConnectorTypeFromName,
   impersonatedHelpers,
   OrbitAdapter,
   waitFor,
-  WalletType,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
 import { isAddress } from 'gill';
@@ -304,7 +304,7 @@ function getConnectorName(
 
   const connector = connectors.find((c) => {
     if (c && typeof c === 'object' && 'name' in c && typeof c.name === 'string') {
-      return formatWalletName(c.name) === activeConnector;
+      return formatConnectorName(c.name) === activeConnector;
     }
     return false;
   });
@@ -560,10 +560,10 @@ export const ConnectModal = memo<ConnectModalProps>(
       activeConnector,
       impersonatedAddress,
     } = useNovaConnect();
-    const walletConnectionError = useSatelliteConnectStore((store) => store.walletConnectionError);
+    const connectionError = useSatelliteConnectStore((store) => store.connectionError);
     const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
     const connect = useSatelliteConnectStore((store) => store.connect);
-    const activeWallet = useSatelliteConnectStore((store) => store.activeWallet);
+    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
     const labels = useNovaConnectLabels();
     const store = useContext(SatelliteStoreContext);
@@ -582,12 +582,12 @@ export const ConnectModal = memo<ConnectModalProps>(
 
     // Convert error to Error object if it's a string
     const normalizedError = useMemo(() => {
-      if (!walletConnectionError) return null;
-      if (typeof walletConnectionError === 'string') {
-        return new Error(walletConnectionError);
+      if (!connectionError) return null;
+      if (typeof connectionError === 'string') {
+        return new Error(connectionError);
       }
-      return walletConnectionError;
-    }, [walletConnectionError]);
+      return connectionError;
+    }, [connectionError]);
 
     // Memoize modal data for customization context
     const modalData = useMemo<ConnectModalData>(
@@ -725,14 +725,14 @@ export const ConnectModal = memo<ConnectModalProps>(
      * Generic connection handler
      */
     const handleConnect = useCallback(
-      async (walletType: WalletType, adapter: OrbitAdapter) => {
+      async (connectorType: ConnectorType, adapter: OrbitAdapter) => {
         await connect({
-          walletType,
+          connectorType,
           chainId: getConnectChainId({ appChains, selectedAdapter: adapter, solanaRPCUrls }),
         });
 
         try {
-          await waitFor(() => store?.getState().activeWallet?.isConnected);
+          await waitFor(() => store?.getState().activeConnection?.isConnected);
           setIsConnected(true);
           const modalCloseTime = setTimeout(() => setIsConnectModalOpen(false), 400);
           const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);
@@ -751,10 +751,10 @@ export const ConnectModal = memo<ConnectModalProps>(
      * Handle network selection click
      */
     const handleNetworkClick = useCallback(
-      async (adapter: OrbitAdapter, walletType: WalletType) => {
+      async (adapter: OrbitAdapter, connectorType: ConnectorType) => {
         setSelectedAdapter(adapter);
         setConnectModalContentType('connecting');
-        await handleConnect(walletType, adapter);
+        await handleConnect(connectorType, adapter);
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [handleConnect],
@@ -765,17 +765,17 @@ export const ConnectModal = memo<ConnectModalProps>(
      */
     const handleConnectorClick = useCallback(
       (connector: GroupedConnector) => {
-        setActiveConnector(formatWalletName(connector.name));
+        setActiveConnector(formatConnectorName(connector.name));
         if (connector.adapters.length === 1) {
           setSelectedAdapter(connector.adapters[0]);
           setConnectModalContentType(
-            formatWalletName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+            formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
           );
         } else if (selectedAdapter) {
           setConnectModalContentType(
-            formatWalletName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+            formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
           );
-        } else if (formatWalletName(connector.name) === 'impersonatedwallet') {
+        } else if (formatConnectorName(connector.name) === 'impersonatedwallet') {
           setConnectModalContentType('impersonate');
         } else {
           setConnectModalContentType('network');
@@ -845,6 +845,7 @@ export const ConnectModal = memo<ConnectModalProps>(
         case 'impersonate':
           return (
             <ImpersonateForm
+              selectedAdapter={selectedAdapter}
               impersonatedAddress={impersonatedAddress}
               setImpersonatedAddress={setImpersonatedAddress}
               customization={childComponents.impersonateForm}
@@ -919,25 +920,19 @@ export const ConnectModal = memo<ConnectModalProps>(
                 await handlers.onActionClick.impersonate(modalData);
               } else {
                 const trimmedAddress = impersonatedAddress.trim();
-                if (
-                  walletConnectionError ||
-                  !trimmedAddress ||
-                  isAddress(trimmedAddress) ||
-                  !!activeWallet?.isConnected
-                )
+                if (connectionError || !trimmedAddress || isAddress(trimmedAddress) || !!activeConnection?.isConnected)
                   return;
-
                 impersonatedHelpers.setImpersonated(trimmedAddress);
+                setConnectModalContentType('connecting');
                 await handleConnect(
-                  `${selectedAdapter ?? OrbitAdapter.EVM}:impersonatedwallet` as WalletType,
+                  getConnectorTypeFromName(selectedAdapter ?? OrbitAdapter.EVM, activeConnector ?? '') as ConnectorType,
                   selectedAdapter ?? OrbitAdapter.EVM,
                 );
-                setConnectModalContentType('connecting');
               }
             },
           };
         case 'connecting':
-          return walletConnectionError && selectedAdapter && activeConnector
+          return connectionError && selectedAdapter && activeConnector
             ? {
                 title: labels.tryAgain,
                 onClick: async () => {
@@ -945,7 +940,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                     await handlers.onActionClick.connecting(modalData);
                   } else {
                     await handleConnect(
-                      getWalletTypeFromConnectorName(selectedAdapter, activeConnector) as WalletType,
+                      getConnectorTypeFromName(selectedAdapter, activeConnector) as ConnectorType,
                       selectedAdapter,
                     );
                   }
@@ -962,7 +957,7 @@ export const ConnectModal = memo<ConnectModalProps>(
       selectedAdapter,
       connectors,
       impersonatedAddress,
-      walletConnectionError,
+      connectionError,
       handleConnect,
       activeConnector,
     ]);

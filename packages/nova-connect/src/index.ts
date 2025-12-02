@@ -56,7 +56,7 @@ export interface BlockchainUtilities {
  * @since 1.0.0
  */
 export async function getBlockchainUtilities(): Promise<BlockchainUtilities> {
-  const { getAllAdaptersStatus } = await import('./utils/getChainsListByWalletType');
+  const { getAllAdaptersStatus } = await import('./utils/getChainsListByConnectorType');
 
   return {
     hasEvmUtils: await checkEvmUtils(),
@@ -237,7 +237,7 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
   };
 
   try {
-    const { preloadChainAdapters } = await import('./utils/getChainsListByWalletType');
+    const { preloadChainAdapters } = await import('./utils/getChainsListByConnectorType');
     await preloadChainAdapters([OrbitAdapter.EVM, OrbitAdapter.SOLANA]);
 
     // Check what was successfully loaded
