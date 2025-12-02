@@ -45,6 +45,7 @@ type InputProps = {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
+  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   'aria-describedby'?: string;
   'aria-invalid'?: 'true' | 'false';
@@ -93,6 +94,8 @@ export type ImpersonateFormCustomization = {
     onInputChange?: (value: string) => void;
     /** Custom handler for input blur (called after default logic) */
     onInputBlur?: (value: string) => void;
+    /** Custom handler for paste events */
+    onInputPaste?: (value: string) => void;
     /** Custom handler for validation start */
     onValidationStart?: (value: string) => void;
     /** Custom handler for validation complete */
@@ -404,54 +407,10 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
-     * Debounced validation function
+     * Process and validate a value (for input changes and pasting)
      */
-    const debouncedValidate = useCallback(
-      (address: string, immediate = false) => {
-        if (!validationConfig.validateOnChange && !immediate) return;
-
-        // Clear previous timeout
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-
-        customHandlers?.onValidationStart?.(address);
-
-        const delay = immediate ? 0 : validationConfig.debounceDelay;
-
-        timeoutRef.current = setTimeout(async () => {
-          if (hasInteracted || immediate) {
-            const error = await validateAddress(address);
-            if (error) {
-              setConnectionError(error);
-            } else if (connectionError) {
-              resetConnectionError();
-            }
-            customHandlers?.onValidationComplete?.(address, error);
-          }
-        }, delay);
-      },
-      [
-        validationConfig.validateOnChange,
-        validationConfig.debounceDelay,
-        hasInteracted,
-        validateAddress,
-        setConnectionError,
-        resetConnectionError,
-        connectionError,
-        customHandlers?.onValidationStart,
-        customHandlers?.onValidationComplete,
-      ],
-    );
-
-    /**
-     * Handle input changes
-     */
-    const handleInputChange = useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
-        setHasInteracted(true);
-
+    const processValue = useCallback(
+      async (newValue: string, immediate = false) => {
         // Always update the display value
         setDisplayValue(newValue);
 
@@ -469,13 +428,78 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           }
         }
 
-        // Trigger debounced validation
-        debouncedValidate(newValue);
+        // Trigger validation
+        if (!validationConfig.validateOnChange && !immediate) return;
+
+        // Clear previous timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        customHandlers?.onValidationStart?.(newValue);
+
+        const delay = immediate ? 0 : validationConfig.debounceDelay;
+
+        timeoutRef.current = setTimeout(async () => {
+          if (hasInteracted || immediate) {
+            const error = await validateAddress(newValue);
+            if (error) {
+              setConnectionError(error);
+            } else if (connectionError) {
+              resetConnectionError();
+            }
+            customHandlers?.onValidationComplete?.(newValue, error);
+          }
+        }, delay);
+      },
+      [
+        setImpersonatedAddress,
+        connectionError,
+        resetConnectionError,
+        validationConfig.validateOnChange,
+        validationConfig.debounceDelay,
+        hasInteracted,
+        validateAddress,
+        setConnectionError,
+        customHandlers?.onValidationStart,
+        customHandlers?.onValidationComplete,
+      ],
+    );
+
+    /**
+     * Handle input changes
+     */
+    const handleInputChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        setHasInteracted(true);
+
+        processValue(newValue);
 
         // Call custom handler
         customHandlers?.onInputChange?.(newValue);
       },
-      [setImpersonatedAddress, connectionError, resetConnectionError, debouncedValidate, customHandlers?.onInputChange],
+      [processValue, customHandlers?.onInputChange],
+    );
+
+    /**
+     * Handle paste events
+     */
+    const handlePaste = useCallback(
+      (event: React.ClipboardEvent<HTMLInputElement>) => {
+        const pastedValue = event.clipboardData.getData('text');
+
+        if (pastedValue.trim()) {
+          setHasInteracted(true);
+
+          // Process pasted value immediately
+          processValue(pastedValue, true);
+
+          // Call custom handler
+          customHandlers?.onInputPaste?.(pastedValue);
+        }
+      },
+      [processValue, customHandlers?.onInputPaste],
     );
 
     /**
@@ -524,11 +548,11 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         setDisplayValue(impersonatedAddress);
       }
 
-      // Trigger validation for pasted values or programmatic changes
+      // Trigger validation for values set from parent (e.g., programmatic changes)
       if (impersonatedAddress && !hasInteracted) {
-        debouncedValidate(impersonatedAddress, true); // immediate validation
+        processValue(impersonatedAddress, true); // immediate validation
       }
-    }, [impersonatedAddress, resolvedAddress, hasInteracted, debouncedValidate]);
+    }, [impersonatedAddress, resolvedAddress, hasInteracted, processValue]);
 
     /**
      * Generate container classes with proper memoization dependencies
@@ -643,6 +667,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           value={displayValue}
           onChange={handleInputChange}
           onBlur={handleBlur}
+          onPaste={handlePaste}
           placeholder={placeholder}
           aria-describedby={connectionError ? errorId : undefined}
           aria-invalid={connectionError ? 'true' : 'false'}
