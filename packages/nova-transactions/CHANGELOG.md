@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.1.2...nova-transactions-v0.2.0) (2025-12-02)
+
+
+### Features
+
+* update packages and integrate multi wallets logic ([5617146](https://github.com/TuwaIO/nova-uikit/commit/5617146a0b76eba56f2081933e8003364f446251))
+
+
+### Bug Fixes
+
+* simplify Wagmi connector initialization in `nova-connect` and update package dependencies to Wagmi v3. ([901cdf5](https://github.com/TuwaIO/nova-uikit/commit/901cdf5c3481c7b1e802c820d1bb514bf27225a6))
+* update packages ([5462fb5](https://github.com/TuwaIO/nova-uikit/commit/5462fb54238f6ce4bfb98420a102fdb6be1aa77c))
+* WIP multi wallet connection ([4da4f4c](https://github.com/TuwaIO/nova-uikit/commit/4da4f4c457e1d493e3fe63d3a5b97ee20aea2eef))
+
 ## [0.1.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.1.1...nova-transactions-v0.1.2) (2025-10-29)
 
 
