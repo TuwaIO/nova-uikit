@@ -922,12 +922,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 const trimmedAddress = impersonatedAddress.trim();
                 if (connectionError || !trimmedAddress || isAddress(trimmedAddress) || !!activeConnection?.isConnected)
                   return;
-
                 impersonatedHelpers.setImpersonated(trimmedAddress);
-                await handleConnect(
-                  `${selectedAdapter ?? OrbitAdapter.EVM}:impersonatedwallet` as ConnectorType,
-                  selectedAdapter ?? OrbitAdapter.EVM,
-                );
                 setConnectModalContentType('connecting');
               }
             },

@@ -3,17 +3,34 @@
  */
 
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { ArrowsRightLeftIcon, ArrowTopRightOnSquareIcon, DocumentDuplicateIcon, ArrowLeftStartOnRectangleIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftStartOnRectangleIcon,
+  ArrowsRightLeftIcon,
+  ArrowTopRightOnSquareIcon,
+  DocumentDuplicateIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
   getAdapterFromConnectorType,
-  recentlyConnectedConnectorsListHelpers,
+  impersonatedHelpers,
   RecentlyConnectedConnectorData,
+  recentlyConnectedConnectorsListHelpers,
   setChainId,
 } from '@tuwaio/orbit-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  ComponentType,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -163,7 +180,11 @@ export type ConnectionsContentCustomization = {
     /** Function to generate recent row classes */
     recentRow?: (params: { connectorType: ConnectorType; isConnecting: boolean }) => string;
     /** Function to generate action button classes */
-    actionButton?: (params: { variant?: 'primary' | 'secondary' | 'danger'; disabled?: boolean; loading?: boolean }) => string;
+    actionButton?: (params: {
+      variant?: 'primary' | 'secondary' | 'danger';
+      disabled?: boolean;
+      loading?: boolean;
+    }) => string;
     /** Function to generate add wallet button classes */
     addWalletButton?: (params: { disabled?: boolean }) => string;
     /** Function to generate empty state classes */
@@ -322,13 +343,12 @@ interface RecentlyConnectedRowProps {
 const getFormattedConnectorName = (connectorType: string): string => {
   function capitalizeFirstLetter(str: string) {
     if (typeof str !== 'string' || str.length === 0) {
-      return ""; // Handle empty strings or non-string inputs
+      return ''; // Handle empty strings or non-string inputs
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
   // Remove adapter prefix (e.g., "EVM:METAMASK" -> "METAMASK")
   const nameWithoutAdapter = connectorType.includes(':') ? connectorType.split(':')[1] : connectorType;
-  return capitalizeFirstLetter(formatConnectorName(nameWithoutAdapter));
   return capitalizeFirstLetter(formatConnectorName(nameWithoutAdapter));
 };
 
@@ -347,51 +367,54 @@ interface ConnectorIconProps {
 /**
  * Helper component to display wallet icon with network badge
  */
-const ConnectorIcon: React.FC<ConnectorIconProps> = ({ 
-  connectorType, 
-  icon, 
-  chainId, 
-  size = 32, 
+const ConnectorIcon: React.FC<ConnectorIconProps> = ({
+  connectorType,
+  icon,
+  chainId,
+  size = 32,
   badgeSize = 16,
-  imageClassName 
+  imageClassName,
 }) => {
   const adapter = getAdapterFromConnectorType(connectorType);
   const networkIcon = getNetworkIcon(adapter);
-  
+
   return (
     <div className="novacon:relative">
-      <WalletIcon 
-        name={connectorType.split(':')[1]} 
-        icon={icon} 
-        size={size} 
-        className={imageClassName} 
-      />
-      <div 
+      <WalletIcon name={connectorType.split(':')[1]} icon={icon} size={size} className={imageClassName} />
+      <div
         className="novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]"
         style={{ width: badgeSize, height: badgeSize }}
       >
-        <Web3Icon 
-          chainId={setChainId(chainId ?? networkIcon?.chainId ?? 1)} 
-          className="novacon:h-full novacon:w-full" 
+        <Web3Icon
+          chainId={setChainId(chainId ?? networkIcon?.chainId ?? 1)}
+          className="novacon:h-full novacon:w-full"
         />
       </div>
     </div>
   );
 };
 
-
 // --- Default Components ---
 
 const DefaultContainer = forwardRef<HTMLDivElement, CustomContainerProps>(
-  ({ className, children, isEmpty, connectionsCount, recentCount, role, 'aria-label': ariaLabel, 'data-testid': testId, ...domProps }, ref) => (
-    <div 
-      ref={ref} 
-      className={className} 
-      role={role}
-      aria-label={ariaLabel}
-      data-testid={testId}
-      {...domProps}
-    >
+  (
+    {
+      className,
+      children,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      isEmpty,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      connectionsCount,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      recentCount,
+      role,
+      'aria-label': ariaLabel,
+      'data-testid': testId,
+      ...domProps
+    },
+    ref,
+  ) => (
+    <div ref={ref} className={className} role={role} aria-label={ariaLabel} data-testid={testId} {...domProps}>
       {children}
     </div>
   ),
@@ -401,7 +424,7 @@ DefaultContainer.displayName = 'DefaultContainer';
 const DefaultActiveConnectorsSection = forwardRef<
   HTMLDivElement,
   { className?: string; children: React.ReactNode; count: number }
- >(({ className, children, count, ...props }, ref) => {
+>(({ className, children, count, ...props }, ref) => {
   const labels = useNovaConnectLabels();
   return (
     <div ref={ref} className={className} {...props}>
@@ -416,20 +439,21 @@ const DefaultActiveConnectorsSection = forwardRef<
 });
 DefaultActiveConnectorsSection.displayName = 'DefaultActiveConnectorsSection';
 
-const DefaultRecentlyConnectedSection = forwardRef<
-  HTMLDivElement,
-  { className?: string; children: React.ReactNode }
->(({ className, children, ...props }, ref) => {
-  const labels = useNovaConnectLabels();
-  return (
-    <div ref={ref} className={className} {...props}>
-      <h3 className="novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]">
-        {labels.recent}
-      </h3>
-      <div className="NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-2">{children}</div>
-    </div>
-  );
-});
+const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, { className?: string; children: React.ReactNode }>(
+  ({ className, children, ...props }, ref) => {
+    const labels = useNovaConnectLabels();
+    return (
+      <div ref={ref} className={className} {...props}>
+        <h3 className="novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]">
+          {labels.recent}
+        </h3>
+        <div className="NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-2">
+          {children}
+        </div>
+      </div>
+    );
+  },
+);
 DefaultRecentlyConnectedSection.displayName = 'DefaultRecentlyConnectedSection';
 
 const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
@@ -465,11 +489,11 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         </div>
 
         <div className="novacon:flex novacon:items-center novacon:gap-3">
-          <ConnectorIcon 
-            connectorType={connectorType} 
-            icon={icon} 
-            chainId={chainId} 
-            size={40} 
+          <ConnectorIcon
+            connectorType={connectorType}
+            icon={icon}
+            chainId={chainId}
+            size={40}
             badgeSize={20}
             imageClassName="novacon:rounded-xl"
           />
@@ -480,10 +504,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             <span className="novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]">
               {getFormattedConnectorName(connectorType)}
             </span>
-            
+
             {/* Actions Row */}
             <div className="novacon:mt-1 novacon:flex novacon:items-center novacon:gap-2">
-               <button
+              <button
                 onClick={handleCopy}
                 className="novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]"
                 title="Copy Address"
@@ -504,7 +528,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             </div>
           </div>
         </div>
-        
+
         <button
           onClick={onDisconnect}
           className="novacon:mt-4 novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]"
@@ -537,11 +561,11 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
         </div>
 
         <div className="novacon:flex novacon:items-center novacon:gap-3 novacon:ml-0 novacon:group-hover:ml-6 novacon:transition-all">
-          <ConnectorIcon 
-            connectorType={connectorType} 
-            icon={icon} 
-            chainId={chainId} 
-            size={32} 
+          <ConnectorIcon
+            connectorType={connectorType}
+            icon={icon}
+            chainId={chainId}
+            size={32}
             badgeSize={16}
             imageClassName="novacon:rounded-xl"
           />
@@ -583,10 +607,10 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
         )}
       >
         <div className="novacon:flex novacon:items-center novacon:gap-3">
-          <ConnectorIcon 
-            connectorType={connectorType} 
-            icon={icon} 
-            size={32} 
+          <ConnectorIcon
+            connectorType={connectorType}
+            icon={icon}
+            size={32}
             badgeSize={16}
             imageClassName="novacon:rounded-lg"
           />
@@ -616,14 +640,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle
-                    className="novacon:opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
+                  <circle className="novacon:opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path
                     className="novacon:opacity-75"
                     fill="currentColor"
@@ -657,7 +674,7 @@ DefaultRecentlyConnectedRow.displayName = 'DefaultRecentlyConnectedRow';
  */
 export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ className, customization }) => {
   const labels = useNovaConnectLabels();
-  const { setIsConnectedModalOpen, setIsConnectModalOpen } = useNovaConnect();
+  const { setIsConnectModalOpen } = useNovaConnect();
   const connections = useSatelliteConnectStore((store) => store.connections);
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const switchConnection = useSatelliteConnectStore((store) => store.switchConnection);
@@ -706,7 +723,6 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // Ref for container element for focus management
   const containerRef = useRef<HTMLDivElement>(null);
-  const firstInteractiveRef = useRef<HTMLElement>(null);
 
   /**
    * Auto-focus first interactive element on mount if enabled
@@ -724,8 +740,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // Custom Components
   const Container = customization?.components?.Container || DefaultContainer;
-  const ActiveConnectorsSection =
-    customization?.components?.ActiveConnectorsSection || DefaultActiveConnectorsSection;
+  const ActiveConnectorsSection = customization?.components?.ActiveConnectorsSection || DefaultActiveConnectorsSection;
   const RecentlyConnectedSection =
     customization?.components?.RecentlyConnectedSection || DefaultRecentlyConnectedSection;
   const ActiveConnectorRow = customization?.components?.ActiveConnectorRow || DefaultActiveConnectorRow;
@@ -750,8 +765,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
     const allRecent = recentlyConnectedConnectorsListHelpers.getConnectorsSortedByTime();
     // Filter out currently connected wallets
     const filtered = allRecent.filter(([type]) => !connections?.[type]);
-    setRecentListState(filtered);
-  }, [connections]);
+    setRecentListState(filtered.slice(0, maxRecentConnections));
+  }, [connections, maxRecentConnections]);
 
   // Initial load and sync with connections changes
   useEffect(() => {
@@ -775,8 +790,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         // Announce to screen readers
         const walletName = getFormattedConnectorName(connectorType);
         const announcement =
-          customization?.labels?.switchAnnouncement?.(walletName) ??
-          `Switched to ${walletName} wallet`;
+          customization?.labels?.switchAnnouncement?.(walletName) ?? `Switched to ${walletName} wallet`;
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -814,8 +828,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         // Announce to screen readers
         const walletName = getFormattedConnectorName(connectorType);
         const announcement =
-          customization?.labels?.disconnectAnnouncement?.(walletName) ??
-          `Disconnected ${walletName} wallet`;
+          customization?.labels?.disconnectAnnouncement?.(walletName) ?? `Disconnected ${walletName} wallet`;
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -837,7 +850,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
    * Handle connecting a recent wallet with custom handlers and announcements
    */
   const handleConnectRecent = useCallback(
-    async (connectorType: ConnectorType) => {
+    async (address: string, connectorType: ConnectorType) => {
       setConnectingRecent(connectorType);
       try {
         // Custom before connect handler
@@ -852,13 +865,17 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         const adapter = getAdapterFromConnectorType(connectorType);
         const networkIcon = getNetworkIcon(adapter);
         const chainId = networkIcon?.chainId || 1;
-        await connect({ connectorType, chainId });
+        const walletName = getFormattedConnectorName(connectorType);
+        if (walletName === 'impersonatedwallet') {
+          impersonatedHelpers.setImpersonated(address.trim());
+          await connect({ connectorType, chainId });
+        } else {
+          await connect({ connectorType, chainId });
+        }
 
         // Announce to screen readers
-        const walletName = getFormattedConnectorName(connectorType);
         const announcement =
-          customization?.labels?.connectAnnouncement?.(walletName) ??
-          `Connected ${walletName} wallet`;
+          customization?.labels?.connectAnnouncement?.(walletName) ?? `Connected ${walletName} wallet`;
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -911,9 +928,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       // Navigate to next connection (Ctrl/Cmd + ArrowDown or custom)
       if (modKey && key === shortcuts.nextConnection) {
         event.preventDefault();
-        const currentIndex = connectionsList.findIndex(
-          (c) => c.connectorType === activeConnection?.connectorType,
-        );
+        const currentIndex = connectionsList.findIndex((c) => c.connectorType === activeConnection?.connectorType);
         if (currentIndex < connectionsList.length - 1) {
           handleSwitch(connectionsList[currentIndex + 1].connectorType);
         }
@@ -923,9 +938,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       // Navigate to previous connection (Ctrl/Cmd + ArrowUp or custom)
       if (modKey && key === shortcuts.prevConnection) {
         event.preventDefault();
-        const currentIndex = connectionsList.findIndex(
-          (c) => c.connectorType === activeConnection?.connectorType,
-        );
+        const currentIndex = connectionsList.findIndex((c) => c.connectorType === activeConnection?.connectorType);
         if (currentIndex > 0) {
           handleSwitch(connectionsList[currentIndex - 1].connectorType);
         }
@@ -943,14 +956,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    enableKeyboardShortcuts,
-    connectionsList,
-    activeConnection,
-    customization,
-    handleSwitch,
-    handleDisconnect,
-  ]);
+  }, [enableKeyboardShortcuts, connectionsList, activeConnection, customization, handleSwitch, handleDisconnect]);
 
   const allConnectors = getConnectors();
 
@@ -985,12 +991,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       data-testid={testIds?.container}
     >
       {/* ARIA Live Region for announcements */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="novacon:sr-only"
-      >
+      <div role="status" aria-live="polite" aria-atomic="true" className="novacon:sr-only">
         {announcement}
       </div>
       {/* Active Connectors Section */}
@@ -1009,7 +1010,10 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               explorerLink={(() => {
                 try {
                   const adapter = getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
-                  return adapter?.getExplorerUrl?.(`/address/${activeConnection.address}`, setChainId(activeConnection.chainId));
+                  return adapter?.getExplorerUrl?.(
+                    `/address/${activeConnection.address}`,
+                    setChainId(activeConnection.chainId),
+                  );
                 } catch {
                   return undefined;
                 }
@@ -1034,10 +1038,9 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             ))}
         </ActiveConnectorsSection>
       )}
-      
 
       {/* Recently Connected Section */}
-      {recentListState.length > 0 && (
+      {showRecentSection && recentListState.length > 0 && (
         <RecentlyConnectedSection>
           {recentListState.map(([connectorType, data]) => {
             const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some(
@@ -1049,7 +1052,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 connectorType={connectorType}
                 address={textCenterEllipsis(data.address, 6, 4)}
                 timestamp={data.disconnectedTimestamp}
-                onConnect={isAvailable ? () => handleConnectRecent(connectorType) : undefined}
+                onConnect={isAvailable ? () => handleConnectRecent(data.address, connectorType) : undefined}
                 onRemove={(e) => handleRemoveRecent(connectorType, e)}
                 icon={data.icon}
                 isConnecting={connecting && connectingRecent === connectorType}
@@ -1059,15 +1062,17 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         </RecentlyConnectedSection>
       )}
 
-      <button
-        type="button"
-        onClick={() => {
-          setIsConnectModalOpen(true);
-        }}
-        className="novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-xl novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]"
-      >
-        + {labels.connectNewWallet}
-      </button>
+      {showAddWalletButton && (
+        <button
+          type="button"
+          onClick={() => {
+            setIsConnectModalOpen(true);
+          }}
+          className="novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-xl novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]"
+        >
+          + {labels.connectNewWallet}
+        </button>
+      )}
     </Container>
   );
 };
