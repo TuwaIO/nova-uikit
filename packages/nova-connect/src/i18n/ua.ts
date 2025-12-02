@@ -133,7 +133,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   walletIcon: 'Іконка гаманця',
 
   // Помилки імітації
-  impersonateAddressEmpty: 'Введіть адресу гаманця для імітації.',
-  impersonateAddressNotCorrect: 'Введена адреса гаманця неправильна. Спробуйте знову.',
+  impersonateAddressEmpty: 'Введіть адресу або імя гаманця для імітації.',
+  impersonateAddressNotCorrect: 'Введена адреса або імя гаманця неправильна. Спробуйте знову.',
   impersonateAddressConnected: 'Спочатку відключіть гаманець для імітації іншої адреси.',
 };

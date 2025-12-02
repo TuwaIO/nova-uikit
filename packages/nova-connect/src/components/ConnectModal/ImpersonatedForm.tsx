@@ -259,8 +259,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
     const adapter = useMemo(() => getAdapter(selectedAdapter ?? OrbitAdapter.EVM), [getAdapter, selectedAdapter]);
 
-    // State for tracking resolved address
+    // State for tracking resolved address and display value
     const [resolvedAddress, setResolvedAddress] = useState<string | null>(null);
+    const [displayValue, setDisplayValue] = useState(impersonatedAddress);
     const [isResolving, setIsResolving] = useState(false);
 
     // Extract customization options
@@ -329,68 +330,65 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
-     * Generate validation function with proper memoization dependencies
+     * Validate address and handle domain resolution
      */
-    const getValidateAddress = useCallback(
-      () =>
-        async (inputValue: string): Promise<string | null> => {
-          // Custom validation first
-          if (validationConfig.customValidator) {
-            const customError = validationConfig.customValidator(inputValue);
-            if (customError) return customError;
-          }
+    const validateAddress = useCallback(
+      async (inputValue: string): Promise<string | null> => {
+        // Custom validation first
+        if (validationConfig.customValidator) {
+          const customError = validationConfig.customValidator(inputValue);
+          if (customError) return customError;
+        }
 
-          // Standard validations
-          if (!inputValue.trim()) {
-            return labels.impersonateAddressEmpty;
-          }
+        // Standard validations
+        if (!inputValue.trim()) {
+          return labels.impersonateAddressEmpty;
+        }
 
-          // Check if it's a domain name
-          if (isDomainName(inputValue)) {
-            if (!supportsNameResolution) {
-              return labels.impersonateAddressNotCorrect;
-            }
-
-            // Validate domain format based on adapter
-            if (selectedAdapter === OrbitAdapter.EVM && !isENSName(inputValue)) {
-              return labels.impersonateAddressNotCorrect;
-            }
-            if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(inputValue)) {
-              return labels.impersonateAddressNotCorrect;
-            }
-
-            // Try to resolve the domain name
-            const resolved = await resolveDomainName(inputValue);
-            if (!resolved) {
-              return labels.impersonateAddressNotCorrect;
-            }
-
-            // Update resolved address and notify parent
-            setResolvedAddress(resolved);
-            customHandlers?.onAddressResolved?.(inputValue, resolved);
-
-            // Automatically update the parent with the resolved address
-            // This ensures that the final address used for connection is the resolved one
-            setImpersonatedAddress(resolved);
-
-            return null;
-          }
-
-          // Reset resolved address if not a domain name
-          setResolvedAddress(null);
-
-          // Validate as regular address
-          if (!isAddress(inputValue)) {
+        // Check if it's a domain name
+        if (isDomainName(inputValue)) {
+          if (!supportsNameResolution) {
             return labels.impersonateAddressNotCorrect;
           }
 
-          if (activeConnection?.isConnected) {
-            return labels.impersonateAddressConnected;
+          // Validate domain format based on adapter
+          if (selectedAdapter === OrbitAdapter.EVM && !isENSName(inputValue)) {
+            return labels.impersonateAddressNotCorrect;
+          }
+          if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(inputValue)) {
+            return labels.impersonateAddressNotCorrect;
           }
 
+          // Try to resolve the domain name
+          const resolved = await resolveDomainName(inputValue);
+          if (!resolved) {
+            return labels.impersonateAddressNotCorrect;
+          }
+
+          // Update resolved address and notify parent
+          setResolvedAddress(resolved);
+          customHandlers?.onAddressResolved?.(inputValue, resolved);
+
+          // Update the parent with the resolved address for connection, but keep display value as domain name
+          setImpersonatedAddress(resolved);
+
           return null;
-        },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
+
+        // Reset resolved address if not a domain name
+        setResolvedAddress(null);
+
+        // Validate as regular address
+        if (!isAddress(inputValue)) {
+          return labels.impersonateAddressNotCorrect;
+        }
+
+        if (activeConnection?.isConnected) {
+          return labels.impersonateAddressConnected;
+        }
+
+        return null;
+      },
       [
         validationConfig.customValidator,
         labels.impersonateAddressEmpty,
@@ -406,16 +404,11 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
-     * Memoized validation function
+     * Debounced validation function
      */
-    const validateAddress = useMemo(() => getValidateAddress(), [getValidateAddress]);
-
-    /**
-     * Generate debounced validation function with proper memoization dependencies
-     */
-    const getDebouncedValidate = useCallback(
-      () => (address: string) => {
-        if (!validationConfig.validateOnChange) return;
+    const debouncedValidate = useCallback(
+      (address: string, immediate = false) => {
+        if (!validationConfig.validateOnChange && !immediate) return;
 
         // Clear previous timeout
         if (timeoutRef.current) {
@@ -424,8 +417,10 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
         customHandlers?.onValidationStart?.(address);
 
+        const delay = immediate ? 0 : validationConfig.debounceDelay;
+
         timeoutRef.current = setTimeout(async () => {
-          if (hasInteracted) {
+          if (hasInteracted || immediate) {
             const error = await validateAddress(address);
             if (error) {
               setConnectionError(error);
@@ -434,9 +429,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
             }
             customHandlers?.onValidationComplete?.(address, error);
           }
-        }, validationConfig.debounceDelay);
+        }, delay);
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         validationConfig.validateOnChange,
         validationConfig.debounceDelay,
@@ -451,95 +445,113 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
-     * Memoized debounced validation function
+     * Handle input changes
      */
-    const debouncedValidate = useMemo(() => getDebouncedValidate(), [getDebouncedValidate]);
-
-    /**
-     * Generate blur handler with proper memoization dependencies
-     */
-    const getHandleBlur = useCallback(
-      () => async () => {
-        if (!validationConfig.validateOnBlur) return;
-
+    const handleInputChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
         setHasInteracted(true);
 
-        // Clear any pending debounced validation
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
+        // Always update the display value
+        setDisplayValue(newValue);
+
+        // For non-domain values, update the actual address immediately
+        if (!isDomainName(newValue)) {
+          setResolvedAddress(null);
+          setImpersonatedAddress(newValue);
+        }
+        // For domain values, the resolved address will be set by validation
+
+        // Clear error immediately if field becomes valid
+        if (newValue.trim() && connectionError) {
+          if (isAddress(newValue) || isDomainName(newValue)) {
+            resetConnectionError();
+          }
         }
 
-        // For blur validation, we need to use the currently displayed value
-        const currentDisplayValue =
-          isDomainName(impersonatedAddress) && resolvedAddress
-            ? (document.getElementById('impersonated-address') as HTMLInputElement)?.value || impersonatedAddress
-            : impersonatedAddress;
-
-        // Validate immediately on blur without debounce
-        const error = await validateAddress(currentDisplayValue);
-        if (error) {
-          setConnectionError(error);
-        } else if (connectionError) {
-          resetConnectionError();
-        }
+        // Trigger debounced validation
+        debouncedValidate(newValue);
 
         // Call custom handler
-        customHandlers?.onInputBlur?.(currentDisplayValue);
-        customHandlers?.onValidationComplete?.(currentDisplayValue, error);
+        customHandlers?.onInputChange?.(newValue);
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        validationConfig.validateOnBlur,
-        validateAddress,
-        impersonatedAddress,
-        resolvedAddress,
-        setConnectionError,
-        resetConnectionError,
-        connectionError,
-        customHandlers?.onInputBlur,
-        customHandlers?.onValidationComplete,
-      ],
+      [setImpersonatedAddress, connectionError, resetConnectionError, debouncedValidate, customHandlers?.onInputChange],
     );
 
     /**
-     * Memoized blur handler
+     * Handle input blur
      */
-    const handleBlur = useMemo(() => getHandleBlur(), [getHandleBlur]);
+    const handleBlur = useCallback(async () => {
+      if (!validationConfig.validateOnBlur) return;
+
+      setHasInteracted(true);
+
+      // Clear any pending debounced validation
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Use current display value for blur validation
+      const currentValue = displayValue;
+
+      // Validate immediately on blur without debounce
+      const error = await validateAddress(currentValue);
+      if (error) {
+        setConnectionError(error);
+      } else if (connectionError) {
+        resetConnectionError();
+      }
+
+      // Call custom handler
+      customHandlers?.onInputBlur?.(currentValue);
+      customHandlers?.onValidationComplete?.(currentValue, error);
+    }, [
+      validationConfig.validateOnBlur,
+      displayValue,
+      validateAddress,
+      setConnectionError,
+      resetConnectionError,
+      connectionError,
+      customHandlers?.onInputBlur,
+      customHandlers?.onValidationComplete,
+    ]);
+
+    // Update display value when parent value changes, but preserve ENS/SNS names
+    useEffect(() => {
+      // If the impersonated address is changing from parent and it's not a resolved address,
+      // update display value
+      if (impersonatedAddress !== resolvedAddress && !isDomainName(impersonatedAddress)) {
+        setDisplayValue(impersonatedAddress);
+      }
+
+      // Trigger validation for pasted values or programmatic changes
+      if (impersonatedAddress && !hasInteracted) {
+        debouncedValidate(impersonatedAddress, true); // immediate validation
+      }
+    }, [impersonatedAddress, resolvedAddress, hasInteracted, debouncedValidate]);
 
     /**
      * Generate container classes with proper memoization dependencies
      */
-    const getContainerClasses = useCallback(
+    const containerClasses = useMemo(
       () => customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.container, className],
     );
 
     /**
-     * Memoized container classes
+     * Generate label classes
      */
-    const containerClasses = useMemo(getContainerClasses, [getContainerClasses]);
-
-    /**
-     * Generate label classes with proper memoization dependencies
-     */
-    const getLabelClasses = useCallback(
+    const labelClasses = useMemo(
       () =>
         customization?.classNames?.label?.() ??
         'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.label],
     );
 
     /**
-     * Memoized label classes
+     * Generate input classes
      */
-    const labelClasses = useMemo(() => getLabelClasses(), [getLabelClasses]);
-
-    /**
-     * Generate input classes with proper memoization dependencies
-     */
-    const getInputClasses = useCallback(() => {
+    const inputClasses = useMemo(() => {
       if (customization?.classNames?.input) {
         return customization.classNames.input({ hasError: !!connectionError, hasInteracted });
       }
@@ -565,32 +577,20 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // Transition for smooth state changes
         'novacon:transition-colors novacon:duration-200',
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customization?.classNames?.input, connectionError, hasInteracted, isResolving]);
 
     /**
-     * Memoized input classes
+     * Generate error message classes
      */
-    const inputClasses = useMemo(() => getInputClasses(), [getInputClasses]);
-
-    /**
-     * Generate error message classes with proper memoization dependencies
-     */
-    const getErrorMessageClasses = useCallback(
+    const errorMessageClasses = useMemo(
       () => customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [customization?.classNames?.errorMessage],
     );
 
     /**
-     * Memoized error message classes
-     */
-    const errorMessageClasses = useMemo(() => getErrorMessageClasses(), [getErrorMessageClasses]);
-
-    /**
      * Generate placeholder text based on adapter support
      */
-    const getPlaceholder = useCallback(() => {
+    const placeholder = useMemo(() => {
       if (customConfig?.input?.placeholder) {
         return customConfig.input.placeholder;
       }
@@ -607,58 +607,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       return labels.walletAddressPlaceholder;
     }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
 
-    // Track the display value for input (keeps ENS names visible)
-    const [displayValue, setDisplayValue] = useState(impersonatedAddress);
-
-    // Update display value when impersonated address changes from parent
-    useEffect(() => {
-      setDisplayValue(impersonatedAddress);
-    }, [impersonatedAddress]);
-
-    // Update display value when user types ENS names
-    const updateDisplayValue = useCallback((value: string) => {
-      setDisplayValue(value);
-    }, []);
-
-    // Modified input change handler that manages both display and actual values
-    const handleAddressChangeWithDisplay = useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
-        setHasInteracted(true);
-
-        // Always update the display value
-        updateDisplayValue(newValue);
-
-        // For non-domain values, update the actual address immediately
-        if (!isDomainName(newValue)) {
-          setResolvedAddress(null);
-          setImpersonatedAddress(newValue);
-        }
-        // For domain values, the resolved address will be set by validation
-
-        // Clear error immediately if field becomes valid
-        if (newValue.trim() && connectionError) {
-          if (isAddress(newValue) || isDomainName(newValue)) {
-            resetConnectionError();
-          }
-        }
-
-        // Trigger debounced validation
-        debouncedValidate(newValue);
-
-        // Call custom handler
-        customHandlers?.onInputChange?.(newValue);
-      },
-      [
-        updateDisplayValue,
-        setImpersonatedAddress,
-        connectionError,
-        resetConnectionError,
-        debouncedValidate,
-        customHandlers?.onInputChange,
-      ],
-    );
-
     // Cleanup effect and mount/unmount handlers
     useEffect(() => {
       customHandlers?.onMount?.();
@@ -672,13 +620,11 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         setResolvedAddress(null);
         customHandlers?.onUnmount?.();
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
 
     // Input configuration
     const inputId = 'impersonated-address';
     const errorId = 'address-error';
-    const placeholder = getPlaceholder();
     const autoComplete = customConfig?.input?.autoComplete ?? 'off';
     const spellCheck = customConfig?.input?.spellCheck ?? false;
 
@@ -695,7 +641,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           id={inputId}
           type="text"
           value={displayValue}
-          onChange={handleAddressChangeWithDisplay}
+          onChange={handleInputChange}
           onBlur={handleBlur}
           placeholder={placeholder}
           aria-describedby={connectionError ? errorId : undefined}
