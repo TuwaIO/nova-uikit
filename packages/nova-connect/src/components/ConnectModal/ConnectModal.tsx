@@ -10,13 +10,13 @@ import {
   standardButtonClasses,
 } from '@tuwaio/nova-core';
 import {
+  ConnectorType,
   delay,
   formatConnectorName,
   getConnectorTypeFromName,
   impersonatedHelpers,
   OrbitAdapter,
   waitFor,
-  ConnectorType,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
 import { isAddress } from 'gill';
@@ -845,6 +845,7 @@ export const ConnectModal = memo<ConnectModalProps>(
         case 'impersonate':
           return (
             <ImpersonateForm
+              selectedAdapter={selectedAdapter}
               impersonatedAddress={impersonatedAddress}
               setImpersonatedAddress={setImpersonatedAddress}
               customization={childComponents.impersonateForm}
@@ -919,12 +920,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 await handlers.onActionClick.impersonate(modalData);
               } else {
                 const trimmedAddress = impersonatedAddress.trim();
-                if (
-                  connectionError ||
-                  !trimmedAddress ||
-                  isAddress(trimmedAddress) ||
-                  !!activeConnection?.isConnected
-                )
+                if (connectionError || !trimmedAddress || isAddress(trimmedAddress) || !!activeConnection?.isConnected)
                   return;
 
                 impersonatedHelpers.setImpersonated(trimmedAddress);

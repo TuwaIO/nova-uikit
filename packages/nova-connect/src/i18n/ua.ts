@@ -68,7 +68,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   viewTransactions: 'Переглянути транзакції',
 
   // Форма імітації - Підписи для функції імітації адреси гаманця
-  enterWalletAddress: 'Введіть адресу гаманця для імітації',
+  enterWalletAddressOrAddressName: 'Введіть адресу гаманця або його імя для імітації',
   walletAddressPlaceholder: '0x...',
 
   // Повідомлення про помилки - Повідомлення про помилки для користувача

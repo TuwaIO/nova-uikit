@@ -64,7 +64,7 @@ export type NovaConnectLabels = {
   viewTransactions: string;
 
   // Impersonation form - Labels for wallet address impersonation feature
-  enterWalletAddress: string;
+  enterWalletAddressOrAddressName: string;
   walletAddressPlaceholder: string;
 
   // Error messages - User-facing error notifications and descriptions

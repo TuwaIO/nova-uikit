@@ -90,7 +90,7 @@
     }
   ],
   "dependencies": {
-    "@tuwaio/satellite-react": "1.0.0-fix-packages-alpha.23.ff47aba"
+    "@tuwaio/satellite-react": "^0.2.0"
   },
   "peerDependencies": {
     "@bgd-labs/react-web3-icons": ">=1.5",
@@ -197,17 +197,17 @@
     }
   },
   "devDependencies": {
-    "@bgd-labs/react-web3-icons": "^1.56.0",
+    "@bgd-labs/react-web3-icons": "^1.57.0",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-select": "^2.2.6",
-    "@tuwaio/orbit-core": "1.0.0-fix-packages-alpha.5.efc1769",
-    "@tuwaio/orbit-evm": "1.0.0-fix-packages-alpha.5.efc1769",
-    "@tuwaio/orbit-solana": "1.0.0-fix-packages-alpha.5.efc1769",
-    "@tuwaio/satellite-core": "1.0.0-fix-packages-alpha.23.ff47aba",
-    "@tuwaio/satellite-evm": "1.0.0-fix-packages-alpha.23.ff47aba",
-    "@tuwaio/satellite-solana": "1.0.0-fix-packages-alpha.23.ff47aba",
-    "@tuwaio/pulsar-core": "1.0.0-fix-packages-alpha.3.f5616ba",
+    "@tuwaio/orbit-core": "^0.2.0",
+    "@tuwaio/orbit-evm": "^0.2.0",
+    "@tuwaio/orbit-solana": "^0.2.0",
+    "@tuwaio/satellite-core": "^0.2.0",
+    "@tuwaio/satellite-evm": "^0.2.0",
+    "@tuwaio/satellite-solana": "^0.2.0",
+    "@tuwaio/pulsar-core": "^0.3.0",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "@wallet-standard/react": "^1.0.1",
@@ -215,14 +215,14 @@
     "gill": "^0.14.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
-    "immer": "^11.0.0",
+    "immer": "^11.0.1",
     "ethereum-blockies-base64": "^1.0.2",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.23.25",
     "react": "^19.2.0",
     "react-toastify": "^11.0.5",
     "tailwind-merge": "^3.4.0",
     "viem": "^2.40.3",
-    "zustand": "^5.0.8",
+    "zustand": "^5.0.9",
     "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.7",

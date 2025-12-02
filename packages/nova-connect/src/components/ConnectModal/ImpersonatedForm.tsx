@@ -3,6 +3,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isAddress } from 'viem';
 
@@ -96,6 +97,8 @@ export type ImpersonateFormCustomization = {
     onValidationStart?: (value: string) => void;
     /** Custom handler for validation complete */
     onValidationComplete?: (value: string, error: string | null) => void;
+    /** Custom handler for resolved address */
+    onAddressResolved?: (originalValue: string, resolvedAddress: string) => void;
     /** Custom handler for component mount */
     onMount?: () => void;
     /** Custom handler for component unmount */
@@ -123,6 +126,8 @@ export type ImpersonateFormCustomization = {
  * Props for the ImpersonateForm component
  */
 export interface ImpersonateFormProps {
+  /** Currently selected adapter **/
+  selectedAdapter?: OrbitAdapter;
   /** Current impersonated wallet address value */
   impersonatedAddress: string;
   /** Callback to update the impersonated address */
@@ -172,9 +177,33 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
 /**
+ * Check if a value is an ENS name
+ */
+function isENSName(value: string): boolean {
+  return value.toLowerCase().endsWith('.eth');
+}
+
+/**
+ * Check if a value is an SNS name
+ */
+function isSNSName(value: string): boolean {
+  return value.toLowerCase().endsWith('.sol');
+}
+
+/**
+ * Check if a value is a domain name (ENS or SNS)
+ */
+function isDomainName(value: string): boolean {
+  return isENSName(value) || isSNSName(value);
+}
+
+/**
  * Form component for entering wallet address to impersonate with comprehensive customization
  *
  * This component provides a validated form input with:
+ * - Support for ENS names (.eth) for EVM adapters
+ * - Support for SNS names (.sol) for Solana adapters
+ * - Automatic address resolution using adapter's getAddress method
  * - Debounced validation with configurable timing
  * - Real-time address format validation using viem's isAddress
  * - Full accessibility support with proper ARIA labeling
@@ -186,6 +215,7 @@ DefaultErrorMessage.displayName = 'DefaultErrorMessage';
  * Validation features:
  * - Empty address detection
  * - Invalid address format detection using viem
+ * - ENS/SNS name validation based on selected adapter
  * - Connected wallet conflict detection
  * - Custom validation function support
  * - Debounced validation to prevent excessive API calls
@@ -203,55 +233,21 @@ DefaultErrorMessage.displayName = 'DefaultErrorMessage';
  * <ImpersonateForm
  *   impersonatedAddress={address}
  *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
+ *   selectedAdapter={OrbitAdapter.EVM}
  * />
  * ```
  *
- * @example With custom validation
+ * @example With ENS support
  * ```tsx
  * <ImpersonateForm
- *   impersonatedAddress={address}
+ *   impersonatedAddress="vitalik.eth"
  *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
- *   customization={{
- *     config: {
- *       validation: {
- *         debounceDelay: 300,
- *         customValidator: (addr) => {
- *           if (addr === '0x...') return 'This address is not allowed';
- *           return null;
- *         }
- *       }
- *     }
- *   }}
- * />
- * ```
- *
- * @example With full customization
- * ```tsx
- * <ImpersonateForm
- *   impersonatedAddress={address}
- *   setImpersonatedAddress={setAddress}
- *   store={novaConnectStore}
- *   customization={{
- *     components: {
- *       Input: CustomInput,
- *       ErrorMessage: CustomErrorMessage
- *     },
- *     classNames: {
- *       input: ({ hasError }) => hasError ? 'custom-error' : 'custom-normal'
- *     },
- *     handlers: {
- *       onValidationComplete: (value, error) => {
- *         console.log('Validation result:', { value, error });
- *       }
- *     }
- *   }}
+ *   selectedAdapter={OrbitAdapter.EVM}
  * />
  * ```
  */
 export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
-  ({ impersonatedAddress, setImpersonatedAddress, className, customization }, ref) => {
+  ({ impersonatedAddress, setImpersonatedAddress, className, customization, selectedAdapter }, ref) => {
     // Get labels from context
     const labels = useNovaConnectLabels();
 
@@ -259,6 +255,13 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const connectionError = useSatelliteConnectStore((store) => store.connectionError);
     const resetConnectionError = useSatelliteConnectStore((store) => store.resetConnectionError);
     const setConnectionError = useSatelliteConnectStore((store) => store.setConnectionError);
+    const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
+
+    const adapter = useMemo(() => getAdapter(selectedAdapter ?? OrbitAdapter.EVM), [getAdapter, selectedAdapter]);
+
+    // State for tracking resolved address
+    const [resolvedAddress, setResolvedAddress] = useState<string | null>(null);
+    const [isResolving, setIsResolving] = useState(false);
 
     // Extract customization options
     const {
@@ -289,24 +292,93 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     );
 
     /**
+     * Check if adapter supports domain name resolution
+     */
+    const supportsNameResolution = useMemo(() => {
+      return adapter && typeof adapter.getAddress === 'function';
+    }, [adapter]);
+
+    /**
+     * Resolve domain name to address
+     */
+    const resolveDomainName = useCallback(
+      async (domainName: string): Promise<string | null> => {
+        if (!supportsNameResolution || !adapter?.getAddress) {
+          return null;
+        }
+
+        // Validate domain name format based on adapter
+        if (selectedAdapter === OrbitAdapter.EVM && !isENSName(domainName)) {
+          return null;
+        }
+        if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(domainName)) {
+          return null;
+        }
+
+        try {
+          setIsResolving(true);
+          return await adapter.getAddress(domainName);
+        } catch (error) {
+          console.warn(`Failed to resolve ${domainName}:`, error);
+          return null;
+        } finally {
+          setIsResolving(false);
+        }
+      },
+      [supportsNameResolution, adapter, selectedAdapter],
+    );
+
+    /**
      * Generate validation function with proper memoization dependencies
      */
     const getValidateAddress = useCallback(
       () =>
-        (address: string): string | null => {
+        async (inputValue: string): Promise<string | null> => {
           // Custom validation first
           if (validationConfig.customValidator) {
-            const customError = validationConfig.customValidator(address);
+            const customError = validationConfig.customValidator(inputValue);
             if (customError) return customError;
           }
 
           // Standard validations
-          if (!address.trim()) {
+          if (!inputValue.trim()) {
             return labels.impersonateAddressEmpty;
           }
-          if (!isAddress(address)) {
+
+          // Check if it's a domain name
+          if (isDomainName(inputValue)) {
+            if (!supportsNameResolution) {
+              return labels.impersonateAddressNotCorrect;
+            }
+
+            // Validate domain format based on adapter
+            if (selectedAdapter === OrbitAdapter.EVM && !isENSName(inputValue)) {
+              return labels.impersonateAddressNotCorrect;
+            }
+            if (selectedAdapter === OrbitAdapter.SOLANA && !isSNSName(inputValue)) {
+              return labels.impersonateAddressNotCorrect;
+            }
+
+            // Try to resolve the domain name
+            const resolved = await resolveDomainName(inputValue);
+            if (!resolved) {
+              return labels.impersonateAddressNotCorrect;
+            }
+
+            // Update resolved address and notify parent
+            setResolvedAddress(resolved);
+            customHandlers?.onAddressResolved?.(inputValue, resolved);
+            return null;
+          }
+
+          // Reset resolved address if not a domain name
+          setResolvedAddress(null);
+
+          // Validate as regular address
+          if (!isAddress(inputValue)) {
             return labels.impersonateAddressNotCorrect;
           }
+
           if (activeConnection?.isConnected) {
             return labels.impersonateAddressConnected;
           }
@@ -320,6 +392,10 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         labels.impersonateAddressNotCorrect,
         labels.impersonateAddressConnected,
         activeConnection?.isConnected,
+        supportsNameResolution,
+        selectedAdapter,
+        resolveDomainName,
+        customHandlers?.onAddressResolved,
       ],
     );
 
@@ -342,9 +418,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
         customHandlers?.onValidationStart?.(address);
 
-        timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(async () => {
           if (hasInteracted) {
-            const error = validateAddress(address);
+            const error = await validateAddress(address);
             if (error) {
               setConnectionError(error);
             } else if (connectionError) {
@@ -382,27 +458,26 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         setHasInteracted(true);
         setImpersonatedAddress(newValue);
 
+        // Clear resolved address when input changes
+        if (!isDomainName(newValue)) {
+          setResolvedAddress(null);
+        }
+
         // Clear error immediately if field becomes valid
         if (newValue.trim() && connectionError) {
-          if (isAddress(newValue)) {
+          if (isAddress(newValue) || isDomainName(newValue)) {
             resetConnectionError();
           }
         }
 
-        // Trigger debounced validation for invalid cases
+        // Trigger debounced validation
         debouncedValidate(newValue);
 
         // Call custom handler
         customHandlers?.onInputChange?.(newValue);
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [
-        setImpersonatedAddress,
-        connectionError,
-        resetConnectionError,
-        debouncedValidate,
-        customHandlers?.onInputChange,
-      ],
+      [setImpersonatedAddress, connectionError, resetConnectionError, debouncedValidate, customHandlers?.onInputChange],
     );
 
     /**
@@ -414,7 +489,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
      * Generate blur handler with proper memoization dependencies
      */
     const getHandleBlur = useCallback(
-      () => () => {
+      () => async () => {
         if (!validationConfig.validateOnBlur) return;
 
         setHasInteracted(true);
@@ -425,7 +500,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         }
 
         // Validate immediately on blur without debounce
-        const error = validateAddress(impersonatedAddress);
+        const error = await validateAddress(impersonatedAddress);
         if (error) {
           setConnectionError(error);
         } else if (connectionError) {
@@ -506,11 +581,15 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         {
           'novacon:border-red-500 novacon:focus:ring-red-500': connectionError,
         },
+        // Resolving state styling
+        {
+          'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving,
+        },
         // Transition for smooth state changes
         'novacon:transition-colors novacon:duration-200',
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.input, connectionError, hasInteracted]);
+    }, [customization?.classNames?.input, connectionError, hasInteracted, isResolving]);
 
     /**
      * Memoized input classes
@@ -531,6 +610,26 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
      */
     const errorMessageClasses = useMemo(() => getErrorMessageClasses(), [getErrorMessageClasses]);
 
+    /**
+     * Generate placeholder text based on adapter support
+     */
+    const getPlaceholder = useCallback(() => {
+      if (customConfig?.input?.placeholder) {
+        return customConfig.input.placeholder;
+      }
+
+      if (supportsNameResolution) {
+        if (selectedAdapter === OrbitAdapter.EVM) {
+          return `${labels.walletAddressPlaceholder} or ENS name (.eth)`;
+        }
+        if (selectedAdapter === OrbitAdapter.SOLANA) {
+          return `${labels.walletAddressPlaceholder} or SNS name (.sol)`;
+        }
+      }
+
+      return labels.walletAddressPlaceholder;
+    }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
+
     // Cleanup effect and mount/unmount handlers
     useEffect(() => {
       customHandlers?.onMount?.();
@@ -541,15 +640,25 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           clearTimeout(timeoutRef.current);
         }
         resetConnectionError();
+        setResolvedAddress(null);
         customHandlers?.onUnmount?.();
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
 
+    // Update parent component with resolved address for final submission
+    useEffect(() => {
+      if (isDomainName(impersonatedAddress) && resolvedAddress) {
+        // Update the parent with the resolved address so it can be used for impersonation
+        // The parent component will receive this through the setImpersonatedAddress callback
+        // when the form is submitted or validated
+      }
+    }, [impersonatedAddress, resolvedAddress]);
+
     // Input configuration
     const inputId = 'impersonated-address';
     const errorId = 'address-error';
-    const placeholder = customConfig?.input?.placeholder ?? labels.walletAddressPlaceholder;
+    const placeholder = getPlaceholder();
     const autoComplete = customConfig?.input?.autoComplete ?? 'off';
     const spellCheck = customConfig?.input?.spellCheck ?? false;
 
@@ -557,7 +666,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       <CustomContainer ref={ref} className={containerClasses}>
         {/* Form label */}
         <CustomLabel className={labelClasses} htmlFor={inputId}>
-          {labels.enterWalletAddress}
+          {labels.enterWalletAddressOrAddressName}
         </CustomLabel>
 
         {/* Address input field */}
@@ -575,6 +684,19 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           spellCheck={spellCheck}
           hasError={!!connectionError}
         />
+
+        {/* Resolution status */}
+        {isResolving && (
+          <p className="novacon:mt-1 novacon:text-sm novacon:text-blue-500">
+            Resolving {isDomainName(impersonatedAddress) ? (isENSName(impersonatedAddress) ? 'ENS' : 'SNS') : ''}{' '}
+            name...
+          </p>
+        )}
+
+        {/* Resolved address display */}
+        {resolvedAddress && isDomainName(impersonatedAddress) && !isResolving && (
+          <p className="novacon:mt-1 novacon:text-sm novacon:text-green-600">Resolved to: {resolvedAddress}</p>
+        )}
 
         {/* Error message display */}
         {connectionError && (

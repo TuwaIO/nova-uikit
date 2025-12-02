@@ -68,7 +68,7 @@ export const defaultLabels: NovaConnectLabels = {
   viewTransactions: 'View transactions',
 
   // Impersonation form - Labels for wallet address impersonation feature
-  enterWalletAddress: 'Enter wallet address to impersonate',
+  enterWalletAddressOrAddressName: 'Enter wallet address or address name to impersonate',
   walletAddressPlaceholder: '0x...',
 
   // Error messages - User-facing error notifications and descriptions

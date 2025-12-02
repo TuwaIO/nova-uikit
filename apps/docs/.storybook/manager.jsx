@@ -5,7 +5,7 @@ export const tuwaTheme = create({
   base: 'light',
 
   brandTitle: 'TUWA UI Components',
-  brandUrl: 'https://docs.tuwa.io/',
+  brandUrl: 'https://www.tuwa.io/',
   brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwa_logo.svg',
   brandTarget: '_self',
 
@@ -34,7 +34,7 @@ export const tuwaDarkTheme = create({
   base: 'dark',
 
   brandTitle: 'TUWA UI Components',
-  brandUrl: 'https://docs.tuwa.io/',
+  brandUrl: 'https://www.tuwa.io/',
   brandImage: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/tuwa_logo.svg',
   brandTarget: '_self',
 
@@ -79,6 +79,11 @@ addons.setConfig({
     'tuwa/theme-switcher': {
       icon: 'paintbrush',
       title: 'Switch Theme',
+    },
+    'tuwa/link': {
+      icon: 'website',
+      title: 'Website',
+      onClick: () => window.open('https://www.tuwa.io/', '_blank'),
     },
     'tuwa/docs-link': {
       icon: 'document',
