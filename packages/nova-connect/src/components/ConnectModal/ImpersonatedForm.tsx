@@ -368,6 +368,11 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
             // Update resolved address and notify parent
             setResolvedAddress(resolved);
             customHandlers?.onAddressResolved?.(inputValue, resolved);
+
+            // Automatically update the parent with the resolved address
+            // This ensures that the final address used for connection is the resolved one
+            setImpersonatedAddress(resolved);
+
             return null;
           }
 
@@ -396,6 +401,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         selectedAdapter,
         resolveDomainName,
         customHandlers?.onAddressResolved,
+        setImpersonatedAddress,
       ],
     );
 
@@ -450,42 +456,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const debouncedValidate = useMemo(() => getDebouncedValidate(), [getDebouncedValidate]);
 
     /**
-     * Generate input change handler with proper memoization dependencies
-     */
-    const getHandleAddressChange = useCallback(
-      () => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
-        setHasInteracted(true);
-        setImpersonatedAddress(newValue);
-
-        // Clear resolved address when input changes
-        if (!isDomainName(newValue)) {
-          setResolvedAddress(null);
-        }
-
-        // Clear error immediately if field becomes valid
-        if (newValue.trim() && connectionError) {
-          if (isAddress(newValue) || isDomainName(newValue)) {
-            resetConnectionError();
-          }
-        }
-
-        // Trigger debounced validation
-        debouncedValidate(newValue);
-
-        // Call custom handler
-        customHandlers?.onInputChange?.(newValue);
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [setImpersonatedAddress, connectionError, resetConnectionError, debouncedValidate, customHandlers?.onInputChange],
-    );
-
-    /**
-     * Memoized input change handler
-     */
-    const handleAddressChange = useMemo(() => getHandleAddressChange(), [getHandleAddressChange]);
-
-    /**
      * Generate blur handler with proper memoization dependencies
      */
     const getHandleBlur = useCallback(
@@ -499,8 +469,14 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           clearTimeout(timeoutRef.current);
         }
 
+        // For blur validation, we need to use the currently displayed value
+        const currentDisplayValue =
+          isDomainName(impersonatedAddress) && resolvedAddress
+            ? (document.getElementById('impersonated-address') as HTMLInputElement)?.value || impersonatedAddress
+            : impersonatedAddress;
+
         // Validate immediately on blur without debounce
-        const error = await validateAddress(impersonatedAddress);
+        const error = await validateAddress(currentDisplayValue);
         if (error) {
           setConnectionError(error);
         } else if (connectionError) {
@@ -508,14 +484,15 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         }
 
         // Call custom handler
-        customHandlers?.onInputBlur?.(impersonatedAddress);
-        customHandlers?.onValidationComplete?.(impersonatedAddress, error);
+        customHandlers?.onInputBlur?.(currentDisplayValue);
+        customHandlers?.onValidationComplete?.(currentDisplayValue, error);
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         validationConfig.validateOnBlur,
         validateAddress,
         impersonatedAddress,
+        resolvedAddress,
         setConnectionError,
         resetConnectionError,
         connectionError,
@@ -630,6 +607,58 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       return labels.walletAddressPlaceholder;
     }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
 
+    // Track the display value for input (keeps ENS names visible)
+    const [displayValue, setDisplayValue] = useState(impersonatedAddress);
+
+    // Update display value when impersonated address changes from parent
+    useEffect(() => {
+      setDisplayValue(impersonatedAddress);
+    }, [impersonatedAddress]);
+
+    // Update display value when user types ENS names
+    const updateDisplayValue = useCallback((value: string) => {
+      setDisplayValue(value);
+    }, []);
+
+    // Modified input change handler that manages both display and actual values
+    const handleAddressChangeWithDisplay = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        setHasInteracted(true);
+
+        // Always update the display value
+        updateDisplayValue(newValue);
+
+        // For non-domain values, update the actual address immediately
+        if (!isDomainName(newValue)) {
+          setResolvedAddress(null);
+          setImpersonatedAddress(newValue);
+        }
+        // For domain values, the resolved address will be set by validation
+
+        // Clear error immediately if field becomes valid
+        if (newValue.trim() && connectionError) {
+          if (isAddress(newValue) || isDomainName(newValue)) {
+            resetConnectionError();
+          }
+        }
+
+        // Trigger debounced validation
+        debouncedValidate(newValue);
+
+        // Call custom handler
+        customHandlers?.onInputChange?.(newValue);
+      },
+      [
+        updateDisplayValue,
+        setImpersonatedAddress,
+        connectionError,
+        resetConnectionError,
+        debouncedValidate,
+        customHandlers?.onInputChange,
+      ],
+    );
+
     // Cleanup effect and mount/unmount handlers
     useEffect(() => {
       customHandlers?.onMount?.();
@@ -645,15 +674,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetConnectionError, customHandlers?.onMount, customHandlers?.onUnmount]);
-
-    // Update parent component with resolved address for final submission
-    useEffect(() => {
-      if (isDomainName(impersonatedAddress) && resolvedAddress) {
-        // Update the parent with the resolved address so it can be used for impersonation
-        // The parent component will receive this through the setImpersonatedAddress callback
-        // when the form is submitted or validated
-      }
-    }, [impersonatedAddress, resolvedAddress]);
 
     // Input configuration
     const inputId = 'impersonated-address';
@@ -674,8 +694,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           className={inputClasses}
           id={inputId}
           type="text"
-          value={impersonatedAddress}
-          onChange={handleAddressChange}
+          value={displayValue}
+          onChange={handleAddressChangeWithDisplay}
           onBlur={handleBlur}
           placeholder={placeholder}
           aria-describedby={connectionError ? errorId : undefined}
@@ -688,13 +708,12 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         {/* Resolution status */}
         {isResolving && (
           <p className="novacon:mt-1 novacon:text-sm novacon:text-blue-500">
-            Resolving {isDomainName(impersonatedAddress) ? (isENSName(impersonatedAddress) ? 'ENS' : 'SNS') : ''}{' '}
-            name...
+            Resolving {isDomainName(displayValue) ? (isENSName(displayValue) ? 'ENS' : 'SNS') : ''} name...
           </p>
         )}
 
         {/* Resolved address display */}
-        {resolvedAddress && isDomainName(impersonatedAddress) && !isResolving && (
+        {resolvedAddress && isDomainName(displayValue) && !isResolving && (
           <p className="novacon:mt-1 novacon:text-sm novacon:text-green-600">Resolved to: {resolvedAddress}</p>
         )}
 
