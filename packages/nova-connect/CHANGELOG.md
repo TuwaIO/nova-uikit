@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.2.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.10...nova-connect-v0.2.0) (2025-12-02)
+
+
+### Features
+
+* update packages and integrate multi wallets logic ([5617146](https://github.com/TuwaIO/nova-uikit/commit/5617146a0b76eba56f2081933e8003364f446251))
+
+
+### Bug Fixes
+
+* finished connections selection ([a65039b](https://github.com/TuwaIO/nova-uikit/commit/a65039bc5aa9af003026a71a72b20e52ba5f8bed))
+* fixes recent connection and impersonated wallet ([0170c26](https://github.com/TuwaIO/nova-uikit/commit/0170c260d47c77e8c6c28078147cdc52b5eb75b8))
+* impersonate connect ([e9e925c](https://github.com/TuwaIO/nova-uikit/commit/e9e925cd33ee17687c51a247fafe014ebd95f2e4))
+* impersonated bugs ([9923b67](https://github.com/TuwaIO/nova-uikit/commit/9923b6743ef5de47eb9647ea59d41a396c8ee23c))
+* impersonated bugs ([248b55a](https://github.com/TuwaIO/nova-uikit/commit/248b55a3bec3ae6e4ecf5770fc0537f867124ec4))
+* impersonated form bugs ([3885390](https://github.com/TuwaIO/nova-uikit/commit/3885390bebcf5d058596600eb5f4ce241c1e4591))
+* impersonated form logic to support ens/sns enter ([05f72e4](https://github.com/TuwaIO/nova-uikit/commit/05f72e47ba79f1cf90d44eabeb36847d8d68c7e1))
+* multi connectors flow styles and logic ([63d9377](https://github.com/TuwaIO/nova-uikit/commit/63d93779bde97fe7daf4313e46d7ca89e15beddc))
+* simplify Wagmi connector initialization in `nova-connect` and update package dependencies to Wagmi v3. ([901cdf5](https://github.com/TuwaIO/nova-uikit/commit/901cdf5c3481c7b1e802c820d1bb514bf27225a6))
+* update packages ([5462fb5](https://github.com/TuwaIO/nova-uikit/commit/5462fb54238f6ce4bfb98420a102fdb6be1aa77c))
+* WIP multi wallet connection ([4da4f4c](https://github.com/TuwaIO/nova-uikit/commit/4da4f4c457e1d493e3fe63d3a5b97ee20aea2eef))
+
 ## [0.1.10](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.1.9...nova-connect-v0.1.10) (2025-11-03)
 
 
