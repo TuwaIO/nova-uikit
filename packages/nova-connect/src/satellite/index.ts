@@ -1,7 +1,7 @@
 export {
   AllConnectors,
-  Connector,
   Connection,
+  Connector,
   SatelliteConnectProvider,
   SatelliteConnectProviderProps,
   SatelliteStoreContext,

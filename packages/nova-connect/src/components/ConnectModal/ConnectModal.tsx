@@ -19,7 +19,6 @@ import {
   waitFor,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
-import { isAddress } from 'gill';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -35,6 +34,7 @@ import { ConnectContentType, NovaConnectProviderProps, useNovaConnect, useNovaCo
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
+import { isAddress } from '../../utils/addressValidation';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';

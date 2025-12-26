@@ -180,6 +180,7 @@ export function isValidSolanaCluster(cluster: string): boolean {
  * Export additional utility functions that don't require blockchain-specific adapters.
  * These utilities provide general functionality for wallet and network management.
  */
+export * from './addressValidation';
 export * from './getConnectedChainId';
 export * from './getFilteredConnectors';
 export * from './getGroupedConnectors';

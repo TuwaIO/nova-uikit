@@ -110,6 +110,9 @@ importers:
       '@tuwaio/satellite-evm':
         specifier: ^0.2.2
         version: 0.2.2(7675dad4c81f3b544af11831f81803fa)
+      '@tuwaio/satellite-react':
+        specifier: ^0.2.2
+        version: 0.2.2(1a066a52579780551082b545e28b0120)
       '@tuwaio/satellite-solana':
         specifier: ^0.2.2
         version: 0.2.2(707fec05106df8809915d006cbc02c26)
@@ -233,10 +236,6 @@ importers:
         version: 7.2.7(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.1)
 
   packages/nova-connect:
-    dependencies:
-      '@tuwaio/satellite-react':
-        specifier: ^0.2.2
-        version: 0.2.2(1a066a52579780551082b545e28b0120)
     devDependencies:
       '@bgd-labs/react-web3-icons':
         specifier: ^1.58.0
@@ -283,6 +282,9 @@ importers:
       '@tuwaio/satellite-evm':
         specifier: ^0.2.2
         version: 0.2.2(7675dad4c81f3b544af11831f81803fa)
+      '@tuwaio/satellite-react':
+        specifier: ^0.2.2
+        version: 0.2.2(1a066a52579780551082b545e28b0120)
       '@tuwaio/satellite-solana':
         specifier: ^0.2.2
         version: 0.2.2(707fec05106df8809915d006cbc02c26)

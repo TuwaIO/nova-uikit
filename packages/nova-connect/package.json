@@ -89,9 +89,6 @@
       "url": "https://github.com/Argeare5"
     }
   ],
-  "dependencies": {
-    "@tuwaio/satellite-react": "^0.2.2"
-  },
   "peerDependencies": {
     "@bgd-labs/react-web3-icons": ">=1.5",
     "@heroicons/react": "2.x.x",
@@ -103,6 +100,7 @@
     "@tuwaio/satellite-core": ">=0.2",
     "@tuwaio/satellite-evm": ">=0.2",
     "@tuwaio/satellite-solana": ">=0.2",
+    "@tuwaio/satellite-react": ">=0.2.2",
     "@tuwaio/pulsar-core": ">=0.3",
     "@tuwaio/nova-core": ">=0.2.2",
     "@tuwaio/nova-transactions": ">=0.2.2",
@@ -165,6 +163,9 @@
     "react-toastify": {
       "optional": false
     },
+    "@tuwaio/satellite-react": {
+      "optional": false
+    },
     "dayjs": {
       "optional": true
     },
@@ -203,6 +204,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@tuwaio/orbit-core": "^0.2.0",
     "@tuwaio/orbit-evm": "^0.2.2",
+    "@tuwaio/satellite-react": "^0.2.2",
     "@tuwaio/orbit-solana": "^0.2.0",
     "@tuwaio/satellite-core": "^0.2.0",
     "@tuwaio/satellite-evm": "^0.2.2",
