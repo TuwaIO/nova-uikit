@@ -7,7 +7,21 @@ export type { SolanaClusterMoniker } from 'gill';
 // Dynamic exports that will be loaded at runtime
 export async function getSolanaExports() {
   try {
-    const satelliteReactSolana = await import('@tuwaio/satellite-react/solana');
+    // Use a more indirect approach to prevent bundlers from resolving imports at build time
+    // This creates a function that will be called at runtime
+    const importSolanaModule = new Function(
+      'return import("@tuwaio/satellite-react/solana").catch(error => { console.warn("Failed to load Solana exports:", error); return null; })'
+    );
+
+    const satelliteReactSolana = await importSolanaModule();
+
+    if (!satelliteReactSolana) {
+      return {
+        available: false,
+        error: 'Failed to load Solana exports',
+      };
+    }
+
     return {
       ...satelliteReactSolana,
       available: true,

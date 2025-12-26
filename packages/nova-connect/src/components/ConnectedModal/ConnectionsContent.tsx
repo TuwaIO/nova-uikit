@@ -1043,8 +1043,15 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       {showRecentSection && recentListState.length > 0 && (
         <RecentlyConnectedSection>
           {recentListState.map(([connectorType, data]) => {
+            // Use a more direct approach with explicit type casting
             const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some(
-              (c) => `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName(c.name)}` === connectorType,
+              (c) => {
+                // Safely check if c is a valid object with a name property
+                if (c && typeof c === 'object' && 'name' in c && typeof (c as any).name === 'string') {
+                  return `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName((c as { name: string }).name)}` === connectorType;
+                }
+                return false;
+              }
             );
             return (
               <RecentlyConnectedRow

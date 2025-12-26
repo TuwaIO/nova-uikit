@@ -5,6 +5,9 @@ export * from './providers';
 export * from './types';
 export * from './utils';
 
+// Export satellite module separately to avoid bundling issues
+export * from './satellite';
+
 // ========================================
 // Modern Conditional Export System
 // ========================================

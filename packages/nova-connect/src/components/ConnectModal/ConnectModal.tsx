@@ -302,16 +302,21 @@ function getConnectorName(
     return undefined;
   }
 
+  // Use a more direct approach with explicit type casting
   const connector = connectors.find((c) => {
-    if (c && typeof c === 'object' && 'name' in c && typeof c.name === 'string') {
-      return formatConnectorName(c.name) === activeConnector;
+    // Safely check if c is a valid object with a name property
+    if (c && typeof c === 'object' && 'name' in c && typeof (c as any).name === 'string') {
+      return formatConnectorName((c as { name: string }).name) === activeConnector;
     }
     return false;
   });
 
-  return connector && typeof connector === 'object' && 'name' in connector && typeof connector.name === 'string'
-    ? connector.name
-    : undefined;
+  // Safely access the name property with type checking
+  if (connector && typeof connector === 'object' && 'name' in connector && typeof (connector as any).name === 'string') {
+    return (connector as { name: string }).name;
+  }
+
+  return undefined;
 }
 
 // --- Default Sub-Components ---

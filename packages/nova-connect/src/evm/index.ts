@@ -7,7 +7,21 @@ export type { Chain } from 'viem/chains';
 // Dynamic exports that will be loaded at runtime
 export async function getEvmExports() {
   try {
-    const satelliteReactEvm = await import('@tuwaio/satellite-react/evm');
+    // Use a more indirect approach to prevent bundlers from resolving imports at build time
+    // This creates a function that will be called at runtime
+    const importEvmModule = new Function(
+      'return import("@tuwaio/satellite-react/evm").catch(error => { console.warn("Failed to load EVM exports:", error); return null; })'
+    );
+
+    const satelliteReactEvm = await importEvmModule();
+
+    if (!satelliteReactEvm) {
+      return {
+        available: false,
+        error: 'Failed to load EVM exports',
+      };
+    }
+
     return {
       ...satelliteReactEvm,
       available: true,

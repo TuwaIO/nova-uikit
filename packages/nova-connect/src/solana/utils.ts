@@ -19,8 +19,17 @@ export async function initializeSolanaUtils(): Promise<boolean> {
   try {
     // Only try to load if not already initialized
     if (Object.keys(defaultRpcUrlsByMoniker).length === 0) {
-      // Dynamically import Solana dependencies
-      const orbitSolana = await import('@tuwaio/orbit-solana');
+      // Use a more indirect approach to prevent bundlers from resolving imports at build time
+      // This creates a function that will be called at runtime
+      const importSolanaModule = new Function(
+        'return import("@tuwaio/orbit-solana").catch(error => { console.warn("Failed to load Solana dependencies:", error); return null; })'
+      );
+
+      const orbitSolana = await importSolanaModule();
+
+      if (!orbitSolana) {
+        return false;
+      }
 
       // Populate default values
       defaultRpcUrlsByMoniker = orbitSolana.defaultRpcUrlsByMoniker;

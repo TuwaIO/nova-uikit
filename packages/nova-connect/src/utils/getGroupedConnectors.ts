@@ -40,8 +40,8 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
 
   return {
     name: connectorObj.name,
-    // @ts-expect-error - types on available correctly on the package level
-    icon: connectorObj.icon,
+    // Access icon property safely
+    icon: 'icon' in connectorObj ? (connectorObj.icon as string | undefined) : undefined,
     adapter,
     originalConnector: connectorObj as Connector,
   };
@@ -103,9 +103,14 @@ export function getGroupedConnectors(
       group.adapters.push(processed.adapter);
     }
 
-    group.connectors.push({ ...(processed.originalConnector as Connector), adapter: processed.adapter } as Connector & {
-      adapter: OrbitAdapter;
-    });
+    // Create a new object with the connector properties and add the adapter
+    const connectorWithAdapter = Object.assign(
+      {},
+      processed.originalConnector,
+      { adapter: processed.adapter }
+    ) as Connector & { adapter: OrbitAdapter };
+
+    group.connectors.push(connectorWithAdapter);
 
     // Update icon if not set
     if (!group.icon && processed.icon) {
