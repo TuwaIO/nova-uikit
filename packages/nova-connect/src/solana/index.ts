@@ -1,10 +1,25 @@
+// Export utils with dynamic initialization
 export * from './utils';
-export * from '@tuwaio/satellite-react/solana';
 
-// Re-export gill types directly when available
+// Export types only, not implementations
 export type { SolanaClusterMoniker } from 'gill';
-// Import types for extension
-import type { SolanaClusterMoniker } from 'gill';
+
+// Dynamic exports that will be loaded at runtime
+export async function getSolanaExports() {
+  try {
+    const satelliteReactSolana = await import('@tuwaio/satellite-react/solana');
+    return {
+      ...satelliteReactSolana,
+      available: true,
+    };
+  } catch (error) {
+    console.warn('Failed to load Solana exports:', error);
+    return {
+      available: false,
+      error: error instanceof Error ? error.message : 'Unknown error loading Solana exports',
+    };
+  }
+}
 
 // Extend the main interface with Solana-specific config
 // This will override the default `any` type with specific SolanaClusterMoniker typing

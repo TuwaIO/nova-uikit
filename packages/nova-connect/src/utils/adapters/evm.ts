@@ -7,8 +7,9 @@ import type { ChainAdapter } from './types';
  * @since 1.0.0
  */
 interface EvmUtilsModule {
-  getEvmChains?: (appChains: any) => (string | number)[];
+  getEvmChains?: (appChains: any) => Promise<(string | number)[]>;
   isEvmChainList?: (chains: (string | number)[]) => boolean;
+  initializeEvmUtils?: () => Promise<boolean>;
 }
 
 /**
@@ -77,10 +78,10 @@ export async function createEvmAdapter(): Promise<ChainAdapter> {
      * @param appChains Array of chain configurations or chain identifiers
      * @returns Array of chain IDs (numbers or strings)
      */
-    getChains(appChains: any): (string | number)[] {
+    async getChains(appChains: any): Promise<(string | number)[]> {
       // Use imported EVM utilities if available
       if (evmUtils?.getEvmChains) {
-        return evmUtils.getEvmChains(appChains);
+        return await evmUtils.getEvmChains(appChains);
       }
 
       // Fallback implementation for basic chain extraction

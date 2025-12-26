@@ -203,10 +203,39 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
           };
         }
 
-        return {
-          available: true,
-          ...evmModule,
-        };
+        // Call getEvmExports to dynamically load EVM exports
+        // We need to use a Promise here because we can't use await in new Function
+        return new Promise((resolve) => {
+          if (typeof evmModule.getEvmExports !== 'function') {
+            resolve({
+              available: false,
+              error: 'EVM module does not have getEvmExports function',
+            });
+            return;
+          }
+
+          evmModule.getEvmExports()
+            .then((evmExports: { available: boolean; error?: string; [key: string]: any }) => {
+              if (!evmExports.available) {
+                resolve({
+                  available: false,
+                  error: evmExports.error || 'Failed to load EVM exports',
+                });
+                return;
+              }
+
+              resolve({
+                ...evmModule, // Include utility functions
+                ...evmExports, // Include dynamically loaded exports
+              });
+            })
+            .catch((error: unknown) => {
+              resolve({
+                available: false,
+                error: error instanceof Error ? error.message : 'Failed to load EVM exports',
+              });
+            });
+        });
       } catch (error) {
         return {
           available: false,
@@ -217,9 +246,20 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
 
     // Only import our utilities if packages are available
     const evmModule = await import('./evm');
+
+    // Use the new getEvmExports function to dynamically load EVM exports
+    const evmExports = await evmModule.getEvmExports();
+
+    if (!evmExports.available) {
+      return {
+        available: false,
+        error: evmExports.error || 'Failed to load EVM exports',
+      };
+    }
+
     return {
-      available: true,
-      ...evmModule,
+      ...evmModule, // Include utility functions
+      ...evmExports, // Include dynamically loaded exports
     };
   } catch (error) {
     return {
@@ -277,10 +317,39 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
           };
         }
 
-        return {
-          available: true,
-          ...solanaModule,
-        };
+        // Call getSolanaExports to dynamically load Solana exports
+        // We need to use a Promise here because we can't use await in new Function
+        return new Promise((resolve) => {
+          if (typeof solanaModule.getSolanaExports !== 'function') {
+            resolve({
+              available: false,
+              error: 'Solana module does not have getSolanaExports function',
+            });
+            return;
+          }
+
+          solanaModule.getSolanaExports()
+            .then((solanaExports: { available: boolean; error?: string; [key: string]: any }) => {
+              if (!solanaExports.available) {
+                resolve({
+                  available: false,
+                  error: solanaExports.error || 'Failed to load Solana exports',
+                });
+                return;
+              }
+
+              resolve({
+                ...solanaModule, // Include utility functions
+                ...solanaExports, // Include dynamically loaded exports
+              });
+            })
+            .catch((error: unknown) => {
+              resolve({
+                available: false,
+                error: error instanceof Error ? error.message : 'Failed to load Solana exports',
+              });
+            });
+        });
       } catch (error) {
         return {
           available: false,
@@ -291,9 +360,20 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
 
     // Only import our utilities if packages are available
     const solanaModule = await import('./solana');
+
+    // Use the new getSolanaExports function to dynamically load Solana exports
+    const solanaExports = await solanaModule.getSolanaExports();
+
+    if (!solanaExports.available) {
+      return {
+        available: false,
+        error: solanaExports.error || 'Failed to load Solana exports',
+      };
+    }
+
     return {
-      available: true,
-      ...solanaModule,
+      ...solanaModule, // Include utility functions
+      ...solanaExports, // Include dynamically loaded exports
     };
   } catch (error) {
     return {

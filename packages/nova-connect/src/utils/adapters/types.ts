@@ -35,26 +35,26 @@ export interface ChainAdapter {
    *
    * @param config Chain configuration data (format varies by blockchain)
    * @param chains Optional array of specific chains to filter or process
-   * @returns Array of chain identifiers (numbers for EVM, strings for Solana)
+   * @returns Promise resolving to array of chain identifiers (numbers for EVM, strings for Solana)
    *
    * @example
    * ```typescript
    * // EVM chains
-   * const evmChains = adapter.getChains([
+   * const evmChains = await adapter.getChains([
    *   { id: 1, name: 'Ethereum' },
    *   { id: 56, name: 'BSC' }
    * ]);
    * // Returns: [1, 56]
    *
    * // Solana clusters
-   * const solanaClusters = adapter.getChains({
+   * const solanaClusters = await adapter.getChains({
    *   'mainnet-beta': 'https://api.mainnet-beta.solana.com',
    *   devnet: 'https://api.devnet.solana.com'
    * });
    * // Returns: ['mainnet-beta', 'devnet']
    * ```
    */
-  getChains(config: any, chains?: any): (string | number)[];
+  getChains(config: any, chains?: any): Promise<(string | number)[]>;
 
   /**
    * Validates whether a chain identifier array conforms to this adapter's expected format.
@@ -86,17 +86,17 @@ export interface ChainAdapter {
    * This method is specific to Solana and returns the configured cluster names
    * that can be used for connections. Not applicable to other blockchain types.
    *
-   * @returns Array of available cluster names
+   * @returns Promise resolving to array of available cluster names
    * @optional This method is only available on Solana adapters
    *
    * @example
    * ```typescript
    * const solanaAdapter = await createSolanaAdapter();
-   * const clusters = solanaAdapter.getAvailableClusters?.();
+   * const clusters = await solanaAdapter.getAvailableClusters?.();
    * // Might return: ['mainnet-beta', 'devnet', 'testnet', 'localnet']
    * ```
    */
-  getAvailableClusters?(): string[];
+  getAvailableClusters?(): Promise<string[]>;
 
   /**
    * Validates whether a cluster name is valid for Solana.
@@ -105,17 +105,17 @@ export interface ChainAdapter {
    * is a known/valid Solana cluster moniker. Not applicable to other blockchain types.
    *
    * @param cluster Cluster name to validate
-   * @returns True if the cluster name is valid for Solana
+   * @returns Promise resolving to true if the cluster name is valid for Solana
    * @optional This method is only available on Solana adapters
    *
    * @example
    * ```typescript
    * const solanaAdapter = await createSolanaAdapter();
-   * const isValid = solanaAdapter.isValidCluster?.('mainnet-beta'); // true
-   * const isInvalid = solanaAdapter.isValidCluster?.('invalid-cluster'); // false
+   * const isValid = await solanaAdapter.isValidCluster?.('mainnet-beta'); // true
+   * const isInvalid = await solanaAdapter.isValidCluster?.('invalid-cluster'); // false
    * ```
    */
-  isValidCluster?(cluster: string): boolean;
+  isValidCluster?(cluster: string): Promise<boolean>;
 }
 
 /**

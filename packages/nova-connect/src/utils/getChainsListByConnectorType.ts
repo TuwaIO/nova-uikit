@@ -161,19 +161,13 @@ export function getChainsListByConnectorTypeSync(params: GetChainsListParams): (
   }
 
   const adapterType = getAdapterFromConnectorType(connectorType);
-  const adapter = adapterRegistry.getLoadedAdapter(adapterType);
 
-  if (adapter) {
-    try {
-      if (adapterType === OrbitAdapter.SOLANA) {
-        return adapter.getChains(config.solanaRPCUrls, chains);
-      } else {
-        return adapter.getChains(config.appChains);
-      }
-    } catch (error) {
-      console.warn(`Error with loaded adapter for ${adapterType}:`, error);
-    }
-  }
+  // Since adapter methods are now async, we can't use them in a sync context
+  // Instead, we'll use the fallback implementation directly
+  console.warn(
+    `getChainsListByConnectorTypeSync: Using fallback implementation for ${adapterType} ` +
+    `because adapter methods are now async. Consider using the async version instead.`
+  );
 
   return getFallbackChains(adapterType, config);
 }

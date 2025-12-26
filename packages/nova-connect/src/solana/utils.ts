@@ -1,7 +1,36 @@
-import { defaultRpcUrlsByMoniker, SolanaRPCUrls } from '@tuwaio/orbit-solana';
 import type { SolanaClusterMoniker } from 'gill';
-
 import { ChainIdentifierArray } from '../index';
+
+// Use a local type definition to avoid direct imports
+type SolanaRPCUrlsType = {
+  rpcUrls: Partial<Record<string, string>>;
+};
+
+// Default values that will be populated at runtime if the package is available
+let defaultRpcUrlsByMoniker: Record<string, string> = {};
+
+/**
+ * Initializes Solana utilities by dynamically loading dependencies.
+ * This function should be called before using any Solana-specific functionality.
+ * 
+ * @returns Promise resolving to true if initialization was successful
+ */
+export async function initializeSolanaUtils(): Promise<boolean> {
+  try {
+    // Only try to load if not already initialized
+    if (Object.keys(defaultRpcUrlsByMoniker).length === 0) {
+      // Dynamically import Solana dependencies
+      const orbitSolana = await import('@tuwaio/orbit-solana');
+
+      // Populate default values
+      defaultRpcUrlsByMoniker = orbitSolana.defaultRpcUrlsByMoniker;
+    }
+    return true;
+  } catch (error) {
+    console.warn('Failed to initialize Solana utilities:', error);
+    return false;
+  }
+}
 
 /**
  * Extracts Solana cluster from chain identifier
@@ -26,9 +55,9 @@ function extractSolanaCluster(chainId: string): SolanaClusterMoniker | null {
  */
 function buildSolanaRpcUrls(
   chains: ChainIdentifierArray,
-  solanaRPCUrls?: SolanaRPCUrls['rpcUrls'],
-): SolanaRPCUrls['rpcUrls'] {
-  const availableRpcUrls: SolanaRPCUrls['rpcUrls'] = {};
+  solanaRPCUrls?: SolanaRPCUrlsType['rpcUrls'],
+): SolanaRPCUrlsType['rpcUrls'] {
+  const availableRpcUrls: SolanaRPCUrlsType['rpcUrls'] = {};
 
   // If config is provided, we only consider clusters defined in it.
   // If not provided, we consider all default clusters.
@@ -57,10 +86,13 @@ function buildSolanaRpcUrls(
 /**
  * Get Solana clusters from configuration
  */
-export function getSolanaClusters(
+export async function getSolanaClusters(
   solanaRPCUrls?: Partial<Record<SolanaClusterMoniker, string>>,
   chains?: ChainIdentifierArray,
-): string[] {
+): Promise<string[]> {
+  // Initialize Solana utilities first
+  await initializeSolanaUtils();
+
   if (chains && chains.length > 0) {
     // For Solana, build RPC URLs and return cluster names
     const availableRpcUrls = buildSolanaRpcUrls(chains, solanaRPCUrls);
@@ -81,13 +113,17 @@ export function isSolanaChainList(chains: (string | number)[]): chains is string
 /**
  * Gets available Solana clusters from the default configuration
  */
-export function getAvailableSolanaClusters(): SolanaClusterMoniker[] {
+export async function getAvailableSolanaClusters(): Promise<SolanaClusterMoniker[]> {
+  // Initialize Solana utilities first
+  await initializeSolanaUtils();
   return Object.keys(defaultRpcUrlsByMoniker) as SolanaClusterMoniker[];
 }
 
 /**
  * Validates if a string is a valid Solana cluster moniker
  */
-export function isValidSolanaCluster(cluster: string): cluster is SolanaClusterMoniker {
+export async function isValidSolanaCluster(cluster: string): Promise<boolean> {
+  // Initialize Solana utilities first
+  await initializeSolanaUtils();
   return cluster in defaultRpcUrlsByMoniker;
 }

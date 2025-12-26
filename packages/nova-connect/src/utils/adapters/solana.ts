@@ -7,10 +7,11 @@ import type { ChainAdapter } from './types';
  * @since 1.0.0
  */
 interface SolanaUtilsModule {
-  getSolanaClusters?: (solanaRPCUrls: any, chains?: any) => string[];
+  getSolanaClusters?: (solanaRPCUrls: any, chains?: any) => Promise<string[]>;
   isSolanaChainList?: (chains: (string | number)[]) => boolean;
-  getAvailableSolanaClusters?: () => string[];
-  isValidSolanaCluster?: (cluster: string) => boolean;
+  getAvailableSolanaClusters?: () => Promise<string[]>;
+  isValidSolanaCluster?: (cluster: string) => Promise<boolean>;
+  initializeSolanaUtils?: () => Promise<boolean>;
 }
 
 /**
@@ -84,10 +85,10 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
      * @param chains Optional array of specific chains to filter
      * @returns Array of cluster names (strings)
      */
-    getChains(solanaRPCUrls: any, chains?: any): (string | number)[] {
+    async getChains(solanaRPCUrls: any, chains?: any): Promise<(string | number)[]> {
       // Use imported Solana utilities if available
       if (solanaUtils?.getSolanaClusters) {
-        return solanaUtils.getSolanaClusters(solanaRPCUrls, chains);
+        return await solanaUtils.getSolanaClusters(solanaRPCUrls, chains);
       }
 
       // Fallback implementation for basic cluster extraction
@@ -121,13 +122,13 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
      *
      * @example
      * ```typescript
-     * const clusters = adapter.getAvailableClusters?.();
+     * const clusters = await adapter.getAvailableClusters?.();
      * // Might return: ['mainnet-beta', 'devnet', 'testnet']
      * ```
      */
-    getAvailableClusters(): string[] {
+    async getAvailableClusters(): Promise<string[]> {
       if (solanaUtils?.getAvailableSolanaClusters) {
-        return solanaUtils.getAvailableSolanaClusters();
+        return await solanaUtils.getAvailableSolanaClusters();
       }
       return [];
     },
@@ -141,16 +142,16 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
      *
      * @example
      * ```typescript
-     * const isValid = adapter.isValidCluster?.('mainnet-beta');
+     * const isValid = await adapter.isValidCluster?.('mainnet-beta');
      * console.log(isValid); // true
      *
-     * const isInvalid = adapter.isValidCluster?.('invalid-cluster');
+     * const isInvalid = await adapter.isValidCluster?.('invalid-cluster');
      * console.log(isInvalid); // false
      * ```
      */
-    isValidCluster(cluster: string): boolean {
+    async isValidCluster(cluster: string): Promise<boolean> {
       if (solanaUtils?.isValidSolanaCluster) {
-        return solanaUtils.isValidSolanaCluster(cluster);
+        return await solanaUtils.isValidSolanaCluster(cluster);
       }
       return false;
     },
