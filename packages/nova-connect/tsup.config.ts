@@ -29,6 +29,7 @@ export default defineConfig([
       '@tuwaio/satellite-core',
       '@tuwaio/satellite-evm',
       '@tuwaio/satellite-solana',
+      '@tuwaio/satellite-react',
       '@tuwaio/pulsar-core',
       '@tuwaio/nova-core',
       '@tuwaio/nova-transactions',
