@@ -10,6 +10,13 @@ export * from './utils';
 // ========================================
 
 /**
+ * @internal
+ * Flag to indicate if we're in a bundler environment that doesn't support dynamic imports properly
+ * This is used to prevent bundlers from trying to resolve dynamic imports at build time
+ */
+const IS_BUNDLER_ENV = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
+
+/**
  * Information about available blockchain-specific utilities and their status.
  *
  * @interface BlockchainUtilities
@@ -75,6 +82,21 @@ export async function getBlockchainUtilities(): Promise<BlockchainUtilities> {
  * @since 1.0.0
  */
 async function checkEvmUtils(): Promise<boolean> {
+  // In bundler environments, we can't reliably use dynamic imports
+  // as they might be resolved at build time
+  if (IS_BUNDLER_ENV) {
+    try {
+      // Use a more indirect approach that won't be resolved at build time
+      // This creates a function that will be called at runtime
+      const checkImport = new Function(
+        'try { return Boolean(require("@tuwaio/orbit-evm") && require("viem")); } catch { return false; }'
+      );
+      return checkImport();
+    } catch {
+      return false;
+    }
+  }
+
   try {
     // Check if actual EVM packages are available
     await import('viem');
@@ -95,6 +117,21 @@ async function checkEvmUtils(): Promise<boolean> {
  * @since 1.0.0
  */
 async function checkSolanaUtils(): Promise<boolean> {
+  // In bundler environments, we can't reliably use dynamic imports
+  // as they might be resolved at build time
+  if (IS_BUNDLER_ENV) {
+    try {
+      // Use a more indirect approach that won't be resolved at build time
+      // This creates a function that will be called at runtime
+      const checkImport = new Function(
+        'try { return Boolean(require("@tuwaio/orbit-solana") && require("gill")); } catch { return false; }'
+      );
+      return checkImport();
+    } catch {
+      return false;
+    }
+  }
+
   try {
     // Check if actual Solana packages are available
     await import('gill');
@@ -150,6 +187,34 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
       };
     }
 
+    // In bundler environments, we need to handle imports differently
+    if (IS_BUNDLER_ENV) {
+      try {
+        // Use a more indirect approach that won't be resolved at build time
+        const getEvmModule = new Function(
+          'try { return require("./evm"); } catch { return null; }'
+        );
+        const evmModule = getEvmModule();
+
+        if (!evmModule) {
+          return {
+            available: false,
+            error: 'Failed to load EVM module',
+          };
+        }
+
+        return {
+          available: true,
+          ...evmModule,
+        };
+      } catch (error) {
+        return {
+          available: false,
+          error: error instanceof Error ? error.message : 'Failed to load EVM module',
+        };
+      }
+    }
+
     // Only import our utilities if packages are available
     const evmModule = await import('./evm');
     return {
@@ -194,6 +259,34 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
         available: false,
         error: 'Solana packages (gill, @tuwaio/orbit-solana) not available',
       };
+    }
+
+    // In bundler environments, we need to handle imports differently
+    if (IS_BUNDLER_ENV) {
+      try {
+        // Use a more indirect approach that won't be resolved at build time
+        const getSolanaModule = new Function(
+          'try { return require("./solana"); } catch { return null; }'
+        );
+        const solanaModule = getSolanaModule();
+
+        if (!solanaModule) {
+          return {
+            available: false,
+            error: 'Failed to load Solana module',
+          };
+        }
+
+        return {
+          available: true,
+          ...solanaModule,
+        };
+      } catch (error) {
+        return {
+          available: false,
+          error: error instanceof Error ? error.message : 'Failed to load Solana module',
+        };
+      }
     }
 
     // Only import our utilities if packages are available
@@ -267,17 +360,47 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
 
     // Only load adapter management if we have at least one blockchain available
     if (evmAvailable || solanaAvailable) {
-      const { preloadChainAdapters } = await import('./utils/getChainsListByConnectorType');
+      // In bundler environments, we need to handle imports differently
+      if (IS_BUNDLER_ENV) {
+        try {
+          // Use a more indirect approach that won't be resolved at build time
+          const getUtilsModule = new Function(
+            'try { return require("./utils/getChainsListByConnectorType"); } catch { return null; }'
+          );
+          const utilsModule = getUtilsModule();
 
-      const adaptersToPreload: OrbitAdapter[] = [];
-      if (evmAvailable) adaptersToPreload.push(OrbitAdapter.EVM);
-      if (solanaAvailable) adaptersToPreload.push(OrbitAdapter.SOLANA);
+          if (!utilsModule) {
+            results.errors.push('Failed to load chain adapter utilities');
+            return results;
+          }
 
-      await preloadChainAdapters(adaptersToPreload);
+          const adaptersToPreload: OrbitAdapter[] = [];
+          if (evmAvailable) adaptersToPreload.push(OrbitAdapter.EVM);
+          if (solanaAvailable) adaptersToPreload.push(OrbitAdapter.SOLANA);
 
-      // Set results based on successful package availability
-      results.evm = evmAvailable;
-      results.solana = solanaAvailable;
+          await utilsModule.preloadChainAdapters(adaptersToPreload);
+
+          // Set results based on successful package availability
+          results.evm = evmAvailable;
+          results.solana = solanaAvailable;
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : 'Failed to initialize chain adapters';
+          results.errors.push(errorMsg);
+        }
+      } else {
+        // Standard dynamic import approach for non-bundler environments
+        const { preloadChainAdapters } = await import('./utils/getChainsListByConnectorType');
+
+        const adaptersToPreload: OrbitAdapter[] = [];
+        if (evmAvailable) adaptersToPreload.push(OrbitAdapter.EVM);
+        if (solanaAvailable) adaptersToPreload.push(OrbitAdapter.SOLANA);
+
+        await preloadChainAdapters(adaptersToPreload);
+
+        // Set results based on successful package availability
+        results.evm = evmAvailable;
+        results.solana = solanaAvailable;
+      }
     } else {
       results.errors.push('No blockchain packages available for initialization');
     }
@@ -317,15 +440,17 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
  * @since 1.0.0
  */
 export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean> {
-  switch (adapter) {
-    case OrbitAdapter.EVM:
-      return checkEvmUtils();
-    case OrbitAdapter.SOLANA:
-      return checkSolanaUtils();
-    case OrbitAdapter.Starknet:
-      return false; // Not yet implemented
-    default:
-      return false;
+  // For Starknet and unknown adapters, we can return immediately
+  if (adapter === OrbitAdapter.Starknet || 
+      (adapter !== OrbitAdapter.EVM && adapter !== OrbitAdapter.SOLANA)) {
+    return false;
+  }
+
+  // For EVM and Solana, use the appropriate check function
+  if (adapter === OrbitAdapter.EVM) {
+    return checkEvmUtils();
+  } else {
+    return checkSolanaUtils();
   }
 }
 
