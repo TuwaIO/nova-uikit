@@ -38,10 +38,27 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
     return null;
   }
 
+  // Extract the icon property safely
+  let iconValue: string | undefined = undefined;
+  if ('icon' in connectorObj) {
+    const icon = connectorObj.icon;
+    // Check if the icon is a string
+    if (typeof icon === 'string') {
+      iconValue = icon;
+    }
+    // If it's an object with a toString method, use that
+    else if (icon && typeof icon === 'object' && 'toString' in icon && typeof icon.toString === 'function') {
+      try {
+        iconValue = icon.toString();
+      } catch (e) {
+        // Ignore errors in toString
+      }
+    }
+  }
+
   return {
     name: connectorObj.name,
-    // Access icon property safely
-    icon: 'icon' in connectorObj ? (connectorObj.icon as string | undefined) : undefined,
+    icon: iconValue,
     adapter,
     originalConnector: connectorObj as Connector,
   };

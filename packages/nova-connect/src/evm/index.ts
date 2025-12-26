@@ -4,6 +4,9 @@ export * from './utils';
 // Export types only, not implementations
 export type { Chain } from 'viem/chains';
 
+// Export components directly to satisfy static imports
+export { EVMConnectorsWatcher } from '@tuwaio/satellite-react/evm';
+
 // Dynamic exports that will be loaded at runtime
 export async function getEvmExports() {
   try {

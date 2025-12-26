@@ -4,6 +4,13 @@ export * from './utils';
 // Export types only, not implementations
 export type { SolanaClusterMoniker } from 'gill';
 
+// Export components directly to satisfy static imports
+export { SolanaConnectorsWatcher } from '@tuwaio/satellite-react/solana';
+
+// Re-export the Connection type from satellite-react and create a type alias for Solana
+import { Connection } from '@tuwaio/satellite-react';
+export type SolanaConnection = Connection;
+
 // Dynamic exports that will be loaded at runtime
 export async function getSolanaExports() {
   try {
