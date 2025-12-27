@@ -204,7 +204,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@tuwaio/orbit-core": "^0.2.0",
     "@tuwaio/orbit-evm": "^0.2.2",
-    "@tuwaio/satellite-react": "1.0.0-fix-adapters-independ-alpha.1.82df95a",
+    "@tuwaio/satellite-react": "1.0.0-fix-adapters-independ-alpha.2.821adb2",
     "@tuwaio/orbit-solana": "^0.2.0",
     "@tuwaio/satellite-core": "^0.2.0",
     "@tuwaio/satellite-evm": "^0.2.2",

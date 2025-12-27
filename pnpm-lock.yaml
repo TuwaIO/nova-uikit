@@ -283,8 +283,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(7675dad4c81f3b544af11831f81803fa)
       '@tuwaio/satellite-react':
-        specifier: 1.0.0-fix-adapters-independ-alpha.1.82df95a
-        version: 1.0.0-fix-adapters-independ-alpha.1.82df95a(1a066a52579780551082b545e28b0120)
+        specifier: 1.0.0-fix-adapters-independ-alpha.2.821adb2
+        version: 1.0.0-fix-adapters-independ-alpha.2.821adb2(1a066a52579780551082b545e28b0120)
       '@tuwaio/satellite-solana':
         specifier: ^0.2.2
         version: 0.2.2(707fec05106df8809915d006cbc02c26)
@@ -2113,8 +2113,8 @@ packages:
       viem:
         optional: true
 
-  '@tuwaio/satellite-react@1.0.0-fix-adapters-independ-alpha.1.82df95a':
-    resolution: {integrity: sha512-/SNXGwfPTfJJq4fxjXxO66zqpyvKEMOeyEbNLfJ/S2yLRgAfOoPsRl36IfQHcei3SEwX9VxI/CJakNCABBaFRg==}
+  '@tuwaio/satellite-react@1.0.0-fix-adapters-independ-alpha.2.821adb2':
+    resolution: {integrity: sha512-p09lk2yMudi7VK0QTkV5P+lqeMXNlWZO/azW7Yg6SBJzT0HVP6ouyxvwLG+iGzvHjD9k6JlN1dQnvXTTCQvGbA==}
     peerDependencies:
       '@tuwaio/orbit-core': '>=0.2'
       '@tuwaio/orbit-evm': '>=0.2'
@@ -6745,7 +6745,7 @@ snapshots:
       gill: 0.14.0(@solana/sysvars@5.0.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       viem: 2.42.1(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.1.13)
 
-  '@tuwaio/satellite-react@1.0.0-fix-adapters-independ-alpha.1.82df95a(1a066a52579780551082b545e28b0120)':
+  '@tuwaio/satellite-react@1.0.0-fix-adapters-independ-alpha.2.821adb2(1a066a52579780551082b545e28b0120)':
     dependencies:
       '@tuwaio/orbit-core': 0.2.0
       '@tuwaio/satellite-core': 0.2.0(@tuwaio/orbit-core@0.2.0)(immer@11.0.1)(zustand@5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.4.0(react@19.2.3)))
