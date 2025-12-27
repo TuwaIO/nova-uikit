@@ -4,12 +4,16 @@ export * from './utils';
 // Export types only, not implementations
 export type { SolanaClusterMoniker } from 'gill';
 
-// Export components directly to satisfy static imports
-export { SolanaConnectorsWatcher } from '@tuwaio/satellite-react/solana';
+// Import types from satellite-react/solana
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { SolanaConnectorsWatcher } from '@tuwaio/satellite-react/solana';
+import { ConnectorSolana, SolanaConnection } from '@tuwaio/satellite-solana';
 
-// Re-export the Connection type from satellite-react and create a type alias for Solana
-import { Connection } from '@tuwaio/satellite-react';
-export type SolanaConnection = Connection;
+// Re-export the types
+export type { ConnectorSolana, SolanaConnection };
+
+// Re-export the component
+export { SolanaConnectorsWatcher };
 
 // Dynamic exports that will be loaded at runtime
 export async function getSolanaExports() {
@@ -17,7 +21,7 @@ export async function getSolanaExports() {
     // Use a more indirect approach to prevent bundlers from resolving imports at build time
     // This creates a function that will be called at runtime
     const importSolanaModule = new Function(
-      'return import("@tuwaio/satellite-react/solana").catch(error => { console.warn("Failed to load Solana exports:", error); return null; })'
+      'return import("@tuwaio/satellite-react/solana").catch(error => { console.warn("Failed to load Solana exports:", error); return null; })',
     );
 
     const satelliteReactSolana = await importSolanaModule();
@@ -29,9 +33,14 @@ export async function getSolanaExports() {
       };
     }
 
+    // Instead of trying to modify exports directly, we'll return the actual component
+    // implementation and let the consumer handle the assignment
+    const actualSolanaConnectorsWatcher = satelliteReactSolana.SolanaConnectorsWatcher;
+
     return {
       ...satelliteReactSolana,
       available: true,
+      SolanaConnectorsWatcher: actualSolanaConnectorsWatcher,
     };
   } catch (error) {
     console.warn('Failed to load Solana exports:', error);
@@ -55,5 +64,17 @@ declare module '@tuwaio/nova-connect' {
     // eslint-disable-next-line
     // @ts-ignore - Need for declaration merging
     solanaRPCUrls?: Partial<Record<SolanaClusterMoniker, string>>;
+  }
+}
+
+// Extend the satellite-react interfaces with Solana-specific types
+// eslint-disable-next-line
+// @ts-ignore - Need for declaration merging
+declare module '@tuwaio/satellite-react' {
+  export interface AllConnections {
+    [OrbitAdapter.SOLANA]: SolanaConnection;
+  }
+  export interface AllConnectors {
+    [OrbitAdapter.SOLANA]: ConnectorSolana;
   }
 }

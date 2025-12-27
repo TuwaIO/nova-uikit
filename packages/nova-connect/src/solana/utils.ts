@@ -1,4 +1,5 @@
 import type { SolanaClusterMoniker } from 'gill';
+
 import { ChainIdentifierArray } from '../index';
 
 // Use a local type definition to avoid direct imports
@@ -12,7 +13,7 @@ let defaultRpcUrlsByMoniker: Record<string, string> = {};
 /**
  * Initializes Solana utilities by dynamically loading dependencies.
  * This function should be called before using any Solana-specific functionality.
- * 
+ *
  * @returns Promise resolving to true if initialization was successful
  */
 export async function initializeSolanaUtils(): Promise<boolean> {
@@ -22,7 +23,7 @@ export async function initializeSolanaUtils(): Promise<boolean> {
       // Use a more indirect approach to prevent bundlers from resolving imports at build time
       // This creates a function that will be called at runtime
       const importSolanaModule = new Function(
-        'return import("@tuwaio/orbit-solana").catch(error => { console.warn("Failed to load Solana dependencies:", error); return null; })'
+        'return import("@tuwaio/orbit-solana").catch(error => { console.warn("Failed to load Solana dependencies:", error); return null; })',
       );
 
       const orbitSolana = await importSolanaModule();

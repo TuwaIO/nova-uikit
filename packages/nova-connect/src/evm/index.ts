@@ -4,8 +4,16 @@ export * from './utils';
 // Export types only, not implementations
 export type { Chain } from 'viem/chains';
 
-// Export components directly to satisfy static imports
-export { EVMConnectorsWatcher } from '@tuwaio/satellite-react/evm';
+// Import types from satellite-react/evm
+import { EVMConnectorsWatcher } from '@tuwaio/satellite-react/evm';
+import { EVMConnection, ConnectorEVM } from '@tuwaio/satellite-evm';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+
+// Re-export the types
+export type { EVMConnection, ConnectorEVM };
+
+// Re-export the component
+export { EVMConnectorsWatcher };
 
 // Dynamic exports that will be loaded at runtime
 export async function getEvmExports() {
@@ -25,9 +33,14 @@ export async function getEvmExports() {
       };
     }
 
+    // Instead of trying to modify exports directly, we'll return the actual component
+    // implementation and let the consumer handle the assignment
+    const actualEVMConnectorsWatcher = satelliteReactEvm.EVMConnectorsWatcher;
+
     return {
       ...satelliteReactEvm,
       available: true,
+      EVMConnectorsWatcher: actualEVMConnectorsWatcher,
     };
   } catch (error) {
     console.warn('Failed to load EVM exports:', error);
@@ -51,5 +64,17 @@ declare module '@tuwaio/nova-connect' {
     // eslint-disable-next-line
     // @ts-ignore - Need for declaration merging
     appChains?: readonly [Chain, ...Chain[]];
+  }
+}
+
+// Extend the satellite-react interfaces with EVM-specific types
+// eslint-disable-next-line
+// @ts-ignore - Need for declaration merging
+declare module '@tuwaio/satellite-react' {
+  export interface AllConnections {
+    [OrbitAdapter.EVM]: EVMConnection;
+  }
+  export interface AllConnectors {
+    [OrbitAdapter.EVM]: ConnectorEVM;
   }
 }

@@ -5,9 +5,6 @@ export * from './providers';
 export * from './types';
 export * from './utils';
 
-// Export satellite module separately to avoid bundling issues
-export * from './satellite';
-
 // ========================================
 // Modern Conditional Export System
 // ========================================
@@ -92,7 +89,7 @@ async function checkEvmUtils(): Promise<boolean> {
       // Use a more indirect approach that won't be resolved at build time
       // This creates a function that will be called at runtime
       const checkImport = new Function(
-        'try { return Boolean(require("@tuwaio/orbit-evm") && require("viem")); } catch { return false; }'
+        'try { return Boolean(require("@tuwaio/orbit-evm") && require("viem")); } catch { return false; }',
       );
       return checkImport();
     } catch {
@@ -127,7 +124,7 @@ async function checkSolanaUtils(): Promise<boolean> {
       // Use a more indirect approach that won't be resolved at build time
       // This creates a function that will be called at runtime
       const checkImport = new Function(
-        'try { return Boolean(require("@tuwaio/orbit-solana") && require("gill")); } catch { return false; }'
+        'try { return Boolean(require("@tuwaio/orbit-solana") && require("gill")); } catch { return false; }',
       );
       return checkImport();
     } catch {
@@ -194,9 +191,7 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
     if (IS_BUNDLER_ENV) {
       try {
         // Use a more indirect approach that won't be resolved at build time
-        const getEvmModule = new Function(
-          'try { return require("./evm"); } catch { return null; }'
-        );
+        const getEvmModule = new Function('try { return require("./evm"); } catch { return null; }');
         const evmModule = getEvmModule();
 
         if (!evmModule) {
@@ -217,7 +212,8 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
             return;
           }
 
-          evmModule.getEvmExports()
+          evmModule
+            .getEvmExports()
             .then((evmExports: { available: boolean; error?: string; [key: string]: any }) => {
               if (!evmExports.available) {
                 resolve({
@@ -308,9 +304,7 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
     if (IS_BUNDLER_ENV) {
       try {
         // Use a more indirect approach that won't be resolved at build time
-        const getSolanaModule = new Function(
-          'try { return require("./solana"); } catch { return null; }'
-        );
+        const getSolanaModule = new Function('try { return require("./solana"); } catch { return null; }');
         const solanaModule = getSolanaModule();
 
         if (!solanaModule) {
@@ -331,7 +325,8 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
             return;
           }
 
-          solanaModule.getSolanaExports()
+          solanaModule
+            .getSolanaExports()
             .then((solanaExports: { available: boolean; error?: string; [key: string]: any }) => {
               if (!solanaExports.available) {
                 resolve({
@@ -448,7 +443,7 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
         try {
           // Use a more indirect approach that won't be resolved at build time
           const getUtilsModule = new Function(
-            'try { return require("./utils/getChainsListByConnectorType"); } catch { return null; }'
+            'try { return require("./utils/getChainsListByConnectorType"); } catch { return null; }',
           );
           const utilsModule = getUtilsModule();
 
@@ -524,8 +519,7 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
  */
 export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean> {
   // For Starknet and unknown adapters, we can return immediately
-  if (adapter === OrbitAdapter.Starknet || 
-      (adapter !== OrbitAdapter.EVM && adapter !== OrbitAdapter.SOLANA)) {
+  if (adapter === OrbitAdapter.Starknet || (adapter !== OrbitAdapter.EVM && adapter !== OrbitAdapter.SOLANA)) {
     return false;
   }
 
