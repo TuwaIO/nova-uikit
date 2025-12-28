@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.2...nova-transactions-v0.2.3) (2025-12-28)
+
+
+### Bug Fixes
+
+* evm and svm adapters logic and update packages ([#54](https://github.com/TuwaIO/nova-uikit/issues/54)) ([ab7c772](https://github.com/TuwaIO/nova-uikit/commit/ab7c7722bea0f98b1b990c53755b1f35d09be579))
+
 ## [0.2.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.1...nova-transactions-v0.2.2) (2025-12-15)
 
 
