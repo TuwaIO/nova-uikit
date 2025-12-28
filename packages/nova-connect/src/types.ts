@@ -40,14 +40,3 @@ export interface AllChainConfigs {
  * ```
  */
 export type InitialChains = AllChainConfigs;
-
-/**
- * Array of chain identifiers (replaces IdentifierArray from @wallet-standard/base)
- * Can contain strings, numbers, or other primitive types
- *
- * @example
- * ```typescript
- * const chainIds: ChainIdentifierArray = ['ethereum', 1, 'solana:mainnet-beta'];
- * ```
- */
-export type ChainIdentifierArray = readonly (string | number)[];

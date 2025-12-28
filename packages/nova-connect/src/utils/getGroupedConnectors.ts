@@ -38,10 +38,28 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
     return null;
   }
 
+  // Extract the icon property safely
+  let iconValue: string | undefined = undefined;
+  if ('icon' in connectorObj) {
+    const icon = connectorObj.icon;
+    // Check if the icon is a string
+    if (typeof icon === 'string') {
+      iconValue = icon;
+    }
+    // If it's an object with a toString method, use that
+    else if (icon && typeof icon === 'object' && 'toString' in icon && typeof icon.toString === 'function') {
+      try {
+        iconValue = icon.toString();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        // Ignore errors in toString
+      }
+    }
+  }
+
   return {
     name: connectorObj.name,
-    // @ts-expect-error - types on available correctly on the package level
-    icon: connectorObj.icon,
+    icon: iconValue,
     adapter,
     originalConnector: connectorObj as Connector,
   };
@@ -103,9 +121,12 @@ export function getGroupedConnectors(
       group.adapters.push(processed.adapter);
     }
 
-    group.connectors.push({ ...(processed.originalConnector as Connector), adapter: processed.adapter } as Connector & {
-      adapter: OrbitAdapter;
-    });
+    // Create a new object with the connector properties and add the adapter
+    const connectorWithAdapter = Object.assign({}, processed.originalConnector, {
+      adapter: processed.adapter,
+    }) as Connector & { adapter: OrbitAdapter };
+
+    group.connectors.push(connectorWithAdapter);
 
     // Update icon if not set
     if (!group.icon && processed.icon) {

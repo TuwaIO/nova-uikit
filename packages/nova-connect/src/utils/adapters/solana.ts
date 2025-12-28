@@ -33,9 +33,9 @@ interface SolanaUtilsModule {
  */
 async function getSolanaUtils(): Promise<SolanaUtilsModule | null> {
   try {
-    // Dynamic import of Solana utilities - fails gracefully if package not installed
-    const solanaUtils = await import('../../solana');
-    return solanaUtils;
+    const { getSolanaClusters, isSolanaChainList, getAvailableSolanaClusters, isValidSolanaCluster } =
+      await import('@tuwaio/orbit-solana');
+    return { getSolanaClusters, isSolanaChainList, getAvailableSolanaClusters, isValidSolanaCluster };
   } catch (error) {
     console.warn('Solana utilities not available:', error);
     return null;
@@ -121,7 +121,7 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
      *
      * @example
      * ```typescript
-     * const clusters = adapter.getAvailableClusters?.();
+     * const clusters = await adapter.getAvailableClusters?.();
      * // Might return: ['mainnet-beta', 'devnet', 'testnet']
      * ```
      */
@@ -141,10 +141,10 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
      *
      * @example
      * ```typescript
-     * const isValid = adapter.isValidCluster?.('mainnet-beta');
+     * const isValid = await adapter.isValidCluster?.('mainnet-beta');
      * console.log(isValid); // true
      *
-     * const isInvalid = adapter.isValidCluster?.('invalid-cluster');
+     * const isInvalid = await adapter.isValidCluster?.('invalid-cluster');
      * console.log(isInvalid); // false
      * ```
      */
@@ -155,34 +155,4 @@ export async function createSolanaAdapter(): Promise<ChainAdapter> {
       return false;
     },
   };
-}
-
-/**
- * Checks if the Solana adapter can be created in the current environment.
- * This function verifies that the required Solana utilities are available
- * by attempting to import them.
- *
- * @returns Promise resolving to true if Solana adapter is available
- *
- * @example
- * ```typescript
- * const hasSolana = await isSolanaAdapterAvailable();
- * if (hasSolana) {
- *   const adapter = await createSolanaAdapter();
- *   // Use Solana functionality
- *   const clusters = adapter.getAvailableClusters?.();
- * } else {
- *   console.log('Solana support not available in this build');
- * }
- * ```
- *
- * @since 1.0.0
- */
-export async function isSolanaAdapterAvailable(): Promise<boolean> {
-  try {
-    await import('../../solana');
-    return true;
-  } catch {
-    return false;
-  }
 }

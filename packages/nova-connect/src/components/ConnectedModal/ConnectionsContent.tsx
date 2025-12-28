@@ -15,6 +15,7 @@ import {
   ConnectorType,
   formatConnectorName,
   getAdapterFromConnectorType,
+  getNetworkData,
   impersonatedHelpers,
   RecentlyConnectedConnectorData,
   recentlyConnectedConnectorsListHelpers,
@@ -35,7 +36,6 @@ import {
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
-import { getNetworkIcon } from '../../utils/getNetworIcon';
 import { WalletIcon } from '../WalletIcon';
 
 // --- Types for Customization ---
@@ -376,7 +376,7 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
   imageClassName,
 }) => {
   const adapter = getAdapterFromConnectorType(connectorType);
-  const networkIcon = getNetworkIcon(adapter);
+  const networkIcon = getNetworkData(adapter)?.chain;
 
   return (
     <div className="novacon:relative">
@@ -863,7 +863,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         }
 
         const adapter = getAdapterFromConnectorType(connectorType);
-        const networkIcon = getNetworkIcon(adapter);
+        const networkIcon = getNetworkData(adapter)?.chain;
         const chainId = networkIcon?.chainId || 1;
         const walletName = getFormattedConnectorName(connectorType);
         if (walletName === 'impersonatedwallet') {
@@ -1043,9 +1043,17 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       {showRecentSection && recentListState.length > 0 && (
         <RecentlyConnectedSection>
           {recentListState.map(([connectorType, data]) => {
-            const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some(
-              (c) => `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName(c.name)}` === connectorType,
-            );
+            // Use a more direct approach with explicit type casting
+            const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some((c) => {
+              // Safely check if c is a valid object with a name property
+              if (c && typeof c === 'object' && 'name' in c && typeof (c as any).name === 'string') {
+                return (
+                  `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName((c as { name: string }).name)}` ===
+                  connectorType
+                );
+              }
+              return false;
+            });
             return (
               <RecentlyConnectedRow
                 key={connectorType}

@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
 // --- Default Motion Variants ---
 const DEFAULT_MOTION_PATH_VARIANTS: Variants = {
@@ -118,11 +118,10 @@ export type StatusIconCustomization = {
   };
 };
 
-export interface StatusIconProps
-  extends Omit<
-    HTMLMotionProps<'div'>,
-    'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
-  > {
+export interface StatusIconProps extends Omit<
+  HTMLMotionProps<'div'>,
+  'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
+> {
   /** Transaction status type */
   txStatus: 'succeed' | 'failed' | 'replaced';
   /** Color variable name (without --tuwa- prefix) */

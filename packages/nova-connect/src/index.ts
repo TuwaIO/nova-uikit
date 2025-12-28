@@ -66,7 +66,7 @@ export async function getBlockchainUtilities(): Promise<BlockchainUtilities> {
 }
 
 /**
- * Checks if EVM utilities are available by attempting to import them.
+ * Checks if EVM utilities are available by testing actual package imports.
  * This function performs a dynamic import to determine availability without throwing errors.
  *
  * @internal
@@ -76,7 +76,9 @@ export async function getBlockchainUtilities(): Promise<BlockchainUtilities> {
  */
 async function checkEvmUtils(): Promise<boolean> {
   try {
-    await import('./evm/utils');
+    // Check if actual EVM packages are available
+    await import('viem');
+    await import('@tuwaio/orbit-evm');
     return true;
   } catch {
     return false;
@@ -84,7 +86,7 @@ async function checkEvmUtils(): Promise<boolean> {
 }
 
 /**
- * Checks if Solana utilities are available by attempting to import them.
+ * Checks if Solana utilities are available by testing actual package imports.
  * This function performs a dynamic import to determine availability without throwing errors.
  *
  * @internal
@@ -94,7 +96,9 @@ async function checkEvmUtils(): Promise<boolean> {
  */
 async function checkSolanaUtils(): Promise<boolean> {
   try {
-    await import('./solana/utils');
+    // Check if actual Solana packages are available
+    await import('gill');
+    await import('@tuwaio/orbit-solana');
     return true;
   } catch {
     return false;
@@ -137,10 +141,31 @@ export type BlockchainUtilityResult<T = any> = ({ available: true } & T) | { ava
  */
 export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
   try {
+    // First check if EVM packages are available
+    const hasEvmPackages = await checkEvmUtils();
+    if (!hasEvmPackages) {
+      return {
+        available: false,
+        error: 'EVM packages (viem, @tuwaio/orbit-evm) not available',
+      };
+    }
+
+    // Only import our utilities if packages are available
     const evmModule = await import('./evm');
+
+    // Use the new getEvmExports function to dynamically load EVM exports
+    const evmExports = await evmModule.getEvmExports();
+
+    if (!evmExports.available) {
+      return {
+        available: false,
+        error: evmExports.error || 'Failed to load EVM exports',
+      };
+    }
+
     return {
-      available: true,
-      ...evmModule,
+      ...evmModule, // Include utility functions
+      ...evmExports, // Include dynamically loaded exports
     };
   } catch (error) {
     return {
@@ -173,10 +198,31 @@ export async function getEvmUtils(): Promise<BlockchainUtilityResult> {
  */
 export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
   try {
+    // First check if Solana packages are available
+    const hasSolanaPackages = await checkSolanaUtils();
+    if (!hasSolanaPackages) {
+      return {
+        available: false,
+        error: 'Solana packages (gill, @tuwaio/orbit-solana) not available',
+      };
+    }
+
+    // Only import our utilities if packages are available
     const solanaModule = await import('./solana');
+
+    // Use the new getSolanaExports function to dynamically load Solana exports
+    const solanaExports = await solanaModule.getSolanaExports();
+
+    if (!solanaExports.available) {
+      return {
+        available: false,
+        error: solanaExports.error || 'Failed to load Solana exports',
+      };
+    }
+
     return {
-      available: true,
-      ...solanaModule,
+      ...solanaModule, // Include utility functions
+      ...solanaExports, // Include dynamically loaded exports
     };
   } catch (error) {
     return {
@@ -237,12 +283,27 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
   };
 
   try {
-    const { preloadChainAdapters } = await import('./utils/getChainsListByConnectorType');
-    await preloadChainAdapters([OrbitAdapter.EVM, OrbitAdapter.SOLANA]);
+    // Check what packages are actually available
+    const evmAvailable = await checkEvmUtils();
+    const solanaAvailable = await checkSolanaUtils();
 
-    // Check what was successfully loaded
-    results.evm = await checkEvmUtils();
-    results.solana = await checkSolanaUtils();
+    // Only load adapter management if we have at least one blockchain available
+    if (evmAvailable || solanaAvailable) {
+      // Standard dynamic import approach for non-bundler environments
+      const { preloadChainAdapters } = await import('./utils/getChainsListByConnectorType');
+
+      const adaptersToPreload: OrbitAdapter[] = [];
+      if (evmAvailable) adaptersToPreload.push(OrbitAdapter.EVM);
+      if (solanaAvailable) adaptersToPreload.push(OrbitAdapter.SOLANA);
+
+      await preloadChainAdapters(adaptersToPreload);
+
+      // Set results based on successful package availability
+      results.evm = evmAvailable;
+      results.solana = solanaAvailable;
+    } else {
+      results.errors.push('No blockchain packages available for initialization');
+    }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown initialization error';
     results.errors.push(errorMsg);
@@ -279,15 +340,16 @@ export async function initializeBlockchainSupport(): Promise<InitializationResul
  * @since 1.0.0
  */
 export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean> {
-  switch (adapter) {
-    case OrbitAdapter.EVM:
-      return checkEvmUtils();
-    case OrbitAdapter.SOLANA:
-      return checkSolanaUtils();
-    case OrbitAdapter.Starknet:
-      return false; // Not yet implemented
-    default:
-      return false;
+  // For Starknet and unknown adapters, we can return immediately
+  if (adapter === OrbitAdapter.Starknet || (adapter !== OrbitAdapter.EVM && adapter !== OrbitAdapter.SOLANA)) {
+    return false;
+  }
+
+  // For EVM and Solana, use the appropriate check function
+  if (adapter === OrbitAdapter.EVM) {
+    return checkEvmUtils();
+  } else {
+    return checkSolanaUtils();
   }
 }
 
@@ -301,4 +363,4 @@ export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean
  *
  * @since 1.0.0
  */
-export type { AllChainConfigs, ChainIdentifierArray, InitialChains } from './types';
+export type { AllChainConfigs, InitialChains } from './types';

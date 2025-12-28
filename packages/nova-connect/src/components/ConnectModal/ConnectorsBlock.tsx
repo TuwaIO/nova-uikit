@@ -4,14 +4,14 @@
 
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import {
+  ConnectorType,
   delay,
   formatConnectorName,
   getConnectorTypeFromName,
   OrbitAdapter,
+  RecentlyConnectedConnectorData,
   recentlyConnectedConnectorsListHelpers,
   waitFor,
-  ConnectorType,
-  RecentlyConnectedConnectorData,
 } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
@@ -186,8 +186,10 @@ export type ConnectorsBlockCustomization = {
 /**
  * Props for the ConnectorsBlock component
  */
-interface ConnectorsBlockProps
-  extends Pick<ConnectorsSelectionsProps, 'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'> {
+interface ConnectorsBlockProps extends Pick<
+  ConnectorsSelectionsProps,
+  'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'
+> {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors to display */
@@ -451,14 +453,14 @@ export const ConnectorsBlock = memo(
 
         return connectors.map((group, index) => {
           const name = formatConnectorName(group.name);
-          
+
           let isRecent = false;
           if (customConfig?.features?.showRecentIndicators !== false && recentWallets && recentWallets.length > 0) {
-             // Check if any adapter in the group matches a recent connector
-             isRecent = group.adapters.some(adapter => {
-                 const typeToCheck = getConnectorTypeFromName(adapter, name);
-                 return recentWallets.some(([recentType]) => recentType === typeToCheck);
-             });
+            // Check if any adapter in the group matches a recent connector
+            isRecent = group.adapters.some((adapter) => {
+              const typeToCheck = getConnectorTypeFromName(adapter, name);
+              return recentWallets.some(([recentType]) => recentType === typeToCheck);
+            });
           }
 
           return {

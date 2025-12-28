@@ -1,6 +1,6 @@
-import { ConnectorType, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
+import { ChainIdentifierArray, ConnectorType, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { ChainIdentifierArray, InitialChains } from '../types';
+import { InitialChains } from '../types';
 import { adapterRegistry } from './adapters/registry';
 
 /**

@@ -6,11 +6,10 @@ import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { getNetworkIcon } from '../../utils/getNetworIcon';
 import { RecentBadge } from './RecentBadge';
 
 // --- Types ---
@@ -386,8 +385,8 @@ const NetworkIcons = memo(
       return adapters.slice(0, 3).map(
         (adapter, index): NetworkData => ({
           adapter,
-          chainId: getNetworkIcon(adapter)?.chainId,
-          name: getNetworkIcon(adapter)?.name,
+          chainId: getNetworkData(adapter)?.chain?.chainId,
+          name: getNetworkData(adapter)?.chain?.name,
           index,
         }),
       );
@@ -662,7 +661,7 @@ export const ConnectCard = memo(
           adapters?.slice(0, 3).map(
             (adapter, index): NetworkData => ({
               adapter,
-              chainId: getNetworkIcon(adapter)?.chainId,
+              chainId: getNetworkData(adapter)?.chain?.chainId,
               name: String(adapter),
               index,
             }),

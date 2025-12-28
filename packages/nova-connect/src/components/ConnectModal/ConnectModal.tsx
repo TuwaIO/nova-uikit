@@ -14,12 +14,13 @@ import {
   delay,
   formatConnectorName,
   getConnectorTypeFromName,
+  getNetworkData,
   impersonatedHelpers,
+  isAddress,
   OrbitAdapter,
   waitFor,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
-import { isAddress } from 'gill';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -34,7 +35,7 @@ import React, {
 import { ConnectContentType, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
-import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
+import { getConnectChainId, getFilteredConnectors } from '../../utils';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
@@ -302,16 +303,26 @@ function getConnectorName(
     return undefined;
   }
 
+  // Use a more direct approach with explicit type casting
   const connector = connectors.find((c) => {
-    if (c && typeof c === 'object' && 'name' in c && typeof c.name === 'string') {
-      return formatConnectorName(c.name) === activeConnector;
+    // Safely check if c is a valid object with a name property
+    if (c && typeof c === 'object' && 'name' in c && typeof (c as any).name === 'string') {
+      return formatConnectorName((c as { name: string }).name) === activeConnector;
     }
     return false;
   });
 
-  return connector && typeof connector === 'object' && 'name' in connector && typeof connector.name === 'string'
-    ? connector.name
-    : undefined;
+  // Safely access the name property with type checking
+  if (
+    connector &&
+    typeof connector === 'object' &&
+    'name' in connector &&
+    typeof (connector as any).name === 'string'
+  ) {
+    return (connector as { name: string }).name;
+  }
+
+  return undefined;
 }
 
 // --- Default Sub-Components ---
@@ -890,7 +901,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 handlers.onActionClick.getWallet(modalData);
               } else {
                 window.open(
-                  networksLinks[selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter)]?.choseWallet,
+                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
                   '_blank',
                   'noopener,noreferrer',
                 );
@@ -905,7 +916,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 handlers.onActionClick.about(modalData);
               } else {
                 window.open(
-                  networksLinks[selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter)]?.about,
+                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
                   '_blank',
                   'noopener,noreferrer',
                 );

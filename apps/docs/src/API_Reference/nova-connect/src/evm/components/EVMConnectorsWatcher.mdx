@@ -4,17 +4,12 @@
 
 # EVMConnectorsWatcher()
 
-> **EVMConnectorsWatcher**(`props`): `null`
+> **EVMConnectorsWatcher**(`props`): `Element` \| `null`
 
-Defined in: node\_modules/.pnpm/@tuwaio+satellite-react@0.2.2\_1a066a52579780551082b545e28b0120/node\_modules/@tuwaio/satellite-react/dist/evm/index.d.ts:46
+Defined in: node\_modules/.pnpm/@tuwaio+satellite-react@0.2.3\_15d02fc0c95cc647870ad6b9d4f4dd8e/node\_modules/@tuwaio/satellite-react/dist/evm/index.d.ts:41
 
-A headless React component (renders `null`) that synchronizes the EVM connector
-state from `@wagmi/core` with the global `useSatelliteConnectStore`.
-
-It is responsible for:
-1. Automatically disconnecting if a SIWE (Sign-In With Ethereum) request is rejected.
-2. Listening for account changes (e.g., account switch, chain switch, disconnect)
-from `wagmi` and updating the global store accordingly.
+A dynamic version of the EVMConnectorsWatcher component that avoids static imports.
+This component dynamically imports the dependencies only when they are available.
 
 ## Parameters
 
@@ -26,6 +21,6 @@ The component's props. See EVMConnectorsWatcherProps for details.
 
 ## Returns
 
-`null`
+`Element` \| `null`
 
 This component does not render any UI.

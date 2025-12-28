@@ -3,9 +3,8 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { isAddress, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { isAddress } from 'viem';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../../satellite';

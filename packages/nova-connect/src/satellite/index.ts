@@ -1,7 +1,8 @@
+// Export all types and components directly to satisfy static imports
 export {
   AllConnectors,
-  Connector,
   Connection,
+  Connector,
   SatelliteConnectProvider,
   SatelliteConnectProviderProps,
   SatelliteStoreContext,
