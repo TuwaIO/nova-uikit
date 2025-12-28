@@ -14,7 +14,9 @@ import {
   delay,
   formatConnectorName,
   getConnectorTypeFromName,
+  getNetworkData,
   impersonatedHelpers,
+  isAddress,
   OrbitAdapter,
   waitFor,
 } from '@tuwaio/orbit-core';
@@ -33,8 +35,7 @@ import React, {
 import { ConnectContentType, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
-import { getConnectChainId, getFilteredConnectors, networksLinks } from '../../utils';
-import { isAddress } from '../../utils/addressValidation';
+import { getConnectChainId, getFilteredConnectors } from '../../utils';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
@@ -312,7 +313,12 @@ function getConnectorName(
   });
 
   // Safely access the name property with type checking
-  if (connector && typeof connector === 'object' && 'name' in connector && typeof (connector as any).name === 'string') {
+  if (
+    connector &&
+    typeof connector === 'object' &&
+    'name' in connector &&
+    typeof (connector as any).name === 'string'
+  ) {
     return (connector as { name: string }).name;
   }
 
@@ -895,7 +901,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 handlers.onActionClick.getWallet(modalData);
               } else {
                 window.open(
-                  networksLinks[selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter)]?.choseWallet,
+                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
                   '_blank',
                   'noopener,noreferrer',
                 );
@@ -910,7 +916,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 handlers.onActionClick.about(modalData);
               } else {
                 window.open(
-                  networksLinks[selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter)]?.about,
+                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
                   '_blank',
                   'noopener,noreferrer',
                 );

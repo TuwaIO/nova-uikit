@@ -5,11 +5,16 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { formatConnectorName, getConnectorTypeFromName, OrbitAdapter, ConnectorType } from '@tuwaio/orbit-core';
+import {
+  ConnectorType,
+  formatConnectorName,
+  getConnectorTypeFromName,
+  getNetworkData,
+  OrbitAdapter,
+} from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { getNetworkIcon, networksLinks } from '../../utils';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
 import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
@@ -421,12 +426,12 @@ export const NetworkSelections = memo(
       if (!activeConnectors?.adapters) return [];
 
       return activeConnectors.adapters.map((adapter, index) => {
-        const networkInfo = getNetworkIcon(adapter);
+        const networkInfo = getNetworkData(adapter);
         return {
           adapter,
-          chainId: networkInfo?.chainId,
-          name: networkInfo?.name ?? 'Ethereum',
-          infoLink: networksLinks[adapter]?.aboutNetwork,
+          chainId: networkInfo?.chain?.chainId,
+          name: networkInfo?.chain?.name ?? 'Ethereum',
+          infoLink: networkInfo?.links.aboutNetwork,
           index,
         };
       });

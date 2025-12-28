@@ -1,6 +1,6 @@
-import { ConnectorType, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
+import { ChainIdentifierArray, ConnectorType, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
 
-import { ChainIdentifierArray, InitialChains } from '../types';
+import { InitialChains } from '../types';
 import { adapterRegistry } from './adapters/registry';
 
 /**
@@ -161,13 +161,19 @@ export function getChainsListByConnectorTypeSync(params: GetChainsListParams): (
   }
 
   const adapterType = getAdapterFromConnectorType(connectorType);
+  const adapter = adapterRegistry.getLoadedAdapter(adapterType);
 
-  // Since adapter methods are now async, we can't use them in a sync context
-  // Instead, we'll use the fallback implementation directly
-  console.warn(
-    `getChainsListByConnectorTypeSync: Using fallback implementation for ${adapterType} ` +
-    `because adapter methods are now async. Consider using the async version instead.`
-  );
+  if (adapter) {
+    try {
+      if (adapterType === OrbitAdapter.SOLANA) {
+        return adapter.getChains(config.solanaRPCUrls, chains);
+      } else {
+        return adapter.getChains(config.appChains);
+      }
+    } catch (error) {
+      console.warn(`Error with loaded adapter for ${adapterType}:`, error);
+    }
+  }
 
   return getFallbackChains(adapterType, config);
 }

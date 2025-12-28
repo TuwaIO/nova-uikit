@@ -541,4 +541,4 @@ export async function isAdapterSupported(adapter: OrbitAdapter): Promise<boolean
  *
  * @since 1.0.0
  */
-export type { AllChainConfigs, ChainIdentifierArray, InitialChains } from './types';
+export type { AllChainConfigs, InitialChains } from './types';

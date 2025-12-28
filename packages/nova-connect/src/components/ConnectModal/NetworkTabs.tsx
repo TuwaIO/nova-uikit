@@ -5,12 +5,11 @@
 import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { getNetworkIcon } from '../../utils/getNetworIcon';
 
 // --- Types ---
 
@@ -37,7 +36,7 @@ export interface NetworkTabData {
   /** Display name */
   displayName: string;
   /** Network info from utils */
-  networkInfo: ReturnType<typeof getNetworkIcon> | null;
+  networkInfo: { chainId: number | string; name: string } | null;
   /** Whether this tab is selected */
   isSelected: boolean;
   /** Tab index */
@@ -479,7 +478,7 @@ export const NetworkTabs = memo(
               return customConfig.networkNames[networkKey];
             }
 
-            return getNetworkIcon(network)?.name ?? 'Unknown';
+            return getNetworkData(network)?.chain?.name ?? 'Unknown';
           },
         [labels.all, customConfig?.networkNames],
       );
@@ -533,7 +532,7 @@ export const NetworkTabs = memo(
         return localNetworks.map((network, index) => ({
           network,
           displayName: getNetworkDisplayName(network),
-          networkInfo: network ? getNetworkIcon(network) : null,
+          networkInfo: network ? (getNetworkData(network)?.chain ?? null) : null,
           isSelected: selectedAdapter === network,
           index,
         }));

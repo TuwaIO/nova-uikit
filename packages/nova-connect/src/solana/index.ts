@@ -1,6 +1,3 @@
-// Export utils with dynamic initialization
-export * from './utils';
-
 // Export types only, not implementations
 export type { SolanaClusterMoniker } from 'gill';
 

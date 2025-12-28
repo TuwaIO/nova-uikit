@@ -6,7 +6,7 @@ import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
 
-import { useNovaConnectLabels } from '../../hooks';
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---
@@ -134,11 +134,10 @@ export type WaitForConnectionContentCustomization = {
   };
 };
 
-export interface WaitForConnectionContentProps
-  extends Omit<
-    HTMLMotionProps<'div'>,
-    'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
-  > {
+export interface WaitForConnectionContentProps extends Omit<
+  HTMLMotionProps<'div'>,
+  'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
+> {
   /** Custom CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */

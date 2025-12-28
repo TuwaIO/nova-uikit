@@ -4,7 +4,7 @@
 
 import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
-import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
+import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
 

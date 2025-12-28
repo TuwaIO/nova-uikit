@@ -6,7 +6,16 @@ import { ArrowPathIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/reac
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  ComponentPropsWithoutRef,
+  ComponentType,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -226,8 +235,10 @@ export type ConnectedModalNameAndBalanceCustomization = {
 /**
  * Props for the ConnectedModalNameAndBalance component
  */
-export interface ConnectedModalNameAndBalanceProps
-  extends Pick<ConnectedModalMainContentProps, 'balanceLoading' | 'ensNameAbbreviated' | 'balance'> {
+export interface ConnectedModalNameAndBalanceProps extends Pick<
+  ConnectedModalMainContentProps,
+  'balanceLoading' | 'ensNameAbbreviated' | 'balance'
+> {
   /** Function to manually trigger a balance refresh */
   refetch: () => void;
   /** Additional CSS classes for the container */
@@ -406,11 +417,7 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, rotate: balanceLoading ? 360 : 0 }}
             exit={{ opacity: 0 }}
-            transition={
-              balanceLoading
-                ? { repeat: Infinity, duration: 1, ease: 'linear' }
-                : { duration: 0.2 }
-            }
+            transition={balanceLoading ? { repeat: Infinity, duration: 1, ease: 'linear' } : { duration: 0.2 }}
           >
             <ArrowPathIcon className="novacon:w-4 novacon:h-4" />
           </motion.div>
@@ -548,7 +555,16 @@ const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance,
  */
 export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedModalNameAndBalanceProps>(
   (
-    { ensNameAbbreviated, balanceLoading, balance, refetch, className, 'aria-label': ariaLabel, customization, ...props },
+    {
+      ensNameAbbreviated,
+      balanceLoading,
+      balance,
+      refetch,
+      className,
+      'aria-label': ariaLabel,
+      customization,
+      ...props
+    },
     ref,
   ) => {
     const labels = useNovaConnectLabels();

@@ -1,16 +1,13 @@
-// Export utils with dynamic initialization
-export * from './utils';
-
 // Export types only, not implementations
 export type { Chain } from 'viem/chains';
 
 // Import types from satellite-react/evm
-import { EVMConnectorsWatcher } from '@tuwaio/satellite-react/evm';
-import { EVMConnection, ConnectorEVM } from '@tuwaio/satellite-evm';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { ConnectorEVM, EVMConnection } from '@tuwaio/satellite-evm';
+import { EVMConnectorsWatcher } from '@tuwaio/satellite-react/evm';
 
 // Re-export the types
-export type { EVMConnection, ConnectorEVM };
+export type { ConnectorEVM, EVMConnection };
 
 // Re-export the component
 export { EVMConnectorsWatcher };
@@ -21,7 +18,7 @@ export async function getEvmExports() {
     // Use a more indirect approach to prevent bundlers from resolving imports at build time
     // This creates a function that will be called at runtime
     const importEvmModule = new Function(
-      'return import("@tuwaio/satellite-react/evm").catch(error => { console.warn("Failed to load EVM exports:", error); return null; })'
+      'return import("@tuwaio/satellite-react/evm").catch(error => { console.warn("Failed to load EVM exports:", error); return null; })',
     );
 
     const satelliteReactEvm = await importEvmModule();

@@ -7,9 +7,8 @@ import type { ChainAdapter } from './types';
  * @since 1.0.0
  */
 interface EvmUtilsModule {
-  getEvmChains?: (appChains: any) => Promise<(string | number)[]>;
+  getEvmChains?: (appChains: any) => (string | number)[];
   isEvmChainList?: (chains: (string | number)[]) => boolean;
-  initializeEvmUtils?: () => Promise<boolean>;
 }
 
 /**
@@ -32,9 +31,8 @@ interface EvmUtilsModule {
  */
 async function getEvmUtils(): Promise<EvmUtilsModule | null> {
   try {
-    // Dynamic import of EVM utilities - fails gracefully if package not installed
-    const evmUtils = await import('../../evm');
-    return evmUtils;
+    const { getEvmChains, isEvmChainList } = await import('@tuwaio/orbit-evm');
+    return { getEvmChains, isEvmChainList };
   } catch (error) {
     console.warn('EVM utilities not available:', error);
     return null;
@@ -78,10 +76,10 @@ export async function createEvmAdapter(): Promise<ChainAdapter> {
      * @param appChains Array of chain configurations or chain identifiers
      * @returns Array of chain IDs (numbers or strings)
      */
-    async getChains(appChains: any): Promise<(string | number)[]> {
+    getChains(appChains: any): (string | number)[] {
       // Use imported EVM utilities if available
       if (evmUtils?.getEvmChains) {
-        return await evmUtils.getEvmChains(appChains);
+        return evmUtils.getEvmChains(appChains);
       }
 
       // Fallback implementation for basic chain extraction
@@ -120,33 +118,4 @@ export async function createEvmAdapter(): Promise<ChainAdapter> {
       return chains.length > 0 && chains.every((chain) => typeof chain === 'number');
     },
   };
-}
-
-/**
- * Checks if the EVM adapter can be created in the current environment.
- * This function verifies that the required EVM utilities are available
- * by attempting to import them.
- *
- * @returns Promise resolving to true if EVM adapter is available
- *
- * @example
- * ```typescript
- * const hasEvm = await isEvmAdapterAvailable();
- * if (hasEvm) {
- *   const adapter = await createEvmAdapter();
- *   // Use EVM functionality
- * } else {
- *   console.log('EVM support not available in this build');
- * }
- * ```
- *
- * @since 1.0.0
- */
-export async function isEvmAdapterAvailable(): Promise<boolean> {
-  try {
-    await import('../../evm');
-    return true;
-  } catch {
-    return false;
-  }
 }

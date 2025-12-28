@@ -54,7 +54,7 @@ export interface ChainAdapter {
    * // Returns: ['mainnet-beta', 'devnet']
    * ```
    */
-  getChains(config: any, chains?: any): Promise<(string | number)[]>;
+  getChains(config: any, chains?: any): (string | number)[];
 
   /**
    * Validates whether a chain identifier array conforms to this adapter's expected format.
@@ -96,7 +96,7 @@ export interface ChainAdapter {
    * // Might return: ['mainnet-beta', 'devnet', 'testnet', 'localnet']
    * ```
    */
-  getAvailableClusters?(): Promise<string[]>;
+  getAvailableClusters?(): string[];
 
   /**
    * Validates whether a cluster name is valid for Solana.
@@ -115,7 +115,7 @@ export interface ChainAdapter {
    * const isInvalid = await solanaAdapter.isValidCluster?.('invalid-cluster'); // false
    * ```
    */
-  isValidCluster?(cluster: string): Promise<boolean>;
+  isValidCluster?(cluster: string): boolean;
 }
 
 /**

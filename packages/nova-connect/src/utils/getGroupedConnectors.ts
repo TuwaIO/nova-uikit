@@ -50,6 +50,7 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
     else if (icon && typeof icon === 'object' && 'toString' in icon && typeof icon.toString === 'function') {
       try {
         iconValue = icon.toString();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // Ignore errors in toString
       }
@@ -121,11 +122,9 @@ export function getGroupedConnectors(
     }
 
     // Create a new object with the connector properties and add the adapter
-    const connectorWithAdapter = Object.assign(
-      {},
-      processed.originalConnector,
-      { adapter: processed.adapter }
-    ) as Connector & { adapter: OrbitAdapter };
+    const connectorWithAdapter = Object.assign({}, processed.originalConnector, {
+      adapter: processed.adapter,
+    }) as Connector & { adapter: OrbitAdapter };
 
     group.connectors.push(connectorWithAdapter);
 
