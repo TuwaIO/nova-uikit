@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.3...nova-connect-v0.2.4) (2025-12-29)
+
+
+### Bug Fixes
+
+* impersonated condition before connection ([e09a849](https://github.com/TuwaIO/nova-uikit/commit/e09a84929b956270a818ed3d99d64146279e684b))
+
 ## [0.2.3](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.2...nova-connect-v0.2.3) (2025-12-28)
 
 
