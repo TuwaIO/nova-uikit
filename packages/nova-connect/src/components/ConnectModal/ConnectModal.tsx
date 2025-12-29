@@ -931,7 +931,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 await handlers.onActionClick.impersonate(modalData);
               } else {
                 const trimmedAddress = impersonatedAddress.trim();
-                if (connectionError || !trimmedAddress || isAddress(trimmedAddress) || !!activeConnection?.isConnected)
+                if (connectionError || !trimmedAddress || !isAddress(trimmedAddress) || !!activeConnection?.isConnected)
                   return;
                 impersonatedHelpers.setImpersonated(trimmedAddress);
                 setConnectModalContentType('connecting');
