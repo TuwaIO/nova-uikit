@@ -1,11 +1,13 @@
 import { defineConfig } from 'tsup';
 
+import pkg from './package.json';
+
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
     entry: ['./src/index.ts'],
     treeshake: true,
-    sourcemap: true,
+    sourcemap: false,
     minify: true,
     clean: true,
     dts: true,
@@ -15,6 +17,6 @@ export default defineConfig([
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,
       };
     },
-    external: ['@radix-ui/react-dialog', 'clsx', 'framer-motion', 'react', 'tailwind-merge'],
+    external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.devDependencies || {})],
   },
 ]);

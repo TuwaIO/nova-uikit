@@ -1,11 +1,13 @@
 import { defineConfig } from 'tsup';
 
+import pkg from './package.json';
+
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
     entry: ['./src/index.ts', './src/providers/index.ts'],
     treeshake: true,
-    sourcemap: true,
+    sourcemap: false,
     minify: true,
     clean: true,
     dts: true,
@@ -15,17 +17,6 @@ export default defineConfig([
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,
       };
     },
-    external: [
-      '@bgd-labs/react-web3-icons',
-      '@heroicons/react',
-      '@radix-ui/react-dialog',
-      'framer-motion',
-      'react',
-      'react-toastify',
-      '@tuwaio/pulsar-core',
-      '@tuwaio/nova-core',
-      '@tuwaio/orbit-core',
-      'dayjs',
-    ],
+    external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.devDependencies || {})],
   },
 ]);
