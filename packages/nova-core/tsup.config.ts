@@ -8,10 +8,10 @@ export default defineConfig([
     entry: ['./src/index.ts'],
     treeshake: true,
     sourcemap: false,
+    splitting: true,
     minify: true,
     clean: true,
     dts: true,
-    splitting: false,
     outExtension({ format }) {
       return {
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,

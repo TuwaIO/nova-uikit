@@ -4,7 +4,7 @@
 
 # ChainAdapter
 
-Defined in: [packages/nova-connect/src/utils/adapters/types.ts:27](https://github.com/TuwaIO/nova-uikit/blob/2a3c4ab549f3e82043dd5b87241fd0e22f869649/packages/nova-connect/src/utils/adapters/types.ts#L27)
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:27](https://github.com/TuwaIO/nova-uikit/blob/03ef94cd466aa8d72e8741dc94b0f5bb38ab82ee/packages/nova-connect/src/utils/adapters/types.ts#L27)
 
 Generic chain adapter interface that provides blockchain-specific functionality.
 
@@ -41,7 +41,7 @@ const solanaClusters = solanaAdapter.getChains({
 
 > `optional` **getAvailableClusters**(): `string`[]
 
-Defined in: [packages/nova-connect/src/utils/adapters/types.ts:99](https://github.com/TuwaIO/nova-uikit/blob/2a3c4ab549f3e82043dd5b87241fd0e22f869649/packages/nova-connect/src/utils/adapters/types.ts#L99)
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:99](https://github.com/TuwaIO/nova-uikit/blob/03ef94cd466aa8d72e8741dc94b0f5bb38ab82ee/packages/nova-connect/src/utils/adapters/types.ts#L99)
 
 Gets all available clusters for Solana-based adapters.
 
@@ -72,7 +72,7 @@ const clusters = await solanaAdapter.getAvailableClusters?.();
 
 > **getChains**(`config`, `chains?`): (`string` \| `number`)[]
 
-Defined in: [packages/nova-connect/src/utils/adapters/types.ts:57](https://github.com/TuwaIO/nova-uikit/blob/2a3c4ab549f3e82043dd5b87241fd0e22f869649/packages/nova-connect/src/utils/adapters/types.ts#L57)
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:57](https://github.com/TuwaIO/nova-uikit/blob/03ef94cd466aa8d72e8741dc94b0f5bb38ab82ee/packages/nova-connect/src/utils/adapters/types.ts#L57)
 
 Extracts chain identifiers from the provided configuration.
 
@@ -125,7 +125,7 @@ const solanaClusters = await adapter.getChains({
 
 > **isChainList**(`chains`): `boolean`
 
-Defined in: [packages/nova-connect/src/utils/adapters/types.ts:81](https://github.com/TuwaIO/nova-uikit/blob/2a3c4ab549f3e82043dd5b87241fd0e22f869649/packages/nova-connect/src/utils/adapters/types.ts#L81)
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:81](https://github.com/TuwaIO/nova-uikit/blob/03ef94cd466aa8d72e8741dc94b0f5bb38ab82ee/packages/nova-connect/src/utils/adapters/types.ts#L81)
 
 Validates whether a chain identifier array conforms to this adapter's expected format.
 
@@ -166,7 +166,7 @@ const solanaInvalid = solanaAdapter.isChainList([1, 2]); // false
 
 > `optional` **isValidCluster**(`cluster`): `boolean`
 
-Defined in: [packages/nova-connect/src/utils/adapters/types.ts:118](https://github.com/TuwaIO/nova-uikit/blob/2a3c4ab549f3e82043dd5b87241fd0e22f869649/packages/nova-connect/src/utils/adapters/types.ts#L118)
+Defined in: [packages/nova-connect/src/utils/adapters/types.ts:118](https://github.com/TuwaIO/nova-uikit/blob/03ef94cd466aa8d72e8741dc94b0f5bb38ab82ee/packages/nova-connect/src/utils/adapters/types.ts#L118)
 
 Validates whether a cluster name is valid for Solana.
 
