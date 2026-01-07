@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.2.2...nova-core-v0.2.3) (2026-01-07)
+
+
+### Bug Fixes
+
+* optimized packages size after build ([#57](https://github.com/TuwaIO/nova-uikit/issues/57)) ([017d7ec](https://github.com/TuwaIO/nova-uikit/commit/017d7ece784a254d0f80e7ccf3523e90b74d63e7))
+
 ## [0.2.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.2.1...nova-core-v0.2.2) (2025-12-15)
 
 
