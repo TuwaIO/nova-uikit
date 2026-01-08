@@ -10,13 +10,12 @@ import React, {
   forwardRef,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { digitalPassportImage } from './images/digitalPassportImage';
-import { walletImage } from './images/walletImage';
 
 // --- Types ---
 type SlideConfig = {
@@ -114,13 +113,13 @@ type StatusProps = {
 const DEFAULT_SLIDES_CONFIG: SlideConfig[] = [
   {
     id: 1,
-    image: digitalPassportImage,
+    image: '', // Loaded dynamically
     titleKey: 'keyToNewInternet',
     descriptionKey: 'keyToNewInternetDescription',
   },
   {
     id: 2,
-    image: walletImage,
+    image: '', // Loaded dynamically
     titleKey: 'logInWithoutHassle',
     descriptionKey: 'logInWithoutHassleDescription',
   },
@@ -335,23 +334,25 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
         transition={ANIMATION_CONFIG.imageTransition}
         className="novacon:relative"
       >
-        <div className="novacon:relative">
-          <img
-            src={slide.image}
-            alt={labels[slide.titleKey as string]}
-            width={250}
-            height={250}
-            className={cn(
-              'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
-              'novacon:object-cover',
-              imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
-            )}
-            style={{ width: 250, height: 250 }}
-            onLoad={onImageLoad}
-            onError={onImageError}
-            loading="eager"
-            decoding="async"
-          />
+        <div className="novacon:relative" style={{ width: 250, height: 250 }}>
+          {slide.image && (
+            <img
+              src={slide.image}
+              alt={labels[slide.titleKey as string]}
+              width={250}
+              height={250}
+              className={cn(
+                'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
+                'novacon:object-cover',
+                imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
+              )}
+              style={{ width: 250, height: 250 }}
+              onLoad={onImageLoad}
+              onError={onImageError}
+              loading="eager"
+              decoding="async"
+            />
+          )}
 
           {!imageLoaded && (
             <div
@@ -510,7 +511,46 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   const labels = useNovaConnectLabels();
 
   // Extract customization options
-  const slidesConfig = customization?.slidesConfig ?? DEFAULT_SLIDES_CONFIG;
+  const inputSlidesConfig = customization?.slidesConfig ?? DEFAULT_SLIDES_CONFIG;
+
+  // State for dynamically loaded default images
+  const [defaultImages, setDefaultImages] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    // Only load if we are using defaults or have missing images for default IDs
+    const needsLoading = inputSlidesConfig.some((slide) => (slide.id === 1 || slide.id === 2) && !slide.image);
+
+    if (!needsLoading) return;
+
+    const loadDefaultImages = async () => {
+      try {
+        const [passportModule, walletModule] = await Promise.all([
+          import('./images/digitalPassportImage'),
+          import('./images/walletImage'),
+        ]);
+        setDefaultImages({
+          1: passportModule.digitalPassportImage,
+          2: walletModule.walletImage,
+        });
+      } catch (error) {
+        console.warn('Failed to load default images', error);
+      }
+    };
+    loadDefaultImages();
+  }, [inputSlidesConfig]);
+
+  const slidesConfig = useMemo(() => {
+    return inputSlidesConfig.map((slide) => {
+      // If image is present, use it
+      if (slide.image) return slide;
+      // Otherwise try to use loaded default
+      return {
+        ...slide,
+        image: defaultImages[slide.id] || '',
+      };
+    });
+  }, [inputSlidesConfig, defaultImages]);
+
   const slideVariants = customization?.variants?.slide ?? DEFAULT_SLIDE_VARIANTS;
   const {
     Section: CustomSection = DefaultSection,
