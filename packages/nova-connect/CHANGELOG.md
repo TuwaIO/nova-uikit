@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.6...nova-connect-v0.2.7) (2026-01-08)
+
+
+### Bug Fixes
+
+* update digpass and wallet images and optimize loading ([#60](https://github.com/TuwaIO/nova-uikit/issues/60)) ([84d78c5](https://github.com/TuwaIO/nova-uikit/commit/84d78c504e1f5b67b49a4dc13b5195745e943560))
+
 ## [0.2.6](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.5...nova-connect-v0.2.6) (2026-01-07)
 
 
