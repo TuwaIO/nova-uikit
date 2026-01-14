@@ -136,4 +136,10 @@ export const ukrainianLabels: NovaConnectLabels = {
   impersonateAddressEmpty: 'Введіть адресу або імя гаманця для імітації.',
   impersonateAddressNotCorrect: 'Введена адреса або імя гаманця неправильна. Спробуйте знову.',
   impersonateAddressConnected: 'Спочатку відключіть гаманець для імітації іншої адреси.',
+
+  // Підписи юридичного розділу
+  legalIntro: 'Підключаючи свій гаманець, ви погоджуєтесь з нашими',
+  legalTerms: 'Умовами використання',
+  legalPrivacy: 'Політикою конфіденційності',
+  legalAnd: 'та',
 };

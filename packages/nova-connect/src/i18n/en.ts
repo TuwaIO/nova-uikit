@@ -136,4 +136,10 @@ export const defaultLabels: NovaConnectLabels = {
   impersonateAddressEmpty: 'Enter a wallet address or name to impersonate.',
   impersonateAddressNotCorrect: 'Entered wallet address or name is not correct. Please try again.',
   impersonateAddressConnected: 'First disconnect the wallet to impersonate another address.',
+
+  // Legal section labels
+  legalIntro: 'By connecting your wallet, you agree to our',
+  legalTerms: 'Terms of Service',
+  legalPrivacy: 'Privacy Policy',
+  legalAnd: 'and',
 };
