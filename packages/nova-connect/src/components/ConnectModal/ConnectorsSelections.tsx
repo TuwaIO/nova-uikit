@@ -470,7 +470,7 @@ export const ConnectorsSelections = memo(
        * Memoized connector filtering
        */
       const connectorGroups = useMemo(() => {
-        const popularDesiredOrder = ['walletconnect', 'porto', 'coinbasewallet', 'geminiwallet'];
+        const popularDesiredOrder = ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
 
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
@@ -485,7 +485,7 @@ export const ConnectorsSelections = memo(
 
         const installedConnectors = isSafeApp
           ? installedConnectorsInitial
-          : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== 'safewallet');
+          : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== 'safe');
 
         const popularConnectors = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
@@ -497,7 +497,9 @@ export const ConnectorsSelections = memo(
           );
         });
 
-        const impersonatedConnector = connectors.find((group) => formatConnectorName(group.name) === 'impersonatedwallet');
+        const impersonatedConnector = connectors.find(
+          (group) => formatConnectorName(group.name) === 'impersonatedwallet',
+        );
 
         return {
           installed: installedConnectors,
