@@ -430,7 +430,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
 
     const activeIndicator = isMobile ? (
       <div className="novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]">
-        <span aria-label={labels.connected}>{labels.connected}</span>
+        {isActive && <span aria-label={labels.connected}>{labels.connected}</span>}
         <ActiveIndicator isActive={isActive} label={labels.connected} className={activeIndicatorClasses} />
       </div>
     ) : (
