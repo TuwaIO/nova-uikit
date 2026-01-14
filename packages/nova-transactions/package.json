@@ -65,7 +65,8 @@
     }
   ],
   "peerDependencies": {
-    "@bgd-labs/react-web3-icons": ">=1.5",
+    "@web3icons/react": ">=4",
+    "@web3icons/common": ">=0.11",
     "@heroicons/react": "2.x.x",
     "@radix-ui/react-dialog": "1.x.x",
     "framer-motion": "12.x.x",
@@ -81,7 +82,8 @@
     "@tuwaio/pulsar-core": "^0.3.2",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.19",
-    "@bgd-labs/react-web3-icons": "^1.58.0",
+    "@web3icons/react": "^4.1.12",
+    "@web3icons/common": "^0.11.41",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@tailwindcss/postcss": "^4.1.18",

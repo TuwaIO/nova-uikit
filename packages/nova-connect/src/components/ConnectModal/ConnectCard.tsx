@@ -2,10 +2,9 @@
  * @file ConnectCard component with comprehensive customization options for wallet connection cards.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { cn, isTouchDevice } from '@tuwaio/nova-core';
+import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
@@ -434,7 +433,7 @@ const NetworkIcons = memo(
             networkData={networkData}
             cardData={cardData}
           >
-            <Web3Icon chainId={networkData.chainId} />
+            <NetworkIcon chainId={networkData.chainId ?? ''} />
           </CustomNetworkIcon>
         ))}
         {overflowCount > 0 && (
@@ -808,7 +807,7 @@ export const ConnectCard = memo(
                 className={
                   customization?.classNames?.iconWrapper?.({ cardData }) ??
                   cn(
-                    'novacon:[&_img]:w-[42px]! novacon:[&_img]:h-[42px]! novacon:sm:[&_img]:w-[32px]! novacon:sm:[&_img]:h-[32px]! novacon:leading-[0]',
+                    'novacon:[&_svg]:w-[42px]! novacon:[&_svg]:h-[42px]! novacon:sm:[&_svg]:w-[32px]! novacon:sm:[&_svg]:h-[32px]! novacon:leading-[0]',
                   )
                 }
                 cardData={cardData}

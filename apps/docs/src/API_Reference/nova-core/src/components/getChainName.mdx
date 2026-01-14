@@ -1,0 +1,32 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# getChainName()
+
+> **getChainName**(`chainId`): `string`
+
+Defined in: [packages/nova-core/src/utils/getChainName.ts:23](https://github.com/TuwaIO/nova-uikit/blob/5b3a21c9e1f68dc7c1192d074cfe0ab07541ed59/packages/nova-core/src/utils/getChainName.ts#L23)
+
+Retrieves the human-readable name of a blockchain network based on its Chain ID.
+
+Supports both:
+- Numeric IDs (EVM): e.g., `1` -> "Ethereum"
+- String IDs (Non-EVM): e.g., `"solana:devnet"` -> "Solana Devnet"
+
+For formatted string IDs (like "solana:devnet"), it capitalizes the suffix
+if the network is identified as a development environment.
+
+## Parameters
+
+### chainId
+
+The unique identifier of the chain (number for EVM, string for others).
+
+`string` | `number`
+
+## Returns
+
+`string`
+
+The formatted network name or 'Unknown'.

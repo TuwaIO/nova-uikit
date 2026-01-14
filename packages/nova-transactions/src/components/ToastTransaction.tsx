@@ -2,9 +2,7 @@
  * @file This file contains the `ToastTransaction` component, which serves as the main body for a transaction notification toast.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
-import { cn } from '@tuwaio/nova-core';
+import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
 import { selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
@@ -115,11 +113,8 @@ export function ToastTransaction<T extends Transaction>({
       )}
     >
       <div className="novatx:flex novatx:items-center novatx:gap-3">
-        <div
-          className="novatx:w-[40px] novatx:flex-shrink-0 [&>img]:novatx:w-full [&>img]:novatx:h-auto"
-          title={getChainName(setChainId(tx.chainId))}
-        >
-          {icon ?? <Web3Icon chainId={setChainId(tx.chainId)} />}
+        <div className="novatx:w-[40px] novatx:flex-shrink-0" title={getChainName(setChainId(tx.chainId))}>
+          {icon ?? <NetworkIcon chainId={setChainId(tx.chainId)} />}
         </div>
         <div className="novatx:flex-1">
           <CStatusAwareText txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />

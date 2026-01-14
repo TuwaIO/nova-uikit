@@ -3,10 +3,8 @@
  * @module ChainListRenderer
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import * as Select from '@radix-ui/react-select';
-import { cn } from '@tuwaio/nova-core';
+import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
 import {
   type AnyResolvedKeyframe,
   type LegacyAnimationControls,
@@ -185,17 +183,17 @@ export interface ChainListRendererProps {
 // === DEFAULT COMPONENTS ===
 
 /**
- * Default chain icon component using Web3Icon
+ * Default chain icon component using NetworkIcon
  */
 const DefaultChainIcon: React.FC<CustomChainIconProps> = ({ chainId, className, ...props }) => (
-  <Web3Icon chainId={chainId} className={className} {...props} />
+  <NetworkIcon chainId={chainId} className={className} {...props} />
 );
 
 /**
  * Default chain content component
  */
 const DefaultChainContent: React.FC<CustomChainContentProps> = ({ icon, children }) => (
-  <div className="novacon:flex novacon:items-center novacon:space-x-3 novacon:[&_img]:w-6 novacon:[&_img]:h-6">
+  <div className="novacon:flex novacon:items-center novacon:space-x-3 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
     <div aria-hidden="true">{icon}</div>
     {children}
   </div>

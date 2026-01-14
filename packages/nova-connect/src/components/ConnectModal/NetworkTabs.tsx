@@ -2,9 +2,8 @@
  * @file NetworkTabs component with comprehensive customization options and animated transitions.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
@@ -609,8 +608,7 @@ export const NetworkTabs = memo(
                 );
 
               const iconContainerClasses =
-                customization?.classNames?.iconContainer?.({ tabData }) ??
-                'novacon:w-6 novacon:h-6 novacon:[&>img]:w-full novacon:[&>img]:h-full';
+                customization?.classNames?.iconContainer?.({ tabData }) ?? 'novacon:w-6 novacon:h-6';
 
               const tabTextClasses =
                 customization?.classNames?.tabText?.({
@@ -644,9 +642,9 @@ export const NetworkTabs = memo(
                       tabData={tabData}
                     >
                       {tabData.network ? (
-                        <Web3Icon chainId={tabData.networkInfo?.chainId} />
+                        <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
                       ) : (
-                        <div className="novacon:w-6 novacon:h-6 novacon:[&>img]:w-full novacon:[&>img]:h-full novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
+                        <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
                           <GlobeAltIcon aria-hidden="true" />
                         </div>
                       )}

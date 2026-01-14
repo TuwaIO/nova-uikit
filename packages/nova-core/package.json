@@ -52,6 +52,8 @@
   ],
   "peerDependencies": {
     "@radix-ui/react-dialog": "1.x.x",
+    "@web3icons/react": ">=4",
+    "@web3icons/common": ">=0.11",
     "clsx": "2.x.x",
     "framer-motion": "12.x.x",
     "react": ">=19.2.3",
@@ -62,6 +64,8 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.7",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@web3icons/react": "^4.1.12",
+    "@web3icons/common": "^0.11.41",
     "autoprefixer": "^10.4.23",
     "clsx": "^2.1.1",
     "framer-motion": "^12.24.8",

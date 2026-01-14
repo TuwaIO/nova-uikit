@@ -3,8 +3,7 @@
  * in a list format for the transaction history view.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { cn } from '@tuwaio/nova-core';
+import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { setChainId } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
@@ -43,7 +42,7 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
 
 const DefaultIcon = ({ chainId }: CustomIconProps) => (
   <div className="novatx:h-8 novatx:w-8 novatx:text-[var(--tuwa-text-secondary)]">
-    <Web3Icon chainId={setChainId(chainId)} />
+    <NetworkIcon chainId={setChainId(chainId)} />
   </div>
 );
 

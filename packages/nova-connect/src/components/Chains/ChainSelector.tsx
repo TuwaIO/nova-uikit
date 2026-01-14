@@ -3,8 +3,6 @@
  * @module ChainSelector
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
 import * as Select from '@radix-ui/react-select';
 import {
   ChevronArrowWithAnim,
@@ -15,6 +13,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  getChainName,
+  NetworkIcon,
 } from '@tuwaio/nova-core';
 import { formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import React, { ComponentPropsWithoutRef, ComponentType, ReactNode, useCallback, useMemo } from 'react';
@@ -273,7 +273,7 @@ interface ChainTriggerButtonProps {
  * Default trigger icon.
  */
 const DefaultTriggerIcon = ({ chainId, className, ...props }: CustomTriggerIconProps) => {
-  return <Web3Icon chainId={chainId} className={className} {...props} />;
+  return <NetworkIcon chainId={chainId} className={className} {...props} />;
 };
 
 /**
@@ -282,7 +282,7 @@ const DefaultTriggerIcon = ({ chainId, className, ...props }: CustomTriggerIconP
 const DefaultTriggerContent = ({ icon, chainName, isMobile }: CustomTriggerContentProps) => {
   return (
     <>
-      <div className="novacon:flex novacon:items-center novacon:sm:space-x-2 novacon:[&_img]:w-6 novacon:[&_img]:h-6">
+      <div className="novacon:flex novacon:items-center novacon:sm:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
         <div aria-hidden="true">{icon}</div>
         {isMobile ? (
           <span className="novacon:hidden novacon:sm:inline-block novacon:sr-only novacon:sm:not-sr-only">
@@ -318,7 +318,7 @@ const DefaultSingleChainDisplay = ({
 }: CustomSingleChainDisplayProps) => {
   return (
     <div className={className} role="img" aria-label={ariaLabel}>
-      <Web3Icon chainId={chainId} />
+      <NetworkIcon chainId={chainId ?? ''} />
       <span className="novacon:sr-only">{chainName}</span>
     </div>
   );
@@ -508,7 +508,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
           isChainsListOpen,
         'novacon:border novacon:border-[var(--tuwa-border-primary)]': !isChainsListOpen,
       },
-      'novacon:[&_img]:w-4 novacon:[&_img]:h-4',
+      'novacon:[&_svg]:w-4 novacon:[&_svg]:h-4',
     );
   }, [customization, isMobile, isChainsListOpen, hasMultipleChains]);
 
@@ -660,7 +660,7 @@ export function ChainSelector({
     if (customization?.classNames?.singleChainDisplay) {
       return customization.classNames.singleChainDisplay();
     }
-    return 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_img]:w-6 novacon:[&_img]:h-6';
+    return 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customization?.classNames?.singleChainDisplay]);
 

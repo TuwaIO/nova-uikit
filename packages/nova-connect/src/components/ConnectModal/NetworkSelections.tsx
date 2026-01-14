@@ -2,9 +2,8 @@
  * @file NetworkSelections component with comprehensive customization options for network selection.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { cn, isTouchDevice } from '@tuwaio/nova-core';
+import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -603,7 +602,7 @@ export const NetworkSelections = memo(
                     networkData={networkData}
                     selectionsData={selectionsData}
                   >
-                    <Web3Icon chainId={networkData.chainId} />
+                    <NetworkIcon chainId={networkData.chainId ?? ''} />
                   </CustomNetworkIcon>
                 }
                 onClick={() => handleNetworkClick(networkData.adapter)}

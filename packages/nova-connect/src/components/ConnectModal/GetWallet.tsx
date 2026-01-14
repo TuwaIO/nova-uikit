@@ -2,8 +2,7 @@
  * @file GetWallet component with comprehensive customization options and staggered animations.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { cn, StarsBackground } from '@tuwaio/nova-core';
+import { cn, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, useMemo } from 'react';
 
@@ -439,7 +438,7 @@ const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations
       aria-label={ariaLabel || `${walletKey} wallet icon`}
       data-testid={`wallet-icon-${walletKey}`}
     >
-      <Web3Icon walletKey={walletKey} />
+      <WalletIcon walletName={walletKey} />
     </div>
   );
 };
