@@ -205,7 +205,7 @@
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-select": "^2.2.6",
-    "@tuwaio/orbit-core": "^0.2.2",
+    "@tuwaio/orbit-core": "^0.2.3",
     "@tuwaio/orbit-evm": "^0.2.5",
     "@tuwaio/orbit-solana": "^0.2.2",
     "@tuwaio/satellite-react": "^0.2.4",

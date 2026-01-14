@@ -250,7 +250,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
     ariaLabel: 'MetaMask wallet icon',
   },
   {
-    walletKey: 'coinbasewallet',
+    walletKey: 'coinbase',
     position: {
       top: 'novacon:top-[10%]',
       right: 'novacon:right-[10%]',
@@ -268,7 +268,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
     ariaLabel: 'Coinbase Wallet icon',
   },
   {
-    walletKey: 'trustwallet',
+    walletKey: 'trust',
     position: {
       top: 'novacon:top-[25%]',
       left: 'novacon:left-1/2',
@@ -286,7 +286,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
     ariaLabel: 'Trust Wallet icon',
   },
   {
-    walletKey: 'bravewallet',
+    walletKey: 'rabby',
     position: {
       bottom: 'novacon:bottom-[10%]',
       left: 'novacon:left-[10%]',
@@ -301,10 +301,10 @@ const defaultWalletIcons: WalletIconConfig[] = [
       reverse: true,
       ease: 'ease-in',
     },
-    ariaLabel: 'Brave Wallet icon',
+    ariaLabel: 'Rabby Wallet icon',
   },
   {
-    walletKey: 'phantomwallet',
+    walletKey: 'phantom',
     position: {
       bottom: 'novacon:bottom-[15%]',
       right: 'novacon:right-[15%]',
