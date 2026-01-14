@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.2.3...nova-core-v0.2.4) (2026-01-14)
+
+
+### Bug Fixes
+
+* migrate from @bgd-labs/react-web3-icons to web3icons/react and added legal ([#62](https://github.com/TuwaIO/nova-uikit/issues/62)) ([fd37f15](https://github.com/TuwaIO/nova-uikit/commit/fd37f15a2b99c13a0c88e0cc7a2c97e588c453fc))
+
 ## [0.2.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.2.2...nova-core-v0.2.3) (2026-01-07)
 
 
