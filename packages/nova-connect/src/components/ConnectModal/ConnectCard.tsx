@@ -807,7 +807,7 @@ export const ConnectCard = memo(
                 className={
                   customization?.classNames?.iconWrapper?.({ cardData }) ??
                   cn(
-                    'novacon:[&_svg]:w-[42px]! novacon:[&_svg]:h-[42px]! novacon:sm:[&_svg]:w-[32px]! novacon:sm:[&_svg]:h-[32px]! novacon:leading-[0]',
+                    'novacon:w-[42px] novacon:h-[42px] novacon:sm:w-[32px] novacon:sm:h-[32px] novacon:[&_img]:w-[42px]! novacon:[&_img]:h-[42px]! novacon:sm:[&_img]:w-[32px]! novacon:sm:[&_img]:h-[32px]! novacon:[&_svg]:w-[42px]! novacon:[&_svg]:h-[42px]! novacon:sm:[&_svg]:w-[32px]! novacon:sm:[&_svg]:h-[32px]! novacon:leading-[0]',
                   )
                 }
                 cardData={cardData}
