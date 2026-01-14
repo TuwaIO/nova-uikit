@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxInfoBlock } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
-import { sepolia } from 'viem/chains';
+import { monad, monadTestnet } from 'viem/chains';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../../utils/mockAdapters';
 import { createInitialTx, createMockTx } from '../../utils/mockTransactions';
@@ -89,7 +89,19 @@ export const GelatoTransaction: Story = {
 export const DifferentNetwork: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
-      chainId: sepolia.id,
+      chainId: monadTestnet.id,
+    }),
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * A transaction on a different network (Sepolia) to demonstrate correct chain info display.
+ */
+export const DifferentNetworkMonad: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      chainId: monad.id,
     }),
     adapter: [mockEvmAdapter],
   },

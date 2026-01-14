@@ -41,6 +41,7 @@ import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
 import { GetWallet, GetWalletCustomization } from './GetWallet';
 import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedForm';
+import { LegalDisclaimer } from './LegalDisclaimer';
 import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
 import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
 
@@ -833,6 +834,8 @@ export const ConnectModal = memo<ConnectModalProps>(
                 withImpersonated={withImpersonated}
                 customization={childComponents.connectorsSelections}
               />
+
+              <LegalDisclaimer />
             </>
           ) : (
             <CustomEmptyState className={classNames.emptyConnectors?.({ modalData })} modalData={modalData}>

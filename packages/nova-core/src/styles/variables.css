@@ -40,6 +40,8 @@
 
   --tuwa-standart-button-bg: theme('colors.gray.100');
   --tuwa-standart-button-hover: theme('colors.gray.200');
+
+  --tuwa-testnet-icons: #C4BFB8;
 }
 
 .dark {
@@ -80,6 +82,8 @@
 
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');
+
+  --tuwa-testnet-icons: #C4BFB8;
 }
 
 .Toastify {

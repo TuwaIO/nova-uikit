@@ -1,0 +1,30 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# NetworkIcon()
+
+> **NetworkIcon**(`props`): `Element`
+
+Defined in: [packages/nova-core/src/components/NetworkIcon.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-core/src/components/NetworkIcon.tsx#L47)
+
+Renders a network icon based on the chain ID.
+
+It handles logic for:
+1. Lazy loading the heavy icon library.
+2. Normalizing string IDs (e.g., converts "solana:devnet" -> "solana").
+3. Applying specific styling for Testnets/Devnets (e.g., muted colors for Solana Devnet).
+
+## Parameters
+
+### props
+
+`NetworkIconProps`
+
+NetworkIconProps
+
+## Returns
+
+`Element`
+
+The network icon or a fallback UI.

@@ -2,8 +2,7 @@
  * @file This file contains the `WalletIcon` component, a customizable wallet icon renderer with fallback support.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { cn } from '@tuwaio/nova-core';
+import { cn, WalletIcon as WI } from '@tuwaio/nova-core';
 import { formatConnectorName } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
 
@@ -98,7 +97,7 @@ const DefaultErrorIndicator = ({ walletName, hasError }: CustomErrorIndicatorPro
 };
 
 const DefaultFallbackIcon = ({ walletName, className }: CustomFallbackIconProps) => {
-  return <Web3Icon walletKey={walletName} className={cn('novacon:flex-shrink-0', className)} />;
+  return <WI walletName={walletName} className={cn('novacon:flex-shrink-0', className)} />;
 };
 
 /**

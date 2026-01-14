@@ -3,9 +3,7 @@
  * It also supports Solana-specific functionality to display slot, confirmations, and recentBlockhash details.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
-import { getChainName } from '@bgd-labs/react-web3-icons/dist/utils';
-import { cn } from '@tuwaio/nova-core';
+import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
 import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
@@ -70,7 +68,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         value={
           <div className="novatx:flex novatx:items-center novatx:justify-end novatx:gap-2">
             <div className="novatx:h-4 novatx:w-4">
-              <Web3Icon chainId={setChainId(chainId)} />
+              <NetworkIcon chainId={setChainId(chainId)} />
             </div>
             <span>{getChainName(setChainId(chainId))}</span>
           </div>

@@ -1,0 +1,28 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# isSolanaDev()
+
+> **isSolanaDev**(`chainId`): `boolean`
+
+Defined in: [packages/nova-core/src/utils/isSolanaDev.ts:10](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-core/src/utils/isSolanaDev.ts#L10)
+
+Determines if the current chain is a Solana development or test network.
+
+It strictly checks if the ID is a string containing 'solana' AND
+indicates a non-production environment ('devnet' or 'testnet').
+
+## Parameters
+
+### chainId
+
+The chain identifier (e.g., "solana:devnet", 1, "ethereum").
+
+`string` | `number`
+
+## Returns
+
+`boolean`
+
+True only if it is a Solana dev/test chain.

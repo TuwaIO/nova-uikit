@@ -39,13 +39,13 @@ Built on top of the Satellite Connect ecosystem, Nova Connect offers a unified i
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/pulsar-core @tuwaio/satellite-evm @tuwaio/satellite-solana @wagmi/core @wallet-standard/react viem zustand
+pnpm add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
 
 # Using npm
-npm install @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/pulsar-core @tuwaio/satellite-evm @tuwaio/satellite-solana @wagmi/core @wallet-standard/react viem zustand
+npm install @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
 
 # Using yarn
-yarn add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/orbit-core @tuwaio/pulsar-core @tuwaio/satellite-evm @tuwaio/satellite-solana @wagmi/core @wallet-standard/react viem zustand
+yarn add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
 ````
 
 -----

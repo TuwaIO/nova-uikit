@@ -128,4 +128,10 @@ export type NovaConnectLabels = {
   impersonateAddressEmpty: string;
   impersonateAddressNotCorrect: string;
   impersonateAddressConnected: string;
+
+  // Legal section labels
+  legalIntro: string;
+  legalTerms: string;
+  legalPrivacy: string;
+  legalAnd: string;
 };

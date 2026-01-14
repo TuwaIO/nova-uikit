@@ -253,6 +253,7 @@ export function NovaConnectProvider({
   withImpersonated,
   withBalance,
   withChain,
+  legal,
   customization,
 }: NovaConnectProviderPropsWithCustomization) {
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
@@ -357,6 +358,7 @@ export function NovaConnectProvider({
       setImpersonatedAddress,
       isConnected,
       setIsConnected,
+      legal,
     };
 
     return customContextValueTransform(defaultContextValue, providerContext);
@@ -388,6 +390,7 @@ export function NovaConnectProvider({
     setImpersonatedAddress,
     isConnected,
     setIsConnected,
+    legal,
     customContextValueTransform,
     providerContext,
   ]);

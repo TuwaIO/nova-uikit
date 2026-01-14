@@ -43,7 +43,7 @@ pnpm add react react-dom zustand immer
 
 # UI libraries
 pnpm add framer-motion @radix-ui/react-dialog @heroicons/react
-pnpm add react-toastify @bgd-labs/react-web3-icons
+pnpm add react-toastify @web3icons/common @web3icons/react
 
 # Utilities
 pnpm add dayjs clsx tailwind-merge
@@ -54,13 +54,13 @@ pnpm add dayjs clsx tailwind-merge
 For a complete setup with all TUWA packages:
 ```bash
 # Using pnpm (recommended)
-pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons dayjs react immer zustand clsx tailwind-merge
+pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
 
 # Using npm
-npm install @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons dayjs react immer zustand clsx tailwind-merge
+npm install @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
 
 # Using yarn
-yarn add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @bgd-labs/react-web3-icons dayjs react immer zustand clsx tailwind-merge
+yarn add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
 ```
 ---
 

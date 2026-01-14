@@ -9,6 +9,12 @@ export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replac
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';
 export type ConnectedContentType = 'main' | 'transactions' | 'chains' | 'connections';
 
+/** Legal configuration for Terms of Service and Privacy Policy links */
+export interface LegalConfig {
+  termsUrl?: string;
+  privacyUrl?: string;
+}
+
 // Provider props interface
 export interface NovaConnectProviderProps extends InitialChains {
   /** Transaction pool for pending transactions display */
@@ -21,6 +27,8 @@ export interface NovaConnectProviderProps extends InitialChains {
   withChain?: boolean;
   /** Whether impersonated wallets are enabled */
   withImpersonated?: boolean;
+  /** Legal configuration for Terms of Service and Privacy Policy links */
+  legal?: LegalConfig;
   children: React.ReactNode;
   labels?: Partial<NovaConnectLabels>;
 }
@@ -67,6 +75,9 @@ export interface NovaConnectProviderType
   // Impersonation
   impersonatedAddress: string;
   setImpersonatedAddress: (value: string) => void;
+
+  // Legal configuration
+  legal?: LegalConfig;
 }
 
 // Custom error for hook usage outside provider

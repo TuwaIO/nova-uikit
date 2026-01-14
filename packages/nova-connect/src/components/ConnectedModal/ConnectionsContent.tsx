@@ -2,7 +2,6 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import {
   ArrowLeftStartOnRectangleIcon,
   ArrowsRightLeftIcon,
@@ -10,7 +9,7 @@ import {
   DocumentDuplicateIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, NetworkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -385,7 +384,7 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
         className="novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]"
         style={{ width: badgeSize, height: badgeSize }}
       >
-        <Web3Icon
+        <NetworkIcon
           chainId={setChainId(chainId ?? networkIcon?.chainId ?? 1)}
           className="novacon:h-full novacon:w-full"
         />
