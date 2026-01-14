@@ -35,7 +35,7 @@ export const LegalDisclaimer = memo(() => {
 
   return (
     <div
-      className="novacon:border-t novacon:border-b novacon:border-[var(--tuwa-border-primary)] novacon:py-3 novacon:my-2"
+      className="novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:pt-3 novacon:mt-2"
       role="contentinfo"
       aria-label="Legal information"
     >
