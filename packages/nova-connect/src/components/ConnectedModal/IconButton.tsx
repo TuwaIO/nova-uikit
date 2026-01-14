@@ -511,11 +511,11 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
         'novacon:p-1.5 novacon:transition-all novacon:duration-200 novacon:relative',
 
         // Icon sizing
-        'novacon:[&_svg]:w-6! novacon:[&_svg]:h-6! novacon:[&_svg]:transition-transform novacon:[&_svg]:duration-200',
+        'novacon:[&_svg]:w-6! novacon:[&_svg]:h-6! novacon:[&_svg]:transition-transform novacon:[&_svg]:duration-200 novacon:[&_img]:w-6! novacon:[&_img]:h-6! novacon:[&_img]:transition-transform novacon:[&_img]:duration-200',
 
         // Interactive states
         {
-          'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:shadow-sm':
+          'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:[&_img]:scale-95 novacon:active:[&_img]:scale-85 novacon:hover:shadow-sm':
             isClickable,
           'novacon:cursor-not-allowed novacon:opacity-50': disabled && !loading,
           'novacon:cursor-wait novacon:opacity-75': loading,
