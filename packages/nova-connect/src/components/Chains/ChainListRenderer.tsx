@@ -193,8 +193,10 @@ const DefaultChainIcon: React.FC<CustomChainIconProps> = ({ chainId, className, 
  * Default chain content component
  */
 const DefaultChainContent: React.FC<CustomChainContentProps> = ({ icon, children }) => (
-  <div className="novacon:flex novacon:items-center novacon:space-x-3 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
-    <div aria-hidden="true">{icon}</div>
+  <div className="novacon:flex novacon:items-center novacon:space-x-3">
+    <div className="novacon:[&_svg]:w-6 novacon:[&_svg]:h-6 novacon:w-6 novacon:h-6" aria-hidden="true">
+      {icon}
+    </div>
     {children}
   </div>
 );
