@@ -66,6 +66,7 @@
   ],
   "peerDependencies": {
     "@web3icons/react": ">=4",
+    "@web3icons/common": ">=0.11",
     "@heroicons/react": "2.x.x",
     "@radix-ui/react-dialog": "1.x.x",
     "framer-motion": "12.x.x",
@@ -82,6 +83,7 @@
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.19",
     "@web3icons/react": "^4.1.13",
+    "@web3icons/common": "^0.11.42",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@tailwindcss/postcss": "^4.1.18",

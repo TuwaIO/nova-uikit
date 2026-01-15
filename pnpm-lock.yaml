@@ -297,6 +297,9 @@ importers:
       '@wallet-standard/react':
         specifier: ^1.0.1
         version: 1.0.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@web3icons/common':
+        specifier: ^0.11.42
+        version: 0.11.42(typescript@5.9.3)
       '@web3icons/react':
         specifier: ^4.1.13
         version: 4.1.13(react@19.2.3)(typescript@5.9.3)
@@ -429,6 +432,9 @@ importers:
       '@types/react':
         specifier: ^19.2.8
         version: 19.2.8
+      '@web3icons/common':
+        specifier: ^0.11.42
+        version: 0.11.42(typescript@5.9.3)
       '@web3icons/react':
         specifier: ^4.1.13
         version: 4.1.13(react@19.2.3)(typescript@5.9.3)

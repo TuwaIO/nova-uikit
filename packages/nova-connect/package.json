@@ -106,6 +106,7 @@
     "@wallet-standard/react": "1.x.x",
     "@wagmi/core": "3.x.x",
     "@web3icons/react": ">=4",
+    "@web3icons/common": ">=0.11",
     "gill": ">=0.14",
     "dayjs": "1.x.x",
     "immer": "11.x.x",
@@ -119,6 +120,9 @@
   },
   "peerDependenciesMeta": {
     "@web3icons/react": {
+      "optional": false
+    },
+    "@web3icons/common": {
       "optional": false
     },
     "@heroicons/react": {
@@ -214,6 +218,7 @@
     "@wallet-standard/react": "^1.0.1",
     "@wagmi/core": "^3.2.2",
     "@web3icons/react": "^4.1.13",
+    "@web3icons/common": "^0.11.42",
     "gill": "^0.14.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
