@@ -55,6 +55,17 @@ interface CustomChainContentProps {
 }
 
 /**
+ * Props for custom active indicator wrapper component
+ */
+interface CustomActiveIndicatorWrapperProps {
+  isActive: boolean;
+  isMobile: boolean;
+  indicator: ReactNode;
+  children?: ReactNode;
+  className?: string;
+}
+
+/**
  * Props for custom active indicator component
  */
 interface CustomActiveIndicatorProps {
@@ -92,6 +103,8 @@ export interface ChainListRendererCustomization {
     ChainIcon?: ComponentType<CustomChainIconProps>;
     /** Custom chain content layout component */
     ChainContent?: ComponentType<CustomChainContentProps>;
+    /** Custom active indicator wrapper component */
+    ActiveIndicatorWrapper?: ComponentType<CustomActiveIndicatorWrapperProps>;
     /** Custom active indicator component */
     ActiveIndicator?: ComponentType<CustomActiveIndicatorProps>;
   };
@@ -107,6 +120,8 @@ export interface ChainListRendererCustomization {
     icon?: (params: { isActive: boolean; chainId: string | number }) => string;
     /** Chain name classes */
     chainName?: (params: { isActive: boolean; isMobile: boolean }) => string;
+    /** Active indicator wrapper classes */
+    activeIndicatorWrapper?: (params: { isActive: boolean; isMobile: boolean }) => string;
     /** Active indicator classes */
     activeIndicator?: (params: { isMobile: boolean }) => string;
   };
@@ -202,6 +217,33 @@ const DefaultChainContent: React.FC<CustomChainContentProps> = ({ icon, children
 );
 
 /**
+ * Default active indicator wrapper component
+ */
+const DefaultActiveIndicatorWrapper: React.FC<CustomActiveIndicatorWrapperProps> = ({
+  isActive,
+  isMobile,
+  indicator,
+  children,
+  className,
+}) => {
+  if (isMobile) {
+    return (
+      <div
+        className={cn(
+          'novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]',
+          className,
+        )}
+      >
+        {isActive && children}
+        {indicator}
+      </div>
+    );
+  }
+
+  return indicator;
+};
+
+/**
  * Default active indicator component
  */
 const DefaultActiveIndicator: React.FC<CustomActiveIndicatorProps> = ({ isActive, label, className }) => {
@@ -283,6 +325,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
   const {
     ChainIcon = DefaultChainIcon,
     ChainContent = DefaultChainContent,
+    ActiveIndicatorWrapper = DefaultActiveIndicatorWrapper,
     ActiveIndicator = DefaultActiveIndicator,
   } = customization?.components ?? {};
 
@@ -413,6 +456,13 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
 
     const chainNameClasses = customization?.classNames?.chainName?.({ isActive, isMobile });
 
+    const activeIndicatorWrapperClasses = customization?.classNames?.activeIndicatorWrapper?.({
+      isActive,
+      isMobile,
+    });
+
+    const activeIndicatorClasses = customization?.classNames?.activeIndicator?.({ isMobile });
+
     // Create event handlers
     const handleClick = createClickHandler(formattedChainId, chainName, isActive);
     const handleKeyDown = createKeyDownHandler(handleClick, formattedChainId, chainName, isActive);
@@ -428,15 +478,19 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
     );
 
     // Create active indicator
-    const activeIndicatorClasses = customization?.classNames?.activeIndicator?.({ isMobile });
-
-    const activeIndicator = isMobile ? (
-      <div className="novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]">
-        {isActive && <span aria-label={labels.connected}>{labels.connected}</span>}
-        <ActiveIndicator isActive={isActive} label={labels.connected} className={activeIndicatorClasses} />
-      </div>
-    ) : (
+    const indicator = (
       <ActiveIndicator isActive={isActive} label={labels.connected} className={activeIndicatorClasses} />
+    );
+
+    const activeIndicatorWrapper = (
+      <ActiveIndicatorWrapper
+        isActive={isActive}
+        isMobile={isMobile}
+        indicator={indicator}
+        className={activeIndicatorWrapperClasses}
+      >
+        <span aria-label={labels.connected}>{labels.connected}</span>
+      </ActiveIndicatorWrapper>
     );
 
     const ariaLabel = `${labels.chainOption}: ${chainName}`;
@@ -459,7 +513,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
           {...motionProps}
         >
           {contentElement}
-          {activeIndicator}
+          {activeIndicatorWrapper}
         </MotionItem>
       );
     }

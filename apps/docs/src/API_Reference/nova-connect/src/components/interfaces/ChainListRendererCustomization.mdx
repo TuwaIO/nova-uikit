@@ -4,7 +4,7 @@
 
 # ChainListRendererCustomization
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L88)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L99)
 
 Comprehensive customization options for ChainListRenderer
 
@@ -14,7 +14,7 @@ Comprehensive customization options for ChainListRenderer
 
 > `optional` **animations**: `object`
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:134](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L134)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L149)
 
 Animation configuration
 
@@ -36,7 +36,7 @@ Item animation
 
 > `optional` **behavior**: `object`
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L141)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L156)
 
 Behavior configuration
 
@@ -70,7 +70,7 @@ Show loading states
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L99)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L112)
 
 Custom class name generators
 
@@ -83,6 +83,28 @@ Active indicator classes
 ##### Parameters
 
 ###### params
+
+###### isMobile
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### activeIndicatorWrapper()?
+
+> `optional` **activeIndicatorWrapper**: (`params`) => `string`
+
+Active indicator wrapper classes
+
+##### Parameters
+
+###### params
+
+###### isActive
+
+`boolean`
 
 ###### isMobile
 
@@ -212,7 +234,7 @@ Item classes
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L90)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L101)
 
 Custom components
 
@@ -221,6 +243,12 @@ Custom components
 > `optional` **ActiveIndicator**: `ComponentType`\<`CustomActiveIndicatorProps`\>
 
 Custom active indicator component
+
+#### ActiveIndicatorWrapper?
+
+> `optional` **ActiveIndicatorWrapper**: `ComponentType`\<`CustomActiveIndicatorWrapperProps`\>
+
+Custom active indicator wrapper component
 
 #### ChainContent?
 
@@ -240,7 +268,7 @@ Custom chain icon component
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/10aa196b21f6e1e4fcd89fe914986bc7d63289f1/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L114)
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:129](https://github.com/TuwaIO/nova-uikit/blob/7a210c0ecc4043ba26cbaecdbd2d557ac81e9c59/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L129)
 
 Custom event handlers
 
