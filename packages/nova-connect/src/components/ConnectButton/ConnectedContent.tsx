@@ -82,8 +82,6 @@ export type ConnectedContentCustomization = {
     container?: (params: { connectedButtonStatus: ButtonTxStatus; withBalance: boolean }) => string;
     /** Function to generate balance container classes */
     balanceContainer?: (params: { formattedBalance: string }) => string;
-    /** Function to generate balance text classes */
-    balanceText?: (params: { formattedBalance: string }) => string;
     /** Function to generate balance divider classes */
     balanceDivider?: () => string;
     /** Function to generate main content classes */
@@ -192,7 +190,7 @@ const DefaultBalanceDivider = ({ className }: CustomBalanceDividerProps) => {
   return (
     <div
       className={cn(
-        'novacon:absolute novacon:top-1/2 novacon:right-0 novacon:transform novacon:-translate-y-1/2 novacon:h-4 novacon:w-[1px] novacon:bg-[var(--tuwa-border-primary)]',
+        'novacon:hidden novacon:sm:block novacon:absolute novacon:top-1/2 novacon:right-0 novacon:transform novacon:-translate-y-1/2 novacon:h-4 novacon:w-[1px] novacon:bg-[var(--tuwa-border-primary)]',
         className,
       )}
       aria-hidden="true"
