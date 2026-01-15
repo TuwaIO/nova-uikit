@@ -352,7 +352,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
       <WalletAvatar
         ensAvatar={ensAvatar}
         address={activeConnection.address}
-        className="novacon:w-28 novacon:h-28 novacon:sm:w-32 novacon:sm:h-32"
+        className="novacon:w-36 novacon:h-36 novacon:sm:w-32 novacon:sm:h-32"
         aria-describedby="wallet-info"
       />
     </motion.div>
