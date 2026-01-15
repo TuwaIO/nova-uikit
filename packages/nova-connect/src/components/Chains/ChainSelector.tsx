@@ -121,6 +121,20 @@ type CustomMobileSelectorProps = {
 };
 
 /**
+ * Props for a custom close button component.
+ */
+type CustomCloseButtonProps = {
+  /** Close handler */
+  onClose: () => void;
+  /** CSS class */
+  className?: string;
+  /** ARIA label */
+  'aria-label': string;
+  /** Icon element */
+  icon: ReactNode;
+};
+
+/**
  * Props for a custom dialog header component.
  */
 type CustomDialogHeaderProps = {
@@ -130,6 +144,17 @@ type CustomDialogHeaderProps = {
   onClose: () => void;
   /** CSS class */
   className?: string;
+  /** Close button customization */
+  closeButton?: {
+    /** Close button component */
+    Component?: ComponentType<CustomCloseButtonProps>;
+    /** Close button props */
+    props?: Partial<ComponentPropsWithoutRef<'button'>>;
+    /** Close button classes */
+    className?: string;
+    /** Close button icon classes */
+    iconClassName?: string;
+  };
 };
 
 /**
@@ -229,6 +254,12 @@ export type ChainSelectorCustomization = {
     dialogContent?: (params: { chainCount: number }) => string;
     /** Classes for the dialog inner container */
     dialogInnerContainer?: () => string;
+    /** Classes for the dialog header */
+    dialogHeader?: () => string;
+    /** Classes for the dialog header title */
+    dialogHeaderTitle?: () => string;
+    /** Classes for the dialog header close button wrapper */
+    dialogHeaderCloseButtonWrapper?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
@@ -236,6 +267,18 @@ export type ChainSelectorCustomization = {
     onChainChange?: (originalHandler: (newChainId: string) => void, newChainId: string) => void;
     /** Wrapper for the dialog close handler */
     onDialogClose?: (originalHandler: () => void) => void;
+  };
+  /** Dialog header customization */
+  dialogHeader?: {
+    /** Close button customization */
+    closeButton?: {
+      /** Close button props */
+      props?: Partial<ComponentPropsWithoutRef<'button'>>;
+      /** Close button classes */
+      className?: string;
+      /** Close button icon classes */
+      iconClassName?: string;
+    };
   };
   /** Customization for sub-components */
   triggerButton?: ChainTriggerButtonCustomization;
@@ -347,26 +390,51 @@ const DefaultMobileSelector = ({ children, className, 'aria-label': ariaLabel }:
 };
 
 /**
+ * Default close button component.
+ */
+const DefaultCloseButton = ({ onClose, className, 'aria-label': ariaLabel, icon }: CustomCloseButtonProps) => {
+  return (
+    <button type="button" aria-label={ariaLabel} className={className} onClick={onClose}>
+      {icon}
+    </button>
+  );
+};
+
+/**
  * Default dialog header component.
  */
-const DefaultDialogHeader = ({ title, onClose, className }: CustomDialogHeaderProps) => {
+const DefaultDialogHeader = ({ title, onClose, className, closeButton }: CustomDialogHeaderProps) => {
   const labels = useNovaConnectLabels();
+
+  const {
+    Component: CloseButtonComponent = DefaultCloseButton,
+    props: closeButtonProps,
+    className: closeButtonClassName,
+    iconClassName: closeIconClassName,
+  } = closeButton ?? {};
+
+  const defaultCloseButtonClasses = cn(
+    'novacon:cursor-pointer novacon:rounded-full novacon:p-1',
+    'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
+    'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
+    'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+  );
+
+  const finalCloseButtonClasses = closeButtonClassName || defaultCloseButtonClasses;
+
+  const closeIconElement = <CloseIcon className={closeIconClassName} />;
 
   return (
     <DialogHeader className={className}>
       <DialogTitle>{title}</DialogTitle>
       <DialogClose asChild>
-        <button
-          type="button"
+        <CloseButtonComponent
+          onClose={onClose}
+          className={finalCloseButtonClasses}
           aria-label={labels.closeModal}
-          className="novacon:cursor-pointer novacon:rounded-full novacon:p-1
-           novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors
-           novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]
-           novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2"
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </button>
+          icon={closeIconElement}
+          {...closeButtonProps}
+        />
       </DialogClose>
     </DialogHeader>
   );
@@ -631,6 +699,10 @@ export function ChainSelector({
     ? customization.classNames.dialogInnerContainer()
     : cn('novacon:relative novacon:flex novacon:w-full novacon:flex-col');
 
+  const dialogHeaderClasses = customization?.classNames?.dialogHeader
+    ? customization.classNames.dialogHeader()
+    : undefined;
+
   const handleChainChange = useCallback(
     (newChainId: string) => {
       const originalHandler = async (chainId: string) => {
@@ -726,7 +798,12 @@ export function ChainSelector({
         <Dialog open={isChainsListOpenMobile} onOpenChange={setIsChainsListOpenMobile}>
           <DialogContent className={dialogContentClasses} aria-describedby="chain-selector-description">
             <div className={dialogInnerContainerClasses}>
-              <DialogHeader title={labels.switchNetworks} onClose={handleDialogClose} />
+              <DialogHeader
+                title={labels.switchNetworks}
+                onClose={handleDialogClose}
+                className={dialogHeaderClasses}
+                closeButton={customization?.dialogHeader?.closeButton}
+              />
 
               <div id="chain-selector-description" className="novacon:sr-only">
                 {labels.selectChain}
