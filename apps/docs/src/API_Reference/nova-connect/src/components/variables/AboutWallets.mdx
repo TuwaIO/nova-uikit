@@ -6,7 +6,7 @@
 
 > `const` **AboutWallets**: `ForwardRefExoticComponent`\<[`AboutWalletsProps`](../interfaces/AboutWalletsProps.md) & `RefAttributes`\<`HTMLElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:510](https://github.com/TuwaIO/nova-uikit/blob/584277c0cd25dcb7d9e92c6efce611540916dbfd/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L510)
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:586](https://github.com/TuwaIO/nova-uikit/blob/3156172bedbb2f743ddf81090d0cd55f885e7038/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L586)
 
 Educational carousel component about wallet functionality with comprehensive customization and touch support.
 
@@ -22,8 +22,22 @@ This component provides an interactive slideshow explaining wallet benefits:
 - Full customization of all child components
 - Performance-optimized with memoized calculations
 
-## Example
+## Examples
 
 ```tsx
 <AboutWallets />
+```
+
+```tsx
+<AboutWallets
+  customization={{
+    classNames: {
+      section: () => 'my-custom-section',
+      title: ({ slideIndex }) => slideIndex === 0 ? 'text-blue-500' : 'text-green-500',
+      description: () => 'text-gray-400',
+      imageSection: () => 'bg-gradient-to-r from-purple-500 to-pink-500',
+      indicator: ({ isActive }) => isActive ? 'bg-blue-500 w-8' : 'bg-gray-300',
+    },
+  }}
+/>
 ```

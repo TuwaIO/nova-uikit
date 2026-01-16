@@ -34,6 +34,21 @@ type TouchState = {
   threshold: number;
 };
 
+// --- ClassNames Type for customization propagation ---
+type AboutWalletsClassNames = {
+  section?: () => string;
+  slideContainer?: () => string;
+  slide?: (params: { slideIndex: number; totalSlides: number }) => string;
+  imageSection?: (params: { slideIndex: number }) => string;
+  image?: (params: { slideIndex: number; imageLoaded: boolean }) => string;
+  contentSection?: (params: { slideIndex: number }) => string;
+  title?: (params: { slideIndex: number }) => string;
+  description?: (params: { slideIndex: number }) => string;
+  navigation?: () => string;
+  indicator?: (params: { index: number; isActive: boolean }) => string;
+  status?: () => string;
+};
+
 // --- Component Props Types ---
 type SectionProps = {
   className?: string;
@@ -64,6 +79,15 @@ type SlideProps = {
   labels: Record<string, string>;
   slideVariants?: Variants;
   slideTransition?: Transition;
+  imageVariants?: Variants;
+  imageTransition?: Transition;
+  /** ClassNames for nested customization */
+  classNames?: AboutWalletsClassNames;
+  /** Custom components */
+  components?: {
+    ImageSection?: ComponentType<ImageSectionProps>;
+    ContentSection?: ComponentType<ContentSectionProps>;
+  };
 };
 
 type ImageSectionProps = {
@@ -74,6 +98,10 @@ type ImageSectionProps = {
   slideIndex: number;
   className?: string;
   labels: Record<string, string>;
+  imageVariants?: Variants;
+  imageTransition?: Transition;
+  /** ClassNames for nested customization */
+  classNames?: AboutWalletsClassNames;
 };
 
 type ContentSectionProps = {
@@ -81,6 +109,8 @@ type ContentSectionProps = {
   slideIndex: number;
   className?: string;
   labels: Record<string, string>;
+  /** ClassNames for nested customization */
+  classNames?: AboutWalletsClassNames;
 };
 
 type NavigationProps = {
@@ -89,6 +119,10 @@ type NavigationProps = {
   onSlideChange: (index: number) => void;
   className?: string;
   labels: Record<string, string>;
+  /** ClassNames for nested customization */
+  classNames?: AboutWalletsClassNames;
+  /** Custom indicator component */
+  IndicatorComponent?: ComponentType<IndicatorProps>;
 };
 
 type IndicatorProps = {
@@ -202,30 +236,7 @@ export type AboutWalletsCustomization = {
     MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
   };
   /** Custom class name generators */
-  classNames?: {
-    /** Function to generate section classes */
-    section?: () => string;
-    /** Function to generate slide container classes */
-    slideContainer?: () => string;
-    /** Function to generate slide classes */
-    slide?: (params: { slideIndex: number; totalSlides: number }) => string;
-    /** Function to generate image section classes */
-    imageSection?: (params: { slideIndex: number }) => string;
-    /** Function to generate image classes */
-    image?: (params: { slideIndex: number; imageLoaded: boolean }) => string;
-    /** Function to generate content section classes */
-    contentSection?: (params: { slideIndex: number }) => string;
-    /** Function to generate title classes */
-    title?: (params: { slideIndex: number }) => string;
-    /** Function to generate description classes */
-    description?: (params: { slideIndex: number }) => string;
-    /** Function to generate navigation classes */
-    navigation?: () => string;
-    /** Function to generate indicator classes */
-    indicator?: (params: { index: number; isActive: boolean }) => string;
-    /** Function to generate status classes */
-    status?: () => string;
-  };
+  classNames?: AboutWalletsClassNames;
   /** Custom animation variants */
   variants?: {
     /** Slide animation variants */
@@ -322,71 +333,99 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
   slideIndex,
   className,
   labels,
-}) => (
-  <div className={cn('novacon:flex novacon:justify-center novacon:relative novacon:pt-4', className)}>
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={`image-${slideIndex}`}
-        variants={DEFAULT_IMAGE_VARIANTS}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={ANIMATION_CONFIG.imageTransition}
-        className="novacon:relative"
+  imageVariants = DEFAULT_IMAGE_VARIANTS,
+  imageTransition = ANIMATION_CONFIG.imageTransition,
+  classNames,
+}) => {
+  // Compute custom image class if provided
+  const imageClassName = classNames?.image?.({ slideIndex, imageLoaded });
+
+  return (
+    <div
+      className={cn(
+        'novacon:flex novacon:justify-center novacon:relative novacon:pt-4',
+        classNames?.imageSection?.({ slideIndex }),
+        className,
+      )}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`image-${slideIndex}`}
+          variants={imageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={imageTransition}
+          className="novacon:relative"
+        >
+          <div className="novacon:relative" style={{ width: 250, height: 250 }}>
+            {slide.image && (
+              <img
+                src={slide.image}
+                alt={labels[slide.titleKey as string]}
+                width={250}
+                height={250}
+                className={cn(
+                  'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
+                  'novacon:object-cover',
+                  imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
+                  imageClassName,
+                )}
+                style={{ width: 250, height: 250 }}
+                onLoad={onImageLoad}
+                onError={onImageError}
+                loading="eager"
+                decoding="async"
+              />
+            )}
+
+            {!imageLoaded && (
+              <div
+                className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center"
+                style={{ width: 250, height: 250 }}
+                aria-hidden="true"
+              >
+                <div className="novacon:w-12 novacon:h-12 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent novacon:rounded-full novacon:animate-spin" />
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels, classNames }) => {
+  // Compute custom title and description classes if provided
+  const titleClassName = classNames?.title?.({ slideIndex });
+  const descriptionClassName = classNames?.description?.({ slideIndex });
+
+  return (
+    <div
+      className={cn(
+        'novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]',
+        classNames?.contentSection?.({ slideIndex }),
+        className,
+      )}
+    >
+      <h2
+        className={cn(
+          'novacon:text-xl novacon:font-bold novacon:text-[var(--tuwa-text-primary)] novacon:mb-2',
+          titleClassName,
+        )}
+        id={`slide-title-${slideIndex}`}
       >
-        <div className="novacon:relative" style={{ width: 250, height: 250 }}>
-          {slide.image && (
-            <img
-              src={slide.image}
-              alt={labels[slide.titleKey as string]}
-              width={250}
-              height={250}
-              className={cn(
-                'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
-                'novacon:object-cover',
-                imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
-              )}
-              style={{ width: 250, height: 250 }}
-              onLoad={onImageLoad}
-              onError={onImageError}
-              loading="eager"
-              decoding="async"
-            />
-          )}
-
-          {!imageLoaded && (
-            <div
-              className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center"
-              style={{ width: 250, height: 250 }}
-              aria-hidden="true"
-            >
-              <div className="novacon:w-12 novacon:h-12 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent novacon:rounded-full novacon:animate-spin" />
-            </div>
-          )}
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  </div>
-);
-
-const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels }) => (
-  <div
-    className={cn('novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]', className)}
-  >
-    <h2
-      className="novacon:text-xl novacon:font-bold novacon:text-[var(--tuwa-text-primary)] novacon:mb-2"
-      id={`slide-title-${slideIndex}`}
-    >
-      {labels[slide.titleKey as string]}
-    </h2>
-    <p
-      className="novacon:text-[var(--tuwa-text-secondary)] novacon:leading-relaxed"
-      aria-describedby={`slide-title-${slideIndex}`}
-    >
-      {labels[slide.descriptionKey as string]}
-    </p>
-  </div>
-);
+        {labels[slide.titleKey as string]}
+      </h2>
+      <p
+        className={cn('novacon:text-[var(--tuwa-text-secondary)] novacon:leading-relaxed', descriptionClassName)}
+        aria-describedby={`slide-title-${slideIndex}`}
+      >
+        {labels[slide.descriptionKey as string]}
+      </p>
+    </div>
+  );
+};
 
 const DefaultIndicator: React.FC<IndicatorProps> = ({ slide, index, isActive, onClick, className, labels }) => (
   <button
@@ -408,7 +447,15 @@ const DefaultIndicator: React.FC<IndicatorProps> = ({ slide, index, isActive, on
   />
 );
 
-const DefaultNavigation: React.FC<NavigationProps> = ({ slides, currentSlide, onSlideChange, className, labels }) => (
+const DefaultNavigation: React.FC<NavigationProps> = ({
+  slides,
+  currentSlide,
+  onSlideChange,
+  className,
+  labels,
+  classNames,
+  IndicatorComponent = DefaultIndicator,
+}) => (
   <nav
     className={cn(
       'novacon:flex novacon:justify-center novacon:space-x-2 novacon:mt-6 novacon:relative novacon:z-3 novacon:mx-4 novacon:mb-4',
@@ -423,13 +470,14 @@ const DefaultNavigation: React.FC<NavigationProps> = ({ slides, currentSlide, on
     />
     <div className="novacon:flex novacon:gap-2 novacon:px-4 novacon:bg-[var(--tuwa-bg-primary)] novacon:relative novacon:z-2">
       {slides.map((slide, index) => (
-        <DefaultIndicator
+        <IndicatorComponent
           key={slide.id}
           slide={slide}
           index={index}
           isActive={currentSlide === index}
           onClick={() => onSlideChange(index)}
           labels={labels}
+          className={classNames?.indicator?.({ index, isActive: currentSlide === index })}
         />
       ))}
     </div>
@@ -448,30 +496,43 @@ const DefaultSlide: React.FC<SlideProps> = ({
   labels,
   slideVariants = DEFAULT_SLIDE_VARIANTS,
   slideTransition = ANIMATION_CONFIG.slideTransition,
-}) => (
-  <motion.div
-    key={slideIndex}
-    custom={direction}
-    variants={slideVariants}
-    initial="enter"
-    animate="center"
-    exit="exit"
-    transition={slideTransition}
-    className={cn('novacon:flex novacon:flex-col novacon:justify-start novacon:w-full novacon:h-full', className)}
-    role="tabpanel"
-    aria-label={`Slide ${slideIndex + 1} of ${totalSlides}`}
-  >
-    <DefaultImageSection
-      slide={slide}
-      imageLoaded={imageLoadedStates[slideIndex] || false}
-      onImageLoad={() => onImageLoad(slideIndex)}
-      onImageError={() => onImageError(slideIndex)}
-      slideIndex={slideIndex}
-      labels={labels}
-    />
-    <DefaultContentSection slide={slide} slideIndex={slideIndex} labels={labels} />
-  </motion.div>
-);
+  imageVariants = DEFAULT_IMAGE_VARIANTS,
+  imageTransition = ANIMATION_CONFIG.imageTransition,
+  classNames,
+  components,
+}) => {
+  // Use custom components if provided, otherwise default
+  const ImageSectionComponent = components?.ImageSection ?? DefaultImageSection;
+  const ContentSectionComponent = components?.ContentSection ?? DefaultContentSection;
+
+  return (
+    <motion.div
+      key={slideIndex}
+      custom={direction}
+      variants={slideVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={slideTransition}
+      className={cn('novacon:flex novacon:flex-col novacon:justify-start novacon:w-full novacon:h-full', className)}
+      role="tabpanel"
+      aria-label={`Slide ${slideIndex + 1} of ${totalSlides}`}
+    >
+      <ImageSectionComponent
+        slide={slide}
+        imageLoaded={imageLoadedStates[slideIndex] || false}
+        onImageLoad={() => onImageLoad(slideIndex)}
+        onImageError={() => onImageError(slideIndex)}
+        slideIndex={slideIndex}
+        labels={labels}
+        imageVariants={imageVariants}
+        imageTransition={imageTransition}
+        classNames={classNames}
+      />
+      <ContentSectionComponent slide={slide} slideIndex={slideIndex} labels={labels} classNames={classNames} />
+    </motion.div>
+  );
+};
 
 const DefaultStatus: React.FC<StatusProps> = ({
   currentSlide,
@@ -506,12 +567,28 @@ const DefaultStatus: React.FC<StatusProps> = ({
  * ```tsx
  * <AboutWallets />
  * ```
+ *
+ * @example With customization via provider
+ * ```tsx
+ * <AboutWallets
+ *   customization={{
+ *     classNames: {
+ *       section: () => 'my-custom-section',
+ *       title: ({ slideIndex }) => slideIndex === 0 ? 'text-blue-500' : 'text-green-500',
+ *       description: () => 'text-gray-400',
+ *       imageSection: () => 'bg-gradient-to-r from-purple-500 to-pink-500',
+ *       indicator: ({ isActive }) => isActive ? 'bg-blue-500 w-8' : 'bg-gray-300',
+ *     },
+ *   }}
+ * />
+ * ```
  */
 export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ className, customization }, ref) => {
   const labels = useNovaConnectLabels();
 
   // Extract customization options
   const inputSlidesConfig = customization?.slidesConfig ?? DEFAULT_SLIDES_CONFIG;
+  const customClassNames = customization?.classNames;
 
   // State for dynamically loaded default images
   const [defaultImages, setDefaultImages] = useState<Record<number, string>>({});
@@ -552,11 +629,15 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   }, [inputSlidesConfig, defaultImages]);
 
   const slideVariants = customization?.variants?.slide ?? DEFAULT_SLIDE_VARIANTS;
+  const imageVariants = customization?.variants?.image ?? DEFAULT_IMAGE_VARIANTS;
   const {
     Section: CustomSection = DefaultSection,
     SlideContainer: CustomSlideContainer = DefaultSlideContainer,
     Slide: CustomSlide = DefaultSlide,
+    ImageSection: CustomImageSection,
+    ContentSection: CustomContentSection,
     Navigation: CustomNavigation = DefaultNavigation,
+    Indicator: CustomIndicator,
     Status: CustomStatus = DefaultStatus,
   } = customization?.components ?? {};
 
@@ -754,21 +835,26 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
 
   const currentSlideData = slidesConfig[currentSlide];
 
+  // Prepare components object for Slide
+  const slideComponents = useMemo(
+    () => ({
+      ImageSection: CustomImageSection,
+      ContentSection: CustomContentSection,
+    }),
+    [CustomImageSection, CustomContentSection],
+  );
+
   return (
     <CustomSection
       ref={ref}
-      className={customization?.classNames?.section?.() ?? className}
+      className={cn(customClassNames?.section?.(), className)}
       role="region"
       aria-label={ariaLabels?.carousel ?? labels.aboutWallets}
       aria-roledescription="carousel"
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
-      <CustomSlideContainer
-        className={customization?.classNames?.slideContainer?.()}
-        aria-live="polite"
-        aria-atomic={false}
-      >
+      <CustomSlideContainer className={customClassNames?.slideContainer?.()} aria-live="polite" aria-atomic={false}>
         <div
           className="novacon:h-full novacon:touch-pan-x"
           onTouchStart={(e) => {
@@ -824,11 +910,15 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
               onImageError={handleImageError}
               slideVariants={slideVariants}
               slideTransition={animationConfig.slideTransition}
-              className={customization?.classNames?.slide?.({
+              imageVariants={imageVariants}
+              imageTransition={animationConfig.imageTransition}
+              className={customClassNames?.slide?.({
                 slideIndex: currentSlide,
                 totalSlides: slidesConfig.length,
               })}
               labels={labels}
+              classNames={customClassNames}
+              components={slideComponents}
             />
           </AnimatePresence>
         </div>
@@ -838,8 +928,10 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
         slides={slidesConfig}
         currentSlide={currentSlide}
         onSlideChange={goToSlide}
-        className={customization?.classNames?.navigation?.()}
+        className={customClassNames?.navigation?.()}
         labels={labels}
+        classNames={customClassNames}
+        IndicatorComponent={CustomIndicator}
       />
 
       <CustomStatus
@@ -847,7 +939,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
         totalSlides={slidesConfig.length}
         currentSlideData={currentSlideData}
         isAutoPlaying={isAutoPlaying}
-        className={customization?.classNames?.status?.()}
+        className={customClassNames?.status?.()}
         labels={labels}
       />
 
