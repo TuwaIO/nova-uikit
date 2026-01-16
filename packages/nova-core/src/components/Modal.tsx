@@ -58,7 +58,7 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
         animate="animate"
         initial="initial"
         exit="exit"
-        className="novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
+        className="novacore:relative novacore:overflow-hidden"
       >
         <div
           className={cn(
@@ -117,7 +117,7 @@ const DialogContent = React.forwardRef<
               animate="animate"
               initial="initial"
               exit="exit"
-              className="NovaNoScrolling novacore:relative novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:overflow-hidden"
+              className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
             >
               <div
                 className={cn(
