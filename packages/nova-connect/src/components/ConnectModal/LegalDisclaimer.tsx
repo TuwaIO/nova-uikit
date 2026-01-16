@@ -153,31 +153,36 @@ export interface LegalDisclaimerProps {
 // --- Default Sub-Components ---
 
 const DefaultContainer = (props: ContainerProps) => {
-  const { role, 'aria-label': ariaLabel, ...restProps } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
+  const { role, 'aria-label': ariaLabel, disclaimerData, ...restProps } = props;
   return <div {...restProps} role={role} aria-label={ariaLabel} />;
 };
 DefaultContainer.displayName = 'DefaultContainer';
 
 const DefaultText = (props: TextProps) => {
-  const { ...restProps } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
+  const { disclaimerData, ...restProps } = props;
   return <p {...restProps} />;
 };
 DefaultText.displayName = 'DefaultText';
 
 const DefaultTermsLink = (props: TermsLinkProps) => {
-  const { target, rel, onClick, ...restProps } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
+  const { target, rel, onClick, disclaimerData, ...restProps } = props;
   return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
 };
 DefaultTermsLink.displayName = 'DefaultTermsLink';
 
 const DefaultPrivacyLink = (props: PrivacyLinkProps) => {
-  const { target, rel, onClick, ...restProps } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
+  const { target, rel, onClick, disclaimerData, ...restProps } = props;
   return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
 };
 DefaultPrivacyLink.displayName = 'DefaultPrivacyLink';
 
 const DefaultSeparator = (props: SeparatorProps) => {
-  const { ...restProps } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
+  const { disclaimerData, ...restProps } = props;
   return <span {...restProps} />;
 };
 DefaultSeparator.displayName = 'DefaultSeparator';
