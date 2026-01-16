@@ -19,15 +19,24 @@ import {
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { ScrollableChainList, ScrollableChainListProps } from '../Chains/ScrollableChainList';
+import {
+  ScrollableChainList,
+  ScrollableChainListCustomization,
+  ScrollableChainListProps,
+} from '../Chains/ScrollableChainList';
 import { ConnectButtonProps } from '../ConnectButton';
 import { ConnectedModalFooter, ConnectedModalFooterProps } from './ConnectedModalFooter';
+import { ConnectedModalFooterCustomization } from './ConnectedModalFooter';
 import {
   ConnectedModalMainContent,
   ConnectedModalMainContentCustomization,
   ConnectedModalMainContentProps,
 } from './ConnectedModalMainContent';
-import { ConnectedModalTxHistory, ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
+import {
+  ConnectedModalTxHistory,
+  ConnectedModalTxHistoryCustomization,
+  ConnectedModalTxHistoryProps,
+} from './ConnectedModalTxHistory';
 import { ConnectionsContent, ConnectionsContentCustomization } from './ConnectionsContent';
 
 // --- Default Motion Variants ---
@@ -215,11 +224,11 @@ export type ConnectedModalCustomization = {
     /** Customization for ConnectionsContent component */
     connections?: ConnectionsContentCustomization;
     /** Customization for ConnectedModalTxHistory component */
-    txHistory?: Record<string, unknown>; // Will be properly typed when that component is updated
+    txHistory?: ConnectedModalTxHistoryCustomization;
     /** Customization for ScrollableChainList component */
-    chainList?: Record<string, unknown>; // Will be properly typed when that component is updated
+    chainList?: ScrollableChainListCustomization;
     /** Customization for ConnectedModalFooter component */
-    footer?: Record<string, unknown>; // Will be properly typed when that component is updated
+    footer?: ConnectedModalFooterCustomization;
   };
   /** Configuration options */
   config?: {
@@ -343,10 +352,17 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             ensAvatar={ensAvatar}
             chainsList={chainsList}
             transactionPool={transactionPool}
+            customization={childCustomizations?.mainContent}
           />
         );
       case 'transactions':
-        return <ConnectedModalTxHistory transactionPool={transactionPool} pulsarAdapter={pulsarAdapter} />;
+        return (
+          <ConnectedModalTxHistory
+            transactionPool={transactionPool}
+            pulsarAdapter={pulsarAdapter}
+            customization={childCustomizations?.txHistory}
+          />
+        );
       case 'chains':
         if (!activeConnection) return null;
         return (
@@ -361,6 +377,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             handleValueChange={onChainChange}
             getChainData={getChainData}
             onClose={onBack}
+            customization={childCustomizations?.chainList}
           />
         );
       case 'connections':
@@ -673,7 +690,11 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         />
 
         {/* Footer with additional controls */}
-        <CustomFooter setIsOpen={setIsConnectedModalOpen} className={customization?.classNames?.footer?.()} />
+        <CustomFooter
+          setIsOpen={setIsConnectedModalOpen}
+          className={customization?.classNames?.footer?.()}
+          customization={customization?.childCustomizations?.footer}
+        />
       </>
     );
 

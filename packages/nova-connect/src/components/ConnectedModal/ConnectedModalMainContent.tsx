@@ -86,6 +86,7 @@ type InfoSectionProps = {
   ensNameAbbreviated: string | undefined;
   labels: Record<string, string>;
   className?: string;
+  nameAndBalanceCustomization?: ConnectedModalNameAndBalanceCustomization;
 };
 
 type TransactionsSectionProps = {
@@ -366,6 +367,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
   ensNameAbbreviated,
   labels,
   className,
+  nameAndBalanceCustomization,
 }) => {
   return (
     <motion.div
@@ -380,6 +382,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
         balance={balance}
         refetch={refetch}
         ensNameAbbreviated={ensNameAbbreviated}
+        customization={nameAndBalanceCustomization}
       />
     </motion.div>
   );
@@ -788,6 +791,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           ensNameAbbreviated={ensNameAbbreviated}
           labels={labels}
           className={customization?.classNames?.infoSection?.()}
+          nameAndBalanceCustomization={customization?.childCustomizations?.nameAndBalance}
         />
 
         {/* Transactions Section */}

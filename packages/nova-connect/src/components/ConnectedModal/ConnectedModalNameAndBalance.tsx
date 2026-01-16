@@ -354,6 +354,7 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
 
   useEffect(() => {
     if (prevLoading.current && !balanceLoading) {
+      // eslint-disable-next-line
       setShowSuccess(true);
       const timer = setTimeout(() => setShowSuccess(false), 1500);
       return () => clearTimeout(timer);
