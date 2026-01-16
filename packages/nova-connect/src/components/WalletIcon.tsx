@@ -185,7 +185,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
         return customization.classNames.container({ isLoading, showLoading, size });
       }
       return cn(
-        'novacon:relative novacon:inline-flex novacon:items-center novacon:justify-center novacon:flex-shrink-0',
+        'novacon:relative novacon:inline-flex novacon:items-center novacon:justify-center novacon:flex-shrink-0 novacon:w-full novacon:h-full',
         'novacon:overflow-hidden',
         {
           'novacon:animate-pulse novacon:bg-[var(--tuwa-bg-muted)]': showLoading && isLoading,

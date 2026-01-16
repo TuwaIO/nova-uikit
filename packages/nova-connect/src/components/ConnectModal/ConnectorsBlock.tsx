@@ -17,7 +17,7 @@ import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMem
 
 import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
-import { WalletIcon } from '../WalletIcon';
+import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
 import { ConnectorsSelectionsProps } from './ConnectorsSelections';
@@ -181,6 +181,8 @@ export type ConnectorsBlockCustomization = {
   };
   /** ConnectCard customization for each connector card */
   connectCard?: ConnectCardCustomization;
+  /** WalletIcon customization for wallet icons */
+  walletIcon?: WalletIconCustomization;
 };
 
 /**
@@ -658,7 +660,13 @@ export const ConnectorsBlock = memo(
                   blockData={blockData}
                 >
                   <ConnectCard
-                    icon={<WalletIcon icon={itemData.group.icon} name={itemData.name} />}
+                    icon={
+                      <WalletIcon
+                        icon={itemData.group.icon}
+                        name={itemData.name}
+                        customization={customization?.walletIcon}
+                      />
+                    }
                     adapters={!selectedAdapter ? itemData.group.adapters : undefined}
                     onClick={() => handleConnectorClickWrapper(itemData)}
                     title={itemData.group.name}
