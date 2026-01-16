@@ -471,8 +471,8 @@ interface ConnectorRowProps {
   icon?: string;
   /** Optional display name (e.g. ENS name) to show instead of address */
   displayName?: string;
-  /** Granular classNames for sub-elements */
-  classNames?: CustomActiveRowProps['classNames'];
+  /** Granular classNames for sub-elements - union of active and connected row classNames */
+  classNames?: CustomActiveRowProps['classNames'] & CustomConnectedRowProps['classNames'];
 }
 
 interface RecentlyConnectedRowProps {
@@ -787,15 +787,20 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
         <div
           className={cn(
             'novacon:absolute novacon:left-2 novacon:top-1/2 novacon:-translate-y-1/2 novacon:opacity-0 novacon:transition-opacity novacon:group-hover:opacity-100',
-            classNames?.content, // reuse content for switch indicator wrapper
+            classNames?.switchIndicator,
           )}
         >
           <ArrowsRightLeftIcon
-            className={cn('novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]', classNames?.copyIcon)}
+            className={cn('novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]', classNames?.switchIcon)}
           />
         </div>
 
-        <div className="novacon:flex novacon:items-center novacon:gap-3 novacon:ml-0 novacon:group-hover:ml-6 novacon:transition-all">
+        <div
+          className={cn(
+            'novacon:flex novacon:items-center novacon:gap-3 novacon:ml-0 novacon:group-hover:ml-6 novacon:transition-all',
+            classNames?.content,
+          )}
+        >
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
@@ -836,7 +841,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
         >
-          <ArrowLeftStartOnRectangleIcon className="novacon:h-5 novacon:w-5" />
+          <ArrowLeftStartOnRectangleIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>
       </div>
     );
@@ -1321,6 +1326,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 explorerButton: customization?.classNames?.activeRowExplorerButton?.(),
                 explorerIcon: customization?.classNames?.activeRowExplorerIcon?.(),
                 disconnectButton: customization?.classNames?.activeRowDisconnectButton?.(),
+                iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 40 }),
+                iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 20 }),
               }}
             />
           )}
@@ -1342,9 +1349,15 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                   container: customization?.classNames?.connectedRowContainer?.({
                     connectorType: connection.connectorType,
                   }),
+                  switchIndicator: customization?.classNames?.connectedRowSwitchIndicator?.(),
+                  switchIcon: customization?.classNames?.connectedRowSwitchIcon?.(),
+                  content: customization?.classNames?.connectedRowContent?.(),
                   walletName: customization?.classNames?.connectedRowWalletName?.(),
                   connectorName: customization?.classNames?.connectedRowConnectorName?.(),
                   disconnectButton: customization?.classNames?.connectedRowDisconnectButton?.(),
+                  disconnectIcon: customization?.classNames?.connectedRowDisconnectIcon?.(),
+                  iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 32 }),
+                  iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 16 }),
                 }}
               />
             ))}
@@ -1398,6 +1411,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                     isConnecting: connecting && connectingRecent === connectorType,
                   }),
                   removeIcon: customization?.classNames?.recentRowRemoveIcon?.(),
+                  iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 32 }),
+                  iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 16 }),
                 }}
               />
             );
