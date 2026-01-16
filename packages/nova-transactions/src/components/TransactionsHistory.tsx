@@ -9,15 +9,60 @@ import { ComponentType, useMemo } from 'react';
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
-type CustomPlaceholderProps = { title: string; message: string };
+type CustomPlaceholderProps = { title: string; message: string; className?: string };
 
+/**
+ * Customization options for TransactionsHistory component.
+ * Allows styling of all sub-elements including individual transaction items.
+ */
 export type TransactionsHistoryCustomization<T extends Transaction> = {
+  /** Custom title for the transactions history section */
   title?: string;
+  /** Custom class name generators for all elements */
   classNames?: {
+    /** Classes for the outer container */
+    container?: string;
+    /** Classes for the title element */
+    titleText?: string;
+    /** Classes for the list wrapper container */
     listWrapper?: string;
+    /** Classes for the placeholder container */
+    placeholderContainer?: string;
+    /** Classes for the placeholder title */
+    placeholderTitle?: string;
+    /** Classes for the placeholder message */
+    placeholderMessage?: string;
+    // --- TransactionHistoryItem classNames ---
+    /** Classes for individual transaction item container */
+    itemContainer?: string;
+    /** Classes for the icon wrapper */
+    itemIconWrapper?: string;
+    /** Classes for the icon itself */
+    itemIcon?: string;
+    /** Classes for the content wrapper (title, timestamp, description) */
+    itemContentWrapper?: string;
+    /** Classes for the title text */
+    itemTitle?: string;
+    /** Classes for the timestamp text */
+    itemTimestamp?: string;
+    /** Classes for the description text */
+    itemDescription?: string;
+    /** Classes for the status badge */
+    itemStatusBadge?: string;
+    /** Classes for the transaction key container */
+    itemTxKeyContainer?: string;
+    /** Classes for the hash link label */
+    itemHashLabel?: string;
+    /** Classes for the hash link */
+    itemHashLink?: string;
+    /** Classes for the hash copy button */
+    itemHashCopyButton?: string;
   };
+  /** Custom components */
   components?: {
+    /** Custom placeholder component */
     Placeholder?: ComponentType<CustomPlaceholderProps>;
+    /** Custom history item component */
     HistoryItem?: ComponentType<TransactionHistoryItemProps<T>>;
   };
 };
@@ -30,11 +75,22 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   customization?: TransactionsHistoryCustomization<T>;
 };
 
-function HistoryPlaceholder({ title, message, className }: CustomPlaceholderProps & { className?: string }) {
+function HistoryPlaceholder({
+  title,
+  message,
+  className,
+  classNames,
+}: CustomPlaceholderProps & { classNames?: { title?: string; message?: string } }) {
   return (
-    <div className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}>
-      <h4 className="novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]">{title}</h4>
-      <p className="novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]">{message}</p>
+    <div
+      className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}
+    >
+      <h4 className={cn('novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]', classNames?.title)}>
+        {title}
+      </h4>
+      <p className={cn('novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]', classNames?.message)}>
+        {message}
+      </p>
     </div>
   );
 }
@@ -62,11 +118,32 @@ export function TransactionsHistory<T extends Transaction>({
         <Placeholder
           title={transactionsModal.history.connectWalletTitle}
           message={transactionsModal.history.connectWalletMessage}
+          className={customization?.classNames?.placeholderContainer}
+          classNames={{
+            title: customization?.classNames?.placeholderTitle,
+            message: customization?.classNames?.placeholderMessage,
+          }}
         />
       );
     }
 
     if (sortedTransactions.length > 0) {
+      // Extract item classNames from customization
+      const itemClassNames = {
+        container: customization?.classNames?.itemContainer,
+        iconWrapper: customization?.classNames?.itemIconWrapper,
+        icon: customization?.classNames?.itemIcon,
+        contentWrapper: customization?.classNames?.itemContentWrapper,
+        title: customization?.classNames?.itemTitle,
+        timestamp: customization?.classNames?.itemTimestamp,
+        description: customization?.classNames?.itemDescription,
+        statusBadge: customization?.classNames?.itemStatusBadge,
+        txKeyContainer: customization?.classNames?.itemTxKeyContainer,
+        hashLabel: customization?.classNames?.itemHashLabel,
+        hashLink: customization?.classNames?.itemHashLink,
+        hashCopyButton: customization?.classNames?.itemHashCopyButton,
+      };
+
       return (
         <div
           className={cn(
@@ -75,7 +152,12 @@ export function TransactionsHistory<T extends Transaction>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItem key={tx.txKey} tx={tx} adapter={adapter} />
+            <HistoryItem
+              key={tx.txKey}
+              tx={tx}
+              adapter={adapter}
+              customization={{ classNames: itemClassNames }}
+            />
           ))}
         </div>
       );
@@ -85,14 +167,24 @@ export function TransactionsHistory<T extends Transaction>({
       <Placeholder
         title={transactionsModal.history.noTransactionsTitle}
         message={transactionsModal.history.noTransactionsMessage}
+        className={customization?.classNames?.placeholderContainer}
+        classNames={{
+          title: customization?.classNames?.placeholderTitle,
+          message: customization?.classNames?.placeholderMessage,
+        }}
       />
     );
   };
 
   return (
-    <div className={cn('novatx:flex novatx:flex-col novatx:gap-y-3', className)}>
+    <div className={cn('novatx:flex novatx:flex-col novatx:gap-y-3', customization?.classNames?.container, className)}>
       {customization?.title && (
-        <h3 className="novatx:text-lg novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
+        <h3
+          className={cn(
+            'novatx:text-lg novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
+            customization?.classNames?.titleText,
+          )}
+        >
           {customization?.title}
         </h3>
       )}

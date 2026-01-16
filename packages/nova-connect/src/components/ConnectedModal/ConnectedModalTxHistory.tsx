@@ -48,6 +48,10 @@ export type LocalTransactionsHistoryCustomization = {
   title?: string;
   /** Custom class name generators */
   classNames?: {
+    /** Classes for the outer container */
+    container?: string;
+    /** Classes for the title element */
+    titleText?: string;
     /** Classes for the list wrapper container */
     listWrapper?: string;
     /** Classes for the placeholder container */
@@ -56,6 +60,31 @@ export type LocalTransactionsHistoryCustomization = {
     placeholderTitle?: string;
     /** Classes for the placeholder message */
     placeholderMessage?: string;
+    // --- TransactionHistoryItem classNames ---
+    /** Classes for individual transaction item container */
+    itemContainer?: string;
+    /** Classes for the icon wrapper */
+    itemIconWrapper?: string;
+    /** Classes for the icon itself */
+    itemIcon?: string;
+    /** Classes for the content wrapper */
+    itemContentWrapper?: string;
+    /** Classes for the title text */
+    itemTitle?: string;
+    /** Classes for the timestamp text */
+    itemTimestamp?: string;
+    /** Classes for the description text */
+    itemDescription?: string;
+    /** Classes for the status badge */
+    itemStatusBadge?: string;
+    /** Classes for the transaction key container */
+    itemTxKeyContainer?: string;
+    /** Classes for the hash link label */
+    itemHashLabel?: string;
+    /** Classes for the hash link */
+    itemHashLink?: string;
+    /** Classes for the hash copy button */
+    itemHashCopyButton?: string;
   };
 };
 
