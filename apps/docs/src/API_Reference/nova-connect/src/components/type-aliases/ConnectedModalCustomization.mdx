@@ -6,7 +6,7 @@
 
 > **ConnectedModalCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:113](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L113)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:167](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L167)
 
 Customization options for ConnectedModal component
 
@@ -16,7 +16,7 @@ Customization options for ConnectedModal component
 
 > `optional` **animation**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L180)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:238](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L238)
 
 Custom animation configuration
 
@@ -92,7 +92,7 @@ Animation easing curve
 
 > `optional` **childCustomizations**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:221](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L221)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:279](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L279)
 
 Child component customizations
 
@@ -132,7 +132,7 @@ Customization for ConnectedModalTxHistory component
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L150)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L208)
 
 Custom class name generators
 
@@ -206,6 +206,24 @@ Function to generate dialog content classes
 
 `string`
 
+#### dialogTitle()?
+
+> `optional` **dialogTitle**: (`params`) => `string`
+
+Function to generate dialog title classes
+
+##### Parameters
+
+###### params
+
+###### contentType
+
+[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
+
+##### Returns
+
+`string`
+
 #### footer()?
 
 > `optional` **footer**: () => `string`
@@ -262,31 +280,13 @@ Function to generate motion container classes
 
 `string`
 
-#### title()?
-
-> `optional` **title**: (`params`) => `string`
-
-Function to generate title classes
-
-##### Parameters
-
-###### params
-
-###### contentType
-
-[`ConnectedContentType`](../../hooks/type-aliases/ConnectedContentType.md)
-
-##### Returns
-
-`string`
-
 ***
 
 ### components?
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L119)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L173)
 
 Custom components
 
@@ -294,7 +294,7 @@ Custom components
 
 > `optional` **BackButton**: `ComponentType`\<`BackButtonProps`\>
 
-Custom back button component
+Custom back button component (chevron left icon button)
 
 #### ChainsContentRenderer?
 
@@ -306,31 +306,27 @@ Custom chains content renderer
 
 > `optional` **CloseButton**: `ComponentType`\<`CloseButtonProps`\>
 
-Custom close button component
+Custom close button component (X icon button)
 
 #### Dialog?
 
 > `optional` **Dialog**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog`\>\>
 
-Custom dialog component
+Custom dialog component (root modal wrapper)
 
 #### DialogContent?
 
 > `optional` **DialogContent**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `DialogContent`\>\>
 
-Custom dialog content component
-
-#### DialogHeader?
-
-> `optional` **DialogHeader**: `ComponentType`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
-
-Custom dialog header component
+Custom dialog content component (modal content wrapper)
 
 #### DialogTitle?
 
-> `optional` **DialogTitle**: `ComponentType`\<`ComponentPropsWithoutRef`\<`"h2"`\>\>
+> `optional` **DialogTitle**: `ComponentType`\<`DialogTitleProps`\>
 
 Custom dialog title component
+Includes back button (when not on main view) and title text
+Use this to customize the entire title area
 
 #### Footer?
 
@@ -343,12 +339,14 @@ Custom footer component
 > `optional` **Header**: `ComponentType`\<`HeaderProps`\>
 
 Custom header component
+Wraps DialogTitle and CloseButton together
+Use this to customize the entire header layout
 
 #### MainContent?
 
 > `optional` **MainContent**: `ComponentType`\<`MainContentProps`\>
 
-Custom main content component
+Custom main content component (renders different views based on contentType)
 
 #### MainContentRenderer?
 
@@ -360,13 +358,7 @@ Custom main content renderer for main view
 
 > `optional` **MotionContainer**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
 
-Custom motion container
-
-#### Title?
-
-> `optional` **Title**: `ComponentType`\<`TitleProps`\>
-
-Custom title component
+Custom motion container for animations
 
 #### TransactionsContentRenderer?
 
@@ -380,7 +372,7 @@ Custom transactions content renderer
 
 > `optional` **config**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:234](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L234)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:292](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L292)
 
 Configuration options
 
@@ -446,7 +438,7 @@ Whether to reduce motion for accessibility
 
 > `optional` **dialogContentProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `DialogContent`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L117)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L171)
 
 Override dialog content props
 
@@ -456,7 +448,7 @@ Override dialog content props
 
 > `optional` **dialogProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Dialog`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L115)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L169)
 
 Override root dialog props
 
@@ -466,7 +458,7 @@ Override root dialog props
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L208)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:266](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L266)
 
 Custom event handlers
 
@@ -544,7 +536,7 @@ Custom handler for modal open state change
 
 > `optional` **variants**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/c69ad9ed784ed588d7138f53d4e3088d4951075f/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L173)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:231](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L231)
 
 Custom animation variants
 
