@@ -33,18 +33,61 @@ const DEFAULT_ERROR_ANIMATION_VARIANTS: Variants = {
   exit: { opacity: 0, scale: 0.95, transition: { duration: 0.15, ease: 'easeIn' } },
 };
 
+// ─────────────────────────────────────────────────────────────────────
+// Local Types for TransactionsHistory (copied to preserve dynamic loading)
+// These types mirror @tuwaio/nova-transactions types without importing
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Local customization options for TransactionsHistory component.
+ * This is a copy of the type from @tuwaio/nova-transactions to avoid
+ * breaking dynamic import logic.
+ */
+export type LocalTransactionsHistoryCustomization = {
+  /** Custom title for the transactions history section */
+  title?: string;
+  /** Custom class name generators */
+  classNames?: {
+    /** Classes for the list wrapper container */
+    listWrapper?: string;
+    /** Classes for the placeholder container */
+    placeholderContainer?: string;
+    /** Classes for the placeholder title */
+    placeholderTitle?: string;
+    /** Classes for the placeholder message */
+    placeholderMessage?: string;
+  };
+};
+
 // --- Types for Customization ---
 type CustomLoadingContainerProps = {
   labels: Record<string, string>;
   className?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    spinner?: string;
+    text?: string;
+  };
 };
 
 type CustomErrorContainerProps = {
   className?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    iconContainer?: string;
+    icon?: string;
+    content?: string;
+    title?: string;
+    description?: string;
+  };
 };
 
 type CustomNoWalletContainerProps = {
   className?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    text?: string;
+  };
 };
 
 type CustomTransactionsHistoryWrapperProps = {
@@ -193,6 +236,11 @@ export type ConnectedModalTxHistoryCustomization = {
       transactionsHistory?: string;
     };
   };
+  /**
+   * Customization for the TransactionsHistory component (from @tuwaio/nova-transactions).
+   * Passed through to the dynamically loaded component.
+   */
+  transactionsHistory?: LocalTransactionsHistoryCustomization;
 };
 
 /**
@@ -225,7 +273,7 @@ const TransactionsHistory = lazy(() => {
 });
 
 // --- Default Sub-Components ---
-const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels, className }) => {
+const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels, className, classNames }) => {
   return (
     <div
       className={cn(
@@ -235,15 +283,25 @@ const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels
       role="status"
       aria-live="polite"
     >
-      <div className="novacon:animate-spin novacon:rounded-full novacon:h-8 novacon:w-8 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent" />
-      <p className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]">
+      <div
+        className={cn(
+          'novacon:animate-spin novacon:rounded-full novacon:h-8 novacon:w-8 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent',
+          classNames?.spinner,
+        )}
+      />
+      <p
+        className={cn(
+          'novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
+          classNames?.text,
+        )}
+      >
         {labels.loading} {labels.transactionsInApp.toLowerCase()}...
       </p>
     </div>
   );
 };
 
-const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className }) => {
+const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className, classNames }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -256,15 +314,30 @@ const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className 
       role="alert"
       aria-live="assertive"
     >
-      <div className="novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-warning-bg)] novacon:text-[var(--tuwa-warning-text)]">
-        <ExclamationTriangleIcon className="novacon:w-full novacon:h-full" />
+      <div
+        className={cn(
+          'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-warning-bg)] novacon:text-[var(--tuwa-warning-text)]',
+          classNames?.iconContainer,
+        )}
+      >
+        <ExclamationTriangleIcon className={cn('novacon:w-full novacon:h-full', classNames?.icon)} />
       </div>
 
-      <div className="novacon:space-y-2">
-        <h2 className="novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)]">
+      <div className={cn('novacon:space-y-2', classNames?.content)}>
+        <h2
+          className={cn(
+            'novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)]',
+            classNames?.title,
+          )}
+        >
           Transaction History Not Available
         </h2>
-        <p className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:max-w-md">
+        <p
+          className={cn(
+            'novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:max-w-md',
+            classNames?.description,
+          )}
+        >
           Transaction history is not supported by this application at the moment. The required package is not installed
           or configured.
         </p>
@@ -273,13 +346,15 @@ const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className 
   );
 };
 
-const DefaultNoWalletContainer: React.FC<CustomNoWalletContainerProps> = ({ className }) => {
+const DefaultNoWalletContainer: React.FC<CustomNoWalletContainerProps> = ({ className, classNames }) => {
   return (
     <div
       className={cn('novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-6', className)}
       role="status"
     >
-      <p className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]">No wallet connected</p>
+      <p className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', classNames?.text)}>
+        No wallet connected
+      </p>
     </div>
   );
 };
@@ -549,7 +624,16 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
      * Loading component with customization
      */
     const loadingComponent = useMemo(
-      () => <LoadingContainer labels={labels} className={customization?.classNames?.loadingContainer?.()} />,
+      () => (
+        <LoadingContainer
+          labels={labels}
+          className={customization?.classNames?.loadingContainer?.()}
+          classNames={{
+            spinner: customization?.classNames?.loadingSpinner?.(),
+            text: customization?.classNames?.loadingText?.(),
+          }}
+        />
+      ),
       [LoadingContainer, labels, customization?.classNames],
     );
 
@@ -557,7 +641,18 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
      * Error fallback component with customization
      */
     const errorComponent = useMemo(
-      () => <ErrorContainer className={customization?.classNames?.errorContainer?.()} />,
+      () => (
+        <ErrorContainer
+          className={customization?.classNames?.errorContainer?.()}
+          classNames={{
+            iconContainer: customization?.classNames?.errorIconContainer?.(),
+            icon: customization?.classNames?.errorIcon?.(),
+            content: customization?.classNames?.errorContent?.(),
+            title: customization?.classNames?.errorTitle?.(),
+            description: customization?.classNames?.errorDescription?.(),
+          }}
+        />
+      ),
       [ErrorContainer, customization?.classNames],
     );
 
@@ -565,7 +660,14 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
      * No wallet component with customization
      */
     const noWalletComponent = useMemo(
-      () => <NoWalletContainer className={customization?.classNames?.noWalletContainer?.()} />,
+      () => (
+        <NoWalletContainer
+          className={customization?.classNames?.noWalletContainer?.()}
+          classNames={{
+            text: customization?.classNames?.noWalletText?.(),
+          }}
+        />
+      ),
       [NoWalletContainer, customization?.classNames],
     );
 
@@ -591,6 +693,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   adapter={pulsarAdapter}
                   connectedWalletAddress={activeConnection!.address}
                   className="novacon:w-full"
+                  customization={customization?.transactionsHistory}
                 />
               </TransactionsHistoryWrapper>
             </ErrorBoundary>

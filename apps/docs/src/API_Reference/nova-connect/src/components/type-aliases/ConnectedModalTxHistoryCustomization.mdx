@@ -6,7 +6,7 @@
 
 > **ConnectedModalTxHistoryCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L62)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:105](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L105)
 
 Customization options for ConnectedModalTxHistory component
 
@@ -16,7 +16,7 @@ Customization options for ConnectedModalTxHistory component
 
 > `optional` **animation**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:143](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L143)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:186](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L186)
 
 Custom animation configuration
 
@@ -98,7 +98,7 @@ Animation easing curve
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L93)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L136)
 
 Custom class name generators
 
@@ -310,7 +310,7 @@ Function to generate transactions history wrapper classes
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L82)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:125](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L125)
 
 Custom components
 
@@ -344,7 +344,7 @@ Custom transactions history wrapper component
 
 > `optional` **config**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L180)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:223](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L223)
 
 Configuration options
 
@@ -398,7 +398,7 @@ Whether to reduce motion for accessibility
 
 > `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L64)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L107)
 
 Override root container props
 
@@ -408,7 +408,7 @@ Override root container props
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L173)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:216](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L216)
 
 Custom event handlers
 
@@ -454,11 +454,22 @@ Custom handler for package loading failure
 
 ***
 
+### transactionsHistory?
+
+> `optional` **transactionsHistory**: [`LocalTransactionsHistoryCustomization`](LocalTransactionsHistoryCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:243](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L243)
+
+Customization for the TransactionsHistory component (from @tuwaio/nova-transactions).
+Passed through to the dynamically loaded component.
+
+***
+
 ### variants?
 
 > `optional` **variants**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:134](https://github.com/TuwaIO/nova-uikit/blob/e7e60eeb40cddd57861979f48cab6eee9f31d014/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L134)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:177](https://github.com/TuwaIO/nova-uikit/blob/c4af3263fcbf9bf84b5b2ada0b7233e94ebd44f7/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L177)
 
 Custom animation variants
 
