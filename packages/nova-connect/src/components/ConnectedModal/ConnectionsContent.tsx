@@ -1257,7 +1257,13 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   return (
     <Container
-      className={cn('novacon:flex novacon:flex-col novacon:gap-6 novacon:p-4', className)}
+      className={
+        customization?.classNames?.container?.({
+          isEmpty: false,
+          connectionsCount: connectionsList.length,
+          recentCount: recentListState.length,
+        }) ?? cn('novacon:flex novacon:flex-col novacon:gap-6 novacon:p-4', className)
+      }
       isEmpty={false}
       connectionsCount={connectionsList.length}
       recentCount={recentListState.length}
@@ -1300,6 +1306,22 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 }
               })()}
               icon={activeConnection.icon}
+              classNames={{
+                container: customization?.classNames?.activeRowContainer?.({
+                  connectorType: activeConnection.connectorType,
+                  hasExplorer: true,
+                }),
+                badge: customization?.classNames?.activeRowBadge?.(),
+                content: customization?.classNames?.activeRowContent?.(),
+                walletName: customization?.classNames?.activeRowWalletName?.(),
+                connectorName: customization?.classNames?.activeRowConnectorName?.(),
+                actionsContainer: customization?.classNames?.activeRowActionsContainer?.(),
+                copyButton: customization?.classNames?.activeRowCopyButton?.({ isCopied: false }),
+                copyIcon: customization?.classNames?.activeRowCopyIcon?.(),
+                explorerButton: customization?.classNames?.activeRowExplorerButton?.(),
+                explorerIcon: customization?.classNames?.activeRowExplorerIcon?.(),
+                disconnectButton: customization?.classNames?.activeRowDisconnectButton?.(),
+              }}
             />
           )}
 
@@ -1311,10 +1333,19 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 key={connection.connectorType}
                 connectorType={connection.connectorType}
                 address={textCenterEllipsis(connection.address, 6, 4)}
+                chainId={connection.chainId}
                 isActive={false}
                 onSwitch={() => handleSwitch(connection.connectorType)}
                 onDisconnect={(e) => handleDisconnect(connection.connectorType, e)}
                 icon={connection.icon}
+                classNames={{
+                  container: customization?.classNames?.connectedRowContainer?.({
+                    connectorType: connection.connectorType,
+                  }),
+                  walletName: customization?.classNames?.connectedRowWalletName?.(),
+                  connectorName: customization?.classNames?.connectedRowConnectorName?.(),
+                  disconnectButton: customization?.classNames?.connectedRowDisconnectButton?.(),
+                }}
               />
             ))}
         </ActiveConnectorsSection>
@@ -1350,6 +1381,24 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 onRemove={(e) => handleRemoveRecent(connectorType, e)}
                 icon={data.icon}
                 isConnecting={connecting && connectingRecent === connectorType}
+                classNames={{
+                  container: customization?.classNames?.recentRowContainer?.({
+                    connectorType,
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  content: customization?.classNames?.recentRowContent?.(),
+                  walletName: customization?.classNames?.recentRowWalletName?.(),
+                  connectorName: customization?.classNames?.recentRowConnectorName?.(),
+                  actionsContainer: customization?.classNames?.recentRowActionsContainer?.(),
+                  connectButton: customization?.classNames?.recentRowConnectButton?.({
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  connectSpinner: customization?.classNames?.recentRowConnectSpinner?.(),
+                  removeButton: customization?.classNames?.recentRowRemoveButton?.({
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  removeIcon: customization?.classNames?.recentRowRemoveIcon?.(),
+                }}
               />
             );
           })}
