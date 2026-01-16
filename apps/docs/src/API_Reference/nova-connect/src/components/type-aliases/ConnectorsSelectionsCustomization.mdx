@@ -6,7 +6,7 @@
 
 > **ConnectorsSelectionsCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L117)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L117)
 
 Customization options for ConnectorsSelections component
 
@@ -16,7 +16,7 @@ Customization options for ConnectorsSelections component
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L136)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L136)
 
 Custom class name generators
 
@@ -160,7 +160,7 @@ Function to generate impersonate title classes
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L119)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L119)
 
 Custom components
 
@@ -186,7 +186,7 @@ Custom content wrapper
 
 > `optional` **DisclaimerSection**: `ComponentType`\<`DisclaimerSectionProps`\>
 
-Custom disclaimer section
+Custom disclaimer section wrapper
 
 #### EmptyState?
 
@@ -212,7 +212,7 @@ Custom impersonate title
 
 > `optional` **config**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:170](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L170)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:172](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L172)
 
 Configuration options
 
@@ -324,7 +324,7 @@ Touch device classes for content wrapper
 
 > `optional` **connectorsBlock**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L199)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L201)
 
 ConnectorsBlock customization for each connector block
 
@@ -342,13 +342,43 @@ Customization for popular connectors block
 
 ***
 
+### disclaimer?
+
+> `optional` **disclaimer**: [`DisclaimerCustomization`](DisclaimerCustomization.md)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:210](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L210)
+
+Disclaimer customization
+
+***
+
 ### handlers?
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L159)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L159)
 
 Custom event handlers
+
+#### onDisclaimerLearnMore()?
+
+> `optional` **onDisclaimerLearnMore**: (`selectionsData`, `originalHandler`) => `void`
+
+Custom disclaimer learn more action handler
+
+##### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](../interfaces/ConnectorsSelectionsData.md)
+
+###### originalHandler
+
+() => `void`
+
+##### Returns
+
+`void`
 
 #### onEmptyStateAction()?
 
@@ -396,6 +426,6 @@ Custom impersonate click handler
 
 > `optional` **impersonateCard**: [`ConnectCardCustomization`](ConnectCardCustomization.md)
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L206)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L208)
 
 ConnectCard customization for impersonate card

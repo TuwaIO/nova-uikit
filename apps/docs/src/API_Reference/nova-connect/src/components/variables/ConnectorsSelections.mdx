@@ -6,7 +6,7 @@
 
 > `const` **ConnectorsSelections**: `NamedExoticComponent`\<[`ConnectorsSelectionsProps`](../interfaces/ConnectorsSelectionsProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:431](https://github.com/TuwaIO/nova-uikit/blob/95fabd9af9f6355c3753fb11a3c16ef8f38574e0/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L431)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:437](https://github.com/TuwaIO/nova-uikit/blob/fa4eae2e64decd5a28150a0f1976e8dd4af9d026/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L437)
 
 ConnectorsSelections component - Main wallet selection interface with categorized connectors
 
@@ -85,19 +85,21 @@ Accessibility features:
     classNames: {
       connectorsArea: ({ selectionsData }) =>
         selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
-      impersonateSection: ({ impersonateData }) =>
-        impersonateData.isTouch ? 'touch-impersonate' : 'mouse-impersonate'
     },
     handlers: {
-      onImpersonateClick: (impersonateData, selectionsData, originalHandler) => {
-        analytics.track('impersonate_clicked');
+      onDisclaimerLearnMore: (selectionsData, originalHandler) => {
+        analytics.track('disclaimer_learn_more_clicked');
         originalHandler();
       }
     },
-    connectorsBlock: {
-      installed: {
-        classNames: {
-          title: () => 'custom-installed-title'
+    disclaimer: {
+      classNames: {
+        container: ({ compact }) => 'custom-disclaimer-container',
+        title: ({ compact }) => 'custom-disclaimer-title'
+      },
+      config: {
+        buttonLabels: {
+          learnMore: 'Read More'
         }
       }
     }
