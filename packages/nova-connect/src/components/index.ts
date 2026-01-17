@@ -1,3 +1,4 @@
+export * from './BalanceDisplay';
 export * from './Chains/ChainListRenderer';
 export * from './Chains/ChainSelector';
 export * from './Chains/ScrollableChainList';

@@ -77,6 +77,10 @@ type AvatarSectionProps = {
   onSwitchWallet: () => void;
   onSwitchNetwork: () => void;
   className?: string;
+  /** Customization for switch wallet IconButton */
+  switchWalletButtonProps?: Partial<IconButtonProps>;
+  /** Customization for switch network IconButton */
+  switchNetworkButtonProps?: Partial<IconButtonProps>;
 };
 
 type InfoSectionProps = {
@@ -328,6 +332,8 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
   onSwitchWallet,
   onSwitchNetwork,
   className,
+  switchWalletButtonProps,
+  switchNetworkButtonProps,
 }) => {
   return (
     <motion.div
@@ -338,23 +344,25 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
     >
       {/* Wallet Switch Button */}
       <IconButton
-        className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]"
+        className={cn('novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]', switchWalletButtonProps?.className)}
         walletIcon={activeConnection.icon}
         walletName={walletName}
         items={connectorsCount}
         onClick={onSwitchWallet}
         aria-label={`${labels.connectWallet} - ${connectorsCount} ${labels.connectWallet.toLowerCase()} available`}
         data-testid="switch-wallet-button"
+        customization={switchWalletButtonProps?.customization}
       />
 
       {/* Network Switch Button */}
       <IconButton
-        className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]"
+        className={cn('novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]', switchNetworkButtonProps?.className)}
         walletChainId={activeConnection.chainId}
         items={chainsList.length}
         onClick={onSwitchNetwork}
         aria-label={`${labels.switchNetwork} - ${chainsList.length} ${labels.listOfNetworks.toLowerCase()} available`}
         data-testid="switch-network-button"
+        customization={switchNetworkButtonProps?.customization}
       />
 
       {/* Main Wallet Avatar */}
@@ -789,6 +797,8 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           onSwitchWallet={handleSwitchWallet}
           onSwitchNetwork={handleSwitchNetwork}
           className={customization?.classNames?.avatarSection?.()}
+          switchWalletButtonProps={customization?.childCustomizations?.switchWalletButton}
+          switchNetworkButtonProps={customization?.childCustomizations?.switchNetworkButton}
         />
 
         {/* Wallet Name and Balance */}
