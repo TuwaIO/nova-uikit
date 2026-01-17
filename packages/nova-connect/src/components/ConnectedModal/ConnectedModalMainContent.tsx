@@ -100,6 +100,8 @@ type TransactionsSectionProps = {
   onViewTransactions: () => void;
   showPendingIndicators?: boolean;
   className?: string;
+  /** Custom className for the transactions button */
+  buttonClassName?: string;
 };
 
 type NoTransactionsIndicatorProps = {
@@ -411,6 +413,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
   onViewTransactions,
   showPendingIndicators = true,
   className,
+  buttonClassName,
 }) => {
   if (walletTransactions.length === 0) return null;
 
@@ -426,7 +429,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
     >
       <button
         type="button"
-        className={standardButtonClasses}
+        className={buttonClassName || standardButtonClasses}
         onClick={onViewTransactions}
         aria-describedby="transaction-count"
         data-testid="view-transactions-button"
@@ -830,6 +833,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
             transactionsCount: walletTransactions.length,
             hasPendingTransactions,
           })}
+          buttonClassName={customization?.classNames?.transactionsButton?.()}
         />
 
         {/* Custom Content Slot (like Telegram bot button) */}
