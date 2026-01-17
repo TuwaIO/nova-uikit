@@ -7,7 +7,7 @@ import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -178,6 +178,10 @@ export type ConnectedModalMainContentCustomization = {
     pendingSpinner?: () => string;
     /** Function to generate no transactions classes */
     noTransactions?: () => string;
+    /** Function to generate extra balances container classes */
+    extraBalancesContainer?: () => string;
+    /** Function to generate custom content container classes */
+    customContentContainer?: () => string;
   };
   /** Custom animation variants */
   variants?: {
@@ -268,6 +272,10 @@ export type ConnectedModalMainContentCustomization = {
       noTransactions?: string;
     };
   };
+  /** Render slot for extra balances (tokens like USDC, ETH) - rendered after native balance */
+  renderExtraBalances?: () => ReactNode;
+  /** Render slot for custom content (like Telegram bot button) - rendered after transactions button */
+  renderCustomContent?: () => ReactNode;
 };
 
 /**
@@ -794,6 +802,13 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           nameAndBalanceCustomization={customization?.childCustomizations?.nameAndBalance}
         />
 
+        {/* Extra Balances Slot (tokens like USDC, ETH) */}
+        {customization?.renderExtraBalances && (
+          <div className={customization?.classNames?.extraBalancesContainer?.()}>
+            {customization.renderExtraBalances()}
+          </div>
+        )}
+
         {/* Transactions Section */}
         <TransactionsSection
           walletTransactions={walletTransactions}
@@ -806,6 +821,13 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
             hasPendingTransactions,
           })}
         />
+
+        {/* Custom Content Slot (like Telegram bot button) */}
+        {customization?.renderCustomContent && (
+          <div className={customization?.classNames?.customContentContainer?.()}>
+            {customization.renderCustomContent()}
+          </div>
+        )}
 
         {/* No Transactions State */}
         {walletTransactions.length === 0 && (
