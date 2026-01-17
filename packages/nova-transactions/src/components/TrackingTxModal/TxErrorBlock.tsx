@@ -7,11 +7,30 @@ import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 
 import { useLabels } from '../../providers';
 
+export type TxErrorBlockClassNames = {
+  /** Classes for the container */
+  container?: string;
+  /** Classes for the header row */
+  header?: string;
+  /** Classes for the title container (icon + text) */
+  title?: string;
+  /** Classes for the error icon */
+  icon?: string;
+  /** Classes for the copy button */
+  copyButton?: string;
+  /** Classes for the message container */
+  messageContainer?: string;
+  /** Classes for the message text */
+  messageText?: string;
+};
+
 export type TxErrorBlockProps = {
   /** The error message string to display. If undefined or empty, the component renders nothing. */
   error?: string;
   /** Optional additional CSS classes for the container. */
   className?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: TxErrorBlockClassNames;
 };
 
 /**
@@ -19,7 +38,7 @@ export type TxErrorBlockProps = {
  * It includes a title, an icon, the error message in a scrollable area,
  * and a button to copy the message to the clipboard.
  */
-export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
+export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
@@ -32,13 +51,19 @@ export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
     <div
       className={cn(
         'novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
+        classNames?.container,
         className,
       )}
     >
       {/* --- Header with Title and Copy Button --- */}
-      <div className="novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between">
-        <div className="novatx:flex novatx:items-center novatx:gap-2 novatx:font-bold novatx:text-[var(--tuwa-error-icon)]">
-          <ExclamationTriangleIcon className="novatx:h-5 novatx:w-5" />
+      <div className={cn('novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
+        <div
+          className={cn(
+            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-bold novatx:text-[var(--tuwa-error-icon)]',
+            classNames?.title,
+          )}
+        >
+          <ExclamationTriangleIcon className={cn('novatx:h-5 novatx:w-5', classNames?.icon)} />
           <span>{txError.title}</span>
         </div>
         <button
@@ -46,7 +71,10 @@ export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
           onClick={() => copy(error)}
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : `${actions.copy} error message`}
-          className="novatx:cursor-pointer novatx:text-[var(--tuwa-error-icon)]/50 novatx:transition-colors novatx:hover:text-[var(--tuwa-error-icon)]"
+          className={cn(
+            'novatx:cursor-pointer novatx:text-[var(--tuwa-error-icon)]/50 novatx:transition-colors novatx:hover:text-[var(--tuwa-error-icon)]',
+            classNames?.copyButton,
+          )}
         >
           {isCopied ? (
             <CheckIcon className="novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-success-icon)]" />
@@ -57,8 +85,20 @@ export function TxErrorBlock({ error, className }: TxErrorBlockProps) {
       </div>
 
       {/* --- Scrollable Error Message --- */}
-      <div className="novatx:max-h-24 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2">
-        <p className="novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-error-text)] novatx:break-all">{error}</p>
+      <div
+        className={cn(
+          'novatx:max-h-24 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2',
+          classNames?.messageContainer,
+        )}
+      >
+        <p
+          className={cn(
+            'novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-error-text)] novatx:break-all',
+            classNames?.messageText,
+          )}
+        >
+          {error}
+        </p>
       </div>
     </div>
   );

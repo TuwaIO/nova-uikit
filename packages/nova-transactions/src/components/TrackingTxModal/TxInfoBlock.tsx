@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
-import { HashLink } from '../HashLink';
+import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
@@ -35,6 +35,8 @@ export type TxInfoBlockCustomization<T extends Transaction> = {
     rowValue?: string;
     /** Classes for the transaction key section separator */
     separator?: string;
+    /** ClassNames for the hash link (Tx Hash row) */
+    hashLink?: HashLinkProps['classNames'];
   };
 };
 
@@ -50,7 +52,9 @@ function DefaultInfoRow({ label, value, classNames }: CustomInfoRowProps) {
   return (
     <div className={cn('novatx:flex novatx:items-center novatx:justify-between novatx:text-sm', classNames?.row)}>
       <span className={cn('novatx:text-[var(--tuwa-text-secondary)]', classNames?.label)}>{label}</span>
-      <span className={cn('novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}>{value}</span>
+      <span className={cn('novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}>
+        {value}
+      </span>
     </div>
   );
 }
@@ -144,10 +148,10 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             adapter={adapter}
             variant="history"
             renderHashLink={customization?.components?.transactionKey}
+            hashLinkClassNames={classNames?.hashLink}
           />
         </div>
       )}
     </div>
   );
 }
-

@@ -6,6 +6,15 @@ import { ArrowPathIcon, CheckCircleIcon, ClockIcon, ExclamationCircleIcon } from
 import { cn } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
 
+type StatusKey = 'succeed' | 'failed' | 'replaced' | 'processing' | 'initializing';
+
+export type TxStatusVisualClassNames = {
+  /** Base icon className applied to all statuses */
+  icon?: string;
+  /** Status-specific icon overrides */
+  statusOverrides?: Partial<Record<StatusKey, string>>;
+};
+
 export type TxStatusVisualProps = {
   /** True if the transaction is currently being processed (e.g., in the mempool). */
   isProcessing?: boolean;
@@ -17,12 +26,11 @@ export type TxStatusVisualProps = {
   isReplaced?: boolean;
   /** Additional class names for the container */
   className?: string;
+  /** ClassNames for icon styling */
+  iconClassNames?: TxStatusVisualClassNames;
 };
 
-const STATUS_VISUAL_CONFIG: Record<
-  'succeed' | 'failed' | 'replaced' | 'processing' | 'initializing',
-  { Icon: ComponentType<{ className?: string }>; className: string }
-> = {
+const STATUS_VISUAL_CONFIG: Record<StatusKey, { Icon: ComponentType<{ className?: string }>; className: string }> = {
   succeed: {
     Icon: CheckCircleIcon,
     className: 'novatx:text-[var(--tuwa-success-icon)]',
@@ -55,8 +63,9 @@ export function TxStatusVisual({
   isFailed,
   isReplaced,
   className: containerClassName,
+  iconClassNames,
 }: TxStatusVisualProps) {
-  const statusKey =
+  const statusKey: StatusKey =
     (isSucceed && 'succeed') ||
     (isFailed && 'failed') ||
     (isReplaced && 'replaced') ||
@@ -64,11 +73,11 @@ export function TxStatusVisual({
     'initializing';
 
   const { Icon, className } = STATUS_VISUAL_CONFIG[statusKey];
+  const statusOverride = iconClassNames?.statusOverrides?.[statusKey];
 
   return (
     <div className={cn('novatx:flex novatx:justify-center novatx:py-4', containerClassName)}>
-      <Icon className={cn('novatx:h-16 novatx:w-16', className)} />
+      <Icon className={cn('novatx:h-16 novatx:w-16', className, iconClassNames?.icon, statusOverride)} />
     </div>
   );
 }
-

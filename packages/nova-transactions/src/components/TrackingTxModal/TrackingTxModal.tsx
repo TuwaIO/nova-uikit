@@ -10,6 +10,7 @@ import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'rea
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
 import {
   TxErrorBlock,
+  TxErrorBlockClassNames,
   TxErrorBlockProps,
   TxInfoBlock,
   TxInfoBlockCustomization,
@@ -17,6 +18,7 @@ import {
   TxProgressIndicator,
   TxProgressIndicatorProps,
   TxStatusVisual,
+  TxStatusVisualClassNames,
   TxStatusVisualProps,
 } from '../';
 import { StatusAwareText } from '../StatusAwareText';
@@ -89,6 +91,15 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   statusVisualCustomization?: {
     /** Container className */
     className?: string;
+    /** Icon classNames with status-specific overrides */
+    iconClassNames?: TxStatusVisualClassNames;
+  };
+  /** Customization for TxErrorBlock */
+  errorBlockCustomization?: {
+    /** Container className */
+    className?: string;
+    /** Granular classNames */
+    classNames?: TxErrorBlockClassNames;
   };
 };
 
@@ -195,7 +206,9 @@ export function TrackingTxModal<T extends Transaction>({
         className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
         {...customization?.modalProps}
       >
-        <div className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}>
+        <div
+          className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}
+        >
           {CustomHeader ? (
             <CustomHeader
               onClose={() => onClose(activeTx?.txKey)}
@@ -224,6 +237,7 @@ export function TrackingTxModal<T extends Transaction>({
                 isFailed={isFailed}
                 isReplaced={isReplaced}
                 className={customization?.statusVisualCustomization?.className}
+                iconClassNames={customization?.statusVisualCustomization?.iconClassNames}
               />
             )}
             {CustomProgressIndicator ? (
@@ -246,16 +260,16 @@ export function TrackingTxModal<T extends Transaction>({
             {CustomInfoBlock ? (
               <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
             ) : (
-              <TxInfoBlock
-                tx={txToDisplay}
-                adapter={adapter}
-                customization={customization?.infoBlockCustomization}
-              />
+              <TxInfoBlock tx={txToDisplay} adapter={adapter} customization={customization?.infoBlockCustomization} />
             )}
             {CustomErrorBlock ? (
               <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
             ) : (
-              <TxErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+              <TxErrorBlock
+                error={activeTx?.errorMessage || initialTx?.errorMessage}
+                className={customization?.errorBlockCustomization?.className}
+                classNames={customization?.errorBlockCustomization?.classNames}
+              />
             )}
           </main>
 
@@ -293,13 +307,7 @@ export function TrackingTxModal<T extends Transaction>({
 
 type TrackingModalClassNames = TrackingTxModalCustomization<Transaction>['classNames'];
 
-function DefaultHeaderTitle({
-  tx,
-  className,
-}: {
-  tx: Transaction | InitialTransaction;
-  className?: string;
-}) {
+function DefaultHeaderTitle({ tx, className }: { tx: Transaction | InitialTransaction; className?: string }) {
   return (
     <StatusAwareText
       txStatus={'status' in tx ? tx.status : undefined}
@@ -454,4 +462,3 @@ const DefaultFooter = ({
     </footer>
   );
 };
-
