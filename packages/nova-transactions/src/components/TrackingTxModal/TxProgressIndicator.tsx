@@ -9,7 +9,28 @@ import { ComponentType, useMemo } from 'react';
 import { useLabels } from '../../providers';
 
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';
-export type StepProps = { status: StepStatus; label: string; isFirst?: boolean; isLast?: boolean };
+
+/** ClassNames for step styling overrides */
+export type StepClassNames = {
+  /** Classes for the step container */
+  container?: string;
+  /** Classes for the connecting line */
+  line?: string;
+  /** Classes for the circle element */
+  circle?: string;
+  /** Classes for the label text */
+  label?: string;
+  /** Status-specific overrides */
+  statusOverrides?: Partial<Record<StepStatus, { line?: string; circle?: string; label?: string }>>;
+};
+
+export type StepProps = {
+  status: StepStatus;
+  label: string;
+  isFirst?: boolean;
+  isLast?: boolean;
+  classNames?: StepClassNames;
+};
 
 const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; border: string; fill: string; pulse?: string }> = {
   completed: {
@@ -40,8 +61,9 @@ const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; border: string; fill
   },
 };
 
-function Step({ status, label, isFirst = false }: StepProps) {
+function Step({ status, label, isFirst = false, classNames }: StepProps) {
   const styles = STEP_STYLE_CONFIG[status];
+  const statusOverride = classNames?.statusOverrides?.[status];
 
   const renderIcon = () => {
     switch (status) {
@@ -59,10 +81,20 @@ function Step({ status, label, isFirst = false }: StepProps) {
   };
 
   return (
-    <div className="novatx:relative novatx:flex novatx:min-w-[80px] novatx:flex-1 novatx:flex-col novatx:items-center">
+    <div
+      className={cn(
+        'novatx:relative novatx:flex novatx:min-w-[80px] novatx:flex-1 novatx:flex-col novatx:items-center',
+        classNames?.container,
+      )}
+    >
       {!isFirst && (
         <div
-          className={cn('novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full', styles.line)}
+          className={cn(
+            'novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full',
+            styles.line,
+            classNames?.line,
+            statusOverride?.line,
+          )}
         />
       )}
 
@@ -71,6 +103,8 @@ function Step({ status, label, isFirst = false }: StepProps) {
           'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border-2',
           styles.border,
           styles.fill,
+          classNames?.circle,
+          statusOverride?.circle,
         )}
       >
         {renderIcon()}
@@ -82,6 +116,8 @@ function Step({ status, label, isFirst = false }: StepProps) {
           status !== 'inactive'
             ? 'novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
             : 'novatx:text-[var(--tuwa-text-secondary)]',
+          classNames?.label,
+          statusOverride?.label,
         )}
       >
         {label}
@@ -97,6 +133,8 @@ export interface TxProgressIndicatorProps {
   isReplaced?: boolean;
   className?: string;
   StepComponent?: ComponentType<StepProps>;
+  /** ClassNames for step customization */
+  stepClassNames?: StepClassNames;
 }
 
 export function TxProgressIndicator({
@@ -106,6 +144,7 @@ export function TxProgressIndicator({
   isReplaced,
   className,
   StepComponent = Step,
+  stepClassNames,
 }: TxProgressIndicatorProps) {
   const { trackingModal, statuses } = useLabels();
 
@@ -134,11 +173,11 @@ export function TxProgressIndicator({
     };
 
     return [
-      { status: getStepStatus(1), label: getStepLabel(1), isFirst: true },
-      { status: getStepStatus(2), label: getStepLabel(2) },
-      { status: getStepStatus(3), label: getStepLabel(3), isLast: true },
+      { status: getStepStatus(1), label: getStepLabel(1), isFirst: true, classNames: stepClassNames },
+      { status: getStepStatus(2), label: getStepLabel(2), classNames: stepClassNames },
+      { status: getStepStatus(3), label: getStepLabel(3), isLast: true, classNames: stepClassNames },
     ];
-  }, [isProcessing, isSucceed, isFailed, isReplaced, trackingModal, statuses]);
+  }, [isProcessing, isSucceed, isFailed, isReplaced, trackingModal, statuses, stepClassNames]);
 
   return (
     <div className={cn('novatx:flex novatx:w-full novatx:items-start novatx:px-4 novatx:pt-2 novatx:pb-1', className)}>
@@ -148,3 +187,4 @@ export function TxProgressIndicator({
     </div>
   );
 }
+

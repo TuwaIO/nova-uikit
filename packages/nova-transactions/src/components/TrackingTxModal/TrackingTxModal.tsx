@@ -12,6 +12,7 @@ import {
   TxErrorBlock,
   TxErrorBlockProps,
   TxInfoBlock,
+  TxInfoBlockCustomization,
   TxInfoBlockProps,
   TxProgressIndicator,
   TxProgressIndicatorProps,
@@ -74,6 +75,20 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
     allTransactionsButton?: string;
     /** Classes for the Close button */
     closeModalButton?: string;
+  };
+  /** Customization for TxInfoBlock */
+  infoBlockCustomization?: TxInfoBlockCustomization<T>;
+  /** Customization for TxProgressIndicator */
+  progressIndicatorCustomization?: {
+    /** Container className */
+    className?: string;
+    /** Step classNames */
+    stepClassNames?: TxProgressIndicatorProps['stepClassNames'];
+  };
+  /** Customization for TxStatusVisual */
+  statusVisualCustomization?: {
+    /** Container className */
+    className?: string;
   };
 };
 
@@ -208,6 +223,7 @@ export function TrackingTxModal<T extends Transaction>({
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}
+                className={customization?.statusVisualCustomization?.className}
               />
             )}
             {CustomProgressIndicator ? (
@@ -223,12 +239,18 @@ export function TrackingTxModal<T extends Transaction>({
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}
+                className={customization?.progressIndicatorCustomization?.className}
+                stepClassNames={customization?.progressIndicatorCustomization?.stepClassNames}
               />
             )}
             {CustomInfoBlock ? (
               <CustomInfoBlock tx={txToDisplay} adapter={adapter} />
             ) : (
-              <TxInfoBlock tx={txToDisplay} adapter={adapter} />
+              <TxInfoBlock
+                tx={txToDisplay}
+                adapter={adapter}
+                customization={customization?.infoBlockCustomization}
+              />
             )}
             {CustomErrorBlock ? (
               <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />

@@ -14,12 +14,27 @@ import { HashLink } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
-type CustomInfoRowProps = { label: ReactNode; value: ReactNode };
+type CustomInfoRowProps = { label: ReactNode; value: ReactNode; classNames?: InfoRowClassNames };
+type InfoRowClassNames = { row?: string; label?: string; value?: string };
 
 export type TxInfoBlockCustomization<T extends Transaction> = {
+  /** Custom components */
   components?: {
     InfoRow?: ComponentType<CustomInfoRowProps>;
     transactionKey?: TransactionKeyProps<T>['renderHashLink'];
+  };
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    /** Classes for the container */
+    container?: string;
+    /** Classes for info row */
+    row?: string;
+    /** Classes for row label */
+    rowLabel?: string;
+    /** Classes for row value */
+    rowValue?: string;
+    /** Classes for the transaction key section separator */
+    separator?: string;
   };
 };
 
@@ -31,11 +46,11 @@ export type TxInfoBlockProps<T extends Transaction> = {
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Component ---
-function DefaultInfoRow({ label, value }: CustomInfoRowProps) {
+function DefaultInfoRow({ label, value, classNames }: CustomInfoRowProps) {
   return (
-    <div className="novatx:flex novatx:items-center novatx:justify-between novatx:text-sm">
-      <span className="novatx:text-[var(--tuwa-text-secondary)]">{label}</span>
-      <span className="novatx:font-medium novatx:text-[var(--tuwa-text-primary)]">{value}</span>
+    <div className={cn('novatx:flex novatx:items-center novatx:justify-between novatx:text-sm', classNames?.row)}>
+      <span className={cn('novatx:text-[var(--tuwa-text-secondary)]', classNames?.label)}>{label}</span>
+      <span className={cn('novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}>{value}</span>
     </div>
   );
 }
@@ -52,6 +67,8 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
   if (!foundAdapter) return null;
 
   const { InfoRow = DefaultInfoRow } = customization?.components ?? {};
+  const classNames = customization?.classNames;
+  const rowClassNames = { row: classNames?.row, label: classNames?.rowLabel, value: classNames?.rowValue };
   const chainId = 'chainId' in tx ? tx.chainId : tx.desiredChainID;
   const isSolanaTransaction = tx.adapter === OrbitAdapter.SOLANA;
   const solanaTx = isSolanaTransaction ? (tx as SolanaTransaction) : undefined;
@@ -60,6 +77,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
     <div
       className={cn(
         'novatx:flex novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
+        classNames?.container,
         className,
       )}
     >
@@ -73,9 +91,14 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             <span>{getChainName(setChainId(chainId))}</span>
           </div>
         }
+        classNames={rowClassNames}
       />
       {tx.localTimestamp && (
-        <InfoRow label={txInfo.started} value={dayjs.unix(tx.localTimestamp).format('MMM D, HH:mm:ss')} />
+        <InfoRow
+          label={txInfo.started}
+          value={dayjs.unix(tx.localTimestamp).format('MMM D, HH:mm:ss')}
+          classNames={rowClassNames}
+        />
       )}
 
       {isSolanaTransaction && (
@@ -93,19 +116,29 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
                   }
                 />
               }
+              classNames={rowClassNames}
             />
           )}
           {(typeof solanaTx?.confirmations === 'number' || typeof solanaTx?.confirmations === 'string') && (
-            <InfoRow label={statuses.confirmationsLabel} value={solanaTx.confirmations} />
+            <InfoRow label={statuses.confirmationsLabel} value={solanaTx.confirmations} classNames={rowClassNames} />
           )}
           {solanaTx?.recentBlockhash && (
-            <InfoRow label={hashLabels.recentBlockhash} value={<HashLink hash={solanaTx.recentBlockhash} />} />
+            <InfoRow
+              label={hashLabels.recentBlockhash}
+              value={<HashLink hash={solanaTx.recentBlockhash} />}
+              classNames={rowClassNames}
+            />
           )}
         </>
       )}
 
       {'txKey' in tx && tx.txKey && (
-        <div className="novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:pt-3">
+        <div
+          className={cn(
+            'novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:pt-3',
+            classNames?.separator,
+          )}
+        >
           <TransactionKey
             tx={tx as T}
             adapter={adapter}
@@ -117,3 +150,4 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
     </div>
   );
 }
+

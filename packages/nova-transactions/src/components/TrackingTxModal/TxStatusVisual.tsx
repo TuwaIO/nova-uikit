@@ -15,6 +15,8 @@ export type TxStatusVisualProps = {
   isFailed?: boolean;
   /** True if the transaction was replaced (e.g., sped up). */
   isReplaced?: boolean;
+  /** Additional class names for the container */
+  className?: string;
 };
 
 const STATUS_VISUAL_CONFIG: Record<
@@ -47,7 +49,13 @@ const STATUS_VISUAL_CONFIG: Record<
  * A component that renders a large, animated icon to visually represent the
  * current state of a transaction within the tracking modal.
  */
-export function TxStatusVisual({ isProcessing, isSucceed, isFailed, isReplaced }: TxStatusVisualProps) {
+export function TxStatusVisual({
+  isProcessing,
+  isSucceed,
+  isFailed,
+  isReplaced,
+  className: containerClassName,
+}: TxStatusVisualProps) {
   const statusKey =
     (isSucceed && 'succeed') ||
     (isFailed && 'failed') ||
@@ -58,8 +66,9 @@ export function TxStatusVisual({ isProcessing, isSucceed, isFailed, isReplaced }
   const { Icon, className } = STATUS_VISUAL_CONFIG[statusKey];
 
   return (
-    <div className="novatx:flex novatx:justify-center novatx:py-4">
+    <div className={cn('novatx:flex novatx:justify-center novatx:py-4', containerClassName)}>
       <Icon className={cn('novatx:h-16 novatx:w-16', className)} />
     </div>
   );
 }
+
