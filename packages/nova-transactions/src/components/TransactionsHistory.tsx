@@ -47,8 +47,12 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
     itemTimestamp?: string;
     /** Classes for the description text */
     itemDescription?: string;
-    /** Classes for the status badge */
+    /** Classes for the status badge container */
     itemStatusBadge?: string;
+    /** Classes for the status badge icon */
+    itemStatusBadgeIcon?: string;
+    /** Classes for the status badge label */
+    itemStatusBadgeLabel?: string;
     /** Classes for the transaction key container */
     itemTxKeyContainer?: string;
     /** Classes for the hash link label */
@@ -138,6 +142,8 @@ export function TransactionsHistory<T extends Transaction>({
         timestamp: customization?.classNames?.itemTimestamp,
         description: customization?.classNames?.itemDescription,
         statusBadge: customization?.classNames?.itemStatusBadge,
+        statusBadgeIcon: customization?.classNames?.itemStatusBadgeIcon,
+        statusBadgeLabel: customization?.classNames?.itemStatusBadgeLabel,
         txKeyContainer: customization?.classNames?.itemTxKeyContainer,
         hashLabel: customization?.classNames?.itemHashLabel,
         hashLink: customization?.classNames?.itemHashLink,

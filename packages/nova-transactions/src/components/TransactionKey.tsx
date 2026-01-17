@@ -17,6 +17,8 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsPr
   className?: string;
   renderHashLink?: (props: HashLinkProps) => ReactNode;
   confirmations?: number;
+  /** ClassNames to pass to HashLink components */
+  hashLinkClassNames?: HashLinkProps['classNames'];
 };
 
 export function TransactionKey<T extends Transaction>({
@@ -26,6 +28,7 @@ export function TransactionKey<T extends Transaction>({
   className,
   renderHashLink,
   confirmations,
+  hashLinkClassNames,
 }: TransactionKeyProps<T>) {
   const { hashLabels, statuses } = useLabels();
 
@@ -34,7 +37,7 @@ export function TransactionKey<T extends Transaction>({
   if (!foundAdapter) return null;
 
   const renderHash = (props: HashLinkProps) => {
-    return renderHashLink ? renderHashLink(props) : <HashLink {...props} />;
+    return renderHashLink ? renderHashLink(props) : <HashLink {...props} classNames={hashLinkClassNames} />;
   };
 
   const containerClasses =

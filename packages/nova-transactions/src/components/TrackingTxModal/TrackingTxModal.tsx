@@ -37,6 +37,7 @@ type CustomFooterProps = {
 export type TrackingTxModalCustomization<T extends Transaction> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   motionProps?: MotionProps;
+  /** Custom components to override default elements */
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
     Footer?: ComponentType<CustomFooterProps>;
@@ -44,6 +45,35 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
     ProgressIndicator?: ComponentType<TxProgressIndicatorProps>;
     InfoBlock?: ComponentType<TxInfoBlockProps<T>>;
     ErrorBlock?: ComponentType<TxErrorBlockProps>;
+  };
+  /** Granular classNames for all sub-elements */
+  classNames?: {
+    /** Classes for the outer container */
+    container?: string;
+    /** Classes for the header section */
+    header?: string;
+    /** Classes for the header title */
+    headerTitle?: string;
+    /** Classes for the close button */
+    closeButton?: string;
+    /** Classes for the main content area */
+    main?: string;
+    /** Classes for the footer section */
+    footer?: string;
+    /** Classes for the actions container (left side of footer) */
+    footerActions?: string;
+    /** Classes for the buttons container (right side of footer) */
+    footerButtons?: string;
+    /** Classes for the SpeedUp button */
+    speedUpButton?: string;
+    /** Classes for the Cancel button */
+    cancelButton?: string;
+    /** Classes for the Retry button */
+    retryButton?: string;
+    /** Classes for the All Transactions button */
+    allTransactionsButton?: string;
+    /** Classes for the Close button */
+    closeModalButton?: string;
   };
 };
 

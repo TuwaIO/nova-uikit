@@ -13,9 +13,10 @@ import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
 
-type CustomActionButtonProps = { onClick: () => void; children: ReactNode };
+type CustomActionButtonProps = { onClick: () => void; children: ReactNode; className?: string };
 
 export type ToastTransactionCustomization<T extends Transaction> = {
+  /** Custom components */
   components?: {
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
@@ -23,6 +24,45 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     TxInfoButton?: ComponentType<CustomActionButtonProps>;
     SpeedUpButton?: ComponentType<CustomActionButtonProps>;
     CancelButton?: ComponentType<CustomActionButtonProps>;
+  };
+  /** Granular classNames for all sub-elements */
+  classNames?: {
+    /** Classes for the toast container */
+    container?: string;
+    /** Classes for the header section (icon + content) */
+    header?: string;
+    /** Classes for the icon wrapper */
+    iconWrapper?: string;
+    /** Classes for the content wrapper */
+    contentWrapper?: string;
+    /** Classes for the title text */
+    title?: string;
+    /** Classes for the description text */
+    description?: string;
+    /** Classes for the transaction key section */
+    transactionKey?: string;
+    /** Classes for the hash label */
+    hashLabel?: string;
+    /** Classes for the hash link */
+    hashLink?: string;
+    /** Classes for the hash copy button */
+    hashCopyButton?: string;
+    /** Classes for the footer section */
+    footer?: string;
+    /** Classes for the status badge container */
+    statusBadge?: string;
+    /** Classes for the status badge icon */
+    statusBadgeIcon?: string;
+    /** Classes for the status badge label */
+    statusBadgeLabel?: string;
+    /** Classes for the actions container */
+    actionsContainer?: string;
+    /** Classes for the SpeedUp button */
+    speedUpButton?: string;
+    /** Classes for the Cancel button */
+    cancelButton?: string;
+    /** Classes for the TxInfo button */
+    txInfoButton?: string;
   };
 };
 
@@ -36,29 +76,38 @@ export type ToastTransactionProps<T extends Transaction> = {
   toastProps?: ToastContainerProps;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
 
-const DefaultSpeedUpButton = ({ onClick, children }: CustomActionButtonProps) => (
+const DefaultSpeedUpButton = ({ onClick, children, className }: CustomActionButtonProps) => (
   <button
     onClick={onClick}
     type="button"
-    className="novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
+    className={cn(
+      'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+      className,
+    )}
   >
     {children}
   </button>
 );
 
-const DefaultCancelButton = ({ onClick, children }: CustomActionButtonProps) => (
+const DefaultCancelButton = ({ onClick, children, className }: CustomActionButtonProps) => (
   <button
     onClick={onClick}
     type="button"
-    className="novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80"
+    className={cn(
+      'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+      className,
+    )}
   >
     {children}
   </button>
 );
 
-const DefaultTxInfoButton = ({ onClick, children }: CustomActionButtonProps) => (
+const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButtonProps) => (
   <button
-    className="novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95"
+    className={cn(
+      'novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95',
+      className,
+    )}
     onClick={onClick}
     type="button"
   >
@@ -105,37 +154,78 @@ export function ToastTransaction<T extends Transaction>({
     TxInfoButton = DefaultTxInfoButton,
   } = customization?.components ?? {};
 
+  const classNames = customization?.classNames;
+
   return (
     <div
       className={cn(
         'novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        classNames?.container,
         className,
       )}
     >
-      <div className="novatx:flex novatx:items-center novatx:gap-3">
-        <div className="novatx:w-[40px] novatx:flex-shrink-0" title={getChainName(setChainId(tx.chainId))}>
+      <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
+        <div
+          className={cn('novatx:w-[40px] novatx:flex-shrink-0', classNames?.iconWrapper)}
+          title={getChainName(setChainId(tx.chainId))}
+        >
           {icon ?? <NetworkIcon chainId={setChainId(tx.chainId)} />}
         </div>
-        <div className="novatx:flex-1">
-          <CStatusAwareText txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />
-          <CStatusAwareText txStatus={tx.status} source={tx.description} variant="description" />
+        <div className={cn('novatx:flex-1', classNames?.contentWrapper)}>
+          <CStatusAwareText
+            txStatus={tx.status}
+            source={tx.title}
+            fallback={tx.type}
+            variant="title"
+            applyColor
+            className={classNames?.title}
+          />
+          <CStatusAwareText
+            txStatus={tx.status}
+            source={tx.description}
+            variant="description"
+            className={classNames?.description}
+          />
         </div>
       </div>
 
       <div>
-        <CTransactionKey adapter={adapter} tx={tx} variant="toast" />
-        <div className="novatx:mt-3 novatx:flex novatx:items-center novatx:justify-between">
-          <CStatusBadge tx={tx} />
+        <CTransactionKey
+          adapter={adapter}
+          tx={tx}
+          variant="toast"
+          className={classNames?.transactionKey}
+          hashLinkClassNames={{
+            label: classNames?.hashLabel,
+            link: classNames?.hashLink,
+            copyButton: classNames?.hashCopyButton,
+          }}
+        />
+        <div className={cn('novatx:mt-3 novatx:flex novatx:items-center novatx:justify-between', classNames?.footer)}>
+          <CStatusBadge
+            tx={tx}
+            className={classNames?.statusBadge}
+            classNames={{
+              icon: classNames?.statusBadgeIcon,
+              label: classNames?.statusBadgeLabel,
+            }}
+          />
 
           {canBeReplaced ? (
-            <div className="novatx:flex novatx:items-center novatx:gap-4">
-              <SpeedUpButton onClick={handleSpeedUp}>{actions.speedUp}</SpeedUpButton>
-              <CancelButton onClick={handleCancel}>{actions.cancel}</CancelButton>
+            <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.actionsContainer)}>
+              <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
+                {actions.speedUp}
+              </SpeedUpButton>
+              <CancelButton onClick={handleCancel} className={classNames?.cancelButton}>
+                {actions.cancel}
+              </CancelButton>
             </div>
           ) : (
             openTxInfoModal &&
             !!connectedWalletAddress && (
-              <TxInfoButton onClick={openTxInfoModal}>{toast.openTransactionsInfo}</TxInfoButton>
+              <TxInfoButton onClick={openTxInfoModal} className={classNames?.txInfoButton}>
+                {toast.openTransactionsInfo}
+              </TxInfoButton>
             )
           )}
         </div>

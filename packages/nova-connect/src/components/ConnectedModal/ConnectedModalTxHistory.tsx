@@ -75,8 +75,12 @@ export type LocalTransactionsHistoryCustomization = {
     itemTimestamp?: string;
     /** Classes for the description text */
     itemDescription?: string;
-    /** Classes for the status badge */
+    /** Classes for the status badge container */
     itemStatusBadge?: string;
+    /** Classes for the status badge icon */
+    itemStatusBadgeIcon?: string;
+    /** Classes for the status badge label */
+    itemStatusBadgeLabel?: string;
     /** Classes for the transaction key container */
     itemTxKeyContainer?: string;
     /** Classes for the hash link label */

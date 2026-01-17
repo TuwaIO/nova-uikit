@@ -19,9 +19,22 @@ export type HashLinkProps = {
   variant?: 'default' | 'compact';
   /** Additional CSS classes to apply to the container element for custom styling. */
   className?: string;
+  /** Granular class names for sub-elements */
+  classNames?: {
+    /** Classes for the label text */
+    label?: string;
+    /** Classes for the link element */
+    link?: string;
+    /** Classes for the hash text */
+    hash?: string;
+    /** Classes for the copy button */
+    copyButton?: string;
+    /** Classes for the link icon */
+    linkIcon?: string;
+  };
 };
 
-export function HashLink({ label, hash, explorerUrl, variant = 'default', className }: HashLinkProps) {
+export function HashLink({ label, hash, explorerUrl, variant = 'default', className, classNames }: HashLinkProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
@@ -34,12 +47,18 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
     className,
   );
 
-  const labelClasses = cn('novatx:pr-1', {
-    'novatx:font-bold novatx:text-[var(--tuwa-text-primary)]': variant === 'default',
-    'novatx:font-medium novatx:text-[var(--tuwa-text-secondary)]': variant === 'compact',
-  });
+  const labelClasses = cn(
+    'novatx:pr-1',
+    {
+      'novatx:font-bold novatx:text-[var(--tuwa-text-primary)]': variant === 'default',
+      'novatx:font-medium novatx:text-[var(--tuwa-text-secondary)]': variant === 'compact',
+    },
+    classNames?.label,
+  );
 
-  const hashContent = <span className="novatx:font-mono">{textCenterEllipsis(hash, 5, 5)}</span>;
+  const hashContent = (
+    <span className={cn('novatx:font-mono', classNames?.hash)}>{textCenterEllipsis(hash, 5, 5)}</span>
+  );
 
   return (
     <div className={containerClasses}>
@@ -50,12 +69,15 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
             href={explorerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="novatx:flex novatx:items-center novatx:gap-x-1 novatx:text-[var(--tuwa-text-accent)] novatx:transition-colors novatx:hover:underline"
+            className={cn(
+              'novatx:flex novatx:items-center novatx:gap-x-1 novatx:text-[var(--tuwa-text-accent)] novatx:transition-colors novatx:hover:underline',
+              classNames?.link,
+            )}
             title={actions.viewOnExplorer}
             aria-label={actions.viewOnExplorer}
           >
             {hashContent}
-            <ArrowTopRightOnSquareIcon className="novatx:h-4 novatx:w-4" />
+            <ArrowTopRightOnSquareIcon className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
           </a>
         ) : (
           <span className="novatx:text-[var(--tuwa-text-primary)]">{hashContent}</span>
@@ -63,7 +85,10 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
         <button
           type="button"
           onClick={() => copy(hash)}
-          className="novatx:cursor-pointer novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:text-[var(--tuwa-text-secondary)]"
+          className={cn(
+            'novatx:cursor-pointer novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:text-[var(--tuwa-text-secondary)]',
+            classNames?.copyButton,
+          )}
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : actions.copy}
         >

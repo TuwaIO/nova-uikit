@@ -50,8 +50,12 @@ export type TransactionHistoryItemCustomization<T extends Transaction> = {
     timestamp?: string;
     /** Classes for the description */
     description?: string;
-    /** Classes for the status badge */
+    /** Classes for the status badge container */
     statusBadge?: string;
+    /** Classes for the status badge icon */
+    statusBadgeIcon?: string;
+    /** Classes for the status badge label */
+    statusBadgeLabel?: string;
     /** Classes for the transaction key container */
     txKeyContainer?: string;
     /** Classes for hash link label */
@@ -138,10 +142,27 @@ export function TransactionHistoryItem<T extends Transaction>({
           </div>
         </div>
 
-        <StatusBadge tx={tx} className={classNames?.statusBadge} />
+        <StatusBadge
+          tx={tx}
+          className={classNames?.statusBadge}
+          classNames={{
+            icon: classNames?.statusBadgeIcon,
+            label: classNames?.statusBadgeLabel,
+          }}
+        />
       </div>
 
-      <TxKey tx={tx} adapter={adapter} variant="history" className={classNames?.txKeyContainer} />
+      <TxKey
+        tx={tx}
+        adapter={adapter}
+        variant="history"
+        className={classNames?.txKeyContainer}
+        hashLinkClassNames={{
+          label: classNames?.hashLabel,
+          link: classNames?.hashLink,
+          copyButton: classNames?.hashCopyButton,
+        }}
+      />
     </div>
   );
 }
