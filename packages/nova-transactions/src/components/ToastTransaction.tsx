@@ -102,18 +102,18 @@ const DefaultCancelButton = ({ onClick, children, className }: CustomActionButto
   </button>
 );
 
-const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButtonProps) => (
-  <button
-    className={cn(
-      'novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95',
-      className,
-    )}
-    onClick={onClick}
-    type="button"
-  >
-    {children}
-  </button>
-);
+const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButtonProps) => {
+  // If custom className provided, use it exclusively. Otherwise use default styles.
+  const buttonClassName = className
+    ? className
+    : 'novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95';
+
+  return (
+    <button className={buttonClassName} onClick={onClick} type="button">
+      {children}
+    </button>
+  );
+};
 
 export function ToastTransaction<T extends Transaction>({
   openTxInfoModal,

@@ -172,20 +172,29 @@ export function TrackingTxModal<T extends Transaction>({
 
   if (!txToDisplay) return null;
 
+  const classNames = customization?.classNames;
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
       <DialogContent
         className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
         {...customization?.modalProps}
       >
-        <div className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', className)}>
+        <div className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}>
           {CustomHeader ? (
-            <CustomHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
+            <CustomHeader
+              onClose={() => onClose(activeTx?.txKey)}
+              title={<DefaultHeaderTitle tx={txToDisplay} className={classNames?.headerTitle} />}
+            />
           ) : (
-            <DefaultHeader onClose={() => onClose(activeTx?.txKey)} title={<DefaultHeaderTitle tx={txToDisplay} />} />
+            <DefaultHeader
+              onClose={() => onClose(activeTx?.txKey)}
+              title={<DefaultHeaderTitle tx={txToDisplay} className={classNames?.headerTitle} />}
+              classNames={classNames}
+            />
           )}
 
-          <main className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
+          <main className={cn('novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4', classNames?.main)}>
             {CustomStatusVisual ? (
               <CustomStatusVisual
                 isProcessing={isProcessing}
@@ -251,6 +260,7 @@ export function TrackingTxModal<T extends Transaction>({
               onSpeedUp={isWithActions ? handleSpeedUp : undefined}
               onCancel={isWithActions ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
+              classNames={classNames}
             />
           )}
         </div>
@@ -259,31 +269,44 @@ export function TrackingTxModal<T extends Transaction>({
   );
 }
 
-function DefaultHeaderTitle({ tx }: { tx: Transaction | InitialTransaction }) {
+type TrackingModalClassNames = TrackingTxModalCustomization<Transaction>['classNames'];
+
+function DefaultHeaderTitle({
+  tx,
+  className,
+}: {
+  tx: Transaction | InitialTransaction;
+  className?: string;
+}) {
   return (
     <StatusAwareText
       txStatus={'status' in tx ? tx.status : undefined}
       source={tx.title}
       fallback={tx.type}
       variant="title"
-      className="novatx:text-lg"
+      className={cn('novatx:text-lg', className)}
     />
   );
 }
 
-const DefaultHeader = ({ onClose, title }: CustomHeaderProps) => {
+const DefaultHeader = ({
+  onClose,
+  title,
+  classNames,
+}: CustomHeaderProps & { classNames?: TrackingModalClassNames }) => {
   const { actions } = useLabels();
   return (
-    <DialogHeader>
-      <DialogTitle>{title}</DialogTitle>
+    <DialogHeader className={classNames?.header}>
+      <DialogTitle className={classNames?.headerTitle}>{title}</DialogTitle>
       <DialogClose asChild>
         <button
           type="button"
           onClick={() => onClose()}
           aria-label={actions.close}
-          className="novatx:cursor-pointer novatx:rounded-full novatx:p-1
-                   novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors
-                   novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]"
+          className={cn(
+            'novatx:cursor-pointer novatx:rounded-full novatx:p-1 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
+            classNames?.closeButton,
+          )}
         >
           <CloseIcon />
         </button>
@@ -299,10 +322,11 @@ const MainActionButton = ({
   canReplace,
   connectedWalletAddress,
   onOpenAllTransactions,
+  classNames,
 }: Pick<
   CustomFooterProps,
   'isFailed' | 'onRetry' | 'isProcessing' | 'canReplace' | 'connectedWalletAddress' | 'onOpenAllTransactions'
->) => {
+> & { classNames?: TrackingModalClassNames }) => {
   const { trackingModal } = useLabels();
 
   if (isFailed && onRetry) {
@@ -310,10 +334,10 @@ const MainActionButton = ({
       <button
         type="button"
         onClick={onRetry}
-        className="novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md
-                   novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)]
-                   novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity
-                   novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]"
+        className={cn(
+          'novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
+          classNames?.retryButton,
+        )}
       >
         {trackingModal.retry}
       </button>
@@ -324,9 +348,10 @@ const MainActionButton = ({
       <button
         type="button"
         onClick={onOpenAllTransactions}
-        className="novatx:cursor-pointer novatx:rounded-md
-                   novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]
-                   novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]"
+        className={cn(
+          'novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
+          classNames?.allTransactionsButton,
+        )}
       >
         {trackingModal.allTransactions}
       </button>
@@ -345,37 +370,44 @@ const DefaultFooter = ({
   canReplace,
   isFailed,
   connectedWalletAddress,
-}: CustomFooterProps) => {
+  classNames,
+}: CustomFooterProps & { classNames?: TrackingModalClassNames }) => {
   const { trackingModal, actions } = useLabels();
 
   return (
     <footer
-      className="novatx:flex novatx:w-full novatx:items-center novatx:justify-between
-                     novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:p-4"
+      className={cn(
+        'novatx:flex novatx:w-full novatx:items-center novatx:justify-between novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:p-4',
+        classNames?.footer,
+      )}
     >
-      <div className="novatx:flex novatx:items-center novatx:gap-4">
+      <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.footerActions)}>
         {canReplace && onSpeedUp && onCancel && (
           <>
             <button
               type="button"
               onClick={onSpeedUp}
-              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
-                       novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
+              className={cn(
+                'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+                classNames?.speedUpButton,
+              )}
             >
               {actions.speedUp}
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="novatx:cursor-pointer novatx:text-sm novatx:font-medium
-                       novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80"
+              className={cn(
+                'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+                classNames?.cancelButton,
+              )}
             >
               {actions.cancel}
             </button>
           </>
         )}
       </div>
-      <div className="novatx:flex novatx:items-center novatx:gap-3">
+      <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.footerButtons)}>
         <MainActionButton
           isFailed={isFailed}
           onRetry={onRetry}
@@ -383,14 +415,16 @@ const DefaultFooter = ({
           canReplace={canReplace}
           connectedWalletAddress={connectedWalletAddress}
           onOpenAllTransactions={onOpenAllTransactions}
+          classNames={classNames}
         />
         <button
           type="button"
           onClick={onClose}
           disabled={isProcessing && !canReplace}
-          className="novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold
-                   novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]
-                   novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50"
+          className={cn(
+            'novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
+            classNames?.closeModalButton,
+          )}
         >
           {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
         </button>
@@ -398,3 +432,4 @@ const DefaultFooter = ({
     </footer>
   );
 };
+
