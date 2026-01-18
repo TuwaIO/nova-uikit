@@ -41,7 +41,7 @@ import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
 import { GetWallet, GetWalletCustomization } from './GetWallet';
 import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedForm';
-import { LegalDisclaimer } from './LegalDisclaimer';
+import { LegalDisclaimer, LegalDisclaimerCustomization } from './LegalDisclaimer';
 import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
 import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
 
@@ -290,6 +290,8 @@ export type ConnectModalCustomization = {
     networkSelections?: NetworkSelectionsCustomization;
     /** NetworkTabs customization */
     networkTabs?: NetworkTabsCustomization;
+    /** LegalDisclaimer customization */
+    legalDisclaimer?: LegalDisclaimerCustomization;
   };
 };
 
@@ -344,8 +346,8 @@ DefaultModalContainer.displayName = 'DefaultModalContainer';
 const DefaultModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
-    <div ref={ref} className={className} {...props}>
-      <DialogHeader>{children}</DialogHeader>
+    <div ref={ref} {...props}>
+      <DialogHeader className={className}>{children}</DialogHeader>
     </div>
   ),
 );
@@ -357,14 +359,14 @@ const DefaultInfoButton = forwardRef<HTMLButtonElement, InfoButtonProps>(
     <button
       ref={ref}
       className={cn(
-        'novacon:cursor-pointer novacon:text-[var(--tuwa-text-secondary)] novacon:transition novacon:duration-300 novacon:ease-in-out novacon:active:scale-75 novacon:hover:scale-110',
+        'novacon:cursor-pointer novacon:text-[var(--tuwa-text-secondary)] novacon:transition novacon:duration-300 novacon:ease-in-out novacon:active:scale-75 novacon:hover:scale-110 novacon:mr-1',
         className,
       )}
       type="button"
       onClick={onClick}
       {...props}
     >
-      <InformationCircleIcon width={20} height={20} className="novacon:mr-1" aria-hidden="true" />
+      <InformationCircleIcon width={20} height={20} aria-hidden="true" />
     </button>
   ),
 );
@@ -835,7 +837,7 @@ export const ConnectModal = memo<ConnectModalProps>(
                 customization={childComponents.connectorsSelections}
               />
 
-              <LegalDisclaimer />
+              <LegalDisclaimer customization={childComponents.legalDisclaimer} />
             </>
           ) : (
             <CustomEmptyState className={classNames.emptyConnectors?.({ modalData })} modalData={modalData}>

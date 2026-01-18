@@ -14,9 +14,20 @@ type CustomHeaderProps = { closeModal: () => void };
 
 export type TransactionsInfoModalCustomization<T extends Transaction> = {
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
+  /** Granular classNames for modal elements */
   classNames?: {
+    /** Classes for the content wrapper */
     contentWrapper?: string;
+    /** Classes for the header section */
+    header?: string;
+    /** Classes for the header title */
+    headerTitle?: string;
+    /** Classes for the close button */
+    closeButton?: string;
   };
+  /** Customization for TransactionsHistory component */
+  historyCustomization?: TransactionsHistoryProps<T>['customization'];
+  /** Custom components */
   components?: {
     Header?: ComponentType<CustomHeaderProps>;
     History?: ComponentType<TransactionsHistoryProps<T>>;
@@ -32,20 +43,31 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   customization?: TransactionsInfoModalCustomization<T>;
 };
 
-const DefaultHeader = ({ closeModal, title }: CustomHeaderProps & { title: string }) => {
+type DefaultHeaderClassNames = {
+  header?: string;
+  title?: string;
+  closeButton?: string;
+};
+
+const DefaultHeader = ({
+  closeModal,
+  title,
+  classNames,
+}: CustomHeaderProps & { title: string; classNames?: DefaultHeaderClassNames }) => {
   const { actions } = useLabels();
   return (
-    <DialogHeader>
-      <DialogTitle>{title}</DialogTitle>
+    <DialogHeader className={classNames?.header}>
+      <DialogTitle className={classNames?.title}>{title}</DialogTitle>
 
       <DialogClose asChild>
         <button
           type="button"
           onClick={closeModal}
           aria-label={actions.close}
-          className="novatx:cursor-pointer novatx:rounded-full novatx:p-1
-                     novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors
-                     novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]"
+          className={cn(
+            'novatx:cursor-pointer novatx:rounded-full novatx:p-1 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
+            classNames?.closeButton,
+          )}
         >
           <CloseIcon />
         </button>
@@ -84,7 +106,15 @@ export function TransactionsInfoModal<T extends Transaction>({
           {CustomHeader ? (
             <CustomHeader closeModal={closeModal} />
           ) : (
-            <DefaultHeader closeModal={closeModal} title={transactionsModal.history.title} />
+            <DefaultHeader
+              closeModal={closeModal}
+              title={transactionsModal.history.title}
+              classNames={{
+                header: customization?.classNames?.header,
+                title: customization?.classNames?.headerTitle,
+                closeButton: customization?.classNames?.closeButton,
+              }}
+            />
           )}
 
           {CustomHistory ? (
@@ -92,12 +122,14 @@ export function TransactionsInfoModal<T extends Transaction>({
               adapter={adapter}
               transactionsPool={transactionsPool}
               connectedWalletAddress={connectedWalletAddress}
+              customization={customization?.historyCustomization}
             />
           ) : (
             <TransactionsHistory
               adapter={adapter}
               transactionsPool={transactionsPool}
               connectedWalletAddress={connectedWalletAddress}
+              customization={customization?.historyCustomization}
             />
           )}
         </div>

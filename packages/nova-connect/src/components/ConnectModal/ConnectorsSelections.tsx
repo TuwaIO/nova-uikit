@@ -13,7 +13,7 @@ import { WalletIcon } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
 import { ConnectorsBlock, ConnectorsBlockCustomization } from './ConnectorsBlock';
-import { Disclaimer } from './Disclaimer';
+import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
 
 // --- Types ---
 
@@ -129,7 +129,7 @@ export type ConnectorsSelectionsCustomization = {
     ImpersonateTitle?: ComponentType<ImpersonateTitleProps>;
     /** Custom empty state */
     EmptyState?: ComponentType<EmptyStateProps>;
-    /** Custom disclaimer section */
+    /** Custom disclaimer section wrapper */
     DisclaimerSection?: ComponentType<DisclaimerSectionProps>;
   };
   /** Custom class name generators */
@@ -165,6 +165,8 @@ export type ConnectorsSelectionsCustomization = {
     ) => void;
     /** Custom empty state action handler */
     onEmptyStateAction?: (selectionsData: ConnectorsSelectionsData) => void;
+    /** Custom disclaimer learn more action handler */
+    onDisclaimerLearnMore?: (selectionsData: ConnectorsSelectionsData, originalHandler: () => void) => void;
   };
   /** Configuration options */
   config?: {
@@ -204,6 +206,8 @@ export type ConnectorsSelectionsCustomization = {
   };
   /** ConnectCard customization for impersonate card */
   impersonateCard?: ConnectCardCustomization;
+  /** Disclaimer customization */
+  disclaimer?: DisclaimerCustomization;
 };
 
 /**
@@ -388,7 +392,7 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
  * />
  * ```
  *
- * @example With full customization
+ * @example With full customization including disclaimer
  * ```tsx
  * <ConnectorsSelections
  *   selectedAdapter={undefined}
@@ -408,19 +412,21 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
  *     classNames: {
  *       connectorsArea: ({ selectionsData }) =>
  *         selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
- *       impersonateSection: ({ impersonateData }) =>
- *         impersonateData.isTouch ? 'touch-impersonate' : 'mouse-impersonate'
  *     },
  *     handlers: {
- *       onImpersonateClick: (impersonateData, selectionsData, originalHandler) => {
- *         analytics.track('impersonate_clicked');
+ *       onDisclaimerLearnMore: (selectionsData, originalHandler) => {
+ *         analytics.track('disclaimer_learn_more_clicked');
  *         originalHandler();
  *       }
  *     },
- *     connectorsBlock: {
- *       installed: {
- *         classNames: {
- *           title: () => 'custom-installed-title'
+ *     disclaimer: {
+ *       classNames: {
+ *         container: ({ compact }) => 'custom-disclaimer-container',
+ *         title: ({ compact }) => 'custom-disclaimer-title'
+ *       },
+ *       config: {
+ *         buttonLabels: {
+ *           learnMore: 'Read More'
  *         }
  *       }
  *     }
@@ -607,6 +613,20 @@ export const ConnectorsSelections = memo(
       }, [customHandlers?.onImpersonateClick, impersonateData, selectionsData, handleImpersonateClick]);
 
       /**
+       * Handler for disclaimer learn more action
+       */
+      const handleDisclaimerLearnMore = useCallback(() => {
+        const originalHandler = () => setContentType('about');
+
+        if (customHandlers?.onDisclaimerLearnMore) {
+          customHandlers.onDisclaimerLearnMore(selectionsData, originalHandler);
+        } else {
+          originalHandler();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [customHandlers?.onDisclaimerLearnMore, selectionsData, setContentType]);
+
+      /**
        * Memoized CSS classes
        */
       const cssClasses = useMemo(
@@ -758,7 +778,8 @@ export const ConnectorsSelections = memo(
               <Disclaimer
                 title={labels.whatIsWallet}
                 description={labels.walletDescription}
-                learnMoreAction={() => setContentType('about')}
+                learnMoreAction={handleDisclaimerLearnMore}
+                customization={customization?.disclaimer}
               />
             </CustomDisclaimerSection>
           )}

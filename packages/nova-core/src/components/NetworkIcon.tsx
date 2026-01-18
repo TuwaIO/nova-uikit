@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 
-import { cn } from '../utils';
+import { cn, getChainName } from '../utils';
 import { isSolanaDev } from '../utils/isSolanaDev';
 import { FallbackIcon } from './FallbackIcon';
 
@@ -45,6 +45,7 @@ interface NetworkIconProps {
  * @returns The network icon or a fallback UI.
  */
 export function NetworkIcon({ chainId, variant = 'background', className }: NetworkIconProps) {
+  const chainName = getChainName(chainId);
   const isStringId = typeof chainId === 'string';
 
   // Normalize ID: If "solana:devnet", we need "solana" for the icon library.
@@ -54,7 +55,8 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
   const isSolanaTestnet = isStringId && isSolanaDev(chainId);
 
   const componentClassName = cn('novacore:w-full novacore:h-full novacore:rounded-full', className, {
-    'novacore:[&_path]:first-of-type:fill-[var(--tuwa-testnet-icons)]': isSolanaTestnet,
+    'novacore:[&_path]:first-of-type:fill-[var(--tuwa-testnet-icons)]':
+      isSolanaTestnet || chainName.toLowerCase().includes('testnet'),
   });
 
   return (

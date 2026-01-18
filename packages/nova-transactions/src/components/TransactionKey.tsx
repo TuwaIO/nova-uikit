@@ -17,6 +17,10 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsPr
   className?: string;
   renderHashLink?: (props: HashLinkProps) => ReactNode;
   confirmations?: number;
+  /** ClassNames to pass to HashLink components (default and replaced hash) */
+  hashLinkClassNames?: HashLinkProps['classNames'];
+  /** ClassNames for original hash link in replaced transactions (falls back to hashLinkClassNames) */
+  originalHashLinkClassNames?: HashLinkProps['classNames'];
 };
 
 export function TransactionKey<T extends Transaction>({
@@ -26,6 +30,8 @@ export function TransactionKey<T extends Transaction>({
   className,
   renderHashLink,
   confirmations,
+  hashLinkClassNames,
+  originalHashLinkClassNames,
 }: TransactionKeyProps<T>) {
   const { hashLabels, statuses } = useLabels();
 
@@ -33,8 +39,9 @@ export function TransactionKey<T extends Transaction>({
 
   if (!foundAdapter) return null;
 
-  const renderHash = (props: HashLinkProps) => {
-    return renderHashLink ? renderHashLink(props) : <HashLink {...props} />;
+  const renderHash = (props: HashLinkProps, customClassNames?: HashLinkProps['classNames']) => {
+    const classNames = customClassNames ?? hashLinkClassNames;
+    return renderHashLink ? renderHashLink(props) : <HashLink {...props} classNames={classNames} />;
   };
 
   const containerClasses =
@@ -65,11 +72,14 @@ export function TransactionKey<T extends Transaction>({
       return (
         <>
           {onChainHash &&
-            renderHash({
-              label: hashLabels.original,
-              hash: onChainHash,
-              variant: 'compact',
-            })}
+            renderHash(
+              {
+                label: hashLabels.original,
+                hash: onChainHash,
+                variant: 'compact',
+              },
+              originalHashLinkClassNames,
+            )}
           {typeof foundAdapter.getExplorerTxUrl !== 'undefined' &&
             renderHash({
               label: hashLabels.replaced,

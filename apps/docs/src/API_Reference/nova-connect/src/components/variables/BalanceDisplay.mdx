@@ -1,0 +1,32 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# BalanceDisplay
+
+> `const` **BalanceDisplay**: `React.FC`\<[`BalanceDisplayProps`](../interfaces/BalanceDisplayProps.md)\>
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:319](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/BalanceDisplay.tsx#L319)
+
+BalanceDisplay component for showing token balances with optional refresh functionality.
+Fully customizable through the customization prop.
+
+## Example
+
+```tsx
+<BalanceDisplay
+  balance={{ value: '1,234.56', symbol: 'USDC' }}
+  isLoading={false}
+  onRefetch={() => refetchBalance()}
+  customization={{
+    classNames: {
+      container: () => 'flex items-center gap-2',
+      balanceValue: () => 'text-lg font-bold',
+      refreshButton: () => 'hover:bg-accent/10',
+    },
+    config: {
+      showRefreshButton: true,
+    },
+  }}
+/>
+```

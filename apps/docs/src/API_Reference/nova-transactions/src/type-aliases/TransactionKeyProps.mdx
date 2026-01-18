@@ -6,7 +6,7 @@
 
 > **TransactionKeyProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TransactionKey.tsx#L14)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TransactionKey.tsx#L14)
 
 ## Type Declaration
 
@@ -17,6 +17,18 @@ Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](ht
 ### confirmations?
 
 > `optional` **confirmations**: `number`
+
+### hashLinkClassNames?
+
+> `optional` **hashLinkClassNames**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
+
+ClassNames to pass to HashLink components (default and replaced hash)
+
+### originalHashLinkClassNames?
+
+> `optional` **originalHashLinkClassNames**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
+
+ClassNames for original hash link in replaced transactions (falls back to hashLinkClassNames)
 
 ### renderHashLink()?
 

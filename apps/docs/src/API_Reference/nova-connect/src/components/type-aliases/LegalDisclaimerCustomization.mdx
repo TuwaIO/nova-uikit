@@ -1,0 +1,273 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# LegalDisclaimerCustomization
+
+> **LegalDisclaimerCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L86)
+
+Customization options for LegalDisclaimer component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L101)
+
+Custom class name generators
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+##### Returns
+
+`string`
+
+#### privacyLink()?
+
+> `optional` **privacyLink**: (`params`) => `string`
+
+Function to generate privacy link classes
+
+##### Parameters
+
+###### params
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+##### Returns
+
+`string`
+
+#### separator()?
+
+> `optional` **separator**: (`params`) => `string`
+
+Function to generate separator classes
+
+##### Parameters
+
+###### params
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+##### Returns
+
+`string`
+
+#### termsLink()?
+
+> `optional` **termsLink**: (`params`) => `string`
+
+Function to generate terms link classes
+
+##### Parameters
+
+###### params
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+##### Returns
+
+`string`
+
+#### text()?
+
+> `optional` **text**: (`params`) => `string`
+
+Function to generate text classes
+
+##### Parameters
+
+###### params
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L88)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`ContainerProps`\>
+
+Custom container wrapper
+
+#### PrivacyLink?
+
+> `optional` **PrivacyLink**: `ComponentType`\<`PrivacyLinkProps`\>
+
+Custom privacy link component
+
+#### Separator?
+
+> `optional` **Separator**: `ComponentType`\<`SeparatorProps`\>
+
+Custom separator component between terms and privacy
+
+#### TermsLink?
+
+> `optional` **TermsLink**: `ComponentType`\<`TermsLinkProps`\>
+
+Custom terms link component
+
+#### Text?
+
+> `optional` **Text**: `ComponentType`\<`TextProps`\>
+
+Custom text component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:121](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L121)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container()?
+
+> `optional` **container**: (`disclaimerData`) => `string`
+
+###### Parameters
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+###### Returns
+
+`string`
+
+#### display?
+
+> `optional` **display**: `object`
+
+Display configuration
+
+##### display.separatorText?
+
+> `optional` **separatorText**: `string`
+
+Custom separator text
+
+##### display.showPrivacy?
+
+> `optional` **showPrivacy**: `boolean`
+
+Show privacy link
+
+##### display.showTerms?
+
+> `optional` **showTerms**: `boolean`
+
+Show terms link
+
+#### links?
+
+> `optional` **links**: `object`
+
+Link behavior configuration
+
+##### links.openInNewTab?
+
+> `optional` **openInNewTab**: `boolean`
+
+Whether to open links in new tab
+
+##### links.rel?
+
+> `optional` **rel**: `string`
+
+Custom rel attribute for security
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L114)
+
+Custom event handlers
+
+#### onPrivacyClick()?
+
+> `optional` **onPrivacyClick**: (`disclaimerData`, `originalHandler`) => `void`
+
+Custom click handler for privacy link
+
+##### Parameters
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+###### originalHandler
+
+(`url`) => `void`
+
+##### Returns
+
+`void`
+
+#### onTermsClick()?
+
+> `optional` **onTermsClick**: (`disclaimerData`, `originalHandler`) => `void`
+
+Custom click handler for terms link
+
+##### Parameters
+
+###### disclaimerData
+
+[`LegalDisclaimerData`](../interfaces/LegalDisclaimerData.md)
+
+###### originalHandler
+
+(`url`) => `void`
+
+##### Returns
+
+`void`

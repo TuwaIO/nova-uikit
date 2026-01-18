@@ -7,11 +7,11 @@ import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
+import { WalletAvatar, type WalletAvatarCustomization, WalletAvatarProps } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
@@ -77,6 +77,12 @@ type AvatarSectionProps = {
   onSwitchWallet: () => void;
   onSwitchNetwork: () => void;
   className?: string;
+  /** Customization for switch wallet IconButton */
+  switchWalletButtonProps?: Partial<IconButtonProps>;
+  /** Customization for switch network IconButton */
+  switchNetworkButtonProps?: Partial<IconButtonProps>;
+  /** Customization for WalletAvatar component */
+  walletAvatarCustomization?: WalletAvatarCustomization;
 };
 
 type InfoSectionProps = {
@@ -86,6 +92,7 @@ type InfoSectionProps = {
   ensNameAbbreviated: string | undefined;
   labels: Record<string, string>;
   className?: string;
+  nameAndBalanceCustomization?: ConnectedModalNameAndBalanceCustomization;
 };
 
 type TransactionsSectionProps = {
@@ -95,6 +102,8 @@ type TransactionsSectionProps = {
   onViewTransactions: () => void;
   showPendingIndicators?: boolean;
   className?: string;
+  /** Custom className for the transactions button */
+  buttonClassName?: string;
 };
 
 type NoTransactionsIndicatorProps = {
@@ -177,6 +186,10 @@ export type ConnectedModalMainContentCustomization = {
     pendingSpinner?: () => string;
     /** Function to generate no transactions classes */
     noTransactions?: () => string;
+    /** Function to generate extra balances container classes */
+    extraBalancesContainer?: () => string;
+    /** Function to generate custom content container classes */
+    customContentContainer?: () => string;
   };
   /** Custom animation variants */
   variants?: {
@@ -241,7 +254,7 @@ export type ConnectedModalMainContentCustomization = {
     /** Customization for ConnectedModalNameAndBalance component */
     nameAndBalance?: ConnectedModalNameAndBalanceCustomization;
     /** Customization for WalletAvatar component */
-    walletAvatar?: Partial<WalletAvatarProps>;
+    walletAvatar?: WalletAvatarCustomization;
     /** Customization for switch wallet IconButton */
     switchWalletButton?: Partial<IconButtonProps>;
     /** Customization for switch network IconButton */
@@ -267,6 +280,10 @@ export type ConnectedModalMainContentCustomization = {
       noTransactions?: string;
     };
   };
+  /** Render slot for extra balances (tokens like USDC, ETH) - rendered after native balance */
+  renderExtraBalances?: () => ReactNode;
+  /** Render slot for custom content (like Telegram bot button) - rendered after transactions button */
+  renderCustomContent?: () => ReactNode;
 };
 
 /**
@@ -319,6 +336,9 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
   onSwitchWallet,
   onSwitchNetwork,
   className,
+  switchWalletButtonProps,
+  switchNetworkButtonProps,
+  walletAvatarCustomization,
 }) => {
   return (
     <motion.div
@@ -329,31 +349,40 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
     >
       {/* Wallet Switch Button */}
       <IconButton
-        className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]"
+        className={cn(
+          'novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]',
+          switchWalletButtonProps?.className,
+        )}
         walletIcon={activeConnection.icon}
         walletName={walletName}
         items={connectorsCount}
         onClick={onSwitchWallet}
         aria-label={`${labels.connectWallet} - ${connectorsCount} ${labels.connectWallet.toLowerCase()} available`}
         data-testid="switch-wallet-button"
+        customization={switchWalletButtonProps?.customization}
       />
 
       {/* Network Switch Button */}
       <IconButton
-        className="novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]"
+        className={cn(
+          'novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]',
+          switchNetworkButtonProps?.className,
+        )}
         walletChainId={activeConnection.chainId}
         items={chainsList.length}
         onClick={onSwitchNetwork}
         aria-label={`${labels.switchNetwork} - ${chainsList.length} ${labels.listOfNetworks.toLowerCase()} available`}
         data-testid="switch-network-button"
+        customization={switchNetworkButtonProps?.customization}
       />
 
       {/* Main Wallet Avatar */}
       <WalletAvatar
         ensAvatar={ensAvatar}
         address={activeConnection.address}
-        className="novacon:w-28 novacon:h-28 novacon:sm:w-32 novacon:sm:h-32"
+        className="novacon:w-36 novacon:h-36 novacon:sm:w-32 novacon:sm:h-32"
         aria-describedby="wallet-info"
+        customization={walletAvatarCustomization}
       />
     </motion.div>
   );
@@ -366,6 +395,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
   ensNameAbbreviated,
   labels,
   className,
+  nameAndBalanceCustomization,
 }) => {
   return (
     <motion.div
@@ -380,6 +410,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
         balance={balance}
         refetch={refetch}
         ensNameAbbreviated={ensNameAbbreviated}
+        customization={nameAndBalanceCustomization}
       />
     </motion.div>
   );
@@ -392,6 +423,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
   onViewTransactions,
   showPendingIndicators = true,
   className,
+  buttonClassName,
 }) => {
   if (walletTransactions.length === 0) return null;
 
@@ -407,7 +439,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
     >
       <button
         type="button"
-        className={standardButtonClasses}
+        className={buttonClassName || standardButtonClasses}
         onClick={onViewTransactions}
         aria-describedby="transaction-count"
         data-testid="view-transactions-button"
@@ -778,6 +810,9 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           onSwitchWallet={handleSwitchWallet}
           onSwitchNetwork={handleSwitchNetwork}
           className={customization?.classNames?.avatarSection?.()}
+          switchWalletButtonProps={customization?.childCustomizations?.switchWalletButton}
+          switchNetworkButtonProps={customization?.childCustomizations?.switchNetworkButton}
+          walletAvatarCustomization={customization?.childCustomizations?.walletAvatar}
         />
 
         {/* Wallet Name and Balance */}
@@ -788,7 +823,15 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           ensNameAbbreviated={ensNameAbbreviated}
           labels={labels}
           className={customization?.classNames?.infoSection?.()}
+          nameAndBalanceCustomization={customization?.childCustomizations?.nameAndBalance}
         />
+
+        {/* Extra Balances Slot (tokens like USDC, ETH) */}
+        {customization?.renderExtraBalances && (
+          <div className={customization?.classNames?.extraBalancesContainer?.()}>
+            {customization.renderExtraBalances()}
+          </div>
+        )}
 
         {/* Transactions Section */}
         <TransactionsSection
@@ -801,7 +844,15 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
             transactionsCount: walletTransactions.length,
             hasPendingTransactions,
           })}
+          buttonClassName={customization?.classNames?.transactionsButton?.()}
         />
+
+        {/* Custom Content Slot (like Telegram bot button) */}
+        {customization?.renderCustomContent && (
+          <div className={customization?.classNames?.customContentContainer?.()}>
+            {customization.renderCustomContent()}
+          </div>
+        )}
 
         {/* No Transactions State */}
         {walletTransactions.length === 0 && (

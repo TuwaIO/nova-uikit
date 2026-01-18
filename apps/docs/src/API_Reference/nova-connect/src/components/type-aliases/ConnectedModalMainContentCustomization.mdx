@@ -6,7 +6,7 @@
 
 > **ConnectedModalMainContentCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L107)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:116](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L116)
 
 Customization options for ConnectedModalMainContent component
 
@@ -16,7 +16,7 @@ Customization options for ConnectedModalMainContent component
 
 > `optional` **animation**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:195](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L195)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L208)
 
 Custom animation configuration
 
@@ -104,7 +104,7 @@ Animation easing curve
 
 > `optional` **childCustomizations**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:240](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L240)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:253](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L253)
 
 Child component customizations
 
@@ -128,7 +128,7 @@ Customization for switch wallet IconButton
 
 #### walletAvatar?
 
-> `optional` **walletAvatar**: `Partial`\<[`WalletAvatarProps`](../interfaces/WalletAvatarProps.md)\>
+> `optional` **walletAvatar**: [`WalletAvatarCustomization`](WalletAvatarCustomization.md)
 
 Customization for WalletAvatar component
 
@@ -138,7 +138,7 @@ Customization for WalletAvatar component
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L148)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:157](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L157)
 
 Custom class name generators
 
@@ -177,6 +177,26 @@ Function to generate container classes
 ###### isLoading
 
 `boolean`
+
+##### Returns
+
+`string`
+
+#### customContentContainer()?
+
+> `optional` **customContentContainer**: () => `string`
+
+Function to generate custom content container classes
+
+##### Returns
+
+`string`
+
+#### extraBalancesContainer()?
+
+> `optional` **extraBalancesContainer**: () => `string`
+
+Function to generate extra balances container classes
 
 ##### Returns
 
@@ -342,7 +362,7 @@ Function to generate wallet avatar classes
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L127)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L136)
 
 Custom components
 
@@ -406,7 +426,7 @@ Custom wallet avatar component
 
 > `optional` **config**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:251](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L251)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:264](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L264)
 
 Configuration options
 
@@ -470,7 +490,7 @@ Whether to show pending transaction indicators
 
 > `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:109](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L109)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:118](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L118)
 
 Override root container props
 
@@ -480,7 +500,7 @@ Override root container props
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:227](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L227)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:240](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L240)
 
 Custom event handlers
 
@@ -552,11 +572,39 @@ Custom handler for view transactions
 
 ***
 
+### renderCustomContent()?
+
+> `optional` **renderCustomContent**: () => `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:286](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L286)
+
+Render slot for custom content (like Telegram bot button) - rendered after transactions button
+
+#### Returns
+
+`ReactNode`
+
+***
+
+### renderExtraBalances()?
+
+> `optional` **renderExtraBalances**: () => `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:284](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L284)
+
+Render slot for extra balances (tokens like USDC, ETH) - rendered after native balance
+
+#### Returns
+
+`ReactNode`
+
+***
+
 ### variants?
 
 > `optional` **variants**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L182)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:195](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L195)
 
 Custom animation variants
 

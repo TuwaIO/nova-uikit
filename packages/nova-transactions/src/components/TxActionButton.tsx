@@ -50,6 +50,25 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
   failedContent?: ReactNode;
   replacedContent?: ReactNode;
   resetTimeout?: number;
+  /** Granular classNames for state-specific styling. Each overrides default styles for that state. */
+  classNames?: {
+    /** Base button classes (always applied) */
+    base?: string;
+    /** Classes for idle state (replaces default if provided) */
+    idle?: string;
+    /** Classes for loading state (replaces default if provided) */
+    loading?: string;
+    /** Classes for succeed state (replaces default if provided) */
+    succeed?: string;
+    /** Classes for failed state (replaces default if provided) */
+    failed?: string;
+    /** Classes for replaced state (replaces default if provided) */
+    replaced?: string;
+    /** Classes for the status icon */
+    icon?: string;
+    /** Classes for the label text */
+    label?: string;
+  };
 };
 
 export function TxActionButton<T extends Transaction>({
@@ -64,6 +83,7 @@ export function TxActionButton<T extends Transaction>({
   replacedContent,
   resetTimeout = 2500,
   className,
+  classNames,
   ...props
 }: TxActionButtonProps<T>) {
   const { trackedTxButton } = useLabels();
@@ -135,23 +155,28 @@ export function TxActionButton<T extends Transaction>({
     }
   };
 
+  // Default state-specific classes
+  const defaultStateClasses = {
+    idle: 'novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
+    loading: 'novatx:bg-gray-400 novatx:text-white',
+    replaced: 'novatx:bg-gray-500 novatx:text-white',
+    succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
+    failed: 'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
+  };
+
+  // Use custom classNames if provided, otherwise use defaults
+  const stateClass = classNames?.[status] ?? defaultStateClasses[status];
+
+  const baseClass =
+    classNames?.base ??
+    'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-md novatx:px-3 novatx:py-1.5 novatx:text-sm novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70';
+
   return (
     <button
       {...props}
       disabled={status !== 'idle' || props.disabled}
       onClick={handleClick}
-      className={cn(
-        'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-md novatx:px-3 novatx:py-1.5 novatx:text-sm novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70',
-        {
-          'novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90':
-            status === 'idle',
-          'novatx:bg-gray-400 novatx:text-white': status === 'loading',
-          'novatx:bg-gray-500 novatx:text-white': status === 'replaced',
-          'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]': status === 'succeed',
-          'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]': status === 'failed',
-        },
-        className,
-      )}
+      className={cn(baseClass, stateClass, className)}
     >
       {renderContent()}
     </button>

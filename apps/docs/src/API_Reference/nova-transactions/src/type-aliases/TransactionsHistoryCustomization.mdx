@@ -6,7 +6,10 @@
 
 > **TransactionsHistoryCustomization**\<`T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TransactionsHistory.tsx#L14)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
+
+Customization options for TransactionsHistory component.
+Allows styling of all sub-elements including individual transaction items.
 
 ## Type Parameters
 
@@ -20,11 +23,147 @@ Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:1
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:16](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TransactionsHistory.tsx#L16)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TransactionsHistory.tsx#L22)
+
+Custom class name generators for all elements
+
+#### container?
+
+> `optional` **container**: `string`
+
+Classes for the outer container
+
+#### itemContainer?
+
+> `optional` **itemContainer**: `string`
+
+Classes for individual transaction item container
+
+#### itemContentWrapper?
+
+> `optional` **itemContentWrapper**: `string`
+
+Classes for the content wrapper (title, timestamp, description)
+
+#### itemDescription?
+
+> `optional` **itemDescription**: `string`
+
+Classes for the description text
+
+#### itemHashCopyButton?
+
+> `optional` **itemHashCopyButton**: `string`
+
+Classes for the default hash copy button
+
+#### itemHashLabel?
+
+> `optional` **itemHashLabel**: `string`
+
+Classes for the default hash link label
+
+#### itemHashLink?
+
+> `optional` **itemHashLink**: `string`
+
+Classes for the default hash link
+
+#### itemIcon?
+
+> `optional` **itemIcon**: `string`
+
+Classes for the icon itself
+
+#### itemIconWrapper?
+
+> `optional` **itemIconWrapper**: `string`
+
+Classes for the icon wrapper
+
+#### itemOriginalHashCopyButton?
+
+> `optional` **itemOriginalHashCopyButton**: `string`
+
+Classes for the original hash copy button (replaced transactions)
+
+#### itemOriginalHashLabel?
+
+> `optional` **itemOriginalHashLabel**: `string`
+
+Classes for the original hash link label (replaced transactions)
+
+#### itemOriginalHashLink?
+
+> `optional` **itemOriginalHashLink**: `string`
+
+Classes for the original hash link (replaced transactions)
+
+#### itemStatusBadge?
+
+> `optional` **itemStatusBadge**: `string`
+
+Classes for the status badge container
+
+#### itemStatusBadgeIcon?
+
+> `optional` **itemStatusBadgeIcon**: `string`
+
+Classes for the status badge icon
+
+#### itemStatusBadgeLabel?
+
+> `optional` **itemStatusBadgeLabel**: `string`
+
+Classes for the status badge label
+
+#### itemTimestamp?
+
+> `optional` **itemTimestamp**: `string`
+
+Classes for the timestamp text
+
+#### itemTitle?
+
+> `optional` **itemTitle**: `string`
+
+Classes for the title text
+
+#### itemTxKeyContainer?
+
+> `optional` **itemTxKeyContainer**: `string`
+
+Classes for the transaction key container
 
 #### listWrapper?
 
 > `optional` **listWrapper**: `string`
+
+Classes for the list wrapper container
+
+#### placeholderContainer?
+
+> `optional` **placeholderContainer**: `string`
+
+Classes for the placeholder container
+
+#### placeholderMessage?
+
+> `optional` **placeholderMessage**: `string`
+
+Classes for the placeholder message
+
+#### placeholderTitle?
+
+> `optional` **placeholderTitle**: `string`
+
+Classes for the placeholder title
+
+#### titleText?
+
+> `optional` **titleText**: `string`
+
+Classes for the title element
 
 ***
 
@@ -32,15 +171,21 @@ Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:1
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TransactionsHistory.tsx#L19)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TransactionsHistory.tsx#L72)
+
+Custom components
 
 #### HistoryItem?
 
 > `optional` **HistoryItem**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`T`\>\>
 
+Custom history item component
+
 #### Placeholder?
 
 > `optional` **Placeholder**: `ComponentType`\<`CustomPlaceholderProps`\>
+
+Custom placeholder component
 
 ***
 
@@ -48,4 +193,6 @@ Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:1
 
 > `optional` **title**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:15](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TransactionsHistory.tsx#L15)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TransactionsHistory.tsx#L20)
+
+Custom title for the transactions history section

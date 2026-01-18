@@ -9,7 +9,7 @@ import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { RecentBadge } from './RecentBadge';
+import { RecentBadge, RecentBadgeCustomization } from './RecentBadge';
 
 // --- Types ---
 
@@ -273,6 +273,8 @@ export type ConnectCardCustomization = {
   };
   /** NetworkIcons customization */
   networkIcons?: NetworkIconsCustomization;
+  /** RecentBadge customization */
+  recentBadge?: RecentBadgeCustomization;
 };
 
 /**
@@ -895,7 +897,7 @@ export const ConnectCard = memo(
               }
               cardData={cardData}
             >
-              <RecentBadge>{labels.recent}</RecentBadge>
+              <RecentBadge customization={customization?.recentBadge}>{labels.recent}</RecentBadge>
             </CustomRecentBadgeWrapper>
           )}
 

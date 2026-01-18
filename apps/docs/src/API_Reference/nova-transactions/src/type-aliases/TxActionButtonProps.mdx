@@ -6,7 +6,7 @@
 
 > **TxActionButtonProps**\<`T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TxActionButton.tsx#L42)
+Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TxActionButton.tsx#L42)
 
 ## Type Declaration
 
@@ -21,6 +21,60 @@ Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](ht
 ### children
 
 > **children**: `ReactNode`
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Granular classNames for state-specific styling. Each overrides default styles for that state.
+
+#### classNames.base?
+
+> `optional` **base**: `string`
+
+Base button classes (always applied)
+
+#### classNames.failed?
+
+> `optional` **failed**: `string`
+
+Classes for failed state (replaces default if provided)
+
+#### classNames.icon?
+
+> `optional` **icon**: `string`
+
+Classes for the status icon
+
+#### classNames.idle?
+
+> `optional` **idle**: `string`
+
+Classes for idle state (replaces default if provided)
+
+#### classNames.label?
+
+> `optional` **label**: `string`
+
+Classes for the label text
+
+#### classNames.loading?
+
+> `optional` **loading**: `string`
+
+Classes for loading state (replaces default if provided)
+
+#### classNames.replaced?
+
+> `optional` **replaced**: `string`
+
+Classes for replaced state (replaces default if provided)
+
+#### classNames.succeed?
+
+> `optional` **succeed**: `string`
+
+Classes for succeed state (replaces default if provided)
 
 ### failedContent?
 

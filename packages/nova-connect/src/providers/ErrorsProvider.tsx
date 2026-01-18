@@ -2,7 +2,7 @@
  * @file This file contains the `ErrorsProvider` component, a customizable error toast provider with full styling control.
  */
 
-import { ToastCloseButton } from '@tuwaio/nova-core';
+import { ToastCloseButton, ToastCloseButtonProps } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition } from 'react-toastify';
 
@@ -36,6 +36,8 @@ export type ErrorsProviderCustomization = {
   };
   /** Default ToastError customization (only used with default ToastError component) */
   toastErrorCustomization?: ToastErrorCustomization;
+  /** Customization for toast close button */
+  toastCloseButton?: Omit<ToastCloseButtonProps, 'closeToast'>;
   /** Custom class name generators */
   classNames?: {
     /** Function to generate container classes */
@@ -345,6 +347,17 @@ export function ErrorsProvider({
     return 'novacon:p-0 novacon:bg-transparent';
   }, [customization, errorState.hasAnyError, errorState.errorType]);
 
+  // Create customized close button component
+  const CustomizedCloseButton = useMemo(() => {
+    const closeButtonCustomization = customization?.toastCloseButton;
+    if (!closeButtonCustomization) return ToastCloseButton;
+
+    // Return a wrapper component that passes customization props
+    return ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLElement>) => void }) => (
+      <ToastCloseButton closeToast={closeToast} {...closeButtonCustomization} />
+    );
+  }, [customization?.toastCloseButton]);
+
   // Memoize default container props
   const defaultContainerProps = useMemo(
     () => ({
@@ -352,7 +365,7 @@ export function ErrorsProvider({
       position,
       closeOnClick: false,
       icon: false as const,
-      closeButton: ToastCloseButton,
+      closeButton: CustomizedCloseButton,
       autoClose,
       hideProgressBar: false,
       newestOnTop: false,
@@ -362,7 +375,7 @@ export function ErrorsProvider({
       theme: 'light' as const,
       transition: Bounce as ToastTransition,
     }),
-    [containerId, position, autoClose, draggable],
+    [containerId, position, autoClose, draggable, CustomizedCloseButton],
   );
 
   // Merge container props (NO labels passed to custom components!)

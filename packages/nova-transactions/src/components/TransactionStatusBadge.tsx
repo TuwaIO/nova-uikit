@@ -40,9 +40,22 @@ const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
 export type TransactionStatusBadgeProps<T extends Transaction> = {
   tx: T;
   className?: string;
+  /** Granular class names for sub-elements */
+  classNames?: {
+    /** Classes for the badge container */
+    container?: string;
+    /** Classes for the status icon */
+    icon?: string;
+    /** Classes for the label text */
+    label?: string;
+  };
 };
 
-export function TransactionStatusBadge<T extends Transaction>({ tx, className }: TransactionStatusBadgeProps<T>) {
+export function TransactionStatusBadge<T extends Transaction>({
+  tx,
+  className,
+  classNames,
+}: TransactionStatusBadgeProps<T>) {
   const { statuses } = useLabels();
 
   const statusConfig = useMemo(() => getStatusConfig(statuses), [statuses]);
@@ -56,9 +69,14 @@ export function TransactionStatusBadge<T extends Transaction>({ tx, className }:
   if (!config) {
     return (
       <div
-        className={cn(baseClasses, 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]', className)}
+        className={cn(
+          baseClasses,
+          'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
+          classNames?.container,
+          className,
+        )}
       >
-        {tx.status ?? statuses.unknown}
+        <span className={classNames?.label}>{tx.status ?? statuses.unknown}</span>
       </div>
     );
   }
@@ -66,9 +84,9 @@ export function TransactionStatusBadge<T extends Transaction>({ tx, className }:
   const { label, Icon, badgeClasses, iconClasses } = config;
 
   return (
-    <div className={cn(baseClasses, badgeClasses, className)}>
-      <Icon className={cn('novatx:h-4 novatx:w-4', iconClasses)} />
-      {label}
+    <div className={cn(baseClasses, badgeClasses, classNames?.container, className)}>
+      <Icon className={cn('novatx:h-4 novatx:w-4', iconClasses, classNames?.icon)} />
+      <span className={classNames?.label}>{label}</span>
     </div>
   );
 }

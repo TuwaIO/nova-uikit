@@ -2,23 +2,15 @@
  * @file ConnectedModalNameAndBalance component with comprehensive customization options for wallet name and balance display.
  */
 
-import { ArrowPathIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
+import { BalanceDisplay as BalanceDisplayComponent, type BalanceDisplayCustomization } from '../BalanceDisplay';
 import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';
 
 // --- Default Motion Variants ---
@@ -38,12 +30,6 @@ const DEFAULT_CHECK_ICON_ANIMATION_VARIANTS: Variants = {
   initial: { scale: 0.6, opacity: 0, rotate: -90 },
   animate: { scale: 1, opacity: 1, rotate: 0, transition: { duration: 0.2, ease: 'easeInOut' } },
   exit: { scale: 0.6, opacity: 0, rotate: 90, transition: { duration: 0.2, ease: 'easeInOut' } },
-};
-
-const DEFAULT_LOADING_ANIMATION_VARIANTS: Variants = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1, transition: { duration: 0.2, ease: 'easeOut' } },
-  exit: { opacity: 0, scale: 0.95, transition: { duration: 0.15, ease: 'easeIn' } },
 };
 
 // --- Types for Customization ---
@@ -69,6 +55,8 @@ type BalanceDisplayProps = {
   refetch: () => void;
   labels: Record<string, string>;
   className?: string;
+  /** Customization for the BalanceDisplay component */
+  customization?: BalanceDisplayCustomization;
 };
 
 type ScreenReaderFeedbackProps = {
@@ -139,18 +127,8 @@ export type ConnectedModalNameAndBalanceCustomization = {
     copyIcon?: () => string;
     /** Function to generate check icon classes */
     checkIcon?: () => string;
-    /** Function to generate balance container classes */
+    /** Function to generate balance container wrapper classes */
     balanceContainer?: () => string;
-    /** Function to generate balance loading classes */
-    balanceLoading?: () => string;
-    /** Function to generate balance display classes */
-    balanceDisplay?: () => string;
-    /** Function to generate balance value classes */
-    balanceValue?: () => string;
-    /** Function to generate balance symbol classes */
-    balanceSymbol?: () => string;
-    /** Function to generate no balance classes */
-    noBalance?: () => string;
     /** Function to generate screen reader feedback classes */
     screenReaderFeedback?: () => string;
     /** Function to generate live region classes */
@@ -229,6 +207,11 @@ export type ConnectedModalNameAndBalanceCustomization = {
       screenReaderFeedback?: string;
       liveRegion?: string;
     };
+  };
+  /** Child component customizations */
+  childCustomizations?: {
+    /** Customization for BalanceDisplay component */
+    balanceDisplay?: BalanceDisplayCustomization;
   };
 };
 
@@ -348,120 +331,38 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
   refetch,
   labels,
   className,
+  customization,
 }) => {
-  const [showSuccess, setShowSuccess] = useState(false);
-  const prevLoading = useRef(balanceLoading);
-
-  useEffect(() => {
-    if (prevLoading.current && !balanceLoading) {
-      setShowSuccess(true);
-      const timer = setTimeout(() => setShowSuccess(false), 1500);
-      return () => clearTimeout(timer);
-    }
-    prevLoading.current = balanceLoading;
-  }, [balanceLoading]);
-
-  const balanceDisplay = useMemo(() => {
+  // Convert balance format for BalanceDisplayComponent
+  const balanceData = useMemo(() => {
     if (!balance?.value || !balance?.symbol) return null;
-    return `${balance.value} ${balance.symbol}`;
+    return {
+      value: balance.value,
+      symbol: balance.symbol,
+    };
   }, [balance]);
 
-  if (balanceLoading && !balanceDisplay) {
-    return (
-      <motion.div
-        variants={DEFAULT_LOADING_ANIMATION_VARIANTS}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className={cn(
-          'novacon:animate-pulse novacon:rounded-xl novacon:h-5 novacon:w-24 novacon:bg-[var(--tuwa-bg-muted)]',
-          className,
-        )}
-        role="status"
-        aria-label={labels.loading}
-      >
-        <span className="novacon:sr-only">
-          {labels.loading} {labels.walletBalance}
-        </span>
-      </motion.div>
-    );
-  }
-
-  const renderRefetchButton = () => (
-    <button
-      type="button"
-      onClick={refetch}
-      disabled={balanceLoading}
-      className={cn(
-        'novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors novacon:absolute novacon:right-[-30px]',
-        'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-tertiary)]',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)]',
-        showSuccess && 'novacon:text-[var(--tuwa-success-text)]',
-      )}
-      aria-label="Refresh balance"
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        {showSuccess ? (
-          <motion.div
-            key="success"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <CheckIcon className="novacon:w-4 novacon:h-4" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="refresh"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, rotate: balanceLoading ? 360 : 0 }}
-            exit={{ opacity: 0 }}
-            transition={balanceLoading ? { repeat: Infinity, duration: 1, ease: 'linear' } : { duration: 0.2 }}
-          >
-            <ArrowPathIcon className="novacon:w-4 novacon:h-4" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </button>
+  // Merge labels for BalanceDisplayComponent
+  const balanceLabels = useMemo(
+    () => ({
+      loading: labels.loading,
+      walletBalance: labels.walletBalance,
+      refreshBalance: 'Refresh balance',
+      noBalanceAvailable: 'No balance information available',
+    }),
+    [labels],
   );
 
-  if (balanceDisplay) {
-    return (
-      <div className="novacon:flex novacon:items-center novacon:relative">
-        <p
-          className={cn(
-            'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)]',
-            className,
-          )}
-          role="text"
-          aria-label={`${labels.walletBalance}: ${balanceDisplay}`}
-        >
-          <span aria-hidden="true">{balance?.value}</span>
-          <span aria-hidden="true">{balance?.symbol}</span>
-
-          {/* Screen reader friendly version */}
-          <span className="novacon:sr-only">
-            {labels.walletBalance}: {balanceDisplay}
-          </span>
-        </p>
-        {renderRefetchButton()}
-      </div>
-    );
-  }
-
   return (
-    <div className="novacon:flex novacon:items-center novacon:relative">
-      <p
-        className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)] novacon:opacity-75', className)}
-        role="text"
-        aria-label="No balance information available"
-      >
-        <span aria-hidden="true">—</span>
-        <span className="novacon:sr-only">No balance information available</span>
-      </p>
-      {renderRefetchButton()}
-    </div>
+    <BalanceDisplayComponent
+      balance={balanceData}
+      isLoading={balanceLoading}
+      onRefetch={refetch}
+      labels={balanceLabels}
+      className={className}
+      customization={customization}
+      data-testid="wallet-balance-display"
+    />
   );
 };
 
@@ -715,7 +616,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
             balanceLoading={balanceLoading}
             refetch={refetch}
             labels={labels}
-            className={customization?.classNames?.balanceDisplay?.()}
+            customization={customization?.childCustomizations?.balanceDisplay}
           />
         </div>
 

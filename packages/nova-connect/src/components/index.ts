@@ -1,3 +1,4 @@
+export * from './BalanceDisplay';
 export * from './Chains/ChainListRenderer';
 export * from './Chains/ChainSelector';
 export * from './Chains/ScrollableChainList';
@@ -19,6 +20,7 @@ export * from './ConnectModal/ConnectorsSelections';
 export * from './ConnectModal/Disclaimer';
 export * from './ConnectModal/GetWallet';
 export * from './ConnectModal/ImpersonatedForm';
+export * from './ConnectModal/LegalDisclaimer';
 export * from './ConnectModal/NetworkSelections';
 export * from './ConnectModal/NetworkTabs';
 export * from './ConnectModal/RecentBadge';

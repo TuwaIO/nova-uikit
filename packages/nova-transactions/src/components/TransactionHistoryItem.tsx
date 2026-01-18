@@ -17,10 +17,15 @@ import { TransactionStatusBadge, TransactionStatusBadgeProps } from './Transacti
 
 dayjs.extend(relativeTime);
 
-type CustomIconProps = { chainId: number | string };
-type CustomTimestampProps = { timestamp?: number };
+type CustomIconProps = { chainId: number | string; className?: string };
+type CustomTimestampProps = { timestamp?: number; className?: string };
 
+/**
+ * Customization options for TransactionHistoryItem component.
+ * Allows styling of all sub-elements including icon, text, badge, and hash link.
+ */
 export type TransactionHistoryItemCustomization<T extends Transaction> = {
+  /** Custom components */
   components?: {
     Icon?: ComponentType<CustomIconProps>;
     Title?: ComponentType<StatusAwareTextProps>;
@@ -28,6 +33,43 @@ export type TransactionHistoryItemCustomization<T extends Transaction> = {
     Timestamp?: ComponentType<CustomTimestampProps>;
     StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
+  };
+  /** Custom class name generators for all sub-elements */
+  classNames?: {
+    /** Classes for the item container */
+    container?: string;
+    /** Classes for the icon wrapper */
+    iconWrapper?: string;
+    /** Classes for the icon itself */
+    icon?: string;
+    /** Classes for the content wrapper */
+    contentWrapper?: string;
+    /** Classes for the title */
+    title?: string;
+    /** Classes for the timestamp */
+    timestamp?: string;
+    /** Classes for the description */
+    description?: string;
+    /** Classes for the status badge container */
+    statusBadge?: string;
+    /** Classes for the status badge icon */
+    statusBadgeIcon?: string;
+    /** Classes for the status badge label */
+    statusBadgeLabel?: string;
+    /** Classes for the transaction key container */
+    txKeyContainer?: string;
+    /** Classes for default hash link label */
+    hashLabel?: string;
+    /** Classes for default hash link */
+    hashLink?: string;
+    /** Classes for default copy button */
+    hashCopyButton?: string;
+    /** Classes for original hash link label (replaced transactions) */
+    originalHashLabel?: string;
+    /** Classes for original hash link (replaced transactions) */
+    originalHashLink?: string;
+    /** Classes for original hash copy button (replaced transactions) */
+    originalHashCopyButton?: string;
   };
 };
 
@@ -40,14 +82,14 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
   className?: string;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
-const DefaultIcon = ({ chainId }: CustomIconProps) => (
-  <div className="novatx:h-8 novatx:w-8 novatx:text-[var(--tuwa-text-secondary)]">
+const DefaultIcon = ({ chainId, className }: CustomIconProps) => (
+  <div className={cn('novatx:h-8 novatx:w-8 novatx:text-[var(--tuwa-text-secondary)]', className)}>
     <NetworkIcon chainId={setChainId(chainId)} />
   </div>
 );
 
-const DefaultTimestamp = ({ timestamp }: CustomTimestampProps) => (
-  <span className="novatx:mb-1 novatx:block novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]">
+const DefaultTimestamp = ({ timestamp, className }: CustomTimestampProps) => (
+  <span className={cn('novatx:mb-1 novatx:block novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]', className)}>
     {timestamp ? dayjs.unix(timestamp).fromNow() : '...'}
   </span>
 );
@@ -67,29 +109,71 @@ export function TransactionHistoryItem<T extends Transaction>({
     TransactionKey: TxKey = TransactionKey,
   } = customization?.components ?? {};
 
+  const classNames = customization?.classNames;
+
   return (
     <div
       className={cn(
         'novatx:flex novatx:flex-col novatx:gap-2 novatx:border-b novatx:border-[var(--tuwa-border-secondary)] novatx:p-3 novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-secondary)]',
+        classNames?.container,
         className,
       )}
     >
       <div className="novatx:flex novatx:items-start novatx:justify-between">
         <div className="novatx:flex novatx:items-center novatx:gap-4">
-          <div className="novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-bg-muted)]">
-            <Icon chainId={tx.chainId} />
+          <div
+            className={cn(
+              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-bg-muted)]',
+              classNames?.iconWrapper,
+            )}
+          >
+            <Icon chainId={tx.chainId} className={classNames?.icon} />
           </div>
-          <div>
-            <Title txStatus={tx.status} source={tx.title} fallback={tx.type} variant="title" applyColor />
-            <Timestamp timestamp={tx.localTimestamp} />
-            <Description txStatus={tx.status} source={tx.description} variant="description" />
+          <div className={classNames?.contentWrapper}>
+            <Title
+              txStatus={tx.status}
+              source={tx.title}
+              fallback={tx.type}
+              variant="title"
+              applyColor
+              className={classNames?.title}
+            />
+            <Timestamp timestamp={tx.localTimestamp} className={classNames?.timestamp} />
+            <Description
+              txStatus={tx.status}
+              source={tx.description}
+              variant="description"
+              className={classNames?.description}
+            />
           </div>
         </div>
 
-        <StatusBadge tx={tx} />
+        <StatusBadge
+          tx={tx}
+          className={classNames?.statusBadge}
+          classNames={{
+            icon: classNames?.statusBadgeIcon,
+            label: classNames?.statusBadgeLabel,
+          }}
+        />
       </div>
 
-      <TxKey tx={tx} adapter={adapter} variant="history" />
+      <TxKey
+        tx={tx}
+        adapter={adapter}
+        variant="history"
+        className={classNames?.txKeyContainer}
+        hashLinkClassNames={{
+          label: classNames?.hashLabel,
+          link: classNames?.hashLink,
+          copyButton: classNames?.hashCopyButton,
+        }}
+        originalHashLinkClassNames={{
+          label: classNames?.originalHashLabel,
+          link: classNames?.originalHashLink,
+          copyButton: classNames?.originalHashCopyButton,
+        }}
+      />
     </div>
   );
 }

@@ -6,7 +6,7 @@
 
 > `const` **ConnectedModal**: `ForwardRefExoticComponent`\<[`ConnectedModalProps`](../interfaces/ConnectedModalProps.md) & `RefAttributes`\<`HTMLDivElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:413](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L413)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:583](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L583)
 
 Modal component that displays wallet connection status and provides access to wallet controls with comprehensive customization options.
 
@@ -24,7 +24,7 @@ This modal serves as the main interface for connected wallet management, offerin
 The modal adapts its content based on the current view state and provides
 full WCAG compliance with proper ARIA labels and keyboard navigation support.
 
-## Example
+## Examples
 
 ```tsx
 <ConnectedModal
@@ -33,5 +33,26 @@ full WCAG compliance with proper ARIA labels and keyboard navigation support.
   pulsarAdapter={adapter}
   appChains={chainConfig}
   store={store}
+/>
+```
+
+```tsx
+<ConnectedModal
+  customization={{
+    components: {
+      DialogTitle: ({ title, contentType, onBack, labels }) => (
+        <div className="custom-title">
+          {contentType !== 'main' && (
+            <button onClick={onBack}>{labels.back}</button>
+          )}
+          <h2>{title}</h2>
+        </div>
+      ),
+    },
+    classNames: {
+      dialogTitle: ({ contentType }) =>
+        contentType === 'main' ? 'main-title' : 'sub-title',
+    },
+  }}
 />
 ```

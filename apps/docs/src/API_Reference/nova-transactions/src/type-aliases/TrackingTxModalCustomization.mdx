@@ -6,7 +6,7 @@
 
 > **TrackingTxModalCustomization**\<`T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L37)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L40)
 
 ## Type Parameters
 
@@ -16,11 +16,101 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingT
 
 ## Properties
 
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L53)
+
+Granular classNames for all sub-elements
+
+#### allTransactionsButton?
+
+> `optional` **allTransactionsButton**: `string`
+
+Classes for the All Transactions button
+
+#### cancelButton?
+
+> `optional` **cancelButton**: `string`
+
+Classes for the Cancel button
+
+#### closeButton?
+
+> `optional` **closeButton**: `string`
+
+Classes for the close button
+
+#### closeModalButton?
+
+> `optional` **closeModalButton**: `string`
+
+Classes for the Close button
+
+#### container?
+
+> `optional` **container**: `string`
+
+Classes for the outer container
+
+#### footer?
+
+> `optional` **footer**: `string`
+
+Classes for the footer section
+
+#### footerActions?
+
+> `optional` **footerActions**: `string`
+
+Classes for the actions container (left side of footer)
+
+#### footerButtons?
+
+> `optional` **footerButtons**: `string`
+
+Classes for the buttons container (right side of footer)
+
+#### header?
+
+> `optional` **header**: `string`
+
+Classes for the header section
+
+#### headerTitle?
+
+> `optional` **headerTitle**: `string`
+
+Classes for the header title
+
+#### main?
+
+> `optional` **main**: `string`
+
+Classes for the main content area
+
+#### retryButton?
+
+> `optional` **retryButton**: `string`
+
+Classes for the Retry button
+
+#### speedUpButton?
+
+> `optional` **speedUpButton**: `string`
+
+Classes for the SpeedUp button
+
+***
+
 ### components?
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L40)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L44)
+
+Custom components to override default elements
 
 #### ErrorBlock?
 
@@ -48,11 +138,43 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingT
 
 ***
 
+### errorBlockCustomization?
+
+> `optional` **errorBlockCustomization**: `object`
+
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L98)
+
+Customization for TxErrorBlock
+
+#### className?
+
+> `optional` **className**: `string`
+
+Container className
+
+#### classNames?
+
+> `optional` **classNames**: [`TxErrorBlockClassNames`](TxErrorBlockClassNames.md)
+
+Granular classNames
+
+***
+
+### infoBlockCustomization?
+
+> `optional` **infoBlockCustomization**: [`TxInfoBlockCustomization`](TxInfoBlockCustomization.md)\<`T`\>
+
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L82)
+
+Customization for TxInfoBlock
+
+***
+
 ### modalProps?
 
 > `optional` **modalProps**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `DialogContent`\>\>
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L38)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L41)
 
 ***
 
@@ -60,4 +182,48 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingT
 
 > `optional` **motionProps**: `MotionProps`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/30533978de760ad58b9ab15d87aa394796ecc1a5/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L39)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L42)
+
+***
+
+### progressIndicatorCustomization?
+
+> `optional` **progressIndicatorCustomization**: `object`
+
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L84)
+
+Customization for TxProgressIndicator
+
+#### className?
+
+> `optional` **className**: `string`
+
+Container className
+
+#### stepClassNames?
+
+> `optional` **stepClassNames**: [`TxProgressIndicatorProps`](../interfaces/TxProgressIndicatorProps.md)\[`"stepClassNames"`\]
+
+Step classNames
+
+***
+
+### statusVisualCustomization?
+
+> `optional` **statusVisualCustomization**: `object`
+
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/bc6cba7c9f14a374d1d7687556fbf7f55afba14e/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L91)
+
+Customization for TxStatusVisual
+
+#### className?
+
+> `optional` **className**: `string`
+
+Container className
+
+#### iconClassNames?
+
+> `optional` **iconClassNames**: [`TxStatusVisualClassNames`](TxStatusVisualClassNames.md)
+
+Icon classNames with status-specific overrides

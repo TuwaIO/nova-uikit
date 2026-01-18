@@ -82,7 +82,9 @@ export function useWalletNativeBalance(): NativeBalanceData {
 
   // Create the unique key for cache lookups: "address-chainId".
   const cacheKey = useMemo(() => {
-    return activeConnection?.chainId && activeConnection?.address ? `${activeConnection.address}-${activeConnection.chainId}` : null;
+    return activeConnection?.chainId && activeConnection?.address
+      ? `${activeConnection.address}-${activeConnection.chainId}`
+      : null;
   }, [activeConnection?.chainId, activeConnection?.address]);
 
   // Find the actual adapter object from the adapter map.
@@ -101,7 +103,13 @@ export function useWalletNativeBalance(): NativeBalanceData {
   const fetchBalance = useCallback(
     async (forceRefresh = false) => {
       // Exit early if essential data is missing (not connected).
-      if (!activeConnection?.address || !foundAdapter || !activeConnection?.chainId || !cacheKey || !hasBalanceResolver) {
+      if (
+        !activeConnection?.address ||
+        !foundAdapter ||
+        !activeConnection?.chainId ||
+        !cacheKey ||
+        !hasBalanceResolver
+      ) {
         setIsLoading(false);
         return;
       }

@@ -19,15 +19,27 @@ import {
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { ScrollableChainList, ScrollableChainListProps } from '../Chains/ScrollableChainList';
+import {
+  ScrollableChainList,
+  ScrollableChainListCustomization,
+  ScrollableChainListProps,
+} from '../Chains/ScrollableChainList';
 import { ConnectButtonProps } from '../ConnectButton';
-import { ConnectedModalFooter, ConnectedModalFooterProps } from './ConnectedModalFooter';
+import {
+  ConnectedModalFooter,
+  ConnectedModalFooterCustomization,
+  ConnectedModalFooterProps,
+} from './ConnectedModalFooter';
 import {
   ConnectedModalMainContent,
   ConnectedModalMainContentCustomization,
   ConnectedModalMainContentProps,
 } from './ConnectedModalMainContent';
-import { ConnectedModalTxHistory, ConnectedModalTxHistoryProps } from './ConnectedModalTxHistory';
+import {
+  ConnectedModalTxHistory,
+  ConnectedModalTxHistoryCustomization,
+  ConnectedModalTxHistoryProps,
+} from './ConnectedModalTxHistory';
 import { ConnectionsContent, ConnectionsContentCustomization } from './ConnectionsContent';
 
 // --- Default Motion Variants ---
@@ -48,45 +60,96 @@ const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
 };
 
 // --- Component Props Types ---
-type HeaderProps = {
-  contentType: ConnectedContentType;
+
+/**
+ * Props for custom DialogTitle component
+ * DialogTitle is the main title element that includes back button and title text
+ */
+type DialogTitleProps = {
+  /** Current title text */
   title: string;
+  /** Current content type for conditional rendering */
+  contentType: ConnectedContentType;
+  /** Handler for back button click */
   onBack: () => void;
-  onClose: () => void;
+  /** Localized labels */
   labels: Record<string, string>;
+  /** Additional CSS classes */
   className?: string;
 };
 
+/**
+ * Props for custom BackButton component
+ */
 type BackButtonProps = {
+  /** Handler for back button click */
   onBack: () => void;
+  /** Localized labels */
   labels: Record<string, string>;
+  /** Additional CSS classes */
   className?: string;
 };
 
-type TitleProps = {
-  title: string;
-  className?: string;
-};
-
+/**
+ * Props for custom CloseButton component
+ */
 type CloseButtonProps = {
+  /** Handler for close button click */
   onClose: () => void;
+  /** Localized labels */
   labels: Record<string, string>;
+  /** Additional CSS classes */
   className?: string;
 };
 
-type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
+/**
+ * Props for custom Header component
+ * Header wraps DialogTitle and CloseButton together
+ */
+type HeaderProps = {
+  /** Current content type */
   contentType: ConnectedContentType;
-  balance: NativeBalanceResult | null;
-  refetch: () => void;
-  ensNameAbbreviated: string | undefined;
-  avatarIsLoading: boolean;
-  balanceLoading: boolean;
-  ensAvatar: string | null;
-  chainsList: (string | number)[];
-  onChainChange: (chainId: string) => void;
+  /** Current title text */
+  title: string;
+  /** Handler for back button click */
   onBack: () => void;
-  getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
+  /** Handler for close button click */
+  onClose: () => void;
+  /** Localized labels */
+  labels: Record<string, string>;
+  /** Additional CSS classes */
   className?: string;
+};
+
+/**
+ * Props for custom MainContent component
+ */
+type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
+  /** Current content type */
+  contentType: ConnectedContentType;
+  /** Native balance result */
+  balance: NativeBalanceResult | null;
+  /** Refetch balance function */
+  refetch: () => void;
+  /** Abbreviated ENS name or address */
+  ensNameAbbreviated: string | undefined;
+  /** Whether avatar is loading */
+  avatarIsLoading: boolean;
+  /** Whether balance is loading */
+  balanceLoading: boolean;
+  /** ENS avatar URL */
+  ensAvatar: string | null;
+  /** List of available chains */
+  chainsList: (string | number)[];
+  /** Handler for chain change */
+  onChainChange: (chainId: string) => void;
+  /** Handler for back navigation */
+  onBack: () => void;
+  /** Function to get chain data */
+  getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
+  /** Additional CSS classes */
+  className?: string;
+  /** Child component customizations */
   childCustomizations?: ConnectedModalCustomization['childCustomizations'];
 };
 
@@ -108,23 +171,27 @@ export type ConnectedModalCustomization = {
   dialogContentProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   /** Custom components */
   components?: {
-    /** Custom dialog component */
+    /** Custom dialog component (root modal wrapper) */
     Dialog?: ComponentType<ComponentPropsWithoutRef<typeof Dialog>>;
-    /** Custom dialog content component */
+    /** Custom dialog content component (modal content wrapper) */
     DialogContent?: ComponentType<ComponentPropsWithoutRef<typeof DialogContent>>;
-    /** Custom dialog header component */
-    DialogHeader?: ComponentType<ComponentPropsWithoutRef<'div'>>;
-    /** Custom dialog title component */
-    DialogTitle?: ComponentType<ComponentPropsWithoutRef<'h2'>>;
-    /** Custom header component */
+    /**
+     * Custom dialog title component
+     * Includes back button (when not on main view) and title text
+     * Use this to customize the entire title area
+     */
+    DialogTitle?: ComponentType<DialogTitleProps>;
+    /**
+     * Custom header component
+     * Wraps DialogTitle and CloseButton together
+     * Use this to customize the entire header layout
+     */
     Header?: ComponentType<HeaderProps>;
-    /** Custom back button component */
+    /** Custom back button component (chevron left icon button) */
     BackButton?: ComponentType<BackButtonProps>;
-    /** Custom title component */
-    Title?: ComponentType<TitleProps>;
-    /** Custom close button component */
+    /** Custom close button component (X icon button) */
     CloseButton?: ComponentType<CloseButtonProps>;
-    /** Custom main content component */
+    /** Custom main content component (renders different views based on contentType) */
     MainContent?: ComponentType<MainContentProps>;
     /** Custom main content renderer for main view */
     MainContentRenderer?: ComponentType<ConnectedModalMainContentProps>;
@@ -134,7 +201,7 @@ export type ConnectedModalCustomization = {
     ChainsContentRenderer?: ComponentType<ScrollableChainListProps>;
     /** Custom footer component */
     Footer?: ComponentType<ConnectedModalFooterProps>;
-    /** Custom motion container */
+    /** Custom motion container for animations */
     MotionContainer?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
   };
   /** Custom class name generators */
@@ -149,10 +216,10 @@ export type ConnectedModalCustomization = {
     contentContainer?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate header classes */
     header?: (params: { contentType: ConnectedContentType }) => string;
+    /** Function to generate dialog title classes */
+    dialogTitle?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate back button classes */
     backButton?: () => string;
-    /** Function to generate title classes */
-    title?: (params: { contentType: ConnectedContentType }) => string;
     /** Function to generate close button classes */
     closeButton?: () => string;
     /** Function to generate main content classes */
@@ -215,11 +282,11 @@ export type ConnectedModalCustomization = {
     /** Customization for ConnectionsContent component */
     connections?: ConnectionsContentCustomization;
     /** Customization for ConnectedModalTxHistory component */
-    txHistory?: Record<string, unknown>; // Will be properly typed when that component is updated
+    txHistory?: ConnectedModalTxHistoryCustomization;
     /** Customization for ScrollableChainList component */
-    chainList?: Record<string, unknown>; // Will be properly typed when that component is updated
+    chainList?: ScrollableChainListCustomization;
     /** Customization for ConnectedModalFooter component */
-    footer?: Record<string, unknown>; // Will be properly typed when that component is updated
+    footer?: ConnectedModalFooterCustomization;
   };
   /** Configuration options */
   config?: {
@@ -259,6 +326,10 @@ export interface ConnectedModalProps
 }
 
 // --- Default Sub-Components ---
+
+/**
+ * Default back button component
+ */
 const DefaultBackButton: React.FC<BackButtonProps> = ({ onBack, labels, className }) => (
   <button
     type="button"
@@ -276,10 +347,9 @@ const DefaultBackButton: React.FC<BackButtonProps> = ({ onBack, labels, classNam
   </button>
 );
 
-const DefaultTitle: React.FC<TitleProps> = ({ title, className }) => (
-  <span className={cn('novacon:flex-1 novacon:text-center novacon:font-semibold', className)}>{title}</span>
-);
-
+/**
+ * Default close button component
+ */
 const DefaultCloseButton: React.FC<CloseButtonProps> = ({ onClose, labels, className }) => (
   <DialogClose asChild>
     <button
@@ -299,18 +369,88 @@ const DefaultCloseButton: React.FC<CloseButtonProps> = ({ onClose, labels, class
   </DialogClose>
 );
 
-const DefaultHeader: React.FC<HeaderProps> = ({ contentType, title, onBack, onClose, labels, className }) => (
-  <DialogHeader className={className}>
-    <DialogTitle>
-      <div className="novacon:flex novacon:items-center novacon:justify-between novacon:gap-2">
-        {contentType !== 'main' && <DefaultBackButton onBack={onBack} labels={labels} />}
-        <DefaultTitle title={title} />
-      </div>
-    </DialogTitle>
-    <DefaultCloseButton onClose={onClose} labels={labels} />
-  </DialogHeader>
+/**
+ * Default dialog title component
+ * Combines back button (conditional) and title text
+ */
+const DefaultDialogTitle: React.FC<DialogTitleProps & { BackButton?: ComponentType<BackButtonProps> }> = ({
+  title,
+  contentType,
+  onBack,
+  labels,
+  className,
+  BackButton = DefaultBackButton,
+}) => (
+  <DialogTitle className={className}>
+    <div className="novacon:flex novacon:items-center novacon:justify-between novacon:gap-2">
+      {contentType !== 'main' && <BackButton onBack={onBack} labels={labels} />}
+      <span className="novacon:flex-1 novacon:text-center novacon:font-semibold">{title}</span>
+    </div>
+  </DialogTitle>
 );
 
+/**
+ * Default header component
+ * Wraps DialogTitle and CloseButton
+ */
+const DefaultHeader: React.FC<
+  HeaderProps & {
+    DialogTitleComponent?: ComponentType<DialogTitleProps>;
+    CloseButtonComponent?: ComponentType<CloseButtonProps>;
+    BackButtonComponent?: ComponentType<BackButtonProps>;
+    dialogTitleClassName?: string;
+    closeButtonClassName?: string;
+    backButtonClassName?: string;
+  }
+> = ({
+  contentType,
+  title,
+  onBack,
+  onClose,
+  labels,
+  className,
+  DialogTitleComponent,
+  CloseButtonComponent = DefaultCloseButton,
+  BackButtonComponent = DefaultBackButton,
+  dialogTitleClassName,
+  closeButtonClassName,
+}) => {
+  // If custom DialogTitle is provided, use it directly
+  if (DialogTitleComponent) {
+    return (
+      <DialogHeader className={className}>
+        <DialogTitleComponent
+          title={title}
+          contentType={contentType}
+          onBack={onBack}
+          labels={labels}
+          className={dialogTitleClassName}
+        />
+        <CloseButtonComponent onClose={onClose} labels={labels} className={closeButtonClassName} />
+      </DialogHeader>
+    );
+  }
+
+  // Otherwise use default with custom BackButton if provided
+  return (
+    <DialogHeader className={className}>
+      <DefaultDialogTitle
+        title={title}
+        contentType={contentType}
+        onBack={onBack}
+        labels={labels}
+        className={dialogTitleClassName}
+        BackButton={BackButtonComponent}
+      />
+      <CloseButtonComponent onClose={onClose} labels={labels} className={closeButtonClassName} />
+    </DialogHeader>
+  );
+};
+
+/**
+ * Default main content component
+ * Renders different views based on contentType
+ */
 const DefaultMainContent: React.FC<MainContentProps> = ({
   contentType,
   balance,
@@ -343,10 +483,17 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             ensAvatar={ensAvatar}
             chainsList={chainsList}
             transactionPool={transactionPool}
+            customization={childCustomizations?.mainContent}
           />
         );
       case 'transactions':
-        return <ConnectedModalTxHistory transactionPool={transactionPool} pulsarAdapter={pulsarAdapter} />;
+        return (
+          <ConnectedModalTxHistory
+            transactionPool={transactionPool}
+            pulsarAdapter={pulsarAdapter}
+            customization={childCustomizations?.txHistory}
+          />
+        );
       case 'chains':
         if (!activeConnection) return null;
         return (
@@ -361,6 +508,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             handleValueChange={onChainChange}
             getChainData={getChainData}
             onClose={onBack}
+            customization={childCustomizations?.chainList}
           />
         );
       case 'connections':
@@ -409,6 +557,28 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
  *   store={store}
  * />
  * ```
+ *
+ * @example Customizing DialogTitle
+ * ```tsx
+ * <ConnectedModal
+ *   customization={{
+ *     components: {
+ *       DialogTitle: ({ title, contentType, onBack, labels }) => (
+ *         <div className="custom-title">
+ *           {contentType !== 'main' && (
+ *             <button onClick={onBack}>{labels.back}</button>
+ *           )}
+ *           <h2>{title}</h2>
+ *         </div>
+ *       ),
+ *     },
+ *     classNames: {
+ *       dialogTitle: ({ contentType }) =>
+ *         contentType === 'main' ? 'main-title' : 'sub-title',
+ *     },
+ *   }}
+ * />
+ * ```
  */
 export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
   ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, customization }, ref) => {
@@ -425,7 +595,10 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     const {
       Dialog: CustomDialog = Dialog,
       DialogContent: CustomDialogContent = DialogContent,
-      Header: CustomHeader = DefaultHeader,
+      DialogTitle: CustomDialogTitle,
+      Header: CustomHeader,
+      BackButton: CustomBackButton = DefaultBackButton,
+      CloseButton: CustomCloseButton = DefaultCloseButton,
       MainContent: CustomMainContent = DefaultMainContent,
       Footer: CustomFooter = ConnectedModalFooter,
       MotionContainer = motion.div,
@@ -641,17 +814,48 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       return null;
     }
 
-    const content = (
-      <>
-        {/* Modal header with navigation and close controls */}
-        <CustomHeader
+    /**
+     * Render header section
+     * Supports full Header replacement or individual component customization
+     */
+    const renderHeader = () => {
+      // If custom Header component is provided, use it directly
+      if (CustomHeader) {
+        return (
+          <CustomHeader
+            contentType={connectedModalContentType}
+            title={currentTitle}
+            onBack={handleBackToMain}
+            onClose={handleCloseModal}
+            labels={labels}
+            className={customization?.classNames?.header?.({ contentType: connectedModalContentType })}
+          />
+        );
+      }
+
+      // Otherwise use DefaultHeader with customizable sub-components
+      return (
+        <DefaultHeader
           contentType={connectedModalContentType}
           title={currentTitle}
           onBack={handleBackToMain}
           onClose={handleCloseModal}
           labels={labels}
           className={customization?.classNames?.header?.({ contentType: connectedModalContentType })}
+          DialogTitleComponent={CustomDialogTitle}
+          BackButtonComponent={CustomBackButton}
+          CloseButtonComponent={CustomCloseButton}
+          dialogTitleClassName={customization?.classNames?.dialogTitle?.({ contentType: connectedModalContentType })}
+          backButtonClassName={customization?.classNames?.backButton?.()}
+          closeButtonClassName={customization?.classNames?.closeButton?.()}
         />
+      );
+    };
+
+    const content = (
+      <>
+        {/* Modal header with navigation and close controls */}
+        {renderHeader()}
 
         {/* Main content area - changes based on current view */}
         <CustomMainContent
@@ -673,7 +877,11 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         />
 
         {/* Footer with additional controls */}
-        <CustomFooter setIsOpen={setIsConnectedModalOpen} className={customization?.classNames?.footer?.()} />
+        <CustomFooter
+          setIsOpen={setIsConnectedModalOpen}
+          className={customization?.classNames?.footer?.()}
+          customization={customization?.childCustomizations?.footer}
+        />
       </>
     );
 

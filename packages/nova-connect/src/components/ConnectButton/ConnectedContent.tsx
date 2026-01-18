@@ -82,8 +82,6 @@ export type ConnectedContentCustomization = {
     container?: (params: { connectedButtonStatus: ButtonTxStatus; withBalance: boolean }) => string;
     /** Function to generate balance container classes */
     balanceContainer?: (params: { formattedBalance: string }) => string;
-    /** Function to generate balance text classes */
-    balanceText?: (params: { formattedBalance: string }) => string;
     /** Function to generate balance divider classes */
     balanceDivider?: () => string;
     /** Function to generate main content classes */
@@ -180,7 +178,7 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: CustomLoa
   return (
     <div
       className={cn(
-        "novacon:w-full novacon:h-full novacon:rounded-full novacon:absolute novacon:inset-0 novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
+        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
         className,
       )}
       aria-hidden="true"
@@ -192,7 +190,7 @@ const DefaultBalanceDivider = ({ className }: CustomBalanceDividerProps) => {
   return (
     <div
       className={cn(
-        'novacon:absolute novacon:top-1/2 novacon:right-0 novacon:transform novacon:-translate-y-1/2 novacon:h-4 novacon:w-[1px] novacon:bg-[var(--tuwa-border-primary)]',
+        'novacon:hidden novacon:sm:block novacon:absolute novacon:top-1/2 novacon:right-0 novacon:transform novacon:-translate-y-1/2 novacon:h-4 novacon:w-[1px] novacon:bg-[var(--tuwa-border-primary)]',
         className,
       )}
       aria-hidden="true"
@@ -446,7 +444,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
           return {
             displayName: ensNameAbbreviated,
             avatarIcon: (
-              <div className="novacon:relative novacon:p-1">
+              <div className="novacon:relative">
                 {showLoadingAnimation && (
                   <LoadingAnimation
                     connectedButtonStatus={connectedButtonStatus}
@@ -532,7 +530,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       <div {...containerProps}>
         {/* Balance Display */}
         {withBalance && (
-          <div onClick={handleBalanceClick}>
+          <div className="novacon:relative" onClick={handleBalanceClick}>
             <BalanceContainer
               formattedBalance={formattedBalance}
               labels={labels}

@@ -62,12 +62,23 @@ type CustomActiveSectionProps = {
   children: ReactNode;
   count: number;
   labels?: Record<string, string>;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    title?: string;
+    wrapper?: string;
+  };
 };
 
 type CustomRecentSectionProps = {
   className?: string;
   children: ReactNode;
+  count?: number;
   labels?: Record<string, string>;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    title?: string;
+    list?: string;
+  };
 };
 
 type CustomActiveRowProps = {
@@ -83,6 +94,23 @@ type CustomActiveRowProps = {
   isCopied?: boolean;
   onCopy?: () => void;
   onExplorer?: () => void;
+  displayName?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    container?: string;
+    badge?: string;
+    content?: string;
+    walletName?: string;
+    connectorName?: string;
+    actionsContainer?: string;
+    copyButton?: string;
+    copyIcon?: string;
+    explorerButton?: string;
+    explorerIcon?: string;
+    disconnectButton?: string;
+    iconWrapper?: string;
+    iconBadge?: string;
+  };
 };
 
 type CustomConnectedRowProps = {
@@ -95,6 +123,19 @@ type CustomConnectedRowProps = {
   icon?: string;
   labels?: Record<string, string>;
   isHovered?: boolean;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    container?: string;
+    switchIndicator?: string;
+    switchIcon?: string;
+    content?: string;
+    walletName?: string;
+    connectorName?: string;
+    disconnectButton?: string;
+    disconnectIcon?: string;
+    iconWrapper?: string;
+    iconBadge?: string;
+  };
 };
 
 type CustomRecentRowProps = {
@@ -107,6 +148,20 @@ type CustomRecentRowProps = {
   icon?: string;
   isConnecting?: boolean;
   labels?: Record<string, string>;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    container?: string;
+    content?: string;
+    walletName?: string;
+    connectorName?: string;
+    actionsContainer?: string;
+    connectButton?: string;
+    connectSpinner?: string;
+    removeButton?: string;
+    removeIcon?: string;
+    iconWrapper?: string;
+    iconBadge?: string;
+  };
 };
 
 type CustomActionButtonProps = {
@@ -131,6 +186,11 @@ type CustomAddWalletButtonProps = {
 type CustomEmptyStateProps = {
   message: string;
   className?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    container?: string;
+    message?: string;
+  };
 };
 
 /**
@@ -164,30 +224,117 @@ export type ConnectionsContentCustomization = {
   };
   /** Custom class name generators */
   classNames?: {
+    // ─────────────────────────────────────────────────────────────────────
+    // Container & Sections
+    // ─────────────────────────────────────────────────────────────────────
     /** Function to generate container classes */
     container?: (params: { isEmpty: boolean; connectionsCount: number; recentCount: number }) => string;
-    /** Function to generate section header classes */
-    sectionHeader?: (params: { sectionType: 'active' | 'recent' }) => string;
-    /** Function to generate active section classes */
-    activeSection?: (params: { count: number }) => string;
-    /** Function to generate recent section classes */
-    recentSection?: (params: { count: number }) => string;
-    /** Function to generate active row classes */
-    activeRow?: (params: { connectorType: ConnectorType; hasExplorer: boolean }) => string;
-    /** Function to generate connected row classes */
-    connectedRow?: (params: { connectorType: ConnectorType; isHovered: boolean }) => string;
-    /** Function to generate recent row classes */
-    recentRow?: (params: { connectorType: ConnectorType; isConnecting: boolean }) => string;
-    /** Function to generate action button classes */
-    actionButton?: (params: {
-      variant?: 'primary' | 'secondary' | 'danger';
-      disabled?: boolean;
-      loading?: boolean;
-    }) => string;
-    /** Function to generate add wallet button classes */
-    addWalletButton?: (params: { disabled?: boolean }) => string;
     /** Function to generate empty state classes */
     emptyState?: () => string;
+    /** Function to generate empty state message classes */
+    emptyStateMessage?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Active Connectors Section
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate active section wrapper classes */
+    activeSection?: (params: { count: number }) => string;
+    /** Function to generate active section title classes */
+    activeSectionTitle?: () => string;
+    /** Function to generate active section content wrapper classes */
+    activeSectionWrapper?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Recent Section
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate recent section wrapper classes */
+    recentSection?: (params: { count: number }) => string;
+    /** Function to generate recent section title classes */
+    recentSectionTitle?: () => string;
+    /** Function to generate recent section list container classes */
+    recentSectionList?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Active Connector Row (Primary/Active connection)
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate active row container classes */
+    activeRowContainer?: (params: { connectorType: ConnectorType; hasExplorer: boolean }) => string;
+    /** Function to generate active badge classes */
+    activeRowBadge?: () => string;
+    /** Function to generate active row content wrapper classes */
+    activeRowContent?: () => string;
+    /** Function to generate wallet name/address classes */
+    activeRowWalletName?: () => string;
+    /** Function to generate connector name classes */
+    activeRowConnectorName?: () => string;
+    /** Function to generate actions container classes */
+    activeRowActionsContainer?: () => string;
+    /** Function to generate copy button classes */
+    activeRowCopyButton?: (params: { isCopied: boolean }) => string;
+    /** Function to generate copy icon classes */
+    activeRowCopyIcon?: () => string;
+    /** Function to generate explorer button classes */
+    activeRowExplorerButton?: () => string;
+    /** Function to generate explorer icon classes */
+    activeRowExplorerIcon?: () => string;
+    /** Function to generate disconnect button classes */
+    activeRowDisconnectButton?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Connected Connector Row (Secondary connections)
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate connected row container classes */
+    connectedRowContainer?: (params: { connectorType: ConnectorType }) => string;
+    /** Function to generate switch indicator classes */
+    connectedRowSwitchIndicator?: () => string;
+    /** Function to generate switch icon classes */
+    connectedRowSwitchIcon?: () => string;
+    /** Function to generate content wrapper classes */
+    connectedRowContent?: () => string;
+    /** Function to generate wallet address classes */
+    connectedRowWalletName?: () => string;
+    /** Function to generate connector name classes */
+    connectedRowConnectorName?: () => string;
+    /** Function to generate disconnect button classes */
+    connectedRowDisconnectButton?: () => string;
+    /** Function to generate disconnect icon classes */
+    connectedRowDisconnectIcon?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Recently Connected Row
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate recent row container classes */
+    recentRowContainer?: (params: { connectorType: ConnectorType; isConnecting: boolean }) => string;
+    /** Function to generate recent row content wrapper classes */
+    recentRowContent?: () => string;
+    /** Function to generate wallet address classes */
+    recentRowWalletName?: () => string;
+    /** Function to generate connector name classes */
+    recentRowConnectorName?: () => string;
+    /** Function to generate actions wrapper classes */
+    recentRowActionsContainer?: () => string;
+    /** Function to generate connect button classes */
+    recentRowConnectButton?: (params: { isConnecting: boolean }) => string;
+    /** Function to generate connect button spinner classes */
+    recentRowConnectSpinner?: () => string;
+    /** Function to generate remove button classes */
+    recentRowRemoveButton?: (params: { isConnecting: boolean }) => string;
+    /** Function to generate remove icon classes */
+    recentRowRemoveIcon?: () => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Connector Icon
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate connector icon wrapper classes */
+    connectorIconWrapper?: (params: { size: number }) => string;
+    /** Function to generate network badge wrapper classes */
+    connectorIconBadge?: (params: { badgeSize: number }) => string;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Add Wallet Button
+    // ─────────────────────────────────────────────────────────────────────
+    /** Function to generate add wallet button classes */
+    addWalletButton?: (params: { disabled?: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
@@ -324,6 +471,8 @@ interface ConnectorRowProps {
   icon?: string;
   /** Optional display name (e.g. ENS name) to show instead of address */
   displayName?: string;
+  /** Granular classNames for sub-elements - union of active and connected row classNames */
+  classNames?: CustomActiveRowProps['classNames'] & CustomConnectedRowProps['classNames'];
 }
 
 interface RecentlyConnectedRowProps {
@@ -335,6 +484,8 @@ interface RecentlyConnectedRowProps {
   className?: string;
   icon?: string;
   isConnecting?: boolean;
+  /** Granular classNames for sub-elements */
+  classNames?: CustomRecentRowProps['classNames'];
 }
 
 // --- Helper Functions ---
@@ -361,6 +512,10 @@ interface ConnectorIconProps {
   size?: number;
   badgeSize?: number;
   imageClassName?: string;
+  /** Custom class for icon wrapper */
+  wrapperClassName?: string;
+  /** Custom class for network badge */
+  badgeClassName?: string;
 }
 
 /**
@@ -373,15 +528,23 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
   size = 32,
   badgeSize = 16,
   imageClassName,
+  wrapperClassName,
+  badgeClassName,
 }) => {
   const adapter = getAdapterFromConnectorType(connectorType);
   const networkIcon = getNetworkData(adapter)?.chain;
 
   return (
-    <div className="novacon:relative">
+    <div
+      className={cn('novacon:relative novacon:flex-shrink-0', wrapperClassName)}
+      style={{ width: size, height: size }}
+    >
       <WalletIcon name={connectorType.split(':')[1]} icon={icon} size={size} className={imageClassName} />
       <div
-        className="novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]"
+        className={cn(
+          'novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]',
+          badgeClassName,
+        )}
         style={{ width: badgeSize, height: badgeSize }}
       >
         <NetworkIcon
@@ -420,33 +583,52 @@ const DefaultContainer = forwardRef<HTMLDivElement, CustomContainerProps>(
 );
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultActiveConnectorsSection = forwardRef<
-  HTMLDivElement,
-  { className?: string; children: React.ReactNode; count: number }
->(({ className, children, count, ...props }, ref) => {
-  const labels = useNovaConnectLabels();
-  return (
-    <div ref={ref} className={className} {...props}>
-      <h3 className="novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]">
-        {labels.active} {labels.connectors} {count > 0 && `(${count})`}
-      </h3>
-      <div className="novacon:overflow-hidden novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)]">
-        {children}
-      </div>
-    </div>
-  );
-});
-DefaultActiveConnectorsSection.displayName = 'DefaultActiveConnectorsSection';
-
-const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, { className?: string; children: React.ReactNode }>(
-  ({ className, children, ...props }, ref) => {
+const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, CustomActiveSectionProps>(
+  ({ className, children, count, classNames, ...props }, ref) => {
     const labels = useNovaConnectLabels();
     return (
       <div ref={ref} className={className} {...props}>
-        <h3 className="novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]">
+        <h3
+          className={cn(
+            'novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            classNames?.title,
+          )}
+        >
+          {labels.active} {labels.connectors} {count > 0 && `(${count})`}
+        </h3>
+        <div
+          className={cn(
+            'novacon:overflow-hidden novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)]',
+            classNames?.wrapper,
+          )}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  },
+);
+DefaultActiveConnectorsSection.displayName = 'DefaultActiveConnectorsSection';
+
+const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, CustomRecentSectionProps>(
+  ({ className, children, classNames, ...props }, ref) => {
+    const labels = useNovaConnectLabels();
+    return (
+      <div ref={ref} className={className} {...props}>
+        <h3
+          className={cn(
+            'novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            classNames?.title,
+          )}
+        >
           {labels.recent}
         </h3>
-        <div className="NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-2">
+        <div
+          className={cn(
+            'NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-2',
+            classNames?.list,
+          )}
+        >
           {children}
         </div>
       </div>
@@ -456,7 +638,21 @@ const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, { className?:
 DefaultRecentlyConnectedSection.displayName = 'DefaultRecentlyConnectedSection';
 
 const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
-  ({ connectorType, address, fullAddress, chainId, onDisconnect, icon, className, explorerLink, displayName }, ref) => {
+  (
+    {
+      connectorType,
+      address,
+      fullAddress,
+      chainId,
+      onDisconnect,
+      icon,
+      className,
+      explorerLink,
+      displayName,
+      classNames,
+    },
+    ref,
+  ) => {
     const labels = useNovaConnectLabels();
     const { copy, isCopied } = useCopyToClipboard();
 
@@ -477,17 +673,23 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         ref={ref}
         className={cn(
           'novacon:relative novacon:flex novacon:items-center novacon:justify-between novacon:bg-[var(--tuwa-bg-accent)]/10 novacon:p-4',
+          classNames?.container,
           className,
         )}
       >
         {/* Active Badge - Absolute Top Right */}
         <div className="novacon:absolute novacon:top-2 novacon:right-2">
-          <span className="novacon:rounded-full novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]">
+          <span
+            className={cn(
+              'novacon:rounded-full novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
+              classNames?.badge,
+            )}
+          >
             {labels.active}
           </span>
         </div>
 
-        <div className="novacon:flex novacon:items-center novacon:gap-3">
+        <div className={cn('novacon:flex novacon:items-center novacon:gap-3', classNames?.content)}>
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
@@ -495,32 +697,47 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             size={40}
             badgeSize={20}
             imageClassName="novacon:rounded-xl"
+            wrapperClassName={classNames?.iconWrapper}
+            badgeClassName={classNames?.iconBadge}
           />
           <div className="novacon:flex novacon:flex-col">
-            <span className="novacon:font-medium novacon:text-[var(--tuwa-text-primary)]">
+            <span className={cn('novacon:font-medium novacon:text-[var(--tuwa-text-primary)]', classNames?.walletName)}>
               {displayName || address}
             </span>
-            <span className="novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]">
+            <span
+              className={cn('novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
+            >
               {getFormattedConnectorName(connectorType)}
             </span>
 
             {/* Actions Row */}
-            <div className="novacon:mt-1 novacon:flex novacon:items-center novacon:gap-2">
+            <div
+              className={cn(
+                'novacon:mt-1 novacon:flex novacon:items-center novacon:gap-2',
+                classNames?.actionsContainer,
+              )}
+            >
               <button
                 onClick={handleCopy}
-                className="novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]"
+                className={cn(
+                  'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                  classNames?.copyButton,
+                )}
                 title="Copy Address"
               >
-                <DocumentDuplicateIcon className="novacon:h-3 novacon:w-3" />
+                <DocumentDuplicateIcon className={cn('novacon:h-3 novacon:w-3', classNames?.copyIcon)} />
                 {isCopied ? labels.copied : 'Copy'}
               </button>
               {explorerLink && (
                 <button
                   onClick={handleExplorer}
-                  className="novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]"
+                  className={cn(
+                    'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                    classNames?.explorerButton,
+                  )}
                   title="View on Explorer"
                 >
-                  <ArrowTopRightOnSquareIcon className="novacon:h-3 novacon:w-3" />
+                  <ArrowTopRightOnSquareIcon className={cn('novacon:h-3 novacon:w-3', classNames?.explorerIcon)} />
                   Explorer
                 </button>
               )}
@@ -530,7 +747,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
 
         <button
           onClick={onDisconnect}
-          className="novacon:mt-4 novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]"
+          className={cn(
+            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            classNames?.disconnectButton,
+          )}
           aria-label={`${labels.disconnect} ${connectorType}`}
         >
           {labels.disconnect}
@@ -542,7 +762,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
 DefaultActiveConnectorRow.displayName = 'DefaultActiveConnectorRow';
 
 const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
-  ({ connectorType, address, chainId, onSwitch, onDisconnect, className, icon }, ref) => {
+  ({ connectorType, address, chainId, onSwitch, onDisconnect, className, icon, classNames }, ref) => {
     const labels = useNovaConnectLabels();
 
     return (
@@ -551,15 +771,28 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
         onClick={onSwitch}
         className={cn(
           'novacon:group novacon:relative novacon:flex novacon:cursor-pointer novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
+          classNames?.container,
           className,
         )}
       >
         {/* Switch Indicator on Hover */}
-        <div className="novacon:absolute novacon:left-2 novacon:top-1/2 novacon:-translate-y-1/2 novacon:opacity-0 novacon:transition-opacity novacon:group-hover:opacity-100">
-          <ArrowsRightLeftIcon className="novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]" />
+        <div
+          className={cn(
+            'novacon:absolute novacon:left-2 novacon:top-1/2 novacon:-translate-y-1/2 novacon:opacity-0 novacon:transition-opacity novacon:group-hover:opacity-100',
+            classNames?.switchIndicator,
+          )}
+        >
+          <ArrowsRightLeftIcon
+            className={cn('novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]', classNames?.switchIcon)}
+          />
         </div>
 
-        <div className="novacon:flex novacon:items-center novacon:gap-3 novacon:ml-0 novacon:group-hover:ml-6 novacon:transition-all">
+        <div
+          className={cn(
+            'novacon:flex novacon:items-center novacon:gap-3 novacon:ml-0 novacon:group-hover:ml-6 novacon:transition-all',
+            classNames?.content,
+          )}
+        >
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
@@ -567,12 +800,21 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             size={32}
             badgeSize={16}
             imageClassName="novacon:rounded-xl"
+            wrapperClassName={classNames?.iconWrapper}
+            badgeClassName={classNames?.iconBadge}
           />
           <div className="novacon:flex novacon:flex-col">
-            <span className="novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]">
+            <span
+              className={cn(
+                'novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
+                classNames?.walletName,
+              )}
+            >
               {address}
             </span>
-            <span className="novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]">
+            <span
+              className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
+            >
               {getFormattedConnectorName(connectorType)}
             </span>
           </div>
@@ -582,10 +824,13 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             e.stopPropagation();
             onDisconnect(e);
           }}
-          className="novacon:cursor-pointer novacon:rounded-lg novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]"
+          className={cn(
+            'novacon:cursor-pointer novacon:rounded-lg novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
+            classNames?.disconnectButton,
+          )}
           aria-label={`${labels.disconnect} ${connectorType}`}
         >
-          <ArrowLeftStartOnRectangleIcon className="novacon:h-5 novacon:w-5" />
+          <ArrowLeftStartOnRectangleIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>
       </div>
     );
@@ -594,7 +839,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
 DefaultConnectedConnectorRow.displayName = 'DefaultConnectedConnectorRow';
 
 const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnectedRowProps>(
-  ({ connectorType, address, onConnect, onRemove, className, icon, isConnecting = false }, ref) => {
+  ({ connectorType, address, onConnect, onRemove, className, icon, isConnecting = false, classNames }, ref) => {
     const labels = useNovaConnectLabels();
 
     return (
@@ -602,27 +847,37 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
         ref={ref}
         className={cn(
           'novacon:flex novacon:items-center novacon:justify-between novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:p-3',
+          classNames?.container,
           className,
         )}
       >
-        <div className="novacon:flex novacon:items-center novacon:gap-3">
+        <div className={cn('novacon:flex novacon:items-center novacon:gap-3', classNames?.content)}>
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
             size={32}
             badgeSize={16}
             imageClassName="novacon:rounded-lg"
+            wrapperClassName={classNames?.iconWrapper}
+            badgeClassName={classNames?.iconBadge}
           />
           <div className="novacon:flex novacon:flex-col">
-            <span className="novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]">
+            <span
+              className={cn(
+                'novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
+                classNames?.walletName,
+              )}
+            >
               {address}
             </span>
-            <span className="novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]">
+            <span
+              className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
+            >
               {getFormattedConnectorName(connectorType)}
             </span>
           </div>
         </div>
-        <div className="novacon:flex novacon:items-center novacon:gap-2">
+        <div className={cn('novacon:flex novacon:items-center novacon:gap-2', classNames?.actionsContainer)}>
           {onConnect && (
             <button
               onClick={onConnect}
@@ -630,11 +885,15 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               className={cn(
                 'novacon:relative novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
                 isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
+                classNames?.connectButton,
               )}
             >
               {isConnecting && (
                 <svg
-                  className="novacon:absolute novacon:left-2 novacon:top-1/2 novacon:-translate-y-1/2 novacon:h-3 novacon:w-3 novacon:animate-spin"
+                  className={cn(
+                    'novacon:absolute novacon:left-2 novacon:top-1/2 novacon:-translate-y-1/2 novacon:h-3 novacon:w-3 novacon:animate-spin',
+                    classNames?.connectSpinner,
+                  )}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -656,10 +915,11 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
             className={cn(
               'novacon:cursor-pointer novacon:rounded-lg novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
               isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
+              classNames?.removeButton,
             )}
             aria-label={`${labels.close} ${connectorType}`}
           >
-            <TrashIcon className="novacon:h-4 novacon:w-4" />
+            <TrashIcon className={cn('novacon:h-4 novacon:w-4', classNames?.removeIcon)} />
           </button>
         </div>
       </div>
@@ -966,13 +1226,17 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       <Container
         className={cn(
           'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8',
+          customization?.classNames?.emptyState?.(),
           className,
         )}
         isEmpty={true}
         connectionsCount={0}
         recentCount={0}
       >
-        <p className="novacon:text-[var(--tuwa-text-secondary)]" role="status">
+        <p
+          className={cn('novacon:text-[var(--tuwa-text-secondary)]', customization?.classNames?.emptyStateMessage?.())}
+          role="status"
+        >
           {finalLabels.emptyState}
         </p>
       </Container>
@@ -981,7 +1245,13 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   return (
     <Container
-      className={cn('novacon:flex novacon:flex-col novacon:gap-6 novacon:p-4', className)}
+      className={
+        customization?.classNames?.container?.({
+          isEmpty: false,
+          connectionsCount: connectionsList.length,
+          recentCount: recentListState.length,
+        }) ?? cn('novacon:flex novacon:flex-col novacon:gap-6 novacon:p-4', className)
+      }
       isEmpty={false}
       connectionsCount={connectionsList.length}
       recentCount={recentListState.length}
@@ -995,7 +1265,13 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       </div>
       {/* Active Connectors Section */}
       {connectionsList.length > 0 && (
-        <ActiveConnectorsSection count={connectionsList.length}>
+        <ActiveConnectorsSection
+          count={connectionsList.length}
+          classNames={{
+            title: customization?.classNames?.activeSectionTitle?.(),
+            wrapper: customization?.classNames?.activeSectionWrapper?.(),
+          }}
+        >
           {/* Active Connection */}
           {activeConnection?.connectorType && (
             <ActiveConnectorRow
@@ -1018,6 +1294,24 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 }
               })()}
               icon={activeConnection.icon}
+              classNames={{
+                container: customization?.classNames?.activeRowContainer?.({
+                  connectorType: activeConnection.connectorType,
+                  hasExplorer: true,
+                }),
+                badge: customization?.classNames?.activeRowBadge?.(),
+                content: customization?.classNames?.activeRowContent?.(),
+                walletName: customization?.classNames?.activeRowWalletName?.(),
+                connectorName: customization?.classNames?.activeRowConnectorName?.(),
+                actionsContainer: customization?.classNames?.activeRowActionsContainer?.(),
+                copyButton: customization?.classNames?.activeRowCopyButton?.({ isCopied: false }),
+                copyIcon: customization?.classNames?.activeRowCopyIcon?.(),
+                explorerButton: customization?.classNames?.activeRowExplorerButton?.(),
+                explorerIcon: customization?.classNames?.activeRowExplorerIcon?.(),
+                disconnectButton: customization?.classNames?.activeRowDisconnectButton?.(),
+                iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 40 }),
+                iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 20 }),
+              }}
             />
           )}
 
@@ -1029,10 +1323,25 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 key={connection.connectorType}
                 connectorType={connection.connectorType}
                 address={textCenterEllipsis(connection.address, 6, 4)}
+                chainId={connection.chainId}
                 isActive={false}
                 onSwitch={() => handleSwitch(connection.connectorType)}
                 onDisconnect={(e) => handleDisconnect(connection.connectorType, e)}
                 icon={connection.icon}
+                classNames={{
+                  container: customization?.classNames?.connectedRowContainer?.({
+                    connectorType: connection.connectorType,
+                  }),
+                  switchIndicator: customization?.classNames?.connectedRowSwitchIndicator?.(),
+                  switchIcon: customization?.classNames?.connectedRowSwitchIcon?.(),
+                  content: customization?.classNames?.connectedRowContent?.(),
+                  walletName: customization?.classNames?.connectedRowWalletName?.(),
+                  connectorName: customization?.classNames?.connectedRowConnectorName?.(),
+                  disconnectButton: customization?.classNames?.connectedRowDisconnectButton?.(),
+                  disconnectIcon: customization?.classNames?.connectedRowDisconnectIcon?.(),
+                  iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 32 }),
+                  iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 16 }),
+                }}
               />
             ))}
         </ActiveConnectorsSection>
@@ -1040,7 +1349,12 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
       {/* Recently Connected Section */}
       {showRecentSection && recentListState.length > 0 && (
-        <RecentlyConnectedSection>
+        <RecentlyConnectedSection
+          classNames={{
+            title: customization?.classNames?.recentSectionTitle?.(),
+            list: customization?.classNames?.recentSectionList?.(),
+          }}
+        >
           {recentListState.map(([connectorType, data]) => {
             // Use a more direct approach with explicit type casting
             const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some((c) => {
@@ -1063,6 +1377,26 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
                 onRemove={(e) => handleRemoveRecent(connectorType, e)}
                 icon={data.icon}
                 isConnecting={connecting && connectingRecent === connectorType}
+                classNames={{
+                  container: customization?.classNames?.recentRowContainer?.({
+                    connectorType,
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  content: customization?.classNames?.recentRowContent?.(),
+                  walletName: customization?.classNames?.recentRowWalletName?.(),
+                  connectorName: customization?.classNames?.recentRowConnectorName?.(),
+                  actionsContainer: customization?.classNames?.recentRowActionsContainer?.(),
+                  connectButton: customization?.classNames?.recentRowConnectButton?.({
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  connectSpinner: customization?.classNames?.recentRowConnectSpinner?.(),
+                  removeButton: customization?.classNames?.recentRowRemoveButton?.({
+                    isConnecting: connecting && connectingRecent === connectorType,
+                  }),
+                  removeIcon: customization?.classNames?.recentRowRemoveIcon?.(),
+                  iconWrapper: customization?.classNames?.connectorIconWrapper?.({ size: 32 }),
+                  iconBadge: customization?.classNames?.connectorIconBadge?.({ badgeSize: 16 }),
+                }}
               />
             );
           })}
@@ -1075,7 +1409,10 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           onClick={() => {
             setIsConnectModalOpen(true);
           }}
-          className="novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-xl novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]"
+          className={cn(
+            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-xl novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
+            customization?.classNames?.addWalletButton?.({}),
+          )}
         >
           + {labels.connectNewWallet}
         </button>

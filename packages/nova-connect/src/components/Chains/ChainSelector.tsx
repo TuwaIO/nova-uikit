@@ -17,7 +17,7 @@ import {
   NetworkIcon,
 } from '@tuwaio/nova-core';
 import { formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import React, { ComponentPropsWithoutRef, ComponentType, ReactNode, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, ReactNode, useCallback } from 'react';
 
 import { useNovaConnect, useNovaConnectLabels, useWalletChainsList } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -121,6 +121,20 @@ type CustomMobileSelectorProps = {
 };
 
 /**
+ * Props for a custom close button component.
+ */
+type CustomCloseButtonProps = {
+  /** Close handler */
+  onClose: () => void;
+  /** CSS class */
+  className?: string;
+  /** ARIA label */
+  'aria-label': string;
+  /** Icon element */
+  icon: ReactNode;
+};
+
+/**
  * Props for a custom dialog header component.
  */
 type CustomDialogHeaderProps = {
@@ -130,6 +144,17 @@ type CustomDialogHeaderProps = {
   onClose: () => void;
   /** CSS class */
   className?: string;
+  /** Close button customization */
+  closeButton?: {
+    /** Close button component */
+    Component?: ComponentType<CustomCloseButtonProps>;
+    /** Close button props */
+    props?: Partial<ComponentPropsWithoutRef<'button'>>;
+    /** Close button classes */
+    className?: string;
+    /** Close button icon classes */
+    iconClassName?: string;
+  };
 };
 
 /**
@@ -229,6 +254,12 @@ export type ChainSelectorCustomization = {
     dialogContent?: (params: { chainCount: number }) => string;
     /** Classes for the dialog inner container */
     dialogInnerContainer?: () => string;
+    /** Classes for the dialog header */
+    dialogHeader?: () => string;
+    /** Classes for the dialog header title */
+    dialogHeaderTitle?: () => string;
+    /** Classes for the dialog header close button wrapper */
+    dialogHeaderCloseButtonWrapper?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
@@ -236,6 +267,18 @@ export type ChainSelectorCustomization = {
     onChainChange?: (originalHandler: (newChainId: string) => void, newChainId: string) => void;
     /** Wrapper for the dialog close handler */
     onDialogClose?: (originalHandler: () => void) => void;
+  };
+  /** Dialog header customization */
+  dialogHeader?: {
+    /** Close button customization */
+    closeButton?: {
+      /** Close button props */
+      props?: Partial<ComponentPropsWithoutRef<'button'>>;
+      /** Close button classes */
+      className?: string;
+      /** Close button icon classes */
+      iconClassName?: string;
+    };
   };
   /** Customization for sub-components */
   triggerButton?: ChainTriggerButtonCustomization;
@@ -347,26 +390,51 @@ const DefaultMobileSelector = ({ children, className, 'aria-label': ariaLabel }:
 };
 
 /**
+ * Default close button component.
+ */
+const DefaultCloseButton = ({ onClose, className, 'aria-label': ariaLabel, icon }: CustomCloseButtonProps) => {
+  return (
+    <button type="button" aria-label={ariaLabel} className={className} onClick={onClose}>
+      {icon}
+    </button>
+  );
+};
+
+/**
  * Default dialog header component.
  */
-const DefaultDialogHeader = ({ title, onClose, className }: CustomDialogHeaderProps) => {
+const DefaultDialogHeader = ({ title, onClose, className, closeButton }: CustomDialogHeaderProps) => {
   const labels = useNovaConnectLabels();
+
+  const {
+    Component: CloseButtonComponent = DefaultCloseButton,
+    props: closeButtonProps,
+    className: closeButtonClassName,
+    iconClassName: closeIconClassName,
+  } = closeButton ?? {};
+
+  const defaultCloseButtonClasses = cn(
+    'novacon:cursor-pointer novacon:rounded-full novacon:p-1',
+    'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
+    'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
+    'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+  );
+
+  const finalCloseButtonClasses = closeButtonClassName || defaultCloseButtonClasses;
+
+  const closeIconElement = <CloseIcon className={closeIconClassName} />;
 
   return (
     <DialogHeader className={className}>
       <DialogTitle>{title}</DialogTitle>
       <DialogClose asChild>
-        <button
-          type="button"
+        <CloseButtonComponent
+          onClose={onClose}
+          className={finalCloseButtonClasses}
           aria-label={labels.closeModal}
-          className="novacon:cursor-pointer novacon:rounded-full novacon:p-1
-           novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors
-           novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]
-           novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2"
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </button>
+          icon={closeIconElement}
+          {...closeButtonProps}
+        />
       </DialogClose>
     </DialogHeader>
   );
@@ -374,9 +442,6 @@ const DefaultDialogHeader = ({ title, onClose, className }: CustomDialogHeaderPr
 
 // --- Default Event Handlers ---
 
-/**
- * Default click handler.
- */
 const defaultClickHandler = (
   originalHandler: () => void,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -387,9 +452,6 @@ const defaultClickHandler = (
   originalHandler();
 };
 
-/**
- * Default key down handler.
- */
 const defaultKeyDownHandler = (
   originalHandler: (event: React.KeyboardEvent) => void,
   event: React.KeyboardEvent,
@@ -399,16 +461,10 @@ const defaultKeyDownHandler = (
   originalHandler(event);
 };
 
-/**
- * Default chain change handler.
- */
 const defaultChainChangeHandler = (originalHandler: (newChainId: string) => void, newChainId: string) => {
   originalHandler(newChainId);
 };
 
-/**
- * Default dialog close handler.
- */
 const defaultDialogCloseHandler = (originalHandler: () => void) => {
   originalHandler();
 };
@@ -427,7 +483,6 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   const labels = useNovaConnectLabels();
   const chainName = getChainName(currentFormattedChainId);
 
-  // Extract custom components
   const {
     Icon = DefaultTriggerIcon,
     Content = DefaultTriggerContent,
@@ -437,9 +492,6 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   const { onClick: customClickHandler = defaultClickHandler, onKeyDown: customKeyDownHandler = defaultKeyDownHandler } =
     customization?.handlers ?? {};
 
-  /**
-   * Handles keyboard navigation for the trigger button.
-   */
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
       const context: ChainTriggerButtonContext = {
@@ -466,9 +518,6 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
     [customKeyDownHandler, currentFormattedChainId, isChainsListOpen, isMobile, chainName, onToggle],
   );
 
-  /**
-   * Handles click events for the mobile button.
-   */
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const context: ChainTriggerButtonContext = {
@@ -484,107 +533,94 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
     [customClickHandler, currentFormattedChainId, isChainsListOpen, isMobile, chainName, onToggle],
   );
 
-  // Generate classes and styles
-  const wrapperClasses = useMemo(() => {
-    if (customization?.classNames?.wrapper) {
-      return customization.classNames.wrapper({ isMobile, isOpen: isChainsListOpen });
-    }
-    return 'novacon:relative';
-  }, [customization, isMobile, isChainsListOpen]);
+  // Generate classes directly without useMemo (React 19 auto-memoizes)
+  const wrapperClasses = customization?.classNames?.wrapper
+    ? customization.classNames.wrapper({ isMobile, isOpen: isChainsListOpen })
+    : 'novacon:relative';
 
-  const buttonClasses = useMemo(() => {
-    if (customization?.classNames?.button) {
-      return customization.classNames.button({ isMobile, isOpen: isChainsListOpen, hasMultipleChains });
-    }
+  const buttonClasses = customization?.classNames?.button
+    ? customization.classNames.button({ isMobile, isOpen: isChainsListOpen, hasMultipleChains })
+    : cn(
+        'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
+        'novacon:rounded-xl novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
+        'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
+        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-offset-2 novacon:focus:ring-offset-[var(--tuwa-bg-primary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
+        'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
+        {
+          'novacon:ring-2 novacon:ring-[var(--tuwa-text-accent)] novacon:border novacon:border-transparent':
+            isChainsListOpen,
+          'novacon:border novacon:border-[var(--tuwa-border-primary)]': !isChainsListOpen,
+        },
+        'novacon:[&_svg]:w-4 novacon:[&_svg]:h-4',
+      );
 
-    return cn(
-      'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
-      'novacon:rounded-xl novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
-      'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
-      'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-offset-2 novacon:focus:ring-offset-[var(--tuwa-bg-primary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
-      'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
-      {
-        'novacon:ring-2 novacon:ring-[var(--tuwa-text-accent)] novacon:border novacon:border-transparent':
-          isChainsListOpen,
-        'novacon:border novacon:border-[var(--tuwa-border-primary)]': !isChainsListOpen,
-      },
-      'novacon:[&_svg]:w-4 novacon:[&_svg]:h-4',
-    );
-  }, [customization, isMobile, isChainsListOpen, hasMultipleChains]);
+  const innerContentClasses = customization?.classNames?.innerContent
+    ? customization.classNames.innerContent({ isMobile, isOpen: isChainsListOpen })
+    : 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 sm:novacon:px-4 novacon:min-w-[60px] novacon:min-h-[42px] novacon:py-1';
 
-  const innerContentClasses = useMemo(() => {
-    if (customization?.classNames?.innerContent) {
-      return customization.classNames.innerContent({ isMobile, isOpen: isChainsListOpen });
-    }
-    return 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 sm:novacon:px-4 novacon:min-w-[60px] novacon:min-h-[42px] novacon:py-1';
-  }, [customization, isMobile, isChainsListOpen]);
+  const arrowWrapperClasses = customization?.classNames?.arrowWrapper
+    ? customization.classNames.arrowWrapper({ isMobile })
+    : '';
 
-  /**
-   * Creates the inner content without layout animation to prevent text movement.
-   */
-  const innerContent = useMemo(() => {
-    const iconElement = <Icon chainId={currentFormattedChainId} aria-hidden={true} />;
-    const arrowElement = <Arrow isOpen={isChainsListOpen} aria-hidden={true} />;
+  const iconElement = <Icon chainId={currentFormattedChainId} aria-hidden={true} />;
+  const arrowElement = <Arrow isOpen={isChainsListOpen} aria-hidden={true} />;
 
-    return (
-      <div className={innerContentClasses}>
-        <Content
-          icon={iconElement}
-          chainName={chainName}
-          isMobile={isMobile}
-          isOpen={isChainsListOpen}
-          currentFormattedChainId={currentFormattedChainId}
-        />
-
-        {isMobile ? (
-          <div aria-hidden="true">{arrowElement}</div>
-        ) : (
-          <Select.Icon asChild>
-            <div aria-hidden="true">{arrowElement}</div>
-          </Select.Icon>
-        )}
-      </div>
-    );
-  }, [Icon, Arrow, Content, currentFormattedChainId, isChainsListOpen, chainName, isMobile, innerContentClasses]);
-
-  /**
-   * Accessibility attributes for screen readers.
-   */
   const ariaLabel = `${labels.chainSelector}: ${labels.currentChain} ${chainName}. ${labels.openChainSelector}`;
   const ariaExpanded = isChainsListOpen;
   const ariaHaspopup = 'listbox' as const;
 
-  // Merge button props
-  const mobileButtonProps = useMemo(
-    () => ({
-      ...customization?.buttonProps,
-      type: 'button' as const,
-      'aria-label': ariaLabel,
-      'aria-expanded': ariaExpanded,
-      'aria-haspopup': ariaHaspopup,
-      className: buttonClasses,
-      onClick: handleClick,
-      onKeyDown: handleKeyDown,
-    }),
-    [customization?.buttonProps, ariaLabel, ariaExpanded, buttonClasses, handleClick, handleKeyDown],
-  );
+  const mobileButtonProps = {
+    ...customization?.buttonProps,
+    type: 'button' as const,
+    'aria-label': ariaLabel,
+    'aria-expanded': ariaExpanded,
+    'aria-haspopup': ariaHaspopup,
+    className: buttonClasses,
+    onClick: handleClick,
+    onKeyDown: handleKeyDown,
+  };
 
-  const selectTriggerProps = useMemo(
-    () => ({
-      ...customization?.selectTriggerProps,
-      'aria-label': ariaLabel,
-      className: buttonClasses,
-      onKeyDown: handleKeyDown,
-    }),
-    [customization?.selectTriggerProps, ariaLabel, buttonClasses, handleKeyDown],
-  );
+  const selectTriggerProps = {
+    ...customization?.selectTriggerProps,
+    'aria-label': ariaLabel,
+    className: buttonClasses,
+    onKeyDown: handleKeyDown,
+  };
 
   return (
     <div className={wrapperClasses}>
       {isMobile ? (
-        <button {...mobileButtonProps}>{innerContent}</button>
+        <button {...mobileButtonProps}>
+          <div className={innerContentClasses}>
+            <Content
+              icon={iconElement}
+              chainName={chainName}
+              isMobile={isMobile}
+              isOpen={isChainsListOpen}
+              currentFormattedChainId={currentFormattedChainId}
+            />
+            <div className={arrowWrapperClasses} aria-hidden="true">
+              {arrowElement}
+            </div>
+          </div>
+        </button>
       ) : (
-        <Select.Trigger {...selectTriggerProps}>{innerContent}</Select.Trigger>
+        <Select.Trigger {...selectTriggerProps}>
+          <div className={innerContentClasses}>
+            <Content
+              icon={iconElement}
+              chainName={chainName}
+              isMobile={isMobile}
+              isOpen={isChainsListOpen}
+              currentFormattedChainId={currentFormattedChainId}
+            />
+            <Select.Icon asChild>
+              <div className={arrowWrapperClasses} aria-hidden="true">
+                {arrowElement}
+              </div>
+            </Select.Icon>
+          </div>
+        </Select.Trigger>
       )}
     </div>
   );
@@ -605,9 +641,6 @@ export interface ChainSelectorProps extends InitialChains {
 /**
  * The main chain selector component.
  * Supports both desktop (dropdown) and mobile (dialog modal) interfaces.
- *
- * @param props - Props for the ChainSelector component
- * @returns The chain selector component or null if no wallet is connected
  */
 export function ChainSelector({
   appChains,
@@ -621,7 +654,6 @@ export function ChainSelector({
   const switchNetwork = useSatelliteConnectStore((store) => store.switchNetwork);
   const { isChainsListOpen, setIsChainsListOpen, isChainsListOpenMobile, setIsChainsListOpenMobile } = useNovaConnect();
 
-  // Extract custom components
   const {
     SingleChainDisplay = DefaultSingleChainDisplay,
     DesktopSelector = DefaultDesktopSelector,
@@ -634,89 +666,56 @@ export function ChainSelector({
     onDialogClose: customDialogCloseHandler = defaultDialogCloseHandler,
   } = customization?.handlers ?? {};
 
-  /**
-   * Use custom hook to fetch chains list asynchronously
-   * This handles the async nature of getChainsListByConnectorType
-   */
   const { chainsList } = useWalletChainsList({
     activeConnection,
     appChains,
     solanaRPCUrls,
   });
 
-  // Generate all classes and styles upfront to avoid conditional useMemo
-  const containerClasses = useMemo(() => {
-    if (customization?.classNames?.container) {
-      return customization.classNames.container({
+  const containerClasses = customization?.classNames?.container
+    ? customization.classNames.container({
         hasMultipleChains: chainsList.length > 1,
         isLoading: false,
-      });
-    }
-    return className;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.container, chainsList.length, className]);
+      })
+    : className;
 
-  const singleChainDisplayClasses = useMemo(() => {
-    if (customization?.classNames?.singleChainDisplay) {
-      return customization.classNames.singleChainDisplay();
-    }
-    return 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.singleChainDisplay]);
+  const singleChainDisplayClasses = customization?.classNames?.singleChainDisplay
+    ? customization.classNames.singleChainDisplay()
+    : 'novacon:flex novacon:items-center novacon:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6';
 
-  const desktopWrapperClasses = useMemo(() => {
-    if (customization?.classNames?.desktopWrapper) {
-      return customization.classNames.desktopWrapper({ chainCount: chainsList.length });
-    }
-    return 'novacon:hidden novacon:sm:block';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.desktopWrapper, chainsList.length]);
+  const desktopWrapperClasses = customization?.classNames?.desktopWrapper
+    ? customization.classNames.desktopWrapper({ chainCount: chainsList.length })
+    : 'novacon:hidden novacon:sm:block';
 
-  const mobileWrapperClasses = useMemo(() => {
-    if (customization?.classNames?.mobileWrapper) {
-      return customization.classNames.mobileWrapper({ chainCount: chainsList.length });
-    }
-    return 'novacon:sm:hidden';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.mobileWrapper, chainsList.length]);
+  const mobileWrapperClasses = customization?.classNames?.mobileWrapper
+    ? customization.classNames.mobileWrapper({ chainCount: chainsList.length })
+    : 'novacon:sm:hidden';
 
-  const dialogContentClasses = useMemo(() => {
-    if (customization?.classNames?.dialogContent) {
-      return customization.classNames.dialogContent({ chainCount: chainsList.length });
-    }
-    return cn('novacon:w-full novacon:sm:max-w-md');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.dialogContent, chainsList.length]);
+  const dialogContentClasses = customization?.classNames?.dialogContent
+    ? customization.classNames.dialogContent({ chainCount: chainsList.length })
+    : cn('novacon:w-full novacon:sm:max-w-md');
 
-  const dialogInnerContainerClasses = useMemo(() => {
-    if (customization?.classNames?.dialogInnerContainer) {
-      return customization.classNames.dialogInnerContainer();
-    }
-    return cn('novacon:relative novacon:flex novacon:w-full novacon:flex-col');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.dialogInnerContainer]);
+  const dialogInnerContainerClasses = customization?.classNames?.dialogInnerContainer
+    ? customization.classNames.dialogInnerContainer()
+    : cn('novacon:relative novacon:flex novacon:w-full novacon:flex-col');
 
-  /**
-   * Handles switching networks when the user selects a different chain.
-   */
+  const dialogHeaderClasses = customization?.classNames?.dialogHeader
+    ? customization.classNames.dialogHeader()
+    : undefined;
+
   const handleChainChange = useCallback(
     (newChainId: string) => {
       const originalHandler = async (chainId: string) => {
         await switchNetwork(chainId);
       };
-
       customChainChangeHandler(originalHandler, newChainId);
     },
     [switchNetwork, customChainChangeHandler],
   );
 
-  /**
-   * Retrieves chain formatting data for display purposes.
-   */
   const getChainData = useCallback(
     (chain: string | number) => {
       if (!activeConnection) return { formattedChainId: chain, chain };
-
       return {
         formattedChainId: formatConnectorChainId(chain, getAdapterFromConnectorType(activeConnection.connectorType)),
         chain,
@@ -725,18 +724,13 @@ export function ChainSelector({
     [activeConnection],
   );
 
-  /**
-   * Handles closing the mobile dialog.
-   */
   const handleDialogClose = useCallback(() => {
     const originalHandler = () => setIsChainsListOpenMobile(false);
     customDialogCloseHandler(originalHandler);
   }, [customDialogCloseHandler, setIsChainsListOpenMobile]);
 
-  // Early return if no wallet is connected
   if (!activeConnection) return null;
 
-  // Current chain info
   const currentFormattedChainId = formatConnectorChainId(
     activeConnection.chainId,
     getAdapterFromConnectorType(activeConnection.connectorType),
@@ -745,7 +739,6 @@ export function ChainSelector({
   const selectValue = String(currentFormattedChainId);
   const chainName = getChainName(currentFormattedChainId);
 
-  // Display single chain - no selector needed
   if (chainsList.length <= 1) {
     return (
       <SingleChainDisplay
@@ -759,10 +752,8 @@ export function ChainSelector({
 
   const finalAriaLabel = ariaLabel || labels.chainSelector;
 
-  // Main selector UI for multiple chains
   return (
     <div className={containerClasses}>
-      {/* Desktop View - Dropdown */}
       <DesktopSelector className={desktopWrapperClasses} aria-label={finalAriaLabel}>
         <Select.Root
           value={selectValue}
@@ -793,7 +784,6 @@ export function ChainSelector({
         </Select.Root>
       </DesktopSelector>
 
-      {/* Mobile View - Dialog Modal */}
       <MobileSelector className={mobileWrapperClasses} aria-label={finalAriaLabel}>
         <ChainTriggerButton
           currentFormattedChainId={currentFormattedChainId}
@@ -808,7 +798,12 @@ export function ChainSelector({
         <Dialog open={isChainsListOpenMobile} onOpenChange={setIsChainsListOpenMobile}>
           <DialogContent className={dialogContentClasses} aria-describedby="chain-selector-description">
             <div className={dialogInnerContainerClasses}>
-              <DialogHeader title={labels.switchNetworks} onClose={handleDialogClose} />
+              <DialogHeader
+                title={labels.switchNetworks}
+                onClose={handleDialogClose}
+                className={dialogHeaderClasses}
+                closeButton={customization?.dialogHeader?.closeButton}
+              />
 
               <div id="chain-selector-description" className="novacon:sr-only">
                 {labels.selectChain}
