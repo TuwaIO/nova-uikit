@@ -80,7 +80,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
             <ArrowTopRightOnSquareIcon className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
           </a>
         ) : (
-          <span className="novatx:text-[var(--tuwa-text-primary)]">{hashContent}</span>
+          <span className={cn('novatx:text-[var(--tuwa-text-primary)]', classNames?.link)}>{hashContent}</span>
         )}
         <button
           type="button"
