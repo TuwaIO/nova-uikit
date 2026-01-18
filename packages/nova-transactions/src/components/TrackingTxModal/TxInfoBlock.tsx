@@ -37,6 +37,8 @@ export type TxInfoBlockCustomization<T extends Transaction> = {
     separator?: string;
     /** ClassNames for the hash link (Tx Hash row) */
     hashLink?: HashLinkProps['classNames'];
+    /** ClassNames for original hash link in replaced transactions (falls back to hashLink) */
+    originalHashLink?: HashLinkProps['classNames'];
   };
 };
 
@@ -149,6 +151,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             variant="history"
             renderHashLink={customization?.components?.transactionKey}
             hashLinkClassNames={classNames?.hashLink}
+            originalHashLinkClassNames={classNames?.originalHashLink}
           />
         </div>
       )}

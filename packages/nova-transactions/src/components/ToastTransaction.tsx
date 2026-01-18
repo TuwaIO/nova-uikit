@@ -41,12 +41,18 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     description?: string;
     /** Classes for the transaction key section */
     transactionKey?: string;
-    /** Classes for the hash label */
+    /** Classes for the default hash label */
     hashLabel?: string;
-    /** Classes for the hash link */
+    /** Classes for the default hash link */
     hashLink?: string;
-    /** Classes for the hash copy button */
+    /** Classes for the default hash copy button */
     hashCopyButton?: string;
+    /** Classes for the original hash label (replaced transactions) */
+    originalHashLabel?: string;
+    /** Classes for the original hash link (replaced transactions) */
+    originalHashLink?: string;
+    /** Classes for the original hash copy button (replaced transactions) */
+    originalHashCopyButton?: string;
     /** Classes for the footer section */
     footer?: string;
     /** Classes for the status badge container */
@@ -199,6 +205,11 @@ export function ToastTransaction<T extends Transaction>({
             label: classNames?.hashLabel,
             link: classNames?.hashLink,
             copyButton: classNames?.hashCopyButton,
+          }}
+          originalHashLinkClassNames={{
+            label: classNames?.originalHashLabel,
+            link: classNames?.originalHashLink,
+            copyButton: classNames?.originalHashCopyButton,
           }}
         />
         <div className={cn('novatx:mt-3 novatx:flex novatx:items-center novatx:justify-between', classNames?.footer)}>

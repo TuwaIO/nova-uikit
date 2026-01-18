@@ -58,12 +58,18 @@ export type TransactionHistoryItemCustomization<T extends Transaction> = {
     statusBadgeLabel?: string;
     /** Classes for the transaction key container */
     txKeyContainer?: string;
-    /** Classes for hash link label */
+    /** Classes for default hash link label */
     hashLabel?: string;
-    /** Classes for hash link */
+    /** Classes for default hash link */
     hashLink?: string;
-    /** Classes for copy button */
+    /** Classes for default copy button */
     hashCopyButton?: string;
+    /** Classes for original hash link label (replaced transactions) */
+    originalHashLabel?: string;
+    /** Classes for original hash link (replaced transactions) */
+    originalHashLink?: string;
+    /** Classes for original hash copy button (replaced transactions) */
+    originalHashCopyButton?: string;
   };
 };
 
@@ -161,6 +167,11 @@ export function TransactionHistoryItem<T extends Transaction>({
           label: classNames?.hashLabel,
           link: classNames?.hashLink,
           copyButton: classNames?.hashCopyButton,
+        }}
+        originalHashLinkClassNames={{
+          label: classNames?.originalHashLabel,
+          link: classNames?.originalHashLink,
+          copyButton: classNames?.originalHashCopyButton,
         }}
       />
     </div>

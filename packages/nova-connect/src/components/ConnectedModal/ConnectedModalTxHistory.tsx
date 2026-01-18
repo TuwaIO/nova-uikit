@@ -83,12 +83,18 @@ export type LocalTransactionsHistoryCustomization = {
     itemStatusBadgeLabel?: string;
     /** Classes for the transaction key container */
     itemTxKeyContainer?: string;
-    /** Classes for the hash link label */
+    /** Classes for the default hash link label */
     itemHashLabel?: string;
-    /** Classes for the hash link */
+    /** Classes for the default hash link */
     itemHashLink?: string;
-    /** Classes for the hash copy button */
+    /** Classes for the default hash copy button */
     itemHashCopyButton?: string;
+    /** Classes for the original hash link label (replaced transactions) */
+    itemOriginalHashLabel?: string;
+    /** Classes for the original hash link (replaced transactions) */
+    itemOriginalHashLink?: string;
+    /** Classes for the original hash copy button (replaced transactions) */
+    itemOriginalHashCopyButton?: string;
   };
 };
 
