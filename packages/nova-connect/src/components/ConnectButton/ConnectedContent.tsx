@@ -178,7 +178,7 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: CustomLoa
   return (
     <div
       className={cn(
-        "novacon:w-full novacon:h-full novacon:rounded-full novacon:absolute novacon:inset-[-2px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
+        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
         className,
       )}
       aria-hidden="true"

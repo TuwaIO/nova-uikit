@@ -36,7 +36,7 @@ const FALLBACK_CLASS =
  */
 export const FallbackIcon = ({ animate = false, content = '', className }: FallbackIconProps) => (
   <div
-    className={cn(FALLBACK_CLASS, className, {
+    className={cn(FALLBACK_CLASS, 'Nova_Web3_Icon', className, {
       'novacore:animate-pulse': animate,
     })}
   >

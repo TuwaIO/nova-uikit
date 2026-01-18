@@ -6,7 +6,7 @@
 
 > **ConnectedModalNameAndBalanceCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L79)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L79)
 
 Customization options for ConnectedModalNameAndBalance component
 
@@ -16,7 +16,7 @@ Customization options for ConnectedModalNameAndBalance component
 
 > `optional` **animation**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L159)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L149)
 
 Custom animation configuration
 
@@ -94,11 +94,27 @@ Animation easing curve
 
 ***
 
+### childCustomizations?
+
+> `optional` **childCustomizations**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:212](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L212)
+
+Child component customizations
+
+#### balanceDisplay?
+
+> `optional` **balanceDisplay**: [`BalanceDisplayCustomization`](BalanceDisplayCustomization.md)
+
+Customization for BalanceDisplay component
+
+***
+
 ### classNames?
 
 > `optional` **classNames**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L112)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L112)
 
 Custom class name generators
 
@@ -106,47 +122,7 @@ Custom class name generators
 
 > `optional` **balanceContainer**: () => `string`
 
-Function to generate balance container classes
-
-##### Returns
-
-`string`
-
-#### balanceDisplay()?
-
-> `optional` **balanceDisplay**: () => `string`
-
-Function to generate balance display classes
-
-##### Returns
-
-`string`
-
-#### balanceLoading()?
-
-> `optional` **balanceLoading**: () => `string`
-
-Function to generate balance loading classes
-
-##### Returns
-
-`string`
-
-#### balanceSymbol()?
-
-> `optional` **balanceSymbol**: () => `string`
-
-Function to generate balance symbol classes
-
-##### Returns
-
-`string`
-
-#### balanceValue()?
-
-> `optional` **balanceValue**: () => `string`
-
-Function to generate balance value classes
+Function to generate balance container wrapper classes
 
 ##### Returns
 
@@ -234,16 +210,6 @@ Function to generate live region classes
 
 `string`
 
-#### noBalance()?
-
-> `optional` **noBalance**: () => `string`
-
-Function to generate no balance classes
-
-##### Returns
-
-`string`
-
 #### screenReaderFeedback()?
 
 > `optional` **screenReaderFeedback**: () => `string`
@@ -288,7 +254,7 @@ Function to generate wallet name header container classes
 
 > `optional` **components**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L99)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L99)
 
 Custom components
 
@@ -328,7 +294,7 @@ Custom wallet name display component
 
 > `optional` **config**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:200](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L200)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:190](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L190)
 
 Configuration options
 
@@ -402,7 +368,7 @@ Whether to reduce motion for accessibility
 
 > `optional` **containerProps**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"section"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L81)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L81)
 
 Override root container props
 
@@ -412,7 +378,7 @@ Override root container props
 
 > `optional` **handlers**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:189](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L189)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:179](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L179)
 
 Custom event handlers
 
@@ -494,7 +460,7 @@ Custom handler for keyboard interactions
 
 > `optional` **variants**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/4a713e6a4c59e834f16ffd9019baeadad402a463/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L148)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:138](https://github.com/TuwaIO/nova-uikit/blob/8676df2c22f916bc05b96c4725776baeca2fa169/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L138)
 
 Custom animation variants
 

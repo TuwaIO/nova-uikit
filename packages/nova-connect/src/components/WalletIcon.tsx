@@ -12,6 +12,7 @@ import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 type CustomLoadingOverlayProps = {
   size: number;
   isLoading: boolean;
+  className?: string;
 };
 
 type CustomErrorIndicatorProps = {
@@ -48,6 +49,8 @@ export type WalletIconCustomization = {
     container?: (params: { isLoading: boolean; showLoading: boolean; size: number }) => string;
     /** Function to generate image classes */
     image?: (params: { isLoading: boolean; showLoading: boolean; hasError: boolean }) => string;
+    /** Function to generate loading overlay classes */
+    loadingOverlay?: (params: { isLoading: boolean; size: number }) => string;
   };
 };
 
@@ -73,12 +76,15 @@ export interface WalletIconProps extends Omit<ComponentPropsWithoutRef<'div'>, '
 }
 
 // --- Default Sub-Components ---
-const DefaultLoadingOverlay = ({ isLoading }: CustomLoadingOverlayProps) => {
+const DefaultLoadingOverlay = ({ isLoading, className }: CustomLoadingOverlayProps) => {
   if (!isLoading) return null;
 
   return (
     <div
-      className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full"
+      className={cn(
+        'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full',
+        className,
+      )}
       aria-hidden="true"
     />
   );
@@ -252,10 +258,18 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
       [customization?.imageProps, cleanIconUrl, imageClasses, imageStyle, handleImageLoad, handleImageError, lazy],
     );
 
+    // Generate loading overlay classes
+    const loadingOverlayClasses = useMemo(() => {
+      if (customization?.classNames?.loadingOverlay) {
+        return customization.classNames.loadingOverlay({ isLoading, size });
+      }
+      return undefined;
+    }, [customization?.classNames?.loadingOverlay, isLoading, size]);
+
     return (
       <div {...containerProps}>
         {/* Loading overlay */}
-        <LoadingOverlay size={size} isLoading={showLoading && isLoading} />
+        <LoadingOverlay size={size} isLoading={showLoading && isLoading} className={loadingOverlayClasses} />
 
         {/* Custom icon with error fallback */}
         {cleanIconUrl && !hasError ? (

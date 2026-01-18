@@ -4,7 +4,7 @@
  * to orchestrate modals, toasts, and internationalization.
  */
 
-import { deepMerge, ToastCloseButton, useMediaQuery } from '@tuwaio/nova-core';
+import { deepMerge, ToastCloseButton, ToastCloseButtonProps, useMediaQuery } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { ITxTrackingStore, Transaction, TransactionPool, TransactionStatus, TxAdapter } from '@tuwaio/pulsar-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -47,6 +47,7 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
   };
   customization?: {
     toast?: ToastTransactionCustomization<T>;
+    toastCloseButton?: Omit<ToastCloseButtonProps, 'closeToast'>;
     transactionsInfoModal?: TransactionsInfoModalCustomization<T>;
     trackingTxModal?: TrackingTxModalCustomization<T>;
   };
@@ -155,6 +156,17 @@ export function NovaTransactionsProvider<T extends Transaction>({
   const shouldShowToasts =
     enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isTransactionsInfoModalOpen));
 
+  // Create customized close button component
+  const CustomizedCloseButton = useMemo(() => {
+    const closeButtonCustomization = customization?.toastCloseButton;
+    if (!closeButtonCustomization) return ToastCloseButton;
+
+    // Return a wrapper component that passes customization props
+    return ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLElement>) => void }) => (
+      <ToastCloseButton closeToast={closeToast} {...closeButtonCustomization} />
+    );
+  }, [customization?.toastCloseButton]);
+
   return (
     <NovaTransactionsLabelsProvider labels={mergedLabels}>
       {shouldShowToasts && (
@@ -165,7 +177,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
           hideProgressBar
           closeOnClick={false}
           icon={false}
-          closeButton={ToastCloseButton}
+          closeButton={CustomizedCloseButton}
           containerId={toastContainerId}
           toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
           {...toastProps}

@@ -11,7 +11,7 @@ import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, 
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { WalletAvatar, WalletAvatarProps } from '../WalletAvatar';
+import { WalletAvatar, type WalletAvatarCustomization, WalletAvatarProps } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
@@ -81,6 +81,8 @@ type AvatarSectionProps = {
   switchWalletButtonProps?: Partial<IconButtonProps>;
   /** Customization for switch network IconButton */
   switchNetworkButtonProps?: Partial<IconButtonProps>;
+  /** Customization for WalletAvatar component */
+  walletAvatarCustomization?: WalletAvatarCustomization;
 };
 
 type InfoSectionProps = {
@@ -252,7 +254,7 @@ export type ConnectedModalMainContentCustomization = {
     /** Customization for ConnectedModalNameAndBalance component */
     nameAndBalance?: ConnectedModalNameAndBalanceCustomization;
     /** Customization for WalletAvatar component */
-    walletAvatar?: Partial<WalletAvatarProps>;
+    walletAvatar?: WalletAvatarCustomization;
     /** Customization for switch wallet IconButton */
     switchWalletButton?: Partial<IconButtonProps>;
     /** Customization for switch network IconButton */
@@ -336,6 +338,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
   className,
   switchWalletButtonProps,
   switchNetworkButtonProps,
+  walletAvatarCustomization,
 }) => {
   return (
     <motion.div
@@ -379,6 +382,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
         address={activeConnection.address}
         className="novacon:w-36 novacon:h-36 novacon:sm:w-32 novacon:sm:h-32"
         aria-describedby="wallet-info"
+        customization={walletAvatarCustomization}
       />
     </motion.div>
   );
@@ -808,6 +812,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           className={customization?.classNames?.avatarSection?.()}
           switchWalletButtonProps={customization?.childCustomizations?.switchWalletButton}
           switchNetworkButtonProps={customization?.childCustomizations?.switchNetworkButton}
+          walletAvatarCustomization={customization?.childCustomizations?.walletAvatar}
         />
 
         {/* Wallet Name and Balance */}

@@ -9,7 +9,7 @@ import React, { ComponentType, forwardRef, memo, useEffect, useMemo, useRef } fr
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { WalletIcon } from '../WalletIcon';
+import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
 
 // --- Types ---
@@ -201,6 +201,8 @@ export type ConnectingCustomization = {
       customErrorIcon?: ComponentType<{ className?: string }>;
     };
   };
+  /** WalletIcon customization (for the wallet icon shown during connection) */
+  walletIcon?: WalletIconCustomization;
 };
 
 /**
@@ -722,6 +724,7 @@ export const Connecting = memo(
                 name={activeConnector}
                 altText={`${activeConnector} ${labels.walletIcon}`}
                 showLoading={connectionState === 'connecting'}
+                customization={customization?.walletIcon}
               />
             </CustomWalletIconContainer>
           </CustomStatusContainer>

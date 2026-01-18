@@ -127,18 +127,8 @@ export type ConnectedModalNameAndBalanceCustomization = {
     copyIcon?: () => string;
     /** Function to generate check icon classes */
     checkIcon?: () => string;
-    /** Function to generate balance container classes */
+    /** Function to generate balance container wrapper classes */
     balanceContainer?: () => string;
-    /** Function to generate balance loading classes */
-    balanceLoading?: () => string;
-    /** Function to generate balance display classes */
-    balanceDisplay?: () => string;
-    /** Function to generate balance value classes */
-    balanceValue?: () => string;
-    /** Function to generate balance symbol classes */
-    balanceSymbol?: () => string;
-    /** Function to generate no balance classes */
-    noBalance?: () => string;
     /** Function to generate screen reader feedback classes */
     screenReaderFeedback?: () => string;
     /** Function to generate live region classes */
@@ -217,6 +207,11 @@ export type ConnectedModalNameAndBalanceCustomization = {
       screenReaderFeedback?: string;
       liveRegion?: string;
     };
+  };
+  /** Child component customizations */
+  childCustomizations?: {
+    /** Customization for BalanceDisplay component */
+    balanceDisplay?: BalanceDisplayCustomization;
   };
 };
 
@@ -621,7 +616,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
             balanceLoading={balanceLoading}
             refetch={refetch}
             labels={labels}
-            className={customization?.classNames?.balanceDisplay?.()}
+            customization={customization?.childCustomizations?.balanceDisplay}
           />
         </div>
 
