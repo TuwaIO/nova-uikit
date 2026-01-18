@@ -701,19 +701,11 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             badgeClassName={classNames?.iconBadge}
           />
           <div className="novacon:flex novacon:flex-col">
-            <span
-              className={cn(
-                'novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
-                classNames?.walletName,
-              )}
-            >
+            <span className={cn('novacon:font-medium novacon:text-[var(--tuwa-text-primary)]', classNames?.walletName)}>
               {displayName || address}
             </span>
             <span
-              className={cn(
-                'novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]',
-                classNames?.connectorName,
-              )}
+              className={cn('novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
               {getFormattedConnectorName(connectorType)}
             </span>
@@ -821,10 +813,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
               {address}
             </span>
             <span
-              className={cn(
-                'novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]',
-                classNames?.connectorName,
-              )}
+              className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
               {getFormattedConnectorName(connectorType)}
             </span>
@@ -882,10 +871,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               {address}
             </span>
             <span
-              className={cn(
-                'novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]',
-                classNames?.connectorName,
-              )}
+              className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
               {getFormattedConnectorName(connectorType)}
             </span>
@@ -1248,10 +1234,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         recentCount={0}
       >
         <p
-          className={cn(
-            'novacon:text-[var(--tuwa-text-secondary)]',
-            customization?.classNames?.emptyStateMessage?.(),
-          )}
+          className={cn('novacon:text-[var(--tuwa-text-secondary)]', customization?.classNames?.emptyStateMessage?.())}
           role="status"
         >
           {finalLabels.emptyState}

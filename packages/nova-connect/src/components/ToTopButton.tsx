@@ -56,8 +56,10 @@ export type ToTopButtonCustomization = {
   };
 };
 
-export interface ToTopButtonProps
-  extends Omit<ComponentPropsWithoutRef<'button'>, 'type' | 'onClick' | 'onKeyDown' | 'style'> {
+export interface ToTopButtonProps extends Omit<
+  ComponentPropsWithoutRef<'button'>,
+  'type' | 'onClick' | 'onKeyDown' | 'style'
+> {
   /** Custom CSS classes for the button */
   className?: string;
   /** Custom aria-label for the button */

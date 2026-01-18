@@ -346,7 +346,10 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
     >
       {/* Wallet Switch Button */}
       <IconButton
-        className={cn('novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]', switchWalletButtonProps?.className)}
+        className={cn(
+          'novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:left-[-10px]',
+          switchWalletButtonProps?.className,
+        )}
         walletIcon={activeConnection.icon}
         walletName={walletName}
         items={connectorsCount}
@@ -358,7 +361,10 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
 
       {/* Network Switch Button */}
       <IconButton
-        className={cn('novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]', switchNetworkButtonProps?.className)}
+        className={cn(
+          'novacon:absolute novacon:z-[11] novacon:bottom-[-10px] novacon:right-[-10px]',
+          switchNetworkButtonProps?.className,
+        )}
         walletChainId={activeConnection.chainId}
         items={chainsList.length}
         onClick={onSwitchNetwork}

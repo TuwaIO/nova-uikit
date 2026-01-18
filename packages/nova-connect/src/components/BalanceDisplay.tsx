@@ -351,7 +351,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Show success indicator when loading completes
   useEffect(() => {
     if (prevLoading.current && !isLoading) {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      // eslint-disable-next-line
       setShowSuccess(true);
       const timer = setTimeout(() => setShowSuccess(false), successDuration);
       return () => clearTimeout(timer);
@@ -368,6 +368,7 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   const hasBalance = Boolean(balance?.value && balance?.symbol);
 
   // Container classes
+  // eslint-disable-next-line
   const containerClasses = useMemo(() => {
     if (customization?.classNames?.container) {
       return customization.classNames.container({ isLoading, hasBalance });

@@ -279,8 +279,10 @@ export type ConnectedModalTxHistoryCustomization = {
 /**
  * Props for the ConnectedModalTxHistory component
  */
-export interface ConnectedModalTxHistoryProps
-  extends Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> {
+export interface ConnectedModalTxHistoryProps extends Pick<
+  NovaConnectProviderProps,
+  'transactionPool' | 'pulsarAdapter'
+> {
   /** Additional CSS classes for the container */
   className?: string;
   /** Custom aria-label for the container */
@@ -322,12 +324,7 @@ const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels
           classNames?.spinner,
         )}
       />
-      <p
-        className={cn(
-          'novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
-          classNames?.text,
-        )}
-      >
+      <p className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', classNames?.text)}>
         {labels.loading} {labels.transactionsInApp.toLowerCase()}...
       </p>
     </div>

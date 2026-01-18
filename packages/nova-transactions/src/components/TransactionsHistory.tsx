@@ -86,12 +86,8 @@ function HistoryPlaceholder({
   classNames,
 }: CustomPlaceholderProps & { classNames?: { title?: string; message?: string } }) {
   return (
-    <div
-      className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}
-    >
-      <h4 className={cn('novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]', classNames?.title)}>
-        {title}
-      </h4>
+    <div className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}>
+      <h4 className={cn('novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]', classNames?.title)}>{title}</h4>
       <p className={cn('novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]', classNames?.message)}>
         {message}
       </p>
@@ -158,12 +154,7 @@ export function TransactionsHistory<T extends Transaction>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItem
-              key={tx.txKey}
-              tx={tx}
-              adapter={adapter}
-              customization={{ classNames: itemClassNames }}
-            />
+            <HistoryItem key={tx.txKey} tx={tx} adapter={adapter} customization={{ classNames: itemClassNames }} />
           ))}
         </div>
       );
