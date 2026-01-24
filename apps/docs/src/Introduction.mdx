@@ -243,7 +243,7 @@ export function DemoApp() {
   const executeSwap = async () => {
     await executeTxAction({
       actionFunction: swapAction, // Your swap tx action code
-      onSuccessCallback: (tx) => {
+      onSuccess: (tx) => {
         console.log('Swap executed')
       },
       params: {
