@@ -1,7 +1,7 @@
 import { cn } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -251,18 +251,15 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
 
   const isConnected = Boolean(activeConnection?.isConnected);
 
-  // Memoize button data for customization context
-  const buttonData = useMemo<ConnectButtonData>(
-    () => ({
-      isConnected,
-      labels,
-      activeConnection,
-      withChain,
-      withBalance,
-      withImpersonated,
-    }),
-    [isConnected, withChain, withBalance, withImpersonated, labels, activeConnection],
-  );
+  // Button data for customization context
+  const buttonData: ConnectButtonData = {
+    isConnected,
+    labels,
+    activeConnection,
+    withChain,
+    withBalance,
+    withImpersonated,
+  };
 
   // Extract customization options
   const { components = {}, classNames = {}, handlers = {}, config = {}, childComponents = {} } = customization;
@@ -358,22 +355,18 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
       className,
     );
 
-  // Memoize animation configuration
-  const animationConfig = useMemo(() => {
-    if (config.animation?.disabled) {
-      return {};
-    }
-
-    return {
-      layout: true,
-      transition: {
-        layout: {
-          duration: config.animation?.layoutDuration ?? 0.2,
-          ease: config.animation?.layoutEase ?? [0.1, 0.1, 0.2, 1],
+  // Animation configuration
+  const animationConfig = config.animation?.disabled
+    ? {}
+    : {
+        layout: true,
+        transition: {
+          layout: {
+            duration: config.animation?.layoutDuration ?? 0.2,
+            ease: config.animation?.layoutEase ?? [0.1, 0.1, 0.2, 1],
+          },
         },
-      },
-    };
-  }, [config.animation?.disabled, config.animation?.layoutDuration, config.animation?.layoutEase]);
+      };
 
   return (
     <Navigation

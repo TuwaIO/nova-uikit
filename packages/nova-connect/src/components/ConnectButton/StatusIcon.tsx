@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
@@ -293,112 +293,73 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const pathClasses = customization?.classNames?.path ? customization.classNames.path({ txStatus }) : undefined;
 
     // Resolve animation variants
-    const containerVariants = useMemo(() => {
-      if (customization?.variants?.container) {
-        return customization.variants.container;
-      }
-
-      return DEFAULT_CONTAINER_VARIANTS;
-    }, [customization?.variants?.container]);
-
-    const pathVariants = useMemo(() => {
-      if (customization?.variants?.path) {
-        return customization.variants.path;
-      }
-
-      return DEFAULT_MOTION_PATH_VARIANTS;
-    }, [customization?.variants?.path]);
+    const containerVariants = customization?.variants?.container || DEFAULT_CONTAINER_VARIANTS;
+    const pathVariants = customization?.variants?.path || DEFAULT_MOTION_PATH_VARIANTS;
 
     // Resolve animation configuration
-    const containerAnimation = useMemo(() => {
-      const config = customization?.animation?.container;
-      return {
-        duration: config?.duration ?? 0.3,
-        ease: config?.ease ?? [0.4, 0, 0.2, 1],
-        delay: config?.delay ?? 0,
-      };
-    }, [customization?.animation?.container]);
+    const containerAnimation = {
+      duration: customization?.animation?.container?.duration ?? 0.3,
+      ease: customization?.animation?.container?.ease ?? [0.4, 0, 0.2, 1],
+      delay: customization?.animation?.container?.delay ?? 0,
+    };
 
-    const pathAnimation = useMemo(() => {
-      const config = customization?.animation?.path;
-      return {
-        duration: config?.duration ?? 0.5,
-        ease: config?.ease ?? 'easeInOut',
-        delay: config?.delay ?? 0.1,
-      };
-    }, [customization?.animation?.path]);
+    const pathAnimation = {
+      duration: customization?.animation?.path?.duration ?? 0.5,
+      ease: customization?.animation?.path?.ease ?? 'easeInOut',
+      delay: customization?.animation?.path?.delay ?? 0.1,
+    };
 
     // Check for reduced motion
     const shouldReduceMotion = customization?.config?.reduceMotion ?? false;
     const isAnimationDisabled = customization?.config?.disableAnimation ?? false;
 
     // Create SVG element with custom props
-    const svgElement = useMemo(() => {
-      if (customization?.components?.Svg) {
-        return <Svg pathData={pathData} className={svgClasses} aria-hidden={true} focusable={false} />;
-      }
-
-      return (
-        <svg
-          className={cn('novacon:w-4 novacon:h-4', svgClasses)}
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
-          strokeWidth={customization?.svg?.strokeWidth ?? '2'}
-          stroke="currentColor"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <Path
-            pathData={pathData}
-            variants={isAnimationDisabled || shouldReduceMotion ? {} : pathVariants}
-            className={pathClasses}
-            strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
-            strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
-            strokeWidth={customization?.svg?.strokeWidth ?? 2}
-            {...(!isAnimationDisabled && !shouldReduceMotion
-              ? {
-                  initial: 'hidden',
-                  animate: 'visible',
-                  transition: pathAnimation,
-                }
-              : {})}
-          />
-        </svg>
-      );
-    }, [
-      customization?.components?.Svg,
-      customization?.svg,
-      Svg,
-      Path,
-      pathData,
-      svgClasses,
-      pathClasses,
-      isAnimationDisabled,
-      shouldReduceMotion,
-      pathVariants,
-      pathAnimation,
-    ]);
+    const svgElement = customization?.components?.Svg ? (
+      <Svg pathData={pathData} className={svgClasses} aria-hidden={true} focusable={false} />
+    ) : (
+      <svg
+        className={cn('novacon:w-4 novacon:h-4', svgClasses)}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
+        strokeWidth={customization?.svg?.strokeWidth ?? '2'}
+        stroke="currentColor"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <Path
+          pathData={pathData}
+          variants={isAnimationDisabled || shouldReduceMotion ? {} : pathVariants}
+          className={pathClasses}
+          strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
+          strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
+          strokeWidth={customization?.svg?.strokeWidth ?? 2}
+          {...(!isAnimationDisabled && !shouldReduceMotion
+            ? {
+                initial: 'hidden',
+                animate: 'visible',
+                transition: pathAnimation,
+              }
+            : {})}
+        />
+      </svg>
+    );
 
     // Base props without animation properties
-    const baseProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        key: txStatus,
-        className: containerClasses,
+    const baseProps = {
+      ...customization?.containerProps,
+      ...props,
+      key: txStatus,
+      className: containerClasses,
 
-        role: 'img' as const,
-        'aria-label': finalAriaLabel,
-      }),
-      [customization?.containerProps, props, ref, txStatus, containerClasses, finalAriaLabel],
-    );
+      role: 'img' as const,
+      'aria-label': finalAriaLabel,
+    };
 
     // Conditional rendering with proper animation types
     if (isAnimationDisabled || shouldReduceMotion) {
       return (
-        <motion.div {...baseProps}>
+        <motion.div ref={ref} {...baseProps}>
           {customization?.components?.Content ? (
             <Content txStatus={txStatus} colorVar={colorVar} pathData={pathData} finalAriaLabel={finalAriaLabel} />
           ) : (
@@ -410,8 +371,8 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
 
     return (
       <motion.div
+        ref={ref}
         {...baseProps}
-        // eslint-disable-next-line
         key={baseProps?.key ?? 'status'}
         initial={containerVariants.initial as TargetAndTransition}
         animate={containerVariants.animate as TargetAndTransition}

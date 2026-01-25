@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -327,106 +327,64 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     const pathClasses = customization?.classNames?.path ? customization.classNames.path() : undefined;
 
     // Resolve animation variants
-    const containerVariants = useMemo(() => {
-      if (customization?.variants?.container) {
-        return customization.variants.container;
-      }
-
-      return DEFAULT_CONTAINER_VARIANTS;
-    }, [customization?.variants?.container]);
-
-    const pathVariants = useMemo(() => {
-      if (customization?.variants?.path) {
-        return customization.variants.path;
-      }
-
-      return DEFAULT_PATH_ANIMATION_VARIANTS;
-    }, [customization?.variants?.path]);
+    const containerVariants = customization?.variants?.container || DEFAULT_CONTAINER_VARIANTS;
+    const pathVariants = customization?.variants?.path || DEFAULT_PATH_ANIMATION_VARIANTS;
 
     // Resolve animation configuration
-    const containerAnimation = useMemo(() => {
-      const config = customization?.animation?.container;
+    const containerAnimation = {
+      duration: customization?.animation?.container?.duration ?? 0.3,
+      ease: customization?.animation?.container?.ease ?? [0.4, 0, 0.2, 1],
+      delay: customization?.animation?.container?.delay ?? 0,
+    };
 
-      return {
-        duration: config?.duration ?? 0.3,
-        ease: config?.ease ?? [0.4, 0, 0.2, 1],
-        delay: config?.delay ?? 0,
-      };
-    }, [customization?.animation?.container]);
-
-    const pathAnimation = useMemo(() => {
-      const config = customization?.animation?.path;
-
-      return {
-        duration: config?.duration ?? 0.5,
-        ease: config?.ease ?? 'easeInOut',
-        delay: config?.delay ?? 0.1,
-      };
-    }, [customization?.animation?.path]);
+    const pathAnimation = {
+      duration: customization?.animation?.path?.duration ?? 0.5,
+      ease: customization?.animation?.path?.ease ?? 'easeInOut',
+      delay: customization?.animation?.path?.delay ?? 0.1,
+    };
 
     // Create icon element
-    const iconElement = useMemo(() => {
-      if (customization?.components?.Icon) {
-        return <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />;
-      }
-
-      return (
-        <svg
-          className={cn('novacon:w-5 novacon:h-5', iconClasses)}
-          fill="none"
-          viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
-          stroke="currentColor"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <Path
-            pathData={pathData}
-            variants={disableAnimation || reduceMotion ? {} : pathVariants}
-            className={pathClasses}
-            strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
-            strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
-            strokeWidth={customization?.svg?.strokeWidth ?? 1.5}
-            {...(!disableAnimation && !reduceMotion
-              ? {
-                  initial: 'hidden',
-                  animate: 'visible',
-                  transition: pathAnimation,
-                }
-              : {})}
-          />
-        </svg>
-      );
-    }, [
-      customization?.svg,
-      customization?.components?.Icon,
-      Icon,
-      Path,
-      pathData,
-      iconClasses,
-      pathClasses,
-      disableAnimation,
-      reduceMotion,
-      pathVariants,
-      pathAnimation,
-    ]);
+    const iconElement = customization?.components?.Icon ? (
+      <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />
+    ) : (
+      <svg
+        className={cn('novacon:w-5 novacon:h-5', iconClasses)}
+        fill="none"
+        viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
+        stroke="currentColor"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <Path
+          pathData={pathData}
+          variants={disableAnimation || reduceMotion ? {} : pathVariants}
+          className={pathClasses}
+          strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
+          strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
+          strokeWidth={customization?.svg?.strokeWidth ?? 1.5}
+          {...(!disableAnimation && !reduceMotion
+            ? {
+                initial: 'hidden',
+                animate: 'visible',
+                transition: pathAnimation,
+              }
+            : {})}
+        />
+      </svg>
+    );
 
     // Create text element
-    const textElement = useMemo(() => {
-      return <Text text={displayText} className={textClasses} aria-hidden={true} role="text" />;
-    }, [Text, displayText, textClasses]);
+    const textElement = <Text text={displayText} className={textClasses} aria-hidden={true} role="text" />;
 
     // Base props without animation properties
-    const baseProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'img' as const,
-        'aria-label': finalAriaLabel,
-      }),
-      [customization, props, ref, containerClasses, finalAriaLabel],
-    );
+    const baseProps = {
+      ...customization?.containerProps,
+      ...props,
+      // ref,
+      className: containerClasses,
+      role: 'img' as const,
+      'aria-label': finalAriaLabel,
+    };
 
     // Don't render if wallet is already connected and hideWhenConnected is true
     if (isConnected && hideWhenConnected) return null;
@@ -434,7 +392,7 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     // Conditional rendering with proper animation types
     if (disableAnimation || reduceMotion) {
       return (
-        <motion.div {...baseProps}>
+        <motion.div ref={ref} {...baseProps}>
           {customization?.components?.Content ? (
             <Content icon={iconElement} text={textElement} isConnected={isConnected} finalAriaLabel={finalAriaLabel} />
           ) : (
@@ -446,6 +404,7 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
 
     return (
       <motion.div
+        ref={ref}
         {...baseProps}
         initial={containerVariants.initial as TargetAndTransition}
         animate={containerVariants.animate as TargetAndTransition}
