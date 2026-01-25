@@ -484,10 +484,10 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     const { disableAnimation = false, reduceMotion = false, ariaLabels } = customization?.config ?? {};
 
     /**
-     * Memoized calculations for state
+     * Calculations for state
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
-    const hasBalance = useMemo(() => Boolean(balance?.value && balance?.symbol), [balance]);
+    const hasActiveWallet = Boolean(activeConnection?.isConnected);
+    const hasBalance = Boolean(balance?.value && balance?.symbol);
 
     /**
      * Handle copying wallet address with proper error handling and custom handlers
@@ -505,26 +505,22 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
         console.error('Failed to copy wallet address:', error);
         customization?.handlers?.onCopyError?.(error as Error, activeConnection.address);
       }
-    }, [activeConnection?.address, copy, customization?.handlers]);
+    }, [activeConnection, copy, customization]);
 
     /**
-     * Generate container classes with custom generator
+     * Container classes
      */
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({
           hasActiveWallet,
           isCopied,
           balanceLoading,
           hasBalance,
-        });
-      }
-      return cn(
-        'novacon:flex novacon:w-full novacon:flex-col novacon:items-center novacon:justify-start novacon:gap-2 novacon:min-h-[60px]',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, hasActiveWallet, isCopied, balanceLoading, hasBalance, className]);
+        })
+      : cn(
+          'novacon:flex novacon:w-full novacon:flex-col novacon:items-center novacon:justify-start novacon:gap-2 novacon:min-h-[60px]',
+          className,
+        );
 
     /**
      * Animation variants
@@ -534,27 +530,15 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
     /**
      * Merge container props
      */
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'region',
-        'aria-label':
-          ariaLabel || ariaLabels?.container || `${labels.walletBalance} and ${labels.walletAddress} information`,
-      }),
-      [
-        customization?.containerProps,
-        props,
-        ref,
-        containerClasses,
-        ariaLabel,
-        ariaLabels?.container,
-        labels.walletBalance,
-        labels.walletAddress,
-      ],
-    );
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'region' as const,
+      'aria-label':
+        ariaLabel || ariaLabels?.container || `${labels.walletBalance} and ${labels.walletAddress} information`,
+    };
 
     // Early return if no active wallet
     if (!hasActiveWallet || !activeConnection) {

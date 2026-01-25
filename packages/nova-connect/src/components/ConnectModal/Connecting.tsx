@@ -460,16 +460,13 @@ export const Connecting = memo(
       /**
        * Determine current connection state
        */
-      const connectionState = useMemo((): ConnectionState => {
-        if (connectionError || customErrorMessage) return 'error';
-        if (isConnected) return 'success';
-        return 'connecting';
-      }, [connectionError, customErrorMessage, isConnected]);
+      const connectionState: ConnectionState =
+        connectionError || customErrorMessage ? 'error' : isConnected ? 'success' : 'connecting';
 
       /**
-       * Memoized display message
+       * Display message
        */
-      const displayMessage = useMemo(() => {
+      const displayMessage = (() => {
         switch (connectionState) {
           case 'error':
             return customErrorMessage || labels.connectionError;
@@ -479,20 +476,17 @@ export const Connecting = memo(
           default:
             return activeConnector ? `${labels.connectingTo} ${activeConnector}...` : labels.connectingEllipsis;
         }
-      }, [connectionState, customErrorMessage, labels, activeConnector]);
+      })();
 
       /**
-       * Memoized error message
+       * Error message
        */
-      const errorMessage = useMemo(() => {
-        if (connectionState !== 'error') return null;
-
-        if (customErrorMessage && showDetailedError) {
-          return customErrorMessage;
-        }
-
-        return labels.cannotConnectWallet;
-      }, [connectionState, customErrorMessage, showDetailedError, labels]);
+      const errorMessage =
+        connectionState !== 'error'
+          ? null
+          : customErrorMessage && showDetailedError
+            ? customErrorMessage
+            : labels.cannotConnectWallet;
 
       /**
        * Memoized status data
@@ -521,50 +515,39 @@ export const Connecting = memo(
       );
 
       /**
-       * Memoized container classes
+       * Container classes
        */
-      const containerClasses = useMemo(
-        () =>
-          customization?.classNames?.container?.({ statusData }) ??
-          cn(
-            'novacon:flex novacon:flex-col novacon:gap-4 novacon:items-center novacon:justify-center novacon:w-full',
-            className,
-          ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.container, statusData, className],
-      );
+      const containerClasses =
+        customization?.classNames?.container?.({ statusData }) ??
+        cn(
+          'novacon:flex novacon:flex-col novacon:gap-4 novacon:items-center novacon:justify-center novacon:w-full',
+          className,
+        );
 
       /**
-       * Memoized status container classes based on connection state
+       * Status container classes based on connection state
        */
-      const statusContainerClasses = useMemo(() => {
-        if (customization?.classNames?.statusContainer) {
-          return customization.classNames.statusContainer({ statusData });
-        }
-
-        const baseClasses = [
-          'novacon:relative novacon:flex novacon:items-center novacon:justify-center',
-          'novacon:min-w-[110px] novacon:min-h-[110px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
-          'novacon:border-2 novacon:rounded-full',
-          'novacon:p-4 novacon:md:p-6',
-          'novacon:transition-all novacon:duration-300 novacon:ease-in-out',
-        ];
-
-        const stateClasses = {
-          error: [
-            'novacon:border-[var(--tuwa-error-text)]',
-            'novacon:bg-[var(--tuwa-error-text)] novacon:bg-opacity-5',
-          ],
-          success: [
-            'novacon:border-[var(--tuwa-success-text)]',
-            'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-5',
-          ],
-          connecting: ['novacon:border-[var(--tuwa-border-primary)]', 'novacon:bg-[var(--tuwa-bg-primary)]'],
-        };
-
-        return cn(baseClasses, stateClasses[statusData.state]);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customization?.classNames?.statusContainer, statusData]);
+      const statusContainerClasses = customization?.classNames?.statusContainer
+        ? customization.classNames.statusContainer({ statusData })
+        : cn(
+            'novacon:relative novacon:flex novacon:items-center novacon:justify-center',
+            'novacon:min-w-[110px] novacon:min-h-[110px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
+            'novacon:border-2 novacon:rounded-full',
+            'novacon:p-4 novacon:md:p-6',
+            'novacon:transition-all novacon:duration-300 novacon:ease-in-out',
+            statusData.state === 'error' && [
+              'novacon:border-[var(--tuwa-error-text)]',
+              'novacon:bg-[var(--tuwa-error-text)] novacon:bg-opacity-5',
+            ],
+            statusData.state === 'success' && [
+              'novacon:border-[var(--tuwa-success-text)]',
+              'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-5',
+            ],
+            statusData.state === 'connecting' && [
+              'novacon:border-[var(--tuwa-border-primary)]',
+              'novacon:bg-[var(--tuwa-bg-primary)]',
+            ],
+          );
 
       const performDefaultCleanup = () => {
         if (cleanupCalled.current) return;

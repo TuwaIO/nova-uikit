@@ -5,7 +5,7 @@
 import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
-import { ButtonHTMLAttributes, ReactNode, useEffect, useMemo, useState } from 'react';
+import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
 import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
@@ -90,7 +90,7 @@ export function TxActionButton<T extends Transaction>({
   const [status, setStatus] = useState<ButtonStatus>('idle');
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
 
-  const defaultContent = useMemo(() => getDefaultContent(trackedTxButton), [trackedTxButton]);
+  const defaultContent = getDefaultContent(trackedTxButton);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

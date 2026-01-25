@@ -5,7 +5,6 @@
 import { ArrowPathIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
-import { useMemo } from 'react';
 
 import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
@@ -58,7 +57,7 @@ export function TransactionStatusBadge<T extends Transaction>({
 }: TransactionStatusBadgeProps<T>) {
   const { statuses } = useLabels();
 
-  const statusConfig = useMemo(() => getStatusConfig(statuses), [statuses]);
+  const statusConfig = getStatusConfig(statuses);
 
   const baseClasses =
     'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:rounded-full novatx:px-2 novatx:py-1 novatx:text-xs novatx:font-medium';

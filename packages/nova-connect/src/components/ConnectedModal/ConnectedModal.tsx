@@ -6,7 +6,7 @@ import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
 import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect } from 'react';
 
 import {
   ConnectedContentType,
@@ -613,19 +613,15 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     } = customization?.config ?? {};
 
     // Memoize handler references
-    const customHandlers = useMemo(() => customization?.handlers, [customization?.handlers]);
+    const customHandlers = customization?.handlers;
 
     // Hook configurations
-    const walletNameConfig: WalletNameConfig = useMemo(
-      () =>
-        hooksConfig?.walletNameAndAvatar ?? {
-          abbreviateSymbols: 6,
-          maxNameLength: 30,
-          autoRetry: false,
-          retryDelay: 3000,
-        },
-      [hooksConfig?.walletNameAndAvatar],
-    );
+    const walletNameConfig: WalletNameConfig = hooksConfig?.walletNameAndAvatar ?? {
+      abbreviateSymbols: 6,
+      maxNameLength: 30,
+      autoRetry: false,
+      retryDelay: 3000,
+    };
 
     const {
       ensAvatar,
@@ -754,16 +750,13 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     /**
      * Memoized state calculations
      */
-    const hasActiveWallet = useMemo(
-      () => Boolean(activeConnection && (activeConnection as { isConnected?: boolean }).isConnected),
-      [activeConnection],
-    );
-    const currentTitle = useMemo(() => getTitle(), [getTitle]);
+    const hasActiveWallet = Boolean(activeConnection && (activeConnection as { isConnected?: boolean }).isConnected);
+    const currentTitle = getTitle();
 
     /**
      * Generate dialog content classes
      */
-    const dialogContentClasses = useMemo(() => {
+    const dialogContentClasses = (() => {
       if (customization?.classNames?.dialogContent) {
         return customization.classNames.dialogContent({
           contentType: connectedModalContentType,
@@ -771,20 +764,17 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         });
       }
       return cn('novacon:w-full novacon:sm:max-w-md', className);
-    }, [customization, connectedModalContentType, hasActiveWallet, className]);
+    })();
 
     /**
      * Animation variants
      */
-    const modalVariants = useMemo(
-      () => customization?.variants?.modal || DEFAULT_MODAL_ANIMATION_VARIANTS,
-      [customization?.variants?.modal],
-    );
+    const modalVariants = customization?.variants?.modal || DEFAULT_MODAL_ANIMATION_VARIANTS;
 
     /**
      * Motion props configuration
      */
-    const motionProps = useMemo(() => {
+    const motionProps = (() => {
       if (disableAnimation || reduceMotion) {
         return {};
       }
@@ -807,7 +797,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           delay: customization?.animation?.modal?.delay ?? 0,
         },
       };
-    }, [disableAnimation, reduceMotion, modalVariants, customization]);
+    })();
 
     // Early return if no active wallet - prevents rendering empty modal
     if (!hasActiveWallet || !activeConnection) {

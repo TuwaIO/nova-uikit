@@ -649,9 +649,9 @@ export const ConnectCard = memo(
       const customConfig = customization?.config;
 
       /**
-       * Memoized touch device detection
+       * Touch device detection
        */
-      const isTouch = useMemo(() => isTouchDevice(), []);
+      const isTouch = isTouchDevice();
 
       /**
        * Memoized network data calculations
@@ -694,53 +694,27 @@ export const ConnectCard = memo(
       );
 
       /**
-       * Memoized container classes
+       * Container classes
        */
-      const containerClasses = useMemo(() => {
-        if (customization?.classNames?.container) {
-          return customization.classNames.container({ cardData });
-        }
-
-        const baseClasses =
-          'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-xl novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]';
-
-        const touchClasses =
-          'novacon:w-[125px] novacon:h-[125px] novacon:p-2 novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center';
-
-        const mouseClasses = [
-          'novacon:w-full novacon:h-auto',
-          'novacon:flex novacon:items-center novacon:justify-between',
-        ];
-
-        return cn(baseClasses, className, mouseClasses, { [touchClasses]: isTouch });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customization?.classNames?.container, cardData, className, isTouch]);
+      const containerClasses = customization?.classNames?.container
+        ? customization.classNames.container({ cardData })
+        : cn(
+            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-xl novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
+            className,
+            'novacon:w-full novacon:h-auto',
+            'novacon:flex novacon:items-center novacon:justify-between',
+            {
+              'novacon:w-[125px] novacon:h-[125px] novacon:p-2 novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center':
+                isTouch,
+            },
+          );
 
       /**
-       * Memoized aria label
+       * Aria label
        */
-      const cardAriaLabel = useMemo(() => {
-        if (customConfig?.ariaLabels?.card) {
-          return customConfig.ariaLabels.card(cardData);
-        }
-
-        const baseLabel = `${labels.connect} ${title}`;
-        const recentText = isRecent ? ` (${labels.recent})` : '';
-        const subtitleText = subtitle ? `, ${subtitle}` : '';
-        const networkCount = adapters?.length ? `, supports ${adapters.length} networks` : '';
-
-        return `${baseLabel}${recentText}${subtitleText}${networkCount}`;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [
-        customConfig?.ariaLabels?.card,
-        cardData,
-        labels.connect,
-        labels.recent,
-        title,
-        isRecent,
-        subtitle,
-        adapters?.length,
-      ]);
+      const cardAriaLabel = customConfig?.ariaLabels?.card
+        ? customConfig.ariaLabels.card(cardData)
+        : `${labels.connect} ${title}${isRecent ? ` (${labels.recent})` : ''}${subtitle ? `, ${subtitle}` : ''}${adapters?.length ? `, supports ${adapters.length} networks` : ''}`;
 
       /**
        * Handle click with customization

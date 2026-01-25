@@ -214,7 +214,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const setConnectionError = useSatelliteConnectStore((store) => store.setConnectionError);
     const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
-    const adapter = useMemo(() => getAdapter(selectedAdapter ?? OrbitAdapter.EVM), [getAdapter, selectedAdapter]);
+    const adapter = getAdapter(selectedAdapter ?? OrbitAdapter.EVM);
 
     // Core state - separated concerns
     const [inputValue, setInputValue] = useState(''); // What user sees in input
@@ -251,9 +251,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     /**
      * Check if adapter supports domain name resolution
      */
-    const supportsNameResolution = useMemo(() => {
-      return adapter && typeof adapter.getAddress === 'function';
-    }, [adapter]);
+    const supportsNameResolution = adapter && typeof adapter.getAddress === 'function';
 
     /**
      * Clear validation timeout
@@ -389,7 +387,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       },
       [
         customHandlers,
-        validationConfig.customValidator,
+        validationConfig,
         labels.impersonateAddressEmpty,
         labels.impersonateAddressNotCorrect,
         labels.impersonateAddressConnected,
@@ -533,52 +531,35 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     }, [impersonatedAddress, hasInteracted, triggerValidation]);
 
     // Generate classes
-    const containerClasses = useMemo(
-      () => customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className),
-      [customization?.classNames?.container, className],
-    );
+    const containerClasses = customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className);
 
-    const labelClasses = useMemo(
-      () =>
-        customization?.classNames?.label?.() ??
-        'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
-      [customization?.classNames?.label],
-    );
+    const labelClasses =
+      customization?.classNames?.label?.() ?? 'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]';
 
-    const inputClasses = useMemo(() => {
-      if (customization?.classNames?.input) {
-        return customization.classNames.input({ hasError: !!connectionError, hasInteracted });
-      }
+    const inputClasses = customization?.classNames?.input
+      ? customization.classNames.input({ hasError: !!connectionError, hasInteracted })
+      : cn(
+          // Base layout and spacing
+          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
+          // Theme colors
+          'novacon:bg-[var(--tuwa-bg-secondary)]',
+          'novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          'novacon:text-[var(--tuwa-text-primary)]',
+          'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
+          // Focus and interaction states
+          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+          // Error state styling
+          { 'novacon:border-red-500 novacon:focus:ring-red-500': connectionError },
+          // Resolving state styling
+          { 'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving },
+          // Transition for smooth state changes
+          'novacon:transition-colors novacon:duration-200',
+        );
 
-      return cn(
-        // Base layout and spacing
-        'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
-        // Theme colors
-        'novacon:bg-[var(--tuwa-bg-secondary)]',
-        'novacon:border novacon:border-[var(--tuwa-border-primary)]',
-        'novacon:text-[var(--tuwa-text-primary)]',
-        'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
-        // Focus and interaction states
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
-        // Error state styling
-        {
-          'novacon:border-red-500 novacon:focus:ring-red-500': connectionError,
-        },
-        // Resolving state styling
-        {
-          'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving,
-        },
-        // Transition for smooth state changes
-        'novacon:transition-colors novacon:duration-200',
-      );
-    }, [customization?.classNames?.input, connectionError, hasInteracted, isResolving]);
+    const errorMessageClasses =
+      customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500';
 
-    const errorMessageClasses = useMemo(
-      () => customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500',
-      [customization?.classNames?.errorMessage],
-    );
-
-    const placeholder = useMemo(() => {
+    const placeholder = (() => {
       if (customConfig?.input?.placeholder) {
         return customConfig.input.placeholder;
       }
@@ -593,7 +574,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       }
 
       return labels.walletAddressPlaceholder;
-    }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
+    })();
 
     // Cleanup effect
     useEffect(() => {
