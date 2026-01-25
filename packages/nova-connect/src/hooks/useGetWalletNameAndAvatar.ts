@@ -1,6 +1,6 @@
 import { textCenterEllipsis } from '@tuwaio/nova-core';
-import { getAdapterFromConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
 
@@ -75,14 +75,11 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
-  // Memoize wallet address and adapter for dependency tracking
-  const walletAddress = useMemo(() => activeConnection?.address, [activeConnection?.address]);
-  const connectorType = useMemo(() => activeConnection?.connectorType, [activeConnection?.connectorType]);
+  // Derived values
+  const walletAddress = activeConnection?.address;
+  const connectorType = activeConnection?.connectorType;
 
-  const foundAdapter = useMemo(() => {
-    if (!connectorType) return null;
-    return getAdapter(getAdapterFromConnectorType(connectorType ?? `${OrbitAdapter.EVM}:not-connected`));
-  }, [getAdapter, connectorType]);
+  const foundAdapter = connectorType ? getAdapter(getAdapterFromConnectorType(connectorType)) : null;
 
   // State variables
   const [ensName, setEnsName] = useState<string | null>(null);
@@ -94,17 +91,15 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
   const abortControllerRef = useRef<AbortController | null>(null);
   const retryTimeoutRef = useRef<number | null>(null);
 
-  // Memoize adapter capabilities
-  const adapterCapabilities = useMemo(() => {
-    if (!foundAdapter) {
-      return { hasNameResolver: false, hasAvatarResolver: false };
-    }
-
-    const hasNameResolver = 'getName' in foundAdapter && typeof foundAdapter.getName === 'function';
-    const hasAvatarResolver = 'getAvatar' in foundAdapter && typeof foundAdapter.getAvatar === 'function';
-
-    return { hasNameResolver, hasAvatarResolver };
-  }, [foundAdapter]);
+  // Adapter capabilities
+  // We use simpler derivation here. If foundAdapter changes, these booleans update.
+  // Since they are primitives, they are stable for dependency arrays.
+  const hasNameResolver = !!(foundAdapter && 'getName' in foundAdapter && typeof foundAdapter.getName === 'function');
+  const hasAvatarResolver = !!(
+    foundAdapter &&
+    'getAvatar' in foundAdapter &&
+    typeof foundAdapter.getAvatar === 'function'
+  );
 
   // Cleanup function
   const cleanup = useCallback(() => {
@@ -123,7 +118,7 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
     cleanup();
 
     // Exit conditions
-    if (!walletAddress || !foundAdapter || !adapterCapabilities.hasNameResolver) {
+    if (!walletAddress || !foundAdapter || !hasNameResolver) {
       setEnsName(null);
       setEnsAvatar(null);
       setIsLoading(false);
@@ -154,7 +149,7 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
         setEnsName(name);
 
         // If avatar resolution is supported, fetch the avatar
-        if (adapterCapabilities.hasAvatarResolver) {
+        if (hasAvatarResolver) {
           try {
             const avatar = await foundAdapter.getAvatar?.(name);
             if (!signal.aborted) {
@@ -191,7 +186,7 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
         setIsLoading(false);
       }
     }
-  }, [walletAddress, foundAdapter, adapterCapabilities, autoRetry, retryDelay, cleanup]);
+  }, [walletAddress, foundAdapter, hasNameResolver, hasAvatarResolver, autoRetry, retryDelay, cleanup]);
 
   // Manual retry function
   const retry = useCallback(() => {
@@ -210,16 +205,13 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
     return cleanup;
   }, [cleanup]);
 
-  // Memoized abbreviated name computation
-  const ensNameAbbreviated = useMemo(() => {
-    if (ensName) {
-      return ensName.length > maxNameLength
-        ? textCenterEllipsis(ensName, abbreviateSymbols, abbreviateSymbols)
-        : ensName;
-    }
-
-    return walletAddress ? textCenterEllipsis(walletAddress, abbreviateSymbols, abbreviateSymbols) : undefined;
-  }, [ensName, walletAddress, maxNameLength, abbreviateSymbols]);
+  const ensNameAbbreviated = ensName
+    ? ensName.length > maxNameLength
+      ? textCenterEllipsis(ensName, abbreviateSymbols, abbreviateSymbols)
+      : ensName
+    : walletAddress
+      ? textCenterEllipsis(walletAddress, abbreviateSymbols, abbreviateSymbols)
+      : undefined;
 
   return {
     ensName,

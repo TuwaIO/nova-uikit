@@ -166,52 +166,47 @@ export function ErrorsProvider({
   const displayedErrorsRef = useRef<Set<string>>(new Set());
   const currentToastIdRef = useRef<string | null>(null);
 
-  // Memoize error state
-  const errorState = useMemo(() => {
-    const hasWalletError = Boolean(connectionError);
-    const hasSwitchError = Boolean(switchNetworkError);
-    const isConnected = Boolean(activeConnection?.isConnected);
+  // Error state derivation
+  const hasWalletError = Boolean(connectionError);
+  const hasSwitchError = Boolean(switchNetworkError);
+  const isConnected = Boolean(activeConnection?.isConnected);
+  const hasAnyError = hasWalletError || hasSwitchError;
+  const primaryError = connectionError || switchNetworkError || null;
+  const errorType = (hasWalletError ? 'wallet' : hasSwitchError ? 'switch' : null) as 'wallet' | 'switch' | null;
 
-    return {
-      hasWalletError,
-      hasSwitchError,
-      isConnected,
-      hasAnyError: hasWalletError || hasSwitchError,
-      primaryError: connectionError || switchNetworkError || null,
-      errorType: (hasWalletError ? 'wallet' : hasSwitchError ? 'switch' : null) as 'wallet' | 'switch' | null,
-    };
-  }, [connectionError, switchNetworkError, activeConnection?.isConnected]);
+  const errorState = {
+    hasWalletError,
+    hasSwitchError,
+    isConnected,
+    hasAnyError,
+    primaryError,
+    errorType,
+  };
 
-  // Memoize default error title based on type (using labels, NOT customizing them)
-  const defaultErrorTitle = useMemo(() => {
-    switch (errorState.errorType) {
-      case 'wallet':
-        return labels.connectionError;
-      case 'switch':
-        return labels.errorWhenChainSwitching;
-      default:
-        return labels.somethingWentWrong;
-    }
-  }, [errorState.errorType, labels]);
+  // Default error title based on type
+  let defaultErrorTitle = labels.somethingWentWrong;
+  switch (errorState.errorType) {
+    case 'wallet':
+      defaultErrorTitle = labels.connectionError;
+      break;
+    case 'switch':
+      defaultErrorTitle = labels.errorWhenChainSwitching;
+      break;
+  }
 
-  // Generate custom error title (allows modification but NOT labels customization)
-  const errorTitle = useMemo(() => {
-    return customErrorTitleGenerator(defaultErrorTitle, { errorType: errorState.errorType });
-  }, [customErrorTitleGenerator, defaultErrorTitle, errorState.errorType]);
+  // Generate custom error title
+  const errorTitle = customErrorTitleGenerator(defaultErrorTitle, { errorType: errorState.errorType });
 
   // Generate default error hash for deduplication
-  const defaultErrorHash = useMemo(() => {
-    if (!errorState.primaryError) return null;
-    return `${errorState.errorType}-${errorState.primaryError.substring(0, 50)}`;
-  }, [errorState.primaryError, errorState.errorType]);
+  const defaultErrorHash = errorState.primaryError
+    ? `${errorState.errorType}-${errorState.primaryError.substring(0, 50)}`
+    : null;
 
   // Generate custom error hash
-  const errorHash = useMemo(() => {
-    return customErrorHashGenerator(defaultErrorHash, {
-      primaryError: errorState.primaryError,
-      errorType: errorState.errorType,
-    });
-  }, [customErrorHashGenerator, defaultErrorHash, errorState.primaryError, errorState.errorType]);
+  const errorHash = customErrorHashGenerator(defaultErrorHash, {
+    primaryError: errorState.primaryError,
+    errorType: errorState.errorType,
+  });
 
   // Dismiss current toast
   const dismissCurrentToast = useCallback(() => {
@@ -306,8 +301,6 @@ export function ErrorsProvider({
 
   // Main effect to handle error display logic
   useEffect(() => {
-    const { hasAnyError, isConnected, primaryError } = errorState;
-
     // Clear all errors when connected successfully
     if (isConnected && !hasAnyError) {
       dismissCurrentToast();
@@ -318,13 +311,13 @@ export function ErrorsProvider({
     // Show error if present and not already displayed
     if (hasAnyError && primaryError && errorHash) {
       // For connected state, only show switch network errors
-      if (isConnected && errorState.errorType !== 'switch') {
+      if (isConnected && errorType !== 'switch') {
         return;
       }
 
       showErrorToast(errorTitle, primaryError, errorHash);
     }
-  }, [errorState, errorTitle, errorHash, showErrorToast, dismissCurrentToast]);
+  }, [hasAnyError, isConnected, primaryError, errorType, errorTitle, errorHash, showErrorToast, dismissCurrentToast]);
 
   // Clean up on unmount
   useEffect(() => {
@@ -336,18 +329,16 @@ export function ErrorsProvider({
   }, [dismissCurrentToast]);
 
   // Generate container classes
-  const containerClasses = useMemo(() => {
-    if (customization?.classNames?.container) {
-      return customization.classNames.container({
+  const containerClasses = customization?.classNames?.container
+    ? customization.classNames.container({
         hasErrors: errorState.hasAnyError,
         errorType: errorState.errorType,
-      });
-    }
-
-    return 'novacon:p-0 novacon:bg-transparent';
-  }, [customization, errorState.hasAnyError, errorState.errorType]);
+      })
+    : 'novacon:p-0 novacon:bg-transparent';
 
   // Create customized close button component
+  // KEEPING useMemo here because it returns a Component Definition.
+  // Returning a new component function every render causes remounts and focus loss.
   const CustomizedCloseButton = useMemo(() => {
     const closeButtonCustomization = customization?.toastCloseButton;
     if (!closeButtonCustomization) return ToastCloseButton;
@@ -358,35 +349,29 @@ export function ErrorsProvider({
     );
   }, [customization?.toastCloseButton]);
 
-  // Memoize default container props
-  const defaultContainerProps = useMemo(
-    () => ({
-      containerId,
-      position,
-      closeOnClick: false,
-      icon: false as const,
-      closeButton: CustomizedCloseButton,
-      autoClose,
-      hideProgressBar: false,
-      newestOnTop: false,
-      pauseOnFocusLoss: false,
-      draggable,
-      pauseOnHover: true,
-      theme: 'light' as const,
-      transition: Bounce as ToastTransition,
-    }),
-    [containerId, position, autoClose, draggable, CustomizedCloseButton],
-  );
+  // Default container props
+  const defaultContainerProps = {
+    containerId,
+    position,
+    closeOnClick: false,
+    icon: false as const,
+    closeButton: CustomizedCloseButton,
+    autoClose,
+    hideProgressBar: false,
+    newestOnTop: false,
+    pauseOnFocusLoss: false,
+    draggable,
+    pauseOnHover: true,
+    theme: 'light' as const,
+    transition: Bounce as ToastTransition,
+  };
 
-  // Merge container props (NO labels passed to custom components!)
-  const containerProps = useMemo(
-    () => ({
-      ...defaultContainerProps,
-      ...customization?.containerProps,
-      className: containerClasses,
-    }),
-    [defaultContainerProps, customization?.containerProps, containerClasses],
-  );
+  // Merge container props
+  const containerProps = {
+    ...defaultContainerProps,
+    ...customization?.containerProps,
+    className: containerClasses,
+  };
 
   return <Container {...containerProps} />;
 }

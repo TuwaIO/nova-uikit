@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -69,7 +69,7 @@ export type WalletAvatarCustomization = {
     /** Custom background color generator function */
     generateBgColor?: (address: string) => string;
     /** Custom address formatter function */
-    formatAddress?: (address: string, labels: any) => string;
+    formatAddress?: (address: string, labels: Record<string, string>) => string;
   };
 };
 
@@ -178,7 +178,7 @@ const defaultGenerateBgColor = (address: string): string => {
   }
 };
 
-const defaultFormatAddress = (address: string, labels: any): string => {
+const defaultFormatAddress = (address: string, labels: Record<string, string>): string => {
   if (!address) return labels.unknownWallet;
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
@@ -225,31 +225,30 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     } = customization?.utils ?? {};
 
     // Generate blockie using custom or default function
-    const blockie = useMemo(() => generateBlockie(address), [address, generateBlockie]);
+    const blockie = generateBlockie(address);
 
     // Generate background color using custom or default function
-    const bgColor = useMemo(() => generateBgColor(address), [address, generateBgColor]);
+    // Generate background color using custom or default function
+    const bgColor = generateBgColor(address);
 
     // Format address using custom or default function
-    const formattedAddress = useMemo(() => formatAddress(address, labels), [address, labels, formatAddress]);
+    const formattedAddress = formatAddress(address, labels);
 
     // Generate alt text for accessibility
-    const imageAltText = useMemo(() => {
-      if (altText) return altText;
-      if (hasError || !ensAvatar) {
-        return `${labels.walletAvatar} ${formattedAddress}`;
-      }
-      return `${labels.ensAvatar} ${formattedAddress}`;
-    }, [altText, hasError, ensAvatar, formattedAddress, labels.walletAvatar, labels.ensAvatar]);
+    const imageAltText = altText
+      ? altText
+      : hasError || !ensAvatar
+        ? `${labels.walletAvatar} ${formattedAddress}`
+        : `${labels.ensAvatar} ${formattedAddress}`;
 
     // Reset image source when ensAvatar changes
-    const currentEnsAvatar = useMemo(() => ensAvatar ?? null, [ensAvatar]);
-
-    useMemo(() => {
-      setImageSrc(currentEnsAvatar);
-      setIsLoading(Boolean(currentEnsAvatar));
+    // This is a legitimate case of syncing derived state based on prop change
+    useEffect(() => {
+      // eslint-disable-next-line
+      setImageSrc(ensAvatar ?? null);
+      setIsLoading(Boolean(ensAvatar));
       setHasError(false);
-    }, [currentEnsAvatar]);
+    }, [ensAvatar]);
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {
@@ -259,47 +258,42 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     }, [onImageLoad]);
 
     // Handle image load error
+    // Handle image load error
     const handleImageError = useCallback(
       (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
         setIsLoading(false);
         setHasError(true);
+        const blockie = generateBlockie(address);
         setImageSrc(blockie);
         onImageError?.(event.nativeEvent);
       },
-      [blockie, onImageError],
+      [address, generateBlockie, onImageError],
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ size, bgColor, address });
-      }
-      return cn(
-        sizeClasses[size],
-        'novacon:flex-shrink-0 novacon:rounded-full novacon:relative novacon:overflow-hidden',
-        'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
-        'novacon:focus-within:ring-2 novacon:focus-within:ring-[var(--tuwa-text-accent)]',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, size, bgColor, address, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ size, bgColor, address })
+      : cn(
+          sizeClasses[size],
+          'novacon:flex-shrink-0 novacon:rounded-full novacon:relative novacon:overflow-hidden',
+          'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
+          'novacon:focus-within:ring-2 novacon:focus-within:ring-[var(--tuwa-text-accent)]',
+          className,
+        );
 
     // Get current image source with fallback
     const currentImageSrc = imageSrc || blockie || '';
 
-    // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'img' as const,
-        'aria-label': imageAltText,
-        title: imageAltText,
-      }),
-      [customization?.containerProps, props, ref, containerClasses, imageAltText],
-    );
+    // Container props
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'img' as const,
+      'aria-label': imageAltText,
+      title: imageAltText,
+    };
 
     return (
       <div {...containerProps}>

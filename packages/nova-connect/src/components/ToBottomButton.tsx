@@ -4,7 +4,7 @@
 
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -178,66 +178,41 @@ export const ToBottomButton = forwardRef<HTMLButtonElement, ToBottomButtonProps>
     );
 
     // Generate button classes
-    const buttonClasses = useMemo(() => {
-      if (customization?.classNames?.button) {
-        return customization.classNames.button({ disabled, hasOnClick: Boolean(onClick) });
-      }
-      return cn(
-        'novacon:flex novacon:w-full novacon:h-6 novacon:items-center novacon:justify-center',
-        'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
-        'novacon:transition-colors novacon:duration-200',
-        'novacon:hover:bg-[var(--tuwa-bg-tertiary)] novacon:hover:text-[var(--tuwa-text-secondary)]',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-inset',
-        'novacon:active:bg-[var(--tuwa-bg-quaternary)]',
-        'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:bg-[var(--tuwa-bg-secondary)] novacon:cursor-default',
-        {
-          'novacon:cursor-pointer': onClick,
-        },
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.button, disabled, onClick, className]);
+    const buttonClasses = customization?.classNames?.button
+      ? customization.classNames.button({ disabled, hasOnClick: Boolean(onClick) })
+      : cn(
+          'novacon:flex novacon:w-full novacon:h-6 novacon:items-center novacon:justify-center',
+          'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
+          'novacon:transition-colors novacon:duration-200',
+          'novacon:hover:bg-[var(--tuwa-bg-tertiary)] novacon:hover:text-[var(--tuwa-text-secondary)]',
+          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-inset',
+          'novacon:active:bg-[var(--tuwa-bg-quaternary)]',
+          'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:bg-[var(--tuwa-bg-secondary)] novacon:cursor-default',
+          {
+            'novacon:cursor-pointer': onClick,
+          },
+          className,
+        );
 
     // Generate icon classes
-    const iconClasses = useMemo(() => {
-      if (customization?.classNames?.icon) {
-        return customization.classNames.icon({ disabled });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.icon, disabled]);
+    const iconClasses = customization?.classNames?.icon ? customization.classNames.icon({ disabled }) : undefined;
 
     // Create icon element
-    const iconElement = useMemo(
-      () => <Icon disabled={disabled} className={iconClasses} aria-hidden />,
-      [Icon, disabled, iconClasses],
-    );
+    const iconElement = <Icon disabled={disabled} className={iconClasses} aria-hidden />;
 
     // Merge button props
-    const buttonProps = useMemo(
-      () => ({
-        ...customization?.buttonProps,
-        ...props,
-        ref,
-        type: 'button' as const,
-        onClick: handleClick,
-        onKeyDown: handleKeyDown,
-        disabled,
-        className: buttonClasses,
-        'aria-label': ariaLabel || labels.scrollToBottom,
-        title: ariaLabel || labels.scrollToBottom,
-      }),
-      [
-        customization?.buttonProps,
-        props,
-        ref,
-        handleClick,
-        handleKeyDown,
-        disabled,
-        buttonClasses,
-        ariaLabel,
-        labels.scrollToBottom,
-      ],
-    );
+    const buttonProps = {
+      ...customization?.buttonProps,
+      ...props,
+      ref,
+      type: 'button' as const,
+      onClick: handleClick,
+      onKeyDown: handleKeyDown,
+      disabled,
+      className: buttonClasses,
+      'aria-label': ariaLabel || labels.scrollToBottom,
+      title: ariaLabel || labels.scrollToBottom,
+    };
 
     return (
       <button {...buttonProps}>

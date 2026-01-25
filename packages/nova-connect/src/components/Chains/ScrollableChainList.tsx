@@ -12,7 +12,7 @@ import {
   type Transition,
   type VariantLabels,
 } from 'framer-motion';
-import React, { type ComponentType, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { type ComponentType, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { ToBottomButton, ToBottomButtonCustomization } from '../ToBottomButton';
@@ -441,44 +441,30 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
   );
 
   // Generate wrapper classes and styles
-  const wrapperClasses = useMemo(() => {
-    const customClasses = customization?.classNames?.wrapper?.({
+  const wrapperClasses =
+    customization?.classNames?.wrapper?.({
       itemCount: chainsList.length,
       hasScrollableContent,
-    });
-    return customClasses || 'novacon:relative novacon:py-[24px]';
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.wrapper, chainsList.length, hasScrollableContent]);
+    }) || 'novacon:relative novacon:py-[24px]';
 
   // Generate container classes and styles
-  const containerClasses = useMemo(() => {
-    const customClasses = customization?.classNames?.container?.({
+  const containerClasses =
+    customization?.classNames?.container?.({
       itemCount: chainsList.length,
       hasScrollableContent,
       showTopButton,
       showBottomButton,
-    });
-    return (
-      customClasses ||
-      'NovaCustomScroll novacon:relative novacon:flex novacon:w-full novacon:flex-col novacon:p-2 novacon:gap-1 novacon:max-h-[312px] novacon:overflow-x-hidden novacon:overflow-y-auto'
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.container, chainsList.length, hasScrollableContent, showTopButton, showBottomButton]);
+    }) ||
+    'NovaCustomScroll novacon:relative novacon:flex novacon:w-full novacon:flex-col novacon:p-2 novacon:gap-1 novacon:max-h-[312px] novacon:overflow-x-hidden novacon:overflow-y-auto';
 
   // Button animation wrapper classes and styles
-  const topButtonWrapperClasses = useMemo(() => {
-    return (
-      customization?.classNames?.buttonWrapper?.({ position: 'top', isVisible: showTopButton }) ||
-      'novacon:absolute novacon:top-0 novacon:z-10 novacon:w-full'
-    );
-  }, [customization, showTopButton]);
+  const topButtonWrapperClasses =
+    customization?.classNames?.buttonWrapper?.({ position: 'top', isVisible: showTopButton }) ||
+    'novacon:absolute novacon:top-0 novacon:z-10 novacon:w-full';
 
-  const bottomButtonWrapperClasses = useMemo(() => {
-    return (
-      customization?.classNames?.buttonWrapper?.({ position: 'bottom', isVisible: showBottomButton }) ||
-      'novacon:absolute novacon:bottom-0 novacon:z-10 novacon:w-full'
-    );
-  }, [customization, showBottomButton]);
+  const bottomButtonWrapperClasses =
+    customization?.classNames?.buttonWrapper?.({ position: 'bottom', isVisible: showBottomButton }) ||
+    'novacon:absolute novacon:bottom-0 novacon:z-10 novacon:w-full';
 
   // Create button animation wrapper with custom animations
   const createButtonWrapper = useCallback(

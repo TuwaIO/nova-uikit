@@ -7,7 +7,7 @@
 >
 > The central Storybook instance for the Nova UI Kit design system. Used to develop, test, and document React components for Web3 applications in the TUWA ecosystem.
 
------
+---
 
 ## ️ About This Project
 
@@ -28,7 +28,7 @@ This is the **interactive documentation hub** for the entire Nova UI Kit ecosyst
 - **Multi-Chain Examples** - Real-world scenarios for EVM and Solana interactions
 - **Accessibility Testing** - Built-in a11y validation and keyboard navigation demos
 
------
+---
 
 ## Getting Started
 
@@ -70,7 +70,7 @@ Storybook automatically watches for changes in:
 
 Make changes to any story, and see updates instantly in your browser!
 
------
+---
 
 ## Writing Stories
 
@@ -190,7 +190,7 @@ export const LoadingState: Story = {
 };
 ```
 
------
+---
 
 ## Storybook Structure
 
@@ -198,12 +198,12 @@ Our Storybook is organized into logical sections:
 
 ### 📚 Main Sections
 
-| Section             | Description                             | Components                                             |
-| ------------------- | --------------------------------------- |--------------------------------------------------------|
-| **🏠 Introduction** | Getting started guide and ecosystem overview | Welcome, Setup guides                                  |
-| **🔌 Nova Connect** | Wallet connection components            | ConnectButton, WalletModal, NetworkSelector, etc...    |
-| **📊 Nova Transactions** | Transaction tracking UI                 | TransactionModal, ProgressToast, HistoryWidget, etc... |
-| **⚙️ Nova Core** | Foundational utilities and hooks        | Utils, Hooks, Base components                          |
+| Section                  | Description                                  | Components                                             |
+| ------------------------ | -------------------------------------------- | ------------------------------------------------------ |
+| **🏠 Introduction**      | Getting started guide and ecosystem overview | Welcome, Setup guides                                  |
+| **🔌 Nova Connect**      | Wallet connection components                 | ConnectButton, WalletModal, NetworkSelector, etc...    |
+| **📊 Nova Transactions** | Transaction tracking UI                      | TransactionModal, ProgressToast, HistoryWidget, etc... |
+| **⚙️ Nova Core**         | Foundational utilities and hooks             | Utils, Hooks, Base components                          |
 
 ### 🔧 Configuration
 
@@ -213,7 +213,7 @@ Our Storybook is organized into logical sections:
 - **`.storybook/preview.ts`** - Global decorators, parameters, and theme setup
 - **`.storybook/manager.ts`** - Storybook UI customization
 
------
+---
 
 ## Deployment & CI/CD
 
@@ -248,7 +248,7 @@ The build process includes:
 3.  **Accessibility Audit** - Validates all stories for a11y compliance
 4.  **Performance Check** - Ensures optimal loading times
 
------
+---
 
 ## Contributing to Storybook
 
@@ -295,7 +295,7 @@ export const Story2: Story = {
 4.  **Accessibility Check** - Run a11y addon and fix any issues
 5.  **Performance Review** - Ensure stories load quickly
 
------
+---
 
 ## Quick Links & Resources
 
@@ -325,7 +325,7 @@ pnpm lint:stories
 pnpm type-check
 ```
 
------
+---
 
 ## License
 

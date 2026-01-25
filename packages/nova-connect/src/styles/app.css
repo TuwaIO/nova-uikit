@@ -1,7 +1,7 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme) prefix(novacon);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(novacon);
-@import "tw-animate-css"; /*TODO: need warning about this in docs*/
+@import 'tailwindcss/theme.css' layer(theme) prefix(novacon);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(novacon);
+@import 'tw-animate-css'; /*TODO: need warning about this in docs*/
 
 @theme {
   --animate-float: float var(--tw-duration, 4000ms) var(--tw-ease, ease-in-out) infinite;

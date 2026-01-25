@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -279,8 +279,8 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
-    // Memoize connection status check for better performance
-    const isConnected = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
+    // Connection status check
+    const isConnected = Boolean(activeConnection?.isConnected);
 
     // Extract custom components
     const {
@@ -298,164 +298,93 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
       reduceMotion = false,
     } = customization?.config ?? {};
 
-    // Memoize the text to display
-    const displayText = useMemo(() => {
-      return customText || labels.connectWallet;
-    }, [customText, labels.connectWallet]);
+    // Text to display
+    const displayText = customText || labels.connectWallet;
 
-    // Memoize the default aria-label
-    const defaultAriaLabel = useMemo(() => {
-      return labels.connectWallet;
-    }, [labels.connectWallet]);
-
-    // Memoize the final aria-label
-    const finalAriaLabel = useMemo(() => {
-      return ariaLabel || defaultAriaLabel;
-    }, [ariaLabel, defaultAriaLabel]);
+    // Aria-labels
+    const defaultAriaLabel = labels.connectWallet;
+    const finalAriaLabel = ariaLabel || defaultAriaLabel;
 
     // Default wallet icon path
     const defaultPathData =
       'M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3';
 
-    // Get path data
-    const pathData = useMemo(() => {
-      return customization?.svg?.pathData || defaultPathData;
-    }, [customization?.svg?.pathData, defaultPathData]);
+    // Path data
+    const pathData = customization?.svg?.pathData || defaultPathData;
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ isConnected });
-      }
-      return cn('novacon:flex novacon:items-center novacon:gap-2', className);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isConnected, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ isConnected })
+      : cn('novacon:flex novacon:items-center novacon:gap-2', className);
 
     // Generate icon classes
-    const iconClasses = useMemo(() => {
-      if (customization?.classNames?.icon) {
-        return customization.classNames.icon({ isConnected });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.icon, isConnected]);
+    const iconClasses = customization?.classNames?.icon ? customization.classNames.icon({ isConnected }) : undefined;
 
     // Generate text classes
-    const textClasses = useMemo(() => {
-      if (customization?.classNames?.text) {
-        return customization.classNames.text({ isConnected });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.text, isConnected]);
+    const textClasses = customization?.classNames?.text ? customization.classNames.text({ isConnected }) : undefined;
 
     // Generate path classes
-    const pathClasses = useMemo(() => {
-      if (customization?.classNames?.path) {
-        return customization.classNames.path();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.path]);
+    const pathClasses = customization?.classNames?.path ? customization.classNames.path() : undefined;
 
     // Resolve animation variants
-    const containerVariants = useMemo(() => {
-      if (customization?.variants?.container) {
-        return customization.variants.container;
-      }
-
-      return DEFAULT_CONTAINER_VARIANTS;
-    }, [customization?.variants?.container]);
-
-    const pathVariants = useMemo(() => {
-      if (customization?.variants?.path) {
-        return customization.variants.path;
-      }
-
-      return DEFAULT_PATH_ANIMATION_VARIANTS;
-    }, [customization?.variants?.path]);
+    const containerVariants = customization?.variants?.container || DEFAULT_CONTAINER_VARIANTS;
+    const pathVariants = customization?.variants?.path || DEFAULT_PATH_ANIMATION_VARIANTS;
 
     // Resolve animation configuration
-    const containerAnimation = useMemo(() => {
-      const config = customization?.animation?.container;
+    const containerAnimation = {
+      duration: customization?.animation?.container?.duration ?? 0.3,
+      ease: customization?.animation?.container?.ease ?? [0.4, 0, 0.2, 1],
+      delay: customization?.animation?.container?.delay ?? 0,
+    };
 
-      return {
-        duration: config?.duration ?? 0.3,
-        ease: config?.ease ?? [0.4, 0, 0.2, 1],
-        delay: config?.delay ?? 0,
-      };
-    }, [customization?.animation?.container]);
-
-    const pathAnimation = useMemo(() => {
-      const config = customization?.animation?.path;
-
-      return {
-        duration: config?.duration ?? 0.5,
-        ease: config?.ease ?? 'easeInOut',
-        delay: config?.delay ?? 0.1,
-      };
-    }, [customization?.animation?.path]);
+    const pathAnimation = {
+      duration: customization?.animation?.path?.duration ?? 0.5,
+      ease: customization?.animation?.path?.ease ?? 'easeInOut',
+      delay: customization?.animation?.path?.delay ?? 0.1,
+    };
 
     // Create icon element
-    const iconElement = useMemo(() => {
-      if (customization?.components?.Icon) {
-        return <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />;
-      }
-
-      return (
-        <svg
-          className={cn('novacon:w-5 novacon:h-5', iconClasses)}
-          fill="none"
-          viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
-          stroke="currentColor"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <Path
-            pathData={pathData}
-            variants={disableAnimation || reduceMotion ? {} : pathVariants}
-            className={pathClasses}
-            strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
-            strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
-            strokeWidth={customization?.svg?.strokeWidth ?? 1.5}
-            {...(!disableAnimation && !reduceMotion
-              ? {
-                  initial: 'hidden',
-                  animate: 'visible',
-                  transition: pathAnimation,
-                }
-              : {})}
-          />
-        </svg>
-      );
-    }, [
-      customization?.svg,
-      customization?.components?.Icon,
-      Icon,
-      Path,
-      pathData,
-      iconClasses,
-      pathClasses,
-      disableAnimation,
-      reduceMotion,
-      pathVariants,
-      pathAnimation,
-    ]);
+    const iconElement = customization?.components?.Icon ? (
+      <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />
+    ) : (
+      <svg
+        className={cn('novacon:w-5 novacon:h-5', iconClasses)}
+        fill="none"
+        viewBox={customization?.svg?.viewBox ?? '0 0 24 24'}
+        stroke="currentColor"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <Path
+          pathData={pathData}
+          variants={disableAnimation || reduceMotion ? {} : pathVariants}
+          className={pathClasses}
+          strokeLinecap={customization?.svg?.strokeLinecap ?? 'round'}
+          strokeLinejoin={customization?.svg?.strokeLinejoin ?? 'round'}
+          strokeWidth={customization?.svg?.strokeWidth ?? 1.5}
+          {...(!disableAnimation && !reduceMotion
+            ? {
+                initial: 'hidden',
+                animate: 'visible',
+                transition: pathAnimation,
+              }
+            : {})}
+        />
+      </svg>
+    );
 
     // Create text element
-    const textElement = useMemo(() => {
-      return <Text text={displayText} className={textClasses} aria-hidden={true} role="text" />;
-    }, [Text, displayText, textClasses]);
+    const textElement = <Text text={displayText} className={textClasses} aria-hidden={true} role="text" />;
 
     // Base props without animation properties
-    const baseProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'img' as const,
-        'aria-label': finalAriaLabel,
-      }),
-      [customization, props, ref, containerClasses, finalAriaLabel],
-    );
+    const baseProps = {
+      ...customization?.containerProps,
+      ...props,
+      // ref,
+      className: containerClasses,
+      role: 'img' as const,
+      'aria-label': finalAriaLabel,
+    };
 
     // Don't render if wallet is already connected and hideWhenConnected is true
     if (isConnected && hideWhenConnected) return null;
@@ -463,7 +392,7 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     // Conditional rendering with proper animation types
     if (disableAnimation || reduceMotion) {
       return (
-        <motion.div {...baseProps}>
+        <motion.div ref={ref} {...baseProps}>
           {customization?.components?.Content ? (
             <Content icon={iconElement} text={textElement} isConnected={isConnected} finalAriaLabel={finalAriaLabel} />
           ) : (
@@ -475,6 +404,7 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
 
     return (
       <motion.div
+        ref={ref}
         {...baseProps}
         initial={containerVariants.initial as TargetAndTransition}
         animate={containerVariants.animate as TargetAndTransition}

@@ -1,16 +1,29 @@
 # Introduction to Nova UI Kit
 
-<img src="https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/repos/nova_uikit.png" alt="Nova UI Kit" width="400" style={{ borderRadius: '10px', textAlign: 'center', marginBottom: '20px', marginTop: '20px', marginLeft: 'auto', marginRight: 'auto', display: 'block' }} />
+<img
+  src="https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/repos/nova_uikit.png"
+  alt="Nova UI Kit"
+  width="400"
+  style={{
+    borderRadius: '10px',
+    textAlign: 'center',
+    marginBottom: '20px',
+    marginTop: '20px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'block',
+  }}
+/>
 
 **A comprehensive design system and component library for building modern, robust, and beautiful Web3 applications.**
 
 Welcome to the Storybook for **Nova UI Kit**, developed by **TUWA**. This is a complete React-based design system that provides the **View Layer** for TUWA's Web3 development ecosystem. This Storybook serves as a live, interactive documentation and development environment for all Nova components.
 
------
+---
 
 ## ️ What is Nova UI Kit?
 
-Nova UI Kit is the complete **View Layer** for multi-chain React dApps in the TUWA ecosystem. It is built *on top of* the **[Orbit Utils](https://github.com/TuwaIO/orbit)**, **[Satellite Connect](https://github.com/TuwaIO/satellite-connect)**, and **[Pulsar Engine](https://github.com/TuwaIO/pulsar-core)** (TUWA's headless state management libraries), abstracting away the complexity of wallet connections and transaction tracking into beautiful, accessible React components.
+Nova UI Kit is the complete **View Layer** for multi-chain React dApps in the TUWA ecosystem. It is built _on top of_ the **[Orbit Utils](https://github.com/TuwaIO/orbit)**, **[Satellite Connect](https://github.com/TuwaIO/satellite-connect)**, and **[Pulsar Engine](https://github.com/TuwaIO/pulsar-core)** (TUWA's headless state management libraries), abstracting away the complexity of wallet connections and transaction tracking into beautiful, accessible React components.
 
 **Why Nova UI Kit?**
 
@@ -23,18 +36,18 @@ Nova UI Kit solves this by:
 3.  **Abstracting Complex Logic:** Components automatically react to state changes from Satellite and Pulsar stores, eliminating the need to manage UI state manually.
 4.  **Ensuring Accessibility:** Built on Radix UI primitives with comprehensive ARIA support and keyboard navigation.
 
------
+---
 
 ## ✨ Key Features
 
-  - **Unified Multi-Chain UI:** Single set of components that work seamlessly with both EVM (MetaMask, WalletConnect) and Solana (Phantom, Solflare) wallets.
-  - **Modern React Architecture:** Built with React 19+, TypeScript 5.9+, and Tailwind CSS v4 for optimal developer experience.
-  - **Comprehensive Customization:** Every component offers deep customization options through props, CSS variables, and component replacement.
-  - **Accessible by Default:** Full ARIA support, keyboard navigation, and screen reader compatibility out-of-the-box.
-  - **Internationalization Ready:** Built-in i18n (custom variant) support with easy text overrides for multiple languages.
-  - **Production Ready:** Thoroughly tested components with comprehensive error handling and loading states.
+- **Unified Multi-Chain UI:** Single set of components that work seamlessly with both EVM (MetaMask, WalletConnect) and Solana (Phantom, Solflare) wallets.
+- **Modern React Architecture:** Built with React 19+, TypeScript 5.9+, and Tailwind CSS v4 for optimal developer experience.
+- **Comprehensive Customization:** Every component offers deep customization options through props, CSS variables, and component replacement.
+- **Accessible by Default:** Full ARIA support, keyboard navigation, and screen reader compatibility out-of-the-box.
+- **Internationalization Ready:** Built-in i18n (custom variant) support with easy text overrides for multiple languages.
+- **Production Ready:** Thoroughly tested components with comprehensive error handling and loading states.
 
------
+---
 
 ## Ecosystem Packages
 
@@ -42,14 +55,14 @@ Nova UI Kit is modular, allowing you to install only what you need.
 
 ### Core Package
 
-  - **`@tuwaio/nova-core`:** The foundational package. Provides CSS variables, utility functions (`cn`), common hooks, components, and the base theming system that all other Nova packages depend on.
+- **`@tuwaio/nova-core`:** The foundational package. Provides CSS variables, utility functions (`cn`), common hooks, components, and the base theming system that all other Nova packages depend on.
 
 ### Feature Packages
 
-  - **`@tuwaio/nova-connect`:** Complete wallet connection solution. Includes connect buttons, wallet modals, network selectors, and impersonation features. Integrates with Satellite Connect for state management.
-  - **`@tuwaio/nova-transactions`:** Transaction visualization library. Provides progress modals, toast notifications, transaction history, and status indicators. Integrates with Pulsar Engine for transaction tracking.
+- **`@tuwaio/nova-connect`:** Complete wallet connection solution. Includes connect buttons, wallet modals, network selectors, and impersonation features. Integrates with Satellite Connect for state management.
+- **`@tuwaio/nova-transactions`:** Transaction visualization library. Provides progress modals, toast notifications, transaction history, and status indicators. Integrates with Pulsar Engine for transaction tracking.
 
------
+---
 
 ## Getting Started
 
@@ -100,10 +113,7 @@ import { mainnet, sepolia } from 'viem/chains';
 import type { Chain } from 'viem/chains';
 import { createDefaultTransports } from '@tuwaio/satellite-evm';
 
-export const appEVMChains = [
-  mainnet,
-  sepolia,
-] as readonly [Chain, ...Chain[]];
+export const appEVMChains = [mainnet, sepolia] as readonly [Chain, ...Chain[]];
 
 export const wagmiConfig = createConfig({
   connectors: [injected()],
@@ -207,17 +217,9 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <SatelliteConnectProvider
-          adapter={satelliteEVMAdapter(wagmiConfig)}
-          autoConnect={true}
-        >
+        <SatelliteConnectProvider adapter={satelliteEVMAdapter(wagmiConfig)} autoConnect={true}>
           <EVMWalletsWatcher wagmiConfig={wagmiConfig} />
-          <NovaConnectProvider
-            appChains={appEVMChains}
-            withBalance
-            withChain
-            withImpersonated
-          >
+          <NovaConnectProvider appChains={appEVMChains} withBalance withChain withImpersonated>
             <NovaTransactionsProviderWrapper />
             {children}
           </NovaConnectProvider>
@@ -243,8 +245,8 @@ export function DemoApp() {
   const executeSwap = async () => {
     await executeTxAction({
       actionFunction: swapAction, // Your swap tx action code
-      onSuccessCallback: (tx) => {
-        console.log('Swap executed')
+      onSuccess: (tx) => {
+        console.log('Swap executed');
       },
       params: {
         type: TxType.swap,
@@ -270,10 +272,7 @@ export function DemoApp() {
       <ConnectButton />
 
       {/* Transaction demo */}
-      <button
-        onClick={executeSwap}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
+      <button onClick={executeSwap} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
         Execute Swap
       </button>
     </div>
@@ -315,22 +314,22 @@ Nova UI Kit is built on a robust system of CSS variables that integrate seamless
 
 ```tsx
 // Direct usage in className
-<button className="bg-[var(--tuwa-color-primary)] text-[var(--tuwa-color-foreground)]">
-  Connect Wallet
-</button>
+<button className="bg-[var(--tuwa-color-primary)] text-[var(--tuwa-color-foreground)]">Connect Wallet</button>
 ```
 
 ```tsx
 // Or use the cn utility from nova-core
 import { cn } from '@tuwaio/nova-core';
 
-<button className={cn(
-  'px-[var(--tuwa-spacing-md)] py-[var(--tuwa-spacing-sm)]',
-  'bg-[var(--tuwa-color-primary)] text-[var(--tuwa-color-foreground)]',
-  'rounded-[var(--tuwa-radius-sm)]'
-)}>
+<button
+  className={cn(
+    'px-[var(--tuwa-spacing-md)] py-[var(--tuwa-spacing-sm)]',
+    'bg-[var(--tuwa-color-primary)] text-[var(--tuwa-color-foreground)]',
+    'rounded-[var(--tuwa-radius-sm)]',
+  )}
+>
   Connect Wallet
-</button>
+</button>;
 ```
 
 ### Internationalization
@@ -354,7 +353,7 @@ const transactionsLabels = {
   toast: {
     openTransactionsInfo: 'Показать транзакции',
   },
-}
+};
 
 export function Example() {
   return (
@@ -366,27 +365,26 @@ export function Example() {
         labels={transactionsLabels}
         // ... other props
       />
-  </NovaConnectProvider>
-  )
+    </NovaConnectProvider>
+  );
 }
-
 ```
 
 ### Next Steps
 
-  - **Explore Components:** Browse the component stories in this Storybook to see all available components and their customization options.
-  - **Check Package Documentation:** Visit the individual package README files for detailed setup guides and API references:
-  - [`@tuwaio/nova-core`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-core) - Foundational utilities and theming
-  - [`@tuwaio/nova-connect`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-connect) - Wallet connection components
-  - [`@tuwaio/nova-transactions`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-transactions) - Transaction tracking UI
-  - **Explore TUWA Ecosystem:** Learn about the underlying libraries that power Nova UI Kit:
-  - [Orbit Utils](https://orbit.docs.tuwa.io/) - Framework-agnostic Web3 utilities
-  - [Satellite Connect](https://satellite.docs.tuwa.io/) - Multi-chain wallet connection
-  - [Pulsar Engine](https://pulsar.docs.tuwa.io/) - Transaction tracking and management
+- **Explore Components:** Browse the component stories in this Storybook to see all available components and their customization options.
+- **Check Package Documentation:** Visit the individual package README files for detailed setup guides and API references:
+- [`@tuwaio/nova-core`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-core) - Foundational utilities and theming
+- [`@tuwaio/nova-connect`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-connect) - Wallet connection components
+- [`@tuwaio/nova-transactions`](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-transactions) - Transaction tracking UI
+- **Explore TUWA Ecosystem:** Learn about the underlying libraries that power Nova UI Kit:
+- [Orbit Utils](https://orbit.docs.tuwa.io/) - Framework-agnostic Web3 utilities
+- [Satellite Connect](https://satellite.docs.tuwa.io/) - Multi-chain wallet connection
+- [Pulsar Engine](https://pulsar.docs.tuwa.io/) - Transaction tracking and management
 
 ### Resources
 
-  - **GitHub Repository:** [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
-  - **Report Issues:** [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
-  - **Contributing Guide:** [https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
-  - **Support Options:** [https://github.com/TuwaIO/workflows/blob/main/Donation.md](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
+- **GitHub Repository:** [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
+- **Report Issues:** [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
+- **Contributing Guide:** [https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
+- **Support Options:** [https://github.com/TuwaIO/workflows/blob/main/Donation.md](https://github.com/TuwaIO/workflows/blob/main/Donation.md)

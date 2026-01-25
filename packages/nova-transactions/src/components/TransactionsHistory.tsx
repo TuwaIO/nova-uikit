@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction } from '@tuwaio/pulsar-core';
-import { ComponentType, useMemo } from 'react';
+import { ComponentType } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
@@ -110,11 +110,11 @@ export function TransactionsHistory<T extends Transaction>({
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
 
-  const sortedTransactions = useMemo(() => {
+  const sortedTransactions = (() => {
     if (!connectedWalletAddress) return [];
     const transactions = selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress);
     return transactions.sort((a, b) => (b.localTimestamp ?? 0) - (a.localTimestamp ?? 0));
-  }, [transactionsPool, connectedWalletAddress]);
+  })();
 
   const { Placeholder = HistoryPlaceholder, HistoryItem = TransactionHistoryItem } = customization?.components ?? {};
 

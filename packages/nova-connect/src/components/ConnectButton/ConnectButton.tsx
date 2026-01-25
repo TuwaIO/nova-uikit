@@ -1,7 +1,7 @@
 import { cn } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -249,20 +249,17 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     withImpersonated,
   } = useNovaConnect();
 
-  const isConnected = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
+  const isConnected = Boolean(activeConnection?.isConnected);
 
-  // Memoize button data for customization context
-  const buttonData = useMemo<ConnectButtonData>(
-    () => ({
-      isConnected,
-      labels,
-      activeConnection,
-      withChain,
-      withBalance,
-      withImpersonated,
-    }),
-    [isConnected, withChain, withBalance, withImpersonated, labels, activeConnection],
-  );
+  // Button data for customization context
+  const buttonData: ConnectButtonData = {
+    isConnected,
+    labels,
+    activeConnection,
+    withChain,
+    withBalance,
+    withImpersonated,
+  };
 
   // Extract customization options
   const { components = {}, classNames = {}, handlers = {}, config = {}, childComponents = {} } = customization;
@@ -316,34 +313,22 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     [handleConnectButtonClick, buttonData],
   );
 
-  // Memoize button aria-label for better performance
-  const buttonAriaLabel = useMemo(() => {
-    if (config.ariaLabels?.button) {
-      return config.ariaLabels.button(buttonData);
-    }
+  // Button aria-label
+  const buttonAriaLabel = config.ariaLabels?.button
+    ? config.ariaLabels.button(buttonData)
+    : isConnected
+      ? `${labels.walletConnected}. ${labels.openWalletModal}`
+      : `${labels.walletNotConnected}. ${labels.connectWallet}`;
 
-    if (isConnected) {
-      return `${labels.walletConnected}. ${labels.openWalletModal}`;
-    }
-    return `${labels.walletNotConnected}. ${labels.connectWallet}`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, labels, config.ariaLabels?.button, buttonData]);
+  // Navigation aria-label
+  const navigationAriaLabel = config.ariaLabels?.navigation
+    ? config.ariaLabels.navigation(buttonData)
+    : labels.walletControls;
 
-  // Memoize navigation aria-label
-  const navigationAriaLabel = useMemo(() => {
-    if (config.ariaLabels?.navigation) {
-      return config.ariaLabels.navigation(buttonData);
-    }
-    return labels.walletControls;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [labels, config.ariaLabels?.navigation, buttonData]);
-
-  // Memoize button class names for better performance
-  const buttonClasses = useMemo(() => {
-    const customClasses = classNames.button?.({ buttonData });
-    if (customClasses) return customClasses;
-
-    return cn(
+  // Button class names
+  const buttonClasses =
+    classNames.button?.({ buttonData }) ||
+    cn(
       'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
       'novacon:rounded-xl novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
       'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
@@ -369,25 +354,19 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
           ],
       className,
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, className, classNames.button, buttonData]);
 
-  // Memoize animation configuration
-  const animationConfig = useMemo(() => {
-    if (config.animation?.disabled) {
-      return {};
-    }
-
-    return {
-      layout: true,
-      transition: {
-        layout: {
-          duration: config.animation?.layoutDuration ?? 0.2,
-          ease: config.animation?.layoutEase ?? [0.1, 0.1, 0.2, 1],
+  // Animation configuration
+  const animationConfig = config.animation?.disabled
+    ? {}
+    : {
+        layout: true,
+        transition: {
+          layout: {
+            duration: config.animation?.layoutDuration ?? 0.2,
+            ease: config.animation?.layoutEase ?? [0.1, 0.1, 0.2, 1],
+          },
         },
-      },
-    };
-  }, [config.animation?.disabled, config.animation?.layoutDuration, config.animation?.layoutEase]);
+      };
 
   return (
     <Navigation

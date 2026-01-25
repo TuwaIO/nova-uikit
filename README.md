@@ -12,27 +12,27 @@ Welcome to the official monorepo for the **Nova UI Kit**, the comprehensive desi
 
 Our ecosystem is built on a clear separation of concerns:
 
--   **Orbit Utils (`orbit-core`, `orbit-evm`, `orbit-solana`):** The headless helper functions for interactions with multi networks in Web3.
--   **Satellite Connect (`satellite-core`, `satellite-evm`, `satellite-solana`):** The headless state management libraries that handle Web3 wallet connect logic.
--   **Pulsar Engine (`pulsar-core`, `pulsar-evm`, `pulsar-solana`):** The headless state management libraries that handle Web3 transactions tracking logic.
--   **Nova UI Kit (this repo):** The view layer, providing foundational styles and React components to visualize the state managed by Satellite and Pulsar.
+- **Orbit Utils (`orbit-core`, `orbit-evm`, `orbit-solana`):** The headless helper functions for interactions with multi networks in Web3.
+- **Satellite Connect (`satellite-core`, `satellite-evm`, `satellite-solana`):** The headless state management libraries that handle Web3 wallet connect logic.
+- **Pulsar Engine (`pulsar-core`, `pulsar-evm`, `pulsar-solana`):** The headless state management libraries that handle Web3 transactions tracking logic.
+- **Nova UI Kit (this repo):** The view layer, providing foundational styles and React components to visualize the state managed by Satellite and Pulsar.
 
 ## 📦 Packages in this Monorepo
 
 This repository is managed using `pnpm` workspaces.
 
-| Package | Version | Description |
-|---|---|---|
-| 🎨 **`@tuwaio/nova-core`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core) | Foundational package with styling primitives, CSS variables, and helper utilities. |
-| 🔗 **`@tuwaio/nova-connect`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect) | React components for Web3 wallet connection flows, including connect modals and buttons. |
-| 🧩 **`@tuwaio/nova-transactions`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions) | React component library for visualizing transaction states (modals, toasts, etc.). |
+| Package                            | Version                                                                                                                               | Description                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 🎨 **`@tuwaio/nova-core`**         | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)                 | Foundational package with styling primitives, CSS variables, and helper utilities.       |
+| 🔗 **`@tuwaio/nova-connect`**      | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)           | React components for Web3 wallet connection flows, including connect modals and buttons. |
+| 🧩 **`@tuwaio/nova-transactions`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions) | React component library for visualizing transaction states (modals, toasts, etc.).       |
 
 ## 🛠 Tech Stack
 
--   **Framework**: React 19+
--   **Styling**: Tailwind CSS v4
--   **State Management**: Zustand
--   **Tooling**: TypeScript, pnpm, Vite, Storybook
+- **Framework**: React 19+
+- **Styling**: Tailwind CSS v4
+- **State Management**: Zustand
+- **Tooling**: TypeScript, pnpm, Vite, Storybook
 
 ---
 
@@ -41,6 +41,7 @@ This repository is managed using `pnpm` workspaces.
 Follow these steps to set up the development environment on your local machine.
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/TuwaIO/nova-uikit.git
 
@@ -50,6 +51,7 @@ cd nova-uikit
 ### 2. Install Dependencies
 
 This project uses `pnpm`. Make sure you have it installed (). Then run: `npm install -g pnpm`
+
 ```bash
 pnpm install
 ```
@@ -57,6 +59,7 @@ pnpm install
 ### 3. Build All Packages
 
 After installation, it's a good practice to build all packages to ensure everything is linked correctly.
+
 ```bash
 pnpm build
 ```
@@ -86,4 +89,3 @@ If you find this library useful, please consider supporting its development. Eve
 ## 📄 License
 
 This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.
-

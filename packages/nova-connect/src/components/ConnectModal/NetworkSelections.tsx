@@ -11,7 +11,7 @@ import {
   getNetworkData,
   OrbitAdapter,
 } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
@@ -408,74 +408,60 @@ export const NetworkSelections = memo(
     /**
      * Memoized touch device detection
      */
-    const isTouch = useMemo(() => isTouchDevice(), []);
+    const isTouch = isTouchDevice();
 
     /**
      * Memoized active connector configuration
      */
-    const activeConnectors = useMemo(
-      () => connectors.find((connector) => formatConnectorName(connector.name) === activeConnector),
-      [connectors, activeConnector],
-    );
+    const activeConnectors = connectors.find((connector) => formatConnectorName(connector.name) === activeConnector);
 
-    /**
-     * Memoized network data
-     */
-    const networks = useMemo((): NetworkData[] => {
-      if (!activeConnectors?.adapters) return [];
-
-      return activeConnectors.adapters.map((adapter, index) => {
-        const networkInfo = getNetworkData(adapter);
-        return {
-          adapter,
-          chainId: networkInfo?.chain?.chainId,
-          name: networkInfo?.chain?.name ?? 'Ethereum',
-          infoLink: networkInfo?.links.aboutNetwork,
-          index,
-        };
-      });
-    }, [activeConnectors?.adapters]);
+    const networks: NetworkData[] = activeConnectors?.adapters
+      ? activeConnectors.adapters.map((adapter, index) => {
+          const networkInfo = getNetworkData(adapter);
+          return {
+            adapter,
+            chainId: networkInfo?.chain?.chainId,
+            name: networkInfo?.chain?.name ?? 'Ethereum',
+            infoLink: networkInfo?.links.aboutNetwork,
+            index,
+          };
+        })
+      : [];
 
     /**
      * Memoized selections data
      */
-    const selectionsData = useMemo(
-      (): NetworkSelectionsData => ({
-        activeConnector,
-        connectors,
-        isTouch,
-        isError: !activeConnectors,
-        networks,
-      }),
-
-      [activeConnector, connectors, isTouch, activeConnectors, networks],
-    );
+    const selectionsData: NetworkSelectionsData = {
+      activeConnector,
+      connectors,
+      isTouch,
+      isError: !activeConnectors,
+      networks,
+    };
 
     /**
      * Memoized CSS classes
      */
-    const cssClasses = useMemo(() => {
-      const touchListClasses = [
-        'novacon:flex-row',
-        'novacon:overflow-x-auto',
-        'novacon:max-h-none',
-        customConfig?.scroll?.gap?.touch ?? 'novacon:gap-3',
-        'novacon:pb-4',
-        'novacon:px-1',
-      ];
+    const touchListClasses = [
+      'novacon:flex-row',
+      'novacon:overflow-x-auto',
+      'novacon:max-h-none',
+      customConfig?.scroll?.gap?.touch ?? 'novacon:gap-3',
+      'novacon:pb-4',
+      'novacon:px-1',
+    ];
 
-      const mouseListClasses = [
-        'novacon:flex-col',
-        customConfig?.scroll?.mouseMaxHeight ?? 'novacon:max-h-[310px]',
-        'novacon:overflow-y-auto',
-        customConfig?.scroll?.gap?.mouse ?? 'novacon:gap-2',
-      ];
+    const mouseListClasses = [
+      'novacon:flex-col',
+      customConfig?.scroll?.mouseMaxHeight ?? 'novacon:max-h-[310px]',
+      'novacon:overflow-y-auto',
+      customConfig?.scroll?.gap?.mouse ?? 'novacon:gap-2',
+    ];
 
-      return {
-        touchListClasses,
-        mouseListClasses,
-      };
-    }, [customConfig?.scroll]);
+    const cssClasses = {
+      touchListClasses,
+      mouseListClasses,
+    };
 
     /**
      * Handle network selection click

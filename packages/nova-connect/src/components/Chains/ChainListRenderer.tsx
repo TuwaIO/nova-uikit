@@ -20,7 +20,6 @@ import React, {
   forwardRef,
   ReactNode,
   useCallback,
-  useMemo,
 } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -332,12 +331,11 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
   const animations = customization?.animations;
   const behavior = customization?.behavior ?? {};
 
-  // Memoize container classes and styles
-  const containerClasses = useMemo(() => {
-    const customClasses = customization?.classNames?.container?.({ isMobile, itemCount: chainsList.length });
-    return cn(customClasses, className);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customization?.classNames?.container, isMobile, chainsList.length, className]);
+  // Container classes
+  const containerClasses = cn(
+    customization?.classNames?.container?.({ isMobile, itemCount: chainsList.length }),
+    className,
+  );
 
   // Create event handlers at top level to avoid hooks violations
   const createClickHandler = useCallback(

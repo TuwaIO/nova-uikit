@@ -4,7 +4,7 @@
 
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { motion } from 'framer-motion';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentType, forwardRef, memo } from 'react';
 
 // --- Types ---
 
@@ -182,18 +182,15 @@ const DefaultAnimatedGradient: React.FC<AnimatedGradientProps> = ({
   animationConfig,
   gradientConfig,
 }) => {
-  const gradientBackground = useMemo(() => {
+  const gradientBackground = (() => {
     const stops = gradientConfig.stops.map((stop) => `${stop.color} ${stop.position}%`).join(', ');
     return `linear-gradient(${gradientConfig.direction}, ${stops})`;
-  }, [gradientConfig.direction, gradientConfig.stops]);
+  })();
 
-  const animatedStyle = useMemo(
-    () => ({
-      background: gradientBackground,
-      backgroundSize: gradientConfig.backgroundSize,
-    }),
-    [gradientBackground, gradientConfig.backgroundSize],
-  );
+  const animatedStyle = {
+    background: gradientBackground,
+    backgroundSize: gradientConfig.backgroundSize,
+  };
 
   if (!animated) {
     return <span className={className} style={animatedStyle} />;
@@ -306,35 +303,39 @@ export const RecentBadge = memo(
       const customConfig = customization?.config;
 
       // Detect touch device with customization override
-      const isTouch = useMemo(() => customConfig?.touchDevice ?? isTouchDevice(), [customConfig?.touchDevice]);
+      // Detect touch device with customization override
+      const isTouch = customConfig?.touchDevice ?? isTouchDevice();
 
       /**
        * Memoized animation configuration with customization
        */
-      const animationConfig = useMemo(
-        (): BadgeAnimationConfig => ({
-          ...defaultAnimationConfig,
-          ...customConfig?.animation,
-        }),
-        [customConfig?.animation],
-      );
+      /**
+       * Animation configuration with customization
+       */
+      const animationConfig: BadgeAnimationConfig = {
+        ...defaultAnimationConfig,
+        ...customConfig?.animation,
+      };
 
       /**
        * Memoized gradient configuration with customization
        */
-      const gradientConfig = useMemo(
-        (): BadgeGradientConfig => ({
-          ...defaultGradientConfig,
-          ...customConfig?.gradient,
-          stops: customConfig?.gradient?.stops ?? defaultGradientConfig.stops,
-        }),
-        [customConfig?.gradient],
-      );
+      /**
+       * Gradient configuration with customization
+       */
+      const gradientConfig: BadgeGradientConfig = {
+        ...defaultGradientConfig,
+        ...customConfig?.gradient,
+        stops: customConfig?.gradient?.stops ?? defaultGradientConfig.stops,
+      };
 
       /**
        * Generate container classes with proper memoization dependencies
        */
-      const getContainerClasses = useCallback(() => {
+      /**
+       * Generate container classes
+       */
+      const containerClasses = (() => {
         if (customization?.classNames?.container) {
           return customization.classNames.container({ isTouch, animated });
         }
@@ -349,59 +350,49 @@ export const RecentBadge = memo(
           sizeClasses,
           className,
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [isTouch, animated, customization?.classNames?.container, className]);
-
-      /**
-       * Memoized container classes
-       */
-      const containerClasses = useMemo(getContainerClasses, [getContainerClasses]);
+      })();
 
       /**
        * Memoized animated gradient classes
        */
-      const animatedGradientClasses = useMemo(
-        () =>
-          customization?.classNames?.animatedGradient?.() ??
-          'novacon:absolute novacon:inset-0 novacon:z-0 novacon:pointer-events-none novacon:rounded-full',
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.animatedGradient],
-      );
+      /**
+       * Animated gradient classes
+       */
+      const animatedGradientClasses =
+        customization?.classNames?.animatedGradient?.() ??
+        'novacon:absolute novacon:inset-0 novacon:z-0 novacon:pointer-events-none novacon:rounded-full';
 
       /**
        * Memoized background overlay classes
        */
-      const backgroundOverlayClasses = useMemo(
-        () =>
-          customization?.classNames?.backgroundOverlay?.() ??
-          'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)] novacon:inset-[1px]',
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.backgroundOverlay],
-      );
+      /**
+       * Background overlay classes
+       */
+      const backgroundOverlayClasses =
+        customization?.classNames?.backgroundOverlay?.() ??
+        'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)] novacon:inset-[1px]';
 
       /**
        * Memoized content classes
        */
-      const contentClasses = useMemo(
-        () => customization?.classNames?.content?.() ?? 'novacon:relative novacon:z-20 novacon:whitespace-nowrap',
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.content],
-      );
+      /**
+       * Content classes
+       */
+      const contentClasses =
+        customization?.classNames?.content?.() ?? 'novacon:relative novacon:z-20 novacon:whitespace-nowrap';
 
       /**
        * Generate ARIA label with proper memoization dependencies
        */
-      const getAriaLabel = useCallback(() => {
+      /**
+       * Generate ARIA label
+       */
+      const finalAriaLabel = (() => {
         if (customConfig?.ariaLabels?.container) return customConfig.ariaLabels.container;
         if (ariaLabel) return ariaLabel;
         if (typeof children === 'string') return children;
         return 'Recent';
-      }, [customConfig?.ariaLabels?.container, ariaLabel, children]);
-
-      /**
-       * Memoized ARIA label
-       */
-      const finalAriaLabel = useMemo(() => getAriaLabel(), [getAriaLabel]);
+      })();
 
       // Handle mount/unmount effects
       React.useEffect(() => {

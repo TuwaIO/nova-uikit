@@ -46,9 +46,9 @@ npm install @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwa
 
 # Using yarn
 yarn add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
-````
+```
 
------
+---
 
 ## 🚀 Quick Start
 
@@ -69,10 +69,7 @@ import { injected } from '@wagmi/connectors';
 import { mainnet, sepolia } from 'viem/chains';
 import type { Chain } from 'viem/chains';
 
-export const appEVMChains = [
-  mainnet,
-  sepolia,
-] as readonly [Chain, ...Chain[]];
+export const appEVMChains = [mainnet, sepolia] as readonly [Chain, ...Chain[]];
 
 export const wagmiConfig = createConfig({
   connectors: [injected()],
@@ -84,7 +81,6 @@ export const wagmiConfig = createConfig({
 export const solanaRPCUrls = {
   devnet: 'https://api.devnet.solana.com',
 };
-
 
 const queryClient = new QueryClient();
 
@@ -128,7 +124,7 @@ function App() {
 }
 ```
 
------
+---
 
 ## 🧩 Key Components
 
@@ -143,7 +139,7 @@ function App() {
 - Customizable error handling.
 - Flexible internationalization system.
 
------
+---
 
 ## 🌍 Internationalization
 
@@ -161,10 +157,10 @@ const customLabels = {
 <NovaConnectProvider
   labels={customLabels}
   // ... other props
-/>
+/>;
 ```
 
------
+---
 
 ## ♿ Accessibility
 

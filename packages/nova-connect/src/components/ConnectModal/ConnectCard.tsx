@@ -6,7 +6,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { RecentBadge, RecentBadgeCustomization } from './RecentBadge';
@@ -381,25 +381,22 @@ const NetworkIcons = memo(
     /**
      * Generate visible networks data
      */
-    const visibleNetworksData = useMemo(() => {
-      if (!adapters?.length) return [];
-      return adapters.slice(0, 3).map(
-        (adapter, index): NetworkData => ({
-          adapter,
-          chainId: getNetworkData(adapter)?.chain?.chainId,
-          name: getNetworkData(adapter)?.chain?.name,
-          index,
-        }),
-      );
-    }, [adapters]);
-
     /**
-     * Calculate overflow count
+     * Generate visible networks data
      */
-    // eslint-disable-next-line
-    const overflowCount = useMemo(() => {
-      return adapters?.length ? Math.max(0, adapters.length - 3) : 0;
-    }, [adapters?.length]);
+    const visibleNetworksData =
+      adapters && adapters.length
+        ? adapters.slice(0, 3).map(
+            (adapter, index): NetworkData => ({
+              adapter,
+              chainId: getNetworkData(adapter)?.chain?.chainId,
+              name: getNetworkData(adapter)?.chain?.name,
+              index,
+            }),
+          )
+        : [];
+
+    const overflowCount = adapters?.length ? Math.max(0, adapters.length - 3) : 0;
 
     // Early returns
     if (!adapters?.length) return null;
@@ -649,14 +646,17 @@ export const ConnectCard = memo(
       const customConfig = customization?.config;
 
       /**
-       * Memoized touch device detection
+       * Touch device detection
        */
-      const isTouch = useMemo(() => isTouchDevice(), []);
+      const isTouch = isTouchDevice();
 
       /**
        * Memoized network data calculations
        */
-      const networkStats = useMemo(() => {
+      /**
+       * Network data calculations
+       */
+      const networkStats = (() => {
         const networkCount = adapters?.length || 0;
         const visibleNetworks =
           adapters?.slice(0, 3).map(
@@ -674,73 +674,44 @@ export const ConnectCard = memo(
           visibleNetworks,
           overflowCount,
         };
-      }, [adapters]);
+      })();
 
       /**
-       * Memoized card data
+       * Connect card data
        */
-      const cardData = useMemo(
-        (): ConnectCardData => ({
-          title,
-          subtitle,
-          isRecent,
-          isTouch,
-          infoLink,
-          adapters,
-          isOnlyOneNetwork,
-          ...networkStats,
-        }),
-        [title, subtitle, isRecent, isTouch, infoLink, adapters, isOnlyOneNetwork, networkStats],
-      );
-
-      /**
-       * Memoized container classes
-       */
-      const containerClasses = useMemo(() => {
-        if (customization?.classNames?.container) {
-          return customization.classNames.container({ cardData });
-        }
-
-        const baseClasses =
-          'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-xl novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]';
-
-        const touchClasses =
-          'novacon:w-[125px] novacon:h-[125px] novacon:p-2 novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center';
-
-        const mouseClasses = [
-          'novacon:w-full novacon:h-auto',
-          'novacon:flex novacon:items-center novacon:justify-between',
-        ];
-
-        return cn(baseClasses, className, mouseClasses, { [touchClasses]: isTouch });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customization?.classNames?.container, cardData, className, isTouch]);
-
-      /**
-       * Memoized aria label
-       */
-      const cardAriaLabel = useMemo(() => {
-        if (customConfig?.ariaLabels?.card) {
-          return customConfig.ariaLabels.card(cardData);
-        }
-
-        const baseLabel = `${labels.connect} ${title}`;
-        const recentText = isRecent ? ` (${labels.recent})` : '';
-        const subtitleText = subtitle ? `, ${subtitle}` : '';
-        const networkCount = adapters?.length ? `, supports ${adapters.length} networks` : '';
-
-        return `${baseLabel}${recentText}${subtitleText}${networkCount}`;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [
-        customConfig?.ariaLabels?.card,
-        cardData,
-        labels.connect,
-        labels.recent,
+      const cardData: ConnectCardData = {
         title,
-        isRecent,
         subtitle,
-        adapters?.length,
-      ]);
+        isRecent,
+        isTouch,
+        infoLink,
+        adapters,
+        isOnlyOneNetwork,
+        ...networkStats,
+      };
+
+      /**
+       * Container classes
+       */
+      const containerClasses = customization?.classNames?.container
+        ? customization.classNames.container({ cardData })
+        : cn(
+            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-xl novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
+            className,
+            'novacon:w-full novacon:h-auto',
+            'novacon:flex novacon:items-center novacon:justify-between',
+            {
+              'novacon:w-[125px] novacon:h-[125px] novacon:p-2 novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center':
+                isTouch,
+            },
+          );
+
+      /**
+       * Aria label
+       */
+      const cardAriaLabel = customConfig?.ariaLabels?.card
+        ? customConfig.ariaLabels.card(cardData)
+        : `${labels.connect} ${title}${isRecent ? ` (${labels.recent})` : ''}${subtitle ? `, ${subtitle}` : ''}${adapters?.length ? `, supports ${adapters.length} networks` : ''}`;
 
       /**
        * Handle click with customization

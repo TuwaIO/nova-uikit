@@ -1,5 +1,5 @@
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
 
@@ -81,22 +81,22 @@ export function useWalletNativeBalance(): NativeBalanceData {
   // --- 2. COMPUTED INPUTS ---
 
   // Create the unique key for cache lookups: "address-chainId".
-  const cacheKey = useMemo(() => {
-    return activeConnection?.chainId && activeConnection?.address
+  // Create the unique key for cache lookups: "address-chainId".
+  const cacheKey =
+    activeConnection?.chainId && activeConnection?.address
       ? `${activeConnection.address}-${activeConnection.chainId}`
       : null;
-  }, [activeConnection?.chainId, activeConnection?.address]);
 
   // Find the actual adapter object from the adapter map.
-  const foundAdapter = useMemo(() => {
-    if (!activeConnection?.connectorType) return null;
-    return getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
-  }, [getAdapter, activeConnection?.connectorType]);
+  // Find the actual adapter object from the adapter map.
+  const foundAdapter = activeConnection?.connectorType
+    ? getAdapter(getAdapterFromConnectorType(activeConnection.connectorType))
+    : null;
 
   // Check if the adapter has balance functionality
-  const hasBalanceResolver = useMemo(() => {
-    return foundAdapter && 'getBalance' in foundAdapter && typeof foundAdapter.getBalance === 'function';
-  }, [foundAdapter]);
+  // Check if the adapter has balance functionality
+  const hasBalanceResolver =
+    foundAdapter && 'getBalance' in foundAdapter && typeof foundAdapter.getBalance === 'function';
 
   // --- 3. BALANCE FETCHING LOGIC ---
 
@@ -193,9 +193,8 @@ export function useWalletNativeBalance(): NativeBalanceData {
   // --- 6. RETURNED DATA ---
 
   // The definitive balance is always derived from the cache based on the current key.
-  const balance: NativeBalanceState = useMemo(() => {
-    return cacheKey ? balanceCache[cacheKey] || null : null;
-  }, [cacheKey, balanceCache]);
+  // The definitive balance is always derived from the cache based on the current key.
+  const balance: NativeBalanceState = cacheKey ? balanceCache[cacheKey] || null : null;
 
   // Return the fetched balance data and the loading status.
   return {

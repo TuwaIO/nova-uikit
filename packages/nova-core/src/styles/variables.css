@@ -1,6 +1,6 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme) prefix(novacore);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(novacore);
+@import 'tailwindcss/theme.css' layer(theme) prefix(novacore);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(novacore);
 
 :root {
   --tuwa-success-bg: theme('colors.green.100');
@@ -41,7 +41,7 @@
   --tuwa-standart-button-bg: theme('colors.gray.100');
   --tuwa-standart-button-hover: theme('colors.gray.200');
 
-  --tuwa-testnet-icons: #C4BFB8;
+  --tuwa-testnet-icons: #c4bfb8;
 }
 
 .dark {
@@ -83,7 +83,7 @@
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');
 
-  --tuwa-testnet-icons: #C4BFB8;
+  --tuwa-testnet-icons: #c4bfb8;
 }
 
 .Toastify {
@@ -121,7 +121,8 @@
   }
 
   @keyframes scrolling {
-    0%,to{
+    0%,
+    to {
       padding-right: 2px;
     }
   }

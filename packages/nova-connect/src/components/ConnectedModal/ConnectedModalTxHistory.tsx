@@ -14,7 +14,6 @@ import React, {
   ReactNode,
   Suspense,
   useCallback,
-  useMemo,
 } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
@@ -598,23 +597,25 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
     /**
      * Memoized check for active wallet availability
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
+    /**
+     * Check for active wallet availability
+     */
+    const hasActiveWallet = Boolean(activeConnection?.isConnected);
 
     /**
-     * Memoized check for adapter availability
+     * Check for adapter availability
      */
-    const hasValidAdapter = useMemo(() => Boolean(transactionPool && pulsarAdapter), [transactionPool, pulsarAdapter]);
+    const hasValidAdapter = Boolean(transactionPool && pulsarAdapter);
 
     /**
      * Generate container classes with custom generator
      */
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ hasActiveWallet, hasValidAdapter });
-      }
-      return cn('novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-4', className);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, hasActiveWallet, hasValidAdapter, className]);
+    /**
+     * Generate container classes with custom generator
+     */
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ hasActiveWallet, hasValidAdapter })
+      : cn('novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-4', className);
 
     /**
      * Error handler callbacks
@@ -637,77 +638,63 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
     /**
      * Merge container props
      */
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        'aria-label': ariaLabel || ariaLabels?.transactionsHistory || `${labels.transactionsInApp}`,
-      }),
-      [
-        customization?.containerProps,
-        props,
-        ref,
-        containerClasses,
-        ariaLabel,
-        ariaLabels?.transactionsHistory,
-        labels.transactionsInApp,
-      ],
-    );
+    /**
+     * Merge container props
+     */
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      'aria-label': ariaLabel || ariaLabels?.transactionsHistory || `${labels.transactionsInApp}`,
+    };
 
     /**
      * Loading component with customization
      */
-    const loadingComponent = useMemo(
-      () => (
-        <LoadingContainer
-          labels={labels}
-          className={customization?.classNames?.loadingContainer?.()}
-          classNames={{
-            spinner: customization?.classNames?.loadingSpinner?.(),
-            text: customization?.classNames?.loadingText?.(),
-          }}
-        />
-      ),
-      [LoadingContainer, labels, customization?.classNames],
+    /**
+     * Loading component with customization
+     */
+    const loadingComponent = (
+      <LoadingContainer
+        labels={labels}
+        className={customization?.classNames?.loadingContainer?.()}
+        classNames={{
+          spinner: customization?.classNames?.loadingSpinner?.(),
+          text: customization?.classNames?.loadingText?.(),
+        }}
+      />
     );
 
     /**
      * Error fallback component with customization
      */
-    const errorComponent = useMemo(
-      () => (
-        <ErrorContainer
-          className={customization?.classNames?.errorContainer?.()}
-          classNames={{
-            iconContainer: customization?.classNames?.errorIconContainer?.(),
-            icon: customization?.classNames?.errorIcon?.(),
-            content: customization?.classNames?.errorContent?.(),
-            title: customization?.classNames?.errorTitle?.(),
-            description: customization?.classNames?.errorDescription?.(),
-          }}
-        />
-      ),
-      [ErrorContainer, customization?.classNames],
+    const errorComponent = (
+      <ErrorContainer
+        className={customization?.classNames?.errorContainer?.()}
+        classNames={{
+          iconContainer: customization?.classNames?.errorIconContainer?.(),
+          icon: customization?.classNames?.errorIcon?.(),
+          content: customization?.classNames?.errorContent?.(),
+          title: customization?.classNames?.errorTitle?.(),
+          description: customization?.classNames?.errorDescription?.(),
+        }}
+      />
     );
 
     /**
      * No wallet component with customization
      */
-    const noWalletComponent = useMemo(
-      () => (
-        <NoWalletContainer
-          className={customization?.classNames?.noWalletContainer?.()}
-          classNames={{
-            text: customization?.classNames?.noWalletText?.(),
-          }}
-        />
-      ),
-      [NoWalletContainer, customization?.classNames],
+    const noWalletComponent = (
+      <NoWalletContainer
+        className={customization?.classNames?.noWalletContainer?.()}
+        classNames={{
+          text: customization?.classNames?.noWalletText?.(),
+        }}
+      />
     );
 
-    const content = useMemo(() => {
+    const content = (() => {
       // Early return if no active wallet
       if (!hasActiveWallet) {
         return noWalletComponent;
@@ -738,20 +725,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
       }
 
       return <PulsarAdapterRequired labels={labels} customization={customization} />;
-    }, [
-      hasActiveWallet,
-      hasValidAdapter,
-      transactionPool,
-      pulsarAdapter,
-      activeConnection,
-      noWalletComponent,
-      loadingComponent,
-      errorComponent,
-      handlePackageLoadingFailure,
-      TransactionsHistoryWrapper,
-      labels,
-      customization,
-    ]);
+    })();
 
     if (disableAnimation || reduceMotion) {
       return <div {...containerProps}>{content}</div>;

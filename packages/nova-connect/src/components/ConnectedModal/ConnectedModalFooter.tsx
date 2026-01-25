@@ -5,7 +5,7 @@
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -519,24 +519,24 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
       explorerUrlFallback = '#',
     } = customization?.config ?? {};
 
-    // Memoize custom labels
-    const finalLabels = useMemo(
-      () => ({
-        ...labels,
-        ...(customization?.labels && {
-          disconnect: customization.labels.disconnectText ?? labels.disconnect,
-          viewOnExplorer: customization.labels.explorerText ?? labels.viewOnExplorer,
-          walletControls: customization.labels.footerAriaLabel ?? labels.walletControls,
-        }),
+    // Custom labels
+    const finalLabels = {
+      ...labels,
+      ...(customization?.labels && {
+        disconnect: customization.labels.disconnectText ?? labels.disconnect,
+        viewOnExplorer: customization.labels.explorerText ?? labels.viewOnExplorer,
+        walletControls: customization.labels.footerAriaLabel ?? labels.walletControls,
       }),
-      [labels, customization?.labels],
-    );
+    };
 
     /**
      * Generate explorer URL for the current wallet address
      * Memoized to prevent unnecessary recalculations
      */
-    const explorerUrl = useMemo(() => {
+    /**
+     * Generate explorer URL for the current wallet address
+     */
+    const explorerUrl = (() => {
       if (!activeConnection) return explorerUrlFallback;
 
       try {
@@ -549,22 +549,12 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
         console.warn('Failed to generate explorer URL:', error);
         return explorerUrlFallback;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      activeConnection?.connectorType,
-      activeConnection?.address,
-      activeConnection?.chainId,
-      getAdapter,
-      explorerUrlFallback,
-    ]);
+    })();
 
     /**
      * Check if explorer URL is valid for link functionality
      */
-    const isValidExplorerUrl = useMemo(
-      () => explorerUrl !== '#' && explorerUrl !== explorerUrlFallback,
-      [explorerUrl, explorerUrlFallback],
-    );
+    const isValidExplorerUrl = explorerUrl !== '#' && explorerUrl !== explorerUrlFallback;
 
     /**
      * Handle wallet disconnection with custom hooks
@@ -617,25 +607,20 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container && activeConnection) {
-        return customization.classNames.container({
-          isValidExplorerUrl,
-          walletAddress: activeConnection.address,
-        });
-      }
-      return cn(
-        'novacon:flex novacon:flex-wrap novacon:gap-4 novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4 novacon:flex-col-reverse novacon:sm:flex-row',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isValidExplorerUrl, activeConnection?.address, className]);
+    const containerClasses =
+      customization?.classNames?.container && activeConnection
+        ? customization.classNames.container({
+            isValidExplorerUrl,
+            walletAddress: activeConnection.address,
+          })
+        : cn(
+            'novacon:flex novacon:flex-wrap novacon:gap-4 novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4 novacon:flex-col-reverse novacon:sm:flex-row',
+            className,
+          );
 
     // Generate disconnect button element
-    const disconnectButtonElement = useMemo(() => {
-      if (!showDisconnectButton || !activeConnection) return null;
-
-      return (
+    const disconnectButtonElement =
+      showDisconnectButton && activeConnection ? (
         <DisconnectButton
           onClick={handleDisconnect}
           labels={finalLabels}
@@ -644,23 +629,11 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           aria-describedby="disconnect-description"
           connectionsCount={Object.keys(connections).length}
         />
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      showDisconnectButton,
-      activeConnection,
-      DisconnectButton,
-      handleDisconnect,
-      finalLabels,
-      customization?.classNames?.disconnectButton,
-      disconnectButtonTestId,
-    ]);
+      ) : null;
 
     // Generate explorer link element
-    const explorerLinkElement = useMemo(() => {
-      if (!showExplorerLink || !activeConnection) return null;
-
-      return (
+    const explorerLinkElement =
+      showExplorerLink && activeConnection ? (
         <ExplorerLink
           href={explorerUrl}
           labels={finalLabels}
@@ -674,32 +647,17 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           aria-describedby="explorer-description"
           onClick={handleExplorerClick}
         />
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      showExplorerLink,
-      activeConnection,
-      ExplorerLink,
-      explorerUrl,
-      finalLabels,
-      isValidExplorerUrl,
-      customization?.classNames?.explorerLink,
-      explorerLinkTestId,
-      handleExplorerClick,
-    ]);
+      ) : null;
 
     // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'contentinfo',
-        'aria-label': ariaLabel || finalLabels.walletControls,
-      }),
-      [customization?.containerProps, props, ref, containerClasses, ariaLabel, finalLabels],
-    );
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'contentinfo' as const,
+      'aria-label': ariaLabel || finalLabels.walletControls,
+    };
 
     // Early return if no active wallet
     if (!activeConnection) return null;

@@ -61,6 +61,17 @@ type ErrorMessageProps = {
   'aria-live'?: 'polite' | 'assertive';
 } & React.RefAttributes<HTMLParagraphElement>;
 
+type ResolvingStatusProps = {
+  isResolving: boolean;
+  domainType: 'ENS' | 'SNS' | '';
+  className?: string;
+};
+
+type ResolvedAddressProps = {
+  resolvedAddress: string;
+  className?: string;
+};
+
 /**
  * Customization options for ImpersonateForm component
  */
@@ -75,6 +86,10 @@ export type ImpersonateFormCustomization = {
     Input?: ComponentType<InputProps>;
     /** Custom error message component */
     ErrorMessage?: ComponentType<ErrorMessageProps>;
+    /** Custom resolving status component */
+    ResolvingStatus?: ComponentType<ResolvingStatusProps>;
+    /** Custom resolved address display component */
+    ResolvedAddress?: ComponentType<ResolvedAddressProps>;
   };
   /** Custom class name generators */
   classNames?: {
@@ -86,6 +101,10 @@ export type ImpersonateFormCustomization = {
     input?: (params: { hasError: boolean; hasInteracted: boolean }) => string;
     /** Function to generate error message classes */
     errorMessage?: () => string;
+    /** Function to generate resolving status classes */
+    resolvingStatus?: () => string;
+    /** Function to generate resolved address classes */
+    resolvedAddress?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
@@ -179,6 +198,24 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 );
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
+const DefaultResolvingStatus: React.FC<ResolvingStatusProps> = ({ isResolving, domainType, className }) => {
+  if (!isResolving) return null;
+
+  return (
+    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-blue-500', className)}>
+      Resolving {domainType} name...
+    </p>
+  );
+};
+
+const DefaultResolvedAddress: React.FC<ResolvedAddressProps> = ({ resolvedAddress, className }) => {
+  return (
+    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-green-600', className)}>
+      Resolved to: {resolvedAddress}
+    </p>
+  );
+};
+
 /**
  * Check if a value is an ENS name
  */
@@ -214,7 +251,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const setConnectionError = useSatelliteConnectStore((store) => store.setConnectionError);
     const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
 
-    const adapter = useMemo(() => getAdapter(selectedAdapter ?? OrbitAdapter.EVM), [getAdapter, selectedAdapter]);
+    const adapter = getAdapter(selectedAdapter ?? OrbitAdapter.EVM);
 
     // Core state - separated concerns
     const [inputValue, setInputValue] = useState(''); // What user sees in input
@@ -232,6 +269,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       Label: CustomLabel = DefaultLabel,
       Input: CustomInput = DefaultInput,
       ErrorMessage: CustomErrorMessage = DefaultErrorMessage,
+      ResolvingStatus: CustomResolvingStatus = DefaultResolvingStatus,
+      ResolvedAddress: CustomResolvedAddress = DefaultResolvedAddress,
     } = customization?.components ?? {};
 
     const customHandlers = customization?.handlers;
@@ -240,8 +279,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     /**
      * Memoized validation configuration with customization
      */
-    const validationConfig = useMemo(
-      (): ValidationConfig => ({
+    const validationConfig: ValidationConfig = useMemo(
+      () => ({
         ...defaultValidationConfig,
         ...customConfig?.validation,
       }),
@@ -251,9 +290,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     /**
      * Check if adapter supports domain name resolution
      */
-    const supportsNameResolution = useMemo(() => {
-      return adapter && typeof adapter.getAddress === 'function';
-    }, [adapter]);
+    const supportsNameResolution = adapter && typeof adapter.getAddress === 'function';
 
     /**
      * Clear validation timeout
@@ -389,7 +426,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       },
       [
         customHandlers,
-        validationConfig.customValidator,
+        validationConfig,
         labels.impersonateAddressEmpty,
         labels.impersonateAddressNotCorrect,
         labels.impersonateAddressConnected,
@@ -533,52 +570,35 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     }, [impersonatedAddress, hasInteracted, triggerValidation]);
 
     // Generate classes
-    const containerClasses = useMemo(
-      () => customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className),
-      [customization?.classNames?.container, className],
-    );
+    const containerClasses = customization?.classNames?.container?.() ?? cn('novacon:space-y-1', className);
 
-    const labelClasses = useMemo(
-      () =>
-        customization?.classNames?.label?.() ??
-        'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]',
-      [customization?.classNames?.label],
-    );
+    const labelClasses =
+      customization?.classNames?.label?.() ?? 'novacon:block novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]';
 
-    const inputClasses = useMemo(() => {
-      if (customization?.classNames?.input) {
-        return customization.classNames.input({ hasError: !!connectionError, hasInteracted });
-      }
+    const inputClasses = customization?.classNames?.input
+      ? customization.classNames.input({ hasError: !!connectionError, hasInteracted })
+      : cn(
+          // Base layout and spacing
+          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
+          // Theme colors
+          'novacon:bg-[var(--tuwa-bg-secondary)]',
+          'novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          'novacon:text-[var(--tuwa-text-primary)]',
+          'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
+          // Focus and interaction states
+          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+          // Error state styling
+          { 'novacon:border-red-500 novacon:focus:ring-red-500': connectionError },
+          // Resolving state styling
+          { 'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving },
+          // Transition for smooth state changes
+          'novacon:transition-colors novacon:duration-200',
+        );
 
-      return cn(
-        // Base layout and spacing
-        'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
-        // Theme colors
-        'novacon:bg-[var(--tuwa-bg-secondary)]',
-        'novacon:border novacon:border-[var(--tuwa-border-primary)]',
-        'novacon:text-[var(--tuwa-text-primary)]',
-        'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
-        // Focus and interaction states
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
-        // Error state styling
-        {
-          'novacon:border-red-500 novacon:focus:ring-red-500': connectionError,
-        },
-        // Resolving state styling
-        {
-          'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving,
-        },
-        // Transition for smooth state changes
-        'novacon:transition-colors novacon:duration-200',
-      );
-    }, [customization?.classNames?.input, connectionError, hasInteracted, isResolving]);
+    const errorMessageClasses =
+      customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500';
 
-    const errorMessageClasses = useMemo(
-      () => customization?.classNames?.errorMessage?.() ?? 'novacon:mt-2 novacon:text-sm novacon:text-red-500',
-      [customization?.classNames?.errorMessage],
-    );
-
-    const placeholder = useMemo(() => {
+    const placeholder = (() => {
       if (customConfig?.input?.placeholder) {
         return customConfig.input.placeholder;
       }
@@ -593,7 +613,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       }
 
       return labels.walletAddressPlaceholder;
-    }, [customConfig?.input?.placeholder, supportsNameResolution, selectedAdapter, labels.walletAddressPlaceholder]);
+    })();
 
     // Cleanup effect
     useEffect(() => {
@@ -611,6 +631,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const errorId = 'address-error';
     const autoComplete = customConfig?.input?.autoComplete ?? 'off';
     const spellCheck = customConfig?.input?.spellCheck ?? false;
+
+    // Get domain type for resolving status
+    const domainType = isDomainName(inputValue) ? (isENSName(inputValue) ? 'ENS' : 'SNS') : '';
 
     return (
       <CustomContainer ref={ref} className={containerClasses}>
@@ -637,15 +660,18 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         />
 
         {/* Resolution status */}
-        {isResolving && (
-          <p className="novacon:mt-1 novacon:text-sm novacon:text-blue-500">
-            Resolving {isDomainName(inputValue) ? (isENSName(inputValue) ? 'ENS' : 'SNS') : ''} name...
-          </p>
-        )}
+        <CustomResolvingStatus
+          isResolving={isResolving}
+          domainType={domainType}
+          className={customization?.classNames?.resolvingStatus?.()}
+        />
 
         {/* Resolved address display */}
         {resolvedAddress && isDomainName(inputValue) && !isResolving && (
-          <p className="novacon:mt-1 novacon:text-sm novacon:text-green-600">Resolved to: {resolvedAddress}</p>
+          <CustomResolvedAddress
+            resolvedAddress={resolvedAddress}
+            className={customization?.classNames?.resolvedAddress?.()}
+          />
         )}
 
         {/* Error message display */}

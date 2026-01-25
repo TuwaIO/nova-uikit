@@ -4,7 +4,7 @@
 
 import { cn, WalletIcon as WI } from '@tuwaio/nova-core';
 import { formatConnectorName } from '@tuwaio/orbit-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -139,16 +139,14 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
     } = customization?.components ?? {};
 
     // Format wallet name for consistency
-    const walletName = useMemo(() => formatConnectorName(name), [name]);
+    const walletName = formatConnectorName(name);
 
     // Generate alt text for accessibility
-    const imageAltText = useMemo(() => {
-      if (altText) return altText;
-      return `${walletName} ${labels.walletIcon}`;
-    }, [altText, walletName, labels.walletIcon]);
+    const imageAltText = altText || `${walletName} ${labels.walletIcon}`;
 
     // Clean and validate icon URL
-    const cleanIconUrl = useMemo(() => {
+    // Clean and validate icon URL
+    const cleanIconUrl = (() => {
       if (!icon) return null;
 
       try {
@@ -169,7 +167,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
       } catch {
         return null;
       }
-    }, [icon]);
+    })();
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {
@@ -186,85 +184,64 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
     }, [onImageError]);
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ isLoading, showLoading, size });
-      }
-      return cn(
-        'novacon:relative novacon:inline-flex novacon:items-center novacon:justify-center novacon:flex-shrink-0 novacon:w-full novacon:h-full',
-        'novacon:overflow-hidden',
-        {
-          'novacon:animate-pulse novacon:bg-[var(--tuwa-bg-muted)]': showLoading && isLoading,
-        },
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isLoading, showLoading, size, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ isLoading, showLoading, size })
+      : cn(
+          'novacon:relative novacon:inline-flex novacon:items-center novacon:justify-center novacon:flex-shrink-0 novacon:w-full novacon:h-full',
+          'novacon:overflow-hidden',
+          {
+            'novacon:animate-pulse novacon:bg-[var(--tuwa-bg-muted)]': showLoading && isLoading,
+          },
+          className,
+        );
 
     // Generate image classes
-    const imageClasses = useMemo(() => {
-      if (customization?.classNames?.image) {
-        return customization.classNames.image({ isLoading, showLoading, hasError });
-      }
-
-      return cn(
-        'novacon:object-cover novacon:transition-opacity novacon:duration-200',
-        'novacon:max-w-full novacon:max-h-full',
-        'novacon:opacity-100',
-        {
-          'novacon:opacity-0': isLoading && showLoading,
-        },
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.image, isLoading, showLoading, hasError]);
+    const imageClasses = customization?.classNames?.image
+      ? customization.classNames.image({ isLoading, showLoading, hasError })
+      : cn(
+          'novacon:object-cover novacon:transition-opacity novacon:duration-200',
+          'novacon:max-w-full novacon:max-h-full',
+          'novacon:opacity-100',
+          {
+            'novacon:opacity-0': isLoading && showLoading,
+          },
+        );
 
     // Image style object
-    const imageStyle = useMemo(
-      () => ({
-        width: size,
-        height: size,
-      }),
-      [size],
-    );
+    const imageStyle = {
+      width: size,
+      height: size,
+    };
 
-    // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'img' as const,
-        'aria-label': imageAltText,
-        title: imageAltText,
-        style: { lineHeight: 0, ...customization?.containerProps?.style, ...props.style },
-      }),
-      [customization?.containerProps, props, ref, containerClasses, imageAltText],
-    );
+    // Container props
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'img' as const,
+      'aria-label': imageAltText,
+      title: imageAltText,
+      style: { lineHeight: 0, ...customization?.containerProps?.style, ...props.style },
+    };
 
-    // Merge image props
-    const imageProps = useMemo(
-      () => ({
-        ...customization?.imageProps,
-        src: cleanIconUrl!,
-        alt: '', // Empty alt since parent div has role="img" and aria-label
-        className: cn(imageClasses, customization?.imageProps?.className),
-        style: { ...imageStyle, ...customization?.imageProps?.style },
-        onLoad: handleImageLoad,
-        onError: handleImageError,
-        loading: (lazy ? 'lazy' : 'eager') as 'lazy' | 'eager',
-        decoding: 'async' as const,
-      }),
-      [customization?.imageProps, cleanIconUrl, imageClasses, imageStyle, handleImageLoad, handleImageError, lazy],
-    );
+    // Image props
+    const imageProps = {
+      ...customization?.imageProps,
+      src: cleanIconUrl!,
+      alt: '', // Empty alt since parent div has role="img" and aria-label
+      className: cn(imageClasses, customization?.imageProps?.className),
+      style: { ...imageStyle, ...customization?.imageProps?.style },
+      onLoad: handleImageLoad,
+      onError: handleImageError,
+      loading: (lazy ? 'lazy' : 'eager') as 'lazy' | 'eager',
+      decoding: 'async' as const,
+    };
 
     // Generate loading overlay classes
-    const loadingOverlayClasses = useMemo(() => {
-      if (customization?.classNames?.loadingOverlay) {
-        return customization.classNames.loadingOverlay({ isLoading, size });
-      }
-      return undefined;
-    }, [customization?.classNames?.loadingOverlay, isLoading, size]);
+    const loadingOverlayClasses = customization?.classNames?.loadingOverlay
+      ? customization.classNames.loadingOverlay({ isLoading, size })
+      : undefined;
 
     return (
       <div {...containerProps}>
