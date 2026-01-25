@@ -408,15 +408,12 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
     /**
      * Determine if the button should be interactive
      */
-    const isClickable = useMemo(
-      () => Boolean(onClick && !disabled && !loading && items > 1),
-      [onClick, disabled, loading, items],
-    );
+    const isClickable = Boolean(onClick && !disabled && !loading && items > 1);
 
     /**
      * Generate chain ID for Web3Icon with custom formatting
      */
-    const formattedChainId = useMemo(() => {
+    const formattedChainId = (() => {
       if (!walletChainId) return undefined;
 
       if (chainIdFormatter) {
@@ -430,7 +427,7 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
 
       // If it's a number, use it directly as EVM chain ID
       return walletChainId;
-    }, [walletChainId, chainIdFormatter]);
+    })();
 
     /**
      * Check which icons are present
@@ -443,7 +440,7 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
     /**
      * Generate accessible label with custom generator
      */
-    const accessibleLabel = useMemo(() => {
+    const accessibleLabel = (() => {
       const customAriaLabel = customization?.accessibility?.ariaLabel;
       if (customAriaLabel) {
         return customAriaLabel({
@@ -466,12 +463,12 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
       if (disabled) parts.push('disabled');
 
       return parts.join(', ') || 'Wallet controls';
-    }, [customization?.accessibility?.ariaLabel, ariaLabel, walletName, walletChainId, isClickable, loading, disabled]);
+    })();
 
     /**
      * Generate tooltip text with custom generator
      */
-    const tooltipText = useMemo(() => {
+    const tooltipText = (() => {
       const customTooltip = customization?.accessibility?.tooltip;
       if (customTooltip) {
         return customTooltip({
@@ -488,46 +485,41 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
       if (disabled) return 'Button is disabled';
       if (isClickable) return `Click to select ${walletName ? walletName + ' ' : ''}options`;
       return walletName ? `${walletName} wallet` : 'Wallet information';
-    }, [customization?.accessibility?.tooltip, title, loading, disabled, isClickable, walletName, walletChainId]);
+    })();
 
     /**
      * Generate button classes with custom generator
      */
-    const buttonClasses = useMemo(() => {
-      const customButtonClasses = customization?.classNames?.button;
-      if (customButtonClasses) {
-        return customButtonClasses({
+    const buttonClasses = customization?.classNames?.button
+      ? customization.classNames.button({
           isClickable,
           disabled,
           loading,
           hasMultipleIcons,
-        });
-      }
+        })
+      : cn(
+          // Base styles
+          'novacon:flex novacon:items-center novacon:justify-center novacon:gap-1 novacon:rounded-full novacon:leading-[0]',
+          'novacon:bg-[var(--tuwa-bg-primary)] novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          'novacon:p-1.5 novacon:transition-all novacon:duration-200 novacon:relative',
 
-      return cn(
-        // Base styles
-        'novacon:flex novacon:items-center novacon:justify-center novacon:gap-1 novacon:rounded-full novacon:leading-[0]',
-        'novacon:bg-[var(--tuwa-bg-primary)] novacon:border novacon:border-[var(--tuwa-border-primary)]',
-        'novacon:p-1.5 novacon:transition-all novacon:duration-200 novacon:relative',
+          // Icon sizing
+          'novacon:[&_svg]:w-6! novacon:[&_svg]:h-6! novacon:[&_svg]:transition-transform novacon:[&_svg]:duration-200 novacon:[&_img]:w-6! novacon:[&_img]:h-6! novacon:[&_img]:transition-transform novacon:[&_img]:duration-200',
 
-        // Icon sizing
-        'novacon:[&_svg]:w-6! novacon:[&_svg]:h-6! novacon:[&_svg]:transition-transform novacon:[&_svg]:duration-200 novacon:[&_img]:w-6! novacon:[&_img]:h-6! novacon:[&_img]:transition-transform novacon:[&_img]:duration-200',
+          // Interactive states
+          {
+            'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:[&_img]:scale-95 novacon:active:[&_img]:scale-85 novacon:hover:shadow-sm':
+              isClickable,
+            'novacon:cursor-not-allowed novacon:opacity-50': disabled && !loading,
+            'novacon:cursor-wait novacon:opacity-75': loading,
+            'novacon:cursor-default': !isClickable && !disabled && !loading,
+          },
 
-        // Interactive states
-        {
-          'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:[&_img]:scale-95 novacon:active:[&_img]:scale-85 novacon:hover:shadow-sm':
-            isClickable,
-          'novacon:cursor-not-allowed novacon:opacity-50': disabled && !loading,
-          'novacon:cursor-wait novacon:opacity-75': loading,
-          'novacon:cursor-default': !isClickable && !disabled && !loading,
-        },
+          // Focus states for accessibility
+          'novacon:focus-visible:outline-none novacon:focus-visible:ring-2 novacon:focus-visible:ring-[var(--tuwa-border-accent)] novacon:focus-visible:ring-offset-2',
 
-        // Focus states for accessibility
-        'novacon:focus-visible:outline-none novacon:focus-visible:ring-2 novacon:focus-visible:ring-[var(--tuwa-border-accent)] novacon:focus-visible:ring-offset-2',
-
-        className,
-      );
-    }, [customization?.classNames?.button, isClickable, disabled, loading, hasMultipleIcons, className]);
+          className,
+        );
 
     /**
      * Event handlers with customization support

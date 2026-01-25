@@ -519,18 +519,15 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
       explorerUrlFallback = '#',
     } = customization?.config ?? {};
 
-    // Memoize custom labels
-    const finalLabels = useMemo(
-      () => ({
-        ...labels,
-        ...(customization?.labels && {
-          disconnect: customization.labels.disconnectText ?? labels.disconnect,
-          viewOnExplorer: customization.labels.explorerText ?? labels.viewOnExplorer,
-          walletControls: customization.labels.footerAriaLabel ?? labels.walletControls,
-        }),
+    // Custom labels
+    const finalLabels = {
+      ...labels,
+      ...(customization?.labels && {
+        disconnect: customization.labels.disconnectText ?? labels.disconnect,
+        viewOnExplorer: customization.labels.explorerText ?? labels.viewOnExplorer,
+        walletControls: customization.labels.footerAriaLabel ?? labels.walletControls,
       }),
-      [labels, customization?.labels],
-    );
+    };
 
     /**
      * Generate explorer URL for the current wallet address
@@ -561,10 +558,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     /**
      * Check if explorer URL is valid for link functionality
      */
-    const isValidExplorerUrl = useMemo(
-      () => explorerUrl !== '#' && explorerUrl !== explorerUrlFallback,
-      [explorerUrl, explorerUrlFallback],
-    );
+    const isValidExplorerUrl = explorerUrl !== '#' && explorerUrl !== explorerUrlFallback;
 
     /**
      * Handle wallet disconnection with custom hooks
@@ -617,19 +611,16 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container && activeConnection) {
-        return customization.classNames.container({
-          isValidExplorerUrl,
-          walletAddress: activeConnection.address,
-        });
-      }
-      return cn(
-        'novacon:flex novacon:flex-wrap novacon:gap-4 novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4 novacon:flex-col-reverse novacon:sm:flex-row',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isValidExplorerUrl, activeConnection?.address, className]);
+    const containerClasses =
+      customization?.classNames?.container && activeConnection
+        ? customization.classNames.container({
+            isValidExplorerUrl,
+            walletAddress: activeConnection.address,
+          })
+        : cn(
+            'novacon:flex novacon:flex-wrap novacon:gap-4 novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4 novacon:flex-col-reverse novacon:sm:flex-row',
+            className,
+          );
 
     // Generate disconnect button element
     const disconnectButtonElement = useMemo(() => {
@@ -689,17 +680,14 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     ]);
 
     // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'contentinfo',
-        'aria-label': ariaLabel || finalLabels.walletControls,
-      }),
-      [customization?.containerProps, props, ref, containerClasses, ariaLabel, finalLabels],
-    );
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'contentinfo' as const,
+      'aria-label': ariaLabel || finalLabels.walletControls,
+    };
 
     // Early return if no active wallet
     if (!activeConnection) return null;

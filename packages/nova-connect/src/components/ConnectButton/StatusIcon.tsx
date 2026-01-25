@@ -253,15 +253,13 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const labels = useNovaConnectLabels();
 
     // Extract path data from children
-    const pathData = useMemo(() => {
-      return typeof children === 'string' ? children : '';
-    }, [children]);
+    const pathData = typeof children === 'string' ? children : '';
 
     // Extract custom components
     const { Svg = DefaultSvg, Path = DefaultPath, Content = DefaultContent } = customization?.components ?? {};
 
-    // Memoize the default aria-label based on status
-    const defaultAriaLabel = useMemo(() => {
+    // Default aria-label based on status
+    const defaultAriaLabel = (() => {
       switch (txStatus) {
         case 'succeed':
           return labels.successIcon;
@@ -272,41 +270,27 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
         default:
           return labels.statusIcon;
       }
-    }, [txStatus, labels]);
+    })();
 
-    // Memoize the final aria-label
-    const finalAriaLabel = useMemo(() => {
-      return ariaLabel || defaultAriaLabel;
-    }, [ariaLabel, defaultAriaLabel]);
+    // Final aria-label
+    const finalAriaLabel = ariaLabel || defaultAriaLabel;
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ txStatus, colorVar });
-      }
-      return cn(
-        'novacon:w-6 novacon:h-6 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center novacon:shadow-sm',
-        `novacon:text-[var(--tuwa-${colorVar}-text)] novacon:bg-[var(--tuwa-bg-primary)]`,
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, txStatus, colorVar, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ txStatus, colorVar })
+      : cn(
+          'novacon:w-6 novacon:h-6 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center novacon:shadow-sm',
+          `novacon:text-[var(--tuwa-${colorVar}-text)] novacon:bg-[var(--tuwa-bg-primary)]`,
+          className,
+        );
 
     // Generate SVG classes
-    const svgClasses = useMemo(() => {
-      if (customization?.classNames?.svg) {
-        return customization.classNames.svg({ txStatus, colorVar });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.svg, txStatus, colorVar]);
+    const svgClasses = customization?.classNames?.svg
+      ? customization.classNames.svg({ txStatus, colorVar })
+      : undefined;
 
     // Generate path classes
-    const pathClasses = useMemo(() => {
-      if (customization?.classNames?.path) {
-        return customization.classNames.path({ txStatus });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.path, txStatus]);
+    const pathClasses = customization?.classNames?.path ? customization.classNames.path({ txStatus }) : undefined;
 
     // Resolve animation variants
     const containerVariants = useMemo(() => {

@@ -279,8 +279,8 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
-    // Memoize connection status check for better performance
-    const isConnected = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
+    // Connection status check
+    const isConnected = Boolean(activeConnection?.isConnected);
 
     // Extract custom components
     const {
@@ -298,62 +298,33 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
       reduceMotion = false,
     } = customization?.config ?? {};
 
-    // Memoize the text to display
-    const displayText = useMemo(() => {
-      return customText || labels.connectWallet;
-    }, [customText, labels.connectWallet]);
+    // Text to display
+    const displayText = customText || labels.connectWallet;
 
-    // Memoize the default aria-label
-    const defaultAriaLabel = useMemo(() => {
-      return labels.connectWallet;
-    }, [labels.connectWallet]);
-
-    // Memoize the final aria-label
-    const finalAriaLabel = useMemo(() => {
-      return ariaLabel || defaultAriaLabel;
-    }, [ariaLabel, defaultAriaLabel]);
+    // Aria-labels
+    const defaultAriaLabel = labels.connectWallet;
+    const finalAriaLabel = ariaLabel || defaultAriaLabel;
 
     // Default wallet icon path
     const defaultPathData =
       'M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3';
 
-    // Get path data
-    const pathData = useMemo(() => {
-      return customization?.svg?.pathData || defaultPathData;
-    }, [customization?.svg?.pathData, defaultPathData]);
+    // Path data
+    const pathData = customization?.svg?.pathData || defaultPathData;
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ isConnected });
-      }
-      return cn('novacon:flex novacon:items-center novacon:gap-2', className);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, isConnected, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ isConnected })
+      : cn('novacon:flex novacon:items-center novacon:gap-2', className);
 
     // Generate icon classes
-    const iconClasses = useMemo(() => {
-      if (customization?.classNames?.icon) {
-        return customization.classNames.icon({ isConnected });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.icon, isConnected]);
+    const iconClasses = customization?.classNames?.icon ? customization.classNames.icon({ isConnected }) : undefined;
 
     // Generate text classes
-    const textClasses = useMemo(() => {
-      if (customization?.classNames?.text) {
-        return customization.classNames.text({ isConnected });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.text, isConnected]);
+    const textClasses = customization?.classNames?.text ? customization.classNames.text({ isConnected }) : undefined;
 
     // Generate path classes
-    const pathClasses = useMemo(() => {
-      if (customization?.classNames?.path) {
-        return customization.classNames.path();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.path]);
+    const pathClasses = customization?.classNames?.path ? customization.classNames.path() : undefined;
 
     // Resolve animation variants
     const containerVariants = useMemo(() => {
