@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.6...nova-transactions-v0.2.7) (2026-01-25)
+
+
+### Bug Fixes
+
+* optimized useMemo logic | updated packages | added Agent.md ([#66](https://github.com/TuwaIO/nova-uikit/issues/66)) ([4916d53](https://github.com/TuwaIO/nova-uikit/commit/4916d532f5c044c2caadf130ff8eda4369e2f5f7))
+
 ## [0.2.6](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.5...nova-transactions-v0.2.6) (2026-01-18)
 
 
