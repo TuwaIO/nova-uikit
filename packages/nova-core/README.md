@@ -6,7 +6,7 @@
 
 The foundational package for the Nova UI Kit design system. Provides core styling primitives, theme variables, utility functions, and common React hooks for building consistent Web3 applications.
 
------
+---
 
 ## What is `@tuwaio/nova-core`?
 
@@ -24,7 +24,7 @@ Nova Core solves this by:
 2.  **Supplying Common Hooks:** A collection of reusable React hooks for common Web3 UI patterns.
 3.  **Ensuring Tailwind CSS v4 Integration:** Seamless compatibility with modern Tailwind CSS workflows.
 
------
+---
 
 ## ✨ Key Features
 
@@ -36,7 +36,7 @@ Nova Core solves this by:
 - **♿ Accessibility First:** ARIA-compliant design tokens and utilities for building accessible interfaces
 - **📱 Responsive Design:** Mobile-first breakpoints and responsive utility functions
 
------
+---
 
 ## 💾 Installation
 
@@ -70,7 +70,7 @@ yarn add @tuwaio/nova-core
 @import '@tuwaio/nova-core/dist/index.css';
 ```
 
------
+---
 
 ## 🚀 Usage
 
@@ -106,14 +106,14 @@ import { cn } from '@tuwaio/nova-core';
 const buttonClass = cn(
   'px-4 py-2 font-medium rounded-lg', // base styles
   'bg-blue-500 text-white', // default variant
-  {'opacity-50 cursor-not-allowed': isLoading}, // conditional styles
-  className // additional classes from props
+  { 'opacity-50 cursor-not-allowed': isLoading }, // conditional styles
+  className, // additional classes from props
 );
 
 // Tailwind class conflict resolution
 const mergedClasses = cn(
   'p-4 text-sm', // base classes
-  'p-6 text-lg'  // these override the base classes intelligently
+  'p-6 text-lg', // these override the base classes intelligently
 );
 // Result: 'p-6 text-lg' (conflicts resolved)
 ```
@@ -130,10 +130,7 @@ function WalletAddress({ address }: { address: string }) {
 
   return (
     <div className={cn('transition-all', isCollapsed && 'w-12')}>
-      <button
-        onClick={() => copy(address)}
-        className="font-mono text-sm hover:bg-[var(--tuwa-bg-hover)]"
-      >
+      <button onClick={() => copy(address)} className="font-mono text-sm hover:bg-[var(--tuwa-bg-hover)]">
         {address.slice(0, 6)}
         {copied && ' ✓'}
       </button>
@@ -142,7 +139,7 @@ function WalletAddress({ address }: { address: string }) {
 }
 ```
 
------
+---
 
 ## 🛠️ Theme Customization
 
@@ -205,18 +202,12 @@ import { NovaTransactionsProvider } from '@tuwaio/nova-transactions';
 
 function App() {
   return (
-    <div className={cn(
-      'min-h-screen',
-      'bg-[var(--tuwa-bg-primary)]',
-      'text-[var(--tuwa-text-primary)]'
-    )}>
-        <NovaTransactionsProvider {...params} />
-        <header className="border-b border-[var(--tuwa-border-primary)]">
-          <ConnectButton />
-        </header>
-        <main>
-          {/* Your app content */}
-        </main>
+    <div className={cn('min-h-screen', 'bg-[var(--tuwa-bg-primary)]', 'text-[var(--tuwa-text-primary)]')}>
+      <NovaTransactionsProvider {...params} />
+      <header className="border-b border-[var(--tuwa-border-primary)]">
+        <ConnectButton />
+      </header>
+      <main>{/* Your app content */}</main>
     </div>
   );
 }
@@ -226,16 +217,16 @@ function App() {
 
 #### Utilities
 
-| Function | Description | Usage                                     |
-| :--- | :--- |:------------------------------------------|
+| Function             | Description                                                    | Usage                                                |
+| :------------------- | :------------------------------------------------------------- | :--------------------------------------------------- |
 | **`cn(...classes)`** | Merges class names intelligently, resolving Tailwind conflicts | `cn('p-4 text-sm', 'p-6',  {'hidden': conditional})` |
 
 #### Hooks
 
-| Hook | Description | Return Type |
-| :--- | :--- | :--- |
+| Hook                       | Description                          | Return Type                         |
+| :------------------------- | :----------------------------------- | :---------------------------------- |
 | **`useCopyToClipboard()`** | Copy text to clipboard with feedback | `[boolean, (text: string) => void]` |
-| **`useMediaQuery(query)`** | Responsive media query hook | `boolean` |
+| **`useMediaQuery(query)`** | Responsive media query hook          | `boolean`                           |
 
 ## 🤝 Contributing & Support
 

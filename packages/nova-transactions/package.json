@@ -72,14 +72,14 @@
     "framer-motion": "12.x.x",
     "react": ">=19.2.3",
     "react-toastify": ">=11",
-    "@tuwaio/pulsar-core": ">=0.3.1",
+    "@tuwaio/pulsar-core": ">=0.4",
     "@tuwaio/nova-core": ">=0.2.2",
     "@tuwaio/orbit-core": ">=0.2.1",
     "dayjs": "1.x.x"
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "^0.2.4",
-    "@tuwaio/pulsar-core": "1.0.0-fix-update-alpha.3.ddfbf05",
+    "@tuwaio/pulsar-core": "^0.4.0",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.19",
     "@web3icons/react": "^4.1.14",

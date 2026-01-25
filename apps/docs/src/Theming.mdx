@@ -4,7 +4,7 @@ Welcome to the comprehensive theming guide for **Nova UI Kit**. This document pr
 
 Nova's theming system is designed with **simplicity** and **maximum flexibility** in mind, giving you complete control over every aspect of your Web3 application's appearance.
 
------
+---
 
 ## 🎯 Core Philosophy
 
@@ -20,7 +20,7 @@ Nova's theming system is built on three foundational principles:
 
 Traditional theming systems often require complex JavaScript configurations, vendor lock-in, or limited customization options. Nova UI Kit solves this by exposing every visual aspect through standard CSS variables that integrate perfectly with modern CSS frameworks.
 
------
+---
 
 ## 🚀 Quick Start: Theme Customization
 
@@ -79,7 +79,7 @@ Add your brand colors and customizations after the imports:
 
 Your customizations will automatically apply to all Nova components. Test different components to ensure your theme works across all use cases.
 
------
+---
 
 ## 🎨 Complete Design Token System
 
@@ -173,7 +173,7 @@ Nova UI Kit provides a comprehensive design token system organized by purpose an
 }
 ```
 
------
+---
 
 ## 🔧 Component-Specific Customization
 
@@ -188,10 +188,9 @@ Beyond design tokens, Nova UI Kit provides advanced customization options for in
 <NovaConnectProvider
   // Visual Options
   appChains={appEVMChains}
-  withBalance={true}           // Show wallet balance when connected
-  withChain={true}            // Show current network
-  withImpersonated={true}     // Enable wallet impersonation for testing
-
+  withBalance={true} // Show wallet balance when connected
+  withChain={true} // Show current network
+  withImpersonated={true} // Enable wallet impersonation for testing
   // Internationalization
   labels={{
     connectWallet: 'Connect Wallet',
@@ -204,14 +203,12 @@ Beyond design tokens, Nova UI Kit provides advanced customization options for in
     copied: 'Copied!',
     viewOnExplorer: 'View on Explorer',
   }}
-
   // Advanced Customization
   modalProps={{
     showRecentTransactions: true,
     showNetworkSwitcher: true,
     customFooter: <MyCustomFooter />,
   }}
-
   // Component Replacement
   components={{
     ConnectButton: CustomConnectButton,
@@ -241,7 +238,7 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
         'px-6 py-3 rounded-xl',
         'shadow-lg hover:shadow-xl',
         'transition-all duration-200',
-        className
+        className,
       )}
       {...props}
     />
@@ -262,7 +259,6 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
   connectedWalletAddress={walletAddress}
   connectedAdapterType={TransactionAdapter.EVM}
   adapter={adapter}
-
   // Internationalization
   labels={{
     statuses: {
@@ -280,7 +276,6 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
       transactionSubmitted: 'Transaction Submitted',
     },
   }}
-
   // Visual Customization
   modalProps={{
     showProgressBar: true,
@@ -289,7 +284,6 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
     autoCloseOnSuccess: true,
     autoCloseDelay: 3000,
   }}
-
   // Toast Configuration
   toastProps={{
     position: 'bottom-right',
@@ -297,7 +291,6 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
     showProgressBar: true,
     pauseOnHover: true,
   }}
-
   // Component Replacement
   components={{
     TransactionModal: CustomTransactionModal,
@@ -319,19 +312,25 @@ import { TransactionStatus } from '@tuwaio/nova-transactions';
 function CustomTransactionStatus({
   status,
   hash,
-  className
-}: { status: TransactionStatus, hash: string, className: string }) {
+  className,
+}: {
+  status: TransactionStatus;
+  hash: string;
+  className: string;
+}) {
   return (
-    <div className={cn(
-      'flex items-center gap-3 p-4 rounded-lg',
-      'border border-[var(--tuwa-border-primary)]',
-      {
-        'bg-[var(--tuwa-success-bg)] border-[var(--tuwa-success-accent)]': status === 'success',
-        'bg-[var(--tuwa-error-bg)] border-[var(--tuwa-error-accent)]': status === 'failed',
-        'bg-[var(--tuwa-pending-bg)] border-[var(--tuwa-pending-accent)]': status === 'pending',
-      },
-      className
-    )}>
+    <div
+      className={cn(
+        'flex items-center gap-3 p-4 rounded-lg',
+        'border border-[var(--tuwa-border-primary)]',
+        {
+          'bg-[var(--tuwa-success-bg)] border-[var(--tuwa-success-accent)]': status === 'success',
+          'bg-[var(--tuwa-error-bg)] border-[var(--tuwa-error-accent)]': status === 'failed',
+          'bg-[var(--tuwa-pending-bg)] border-[var(--tuwa-pending-accent)]': status === 'pending',
+        },
+        className,
+      )}
+    >
       <TransactionStatusIcon status={status} />
       <div className="flex flex-col">
         <span className="font-medium">
@@ -355,20 +354,20 @@ function CustomTransactionStatus({
 }
 ```
 
------
+---
 
 ## 🔗 Resources & Next Steps
 
 ### Quick Reference
 
-  - **🎨 Color Palette Generator:** Use tools like [ColorSpace](https://mycolor.space/) to create your brand palette
-  - **♿ Accessibility Checker:** Use [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) for color validation
-  - **🎯 Tailwind CSS v4:** [tailwindcss.com/docs](https://tailwindcss.com/docs) - Learn about the underlying CSS framework
+- **🎨 Color Palette Generator:** Use tools like [ColorSpace](https://mycolor.space/) to create your brand palette
+- **♿ Accessibility Checker:** Use [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) for color validation
+- **🎯 Tailwind CSS v4:** [tailwindcss.com/docs](https://tailwindcss.com/docs) - Learn about the underlying CSS framework
 
 ### Community & Support
 
-  - **📖 Documentation:** [GitHub Repository](https://github.com/TuwaIO/nova-uikit)
-  - **🐛 Report Issues:** [GitHub Issues](https://github.com/TuwaIO/nova-uikit/issues)
-  - **🤝 Contributing:** [Contribution Guide](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
+- **📖 Documentation:** [GitHub Repository](https://github.com/TuwaIO/nova-uikit)
+- **🐛 Report Issues:** [GitHub Issues](https://github.com/TuwaIO/nova-uikit/issues)
+- **🤝 Contributing:** [Contribution Guide](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
 
 **Ready to build something amazing?** Start customizing your Nova UI Kit theme today! 🚀

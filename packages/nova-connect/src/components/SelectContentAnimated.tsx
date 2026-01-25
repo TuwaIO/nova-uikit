@@ -151,56 +151,41 @@ export const SelectContentAnimated = forwardRef<
     }, [reduceMotion, animationDuration]);
 
     // Memoize content container classes (additive approach)
-    const contentClasses = useMemo(
-      () =>
-        cn(
-          // Default styles always applied
-          'novacon:p-1 novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-lg novacon:shadow-xl',
-          'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)] novacon:overflow-hidden',
-          // Custom classes added to defaults
-          contentClassName,
-        ),
-      [contentClassName],
+    const contentClasses = cn(
+      // Default styles always applied
+      'novacon:p-1 novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-lg novacon:shadow-xl',
+      'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)] novacon:overflow-hidden',
+      // Custom classes added to defaults
+      contentClassName,
     );
 
-    // Memoize select content classes (additive approach)
-    const selectContentClasses = useMemo(
-      () =>
-        cn(
-          // Default styles always applied
-          'novacon:overflow-hidden',
-          'novacon:w-[--radix-select-trigger-width]',
-          'novacon:data-[state=open]:animate-in novacon:data-[state=closed]:animate-out',
-          'novacon:data-[state=closed]:fade-out-0 novacon:data-[state=open]:fade-in-0',
-          'novacon:data-[state=closed]:zoom-out-95 novacon:data-[state=open]:zoom-in-95',
-          'novacon:data-[side=bottom]:slide-in-from-top-2 novacon:data-[side=left]:slide-in-from-right-2',
-          'novacon:data-[side=right]:slide-in-from-left-2 novacon:data-[side=top]:slide-in-from-bottom-2',
-          // Custom classes added to defaults
-          className,
-        ),
-      [className],
+    // Select content classes (additive approach)
+    const selectContentClasses = cn(
+      // Default styles always applied
+      'novacon:overflow-hidden',
+      'novacon:w-[--radix-select-trigger-width]',
+      'novacon:data-[state=open]:animate-in novacon:data-[state=closed]:animate-out',
+      'novacon:data-[state=closed]:fade-out-0 novacon:data-[state=open]:fade-in-0',
+      'novacon:data-[state=closed]:zoom-out-95 novacon:data-[state=open]:zoom-in-95',
+      'novacon:data-[side=bottom]:slide-in-from-top-2 novacon:data-[side=left]:slide-in-from-right-2',
+      'novacon:data-[side=right]:slide-in-from-left-2 novacon:data-[side=top]:slide-in-from-bottom-2',
+      // Custom classes added to defaults
+      className,
     );
 
-    // Memoize viewport classes (additive approach)
-    const viewportClasses = useMemo(
-      () =>
-        cn(
-          // Default viewport styles (minimal by default)
-          '',
-          // Custom classes added
-          viewportClassName,
-        ),
-      [viewportClassName],
+    // Viewport classes (additive approach)
+    const viewportClasses = cn(
+      // Default viewport styles (minimal by default)
+      '',
+      // Custom classes added
+      viewportClassName,
     );
 
-    // Memoize inline styles for containers
-    const selectContentStyles = useMemo(
-      () => ({
-        // Apply maxHeight as inline style (can be overridden by style prop)
-        maxHeight: `${maxHeight}px`,
-      }),
-      [maxHeight],
-    );
+    // Inline styles for containers
+    const selectContentStyles = {
+      // Apply maxHeight as inline style (can be overridden by style prop)
+      maxHeight: `${maxHeight}px`,
+    };
 
     // Generate ARIA label
     const finalAriaLabel = ariaLabel || labels.chainListContainer;

@@ -6,15 +6,7 @@
 import { ArrowPathIcon, CheckIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 // --- Animation Variants ---
 const DEFAULT_LOADING_ANIMATION_VARIANTS: Variants = {
@@ -329,13 +321,10 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   const prevLoading = useRef(isLoading);
 
   // Merge labels with defaults
-  const labels = useMemo(
-    () => ({
-      ...DEFAULT_LABELS,
-      ...customLabels,
-    }),
-    [customLabels],
-  );
+  const labels: Required<BalanceDisplayLabels> = {
+    ...DEFAULT_LABELS,
+    ...customLabels,
+  };
 
   // Extract components
   const {
@@ -368,13 +357,9 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   const hasBalance = Boolean(balance?.value && balance?.symbol);
 
   // Container classes
-  // eslint-disable-next-line
-  const containerClasses = useMemo(() => {
-    if (customization?.classNames?.container) {
-      return customization.classNames.container({ isLoading, hasBalance });
-    }
-    return cn('novacon:flex novacon:items-center novacon:relative', className);
-  }, [customization?.classNames, isLoading, hasBalance, className]);
+  const containerClasses = customization?.classNames?.container
+    ? customization.classNames.container({ isLoading, hasBalance })
+    : cn('novacon:flex novacon:items-center novacon:relative', className);
 
   // Loading state
   if (isLoading && !hasBalance) {

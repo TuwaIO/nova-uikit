@@ -4,7 +4,7 @@
 
 import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -202,9 +202,6 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       onKeyDown: customOnKeyDownHandler = defaultKeyDownHandler,
     } = customization?.handlers ?? {};
 
-    // Memoize error text for copying
-    const errorToCopy = useMemo(() => rawError, [rawError]);
-
     // Handle copy with error handling and callback
     const handleCopy = useCallback(
       async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -212,14 +209,14 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
         e.preventDefault();
 
         try {
-          await copy(errorToCopy);
+          await copy(rawError);
           onCopyComplete?.(true);
         } catch (error) {
           console.error('Failed to copy error:', error);
           onCopyComplete?.(false);
         }
       },
-      [copy, errorToCopy, onCopyComplete],
+      [copy, rawError, onCopyComplete],
     );
 
     // Handle keyboard interaction for copy button
@@ -260,114 +257,71 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ hasTitle: Boolean(title), hasError: Boolean(rawError) });
-      }
-      return cn(
-        'novacon:bg-[var(--tuwa-bg-primary)] novacon:p-4 novacon:rounded-md novacon:w-full',
-        'novacon:border novacon:border-[var(--tuwa-border-primary)]',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, title, rawError, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ hasTitle: Boolean(title), hasError: Boolean(rawError) })
+      : cn(
+          'novacon:bg-[var(--tuwa-bg-primary)] novacon:p-4 novacon:rounded-md novacon:w-full',
+          'novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          className,
+        );
 
     // Generate title classes
-    const titleClasses = useMemo(() => {
-      if (customization?.classNames?.title) {
-        return customization.classNames.title({ title });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.title, title]);
+    const titleClasses = customization?.classNames?.title ? customization.classNames.title({ title }) : undefined;
 
     // Generate description classes
-    const descriptionClasses = useMemo(() => {
-      if (customization?.classNames?.description) {
-        return customization.classNames.description({ rawError });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.description, rawError]);
+    const descriptionClasses = customization?.classNames?.description
+      ? customization.classNames.description({ rawError })
+      : undefined;
 
     // Generate button classes
-    const buttonClasses = useMemo(() => {
-      const disabled = !errorToCopy.trim();
-      if (customization?.classNames?.button) {
-        return customization.classNames.button({ isCopied, disabled });
-      }
-
-      return cn(
-        'novacon:cursor-pointer novacon:mt-2 novacon:text-xs novacon:font-medium novacon:inline-flex novacon:items-center novacon:space-x-1.5',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-error-text)] novacon:focus:ring-opacity-50',
-        'novacon:rounded-md novacon:px-2 novacon:py-1 novacon:transition-all novacon:duration-200',
-        'novacon:hover:bg-[var(--tuwa-error-text)] novacon:hover:bg-opacity-10',
-        'novacon:active:bg-[var(--tuwa-error-text)] novacon:active:bg-opacity-20',
-        'novacon:text-[var(--tuwa-error-text)] novacon:hover:text-[var(--tuwa-error-text)]',
-        {
-          'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-10 novacon:text-[var(--tuwa-success-text)]':
-            isCopied,
-        },
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.button, isCopied, errorToCopy]);
+    const disabled = !rawError.trim();
+    const buttonClasses = customization?.classNames?.button
+      ? customization.classNames.button({ isCopied, disabled })
+      : cn(
+          'novacon:cursor-pointer novacon:mt-2 novacon:text-xs novacon:font-medium novacon:inline-flex novacon:items-center novacon:space-x-1.5',
+          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-error-text)] novacon:focus:ring-opacity-50',
+          'novacon:rounded-md novacon:px-2 novacon:py-1 novacon:transition-all novacon:duration-200',
+          'novacon:hover:bg-[var(--tuwa-error-text)] novacon:hover:bg-opacity-10',
+          'novacon:active:bg-[var(--tuwa-error-text)] novacon:active:bg-opacity-20',
+          'novacon:text-[var(--tuwa-error-text)] novacon:hover:text-[var(--tuwa-error-text)]',
+          {
+            'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-10 novacon:text-[var(--tuwa-success-text)]':
+              isCopied,
+          },
+        );
 
     // Generate icon classes
-    const iconClasses = useMemo(() => {
-      if (customization?.classNames?.icon) {
-        return customization.classNames.icon({ isCopied });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.icon, isCopied]);
+    const iconClasses = customization?.classNames?.icon ? customization.classNames.icon({ isCopied }) : undefined;
 
     // Create icon element
-    const iconElement = useMemo(
-      () => <Icon isCopied={isCopied} className={iconClasses} aria-hidden />,
-      [Icon, isCopied, iconClasses],
-    );
+    const iconElement = <Icon isCopied={isCopied} className={iconClasses} aria-hidden />;
 
-    // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'alert' as const,
-        'aria-live': 'assertive' as const,
-        'aria-labelledby': titleId,
-        'aria-describedby': descriptionId,
-        'aria-label': ariaLabel,
-      }),
-      [customization?.containerProps, props, ref, containerClasses, titleId, descriptionId, ariaLabel],
-    );
+    // Container props
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'alert' as const,
+      'aria-live': 'assertive' as const,
+      'aria-labelledby': titleId,
+      'aria-describedby': descriptionId,
+      'aria-label': ariaLabel,
+    };
 
-    // Merge button props
-    const buttonProps = useMemo(
-      () => ({
-        ...customization?.buttonProps,
-        onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
-          customOnClickHandler(handleCopy, e);
-        },
-        onKeyDown: handleKeyDown,
-        className: buttonClasses,
-        type: 'button' as const,
-        'aria-label': isCopied ? `${labels.copied} ${labels.copyRawError}` : labels.copyRawError,
-        'aria-describedby': `${titleId} ${descriptionId}`,
-        disabled: !errorToCopy.trim(),
-      }),
-      [
-        customization?.buttonProps,
-        customOnClickHandler,
-        handleCopy,
-        handleKeyDown,
-        buttonClasses,
-        isCopied,
-        labels.copied,
-        labels.copyRawError,
-        titleId,
-        descriptionId,
-        errorToCopy,
-      ],
-    );
+    // Button props
+    const buttonProps = {
+      ...customization?.buttonProps,
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        customOnClickHandler(handleCopy, e);
+      },
+      onKeyDown: handleKeyDown,
+      className: buttonClasses,
+      type: 'button' as const,
+      'aria-label': isCopied ? `${labels.copied} ${labels.copyRawError}` : labels.copyRawError,
+      'aria-describedby': `${titleId} ${descriptionId}`,
+      disabled: !rawError.trim(),
+    };
 
     return (
       <div {...containerProps}>

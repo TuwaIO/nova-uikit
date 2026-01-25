@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -231,25 +231,23 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     const bgColor = useMemo(() => generateBgColor(address), [address, generateBgColor]);
 
     // Format address using custom or default function
-    const formattedAddress = useMemo(() => formatAddress(address, labels), [address, labels, formatAddress]);
+    const formattedAddress = formatAddress(address, labels);
 
     // Generate alt text for accessibility
-    const imageAltText = useMemo(() => {
-      if (altText) return altText;
-      if (hasError || !ensAvatar) {
-        return `${labels.walletAvatar} ${formattedAddress}`;
-      }
-      return `${labels.ensAvatar} ${formattedAddress}`;
-    }, [altText, hasError, ensAvatar, formattedAddress, labels.walletAvatar, labels.ensAvatar]);
+    const imageAltText = altText
+      ? altText
+      : hasError || !ensAvatar
+        ? `${labels.walletAvatar} ${formattedAddress}`
+        : `${labels.ensAvatar} ${formattedAddress}`;
 
     // Reset image source when ensAvatar changes
-    const currentEnsAvatar = useMemo(() => ensAvatar ?? null, [ensAvatar]);
-
-    useMemo(() => {
-      setImageSrc(currentEnsAvatar);
-      setIsLoading(Boolean(currentEnsAvatar));
+    // This is a legitimate case of syncing derived state based on prop change
+    useEffect(() => {
+      // eslint-disable-next-line
+      setImageSrc(ensAvatar ?? null);
+      setIsLoading(Boolean(ensAvatar));
       setHasError(false);
-    }, [currentEnsAvatar]);
+    }, [ensAvatar]);
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {
@@ -270,36 +268,29 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ size, bgColor, address });
-      }
-      return cn(
-        sizeClasses[size],
-        'novacon:flex-shrink-0 novacon:rounded-full novacon:relative novacon:overflow-hidden',
-        'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
-        'novacon:focus-within:ring-2 novacon:focus-within:ring-[var(--tuwa-text-accent)]',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, size, bgColor, address, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ size, bgColor, address })
+      : cn(
+          sizeClasses[size],
+          'novacon:flex-shrink-0 novacon:rounded-full novacon:relative novacon:overflow-hidden',
+          'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
+          'novacon:focus-within:ring-2 novacon:focus-within:ring-[var(--tuwa-text-accent)]',
+          className,
+        );
 
     // Get current image source with fallback
     const currentImageSrc = imageSrc || blockie || '';
 
-    // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'img' as const,
-        'aria-label': imageAltText,
-        title: imageAltText,
-      }),
-      [customization?.containerProps, props, ref, containerClasses, imageAltText],
-    );
+    // Container props
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'img' as const,
+      'aria-label': imageAltText,
+      title: imageAltText,
+    };
 
     return (
       <div {...containerProps}>

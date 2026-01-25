@@ -12,10 +12,7 @@
   ],
   "entryPointStrategy": "expand",
   "tsconfig": "tsconfig.json",
-  "plugin": [
-    "typedoc-plugin-markdown",
-    "typedoc-plugin-react"
-  ],
+  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-react"],
   "out": "apps/docs/src/API_Reference",
   "readme": "none",
   "githubPages": false,
