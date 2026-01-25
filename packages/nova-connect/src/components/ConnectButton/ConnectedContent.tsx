@@ -11,7 +11,6 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
 } from 'react';
 
@@ -394,7 +393,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     );
 
     // Memoized status display configuration
-    const statusDisplay = useMemo(() => {
+    const statusDisplay = (() => {
       if (!activeConnection) return { displayName: null, avatarIcon: null, ariaLabel: '' };
 
       const baseAriaLabel = `${labels.transactionStatus}: ${getStatusAriaLabel(connectedButtonStatus)}`;
@@ -484,17 +483,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
             ariaLabel: `${labels.walletAddress}: ${ensNameAbbreviated}`,
           };
       }
-    }, [
-      connectedButtonStatus,
-      ensNameAbbreviated,
-      activeConnection,
-      ensAvatar,
-      labels,
-      getStatusAriaLabel,
-      customization,
-      showLoadingAnimation,
-      LoadingAnimation,
-    ]);
+    })();
 
     // Event handlers
     const handleBalanceClick = useCallback(
@@ -508,27 +497,20 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     );
 
     // Generate container classes
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({ connectedButtonStatus, withBalance: Boolean(withBalance) });
-      }
-      return cn('novacon:flex novacon:items-center novacon:gap-2 novacon:sm:gap-3', className);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.container, connectedButtonStatus, withBalance, className]);
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({ connectedButtonStatus, withBalance: Boolean(withBalance) })
+      : cn('novacon:flex novacon:items-center novacon:gap-2 novacon:sm:gap-3', className);
 
     // Merge container props
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'status',
-        'aria-live': 'polite' as const,
-        'aria-label': ariaLabel || statusDisplay.ariaLabel,
-      }),
-      [customization, props, ref, containerClasses, ariaLabel, statusDisplay.ariaLabel],
-    );
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'status',
+      'aria-live': 'polite' as const,
+      'aria-label': ariaLabel || statusDisplay.ariaLabel,
+    };
 
     if (!activeConnection) return null;
 

@@ -240,8 +240,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     /**
      * Memoized validation configuration with customization
      */
-    const validationConfig = useMemo(
-      (): ValidationConfig => ({
+    const validationConfig: ValidationConfig = useMemo(
+      () => ({
         ...defaultValidationConfig,
         ...customConfig?.validation,
       }),

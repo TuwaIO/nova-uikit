@@ -967,18 +967,15 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   } = customization?.config ?? {};
 
   // Merge custom labels with defaults
-  const finalLabels = useMemo(
-    () => ({
-      ...labels,
-      ...(customization?.labels && {
-        emptyState: customization.labels.emptyStateMessage ?? 'No connections found',
-        containerAriaLabel: customization.labels.containerAriaLabel ?? 'Wallet connections manager',
-        activeSectionAriaLabel: customization.labels.activeSectionAriaLabel ?? 'Active wallet connections',
-        recentSectionAriaLabel: customization.labels.recentSectionAriaLabel ?? 'Recently connected wallets',
-      }),
+  const finalLabels = {
+    ...labels,
+    ...(customization?.labels && {
+      emptyState: customization.labels.emptyStateMessage ?? 'No connections found',
+      containerAriaLabel: customization.labels.containerAriaLabel ?? 'Wallet connections manager',
+      activeSectionAriaLabel: customization.labels.activeSectionAriaLabel ?? 'Active wallet connections',
+      recentSectionAriaLabel: customization.labels.recentSectionAriaLabel ?? 'Recently connected wallets',
     }),
-    [labels, customization?.labels],
-  );
+  };
 
   // Ref for container element for focus management
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1006,6 +1003,9 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   const ConnectedConnectorRow = customization?.components?.ConnectedConnectorRow || DefaultConnectedConnectorRow;
   const RecentlyConnectedRow = customization?.components?.RecentlyConnectedRow || DefaultRecentlyConnectedRow;
 
+  /**
+   * Convert connections Record to array for rendering
+   */
   /**
    * Convert connections Record to array for rendering
    */
@@ -1359,7 +1359,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             // Use a more direct approach with explicit type casting
             const isAvailable = allConnectors[getAdapterFromConnectorType(connectorType)]?.some((c) => {
               // Safely check if c is a valid object with a name property
-              if (c && typeof c === 'object' && 'name' in c && typeof (c as any).name === 'string') {
+              if (c && typeof c === 'object' && 'name' in c && typeof (c as { name: unknown }).name === 'string') {
                 return (
                   `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName((c as { name: string }).name)}` ===
                   connectorType

@@ -6,7 +6,7 @@ import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -655,58 +655,47 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     }, [customHandlers?.onViewTransactions, setConnectedModalContentType]);
 
     /**
-     * Memoized connectors to prevent unnecessary recalculations
+     * Connectors from store
      */
-    const connectors = useMemo(() => getConnectors(), [getConnectors]);
+    const connectors = getConnectors();
 
     /**
-     * Memoized wallet transactions filtered by current wallet address
+     * Wallet transactions filtered by current wallet address
      * Only includes transactions from the currently connected wallet
      */
-    const walletTransactions = useMemo(() => {
-      if (!activeConnection || !transactionPool) return [];
-      return Object.values(transactionPool).filter(
-        (tx) => tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeConnection?.address, transactionPool]);
+    const walletTransactions =
+      activeConnection && transactionPool
+        ? Object.values(transactionPool).filter(
+            (tx) => tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
+          )
+        : [];
 
     /**
      * Check if there are pending transactions for loading indicator
      */
-    const hasPendingTransactions = useMemo(() => {
-      return walletTransactions.some((tx) => tx.pending);
-    }, [walletTransactions]);
+    const hasPendingTransactions = walletTransactions.some((tx) => tx.pending);
 
     /**
      * Get number of available connectors for the current wallet type
      */
-    const connectorsCount = useMemo(() => {
-      if (!activeConnection) return 0;
-      return Object.values(connectors)?.length || 0;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeConnection?.connectorType, connectors]);
+    const connectorsCount = activeConnection ? Object.values(connectors)?.length || 0 : 0;
 
     /**
      * Get wallet name from wallet type for display
      */
-    const walletName = useMemo(() => {
-      return activeConnection?.connectorType?.split(':')[1] || labels.unknownWallet;
-    }, [activeConnection?.connectorType, labels.unknownWallet]);
+    const walletName = activeConnection?.connectorType?.split(':')[1] || labels.unknownWallet;
 
     /**
-     * Memoized calculations for state
+     * State calculations
      */
-    const hasActiveWallet = useMemo(() => Boolean(activeConnection?.isConnected), [activeConnection?.isConnected]);
-    const isLoading = useMemo(() => avatarIsLoading || balanceLoading, [avatarIsLoading, balanceLoading]);
-    const hasTransactions = useMemo(() => walletTransactions.length > 0, [walletTransactions]);
+    const hasActiveWallet = Boolean(activeConnection?.isConnected);
+    const isLoading = avatarIsLoading || balanceLoading;
+    const hasTransactions = walletTransactions.length > 0;
 
     /**
      * Effect for transaction updates
      */
-    const pendingCount = useMemo(() => {
-      return walletTransactions.filter((tx) => tx.pending).length;
-    }, [walletTransactions]);
+    const pendingCount = walletTransactions.filter((tx) => tx.pending).length;
 
     // Call transaction update handler when transactions change
     React.useEffect(() => {
@@ -727,29 +716,20 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     /**
      * Generate container classes with custom generator
      */
-    const containerClasses = useMemo(() => {
-      if (customization?.classNames?.container) {
-        return customization.classNames.container({
+    /**
+     * Generate container classes with custom generator
+     */
+    const containerClasses = customization?.classNames?.container
+      ? customization.classNames.container({
           hasActiveWallet,
           isLoading,
           hasTransactions,
           hasPendingTransactions,
-        });
-      }
-
-      return cn(
-        'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:gap-2 novacon:p-4',
-        className,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      customization?.classNames?.container,
-      hasActiveWallet,
-      isLoading,
-      hasTransactions,
-      hasPendingTransactions,
-      className,
-    ]);
+        })
+      : cn(
+          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:gap-2 novacon:p-4',
+          className,
+        );
 
     /**
      * Animation variants
@@ -759,26 +739,17 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     /**
      * Merge container props
      */
-    const containerProps = useMemo(
-      () => ({
-        ...customization?.containerProps,
-        ...props,
-        ref,
-        className: containerClasses,
-        role: 'main',
-        'aria-label': ariaLabel || ariaLabels?.container || `${labels.walletConnected} - ${walletName}`,
-      }),
-      [
-        customization?.containerProps,
-        props,
-        ref,
-        containerClasses,
-        ariaLabel,
-        ariaLabels?.container,
-        labels.walletConnected,
-        walletName,
-      ],
-    );
+    /**
+     * Merge container props
+     */
+    const containerProps = {
+      ...customization?.containerProps,
+      ...props,
+      ref,
+      className: containerClasses,
+      role: 'main',
+      'aria-label': ariaLabel || ariaLabels?.container || `${labels.walletConnected} - ${walletName}`,
+    };
 
     // Early return if no active wallet
     if (!hasActiveWallet || !activeConnection) {

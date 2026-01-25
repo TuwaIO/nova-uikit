@@ -5,7 +5,7 @@
 import { ChevronArrowWithAnim, cn, NetworkIcon } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
@@ -583,7 +583,10 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
     /**
      * Generate child components
      */
-    const walletIconContainer = useMemo(() => {
+    /**
+     * Generate child components
+     */
+    const walletIconContainer = (() => {
       if (!hasWalletIcon) return null;
 
       const walletIconCustomClasses = customization?.classNames?.walletIconContainer;
@@ -600,17 +603,9 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
           })}
         />
       );
-    }, [
-      hasWalletIcon,
-      WalletIconContainer,
-      walletName,
-      walletIcon,
-      loading,
-      labels,
-      customization?.classNames?.walletIconContainer,
-    ]);
+    })();
 
-    const chainIconContainer = useMemo(() => {
+    const chainIconContainer = (() => {
       if (!hasChainIcon || !formattedChainId) return null;
 
       const chainIconCustomClasses = customization?.classNames?.chainIconContainer;
@@ -622,25 +617,19 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
           className={chainIconCustomClasses?.({ hasChainIcon })}
         />
       );
-    }, [
-      hasChainIcon,
-      formattedChainId,
-      ChainIconContainer,
-      walletChainId,
-      customization?.classNames?.chainIconContainer,
-    ]);
+    })();
 
-    const chevronContainer = useMemo(() => {
+    const chevronContainer = (() => {
       if (!hasChevron) return null;
       const chevronCustomClasses = customization?.classNames?.chevronContainer;
       return <ChevronContainer isOpen={isOpen} className={chevronCustomClasses?.({ isOpen, isClickable })} />;
-    }, [hasChevron, ChevronContainer, isOpen, isClickable, customization?.classNames?.chevronContainer]);
+    })();
 
-    const loadingOverlay = useMemo(() => {
+    const loadingOverlay = (() => {
       if (!showLoadingOverlay) return null;
       const loadingCustomClasses = customization?.classNames?.loadingOverlay;
       return <LoadingOverlay loading={loading} className={loadingCustomClasses?.({ loading })} />;
-    }, [showLoadingOverlay, LoadingOverlay, loading, customization?.classNames?.loadingOverlay]);
+    })();
 
     /**
      * Animation variants
@@ -650,43 +639,24 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
     /**
      * Base button props without motion-specific properties
      */
-    const baseButtonProps = useMemo(
-      () => ({
-        type: 'button' as const,
-        id,
-        className: buttonClasses,
-        onClick: handleClick,
-        onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave,
-        onFocus: handleFocus,
-        onBlur: handleBlur,
-        disabled: disabled || loading,
-        'aria-label': accessibleLabel,
-        'aria-describedby': customization?.accessibility?.ariaDescribedBy,
-        title: tooltipText,
-        role: customization?.accessibility?.role || 'button',
-        tabIndex: disabled || loading ? -1 : 0,
-        'data-testid': buttonTestId,
-        ...customization?.buttonProps,
-      }),
-      [
-        id,
-        buttonClasses,
-        handleClick,
-        handleMouseEnter,
-        handleMouseLeave,
-        handleFocus,
-        handleBlur,
-        disabled,
-        loading,
-        accessibleLabel,
-        customization?.accessibility?.ariaDescribedBy,
-        tooltipText,
-        customization?.accessibility?.role,
-        buttonTestId,
-        customization?.buttonProps,
-      ],
-    );
+    const baseButtonProps = {
+      type: 'button' as const,
+      id,
+      className: buttonClasses,
+      onClick: handleClick,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      disabled: disabled || loading,
+      'aria-label': accessibleLabel,
+      'aria-describedby': customization?.accessibility?.ariaDescribedBy,
+      title: tooltipText,
+      role: customization?.accessibility?.role || 'button',
+      tabIndex: disabled || loading ? -1 : 0,
+      'data-testid': buttonTestId,
+      ...customization?.buttonProps,
+    };
 
     const buttonContent = (
       <ButtonContent

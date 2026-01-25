@@ -6,7 +6,7 @@ import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -334,24 +334,23 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
   customization,
 }) => {
   // Convert balance format for BalanceDisplayComponent
-  const balanceData = useMemo(() => {
-    if (!balance?.value || !balance?.symbol) return null;
-    return {
-      value: balance.value,
-      symbol: balance.symbol,
-    };
-  }, [balance]);
+  // Convert balance format for BalanceDisplayComponent
+  const balanceData =
+    balance?.value && balance?.symbol
+      ? {
+          value: balance.value,
+          symbol: balance.symbol,
+        }
+      : null;
 
   // Merge labels for BalanceDisplayComponent
-  const balanceLabels = useMemo(
-    () => ({
-      loading: labels.loading,
-      walletBalance: labels.walletBalance,
-      refreshBalance: 'Refresh balance',
-      noBalanceAvailable: 'No balance information available',
-    }),
-    [labels],
-  );
+  // Merge labels for BalanceDisplayComponent
+  const balanceLabels = {
+    loading: labels.loading,
+    walletBalance: labels.walletBalance,
+    refreshBalance: 'Refresh balance',
+    noBalanceAvailable: 'No balance information available',
+  };
 
   return (
     <BalanceDisplayComponent
@@ -380,10 +379,7 @@ const DefaultScreenReaderFeedback: React.FC<ScreenReaderFeedbackProps> = ({
 };
 
 const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance, className }) => {
-  const balanceDisplay = useMemo(() => {
-    if (!balance?.value || !balance?.symbol) return null;
-    return `${balance.value} ${balance.symbol}`;
-  }, [balance]);
+  const balanceDisplay = balance?.value && balance?.symbol ? `${balance.value} ${balance.symbol}` : null;
 
   return (
     <div className={cn('novacon:sr-only', className)} aria-live="polite" aria-atomic="true" role="status">

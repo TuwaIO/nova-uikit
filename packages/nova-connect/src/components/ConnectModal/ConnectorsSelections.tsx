@@ -475,7 +475,10 @@ export const ConnectorsSelections = memo(
       /**
        * Memoized connector filtering
        */
-      const connectorGroups = useMemo(() => {
+      /**
+       * Connector filtering
+       */
+      const connectorGroups = (() => {
         const popularDesiredOrder = ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
 
         const installedConnectorsInitial = connectors.filter((group) => {
@@ -516,29 +519,32 @@ export const ConnectorsSelections = memo(
           ),
           impersonated: impersonatedConnector,
         };
-      }, [connectors]);
+      })();
 
       /**
        * Memoized selections data
        */
-      const selectionsData = useMemo(
-        (): ConnectorsSelectionsData => ({
-          selectedAdapter,
-          connectors,
-          isOnlyOneNetwork,
-          isTouch,
-          hasImpersonatedConnector: Boolean(connectorGroups.impersonated),
-          showImpersonated: Boolean(connectorGroups.impersonated && withImpersonated),
-          connectorGroups,
-          labels,
-        }),
-        [selectedAdapter, connectors, isOnlyOneNetwork, isTouch, connectorGroups, withImpersonated, labels],
-      );
+      /**
+       * Selections data
+       */
+      const selectionsData: ConnectorsSelectionsData = {
+        selectedAdapter,
+        connectors,
+        isOnlyOneNetwork,
+        isTouch,
+        hasImpersonatedConnector: Boolean(connectorGroups.impersonated),
+        showImpersonated: Boolean(connectorGroups.impersonated && withImpersonated),
+        connectorGroups,
+        labels,
+      };
 
       /**
        * Memoized impersonate section data
        */
-      const impersonateData = useMemo((): ImpersonateSectionData | undefined => {
+      /**
+       * Impersonate section data
+       */
+      const impersonateData = ((): ImpersonateSectionData | undefined => {
         if (!connectorGroups.impersonated) return undefined;
 
         return {
@@ -547,12 +553,15 @@ export const ConnectorsSelections = memo(
           labels,
           sectionsData: selectionsData,
         };
-      }, [connectorGroups.impersonated, isTouch, labels, selectionsData]);
+      })();
 
       /**
        * Memoized layout classes
        */
-      const layoutClasses = useMemo(() => {
+      /**
+       * Layout classes
+       */
+      const layoutClasses = (() => {
         const touchConnectorsClasses = customConfig?.layout?.touchConnectorsClasses ?? [
           'novacon:flex-row',
           'novacon:overflow-x-auto',
@@ -588,7 +597,7 @@ export const ConnectorsSelections = memo(
           touchContentClasses,
           mouseContentClasses,
         };
-      }, [customConfig?.layout]);
+      })();
 
       /**
        * Handles click on impersonated wallet option
@@ -629,38 +638,38 @@ export const ConnectorsSelections = memo(
       /**
        * Memoized CSS classes
        */
-      const cssClasses = useMemo(
-        () => ({
-          container:
-            customization?.classNames?.container?.({ selectionsData }) ?? 'novacon:flex novacon:flex-col novacon:gap-4',
+      /**
+       * CSS classes
+       */
+      const cssClasses = {
+        container:
+          customization?.classNames?.container?.({ selectionsData }) ?? 'novacon:flex novacon:flex-col novacon:gap-4',
 
-          contentWrapper:
-            customization?.classNames?.contentWrapper?.({ selectionsData }) ??
-            cn(isTouch ? layoutClasses.touchContentClasses : layoutClasses.mouseContentClasses),
+        contentWrapper:
+          customization?.classNames?.contentWrapper?.({ selectionsData }) ??
+          cn(isTouch ? layoutClasses.touchContentClasses : layoutClasses.mouseContentClasses),
 
-          connectorsArea:
-            customization?.classNames?.connectorsArea?.({ selectionsData }) ??
-            cn(
-              'novacon:flex NovaCustomScroll',
-              isTouch ? layoutClasses.touchConnectorsClasses : layoutClasses.mouseConnectorsClasses,
-            ),
+        connectorsArea:
+          customization?.classNames?.connectorsArea?.({ selectionsData }) ??
+          cn(
+            'novacon:flex NovaCustomScroll',
+            isTouch ? layoutClasses.touchConnectorsClasses : layoutClasses.mouseConnectorsClasses,
+          ),
 
-          impersonateSection:
-            (impersonateData && customization?.classNames?.impersonateSection?.({ impersonateData, selectionsData })) ??
-            cn({ 'novacon:flex novacon:flex-col novacon:gap-2': isTouch }),
+        impersonateSection:
+          (impersonateData && customization?.classNames?.impersonateSection?.({ impersonateData, selectionsData })) ??
+          cn({ 'novacon:flex novacon:flex-col novacon:gap-2': isTouch }),
 
-          impersonateTitle:
-            (impersonateData && customization?.classNames?.impersonateTitle?.({ impersonateData, selectionsData })) ??
-            cn('novacon:text-sm novacon:hidden', { 'novacon:block novacon:opacity-0': isTouch }),
+        impersonateTitle:
+          (impersonateData && customization?.classNames?.impersonateTitle?.({ impersonateData, selectionsData })) ??
+          cn('novacon:text-sm novacon:hidden', { 'novacon:block novacon:opacity-0': isTouch }),
 
-          emptyState:
-            customization?.classNames?.emptyState?.({ selectionsData }) ??
-            'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-xl novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
+        emptyState:
+          customization?.classNames?.emptyState?.({ selectionsData }) ??
+          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-xl novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
 
-          disclaimerSection: customization?.classNames?.disclaimerSection?.({ selectionsData }) ?? '',
-        }),
-        [customization?.classNames, selectionsData, impersonateData, isTouch, layoutClasses],
-      );
+        disclaimerSection: customization?.classNames?.disclaimerSection?.({ selectionsData }) ?? '',
+      };
 
       // Early return for empty state
       if (selectedAdapter && !connectors?.length) {

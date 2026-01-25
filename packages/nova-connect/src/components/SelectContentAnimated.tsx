@@ -6,7 +6,7 @@
 import * as Select from '@radix-ui/react-select';
 import { cn } from '@tuwaio/nova-core';
 import { AnimatePresence, type Easing, motion } from 'framer-motion';
-import { type ComponentPropsWithoutRef, type ElementRef, forwardRef, useMemo } from 'react';
+import { type ComponentPropsWithoutRef, type ElementRef, forwardRef } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 import { ToBottomButton, ToBottomButtonCustomization } from './ToBottomButton';
@@ -125,7 +125,8 @@ export const SelectContentAnimated = forwardRef<
     const labels = useNovaConnectLabels();
 
     // Memoize animation configuration based on reduce motion preference
-    const animationConfig = useMemo(() => {
+    // Animation configuration based on reduce motion preference
+    const animationConfig = (() => {
       if (reduceMotion) {
         return {
           initial: { opacity: 0 },
@@ -148,7 +149,7 @@ export const SelectContentAnimated = forwardRef<
           },
         },
       };
-    }, [reduceMotion, animationDuration]);
+    })();
 
     // Memoize content container classes (additive approach)
     const contentClasses = cn(
