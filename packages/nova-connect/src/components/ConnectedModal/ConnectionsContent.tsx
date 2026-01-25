@@ -1125,7 +1125,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         const networkIcon = getNetworkData(adapter)?.chain;
         const chainId = networkIcon?.chainId || 1;
         const walletName = getFormattedConnectorName(connectorType);
-        if (walletName === 'impersonatedwallet') {
+        if (walletName === 'Impersonatedwallet') {
           impersonatedHelpers.setImpersonated(address.trim());
           await connect({ connectorType, chainId });
         } else {

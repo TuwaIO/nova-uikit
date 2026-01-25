@@ -3,7 +3,6 @@
  */
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
-import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
@@ -684,7 +683,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      */
     const connectorsCount = useMemo(() => {
       if (!activeConnection) return 0;
-      return connectors[getAdapterFromConnectorType(activeConnection.connectorType)]?.length || 0;
+      return Object.values(connectors)?.length || 0;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeConnection?.connectorType, connectors]);
 

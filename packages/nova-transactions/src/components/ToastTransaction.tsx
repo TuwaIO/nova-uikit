@@ -233,7 +233,7 @@ export function ToastTransaction<T extends Transaction>({
             </div>
           ) : (
             openTxInfoModal &&
-            !!connectedWalletAddress && (
+            tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() && (
               <TxInfoButton onClick={openTxInfoModal} className={classNames?.txInfoButton}>
                 {toast.openTransactionsInfo}
               </TxInfoButton>

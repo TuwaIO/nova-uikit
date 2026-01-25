@@ -4,7 +4,7 @@
 
 # NovaConnectProviderError
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:86](https://github.com/TuwaIO/nova-uikit/blob/1162bbd199fa1e7de23e7c6420e7d24446806b56/packages/nova-connect/src/hooks/useNovaConnect.ts#L86)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:86](https://github.com/TuwaIO/nova-uikit/blob/d4ab29a269e2064b7291c30a99f51f56df6cdfa4/packages/nova-connect/src/hooks/useNovaConnect.ts#L86)
 
 ## Extends
 
@@ -16,7 +16,7 @@ Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:86](https://githu
 
 > **new NovaConnectProviderError**(`message`): `NovaConnectProviderError`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:87](https://github.com/TuwaIO/nova-uikit/blob/1162bbd199fa1e7de23e7c6420e7d24446806b56/packages/nova-connect/src/hooks/useNovaConnect.ts#L87)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:87](https://github.com/TuwaIO/nova-uikit/blob/d4ab29a269e2064b7291c30a99f51f56df6cdfa4/packages/nova-connect/src/hooks/useNovaConnect.ts#L87)
 
 #### Parameters
 
@@ -106,6 +106,8 @@ not capture any frames.
 
 ### captureStackTrace()
 
+#### Call Signature
+
 > `static` **captureStackTrace**(`targetObject`, `constructorOpt?`): `void`
 
 Defined in: node\_modules/.pnpm/@types+node@24.10.1/node\_modules/@types/node/globals.d.ts:52
@@ -154,21 +156,47 @@ function c() {
 a();
 ```
 
-#### Parameters
+##### Parameters
 
-##### targetObject
+###### targetObject
 
 `object`
 
-##### constructorOpt?
+###### constructorOpt?
 
 `Function`
 
-#### Returns
+##### Returns
 
 `void`
 
-#### Inherited from
+##### Inherited from
+
+`Error.captureStackTrace`
+
+#### Call Signature
+
+> `static` **captureStackTrace**(`targetObject`, `constructorOpt?`): `void`
+
+Defined in: node\_modules/.pnpm/@types+node@22.7.5/node\_modules/@types/node/globals.d.ts:136
+
+Create .stack property on a target object
+
+##### Parameters
+
+###### targetObject
+
+`object`
+
+###### constructorOpt?
+
+`Function`
+
+##### Returns
+
+`void`
+
+##### Inherited from
 
 `Error.captureStackTrace`
 
@@ -198,9 +226,9 @@ Indicates whether the argument provided is a built-in Error instance or not.
 
 ***
 
-### prepareStackTrace()
+### prepareStackTrace()?
 
-> `static` **prepareStackTrace**(`err`, `stackTraces`): `any`
+> `static` `optional` **prepareStackTrace**(`err`, `stackTraces`): `any`
 
 Defined in: node\_modules/.pnpm/@types+node@24.10.1/node\_modules/@types/node/globals.d.ts:56
 

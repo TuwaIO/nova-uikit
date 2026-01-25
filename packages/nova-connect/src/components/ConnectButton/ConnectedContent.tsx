@@ -313,6 +313,11 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       return () => setConnectedButtonStatus('idle');
     }, [setConnectedButtonStatus]);
 
+    // Reset status when wallet address changes
+    useEffect(() => {
+      setConnectedButtonStatus('idle');
+    }, [activeConnection?.address, setConnectedButtonStatus]);
+
     // Monitor transaction pool changes
     useEffect(() => {
       if (!activeConnection || !activeConnection?.isConnected) {
@@ -323,6 +328,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
         Object.values(transactionPool ?? {}).filter(
           (tx) => tx.from.toLowerCase() === activeConnection?.address.toLowerCase(),
         ) || [];
+
       const prevPool = prevTxPoolRef.current || [];
       let newStatus: ButtonTxStatus = 'idle';
 
