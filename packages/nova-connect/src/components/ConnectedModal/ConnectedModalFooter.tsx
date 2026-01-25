@@ -5,7 +5,7 @@
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -533,7 +533,10 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
      * Generate explorer URL for the current wallet address
      * Memoized to prevent unnecessary recalculations
      */
-    const explorerUrl = useMemo(() => {
+    /**
+     * Generate explorer URL for the current wallet address
+     */
+    const explorerUrl = (() => {
       if (!activeConnection) return explorerUrlFallback;
 
       try {
@@ -546,14 +549,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
         console.warn('Failed to generate explorer URL:', error);
         return explorerUrlFallback;
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      activeConnection?.connectorType,
-      activeConnection?.address,
-      activeConnection?.chainId,
-      getAdapter,
-      explorerUrlFallback,
-    ]);
+    })();
 
     /**
      * Check if explorer URL is valid for link functionality
@@ -623,10 +619,8 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           );
 
     // Generate disconnect button element
-    const disconnectButtonElement = useMemo(() => {
-      if (!showDisconnectButton || !activeConnection) return null;
-
-      return (
+    const disconnectButtonElement =
+      showDisconnectButton && activeConnection ? (
         <DisconnectButton
           onClick={handleDisconnect}
           labels={finalLabels}
@@ -635,23 +629,11 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           aria-describedby="disconnect-description"
           connectionsCount={Object.keys(connections).length}
         />
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      showDisconnectButton,
-      activeConnection,
-      DisconnectButton,
-      handleDisconnect,
-      finalLabels,
-      customization?.classNames?.disconnectButton,
-      disconnectButtonTestId,
-    ]);
+      ) : null;
 
     // Generate explorer link element
-    const explorerLinkElement = useMemo(() => {
-      if (!showExplorerLink || !activeConnection) return null;
-
-      return (
+    const explorerLinkElement =
+      showExplorerLink && activeConnection ? (
         <ExplorerLink
           href={explorerUrl}
           labels={finalLabels}
@@ -665,19 +647,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           aria-describedby="explorer-description"
           onClick={handleExplorerClick}
         />
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      showExplorerLink,
-      activeConnection,
-      ExplorerLink,
-      explorerUrl,
-      finalLabels,
-      isValidExplorerUrl,
-      customization?.classNames?.explorerLink,
-      explorerLinkTestId,
-      handleExplorerClick,
-    ]);
+      ) : null;
 
     // Merge container props
     const containerProps = {

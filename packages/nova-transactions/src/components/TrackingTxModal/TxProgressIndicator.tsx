@@ -4,7 +4,7 @@
 
 import { ArrowPathIcon, CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
-import { ComponentType, useMemo } from 'react';
+import { ComponentType } from 'react';
 
 import { useLabels } from '../../providers';
 
@@ -148,36 +148,34 @@ export function TxProgressIndicator({
 }: TxProgressIndicatorProps) {
   const { trackingModal, statuses } = useLabels();
 
-  const steps = useMemo((): StepProps[] => {
-    const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
-      if (stepIndex === 1) return 'completed';
-      if (stepIndex === 2) {
-        if (isSucceed || isFailed || isReplaced) return 'completed';
-        if (isProcessing) return 'active';
-      }
-      if (stepIndex === 3) {
-        if (isSucceed) return 'completed';
-        if (isFailed) return 'error';
-        if (isReplaced) return 'replaced';
-        if (isProcessing) return 'active';
-      }
-      return 'inactive';
-    };
+  const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
+    if (stepIndex === 1) return 'completed';
+    if (stepIndex === 2) {
+      if (isSucceed || isFailed || isReplaced) return 'completed';
+      if (isProcessing) return 'active';
+    }
+    if (stepIndex === 3) {
+      if (isSucceed) return 'completed';
+      if (isFailed) return 'error';
+      if (isReplaced) return 'replaced';
+      if (isProcessing) return 'active';
+    }
+    return 'inactive';
+  };
 
-    const getStepLabel = (stepIndex: 1 | 2 | 3): string => {
-      if (stepIndex === 1) return trackingModal.progressIndicator.created;
-      if (stepIndex === 2) return trackingModal.progressIndicator.processing;
-      if (isFailed) return statuses.failed;
-      if (isReplaced) return statuses.replaced;
-      return trackingModal.progressIndicator.succeed;
-    };
+  const getStepLabel = (stepIndex: 1 | 2 | 3): string => {
+    if (stepIndex === 1) return trackingModal.progressIndicator.created;
+    if (stepIndex === 2) return trackingModal.progressIndicator.processing;
+    if (isFailed) return statuses.failed;
+    if (isReplaced) return statuses.replaced;
+    return trackingModal.progressIndicator.succeed;
+  };
 
-    return [
-      { status: getStepStatus(1), label: getStepLabel(1), isFirst: true, classNames: stepClassNames },
-      { status: getStepStatus(2), label: getStepLabel(2), classNames: stepClassNames },
-      { status: getStepStatus(3), label: getStepLabel(3), isLast: true, classNames: stepClassNames },
-    ];
-  }, [isProcessing, isSucceed, isFailed, isReplaced, trackingModal, statuses, stepClassNames]);
+  const steps: StepProps[] = [
+    { status: getStepStatus(1), label: getStepLabel(1), isFirst: true, classNames: stepClassNames },
+    { status: getStepStatus(2), label: getStepLabel(2), classNames: stepClassNames },
+    { status: getStepStatus(3), label: getStepLabel(3), isLast: true, classNames: stepClassNames },
+  ];
 
   return (
     <div className={cn('novatx:flex novatx:w-full novatx:items-start novatx:px-4 novatx:pt-2 novatx:pb-1', className)}>

@@ -3,7 +3,7 @@
  */
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
-import React, { ComponentType, forwardRef, useCallback, useId, useMemo } from 'react';
+import React, { ComponentType, forwardRef, useCallback, useId } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
@@ -372,65 +372,62 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
     /**
      * Memoized container classes based on compact mode
      */
-    const containerClasses = useMemo(
-      () =>
+    /**
+     * Container classes based on compact mode
+     */
+    const containerClasses = cn(
+      customization?.classNames?.container?.({ compact }) ??
         cn(
-          customization?.classNames?.container?.({ compact }) ??
-            cn(
-              'novacon:p-2 novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:flex novacon:flex-col',
-              compact
-                ? 'novacon:gap-2 novacon:sm:p-3 novacon:sm:gap-3'
-                : 'novacon:gap-2 novacon:sm:p-4 novacon:sm:gap-4',
-            ),
-          className,
+          'novacon:p-2 novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:flex novacon:flex-col',
+          compact ? 'novacon:gap-2 novacon:sm:p-3 novacon:sm:gap-3' : 'novacon:gap-2 novacon:sm:p-4 novacon:sm:gap-4',
         ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [compact, className, customization?.classNames?.container],
+      className,
     );
 
     /**
      * Memoized content classes based on compact mode
      */
-    const contentClasses = useMemo(
-      () =>
-        customization?.classNames?.contentSection?.({ compact }) ??
-        cn('novacon:flex novacon:flex-col', compact ? 'novacon:gap-1' : 'novacon:gap-2'),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [compact, customization?.classNames?.contentSection],
-    );
+    /**
+     * Content classes based on compact mode
+     */
+    const contentClasses =
+      customization?.classNames?.contentSection?.({ compact }) ??
+      cn('novacon:flex novacon:flex-col', compact ? 'novacon:gap-1' : 'novacon:gap-2');
 
     /**
      * Memoized title classes based on compact mode
      */
-    const titleClasses = useMemo(
-      () =>
-        customization?.classNames?.title?.({ compact }) ??
-        cn(
-          'novacon:font-bold novacon:text-[var(--tuwa-text-primary)]',
-          compact ? 'novacon:text-base' : 'novacon:text-lg',
-        ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [compact, customization?.classNames?.title],
-    );
+    /**
+     * Title classes based on compact mode
+     */
+    const titleClasses =
+      customization?.classNames?.title?.({ compact }) ??
+      cn(
+        'novacon:font-bold novacon:text-[var(--tuwa-text-primary)]',
+        compact ? 'novacon:text-base' : 'novacon:text-lg',
+      );
 
     /**
      * Generate unique ID for the disclaimer content using React's useId
      */
-    const disclaimerId = useMemo(() => {
+    /**
+     * Generate unique ID for the disclaimer content using React's useId
+     */
+    const disclaimerId = (() => {
       const sanitizedTitle = title.toLowerCase().replace(/\s+/g, '-');
       return `disclaimer-${sanitizedTitle}-${uniqueId}`;
-    }, [title, uniqueId]);
+    })();
 
     /**
      * Generate button test IDs based on main test ID
      */
-    const buttonTestIds = useMemo(
-      () => ({
-        learnMore: testId ? `${testId}-learn-more` : undefined,
-        listAction: testId ? `${testId}-list-action` : undefined,
-      }),
-      [testId],
-    );
+    /**
+     * Generate button test IDs based on main test ID
+     */
+    const buttonTestIds = {
+      learnMore: testId ? `${testId}-learn-more` : undefined,
+      listAction: testId ? `${testId}-list-action` : undefined,
+    };
 
     /**
      * Handle rendering of action buttons with proper type checking

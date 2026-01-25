@@ -6,7 +6,7 @@ import { GlobeAltIcon } from '@heroicons/react/24/solid';
 import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
@@ -434,138 +434,78 @@ export const NetworkTabs = memo(
       /**
        * Memoized animation configuration with customization
        */
-      const animationConfig = useMemo(
-        (): AnimationConfig => ({
-          ...defaultAnimationConfig,
-          ...customConfig?.animation,
-        }),
-        [customConfig?.animation],
-      );
+      const animationConfig: AnimationConfig = {
+        ...defaultAnimationConfig,
+        ...customConfig?.animation,
+      };
 
       /**
        * Memoized text animation variants
        */
-      const textVariant = useMemo(() => getTextVariant(animationConfig), [animationConfig]);
+      const textVariant = getTextVariant(animationConfig);
 
       /**
        * Check if we should render tabs
        */
-      const shouldRender = useMemo(() => {
-        const minNetworks = customConfig?.minNetworksToShow ?? 1;
-        return networks.length > minNetworks;
-      }, [networks.length, customConfig?.minNetworksToShow]);
+      const minNetworks = customConfig?.minNetworksToShow ?? 1;
+      const shouldRender = networks.length > minNetworks;
 
       /**
        * Memoized networks list with "All" option if enabled
        */
-      const localNetworks = useMemo(() => {
-        const showAll = customConfig?.showAllOption ?? true;
-        return showAll ? [undefined, ...networks] : networks;
-      }, [networks, customConfig?.showAllOption]);
+      const showAll = customConfig?.showAllOption ?? true;
+      const localNetworks = showAll ? [undefined, ...networks] : networks;
 
       /**
        * Generate network display name function with proper memoization dependencies
        */
-      const getNetworkDisplayNameGen = useCallback(
-        () =>
-          (network: OrbitAdapter | undefined): string => {
-            if (!network) return labels.all;
+      const getNetworkDisplayName = (network: OrbitAdapter | undefined): string => {
+        if (!network) return labels.all;
 
-            // Check for custom name first
-            const networkKey = network.toString();
-            if (customConfig?.networkNames?.[networkKey]) {
-              return customConfig.networkNames[networkKey];
-            }
+        // Check for custom name first
+        const networkKey = network.toString();
+        if (customConfig?.networkNames?.[networkKey]) {
+          return customConfig.networkNames[networkKey];
+        }
 
-            return getNetworkData(network)?.chain?.name ?? 'Unknown';
-          },
-        [labels.all, customConfig?.networkNames],
-      );
+        return getNetworkData(network)?.chain?.name ?? 'Unknown';
+      };
 
-      /**
-       * Memoized network display name function
-       */
-      const getNetworkDisplayName = useMemo(getNetworkDisplayNameGen, [getNetworkDisplayNameGen]);
+      const getNetworkAriaLabel = (network: OrbitAdapter | undefined, isSelected: boolean): string => {
+        const displayName = getNetworkDisplayName(network);
+        const tabPrefix = customConfig?.ariaLabels?.tabPrefix ?? '';
+        const selectedSuffix = customConfig?.ariaLabels?.selectedSuffix ?? ', currently selected';
 
-      /**
-       * Generate aria label function with proper memoization dependencies
-       */
-      const getNetworkAriaLabelGen = useCallback(
-        () =>
-          (network: OrbitAdapter | undefined, isSelected: boolean): string => {
-            const displayName = getNetworkDisplayName(network);
-            const tabPrefix = customConfig?.ariaLabels?.tabPrefix ?? '';
-            const selectedSuffix = customConfig?.ariaLabels?.selectedSuffix ?? ', currently selected';
-
-            return `${tabPrefix}${displayName} network${isSelected ? selectedSuffix : ''}`.trim();
-          },
-        [getNetworkDisplayName, customConfig?.ariaLabels],
-      );
-
-      /**
-       * Memoized aria label function
-       */
-      const getNetworkAriaLabel = useMemo(getNetworkAriaLabelGen, [getNetworkAriaLabelGen]);
+        return `${tabPrefix}${displayName} network${isSelected ? selectedSuffix : ''}`.trim();
+      };
 
       /**
        * Generate tab selection handler with proper memoization dependencies
        */
-      const getHandleTabSelect = useCallback(
-        () => (network: OrbitAdapter | undefined, tabData: NetworkTabData) => {
-          onSelect(network);
-          customHandlers?.onTabSelect?.(network, tabData);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [onSelect, customHandlers?.onTabSelect],
-      );
-
-      /**
-       * Memoized tab selection handler
-       */
-      const handleTabSelect = useMemo(getHandleTabSelect, [getHandleTabSelect]);
+      const handleTabSelect = (network: OrbitAdapter | undefined, tabData: NetworkTabData) => {
+        onSelect(network);
+        customHandlers?.onTabSelect?.(network, tabData);
+      };
 
       /**
        * Memoized tab data
        */
-      const tabsData = useMemo((): NetworkTabData[] => {
-        return localNetworks.map((network, index) => ({
-          network,
-          displayName: getNetworkDisplayName(network),
-          networkInfo: network ? (getNetworkData(network)?.chain ?? null) : null,
-          isSelected: selectedAdapter === network,
-          index,
-        }));
-      }, [localNetworks, getNetworkDisplayName, selectedAdapter]);
+      const tabsData: NetworkTabData[] = localNetworks.map((network, index) => ({
+        network,
+        displayName: getNetworkDisplayName(network),
+        networkInfo: network ? (getNetworkData(network)?.chain ?? null) : null,
+        isSelected: selectedAdapter === network,
+        index,
+      }));
 
       /**
        * Generate container classes with proper memoization dependencies
        */
-      const getContainerClasses = useCallback(
-        () => customization?.classNames?.container?.() ?? className,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.container, className],
-      );
+      const containerClasses = customization?.classNames?.container?.() ?? className;
 
-      /**
-       * Memoized container classes
-       */
-      const containerClasses = useMemo(getContainerClasses, [getContainerClasses]);
-
-      /**
-       * Generate tab list classes with proper memoization dependencies
-       */
-      const getTabListClasses = useCallback(
-        () =>
-          customization?.classNames?.tabList?.() ??
-          'novacon:flex novacon:overflow-x-auto novacon:gap-2 novacon:p-2 novacon:mb-2 novacon:border-b novacon:border-[var(--tuwa-border-primary)] novacon:relative',
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [customization?.classNames?.tabList],
-      );
-
-      /**
-       * Memoized tab list classes
-       */
-      const tabListClasses = useMemo(getTabListClasses, [getTabListClasses]);
+      const tabListClasses =
+        customization?.classNames?.tabList?.() ??
+        'novacon:flex novacon:overflow-x-auto novacon:gap-2 novacon:p-2 novacon:mb-2 novacon:border-b novacon:border-[var(--tuwa-border-primary)] novacon:relative';
 
       // Mount/unmount effect
       useEffect(() => {

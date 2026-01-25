@@ -4,7 +4,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -69,7 +69,7 @@ export type WalletAvatarCustomization = {
     /** Custom background color generator function */
     generateBgColor?: (address: string) => string;
     /** Custom address formatter function */
-    formatAddress?: (address: string, labels: any) => string;
+    formatAddress?: (address: string, labels: Record<string, string>) => string;
   };
 };
 
@@ -178,7 +178,7 @@ const defaultGenerateBgColor = (address: string): string => {
   }
 };
 
-const defaultFormatAddress = (address: string, labels: any): string => {
+const defaultFormatAddress = (address: string, labels: Record<string, string>): string => {
   if (!address) return labels.unknownWallet;
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
@@ -225,10 +225,11 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     } = customization?.utils ?? {};
 
     // Generate blockie using custom or default function
-    const blockie = useMemo(() => generateBlockie(address), [address, generateBlockie]);
+    const blockie = generateBlockie(address);
 
     // Generate background color using custom or default function
-    const bgColor = useMemo(() => generateBgColor(address), [address, generateBgColor]);
+    // Generate background color using custom or default function
+    const bgColor = generateBgColor(address);
 
     // Format address using custom or default function
     const formattedAddress = formatAddress(address, labels);
@@ -257,14 +258,16 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     }, [onImageLoad]);
 
     // Handle image load error
+    // Handle image load error
     const handleImageError = useCallback(
       (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
         setIsLoading(false);
         setHasError(true);
+        const blockie = generateBlockie(address);
         setImageSrc(blockie);
         onImageError?.(event.nativeEvent);
       },
-      [blockie, onImageError],
+      [address, generateBlockie, onImageError],
     );
 
     // Generate container classes

@@ -5,7 +5,7 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -445,17 +445,23 @@ export const Connecting = memo(
       /**
        * Find the current connector configuration
        */
-      const currentConnector = useMemo(() => {
+      /**
+       * Handle cleanup when activeConnector is cleared
+       */
+      useEffect(() => {
         if (!activeConnector) {
           performDefaultCleanup();
-          return null;
         }
-        return (
-          connectors.find((connector) =>
+      }, [activeConnector]);
+
+      /**
+       * Find the current connector configuration
+       */
+      const currentConnector = activeConnector
+        ? connectors.find((connector) =>
             formatConnectorName(connector.name).toLowerCase().includes(activeConnector.toLowerCase()),
           ) || null
-        );
-      }, [connectors, activeConnector]);
+        : null;
 
       /**
        * Determine current connection state
@@ -491,28 +497,20 @@ export const Connecting = memo(
       /**
        * Memoized status data
        */
-      const statusData = useMemo(
-        (): ConnectingStatusData => ({
-          state: connectionState,
-          message: displayMessage,
-          errorMessage,
-          activeConnector,
-          selectedAdapter,
-          currentConnector,
-          showDetailedError,
-          rawError: connectionError,
-        }),
-        [
-          connectionState,
-          displayMessage,
-          errorMessage,
-          activeConnector,
-          selectedAdapter,
-          currentConnector,
-          showDetailedError,
-          connectionError,
-        ],
-      );
+      /**
+       * Status data object
+       */
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      const statusData: ConnectingStatusData = {
+        state: connectionState,
+        message: displayMessage,
+        errorMessage,
+        activeConnector,
+        selectedAdapter,
+        currentConnector,
+        showDetailedError,
+        rawError: connectionError,
+      };
 
       /**
        * Container classes

@@ -5,7 +5,7 @@ import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, Dialog
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { MotionProps } from 'framer-motion';
-import { ComponentPropsWithoutRef, ComponentType, ReactNode, useMemo } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
 import {
@@ -124,30 +124,21 @@ export function TrackingTxModal<T extends Transaction>({
   initialTx,
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
-  const activeTx = useMemo(
-    () => (initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined),
-    [transactionsPool, initialTx],
-  );
+  const activeTx = initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined;
 
   const txToDisplay = activeTx ?? initialTx;
   const isOpen = (initialTx?.withTrackedModal && !activeTx) || (activeTx?.isTrackedModalOpen ?? false);
 
-  const { isProcessing, isSucceed, isFailed, isReplaced } = useMemo(() => {
-    const txStatus = activeTx?.status;
-    const isInitializing = initialTx?.isInitializing ?? false;
-    const isPending = activeTx?.pending ?? false;
-    return {
-      isProcessing: isInitializing || isPending,
-      isSucceed: txStatus === TransactionStatus.Success,
-      isFailed: activeTx?.isError || !!initialTx?.errorMessage,
-      isReplaced: txStatus === TransactionStatus.Replaced,
-    };
-  }, [activeTx, initialTx]);
+  const txStatus = activeTx?.status;
+  const isInitializing = initialTx?.isInitializing ?? false;
+  const isPending = activeTx?.pending ?? false;
 
-  const foundAdapter = useMemo(
-    () => (txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined),
-    [txToDisplay, adapter],
-  );
+  const isProcessing = isInitializing || isPending;
+  const isSucceed = txStatus === TransactionStatus.Success;
+  const isFailed = activeTx?.isError || !!initialTx?.errorMessage;
+  const isReplaced = txStatus === TransactionStatus.Replaced;
+
+  const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
 
   const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && executeTxAction);
   const canReplace = !!(

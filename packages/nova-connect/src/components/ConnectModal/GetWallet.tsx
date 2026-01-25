@@ -4,7 +4,7 @@
 
 import { cn, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { ComponentType, forwardRef, useMemo } from 'react';
+import React, { ComponentType, forwardRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
@@ -388,7 +388,7 @@ const DefaultAnimationWrapper: React.FC<AnimationWrapperProps> = ({
 const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations, className }) => {
   const { walletKey, position, size, animation, ariaLabel } = config;
 
-  const positionClasses = useMemo(() => {
+  const positionClasses = (() => {
     const classes = ['novacon:absolute'];
 
     if (position.top) classes.push(position.top);
@@ -398,28 +398,25 @@ const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations
     if (position.transform) classes.push(position.transform);
 
     return cn(classes);
-  }, [position]);
+  })();
 
-  const sizeClasses = useMemo(() => {
-    return cn(
-      size.mobile.width,
-      size.mobile.height,
-      size.desktop.width,
-      size.desktop.height,
-      // Icon styling
-      'novacon:[&>img]:w-full!',
-      'novacon:[&>img]:h-full!',
-      'novacon:[&>svg]:w-full!',
-      'novacon:[&>svg]:h-full!',
-    );
-  }, [size]);
+  const sizeClasses = cn(
+    size.mobile.width,
+    size.mobile.height,
+    size.desktop.width,
+    size.desktop.height,
+    // Icon styling
+    'novacon:[&>img]:w-full!',
+    'novacon:[&>img]:h-full!',
+    'novacon:[&>svg]:w-full!',
+    'novacon:[&>svg]:h-full!',
+  );
 
-  const animationClasses = useMemo(() => {
-    if (!enableAnimations) return '';
-    return 'novacon:animate-[float_var(--float-duration,3000ms)_var(--float-ease,ease-in-out)_var(--float-delay,0ms)_infinite_var(--float-direction,normal)]';
-  }, [enableAnimations]);
+  const animationClasses = enableAnimations
+    ? 'novacon:animate-[float_var(--float-duration,3000ms)_var(--float-ease,ease-in-out)_var(--float-delay,0ms)_infinite_var(--float-direction,normal)]'
+    : '';
 
-  const animationStyle = useMemo(() => {
+  const animationStyle = (() => {
     if (!enableAnimations) return {};
 
     return {
@@ -428,7 +425,7 @@ const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations
       '--float-ease': animation.ease || 'ease-in-out',
       '--float-direction': animation.reverse ? 'reverse' : 'normal',
     } as React.CSSProperties;
-  }, [enableAnimations, animation]);
+  })();
 
   return (
     <div
@@ -551,12 +548,14 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
     /**
      * Memoized wallet icons configuration with applied multipliers
      */
-    const walletIcons = useMemo(() => {
-      const icons = customWalletIcons || defaultWalletIcons;
+    /**
+     * Wallet icons configuration with applied multipliers
+     */
+    const walletIcons = (customWalletIcons || defaultWalletIcons).map((icon) => {
       const durationMultiplier = customConfig?.animation?.durationMultiplier ?? 1;
       const delayMultiplier = customConfig?.animation?.delayMultiplier ?? 1;
 
-      return icons.map((icon) => ({
+      return {
         ...icon,
         animation: {
           ...icon.animation,
@@ -564,104 +563,100 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
           delay: Math.round(icon.animation.delay * delayMultiplier),
           ease: icon.animation.ease || customConfig?.animation?.defaultEase || 'ease-in-out',
         },
-      }));
-    }, [customWalletIcons, customConfig?.animation]);
+      };
+    });
 
     /**
      * Memoized container classes
      */
-    const containerClasses = useMemo(() => {
-      const defaultClasses = cn('novacon:m-[-16px]', className);
-      return customization?.classNames?.container?.({ compact }) ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [compact, className, customization?.classNames?.container]);
+    const containerClasses = customization?.classNames?.container?.({ compact }) ?? cn('novacon:m-[-16px]', className);
 
     /**
      * Memoized animation section classes
      */
-    const animationSectionClasses = useMemo(() => {
-      const defaultClasses = cn(
+    /**
+     * Animation section classes
+     */
+    const animationSectionClasses =
+      customization?.classNames?.animationSection?.({ compact }) ??
+      cn(
         'novacon:relative novacon:w-full novacon:overflow-hidden novacon:p-4',
         compact ? 'novacon:h-48' : 'novacon:h-64',
       );
-      return customization?.classNames?.animationSection?.({ compact }) ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [compact, customization?.classNames?.animationSection]);
 
     /**
      * Memoized stars background classes
      */
-    const starsBackgroundClasses = useMemo(
-      () => customization?.classNames?.starsBackground?.() ?? '',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [customization?.classNames?.starsBackground],
-    );
+    /**
+     * Stars background classes
+     */
+    const starsBackgroundClasses = customization?.classNames?.starsBackground?.() ?? '';
 
     /**
      * Memoized gradient overlay classes
      */
-    const gradientOverlayClasses = useMemo(() => {
-      const defaultClasses = cn(
+    /**
+     * Gradient overlay classes
+     */
+    const gradientOverlayClasses =
+      customization?.classNames?.gradientOverlay?.() ??
+      cn(
         'novacon:absolute novacon:inset-0 novacon:z-1',
         'novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]',
       );
-      return customization?.classNames?.gradientOverlay?.() ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.gradientOverlay]);
 
     /**
      * Memoized animation wrapper classes
      */
-    const animationWrapperClasses = useMemo(() => {
-      const defaultClasses = cn(
-        'novacon:relative novacon:z-2 novacon:w-full novacon:h-full',
-        'novacon:px-2 md:novacon:px-4',
-      );
-      return customization?.classNames?.animationWrapper?.() ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customization?.classNames?.animationWrapper]);
+    /**
+     * Animation wrapper classes
+     */
+    const animationWrapperClasses =
+      customization?.classNames?.animationWrapper?.() ??
+      cn('novacon:relative novacon:z-2 novacon:w-full novacon:h-full', 'novacon:px-2 md:novacon:px-4');
 
     /**
      * Memoized content section classes
      */
-    const contentSectionClasses = useMemo(() => {
-      const defaultClasses = cn(
+    /**
+     * Content section classes
+     */
+    const contentSectionClasses =
+      customization?.classNames?.contentSection?.({ compact }) ??
+      cn(
         'novacon:text-center',
         compact ? 'novacon:pb-3 novacon:px-2 novacon:md:px-3' : 'novacon:pb-4 novacon:px-2 novacon:md:px-4',
       );
-      return customization?.classNames?.contentSection?.({ compact }) ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [compact, customization?.classNames?.contentSection]);
 
     /**
      * Memoized title classes
      */
-    const titleClasses = useMemo(() => {
-      const defaultClasses = cn(
+    /**
+     * Title classes
+     */
+    const titleClasses =
+      customization?.classNames?.title?.({ compact }) ??
+      cn(
         'novacon:font-bold novacon:mb-2 novacon:text-[var(--tuwa-text-primary)]',
         compact ? 'novacon:text-lg' : 'novacon:text-xl',
       );
-      return customization?.classNames?.title?.({ compact }) ?? defaultClasses;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [compact, customization?.classNames?.title]);
 
     /**
      * Memoized description classes
      */
-    const descriptionClasses = useMemo(
-      () => customization?.classNames?.description?.() ?? 'novacon:text-[var(--tuwa-text-secondary)]',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [customization?.classNames?.description],
-    );
+    /**
+     * Description classes
+     */
+    const descriptionClasses =
+      customization?.classNames?.description?.() ?? 'novacon:text-[var(--tuwa-text-secondary)]';
 
     /**
      * Memoized screen reader classes
      */
-    const screenReaderClasses = useMemo(
-      () => customization?.classNames?.screenReader?.() ?? 'novacon:sr-only',
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [customization?.classNames?.screenReader],
-    );
+    /**
+     * Screen reader classes
+     */
+    const screenReaderClasses = customization?.classNames?.screenReader?.() ?? 'novacon:sr-only';
 
     // Handle mount/unmount effects
     React.useEffect(() => {

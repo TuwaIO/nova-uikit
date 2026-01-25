@@ -386,7 +386,7 @@ export const ConnectorsBlock = memo(
       /**
        * Memoized touch device detection
        */
-      const isTouch = useMemo(() => isTouchDevice(), []);
+      const isTouch = isTouchDevice();
 
       /**
        * Memoized store functions
@@ -407,72 +407,59 @@ export const ConnectorsBlock = memo(
       /**
        * Memoized section ID
        */
-      const sectionId = useMemo(() => `connectors-${title.toLowerCase().replace(/\s+/g, '-')}`, [title]);
+      const sectionId = `connectors-${title.toLowerCase().replace(/\s+/g, '-')}`;
 
-      /**
-       * Memoized block data
-       */
-      const blockData = useMemo(
-        (): ConnectorsBlockData => ({
-          selectedAdapter,
-          connectors,
-          title,
-          isTitleBold,
-          isOnlyOneNetwork,
-          isTouch,
-          hasConnectors: Boolean(connectors?.length),
-          recentWallets,
-          sectionId,
-        }),
-        [selectedAdapter, connectors, title, isTitleBold, isOnlyOneNetwork, isTouch, recentWallets, sectionId],
-      );
+      const blockData: ConnectorsBlockData = {
+        selectedAdapter,
+        connectors,
+        title,
+        isTitleBold,
+        isOnlyOneNetwork,
+        isTouch,
+        hasConnectors: Boolean(connectors?.length),
+        recentWallets,
+        sectionId,
+      };
 
-      /**
-       * Memoized CSS classes for layout
-       */
-      const layoutClasses = useMemo(() => {
-        const touchClasses = customConfig?.layout?.touchClasses ?? [
-          'novacon:flex-row',
-          customConfig?.layout?.touchGap ?? 'novacon:gap-3',
-        ];
+      const touchClasses = customConfig?.layout?.touchClasses ?? [
+        'novacon:flex-row',
+        customConfig?.layout?.touchGap ?? 'novacon:gap-3',
+      ];
 
-        const mouseClasses = customConfig?.layout?.mouseClasses ?? [
-          'novacon:flex-col',
-          customConfig?.layout?.mouseGap ?? 'novacon:gap-2',
-        ];
+      const mouseClasses = customConfig?.layout?.mouseClasses ?? [
+        'novacon:flex-col',
+        customConfig?.layout?.mouseGap ?? 'novacon:gap-2',
+      ];
 
-        return {
-          touchClasses,
-          mouseClasses,
-        };
-      }, [customConfig?.layout]);
+      const layoutClasses = {
+        touchClasses,
+        mouseClasses,
+      };
 
       /**
        * Memoized connector items data
        */
-      const connectorItems = useMemo((): ConnectorItemData[] => {
-        if (!connectors?.length) return [];
+      const connectorItems: ConnectorItemData[] = connectors?.length
+        ? connectors.map((group, index) => {
+            const name = formatConnectorName(group.name);
 
-        return connectors.map((group, index) => {
-          const name = formatConnectorName(group.name);
+            let isRecent = false;
+            if (customConfig?.features?.showRecentIndicators !== false && recentWallets && recentWallets.length > 0) {
+              // Check if any adapter in the group matches a recent connector
+              isRecent = group.adapters.some((adapter) => {
+                const typeToCheck = getConnectorTypeFromName(adapter, name);
+                return recentWallets.some(([recentType]) => recentType === typeToCheck);
+              });
+            }
 
-          let isRecent = false;
-          if (customConfig?.features?.showRecentIndicators !== false && recentWallets && recentWallets.length > 0) {
-            // Check if any adapter in the group matches a recent connector
-            isRecent = group.adapters.some((adapter) => {
-              const typeToCheck = getConnectorTypeFromName(adapter, name);
-              return recentWallets.some(([recentType]) => recentType === typeToCheck);
-            });
-          }
-
-          return {
-            group,
-            name,
-            isRecent,
-            index,
-          };
-        });
-      }, [connectors, recentWallets, customConfig?.features?.showRecentIndicators]);
+            return {
+              group,
+              name,
+              isRecent,
+              index,
+            };
+          })
+        : [];
 
       /**
        * Handle connector click with connection logic
@@ -538,27 +525,24 @@ export const ConnectorsBlock = memo(
       /**
        * Memoized CSS classes
        */
-      const cssClasses = useMemo(
-        () => ({
-          container:
-            customization?.classNames?.container?.({ blockData }) ?? 'novacon:flex novacon:flex-col novacon:gap-2',
+      const cssClasses = {
+        container:
+          customization?.classNames?.container?.({ blockData }) ?? 'novacon:flex novacon:flex-col novacon:gap-2',
 
-          title:
-            customization?.classNames?.title?.({ blockData }) ??
-            cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', {
-              'novacon:font-bold novacon:text-[var(--tuwa-text-accent)]': blockData.isTitleBold,
-            }),
+        title:
+          customization?.classNames?.title?.({ blockData }) ??
+          cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', {
+            'novacon:font-bold novacon:text-[var(--tuwa-text-accent)]': blockData.isTitleBold,
+          }),
 
-          connectorsList:
-            customization?.classNames?.connectorsList?.({ blockData }) ??
-            cn('novacon:flex', blockData.isTouch ? layoutClasses.touchClasses : layoutClasses.mouseClasses),
+        connectorsList:
+          customization?.classNames?.connectorsList?.({ blockData }) ??
+          cn('novacon:flex', blockData.isTouch ? layoutClasses.touchClasses : layoutClasses.mouseClasses),
 
-          emptyState:
-            customization?.classNames?.emptyState?.({ blockData }) ??
-            'novacon:flex novacon:items-center novacon:justify-center novacon:p-4 novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-lg',
-        }),
-        [customization?.classNames, blockData, layoutClasses],
-      );
+        emptyState:
+          customization?.classNames?.emptyState?.({ blockData }) ??
+          'novacon:flex novacon:items-center novacon:justify-center novacon:p-4 novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-lg',
+      };
 
       // Cleanup effect
       React.useEffect(() => {

@@ -616,17 +616,15 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
     loadDefaultImages();
   }, [inputSlidesConfig]);
 
-  const slidesConfig = useMemo(() => {
-    return inputSlidesConfig.map((slide) => {
-      // If image is present, use it
-      if (slide.image) return slide;
-      // Otherwise try to use loaded default
-      return {
-        ...slide,
-        image: defaultImages[slide.id] || '',
-      };
-    });
-  }, [inputSlidesConfig, defaultImages]);
+  const slidesConfig = inputSlidesConfig.map((slide) => {
+    // If image is present, use it
+    if (slide.image) return slide;
+    // Otherwise try to use loaded default
+    return {
+      ...slide,
+      image: defaultImages[slide.id] || '',
+    };
+  });
 
   const slideVariants = customization?.variants?.slide ?? DEFAULT_SLIDE_VARIANTS;
   const imageVariants = customization?.variants?.image ?? DEFAULT_IMAGE_VARIANTS;

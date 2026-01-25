@@ -6,7 +6,7 @@ import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { RecentBadge, RecentBadgeCustomization } from './RecentBadge';
@@ -381,25 +381,22 @@ const NetworkIcons = memo(
     /**
      * Generate visible networks data
      */
-    const visibleNetworksData = useMemo(() => {
-      if (!adapters?.length) return [];
-      return adapters.slice(0, 3).map(
-        (adapter, index): NetworkData => ({
-          adapter,
-          chainId: getNetworkData(adapter)?.chain?.chainId,
-          name: getNetworkData(adapter)?.chain?.name,
-          index,
-        }),
-      );
-    }, [adapters]);
-
     /**
-     * Calculate overflow count
+     * Generate visible networks data
      */
-    // eslint-disable-next-line
-    const overflowCount = useMemo(() => {
-      return adapters?.length ? Math.max(0, adapters.length - 3) : 0;
-    }, [adapters?.length]);
+    const visibleNetworksData =
+      adapters && adapters.length
+        ? adapters.slice(0, 3).map(
+            (adapter, index): NetworkData => ({
+              adapter,
+              chainId: getNetworkData(adapter)?.chain?.chainId,
+              name: getNetworkData(adapter)?.chain?.name,
+              index,
+            }),
+          )
+        : [];
+
+    const overflowCount = adapters?.length ? Math.max(0, adapters.length - 3) : 0;
 
     // Early returns
     if (!adapters?.length) return null;
@@ -656,7 +653,10 @@ export const ConnectCard = memo(
       /**
        * Memoized network data calculations
        */
-      const networkStats = useMemo(() => {
+      /**
+       * Network data calculations
+       */
+      const networkStats = (() => {
         const networkCount = adapters?.length || 0;
         const visibleNetworks =
           adapters?.slice(0, 3).map(
@@ -674,24 +674,21 @@ export const ConnectCard = memo(
           visibleNetworks,
           overflowCount,
         };
-      }, [adapters]);
+      })();
 
       /**
-       * Memoized card data
+       * Connect card data
        */
-      const cardData = useMemo(
-        (): ConnectCardData => ({
-          title,
-          subtitle,
-          isRecent,
-          isTouch,
-          infoLink,
-          adapters,
-          isOnlyOneNetwork,
-          ...networkStats,
-        }),
-        [title, subtitle, isRecent, isTouch, infoLink, adapters, isOnlyOneNetwork, networkStats],
-      );
+      const cardData: ConnectCardData = {
+        title,
+        subtitle,
+        isRecent,
+        isTouch,
+        infoLink,
+        adapters,
+        isOnlyOneNetwork,
+        ...networkStats,
+      };
 
       /**
        * Container classes

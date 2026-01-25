@@ -583,25 +583,18 @@ export const ConnectModal = memo<ConnectModalProps>(
     const store = useContext(SatelliteStoreContext);
 
     // Memoize connectors to avoid recalculation on every render
-    const connectors = useMemo(() => {
-      if (isConnectModalOpen) {
-        return getConnectors();
-      }
-    }, [isConnectModalOpen, getConnectors]);
+    const connectors = isConnectModalOpen ? getConnectors() : undefined;
 
-    const filteredConnectors = useMemo(
-      () => getFilteredConnectors({ connectors: connectors!, selectedAdapter }),
-      [connectors, selectedAdapter],
-    );
+    const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
 
     // Convert error to Error object if it's a string
-    const normalizedError = useMemo(() => {
+    const normalizedError = (() => {
       if (!connectionError) return null;
       if (typeof connectionError === 'string') {
         return new Error(connectionError);
       }
       return connectionError;
-    }, [connectionError]);
+    })();
 
     // Memoize modal data for customization context
     const modalData = useMemo<ConnectModalData>(

@@ -4,7 +4,7 @@
 
 import { cn, WalletIcon as WI } from '@tuwaio/nova-core';
 import { formatConnectorName } from '@tuwaio/orbit-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useMemo, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -145,7 +145,8 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
     const imageAltText = altText || `${walletName} ${labels.walletIcon}`;
 
     // Clean and validate icon URL
-    const cleanIconUrl = useMemo(() => {
+    // Clean and validate icon URL
+    const cleanIconUrl = (() => {
       if (!icon) return null;
 
       try {
@@ -166,7 +167,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
       } catch {
         return null;
       }
-    }, [icon]);
+    })();
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {
