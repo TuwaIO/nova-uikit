@@ -61,6 +61,17 @@ type ErrorMessageProps = {
   'aria-live'?: 'polite' | 'assertive';
 } & React.RefAttributes<HTMLParagraphElement>;
 
+type ResolvingStatusProps = {
+  isResolving: boolean;
+  domainType: 'ENS' | 'SNS' | '';
+  className?: string;
+};
+
+type ResolvedAddressProps = {
+  resolvedAddress: string;
+  className?: string;
+};
+
 /**
  * Customization options for ImpersonateForm component
  */
@@ -75,6 +86,10 @@ export type ImpersonateFormCustomization = {
     Input?: ComponentType<InputProps>;
     /** Custom error message component */
     ErrorMessage?: ComponentType<ErrorMessageProps>;
+    /** Custom resolving status component */
+    ResolvingStatus?: ComponentType<ResolvingStatusProps>;
+    /** Custom resolved address display component */
+    ResolvedAddress?: ComponentType<ResolvedAddressProps>;
   };
   /** Custom class name generators */
   classNames?: {
@@ -86,6 +101,10 @@ export type ImpersonateFormCustomization = {
     input?: (params: { hasError: boolean; hasInteracted: boolean }) => string;
     /** Function to generate error message classes */
     errorMessage?: () => string;
+    /** Function to generate resolving status classes */
+    resolvingStatus?: () => string;
+    /** Function to generate resolved address classes */
+    resolvedAddress?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
@@ -179,6 +198,24 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 );
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
+const DefaultResolvingStatus: React.FC<ResolvingStatusProps> = ({ isResolving, domainType, className }) => {
+  if (!isResolving) return null;
+
+  return (
+    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-blue-500', className)}>
+      Resolving {domainType} name...
+    </p>
+  );
+};
+
+const DefaultResolvedAddress: React.FC<ResolvedAddressProps> = ({ resolvedAddress, className }) => {
+  return (
+    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-green-600', className)}>
+      Resolved to: {resolvedAddress}
+    </p>
+  );
+};
+
 /**
  * Check if a value is an ENS name
  */
@@ -232,6 +269,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       Label: CustomLabel = DefaultLabel,
       Input: CustomInput = DefaultInput,
       ErrorMessage: CustomErrorMessage = DefaultErrorMessage,
+      ResolvingStatus: CustomResolvingStatus = DefaultResolvingStatus,
+      ResolvedAddress: CustomResolvedAddress = DefaultResolvedAddress,
     } = customization?.components ?? {};
 
     const customHandlers = customization?.handlers;
@@ -593,6 +632,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const autoComplete = customConfig?.input?.autoComplete ?? 'off';
     const spellCheck = customConfig?.input?.spellCheck ?? false;
 
+    // Get domain type for resolving status
+    const domainType = isDomainName(inputValue) ? (isENSName(inputValue) ? 'ENS' : 'SNS') : '';
+
     return (
       <CustomContainer ref={ref} className={containerClasses}>
         {/* Form label */}
@@ -618,15 +660,18 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         />
 
         {/* Resolution status */}
-        {isResolving && (
-          <p className="novacon:mt-1 novacon:text-sm novacon:text-blue-500">
-            Resolving {isDomainName(inputValue) ? (isENSName(inputValue) ? 'ENS' : 'SNS') : ''} name...
-          </p>
-        )}
+        <CustomResolvingStatus
+          isResolving={isResolving}
+          domainType={domainType}
+          className={customization?.classNames?.resolvingStatus?.()}
+        />
 
         {/* Resolved address display */}
         {resolvedAddress && isDomainName(inputValue) && !isResolving && (
-          <p className="novacon:mt-1 novacon:text-sm novacon:text-green-600">Resolved to: {resolvedAddress}</p>
+          <CustomResolvedAddress
+            resolvedAddress={resolvedAddress}
+            className={customization?.classNames?.resolvedAddress?.()}
+          />
         )}
 
         {/* Error message display */}

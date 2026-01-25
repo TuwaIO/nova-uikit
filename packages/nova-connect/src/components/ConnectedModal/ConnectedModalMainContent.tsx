@@ -678,7 +678,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     /**
      * Get number of available connectors for the current wallet type
      */
-    const connectorsCount = activeConnection ? Object.values(connectors)?.length || 0 : 0;
+    const connectorsCount = activeConnection ? Object.values(connectors)?.flat().length || 0 : 0;
 
     /**
      * Get wallet name from wallet type for display
