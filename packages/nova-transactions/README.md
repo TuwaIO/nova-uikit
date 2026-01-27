@@ -57,14 +57,8 @@ pnpm add dayjs clsx tailwind-merge
 For a complete setup with all TUWA packages:
 
 ```bash
-# Using pnpm (recommended)
+# Using pnpm (recommended), but you can use npm, yarn or bun as well
 pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
-
-# Using npm
-npm install @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
-
-# Using yarn
-yarn add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
 ```
 
 ---
@@ -148,7 +142,6 @@ export function NovaTransactionsProvider() {
 
 ```tsx
 // src/providers/index.tsx
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { WagmiProvider } from 'wagmi';
@@ -163,10 +156,8 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <NovaTransactionsProvider />
-          {children}
-        </RainbowKitProvider>
+        <NovaTransactionsProvider />
+        {children}
       </QueryClientProvider>
     </WagmiProvider>
   );

@@ -1,0 +1,89 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectModal
+
+> `const` **ConnectModal**: `NamedExoticComponent`\<[`ConnectModalProps`](../interfaces/ConnectModalProps.md)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:561](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L561)
+
+ConnectModal component - Main modal dialog for wallet connection workflow
+
+This component provides a comprehensive wallet connection interface with:
+- Multi-step connection flow with different content types
+- Network selection and adapter filtering
+- Support for regular wallets and impersonated wallets
+- Educational content about wallets and networks
+- Error handling and retry mechanisms
+- Full accessibility support with ARIA labels
+- Keyboard navigation and screen reader compatibility
+
+Modal content types:
+- 'connectors': Main wallet selection screen with network tabs
+- 'network': Network selection for multi-network wallets
+- 'connecting': Connection progress and status display
+- 'about': Educational content about wallets
+- 'getWallet': Onboarding flow for users without wallets
+- 'impersonate': Form for wallet address impersonation
+
+Visual features:
+- Responsive design adapting to different screen sizes
+- Smooth transitions between different content states
+- Loading states and progress indicators
+- Clear navigation with back/forward buttons
+- Contextual action buttons in footer
+
+Accessibility features:
+- Proper ARIA labels and roles for screen readers
+- Keyboard navigation support with focus management
+- Semantic HTML structure for better navigation
+- Screen reader announcements for state changes
+- High contrast compatible styling
+
+## Param
+
+Configuration for supported blockchain networks
+
+## Param
+
+RPC URLs configuration for Solana network
+
+## Param
+
+Wallet store instance
+
+## Param
+
+Whether to show impersonated wallet option
+
+## Param
+
+Customization options for the component
+
+## Returns
+
+JSX element representing the connection modal dialog
+
+## Example
+
+```tsx
+<ConnectModal
+  appChains={{
+    [OrbitAdapter.EVM]: [1, 137, 56], // Ethereum, Polygon, BSC
+    [OrbitAdapter.SOLANA]: ['devnet', 'mainnet-beta']
+  }}
+  solanaRPCUrls={{
+    'mainnet-beta': 'https://api.mainnet-beta.solana.com',
+    'devnet': 'https://api.devnet.solana.com'
+  }}
+  store={walletStore}
+  withImpersonated
+  customization={{
+    classNames: {
+      title: ({ modalData }) =>
+        modalData.contentType === 'about' ? 'custom-about-title' : ''
+    }
+  }}
+/>
+```

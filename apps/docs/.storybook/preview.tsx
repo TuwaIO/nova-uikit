@@ -11,7 +11,7 @@ const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Introduction', 'NovaTransactionsProvider', 'Theming', 'Components', 'API_Reference'],
+        order: ['Introduction', 'Theming', 'Nova Core', 'Nova Connect', 'Nova Transactions', 'API_Reference'],
       },
     },
     controls: {

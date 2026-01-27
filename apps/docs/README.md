@@ -11,7 +11,7 @@
 
 ## ️ About This Project
 
-This is the **interactive documentation hub** for the entire Nova UI Kit ecosystem. It serves as a living style guide and component library for developers, designers, and product managers working with TUWA's Web3 components.
+This is the **interactive documentation hub** for the entire Nova UI Kit ecosystem. It serves as a living style guide and component library for developers, designers, and product managers working with TUWA's components.
 
 ### What You'll Find Here
 
@@ -26,7 +26,6 @@ This is the **interactive documentation hub** for the entire Nova UI Kit ecosyst
 - **Live Component Playground** - Interactive controls for testing all component variations
 - **Auto-Generated Documentation** - Comprehensive props tables and usage examples
 - **Multi-Chain Examples** - Real-world scenarios for EVM and Solana interactions
-- **Accessibility Testing** - Built-in a11y validation and keyboard navigation demos
 
 ---
 
@@ -37,7 +36,7 @@ This is the **interactive documentation hub** for the entire Nova UI Kit ecosyst
 Ensure you have the required tools installed:
 
 ```bash
-# Check Node.js version (requires 20+)
+# Check Node.js version (requires 20-24)
 node --version
 
 # Check pnpm installation (recommended package manager)
@@ -81,7 +80,7 @@ We follow Storybook's **Component Story Format (CSF 3.0)** for consistent, maint
 **📁 File Structure:**
 
 ```
-apps/docs/src/components/
+apps/docs/src/components/[PackageName]/[ComponentsType]/
 │   ├── [ComponentName].stories.tsx
 ```
 
@@ -89,7 +88,7 @@ apps/docs/src/components/
 
 - **Files:** `[ComponentName].stories.tsx`
 - **Location:** Same directory as the component
-- **Story Titles:** Use hierarchical paths like `Nova Connect/ConnectButton`
+- **Story Titles:** Use hierarchical paths like `Nova Core/Feedback/ToastCloseButton`
 
 ### Story Template
 
@@ -97,95 +96,65 @@ Here's our standard template for creating new stories:
 
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ConnectButton } from '@tuwaio/nova-connect/components';
+import { ToastCloseButton } from '@tuwaio/nova-core';
 
-// Component metadata and controls configuration
-const meta = {
-  title: 'Nova Connect/ConnectButton',
-  component: ConnectButton,
-  tags: ['autodocs'], // Enables automatic documentation
-  parameters: {
-    docs: {
-      description: {
-        component: 'A comprehensive wallet connection button with multi-chain support.',
-      },
-    },
-  },
+const meta: Meta<typeof ToastCloseButton> = {
+  title: 'Nova Core/Feedback/ToastCloseButton',
+  component: ToastCloseButton,
+  tags: ['autodocs'],
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['default', 'compact', 'minimal'],
-      description: 'Visual style variant of the button',
+    ariaLabel: {
+      control: 'text',
+      description: 'Accessibility label for screen readers.',
     },
-    showBalance: {
-      control: 'boolean',
-      description: 'Whether to show wallet balance when connected',
+    title: {
+      control: 'text',
+      description: 'Tooltip text on hover.',
     },
-    showChainSwitcher: {
-      control: 'boolean',
-      description: 'Whether to show network switching option',
+    className: {
+      control: 'text',
+      description: 'Container class overrides.',
+    },
+    iconClassName: {
+      control: 'text',
+      description: 'Icon SVG class overrides.',
+    },
+    closeToast: {
+      action: 'clicked',
+      description: 'Function called when clicked.',
     },
   },
-} satisfies Meta;
+  parameters: {
+    layout: 'centered',
+  },
+  decorators: [
+    // Decorator to provide a context for the absolute positioning of the button
+    (Story) => (
+      <div className="relative w-64 h-20 bg-[var(--tuwa-bg-primary)] border border-[var(--tuwa-border-primary)] rounded-md flex items-center justify-center">
+        <span className="text-[var(--tuwa-text-primary)]">Toast Content Here</span>
+        <Story />
+      </div>
+    ),
+  ],
+};
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof ToastCloseButton>;
 
-// Story variants showcasing different use cases
 export const Default: Story = {
+  args: {},
+};
+
+export const CustomTooltip: Story = {
   args: {
-    variant: 'default',
-    showBalance: true,
-    showChainSwitcher: true,
+    title: 'Dismiss this alert',
+    ariaLabel: 'Dismiss this alert',
   },
 };
 
-export const Compact: Story = {
+export const CustomStyle: Story = {
   args: {
-    variant: 'compact',
-    showBalance: false,
-    showChainSwitcher: false,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Compact version suitable for mobile or limited space layouts.',
-      },
-    },
-  },
-};
-
-export const WithCustomLabels: Story = {
-  args: {
-    variant: 'default',
-    labels: {
-      connectWallet: 'Connect Your Wallet',
-      disconnect: 'Disconnect Wallet',
-      connecting: 'Connecting...',
-    },
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Example with custom internationalization labels.',
-      },
-    },
-  },
-};
-
-// Showcase different states
-export const LoadingState: Story = {
-  args: {
-    variant: 'default',
-  },
-  parameters: {
-    mockData: [
-      {
-        url: '/api/wallet/connect',
-        method: 'POST',
-        status: 'pending',
-      },
-    ],
+    className: 'bg-red-500/10 hover:bg-red-500/20 text-red-500',
   },
 };
 ```
@@ -259,8 +228,7 @@ The build process includes:
 1.  **Show All States** - Include loading, error, empty, and success states
 2.  **Use Real Data** - Provide realistic props and mock data
 3.  **Document Edge Cases** - Show how components handle unusual inputs
-4.  **Test Accessibility** - Ensure keyboard navigation and screen reader support
-5.  **Mobile-First** - Test responsive behavior across different screen sizes
+4.  **Mobile-First** - Test responsive behavior across different screen sizes
 
 **Documentation Standards:**
 
@@ -292,8 +260,7 @@ export const Story2: Story = {
 1.  **Create Stories** alongside new components
 2.  **Test Interactively** in Storybook before submitting PR
 3.  **Request Review** from design team for visual approval
-4.  **Accessibility Check** - Run a11y addon and fix any issues
-5.  **Performance Review** - Ensure stories load quickly
+4.  **Performance Review** - Ensure stories load quickly
 
 ---
 
@@ -314,15 +281,6 @@ pnpm storybook
 
 # Build for production
 pnpm build-storybook
-
-# Run visual regression tests
-pnpm test-storybook
-
-# Lint stories
-pnpm lint:stories
-
-# Type check
-pnpm type-check
 ```
 
 ---

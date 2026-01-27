@@ -1,0 +1,1135 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# ConnectionsContentCustomization
+
+> **ConnectionsContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L199)
+
+Customization options for ConnectionsContent component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:226](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L226)
+
+Custom class name generators
+
+#### activeRowActionsContainer()?
+
+> `optional` **activeRowActionsContainer**: () => `string`
+
+Function to generate actions container classes
+
+##### Returns
+
+`string`
+
+#### activeRowBadge()?
+
+> `optional` **activeRowBadge**: () => `string`
+
+Function to generate active badge classes
+
+##### Returns
+
+`string`
+
+#### activeRowConnectorName()?
+
+> `optional` **activeRowConnectorName**: () => `string`
+
+Function to generate connector name classes
+
+##### Returns
+
+`string`
+
+#### activeRowContainer()?
+
+> `optional` **activeRowContainer**: (`params`) => `string`
+
+Function to generate active row container classes
+
+##### Parameters
+
+###### params
+
+###### connectorType
+
+`ConnectorType`
+
+###### hasExplorer
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### activeRowContent()?
+
+> `optional` **activeRowContent**: () => `string`
+
+Function to generate active row content wrapper classes
+
+##### Returns
+
+`string`
+
+#### activeRowCopyButton()?
+
+> `optional` **activeRowCopyButton**: (`params`) => `string`
+
+Function to generate copy button classes
+
+##### Parameters
+
+###### params
+
+###### isCopied
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### activeRowCopyIcon()?
+
+> `optional` **activeRowCopyIcon**: () => `string`
+
+Function to generate copy icon classes
+
+##### Returns
+
+`string`
+
+#### activeRowDisconnectButton()?
+
+> `optional` **activeRowDisconnectButton**: () => `string`
+
+Function to generate disconnect button classes
+
+##### Returns
+
+`string`
+
+#### activeRowExplorerButton()?
+
+> `optional` **activeRowExplorerButton**: () => `string`
+
+Function to generate explorer button classes
+
+##### Returns
+
+`string`
+
+#### activeRowExplorerIcon()?
+
+> `optional` **activeRowExplorerIcon**: () => `string`
+
+Function to generate explorer icon classes
+
+##### Returns
+
+`string`
+
+#### activeRowWalletName()?
+
+> `optional` **activeRowWalletName**: () => `string`
+
+Function to generate wallet name/address classes
+
+##### Returns
+
+`string`
+
+#### activeSection()?
+
+> `optional` **activeSection**: (`params`) => `string`
+
+Function to generate active section wrapper classes
+
+##### Parameters
+
+###### params
+
+###### count
+
+`number`
+
+##### Returns
+
+`string`
+
+#### activeSectionTitle()?
+
+> `optional` **activeSectionTitle**: () => `string`
+
+Function to generate active section title classes
+
+##### Returns
+
+`string`
+
+#### activeSectionWrapper()?
+
+> `optional` **activeSectionWrapper**: () => `string`
+
+Function to generate active section content wrapper classes
+
+##### Returns
+
+`string`
+
+#### addWalletButton()?
+
+> `optional` **addWalletButton**: (`params`) => `string`
+
+Function to generate add wallet button classes
+
+##### Parameters
+
+###### params
+
+###### disabled?
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### connectedRowConnectorName()?
+
+> `optional` **connectedRowConnectorName**: () => `string`
+
+Function to generate connector name classes
+
+##### Returns
+
+`string`
+
+#### connectedRowContainer()?
+
+> `optional` **connectedRowContainer**: (`params`) => `string`
+
+Function to generate connected row container classes
+
+##### Parameters
+
+###### params
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`string`
+
+#### connectedRowContent()?
+
+> `optional` **connectedRowContent**: () => `string`
+
+Function to generate content wrapper classes
+
+##### Returns
+
+`string`
+
+#### connectedRowDisconnectButton()?
+
+> `optional` **connectedRowDisconnectButton**: () => `string`
+
+Function to generate disconnect button classes
+
+##### Returns
+
+`string`
+
+#### connectedRowDisconnectIcon()?
+
+> `optional` **connectedRowDisconnectIcon**: () => `string`
+
+Function to generate disconnect icon classes
+
+##### Returns
+
+`string`
+
+#### connectedRowSwitchIcon()?
+
+> `optional` **connectedRowSwitchIcon**: () => `string`
+
+Function to generate switch icon classes
+
+##### Returns
+
+`string`
+
+#### connectedRowSwitchIndicator()?
+
+> `optional` **connectedRowSwitchIndicator**: () => `string`
+
+Function to generate switch indicator classes
+
+##### Returns
+
+`string`
+
+#### connectedRowWalletName()?
+
+> `optional` **connectedRowWalletName**: () => `string`
+
+Function to generate wallet address classes
+
+##### Returns
+
+`string`
+
+#### connectorIconBadge()?
+
+> `optional` **connectorIconBadge**: (`params`) => `string`
+
+Function to generate network badge wrapper classes
+
+##### Parameters
+
+###### params
+
+###### badgeSize
+
+`number`
+
+##### Returns
+
+`string`
+
+#### connectorIconWrapper()?
+
+> `optional` **connectorIconWrapper**: (`params`) => `string`
+
+Function to generate connector icon wrapper classes
+
+##### Parameters
+
+###### params
+
+###### size
+
+`number`
+
+##### Returns
+
+`string`
+
+#### container()?
+
+> `optional` **container**: (`params`) => `string`
+
+Function to generate container classes
+
+##### Parameters
+
+###### params
+
+###### connectionsCount
+
+`number`
+
+###### isEmpty
+
+`boolean`
+
+###### recentCount
+
+`number`
+
+##### Returns
+
+`string`
+
+#### emptyState()?
+
+> `optional` **emptyState**: () => `string`
+
+Function to generate empty state classes
+
+##### Returns
+
+`string`
+
+#### emptyStateMessage()?
+
+> `optional` **emptyStateMessage**: () => `string`
+
+Function to generate empty state message classes
+
+##### Returns
+
+`string`
+
+#### recentRowActionsContainer()?
+
+> `optional` **recentRowActionsContainer**: () => `string`
+
+Function to generate actions wrapper classes
+
+##### Returns
+
+`string`
+
+#### recentRowConnectButton()?
+
+> `optional` **recentRowConnectButton**: (`params`) => `string`
+
+Function to generate connect button classes
+
+##### Parameters
+
+###### params
+
+###### isConnecting
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### recentRowConnectorName()?
+
+> `optional` **recentRowConnectorName**: () => `string`
+
+Function to generate connector name classes
+
+##### Returns
+
+`string`
+
+#### recentRowConnectSpinner()?
+
+> `optional` **recentRowConnectSpinner**: () => `string`
+
+Function to generate connect button spinner classes
+
+##### Returns
+
+`string`
+
+#### recentRowContainer()?
+
+> `optional` **recentRowContainer**: (`params`) => `string`
+
+Function to generate recent row container classes
+
+##### Parameters
+
+###### params
+
+###### connectorType
+
+`ConnectorType`
+
+###### isConnecting
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### recentRowContent()?
+
+> `optional` **recentRowContent**: () => `string`
+
+Function to generate recent row content wrapper classes
+
+##### Returns
+
+`string`
+
+#### recentRowRemoveButton()?
+
+> `optional` **recentRowRemoveButton**: (`params`) => `string`
+
+Function to generate remove button classes
+
+##### Parameters
+
+###### params
+
+###### isConnecting
+
+`boolean`
+
+##### Returns
+
+`string`
+
+#### recentRowRemoveIcon()?
+
+> `optional` **recentRowRemoveIcon**: () => `string`
+
+Function to generate remove icon classes
+
+##### Returns
+
+`string`
+
+#### recentRowWalletName()?
+
+> `optional` **recentRowWalletName**: () => `string`
+
+Function to generate wallet address classes
+
+##### Returns
+
+`string`
+
+#### recentSection()?
+
+> `optional` **recentSection**: (`params`) => `string`
+
+Function to generate recent section wrapper classes
+
+##### Parameters
+
+###### params
+
+###### count
+
+`number`
+
+##### Returns
+
+`string`
+
+#### recentSectionList()?
+
+> `optional` **recentSectionList**: () => `string`
+
+Function to generate recent section list container classes
+
+##### Returns
+
+`string`
+
+#### recentSectionTitle()?
+
+> `optional` **recentSectionTitle**: () => `string`
+
+Function to generate recent section title classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L203)
+
+Custom components
+
+#### ActionButton?
+
+> `optional` **ActionButton**: `ComponentType`\<`CustomActionButtonProps`\>
+
+Custom action button
+
+#### ActiveConnectorRow?
+
+> `optional` **ActiveConnectorRow**: `ComponentType`\<`CustomActiveRowProps`\>
+
+Custom active connector row
+
+#### ActiveConnectorsSection?
+
+> `optional` **ActiveConnectorsSection**: `ComponentType`\<`CustomActiveSectionProps`\>
+
+Custom active connectors section
+
+#### AddWalletButton?
+
+> `optional` **AddWalletButton**: `ComponentType`\<`CustomAddWalletButtonProps`\>
+
+Custom add wallet button
+
+#### ConnectedConnectorRow?
+
+> `optional` **ConnectedConnectorRow**: `ComponentType`\<`CustomConnectedRowProps`\>
+
+Custom connected connector row
+
+#### Container?
+
+> `optional` **Container**: `ComponentType`\<`CustomContainerProps`\>
+
+Custom container component
+
+#### EmptyState?
+
+> `optional` **EmptyState**: `ComponentType`\<`CustomEmptyStateProps`\>
+
+Custom empty state
+
+#### RecentlyConnectedRow?
+
+> `optional` **RecentlyConnectedRow**: `ComponentType`\<`CustomRecentRowProps`\>
+
+Custom recently connected row
+
+#### RecentlyConnectedSection?
+
+> `optional` **RecentlyConnectedSection**: `ComponentType`\<`CustomRecentSectionProps`\>
+
+Custom recently connected section
+
+#### SectionHeader?
+
+> `optional` **SectionHeader**: `ComponentType`\<`CustomSectionHeaderProps`\>
+
+Custom section header component
+
+***
+
+### config?
+
+> `optional` **config**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:416](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L416)
+
+Configuration options
+
+#### autoFocus?
+
+> `optional` **autoFocus**: `boolean`
+
+Whether to auto-focus first interactive element
+
+#### disableAnimation?
+
+> `optional` **disableAnimation**: `boolean`
+
+Whether to disable animations
+
+#### enableKeyboardShortcuts?
+
+> `optional` **enableKeyboardShortcuts**: `boolean`
+
+Whether to enable keyboard shortcuts
+
+#### keyboardShortcuts?
+
+> `optional` **keyboardShortcuts**: `object`
+
+Custom keyboard shortcuts map
+
+##### keyboardShortcuts.disconnect?
+
+> `optional` **disconnect**: `string`
+
+Key for disconnecting active wallet
+
+##### keyboardShortcuts.nextConnection?
+
+> `optional` **nextConnection**: `string`
+
+Key for switching to next connection
+
+##### keyboardShortcuts.prevConnection?
+
+> `optional` **prevConnection**: `string`
+
+Key for switching to previous connection
+
+#### maxRecentConnections?
+
+> `optional` **maxRecentConnections**: `number`
+
+Maximum recent connections to show
+
+#### reduceMotion?
+
+> `optional` **reduceMotion**: `boolean`
+
+Whether to reduce motion for accessibility
+
+#### showAddWalletButton?
+
+> `optional` **showAddWalletButton**: `boolean`
+
+Whether to show add wallet button
+
+#### showEmptyState?
+
+> `optional` **showEmptyState**: `boolean`
+
+Whether to show empty state
+
+#### showRecentSection?
+
+> `optional` **showRecentSection**: `boolean`
+
+Whether to show recently connected section
+
+#### testIds?
+
+> `optional` **testIds**: `object`
+
+Custom test IDs
+
+##### testIds.activeSection?
+
+> `optional` **activeSection**: `string`
+
+##### testIds.addWalletButton?
+
+> `optional` **addWalletButton**: `string`
+
+##### testIds.container?
+
+> `optional` **container**: `string`
+
+##### testIds.recentSection?
+
+> `optional` **recentSection**: `string`
+
+***
+
+### containerProps?
+
+> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L201)
+
+Override container element props
+
+***
+
+### handlers?
+
+> `optional` **handlers**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:340](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L340)
+
+Custom event handlers
+
+#### onAddWalletClick()?
+
+> `optional` **onAddWalletClick**: () => `void`
+
+Custom handler for add wallet click
+
+##### Returns
+
+`void`
+
+#### onAfterConnect()?
+
+> `optional` **onAfterConnect**: (`connectorType`) => `void`
+
+Custom handler after connecting recent
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onAfterDisconnect()?
+
+> `optional` **onAfterDisconnect**: (`connectorType`) => `void`
+
+Custom handler after disconnect
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onAfterRemove()?
+
+> `optional` **onAfterRemove**: (`connectorType`) => `void`
+
+Custom handler after removing recent
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onAfterSwitch()?
+
+> `optional` **onAfterSwitch**: (`connectorType`) => `void`
+
+Custom handler after switching connection
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onBeforeConnect()?
+
+> `optional` **onBeforeConnect**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Custom handler before connecting recent
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+#### onBeforeDisconnect()?
+
+> `optional` **onBeforeDisconnect**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Custom handler before disconnect
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+#### onBeforeRemove()?
+
+> `optional` **onBeforeRemove**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Custom handler before removing recent
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+#### onBeforeSwitch()?
+
+> `optional` **onBeforeSwitch**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Custom handler before switching connection
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+#### onConnectError()?
+
+> `optional` **onConnectError**: (`connectorType`, `error`) => `void`
+
+Custom handler when connect fails
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+###### error
+
+`Error`
+
+##### Returns
+
+`void`
+
+#### onCopyAddress()?
+
+> `optional` **onCopyAddress**: (`address`, `connectorType`) => `void`
+
+Custom handler for copy address
+
+##### Parameters
+
+###### address
+
+`string`
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onDisconnectError()?
+
+> `optional` **onDisconnectError**: (`connectorType`, `error`) => `void`
+
+Custom handler when disconnect fails
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+###### error
+
+`Error`
+
+##### Returns
+
+`void`
+
+#### onExplorerClick()?
+
+> `optional` **onExplorerClick**: (`url`, `address`, `connectorType`) => `void`
+
+Custom handler for explorer click
+
+##### Parameters
+
+###### url
+
+`string`
+
+###### address
+
+`string`
+
+###### connectorType
+
+`ConnectorType`
+
+##### Returns
+
+`void`
+
+#### onSwitchError()?
+
+> `optional` **onSwitchError**: (`connectorType`, `error`) => `void`
+
+Custom handler when switch fails
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+###### error
+
+`Error`
+
+##### Returns
+
+`void`
+
+***
+
+### labels?
+
+> `optional` **labels**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:371](https://github.com/TuwaIO/nova-uikit/blob/0e04009a8dc8e8e09a9f6dfd19cd3145e4e828c4/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L371)
+
+Custom text and ARIA labels
+
+#### activeSectionAriaLabel?
+
+> `optional` **activeSectionAriaLabel**: `string`
+
+Custom ARIA label for active section
+
+#### activeSectionTitle?
+
+> `optional` **activeSectionTitle**: `string`
+
+Custom active section title
+
+#### addWalletLabel?
+
+> `optional` **addWalletLabel**: `string`
+
+Custom add wallet button label
+
+#### connectAnnouncement()?
+
+> `optional` **connectAnnouncement**: (`walletName`) => `string`
+
+Custom ARIA live region announcement for connect
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+##### Returns
+
+`string`
+
+#### connectAriaDescription?
+
+> `optional` **connectAriaDescription**: `string`
+
+Custom ARIA description for connect action
+
+#### connectLabel?
+
+> `optional` **connectLabel**: `string`
+
+Custom connect button label
+
+#### containerAriaLabel?
+
+> `optional` **containerAriaLabel**: `string`
+
+Custom ARIA label for container
+
+#### copiedLabel?
+
+> `optional` **copiedLabel**: `string`
+
+Custom copied success label
+
+#### copyLabel?
+
+> `optional` **copyLabel**: `string`
+
+Custom copy button label
+
+#### disconnectAnnouncement()?
+
+> `optional` **disconnectAnnouncement**: (`walletName`) => `string`
+
+Custom ARIA live region announcement for disconnect
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+##### Returns
+
+`string`
+
+#### disconnectAriaDescription?
+
+> `optional` **disconnectAriaDescription**: `string`
+
+Custom ARIA description for disconnect action
+
+#### disconnectLabel?
+
+> `optional` **disconnectLabel**: `string`
+
+Custom disconnect button label
+
+#### emptyStateMessage?
+
+> `optional` **emptyStateMessage**: `string`
+
+Custom empty state message
+
+#### explorerLabel?
+
+> `optional` **explorerLabel**: `string`
+
+Custom explorer button label
+
+#### recentSectionAriaLabel?
+
+> `optional` **recentSectionAriaLabel**: `string`
+
+Custom ARIA label for recent section
+
+#### recentSectionTitle?
+
+> `optional` **recentSectionTitle**: `string`
+
+Custom recent section title
+
+#### removeAriaDescription?
+
+> `optional` **removeAriaDescription**: `string`
+
+Custom ARIA description for remove action
+
+#### removeLabel?
+
+> `optional` **removeLabel**: `string`
+
+Custom remove button label
+
+#### switchAnnouncement()?
+
+> `optional` **switchAnnouncement**: (`walletName`) => `string`
+
+Custom ARIA live region announcement for switch
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+##### Returns
+
+`string`
+
+#### switchAriaDescription?
+
+> `optional` **switchAriaDescription**: `string`
+
+Custom ARIA description for switch action
+
+#### switchLabel?
+
+> `optional` **switchLabel**: `string`
+
+Custom switch button label
