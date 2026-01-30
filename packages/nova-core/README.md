@@ -116,7 +116,7 @@ function WalletAddress({ address }: { address: string }) {
   const [copied, copy] = useCopyToClipboard();
 
   return (
-    <div className={cn('transition-all',   { 'w-12': isCollapsed } )}>
+    <div className={cn('transition-all', { 'w-12': isCollapsed })}>
       <button onClick={() => copy(address)} className="font-mono text-sm hover:bg-[var(--tuwa-bg-hover)]">
         {address.slice(0, 6)}
         {copied && ' ✓'}
