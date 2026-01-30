@@ -253,6 +253,9 @@ export function NovaConnectProvider({
   withImpersonated,
   withBalance,
   withChain,
+  alwaysShowSafe,
+  popularConnectors,
+  customConnectorGroups,
   legal,
   customization,
 }: NovaConnectProviderPropsWithCustomization) {
@@ -288,6 +291,40 @@ export function NovaConnectProvider({
   const [impersonatedAddress, setImpersonatedAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [connectedModalContentType, setConnectedModalContentType] = useState<ConnectedContentType>('main');
+
+  const defaultContextValue: NovaConnectProviderType = {
+    appChains,
+    solanaRPCUrls,
+    withImpersonated,
+    alwaysShowSafe,
+    popularConnectors,
+    customConnectorGroups,
+    withBalance,
+    withChain,
+    isConnectModalOpen,
+    setIsConnectModalOpen,
+    isConnectedModalOpen,
+    setIsConnectedModalOpen,
+    isChainsListOpen,
+    setIsChainsListOpen,
+    isChainsListOpenMobile,
+    setIsChainsListOpenMobile,
+    connectedButtonStatus,
+    setConnectedButtonStatus,
+    connectedModalContentType,
+    setConnectedModalContentType,
+    connectModalContentType,
+    setConnectModalContentType,
+    selectedAdapter,
+    setSelectedAdapter,
+    activeConnector,
+    setActiveConnector,
+    impersonatedAddress,
+    setImpersonatedAddress,
+    isConnected,
+    setIsConnected,
+    legal,
+  };
 
   // Create provider context for custom handlers
   const providerContext = useMemo(
@@ -328,72 +365,7 @@ export function NovaConnectProvider({
     return customLabelsTransform(mergedLabels, providerContext);
   }, [mergedLabels, customLabelsTransform, providerContext]);
 
-  // Create and transform context value using custom logic if provided - moved inside useMemo
-  const contextValue = useMemo(() => {
-    const defaultContextValue: NovaConnectProviderType = {
-      appChains,
-      solanaRPCUrls,
-      withImpersonated,
-      withBalance,
-      withChain,
-      isConnectModalOpen,
-      setIsConnectModalOpen,
-      isConnectedModalOpen,
-      setIsConnectedModalOpen,
-      isChainsListOpen,
-      setIsChainsListOpen,
-      isChainsListOpenMobile,
-      setIsChainsListOpenMobile,
-      connectedButtonStatus,
-      setConnectedButtonStatus,
-      connectedModalContentType,
-      setConnectedModalContentType,
-      connectModalContentType,
-      setConnectModalContentType,
-      selectedAdapter,
-      setSelectedAdapter,
-      activeConnector,
-      setActiveConnector,
-      impersonatedAddress,
-      setImpersonatedAddress,
-      isConnected,
-      setIsConnected,
-      legal,
-    };
-
-    return customContextValueTransform(defaultContextValue, providerContext);
-  }, [
-    appChains,
-    solanaRPCUrls,
-    withImpersonated,
-    withBalance,
-    withChain,
-    isConnectModalOpen,
-    setIsConnectModalOpen,
-    isConnectedModalOpen,
-    setIsConnectedModalOpen,
-    isChainsListOpen,
-    setIsChainsListOpen,
-    isChainsListOpenMobile,
-    setIsChainsListOpenMobile,
-    connectedButtonStatus,
-    setConnectedButtonStatus,
-    connectedModalContentType,
-    setConnectedModalContentType,
-    connectModalContentType,
-    setConnectModalContentType,
-    selectedAdapter,
-    setSelectedAdapter,
-    activeConnector,
-    setActiveConnector,
-    impersonatedAddress,
-    setImpersonatedAddress,
-    isConnected,
-    setIsConnected,
-    legal,
-    customContextValueTransform,
-    providerContext,
-  ]);
+  const contextValue = customContextValueTransform(defaultContextValue, providerContext);
 
   // Create component tree elements
   const errorsProviderElement = <CustomErrorsProvider customization={customization?.errors} />;
@@ -404,7 +376,6 @@ export function NovaConnectProvider({
   const connectModalElement =
     appChains || solanaRPCUrls ? (
       <ConnectModal
-        withImpersonated={withImpersonated}
         solanaRPCUrls={solanaRPCUrls}
         appChains={appChains}
         customization={customization?.modals?.connectModal}

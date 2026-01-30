@@ -5,6 +5,7 @@
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
   "description": "A private Storybook instance for developing, testing, and documenting the Nova UI component ecosystem.",
+  "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
