@@ -122,7 +122,6 @@ Configure your global styles to import Nova's design system.
 
 /* 3. Import Tailwind CSS */
 @import 'tailwindcss';
-
 ```
 
 ### Step 3: Configure Wagmi (EVM Layer)
@@ -137,10 +136,7 @@ import { mainnet, sepolia } from 'viem/chains';
 import type { Chain } from 'viem/chains';
 import { createDefaultTransports } from '@tuwaio/satellite-evm';
 
-export const appEVMChains = [
-  mainnet,
-  sepolia,
-] as readonly [Chain, ...Chain[]];
+export const appEVMChains = [mainnet, sepolia] as readonly [Chain, ...Chain[]];
 
 export const wagmiConfig = createConfig({
   connectors: [injected()], // Add other connectors here (WalletConnect, Coinbase)
@@ -148,7 +144,6 @@ export const wagmiConfig = createConfig({
   chains: appEVMChains,
   ssr: true,
 });
-
 ```
 
 ### Step 4: Create the Transaction Store (Pulsar)
@@ -191,7 +186,6 @@ export const usePulsarStore = createBoundedUseStore(
     maxTransactions: 50, // FIFO Policy to prevent localStorage bloat
   }),
 );
-
 ```
 
 ### Step 5: Setup Providers (The Architecture)
@@ -254,19 +248,11 @@ export function Providers({ children }: { children: ReactNode }) {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         {/* Layer 1: Connectivity Logic */}
-        <SatelliteConnectProvider
-          adapter={satelliteEVMAdapter(wagmiConfig)}
-          autoConnect={true}
-        >
+        <SatelliteConnectProvider adapter={satelliteEVMAdapter(wagmiConfig)} autoConnect={true}>
           <EVMWalletsWatcher wagmiConfig={wagmiConfig} />
 
           {/* Layer 2: Connectivity UI */}
-          <NovaConnectProvider
-            appChains={appEVMChains}
-            withBalance
-            withChain
-            withImpersonated
-          >
+          <NovaConnectProvider appChains={appEVMChains} withBalance withChain withImpersonated>
             {/* Layer 3: Transaction UI */}
             <NovaTransactionsProviderWrapper />
             {children}
@@ -276,7 +262,6 @@ export function Providers({ children }: { children: ReactNode }) {
     </WagmiProvider>
   );
 }
-
 ```
 
 ### Step 6: Usage in Components
@@ -297,7 +282,7 @@ export function DemoApp() {
   // Define the blockchain interaction
   const swapAction = async () => {
     // Return the tx hash (0x...) from your contract write
-    return "0x123...";
+    return '0x123...';
   };
 
   const executeSwap = async () => {
@@ -326,7 +311,6 @@ export function DemoApp() {
     </div>
   );
 }
-
 ```
 
 ---
@@ -421,7 +405,6 @@ Nova uses **CSS Variables** integrated with Tailwind. You can override them glob
 
   --tuwa-testnet-icons: #c4bfb8;
 }
-
 ```
 
 ### Internationalization

@@ -4,9 +4,6 @@ import type { Preview } from '@storybook/react-vite';
 import { defaultLabels } from '@tuwaio/nova-transactions';
 import { NovaTransactionsLabelsProvider } from '@tuwaio/nova-transactions/providers';
 
-// @ts-expect-error - theme is a valid option
-import { tuwaTheme } from './manager';
-
 const preview: Preview = {
   parameters: {
     options: {
@@ -19,9 +16,6 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
-    },
-    docs: {
-      theme: tuwaTheme,
     },
     globalTypes: {
       theme: {
