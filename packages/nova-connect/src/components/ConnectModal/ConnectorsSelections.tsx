@@ -452,12 +452,7 @@ export const ConnectorsSelections = memo(
       },
       ref,
     ) => {
-      const {
-        withImpersonated,
-        alwaysShowSafe,
-        popularConnectors: popularConnectorsProp,
-        customConnectorGroups,
-      } = useNovaConnect();
+      const { withImpersonated, popularConnectors: popularConnectorsProp, customConnectorGroups } = useNovaConnect();
 
       // Extract customization options
       const {
@@ -486,12 +481,14 @@ export const ConnectorsSelections = memo(
        * Connector filtering
        */
       const connectorGroups: Pick<ConnectorsSelectionsData, 'connectorGroups'>['connectorGroups'] = (() => {
-        const popularDesiredOrder = popularConnectorsProp || ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
+        const popularDesiredOrderRaw = popularConnectorsProp || ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
+        const popularDesiredOrder = popularDesiredOrderRaw.map((name) => formatConnectorName(name));
 
         const customGroupsKeys = customConnectorGroups ? Object.keys(customConnectorGroups) : [];
-        const customGroupsConnectorsNames = customConnectorGroups ? Object.values(customConnectorGroups).flat() : [];
+        const customGroupsConnectorsNamesRaw = customConnectorGroups ? Object.values(customConnectorGroups).flat() : [];
+        const customGroupsConnectorsNames = customGroupsConnectorsNamesRaw.map((name) => formatConnectorName(name));
 
-        const isSafeVisible = isSafeApp || alwaysShowSafe;
+        const isSafeVisible = isSafeApp;
 
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
@@ -518,7 +515,9 @@ export const ConnectorsSelections = memo(
         const customGroups: Record<string, GroupedConnector[]> = {};
         if (customConnectorGroups) {
           customGroupsKeys.forEach((key) => {
-            const desiredOrder = customConnectorGroups[key];
+            const desiredOrderRaw = customConnectorGroups[key];
+            const desiredOrder = desiredOrderRaw.map((name) => formatConnectorName(name));
+
             const groupConnectors = connectors.filter((group) => {
               const formattedName = formatConnectorName(group.name);
               return desiredOrder.includes(formattedName);
@@ -758,20 +757,7 @@ export const ConnectorsSelections = memo(
                 isTitleBold
                 customization={customization?.connectorsBlock?.installed}
               />
-              {!!connectorGroups.popular.length && (
-                <ConnectorsBlock
-                  connectors={connectorGroups.popular}
-                  title={labels.popular}
-                  selectedAdapter={selectedAdapter}
-                  onClick={onClick}
-                  solanaRPCUrls={solanaRPCUrls}
-                  setIsConnected={setIsConnected}
-                  setIsOpen={setIsOpen}
-                  appChains={appChains}
-                  isOnlyOneNetwork={isOnlyOneNetwork}
-                  customization={customization?.connectorsBlock?.popular}
-                />
-              )}
+
               {customConnectorGroups &&
                 Object.keys(customConnectorGroups).map((key) => {
                   const groupConnectors = connectorGroups[key] as GroupedConnector[];
@@ -793,6 +779,21 @@ export const ConnectorsSelections = memo(
                     />
                   );
                 })}
+
+              {!!connectorGroups.popular.length && (
+                <ConnectorsBlock
+                  connectors={connectorGroups.popular}
+                  title={labels.popular}
+                  selectedAdapter={selectedAdapter}
+                  onClick={onClick}
+                  solanaRPCUrls={solanaRPCUrls}
+                  setIsConnected={setIsConnected}
+                  setIsOpen={setIsOpen}
+                  appChains={appChains}
+                  isOnlyOneNetwork={isOnlyOneNetwork}
+                  customization={customization?.connectorsBlock?.popular}
+                />
+              )}
             </CustomConnectorsArea>
 
             {selectionsData.showImpersonated &&
