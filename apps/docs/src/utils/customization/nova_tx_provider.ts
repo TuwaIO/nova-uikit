@@ -12,6 +12,7 @@ import {
 } from './shared_styles';
 import { transactions_history_customization } from './tx_history';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nova_tx_provider_customization: NovaTransactionsProviderProps<any>['customization'] = {
   // ========== Toast Close Button Customization ==========
   toastCloseButton: {

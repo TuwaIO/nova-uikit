@@ -67,15 +67,15 @@ Nova Core is designed to work seamlessly with Tailwind CSS v4. You can use the C
 
 ```tsx
 // Using Nova design tokens in Tailwind classes
-<button className="bg-[var(--tuwa-color-primary)] text-[var(--tuwa-text-on-primary)]">
+<button className="bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]">
   Connect Wallet
 </button>
 
 // With hover states and transitions
 <div className="
-  p-[var(--tuwa-spacing-md)]
+  p-4
   bg-[var(--tuwa-bg-secondary)]
-  hover:bg-[var(--tuwa-bg-hover)]
+  hover:bg-[var(--tuwa-bg-muted)]
   transition-colors
 ">
   Card Content
@@ -140,19 +140,17 @@ Override design tokens in your CSS to match your brand:
 
 /* Your custom theme overrides */
 :root {
-  /* Brand Colors */
-  --tuwa-color-primary: #3b82f6; /* Blue-500 */
-  --tuwa-color-primary-hover: #2563eb; /* Blue-600 */
+  /* Text Colors */
+  --tuwa-text-primary: #0f172a;
+  --tuwa-text-secondary: #64748b;
+  --tuwa-text-tertiary: #94a3b8;
+  --tuwa-text-accent: #3b82f6;
+  --tuwa-text-on-accent: #ffffff;
 
   /* Background System */
   --tuwa-bg-primary: #ffffff;
   --tuwa-bg-secondary: #f8fafc;
-  --tuwa-bg-hover: #f1f5f9;
-
-  /* Text Colors */
-  --tuwa-text-primary: #0f172a;
-  --tuwa-text-secondary: #64748b;
-  --tuwa-text-muted: #94a3b8;
+  --tuwa-bg-muted: #f1f5f9;
 
   /* Border System */
   --tuwa-border-primary: #e2e8f0;
@@ -167,12 +165,13 @@ Nova Core includes built-in dark mode support:
 ```css
 /* Dark mode overrides */
 .dark {
-  --tuwa-color-primary: #60a5fa; /* Blue-400 */
-  --tuwa-bg-primary: #0f172a; /* Slate-900 */
-  --tuwa-bg-secondary: #1e293b; /* Slate-800 */
-  --tuwa-text-primary: #f1f5f9; /* Slate-100 */
-  --tuwa-text-secondary: #cbd5e1; /* Slate-300 */
-  --tuwa-border-primary: #374151; /* Gray-700 */
+  --tuwa-text-primary: #f1f5f9;
+  --tuwa-text-secondary: #9ca3af;
+  --tuwa-text-accent: #60a5fa;
+  --tuwa-bg-primary: #0f172a;
+  --tuwa-bg-secondary: #1e293b;
+  --tuwa-bg-muted: #334155;
+  --tuwa-border-primary: #374151;
 }
 ```
 

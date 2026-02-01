@@ -7,6 +7,7 @@ import { ICON_BUTTON_STYLES, SHARED_STYLES } from './shared_styles';
  * Custom theme customization for TransactionsHistory.
  * This can be used both in ConnectedModal and standalone NovaTransactionsProvider.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transactions_history_customization: TransactionsHistoryCustomization<any> = {
   classNames: {
     // Container
