@@ -238,7 +238,7 @@ const DefaultLoadingState: React.FC<LoadingStateProps> = ({ labels, className })
       animate="animate"
       exit="exit"
       className={cn(
-        'novacon:animate-pulse novacon:rounded-xl novacon:h-5 novacon:w-24 novacon:bg-[var(--tuwa-bg-muted)]',
+        'novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-corners)] novacon:h-5 novacon:w-24 novacon:bg-[var(--tuwa-bg-muted)]',
         className,
       )}
       role="status"

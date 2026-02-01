@@ -42,6 +42,8 @@
   --tuwa-standart-button-hover: theme('colors.gray.200');
 
   --tuwa-testnet-icons: #c4bfb8;
+
+  --tuwa-rounded-corners: 4px;
 }
 
 .dark {

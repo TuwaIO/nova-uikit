@@ -92,7 +92,7 @@ function HistoryPlaceholder({
   classNames,
 }: CustomPlaceholderProps & { classNames?: { title?: string; message?: string } }) {
   return (
-    <div className={cn('novatx:rounded-lg novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}>
+    <div className={cn('novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center', className)}>
       <h4 className={cn('novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]', classNames?.title)}>{title}</h4>
       <p className={cn('novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]', classNames?.message)}>
         {message}
@@ -158,7 +158,7 @@ export function TransactionsHistory<T extends Transaction>({
       return (
         <div
           className={cn(
-            'NovaCustomScroll novatx:max-h-[400px] novatx:overflow-y-auto novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
+            'NovaCustomScroll novatx:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >

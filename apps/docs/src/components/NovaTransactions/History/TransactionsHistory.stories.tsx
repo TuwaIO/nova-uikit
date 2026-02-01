@@ -150,7 +150,7 @@ export const WithCustomPlaceholder: Story = {
     customization: {
       components: {
         Placeholder: ({ title, message }) => (
-          <div className="rounded-xl border-2 border-dashed border-purple-300 bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-12 text-center">
+          <div className="rounded-[var(--tuwa-rounded-corners)] border-2 border-dashed border-purple-300 bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-12 text-center">
             <div className="mb-4 text-6xl">🔗</div>
             <h4 className="mb-2 text-xl font-bold text-purple-600">{title}</h4>
             <p className="italic text-purple-500">{message}</p>
@@ -171,7 +171,7 @@ export const WithCustomHistoryItem: Story = {
     customization: {
       components: {
         HistoryItem: ({ tx }) => (
-          <div className="m-2 rounded-r-lg border-l-4 border-green-500 bg-gradient-to-r from-green-500/10 to-blue-500/10 p-4">
+          <div className="m-2 rounded-r-[var(--tuwa-rounded-corners)] border-l-4 border-green-500 bg-gradient-to-r from-green-500/10 to-blue-500/10 p-4">
             <div className="font-semibold text-green-700">Custom Item: {tx.type}</div>
           </div>
         ),

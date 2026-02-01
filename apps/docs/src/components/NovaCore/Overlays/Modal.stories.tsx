@@ -31,14 +31,14 @@ type Story = StoryObj<typeof Dialog>;
 
 // Shared button styles using existing CSS variables
 const buttonBaseStyles =
-  'cursor-pointer px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
+  'cursor-pointer px-4 py-2 rounded-[var(--tuwa-rounded-corners)] font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
 const primaryButtonStyles = `${buttonBaseStyles} bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)] text-[var(--tuwa-text-on-accent)] hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)] focus:ring-[var(--tuwa-button-gradient-from)]`;
 
 const secondaryButtonStyles = `${buttonBaseStyles} bg-[var(--tuwa-standart-button-bg)] text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-standart-button-hover)] focus:ring-[var(--tuwa-border-primary)]`;
 
 const inputStyles =
-  'w-full rounded-lg border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)] px-3 py-2 text-sm text-[var(--tuwa-text-primary)] placeholder:text-[var(--tuwa-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--tuwa-text-accent)] focus:border-[var(--tuwa-text-accent)] transition-colors';
+  'w-full rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)] px-3 py-2 text-sm text-[var(--tuwa-text-primary)] placeholder:text-[var(--tuwa-text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[var(--tuwa-text-accent)] focus:border-[var(--tuwa-text-accent)] transition-colors';
 
 /**
  * Basic usage example with a trigger and content.
@@ -107,11 +107,11 @@ export const Controlled: Story = {
               </DialogDescription>
               <p className="text-[var(--tuwa-text-primary)] text-sm">
                 You can programmatically open and close this modal using the{' '}
-                <code className="bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-accent)] px-1.5 py-0.5 rounded text-xs font-mono">
+                <code className="bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-accent)] px-1.5 py-0.5 rounded-[var(--tuwa-rounded-corners)] text-xs font-mono">
                   open
                 </code>{' '}
                 prop and{' '}
-                <code className="bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-accent)] px-1.5 py-0.5 rounded text-xs font-mono">
+                <code className="bg-[var(--tuwa-bg-muted)] text-[var(--tuwa-text-accent)] px-1.5 py-0.5 rounded-[var(--tuwa-rounded-corners)] text-xs font-mono">
                   onOpenChange
                 </code>{' '}
                 callback.

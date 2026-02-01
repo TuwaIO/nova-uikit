@@ -50,7 +50,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
   return (
     <div
       className={cn(
-        'novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
+        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
         classNames?.container,
         className,
       )}

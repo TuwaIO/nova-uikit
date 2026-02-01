@@ -276,7 +276,7 @@ const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, ComponentProps
         className={cn(
           // Base styles
           'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
-          'novacon:rounded-md novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
+          'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           // Interactive states
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
@@ -441,7 +441,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
       : cn(
           // Default item styles
           'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
-          'novacon:rounded-md novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
+          'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
           'novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',

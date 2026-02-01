@@ -579,7 +579,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       ? customization.classNames.input({ hasError: !!connectionError, hasInteracted })
       : cn(
           // Base layout and spacing
-          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
+          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-[var(--tuwa-rounded-corners)]',
           // Theme colors
           'novacon:bg-[var(--tuwa-bg-secondary)]',
           'novacon:border novacon:border-[var(--tuwa-border-primary)]',

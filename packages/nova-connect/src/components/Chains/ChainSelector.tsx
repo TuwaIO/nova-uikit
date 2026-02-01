@@ -542,7 +542,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
     ? customization.classNames.button({ isMobile, isOpen: isChainsListOpen, hasMultipleChains })
     : cn(
         'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
-        'novacon:rounded-xl novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
+        'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
         'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
         'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-offset-2 novacon:focus:ring-offset-[var(--tuwa-bg-primary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
         'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',

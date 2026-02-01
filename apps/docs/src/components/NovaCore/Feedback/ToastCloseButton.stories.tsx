@@ -33,7 +33,7 @@ const meta: Meta<typeof ToastCloseButton> = {
   decorators: [
     // Decorator to provide a context for the absolute positioning of the button
     (Story) => (
-      <div className="relative w-64 h-20 bg-[var(--tuwa-bg-primary)] border border-[var(--tuwa-border-primary)] rounded-md flex items-center justify-center">
+      <div className="relative w-64 h-20 bg-[var(--tuwa-bg-primary)] border border-[var(--tuwa-border-primary)] rounded-[var(--tuwa-rounded-corners)] flex items-center justify-center">
         <span className="text-[var(--tuwa-text-primary)]">Toast Content Here</span>
         <Story />
       </div>

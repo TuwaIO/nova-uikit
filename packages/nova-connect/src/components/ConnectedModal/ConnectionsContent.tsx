@@ -598,7 +598,7 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, CustomActiveSe
         </h3>
         <div
           className={cn(
-            'novacon:overflow-hidden novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)]',
+            'novacon:overflow-hidden novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)]',
             classNames?.wrapper,
           )}
         >
@@ -696,7 +696,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             chainId={chainId}
             size={40}
             badgeSize={20}
-            imageClassName="novacon:rounded-xl"
+            imageClassName="novacon:rounded-[var(--tuwa-rounded-corners)]"
             wrapperClassName={classNames?.iconWrapper}
             badgeClassName={classNames?.iconBadge}
           />
@@ -748,7 +748,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <button
           onClick={onDisconnect}
           className={cn(
-            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
@@ -799,7 +799,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             chainId={chainId}
             size={32}
             badgeSize={16}
-            imageClassName="novacon:rounded-xl"
+            imageClassName="novacon:rounded-[var(--tuwa-rounded-corners)]"
             wrapperClassName={classNames?.iconWrapper}
             badgeClassName={classNames?.iconBadge}
           />
@@ -825,7 +825,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             onDisconnect(e);
           }}
           className={cn(
-            'novacon:cursor-pointer novacon:rounded-lg novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
@@ -846,7 +846,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
       <div
         ref={ref}
         className={cn(
-          'novacon:flex novacon:items-center novacon:justify-between novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:p-3',
+          'novacon:flex novacon:items-center novacon:justify-between novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:p-3',
           classNames?.container,
           className,
         )}
@@ -857,7 +857,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
             icon={icon}
             size={32}
             badgeSize={16}
-            imageClassName="novacon:rounded-lg"
+            imageClassName="novacon:rounded-[var(--tuwa-rounded-corners)]"
             wrapperClassName={classNames?.iconWrapper}
             badgeClassName={classNames?.iconBadge}
           />
@@ -883,7 +883,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               onClick={onConnect}
               disabled={isConnecting}
               className={cn(
-                'novacon:relative novacon:cursor-pointer novacon:rounded-lg novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
+                'novacon:relative novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
                 isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
                 classNames?.connectButton,
               )}
@@ -913,7 +913,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
             onClick={onRemove}
             disabled={isConnecting}
             className={cn(
-              'novacon:cursor-pointer novacon:rounded-lg novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
+              'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
               isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
               classNames?.removeButton,
             )}
@@ -1410,7 +1410,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             setIsConnectModalOpen(true);
           }}
           className={cn(
-            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-xl novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
+            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
             customization?.classNames?.addWalletButton?.({}),
           )}
         >

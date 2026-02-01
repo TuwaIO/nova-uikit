@@ -4,8 +4,8 @@
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { formatConnectorName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import { detectSafeApp, formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
+import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { InitialChains } from '../../types';
@@ -475,20 +475,35 @@ export const ConnectorsSelections = memo(
       const isTouch = useMemo(() => isTouchDevice(), []);
 
       /**
+       * Safe App detection state
+       */
+      const [isSafeVisible, setIsSafeVisible] = useState(false);
+
+      useEffect(() => {
+        let isMounted = true;
+        detectSafeApp().then((isSafe) => {
+          if (isMounted) {
+            setIsSafeVisible(isSafe);
+          }
+        });
+        return () => {
+          isMounted = false;
+        };
+      }, []);
+
+      /**
        * Memoized connector filtering
        */
       /**
        * Connector filtering
        */
-      const connectorGroups: Pick<ConnectorsSelectionsData, 'connectorGroups'>['connectorGroups'] = (() => {
+      const connectorGroups = useMemo((): Pick<ConnectorsSelectionsData, 'connectorGroups'>['connectorGroups'] => {
         const popularDesiredOrderRaw = popularConnectorsProp || ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
         const popularDesiredOrder = popularDesiredOrderRaw.map((name) => formatConnectorName(name));
 
         const customGroupsKeys = customConnectorGroups ? Object.keys(customConnectorGroups) : [];
         const customGroupsConnectorsNamesRaw = customConnectorGroups ? Object.values(customConnectorGroups).flat() : [];
         const customGroupsConnectorsNames = customGroupsConnectorsNamesRaw.map((name) => formatConnectorName(name));
-
-        const isSafeVisible = isSafeApp;
 
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
@@ -540,7 +555,7 @@ export const ConnectorsSelections = memo(
           impersonated: impersonatedConnector,
           ...customGroups,
         };
-      })();
+      }, [connectors, popularConnectorsProp, customConnectorGroups, isSafeVisible]);
 
       /**
        * Memoized selections data
@@ -687,7 +702,7 @@ export const ConnectorsSelections = memo(
 
         emptyState:
           customization?.classNames?.emptyState?.({ selectionsData }) ??
-          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-xl novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
+          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
 
         disclaimerSection: customization?.classNames?.disclaimerSection?.({ selectionsData }) ?? '',
       };

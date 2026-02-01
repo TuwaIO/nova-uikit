@@ -541,7 +541,7 @@ export const ConnectorsBlock = memo(
 
         emptyState:
           customization?.classNames?.emptyState?.({ blockData }) ??
-          'novacon:flex novacon:items-center novacon:justify-center novacon:p-4 novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-lg',
+          'novacon:flex novacon:items-center novacon:justify-center novacon:p-4 novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-[var(--tuwa-rounded-corners)]',
       };
 
       // Cleanup effect

@@ -128,7 +128,7 @@ export const WithCustomRender: Story = {
       txKey: 'gelato_task_id_abcdef123456',
     }),
     renderHashLink: (props) => (
-      <div className="rounded bg-purple-500/30 px-2 py-1 text-purple-900">
+      <div className="rounded-[var(--tuwa-rounded-corners)] bg-purple-500/30 px-2 py-1 text-purple-900">
         Custom ✨{' '}
         <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
           {props.label}

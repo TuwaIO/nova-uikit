@@ -696,7 +696,7 @@ export const ConnectCard = memo(
       const containerClasses = customization?.classNames?.container
         ? customization.classNames.container({ cardData })
         : cn(
-            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-xl novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
+            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
             className,
             'novacon:w-full novacon:h-auto',
             'novacon:flex novacon:items-center novacon:justify-between',

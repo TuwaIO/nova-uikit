@@ -63,7 +63,7 @@ export const Interactive: Story = {
     return (
       <div className="w-96 space-y-4">
         <TxProgressIndicator {...args} {...states[status].props} />
-        <div className="flex flex-wrap justify-center gap-2 rounded-md bg-[var(--tuwa-bg-muted)] p-2">
+        <div className="flex flex-wrap justify-center gap-2 rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-muted)] p-2">
           {Object.entries(states).map(([key, { label }]) => (
             <button key={key} onClick={() => setStatus(key as keyof typeof states)}>
               {label}

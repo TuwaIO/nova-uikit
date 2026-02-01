@@ -378,7 +378,7 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
     const containerClasses = cn(
       customization?.classNames?.container?.({ compact }) ??
         cn(
-          'novacon:p-2 novacon:rounded-xl novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:flex novacon:flex-col',
+          'novacon:p-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:flex novacon:flex-col',
           compact ? 'novacon:gap-2 novacon:sm:p-3 novacon:sm:gap-3' : 'novacon:gap-2 novacon:sm:p-4 novacon:sm:gap-4',
         ),
       className,

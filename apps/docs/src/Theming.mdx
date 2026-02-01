@@ -235,7 +235,7 @@ function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
         'bg-gradient-to-r from-purple-600 to-blue-600',
         'hover:from-purple-700 hover:to-blue-700',
         'text-white font-semibold',
-        'px-6 py-3 rounded-xl',
+        'px-6 py-3 rounded-[var(--tuwa-rounded-corners)]',
         'shadow-lg hover:shadow-xl',
         'transition-all duration-200',
         className,
@@ -321,7 +321,7 @@ function CustomTransactionStatus({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 p-4 rounded-lg',
+        'flex items-center gap-3 p-4 rounded-[var(--tuwa-rounded-corners)]',
         'border border-[var(--tuwa-border-primary)]',
         {
           'bg-[var(--tuwa-success-bg)] border-[var(--tuwa-success-accent)]': status === 'success',

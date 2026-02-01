@@ -58,10 +58,10 @@ export const Interactive: Story = {
 
     return (
       <div className="w-96 space-y-4">
-        <div className="flex justify-center rounded-lg bg-[var(--tuwa-bg-secondary)] p-4">
+        <div className="flex justify-center rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-secondary)] p-4">
           <TxStatusVisual {...args} {...states[status].props} />
         </div>
-        <div className="flex flex-wrap justify-center gap-2 rounded-md bg-[var(--tuwa-bg-muted)] p-2">
+        <div className="flex flex-wrap justify-center gap-2 rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-muted)] p-2">
           {Object.entries(states).map(([key, { label }]) => (
             <button key={key} onClick={() => setStatus(key as keyof typeof states)}>
               {label}

@@ -334,8 +334,8 @@ const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, LoadingPlaceholderP
     const { statusData: _statusData, ...restProps } = props;
     return (
       <div ref={ref} className={className} {...restProps}>
-        <div className="novacon:animate-pulse novacon:rounded-xl novacon:h-32 novacon:w-32 novacon:bg-[var(--tuwa-bg-muted)]" />
-        <div className="novacon:animate-pulse novacon:rounded-xl novacon:h-6 novacon:w-48 novacon:bg-[var(--tuwa-bg-muted)]" />
+        <div className="novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-corners)] novacon:h-32 novacon:w-32 novacon:bg-[var(--tuwa-bg-muted)]" />
+        <div className="novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-corners)] novacon:h-6 novacon:w-48 novacon:bg-[var(--tuwa-bg-muted)]" />
       </div>
     );
   },
@@ -763,7 +763,7 @@ export const Connecting = memo(
                 <summary className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:cursor-pointer novacon:hover:text-[var(--tuwa-text-primary)] novacon:transition-colors">
                   {labels.copyRawError}
                 </summary>
-                <pre className="novacon:mt-2 novacon:p-3 novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-md novacon:text-xs novacon:font-mono novacon:text-[var(--tuwa-text-secondary)] novacon:overflow-auto novacon:max-h-32">
+                <pre className="novacon:mt-2 novacon:p-3 novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:text-xs novacon:font-mono novacon:text-[var(--tuwa-text-secondary)] novacon:overflow-auto novacon:max-h-32">
                   {JSON.stringify(connectionError, null, 2)}
                 </pre>
               </CustomErrorDetails>
