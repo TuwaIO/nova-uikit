@@ -4,7 +4,7 @@
  */
 
 import { deepMerge } from '@tuwaio/nova-core';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { ComponentType, ReactNode, useMemo, useState } from 'react';
 
@@ -49,7 +49,7 @@ type ProviderContext = {
   /** Active wallet instance */
   activeConnection: BaseConnector | undefined;
   /** Current wallet connection error */
-  connectionError: string | undefined;
+  connectionError: TuwaErrorState | undefined;
   /** All modal and UI states */
   modalStates: {
     isConnectModalOpen: boolean;

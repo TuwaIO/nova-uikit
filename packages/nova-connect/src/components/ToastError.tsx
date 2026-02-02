@@ -4,7 +4,8 @@
 
 import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useState } from 'react';
+import type { TuwaErrorState } from '@tuwaio/orbit-core';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -22,7 +23,7 @@ type CustomTitleProps = {
 };
 
 type CustomDescriptionProps = {
-  rawError: string;
+  rawError: string | TuwaErrorState;
   descriptionId: string;
   className?: string;
 };
@@ -60,7 +61,7 @@ export type ToastErrorCustomization = {
     /** Function to generate title classes */
     title?: (params: { title: string }) => string;
     /** Function to generate description classes */
-    description?: (params: { rawError: string }) => string;
+    description?: (params: { rawError: string | TuwaErrorState }) => string;
     /** Function to generate button classes */
     button?: (params: { isCopied: boolean; disabled: boolean }) => string;
     /** Function to generate icon classes */
@@ -84,8 +85,8 @@ export type ToastErrorCustomization = {
 export interface ToastErrorProps extends Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'aria-live' | 'style'> {
   /** Error title to display */
   title: string;
-  /** Raw error message to display and copy */
-  rawError: string;
+  /** Raw error message or state to display and copy */
+  rawError: string | TuwaErrorState;
   /** Custom CSS classes for the container */
   className?: string;
   /** Custom ARIA label for the error container */
@@ -128,6 +129,7 @@ const DefaultTitle = ({ title, titleId, className }: CustomTitleProps) => {
 };
 
 const DefaultDescription = ({ rawError, descriptionId, className }: CustomDescriptionProps) => {
+  const displayMessage = typeof rawError === 'string' ? rawError : rawError.message;
   return (
     <p
       id={descriptionId}
@@ -137,7 +139,7 @@ const DefaultDescription = ({ rawError, descriptionId, className }: CustomDescri
       )}
       role="text"
     >
-      {rawError}
+      {displayMessage}
     </p>
   );
 };
@@ -202,6 +204,12 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       onKeyDown: customOnKeyDownHandler = defaultKeyDownHandler,
     } = customization?.handlers ?? {};
 
+    // Serialize error for clipboard
+    const errorToCopy = useMemo(() => {
+      if (typeof rawError === 'string') return rawError;
+      return JSON.stringify(rawError.raw, null, 2);
+    }, [rawError]);
+
     // Handle copy with error handling and callback
     const handleCopy = useCallback(
       async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -209,14 +217,14 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
         e.preventDefault();
 
         try {
-          await copy(rawError);
+          await copy(errorToCopy);
           onCopyComplete?.(true);
         } catch (error) {
           console.error('Failed to copy error:', error);
           onCopyComplete?.(false);
         }
       },
-      [copy, rawError, onCopyComplete],
+      [copy, errorToCopy, onCopyComplete],
     );
 
     // Handle keyboard interaction for copy button
@@ -274,7 +282,7 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       : undefined;
 
     // Generate button classes
-    const disabled = !rawError.trim();
+    const disabled = !errorToCopy.trim();
     const buttonClasses = customization?.classNames?.button
       ? customization.classNames.button({ isCopied, disabled })
       : cn(
@@ -320,7 +328,7 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       type: 'button' as const,
       'aria-label': isCopied ? `${labels.copied} ${labels.copyRawError}` : labels.copyRawError,
       'aria-describedby': `${titleId} ${descriptionId}`,
-      disabled: !rawError.trim(),
+      disabled: !errorToCopy.trim(),
     };
 
     return (

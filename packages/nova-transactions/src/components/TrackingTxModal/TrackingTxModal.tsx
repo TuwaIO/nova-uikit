@@ -135,7 +135,7 @@ export function TrackingTxModal<T extends Transaction>({
 
   const isProcessing = isInitializing || isPending;
   const isSucceed = txStatus === TransactionStatus.Success;
-  const isFailed = activeTx?.isError || !!initialTx?.errorMessage;
+  const isFailed = activeTx?.isError || !!initialTx?.error;
   const isReplaced = txStatus === TransactionStatus.Replaced;
 
   const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
@@ -254,10 +254,10 @@ export function TrackingTxModal<T extends Transaction>({
               <TxInfoBlock tx={txToDisplay} adapter={adapter} customization={customization?.infoBlockCustomization} />
             )}
             {CustomErrorBlock ? (
-              <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+              <CustomErrorBlock error={activeTx?.error || initialTx?.error} />
             ) : (
               <TxErrorBlock
-                error={activeTx?.errorMessage || initialTx?.errorMessage}
+                error={activeTx?.error || initialTx?.error}
                 className={customization?.errorBlockCustomization?.className}
                 classNames={customization?.errorBlockCustomization?.classNames}
               />

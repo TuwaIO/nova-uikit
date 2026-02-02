@@ -3,7 +3,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { isAddress, OrbitAdapter } from '@tuwaio/orbit-core';
+import { isAddress, normalizeError, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -455,7 +455,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           if (hasInteracted || immediate) {
             const error = await validateValue(value);
             if (error) {
-              setConnectionError(error);
+              setConnectionError(normalizeError(new Error(error)));
             } else {
               resetConnectionError();
             }
@@ -534,7 +534,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       // Immediate validation on blur
       const error = await validateValue(inputValue);
       if (error) {
-        setConnectionError(error);
+        setConnectionError(normalizeError(new Error(error)));
       } else {
         resetConnectionError();
       }
@@ -677,7 +677,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         {/* Error message display */}
         {connectionError && (
           <CustomErrorMessage className={errorMessageClasses} id={errorId} role="alert" aria-live="polite">
-            {connectionError}
+            {connectionError.message}
           </CustomErrorMessage>
         )}
       </CustomContainer>

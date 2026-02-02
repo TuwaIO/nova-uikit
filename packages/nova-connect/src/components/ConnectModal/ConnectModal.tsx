@@ -18,6 +18,7 @@ import {
   impersonatedHelpers,
   isAddress,
   OrbitAdapter,
+  TuwaErrorState,
   waitFor,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
@@ -76,7 +77,7 @@ export interface ConnectModalData {
   /** Whether modal is open */
   isOpen: boolean;
   /** Connection error if any */
-  error: Error | string | null | undefined;
+  error: Error | TuwaErrorState | null | undefined;
   /** Available connectors */
   connectors: Record<string, Connector[]>;
   /** Filtered connectors for current adapter */
@@ -587,15 +588,6 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
 
   const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
 
-  // Convert error to Error object if it's a string
-  const normalizedError = (() => {
-    if (!connectionError) return null;
-    if (typeof connectionError === 'string') {
-      return new Error(connectionError);
-    }
-    return connectionError;
-  })();
-
   // Memoize modal data for customization context
   const modalData = useMemo<ConnectModalData>(
     () => ({
@@ -605,7 +597,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       impersonatedAddress,
       isConnected,
       isOpen: isConnectModalOpen,
-      error: normalizedError,
+      error: connectionError ?? null,
       connectors: connectors!,
       filteredConnectors,
       labels,
@@ -617,7 +609,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       impersonatedAddress,
       isConnected,
       isConnectModalOpen,
-      normalizedError,
+      connectionError,
       connectors,
       filteredConnectors,
       labels,
