@@ -13,8 +13,8 @@ const getItemStyles = (isActive: boolean) =>
           SHARED_STYLES.bgAccent,
           SHARED_STYLES.textAccentDark,
           SHARED_STYLES.fontMonoMedium,
-          'focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-bg-secondary)]',
-          'focus:bg-[var(--tuwa-text-accent)] focus:outline-none',
+          SHARED_STYLES.focusWithOffset('var(--tuwa-bg-secondary)'),
+          'focus:bg-[var(--tuwa-text-accent)]',
         )
       : cn(SHARED_STYLES.textForeground, 'hover:bg-[var(--tuwa-bg-muted)]', 'active:bg-[var(--tuwa-text-accent)]'),
   );
@@ -48,7 +48,7 @@ export const chain_list_customization: ChainSelectorCustomization = {
         cn(
           BUTTON_STYLES.ghost,
           'text-md',
-          'focus:ring-offset-[var(--tuwa-bg-primary)]',
+          SHARED_STYLES.focusWithOffset('var(--tuwa-bg-primary)'),
           isOpen ? cn(SHARED_STYLES.borderAccent, 'ring-1 ring-[var(--tuwa-text-accent)]') : '',
         ),
       arrowWrapper: () => '[&_svg]:text-[var(--tuwa-text-accent)]',

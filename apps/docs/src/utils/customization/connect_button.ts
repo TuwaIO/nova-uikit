@@ -14,7 +14,7 @@ export const connect_button_customization: ConnectButtonCustomization = {
         BUTTON_STYLES.base,
         'px-4 py-2 text-md',
         SHARED_STYLES.fontMono,
-        'focus:ring-offset-[var(--tuwa-bg-primary)]',
+        SHARED_STYLES.focusWithOffset('var(--tuwa-bg-primary)'),
         'disabled:opacity-50 disabled:cursor-not-allowed',
         isConnected
           ? cn(
@@ -22,9 +22,8 @@ export const connect_button_customization: ConnectButtonCustomization = {
               SHARED_STYLES.textForeground,
               SHARED_STYLES.borderDefault,
               'hover:bg-[var(--tuwa-border-primary)]',
-              SHARED_STYLES.baseFocus,
             )
-          : cn(SHARED_STYLES.bgAccent, SHARED_STYLES.textAccentDark, 'hover:opacity-90', SHARED_STYLES.baseFocus),
+          : cn(SHARED_STYLES.bgAccent, SHARED_STYLES.textAccentDark, 'hover:opacity-90'),
       );
     },
   },

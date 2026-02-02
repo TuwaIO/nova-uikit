@@ -124,8 +124,7 @@ export const connected_modal_customization: ConnectedModalCustomization = {
                   loading && 'cursor-wait opacity-75',
                   !isClickable && !disabled && !loading && 'cursor-default',
                   // Focus states
-                  'focus-visible:outline-none focus-visible:ring-2',
-                  'focus-visible:ring-[var(--tuwa-text-accent)] focus-visible:ring-offset-2',
+                  SHARED_STYLES.focusVisible,
                 ),
               // Chevron color
               chevronContainer: () => '[&_svg]:text-[var(--tuwa-text-tertiary)]',
@@ -163,8 +162,7 @@ export const connected_modal_customization: ConnectedModalCustomization = {
                   loading && 'cursor-wait opacity-75',
                   !isClickable && !disabled && !loading && 'cursor-default',
                   // Focus states
-                  'focus-visible:outline-none focus-visible:ring-2',
-                  'focus-visible:ring-[var(--tuwa-text-accent)] focus-visible:ring-offset-2',
+                  SHARED_STYLES.focusVisible,
                 ),
               // Chevron color
               chevronContainer: () => '[&_svg]:text-[var(--tuwa-text-tertiary)]',

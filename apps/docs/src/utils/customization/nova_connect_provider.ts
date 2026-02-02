@@ -85,6 +85,42 @@ export const nova_connect_provider_customization: NovaConnectProviderCustomizati
           },
         },
 
+        // NetworkSelections - "Select one of available network" screen
+        networkSelections: {
+          classNames: {
+            container: () => cn('flex flex-col gap-4', SHARED_STYLES.textForeground),
+            title: () => cn(SHARED_STYLES.fontMono, SHARED_STYLES.textForeground, 'mb-2'),
+            networkList: ({ selectionsData }) =>
+              cn(
+                'flex NovaCustomScroll',
+                selectionsData.isTouch
+                  ? 'flex-row overflow-x-auto gap-3 pb-4 px-1'
+                  : 'flex-col max-h-[310px] overflow-y-auto gap-2',
+              ),
+            networkItem: ({ selectionsData }) => cn({ 'flex-shrink-0': selectionsData.isTouch }),
+            networkIcon: () => 'leading-[0]',
+            errorContainer: () =>
+              cn(
+                'flex flex-col items-center justify-center p-8 text-center rounded-[4px]',
+                SHARED_STYLES.borderDefault,
+                SHARED_STYLES.bgBase,
+                SHARED_STYLES.textSecondary,
+              ),
+            errorIcon: () => cn(SHARED_STYLES.textAccent, 'mb-3'),
+            errorTitle: () => cn(SHARED_STYLES.fontMonoMedium, 'text-lg mb-1', SHARED_STYLES.textForeground),
+            errorMessage: () => cn(SHARED_STYLES.fontMono, 'text-sm'),
+          },
+          connectCard: connect_card_customization,
+          disclaimer: {
+            classNames: {
+              container: () => cn('p-2 rounded-[4px] flex flex-col gap-2 sm:p-4 sm:gap-4', SHARED_STYLES.borderDefault),
+              title: () => cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textForeground, 'text-md'),
+              description: () => cn(SHARED_STYLES.fontMono, SHARED_STYLES.textSecondary, 'text-[12px]'),
+              button: () => cn(BUTTON_STYLES.ghost, 'px-2 min-h-[40px] text-sm'),
+            },
+          },
+        },
+
         aboutWallets: {
           classNames: {
             section: () => cn('relative m-[-16px]', SHARED_STYLES.bgBase),
@@ -100,7 +136,8 @@ export const nova_connect_provider_customization: NovaConnectProviderCustomizati
             indicator: ({ isActive }) =>
               cn(
                 'cursor-pointer h-2 rounded-full transition-all duration-300',
-                'focus:outline-none focus:ring-2 focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-2 hover:bg-[var(--tuwa-text-accent)]',
+                SHARED_STYLES.baseFocus,
+                'hover:bg-[var(--tuwa-text-accent)]',
                 isActive ? 'bg-[var(--tuwa-text-accent)] w-6' : 'bg-[var(--tuwa-border-primary)] w-2',
               ),
           },
@@ -147,33 +184,6 @@ export const nova_connect_provider_customization: NovaConnectProviderCustomizati
         // Connecting Screen
         connecting: {
           classNames: {
-            container: () => 'flex flex-col gap-4 items-center justify-center w-full',
-            statusContainer: ({ statusData }) =>
-              cn(
-                'relative flex items-center justify-center',
-                'min-w-[110px] min-h-[110px] md:min-w-[150px] md:min-h-[150px]',
-                'border-2 rounded-full p-4 md:p-6',
-                'transition-all duration-300 ease-in-out',
-                statusData.state === 'error'
-                  ? 'border-[var(--tuwa-error-icon)] bg-[var(--tuwa-error-icon)]/5'
-                  : statusData.state === 'success'
-                    ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-text-accent)]/5'
-                    : 'border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)]',
-              ),
-            spinner: () =>
-              cn(
-                'absolute animate-spin rounded-full -inset-[2px]',
-                'w-[calc(100%_+_4px)] h-[calc(100%_+_4px)]',
-                'border-2 border-[var(--tuwa-text-accent)] border-t-transparent',
-              ),
-            statusIcon: ({ statusData }) =>
-              cn(
-                'absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center',
-                statusData.state === 'success' ? 'bg-[var(--tuwa-text-accent)]' : 'bg-[var(--tuwa-error-icon)]',
-              ),
-            walletIconContainer: () =>
-              '[&_svg]:w-[60px]! [&_svg]:h-[auto]! md:[&_svg]:w-[80px]! [&_img]:w-[60px]! [&_img]:h-[auto]! md:[&_img]:w-[80px]! leading-[0]',
-            messageContainer: () => 'text-center space-y-2 max-w-md',
             statusMessage: ({ statusData }) =>
               cn(
                 SHARED_STYLES.fontMonoMedium,
@@ -186,21 +196,6 @@ export const nova_connect_provider_customization: NovaConnectProviderCustomizati
               ),
             errorMessage: () =>
               cn(SHARED_STYLES.fontMono, 'text-sm text-center leading-relaxed', SHARED_STYLES.textError),
-            errorDetails: () => 'mt-3 text-left',
-            loadingPlaceholder: () =>
-              cn(
-                'flex flex-col gap-4 items-center justify-center w-full py-8',
-                '[&>div]:bg-[var(--tuwa-bg-secondary)]',
-              ),
-          },
-          walletIcon: {
-            classNames: {
-              container: ({ isLoading, showLoading }) =>
-                cn({
-                  'animate-pulse bg-[var(--tuwa-bg-secondary)]': showLoading && isLoading,
-                }),
-              loadingOverlay: () => 'bg-[var(--tuwa-bg-muted)]',
-            },
           },
         },
       },

@@ -15,7 +15,7 @@ export const balance_display_customization: BalanceDisplayCustomization = {
         'cursor-pointer ml-2 p-1 rounded-full transition-colors',
         'hover:bg-[var(--tuwa-bg-muted)]',
         SHARED_STYLES.textSecondary,
-        'focus:outline-none focus:ring-2 focus:ring-[var(--tuwa-text-accent)]',
+        SHARED_STYLES.baseFocus,
         showSuccess && 'text-[var(--tuwa-text-accent)]',
         isLoading && 'animate-spin',
       ),

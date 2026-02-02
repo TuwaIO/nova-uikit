@@ -41,15 +41,20 @@ export const SHARED_STYLES = {
   // ─────────────────────────────────────────────────────────────────────────────
   // Focus States
   // ─────────────────────────────────────────────────────────────────────────────
-  baseFocus: 'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--tuwa-text-accent)]',
+  baseFocus:
+    'focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
   focusWithOffset: (offset: string) =>
-    `focus:outline-none focus:ring-2 focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-2 focus:ring-offset-[${offset}]`,
+    `focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-offset-[${offset}]`,
+
+  // Focus-visible variant for buttons
+  focusVisible:
+    'focus-visible:outline-none focus-visible:ring-[var(--tuwa-ring-width)] focus-visible:ring-offset-[var(--tuwa-ring-width)] focus-visible:ring-[var(--tuwa-text-accent)] focus-visible:ring-offset-[var(--tuwa-border-secondary)]',
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Interactive States
   // ─────────────────────────────────────────────────────────────────────────────
   itemInteractive:
-    'transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-bg-secondary)]',
+    'transition-all duration-200 ease-out focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════════════════
