@@ -432,7 +432,7 @@ const DefaultIndicator: React.FC<IndicatorProps> = ({ slide, index, isActive, on
     onClick={onClick}
     className={cn(
       'novacon:cursor-pointer novacon:h-2 novacon:rounded-full novacon:transition-all novacon:duration-300',
-      'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-2',
+      'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
       'novacon:bg-[var(--tuwa-border-primary)] novacon:w-2 novacon:hover:bg-[var(--tuwa-text-accent)]',
       {
         'novacon:bg-[var(--tuwa-text-accent)] novacon:w-6': isActive,

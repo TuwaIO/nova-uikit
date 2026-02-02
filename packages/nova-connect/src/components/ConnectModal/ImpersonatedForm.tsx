@@ -586,7 +586,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           'novacon:text-[var(--tuwa-text-primary)]',
           'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
           // Focus and interaction states
-          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+          'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           // Error state styling
           { 'novacon:border-red-500 novacon:focus:ring-red-500': connectionError },
           // Resolving state styling

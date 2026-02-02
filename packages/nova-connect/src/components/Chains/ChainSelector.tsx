@@ -417,7 +417,7 @@ const DefaultDialogHeader = ({ title, onClose, className, closeButton }: CustomD
     'novacon:cursor-pointer novacon:rounded-full novacon:p-1',
     'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
     'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
-    'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+    'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
   );
 
   const finalCloseButtonClasses = closeButtonClassName || defaultCloseButtonClasses;
@@ -544,7 +544,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
         'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
         'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
         'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-offset-2 novacon:focus:ring-offset-[var(--tuwa-bg-primary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
+        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
         'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
         {
           'novacon:ring-2 novacon:ring-[var(--tuwa-text-accent)] novacon:border novacon:border-transparent':

@@ -197,7 +197,7 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
       className={cn(
         'novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors',
         'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-tertiary)]',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)]',
+        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
         showSuccess && 'novacon:text-[var(--tuwa-success-text)]',
         className,
       )}
