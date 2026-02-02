@@ -334,8 +334,8 @@ const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, LoadingPlaceholderP
     const { statusData: _statusData, ...restProps } = props;
     return (
       <div ref={ref} className={className} {...restProps}>
-        <div className="novacon:animate-pulse novacon:rounded-xl novacon:h-32 novacon:w-32 novacon:bg-[var(--tuwa-bg-muted)]" />
-        <div className="novacon:animate-pulse novacon:rounded-xl novacon:h-6 novacon:w-48 novacon:bg-[var(--tuwa-bg-muted)]" />
+        <div className="novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-corners)] novacon:h-32 novacon:w-32 novacon:bg-[var(--tuwa-bg-muted)]" />
+        <div className="novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-corners)] novacon:h-6 novacon:w-48 novacon:bg-[var(--tuwa-bg-muted)]" />
       </div>
     );
   },
@@ -529,7 +529,7 @@ export const Connecting = memo(
         ? customization.classNames.statusContainer({ statusData })
         : cn(
             'novacon:relative novacon:flex novacon:items-center novacon:justify-center',
-            'novacon:min-w-[110px] novacon:min-h-[110px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
+            'novacon:min-w-[180px] novacon:min-h-[180px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
             'novacon:border-2 novacon:rounded-full',
             'novacon:p-4 novacon:md:p-6',
             'novacon:transition-all novacon:duration-300 novacon:ease-in-out',
@@ -695,7 +695,7 @@ export const Connecting = memo(
               className={
                 customization?.classNames?.walletIconContainer?.({ statusData }) ??
                 cn(
-                  'novacon:[&_svg]:w-[60px]! novacon:[&_svg]:h-[auto]! novacon:md:[&_svg]:w-[80px]! novacon:[&_img]:w-[60px]! novacon:[&_img]:h-[auto]! novacon:md:[&_img]:w-[80px]! novacon:leading-[0]',
+                  'novacon:[&_svg]:w-[100px]! novacon:[&_svg]:h-[auto]! novacon:md:[&_svg]:w-[80px]! novacon:[&_img]:w-[100px]! novacon:[&_img]:h-[auto]! novacon:md:[&_img]:w-[80px]! novacon:leading-[0]',
                 )
               }
               statusData={statusData}
@@ -763,7 +763,7 @@ export const Connecting = memo(
                 <summary className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:cursor-pointer novacon:hover:text-[var(--tuwa-text-primary)] novacon:transition-colors">
                   {labels.copyRawError}
                 </summary>
-                <pre className="novacon:mt-2 novacon:p-3 novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-md novacon:text-xs novacon:font-mono novacon:text-[var(--tuwa-text-secondary)] novacon:overflow-auto novacon:max-h-32">
+                <pre className="novacon:mt-2 novacon:p-3 novacon:bg-[var(--tuwa-bg-muted)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:text-xs novacon:font-mono novacon:text-[var(--tuwa-text-secondary)] novacon:overflow-auto novacon:max-h-32">
                   {JSON.stringify(connectionError, null, 2)}
                 </pre>
               </CustomErrorDetails>

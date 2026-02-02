@@ -539,9 +539,9 @@ export const NetworkTabs = memo(
                   tabData,
                 }) ??
                 cn(
-                  'novacon:cursor-pointer novacon:flex novacon:items-center novacon:gap-2 novacon:px-4 novacon:py-2 novacon:rounded-lg novacon:transition-colors novacon:overflow-hidden novacon:relative novacon:z-4',
+                  'novacon:cursor-pointer novacon:flex novacon:items-center novacon:gap-2 novacon:px-4 novacon:py-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:overflow-hidden novacon:relative novacon:z-4',
                   'novacon:hover:bg-[var(--tuwa-bg-muted)]',
-                  'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+                  'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
                   tabData.isSelected
                     ? 'novacon:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-accent)]'
                     : 'novacon:text-[var(--tuwa-text-secondary)]',
@@ -558,7 +558,7 @@ export const NetworkTabs = memo(
 
               const indicatorClasses =
                 customization?.classNames?.indicator?.({ tabData }) ??
-                'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:z-3 novacon:rounded-lg';
+                'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:z-3 novacon:rounded-[var(--tuwa-rounded-corners)]';
 
               return (
                 <CustomTab key={tabKey} className={tabClasses} data-network={networkKey}>

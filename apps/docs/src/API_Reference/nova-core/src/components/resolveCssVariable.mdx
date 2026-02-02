@@ -1,0 +1,26 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# resolveCssVariable()
+
+> **resolveCssVariable**(`value`): `string`
+
+Defined in: [packages/nova-core/src/utils/svgUtils.ts:8](https://github.com/TuwaIO/nova-uikit/blob/127b4a81efa2388d80b9a5949013038209bbc8ae/packages/nova-core/src/utils/svgUtils.ts#L8)
+
+Resolves a CSS variable to its computed value.
+Returns the original value if it's not a CSS variable.
+
+## Parameters
+
+### value
+
+`string`
+
+Color value, potentially a CSS variable like `var(--my-color)`
+
+## Returns
+
+`string`
+
+Resolved color value (e.g., `#ff0000`) or original if not a variable

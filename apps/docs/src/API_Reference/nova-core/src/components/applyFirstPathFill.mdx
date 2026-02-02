@@ -1,0 +1,33 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# applyFirstPathFill()
+
+> **applyFirstPathFill**(`svgString`, `fillColor`): `string`
+
+Defined in: [packages/nova-core/src/utils/svgUtils.ts:32](https://github.com/TuwaIO/nova-uikit/blob/127b4a81efa2388d80b9a5949013038209bbc8ae/packages/nova-core/src/utils/svgUtils.ts#L32)
+
+Modifies the fill attribute of the first `<path>` element in an SVG string.
+Uses DOMParser for safe XML manipulation.
+Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values.
+
+## Parameters
+
+### svgString
+
+`string`
+
+The original SVG markup
+
+### fillColor
+
+`string`
+
+The color to apply (supports CSS variables)
+
+## Returns
+
+`string`
+
+Modified SVG string

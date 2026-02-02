@@ -154,7 +154,7 @@ export const SelectContentAnimated = forwardRef<
     // Memoize content container classes (additive approach)
     const contentClasses = cn(
       // Default styles always applied
-      'novacon:p-1 novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-lg novacon:shadow-xl',
+      'novacon:p-1 novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:shadow-xl',
       'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)] novacon:overflow-hidden',
       // Custom classes added to defaults
       contentClassName,

@@ -516,7 +516,7 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
           },
 
           // Focus states for accessibility
-          'novacon:focus-visible:outline-none novacon:focus-visible:ring-2 novacon:focus-visible:ring-[var(--tuwa-border-accent)] novacon:focus-visible:ring-offset-2',
+          'novacon:focus-visible:outline-none novacon:focus-visible:ring-[length:var(--tuwa-ring-width)] novacon:focus-visible:ring-[var(--tuwa-border-accent)] novacon:focus-visible:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus-visible:ring-offset-[var(--tuwa-border-secondary)]',
 
           className,
         );

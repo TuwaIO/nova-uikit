@@ -135,7 +135,7 @@ export function TrackingTxModal<T extends Transaction>({
 
   const isProcessing = isInitializing || isPending;
   const isSucceed = txStatus === TransactionStatus.Success;
-  const isFailed = activeTx?.isError || !!initialTx?.errorMessage;
+  const isFailed = activeTx?.isError || !!initialTx?.error;
   const isReplaced = txStatus === TransactionStatus.Replaced;
 
   const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
@@ -254,10 +254,10 @@ export function TrackingTxModal<T extends Transaction>({
               <TxInfoBlock tx={txToDisplay} adapter={adapter} customization={customization?.infoBlockCustomization} />
             )}
             {CustomErrorBlock ? (
-              <CustomErrorBlock error={activeTx?.errorMessage || initialTx?.errorMessage} />
+              <CustomErrorBlock error={activeTx?.error || initialTx?.error} />
             ) : (
               <TxErrorBlock
-                error={activeTx?.errorMessage || initialTx?.errorMessage}
+                error={activeTx?.error || initialTx?.error}
                 className={customization?.errorBlockCustomization?.className}
                 classNames={customization?.errorBlockCustomization?.classNames}
               />
@@ -356,7 +356,7 @@ const MainActionButton = ({
         type="button"
         onClick={onRetry}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-t-md novatx:sm:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
+          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
           classNames?.retryButton,
         )}
       >
@@ -370,7 +370,7 @@ const MainActionButton = ({
         type="button"
         onClick={onOpenAllTransactions}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
+          'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
           classNames?.allTransactionsButton,
         )}
       >
@@ -443,7 +443,7 @@ const DefaultFooter = ({
           onClick={onClose}
           disabled={isProcessing && !canReplace}
           className={cn(
-            'novatx:cursor-pointer novatx:rounded-md novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
+            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
             classNames?.closeModalButton,
           )}
         >

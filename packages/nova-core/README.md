@@ -4,24 +4,18 @@
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](./LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 
-The foundational package for the Nova UI Kit design system. Provides core styling primitives, theme variables, utility functions, and common React hooks for building consistent Web3 applications.
+The foundational package for the **TUWA ecosystem**, Nova Core serves as the shared foundation that powers all other Nova packages (`@tuwaio/nova-connect`, `@tuwaio/nova-transactions`).
 
 ---
 
-## What is `@tuwaio/nova-core`?
-
-`@tuwaio/nova-core` is the **foundational engine** of the Nova UI Kit design system. It is **not** a component library—instead, it provides the low-level tools, design tokens, and utilities necessary to build consistent, high-quality user interfaces across all TUWA products.
-
-Built for the **TUWA ecosystem**, Nova Core serves as the shared foundation that powers all other Nova packages (`@tuwaio/nova-connect`, `@tuwaio/nova-transactions`) and ensures design consistency across multi-chain Web3 applications.
-
-**Why Nova Core?**
+## Why Nova Core??
 
 Building design systems requires consistent foundations: colors, spacing, typography, and utility functions. Without a shared core, different packages end up with conflicting styles, duplicated code, and inconsistent user experiences.
 
 Nova Core solves this by:
 
 1.  **Offering Smart Utilities:** Battle-tested helper functions like the `cn` utility that combines `clsx` and `tailwind-merge` for conflict-free styling.
-2.  **Supplying Common Hooks:** A collection of reusable React hooks for common Web3 UI patterns.
+2.  **Supplying Common Hooks:** A collection of reusable React hooks for common UI patterns.
 3.  **Ensuring Tailwind CSS v4 Integration:** Seamless compatibility with modern Tailwind CSS workflows.
 
 ---
@@ -30,7 +24,6 @@ Nova Core solves this by:
 
 - **🎨 Complete Design Token System:** Comprehensive CSS variables for colors, spacing, typography, shadows, and animations
 - **🛠️ Smart Utility Functions:** Advanced `cn` utility that merges Tailwind classes intelligently, preventing style conflicts
-- **🎣 Common React Hooks:** Collection of reusable hooks for Web3 UI patterns like wallet state, transaction status, and theme management
 - **⚡ Tailwind CSS v4 Ready:** Full compatibility with modern Tailwind CSS workflows and arbitrary value usage
 - **🌓 Dark Mode Support:** Built-in dark mode theming with CSS variable-based switching
 - **♿ Accessibility First:** ARIA-compliant design tokens and utilities for building accessible interfaces
@@ -43,7 +36,7 @@ Nova Core solves this by:
 ### Requirements
 
 - **React:** 19+
-- **Node.js:** 20+
+- **Node.js:** 20-24
 - **TypeScript:** 5.9+ (recommended)
 
 ### Package Installation
@@ -51,14 +44,8 @@ Nova Core solves this by:
 Install the package using your preferred package manager:
 
 ```bash
-# Using pnpm (recommended)
+# Using pnpm (recommended), but you can use npm, yarn or bun as well
 pnpm add @tuwaio/nova-core
-
-# Using npm
-npm install @tuwaio/nova-core
-
-# Using yarn
-yarn add @tuwaio/nova-core
 ```
 
 ### CSS Setup
@@ -80,15 +67,15 @@ Nova Core is designed to work seamlessly with Tailwind CSS v4. You can use the C
 
 ```tsx
 // Using Nova design tokens in Tailwind classes
-<button className="bg-[var(--tuwa-color-primary)] text-[var(--tuwa-text-on-primary)]">
+<button className="bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]">
   Connect Wallet
 </button>
 
 // With hover states and transitions
 <div className="
-  p-[var(--tuwa-spacing-md)]
+  p-4
   bg-[var(--tuwa-bg-secondary)]
-  hover:bg-[var(--tuwa-bg-hover)]
+  hover:bg-[var(--tuwa-bg-muted)]
   transition-colors
 ">
   Card Content
@@ -120,16 +107,16 @@ const mergedClasses = cn(
 
 ### Common React Hooks
 
-Nova Core provides several utility hooks for common Web3 UI patterns:
+Nova Core provides several utility hooks for common UI patterns:
 
 ```tsx
-import { useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
 
 function WalletAddress({ address }: { address: string }) {
   const [copied, copy] = useCopyToClipboard();
 
   return (
-    <div className={cn('transition-all', isCollapsed && 'w-12')}>
+    <div className={cn('transition-all', { 'w-12': isCollapsed })}>
       <button onClick={() => copy(address)} className="font-mono text-sm hover:bg-[var(--tuwa-bg-hover)]">
         {address.slice(0, 6)}
         {copied && ' ✓'}
@@ -153,19 +140,17 @@ Override design tokens in your CSS to match your brand:
 
 /* Your custom theme overrides */
 :root {
-  /* Brand Colors */
-  --tuwa-color-primary: #3b82f6; /* Blue-500 */
-  --tuwa-color-primary-hover: #2563eb; /* Blue-600 */
+  /* Text Colors */
+  --tuwa-text-primary: #0f172a;
+  --tuwa-text-secondary: #64748b;
+  --tuwa-text-tertiary: #94a3b8;
+  --tuwa-text-accent: #3b82f6;
+  --tuwa-text-on-accent: #ffffff;
 
   /* Background System */
   --tuwa-bg-primary: #ffffff;
   --tuwa-bg-secondary: #f8fafc;
-  --tuwa-bg-hover: #f1f5f9;
-
-  /* Text Colors */
-  --tuwa-text-primary: #0f172a;
-  --tuwa-text-secondary: #64748b;
-  --tuwa-text-muted: #94a3b8;
+  --tuwa-bg-muted: #f1f5f9;
 
   /* Border System */
   --tuwa-border-primary: #e2e8f0;
@@ -180,12 +165,13 @@ Nova Core includes built-in dark mode support:
 ```css
 /* Dark mode overrides */
 .dark {
-  --tuwa-color-primary: #60a5fa; /* Blue-400 */
-  --tuwa-bg-primary: #0f172a; /* Slate-900 */
-  --tuwa-bg-secondary: #1e293b; /* Slate-800 */
-  --tuwa-text-primary: #f1f5f9; /* Slate-100 */
-  --tuwa-text-secondary: #cbd5e1; /* Slate-300 */
-  --tuwa-border-primary: #374151; /* Gray-700 */
+  --tuwa-text-primary: #f1f5f9;
+  --tuwa-text-secondary: #9ca3af;
+  --tuwa-text-accent: #60a5fa;
+  --tuwa-bg-primary: #0f172a;
+  --tuwa-bg-secondary: #1e293b;
+  --tuwa-bg-muted: #334155;
+  --tuwa-border-primary: #374151;
 }
 ```
 

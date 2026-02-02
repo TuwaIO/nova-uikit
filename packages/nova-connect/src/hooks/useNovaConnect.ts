@@ -27,6 +27,10 @@ export interface NovaConnectProviderProps extends InitialChains {
   withChain?: boolean;
   /** Whether impersonated wallets are enabled */
   withImpersonated?: boolean;
+  /** Custom list of popular connector names to show in the popular section */
+  popularConnectors?: string[];
+  /** Custom connector groups to show in the modal */
+  customConnectorGroups?: Record<string, string[]>;
   /** Legal configuration for Terms of Service and Privacy Policy links */
   legal?: LegalConfig;
   children: React.ReactNode;

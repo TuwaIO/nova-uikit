@@ -34,18 +34,12 @@ Built on top of the Satellite Connect ecosystem, Nova Connect offers a unified i
 ### Requirements
 
 - React 19+
-- Node.js 20+
+- Node.js 20-24
 - TypeScript 5.9+
 
 ```bash
-# Using pnpm (recommended)
+# Using pnpm (recommended), but you can use npm, yarn or bun as well
 pnpm add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
-
-# Using npm
-npm install @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
-
-# Using yarn
-yarn add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
 ```
 
 ---

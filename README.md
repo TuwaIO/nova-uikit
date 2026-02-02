@@ -21,11 +21,11 @@ Our ecosystem is built on a clear separation of concerns:
 
 This repository is managed using `pnpm` workspaces.
 
-| Package                            | Version                                                                                                                               | Description                                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 🎨 **`@tuwaio/nova-core`**         | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)                 | Foundational package with styling primitives, CSS variables, and helper utilities.       |
-| 🔗 **`@tuwaio/nova-connect`**      | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)           | React components for Web3 wallet connection flows, including connect modals and buttons. |
-| 🧩 **`@tuwaio/nova-transactions`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions) | React component library for visualizing transaction states (modals, toasts, etc.).       |
+| Package                            | Version                                                                                                                               | Description                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 🎨 **`@tuwaio/nova-core`**         | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)                 | Foundational package with styling primitives, CSS variables, base react components and helper utilities. |
+| 🔗 **`@tuwaio/nova-connect`**      | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)           | React components for Web3 wallet connection flows, including connect modals and buttons.                 |
+| 🧩 **`@tuwaio/nova-transactions`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions) | React component library for visualizing transaction states (modals, toasts, etc.).                       |
 
 ## 🛠 Tech Stack
 
@@ -73,7 +73,7 @@ The primary way to develop and test components is through Storybook.
 To start the Storybook development server, run the following command from the root of the repository:
 
 ```bash
-pnpm dev
+pnpm storybook
 ```
 
 This will open Storybook at **[http://localhost:6006](http://localhost:6006)**.

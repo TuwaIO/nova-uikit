@@ -52,7 +52,12 @@ export type TxInfoBlockProps<T extends Transaction> = {
 // --- Default Sub-Component ---
 function DefaultInfoRow({ label, value, classNames }: CustomInfoRowProps) {
   return (
-    <div className={cn('novatx:flex novatx:items-center novatx:justify-between novatx:text-sm', classNames?.row)}>
+    <div
+      className={cn(
+        'novatx:flex novatx:items-center novatx:justify-between novatx:text-sm novatx:gap-2',
+        classNames?.row,
+      )}
+    >
       <span className={cn('novatx:text-[var(--tuwa-text-secondary)]', classNames?.label)}>{label}</span>
       <span className={cn('novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}>
         {value}
@@ -82,7 +87,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
   return (
     <div
       className={cn(
-        'novatx:flex novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
+        'novatx:flex novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
         classNames?.container,
         className,
       )}
@@ -94,7 +99,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             <div className="novatx:h-4 novatx:w-4">
               <NetworkIcon chainId={setChainId(chainId)} />
             </div>
-            <span>{getChainName(setChainId(chainId))}</span>
+            <span>{getChainName(setChainId(chainId)).name}</span>
           </div>
         }
         classNames={rowClassNames}

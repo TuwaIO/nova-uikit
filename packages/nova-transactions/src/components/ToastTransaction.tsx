@@ -112,7 +112,7 @@ const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButto
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
-    : 'novatx:cursor-pointer novatx:rounded-md novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95';
+    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95';
 
   return (
     <button className={buttonClassName} onClick={onClick} type="button">
@@ -165,7 +165,7 @@ export function ToastTransaction<T extends Transaction>({
   return (
     <div
       className={cn(
-        'novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-lg novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        'novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
         classNames?.container,
         className,
       )}
@@ -173,7 +173,7 @@ export function ToastTransaction<T extends Transaction>({
       <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
         <div
           className={cn('novatx:w-[40px] novatx:flex-shrink-0', classNames?.iconWrapper)}
-          title={getChainName(setChainId(tx.chainId))}
+          title={getChainName(setChainId(tx.chainId)).name}
         >
           {icon ?? <NetworkIcon chainId={setChainId(tx.chainId)} />}
         </div>

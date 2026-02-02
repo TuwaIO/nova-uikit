@@ -258,17 +258,13 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
     }, [onImageLoad]);
 
     // Handle image load error
-    // Handle image load error
-    const handleImageError = useCallback(
-      (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        setIsLoading(false);
-        setHasError(true);
-        const blockie = generateBlockie(address);
-        setImageSrc(blockie);
-        onImageError?.(event.nativeEvent);
-      },
-      [address, generateBlockie, onImageError],
-    );
+    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+      setIsLoading(false);
+      setHasError(true);
+      const blockie = generateBlockie(address);
+      setImageSrc(blockie);
+      onImageError?.(event.nativeEvent);
+    };
 
     // Generate container classes
     const containerClasses = customization?.classNames?.container

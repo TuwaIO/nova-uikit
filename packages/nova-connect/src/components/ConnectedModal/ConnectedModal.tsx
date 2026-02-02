@@ -339,7 +339,7 @@ const DefaultBackButton: React.FC<BackButtonProps> = ({ onBack, labels, classNam
       'novacon:cursor-pointer novacon:rounded-full novacon:p-1',
       'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
       'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
-      'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+      'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
       className,
     )}
   >
@@ -360,7 +360,7 @@ const DefaultCloseButton: React.FC<CloseButtonProps> = ({ onClose, labels, class
         'novacon:cursor-pointer novacon:rounded-full novacon:p-1',
         'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
         'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
-        'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
         className,
       )}
     >

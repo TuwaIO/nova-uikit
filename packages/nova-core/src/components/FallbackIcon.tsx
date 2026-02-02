@@ -25,7 +25,7 @@ export interface FallbackIconProps {
  * Defines shape, background color, and layout.
  */
 const FALLBACK_CLASS =
-  'flex items-center justify-center novacore:w-full novacore:h-full novacore:rounded-full novacore:text-[var(--tuwa-text-secondary)] novacore:bg-[var(--tuwa-bg-muted)]';
+  'novacore:flex novacore:items-center novacore:justify-center novacore:w-full novacore:h-full novacore:rounded-full novacore:text-[var(--tuwa-text-secondary)] novacore:bg-[var(--tuwa-bg-muted)]';
 
 /**
  * A reusable placeholder component used for Suspense fallbacks (loading)

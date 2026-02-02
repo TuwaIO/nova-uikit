@@ -18,6 +18,7 @@ import {
   impersonatedHelpers,
   isAddress,
   OrbitAdapter,
+  TuwaErrorState,
   waitFor,
 } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
@@ -32,7 +33,7 @@ import React, {
   useMemo,
 } from 'react';
 
-import { ConnectContentType, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors } from '../../utils';
@@ -76,7 +77,7 @@ export interface ConnectModalData {
   /** Whether modal is open */
   isOpen: boolean;
   /** Connection error if any */
-  error: Error | string | null | undefined;
+  error: Error | TuwaErrorState | null | undefined;
   /** Available connectors */
   connectors: Record<string, Connector[]>;
   /** Filtered connectors for current adapter */
@@ -488,7 +489,7 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
 /**
  * Props for the ConnectModal component
  */
-export interface ConnectModalProps extends InitialChains, Pick<NovaConnectProviderProps, 'withImpersonated'> {
+export interface ConnectModalProps extends InitialChains {
   /** Customization options */
   customization?: ConnectModalCustomization;
 }
@@ -558,520 +559,509 @@ export interface ConnectModalProps extends InitialChains, Pick<NovaConnectProvid
  *
  * @public
  */
-export const ConnectModal = memo<ConnectModalProps>(
-  ({ appChains, solanaRPCUrls, withImpersonated, customization = {} }) => {
-    const {
-      isConnectModalOpen,
-      setIsConnectModalOpen,
-      setConnectModalContentType,
-      setActiveConnector,
-      setImpersonatedAddress,
-      setIsConnected,
-      connectModalContentType,
+export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls, customization = {} }) => {
+  const {
+    isConnectModalOpen,
+    setIsConnectModalOpen,
+    setConnectModalContentType,
+    setActiveConnector,
+    setImpersonatedAddress,
+    setIsConnected,
+    connectModalContentType,
+    selectedAdapter,
+    setSelectedAdapter,
+    isConnected,
+    activeConnector,
+    impersonatedAddress,
+  } = useNovaConnect();
+
+  const connectionError = useSatelliteConnectStore((store) => store.connectionError);
+  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+  const connect = useSatelliteConnectStore((store) => store.connect);
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+
+  const labels = useNovaConnectLabels();
+  const store = useContext(SatelliteStoreContext);
+
+  // Memoize connectors to avoid recalculation on every render
+  const connectors = isConnectModalOpen ? getConnectors() : undefined;
+
+  const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
+
+  // Memoize modal data for customization context
+  const modalData = useMemo<ConnectModalData>(
+    () => ({
+      contentType: connectModalContentType,
       selectedAdapter,
-      setSelectedAdapter,
-      isConnected,
       activeConnector,
       impersonatedAddress,
-    } = useNovaConnect();
-    const connectionError = useSatelliteConnectStore((store) => store.connectionError);
-    const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
-    const connect = useSatelliteConnectStore((store) => store.connect);
-    const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
-
-    const labels = useNovaConnectLabels();
-    const store = useContext(SatelliteStoreContext);
-
-    // Memoize connectors to avoid recalculation on every render
-    const connectors = isConnectModalOpen ? getConnectors() : undefined;
-
-    const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
-
-    // Convert error to Error object if it's a string
-    const normalizedError = (() => {
-      if (!connectionError) return null;
-      if (typeof connectionError === 'string') {
-        return new Error(connectionError);
-      }
-      return connectionError;
-    })();
-
-    // Memoize modal data for customization context
-    const modalData = useMemo<ConnectModalData>(
-      () => ({
-        contentType: connectModalContentType,
-        selectedAdapter,
-        activeConnector,
-        impersonatedAddress,
-        isConnected,
-        isOpen: isConnectModalOpen,
-        error: normalizedError,
-        connectors: connectors!,
-        filteredConnectors,
-        labels,
-      }),
-      [
-        connectModalContentType,
-        selectedAdapter,
-        activeConnector,
-        impersonatedAddress,
-        isConnected,
-        isConnectModalOpen,
-        normalizedError,
-        connectors,
-        filteredConnectors,
-        labels,
-      ],
-    );
-
-    // Reset modal state when opened
-    useEffect(() => {
-      if (isConnectModalOpen) {
-        setConnectModalContentType('connectors');
-        setSelectedAdapter(undefined);
-        setActiveConnector(undefined);
-        setImpersonatedAddress('');
-        setIsConnected(false);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isConnectModalOpen]);
-
-    // Extract customization options
-    const { components = {}, classNames = {}, handlers = {}, config = {}, childComponents = {} } = customization;
-
-    // Component selections with defaults
-    const ModalContainer = components.ModalContainer || DefaultModalContainer;
-    const ModalHeader = components.ModalHeader || DefaultModalHeader;
-    const InfoButton = components.InfoButton || DefaultInfoButton;
-    const Title = components.Title || DefaultTitle;
-    const CloseButton = components.CloseButton || DefaultCloseButton;
-    const MainContent = components.MainContent || DefaultMainContent;
-    const Footer = components.Footer || DefaultFooter;
-    const BackButton = components.BackButton || DefaultBackButton;
-    const ActionButton = components.ActionButton || DefaultActionButton;
-    const ActionDescription = components.ActionDescription || DefaultActionDescription;
-    const CustomEmptyState = components.EmptyState || DefaultEmptyState;
-    const CustomDialog = components.Dialog || Dialog;
-    const CustomDialogContent = components.DialogContent || DialogContent;
-    const CustomMotionDiv = components.MotionDiv || motion.div;
-
-    /**
-     * Gets the appropriate title for the current modal content
-     */
-    const getTitle = useCallback(() => {
-      switch (connectModalContentType) {
-        case 'about':
-          return labels.aboutWallets;
-        case 'getWallet':
-          return labels.getWallet;
-        case 'connecting':
-          if (selectedAdapter && activeConnector && connectors) {
-            const connectorName = getConnectorName(connectors[selectedAdapter], activeConnector);
-            return connectorName || labels.connectingEllipsis;
-          }
-          return labels.connectingEllipsis;
-        case 'impersonate':
-          return labels.connectImpersonatedWallet;
-        default:
-          return labels.connectWallet;
-      }
-    }, [connectModalContentType, selectedAdapter, activeConnector, connectors, labels]);
-
-    /**
-     * Determines the content type to navigate back to
-     */
-    const goBackContentType = useCallback((): ConnectContentType => {
-      switch (connectModalContentType) {
-        default:
-          return 'connectors';
-      }
-    }, [connectModalContentType]);
-
-    /**
-     * Handle modal open/close with custom handler
-     */
-    const handleOpenChange = useCallback(
-      (open: boolean) => {
-        if (handlers?.onOpenChange) {
-          handlers.onOpenChange(open, modalData);
-        } else {
-          setIsConnectModalOpen(open);
-        }
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [handlers?.onOpenChange, modalData, setIsConnectModalOpen],
-    );
-
-    /**
-     * Handle back navigation with custom handler
-     */
-    const handleBack = useCallback(() => {
-      const originalHandler = () => setConnectModalContentType(goBackContentType());
-
-      if (handlers?.onBack) {
-        handlers.onBack(modalData, originalHandler);
-      } else {
-        originalHandler();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType]);
-
-    /**
-     * Handle info button click
-     */
-    const handleInfoClick = useCallback(() => {
-      if (handlers?.onInfoClick) {
-        handlers.onInfoClick(modalData);
-      } else {
-        setConnectModalContentType('about');
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [handlers?.onInfoClick, modalData, setConnectModalContentType]);
-
-    /**
-     * Generic connection handler
-     */
-    const handleConnect = useCallback(
-      async (connectorType: ConnectorType, adapter: OrbitAdapter) => {
-        await connect({
-          connectorType,
-          chainId: getConnectChainId({ appChains, selectedAdapter: adapter, solanaRPCUrls }),
-        });
-
-        try {
-          await waitFor(() => store?.getState().activeConnection?.isConnected);
-          setIsConnected(true);
-          const modalCloseTime = setTimeout(() => setIsConnectModalOpen(false), 400);
-          const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);
-          await delay(null, 500);
-          clearTimeout(modalCloseTime);
-          clearTimeout(isConnectedTimer);
-        } catch (error) {
-          console.error(error);
-        }
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [connect, appChains, selectedAdapter, solanaRPCUrls],
-    );
-
-    /**
-     * Handle network selection click
-     */
-    const handleNetworkClick = useCallback(
-      async (adapter: OrbitAdapter, connectorType: ConnectorType) => {
-        setSelectedAdapter(adapter);
-        setConnectModalContentType('connecting');
-        await handleConnect(connectorType, adapter);
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [handleConnect],
-    );
-
-    /**
-     * Handle connector selection click
-     */
-    const handleConnectorClick = useCallback(
-      (connector: GroupedConnector) => {
-        setActiveConnector(formatConnectorName(connector.name));
-        if (connector.adapters.length === 1) {
-          setSelectedAdapter(connector.adapters[0]);
-          setConnectModalContentType(
-            formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
-          );
-        } else if (selectedAdapter) {
-          setConnectModalContentType(
-            formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
-          );
-        } else if (formatConnectorName(connector.name) === 'impersonatedwallet') {
-          setConnectModalContentType('impersonate');
-        } else {
-          setConnectModalContentType('network');
-        }
-      },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [selectedAdapter],
-    );
-
-    /**
-     * Renders the main content based on current modal state
-     */
-    const renderMainContent = useCallback(() => {
-      switch (connectModalContentType) {
-        case 'network':
-          return (
-            <NetworkSelections
-              activeConnector={activeConnector}
-              connectors={filteredConnectors}
-              onClick={handleNetworkClick}
-              customization={childComponents.networkSelections}
-            />
-          );
-        case 'connectors':
-          return connectors ? (
-            <>
-              <NetworkTabs
-                networks={Object.keys(connectors) as OrbitAdapter[]}
-                selectedAdapter={selectedAdapter}
-                onSelect={(adapter) => setSelectedAdapter(adapter)}
-                customization={childComponents.networkTabs}
-              />
-
-              <ConnectorsSelections
-                isOnlyOneNetwork={Object.keys(connectors).length === 1}
-                connectors={filteredConnectors}
-                selectedAdapter={selectedAdapter}
-                onClick={handleConnectorClick}
-                setContentType={setConnectModalContentType}
-                appChains={appChains}
-                solanaRPCUrls={solanaRPCUrls}
-                setIsConnected={setIsConnected}
-                setIsOpen={setIsConnectModalOpen}
-                withImpersonated={withImpersonated}
-                customization={childComponents.connectorsSelections}
-              />
-
-              <LegalDisclaimer customization={childComponents.legalDisclaimer} />
-            </>
-          ) : (
-            <CustomEmptyState className={classNames.emptyConnectors?.({ modalData })} modalData={modalData}>
-              No connectors available
-            </CustomEmptyState>
-          );
-        case 'about':
-          return <AboutWallets customization={childComponents.aboutWallets} />;
-        case 'getWallet':
-          return <GetWallet customization={childComponents.getWallet} />;
-        case 'connecting':
-          return (
-            <Connecting
-              selectedAdapter={selectedAdapter}
-              connectors={filteredConnectors}
-              activeConnector={activeConnector}
-              isConnected={isConnected}
-              customization={childComponents.connecting}
-            />
-          );
-        case 'impersonate':
-          return (
-            <ImpersonateForm
-              selectedAdapter={selectedAdapter}
-              impersonatedAddress={impersonatedAddress}
-              setImpersonatedAddress={setImpersonatedAddress}
-              customization={childComponents.impersonateForm}
-            />
-          );
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      connectModalContentType,
-      activeConnector,
+      isConnected,
+      isOpen: isConnectModalOpen,
+      error: connectionError ?? null,
+      connectors: connectors!,
       filteredConnectors,
-      handleNetworkClick,
-      childComponents,
-      connectors,
-      selectedAdapter,
-      handleConnectorClick,
-      isConnected,
-      impersonatedAddress,
-    ]);
-
-    /**
-     * Gets configuration for the bottom action button
-     */
-    const getBottomButtonConfig = useCallback((): BottomButtonConfig | undefined => {
-      switch (connectModalContentType) {
-        case 'connectors':
-          return {
-            title: labels.iDontHaveWallet,
-            onClick: () => {
-              if (handlers.onActionClick?.connectors) {
-                handlers.onActionClick.connectors(modalData);
-              } else {
-                setConnectModalContentType('getWallet');
-              }
-            },
-          };
-        case 'getWallet':
-          return {
-            title: labels.choseWallet,
-            onClick: () => {
-              if (handlers.onActionClick?.getWallet) {
-                handlers.onActionClick.getWallet(modalData);
-              } else {
-                window.open(
-                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
-                  '_blank',
-                  'noopener,noreferrer',
-                );
-              }
-            },
-          };
-        case 'about':
-          return {
-            title: labels.learnMore,
-            onClick: () => {
-              if (handlers.onActionClick?.about) {
-                handlers.onActionClick.about(modalData);
-              } else {
-                window.open(
-                  getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
-                  '_blank',
-                  'noopener,noreferrer',
-                );
-              }
-            },
-          };
-        case 'impersonate':
-          return {
-            title: labels.connect,
-            onClick: async () => {
-              if (handlers.onActionClick?.impersonate) {
-                await handlers.onActionClick.impersonate(modalData);
-              } else {
-                const trimmedAddress = impersonatedAddress.trim();
-                if (connectionError || !trimmedAddress || !isAddress(trimmedAddress) || !!activeConnection?.isConnected)
-                  return;
-                impersonatedHelpers.setImpersonated(trimmedAddress);
-                setConnectModalContentType('connecting');
-                await handleConnect(
-                  getConnectorTypeFromName(selectedAdapter ?? OrbitAdapter.EVM, activeConnector ?? '') as ConnectorType,
-                  selectedAdapter ?? OrbitAdapter.EVM,
-                );
-              }
-            },
-          };
-        case 'connecting':
-          return connectionError && selectedAdapter && activeConnector
-            ? {
-                title: labels.tryAgain,
-                onClick: async () => {
-                  if (handlers.onActionClick?.connecting) {
-                    await handlers.onActionClick.connecting(modalData);
-                  } else {
-                    await handleConnect(
-                      getConnectorTypeFromName(selectedAdapter, activeConnector) as ConnectorType,
-                      selectedAdapter,
-                    );
-                  }
-                },
-              }
-            : undefined;
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      connectModalContentType,
       labels,
-      handlers,
-      modalData,
+    }),
+    [
+      connectModalContentType,
       selectedAdapter,
-      connectors,
-      impersonatedAddress,
-      connectionError,
-      handleConnect,
       activeConnector,
-    ]);
+      impersonatedAddress,
+      isConnected,
+      isConnectModalOpen,
+      connectionError,
+      connectors,
+      filteredConnectors,
+      labels,
+    ],
+  );
 
-    const bottomButtonConfig = getBottomButtonConfig();
+  // Reset modal state when opened
+  useEffect(() => {
+    if (isConnectModalOpen) {
+      setConnectModalContentType('connectors');
+      setSelectedAdapter(undefined);
+      setActiveConnector(undefined);
+      setImpersonatedAddress('');
+      setIsConnected(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnectModalOpen]);
 
-    /**
-     * Get action description text
-     */
-    const getActionDescription = useCallback(() => {
-      switch (connectModalContentType) {
-        case 'getWallet':
-          return 'Opens external wallet selection page';
-        case 'about':
-          return 'Opens external documentation';
-        case 'impersonate':
-          return 'Connects with impersonated wallet address';
-        case 'connecting':
-          return 'Retries wallet connection';
-        default:
-          return '';
+  // Extract customization options
+  const { components = {}, classNames = {}, handlers = {}, config = {}, childComponents = {} } = customization;
+
+  // Component selections with defaults
+  const ModalContainer = components.ModalContainer || DefaultModalContainer;
+  const ModalHeader = components.ModalHeader || DefaultModalHeader;
+  const InfoButton = components.InfoButton || DefaultInfoButton;
+  const Title = components.Title || DefaultTitle;
+  const CloseButton = components.CloseButton || DefaultCloseButton;
+  const MainContent = components.MainContent || DefaultMainContent;
+  const Footer = components.Footer || DefaultFooter;
+  const BackButton = components.BackButton || DefaultBackButton;
+  const ActionButton = components.ActionButton || DefaultActionButton;
+  const ActionDescription = components.ActionDescription || DefaultActionDescription;
+  const CustomEmptyState = components.EmptyState || DefaultEmptyState;
+  const CustomDialog = components.Dialog || Dialog;
+  const CustomDialogContent = components.DialogContent || DialogContent;
+  const CustomMotionDiv = components.MotionDiv || motion.div;
+
+  /**
+   * Gets the appropriate title for the current modal content
+   */
+  const getTitle = useCallback(() => {
+    switch (connectModalContentType) {
+      case 'about':
+        return labels.aboutWallets;
+      case 'getWallet':
+        return labels.getWallet;
+      case 'connecting':
+        if (selectedAdapter && activeConnector && connectors) {
+          const connectorName = getConnectorName(connectors[selectedAdapter], activeConnector);
+          return connectorName || labels.connectingEllipsis;
+        }
+        return labels.connectingEllipsis;
+      case 'impersonate':
+        return labels.connectImpersonatedWallet;
+      default:
+        return labels.connectWallet;
+    }
+  }, [connectModalContentType, selectedAdapter, activeConnector, connectors, labels]);
+
+  /**
+   * Determines the content type to navigate back to
+   */
+  const goBackContentType = useCallback((): ConnectContentType => {
+    switch (connectModalContentType) {
+      default:
+        return 'connectors';
+    }
+  }, [connectModalContentType]);
+
+  /**
+   * Handle modal open/close with custom handler
+   */
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (handlers?.onOpenChange) {
+        handlers.onOpenChange(open, modalData);
+      } else {
+        setIsConnectModalOpen(open);
       }
-    }, [connectModalContentType]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [handlers?.onOpenChange, modalData, setIsConnectModalOpen],
+  );
 
-    return (
-      <CustomDialog open={isConnectModalOpen} onOpenChange={handleOpenChange}>
-        <CustomDialogContent className={cn('novacon:w-full novacon:sm:max-w-md')}>
-          <CustomMotionDiv
-            layout
-            transition={{
-              layout: {
-                duration: config.animation?.disabled ? 0 : (config.animation?.layoutDuration ?? 0.0001),
+  /**
+   * Handle back navigation with custom handler
+   */
+  const handleBack = useCallback(() => {
+    const originalHandler = () => setConnectModalContentType(goBackContentType());
+
+    if (handlers?.onBack) {
+      handlers.onBack(modalData, originalHandler);
+    } else {
+      originalHandler();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType]);
+
+  /**
+   * Handle info button click
+   */
+  const handleInfoClick = useCallback(() => {
+    if (handlers?.onInfoClick) {
+      handlers.onInfoClick(modalData);
+    } else {
+      setConnectModalContentType('about');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handlers?.onInfoClick, modalData, setConnectModalContentType]);
+
+  /**
+   * Generic connection handler
+   */
+  const handleConnect = useCallback(
+    async (connectorType: ConnectorType, adapter: OrbitAdapter) => {
+      await connect({
+        connectorType,
+        chainId: getConnectChainId({ appChains, selectedAdapter: adapter, solanaRPCUrls }),
+      });
+
+      try {
+        await waitFor(() => store?.getState().activeConnection?.isConnected);
+        setIsConnected(true);
+        const modalCloseTime = setTimeout(() => setIsConnectModalOpen(false), 400);
+        const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);
+        await delay(null, 500);
+        clearTimeout(modalCloseTime);
+        clearTimeout(isConnectedTimer);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [connect, appChains, selectedAdapter, solanaRPCUrls],
+  );
+
+  /**
+   * Handle network selection click
+   */
+  const handleNetworkClick = useCallback(
+    async (adapter: OrbitAdapter, connectorType: ConnectorType) => {
+      setSelectedAdapter(adapter);
+      setConnectModalContentType('connecting');
+      await handleConnect(connectorType, adapter);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [handleConnect],
+  );
+
+  /**
+   * Handle connector selection click
+   */
+  const handleConnectorClick = useCallback(
+    (connector: GroupedConnector) => {
+      setActiveConnector(formatConnectorName(connector.name));
+      if (connector.adapters.length === 1) {
+        setSelectedAdapter(connector.adapters[0]);
+        setConnectModalContentType(
+          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+        );
+      } else if (selectedAdapter) {
+        setConnectModalContentType(
+          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+        );
+      } else if (formatConnectorName(connector.name) === 'impersonatedwallet') {
+        setConnectModalContentType('impersonate');
+      } else {
+        setConnectModalContentType('network');
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedAdapter],
+  );
+
+  /**
+   * Renders the main content based on current modal state
+   */
+  const renderMainContent = useCallback(() => {
+    switch (connectModalContentType) {
+      case 'network':
+        return (
+          <NetworkSelections
+            activeConnector={activeConnector}
+            connectors={filteredConnectors}
+            onClick={handleNetworkClick}
+            customization={childComponents.networkSelections}
+          />
+        );
+      case 'connectors':
+        return connectors ? (
+          <>
+            <NetworkTabs
+              networks={Object.keys(connectors) as OrbitAdapter[]}
+              selectedAdapter={selectedAdapter}
+              onSelect={(adapter) => setSelectedAdapter(adapter)}
+              customization={childComponents.networkTabs}
+            />
+
+            <ConnectorsSelections
+              isOnlyOneNetwork={Object.keys(connectors).length === 1}
+              connectors={filteredConnectors}
+              selectedAdapter={selectedAdapter}
+              onClick={handleConnectorClick}
+              setContentType={setConnectModalContentType}
+              appChains={appChains}
+              solanaRPCUrls={solanaRPCUrls}
+              setIsConnected={setIsConnected}
+              setIsOpen={setIsConnectModalOpen}
+              customization={childComponents.connectorsSelections}
+            />
+
+            <LegalDisclaimer customization={childComponents.legalDisclaimer} />
+          </>
+        ) : (
+          <CustomEmptyState className={classNames.emptyConnectors?.({ modalData })} modalData={modalData}>
+            No connectors available
+          </CustomEmptyState>
+        );
+      case 'about':
+        return <AboutWallets customization={childComponents.aboutWallets} />;
+      case 'getWallet':
+        return <GetWallet customization={childComponents.getWallet} />;
+      case 'connecting':
+        return (
+          <Connecting
+            selectedAdapter={selectedAdapter}
+            connectors={filteredConnectors}
+            activeConnector={activeConnector}
+            isConnected={isConnected}
+            customization={childComponents.connecting}
+          />
+        );
+      case 'impersonate':
+        return (
+          <ImpersonateForm
+            selectedAdapter={selectedAdapter}
+            impersonatedAddress={impersonatedAddress}
+            setImpersonatedAddress={setImpersonatedAddress}
+            customization={childComponents.impersonateForm}
+          />
+        );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    connectModalContentType,
+    activeConnector,
+    filteredConnectors,
+    handleNetworkClick,
+    childComponents,
+    connectors,
+    selectedAdapter,
+    handleConnectorClick,
+    isConnected,
+    impersonatedAddress,
+  ]);
+
+  /**
+   * Gets configuration for the bottom action button
+   */
+  const getBottomButtonConfig = useCallback((): BottomButtonConfig | undefined => {
+    switch (connectModalContentType) {
+      case 'connectors':
+        return {
+          title: labels.iDontHaveWallet,
+          onClick: () => {
+            if (handlers.onActionClick?.connectors) {
+              handlers.onActionClick.connectors(modalData);
+            } else {
+              setConnectModalContentType('getWallet');
+            }
+          },
+        };
+      case 'getWallet':
+        return {
+          title: labels.choseWallet,
+          onClick: () => {
+            if (handlers.onActionClick?.getWallet) {
+              handlers.onActionClick.getWallet(modalData);
+            } else {
+              window.open(
+                getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
+                '_blank',
+                'noopener,noreferrer',
+              );
+            }
+          },
+        };
+      case 'about':
+        return {
+          title: labels.learnMore,
+          onClick: () => {
+            if (handlers.onActionClick?.about) {
+              handlers.onActionClick.about(modalData);
+            } else {
+              window.open(
+                getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
+                '_blank',
+                'noopener,noreferrer',
+              );
+            }
+          },
+        };
+      case 'impersonate':
+        return {
+          title: labels.connect,
+          onClick: async () => {
+            if (handlers.onActionClick?.impersonate) {
+              await handlers.onActionClick.impersonate(modalData);
+            } else {
+              const trimmedAddress = impersonatedAddress.trim();
+              if (connectionError || !trimmedAddress || !isAddress(trimmedAddress) || !!activeConnection?.isConnected)
+                return;
+              impersonatedHelpers.setImpersonated(trimmedAddress);
+              setConnectModalContentType('connecting');
+              await handleConnect(
+                getConnectorTypeFromName(selectedAdapter ?? OrbitAdapter.EVM, activeConnector ?? '') as ConnectorType,
+                selectedAdapter ?? OrbitAdapter.EVM,
+              );
+            }
+          },
+        };
+      case 'connecting':
+        return connectionError && selectedAdapter && activeConnector
+          ? {
+              title: labels.tryAgain,
+              onClick: async () => {
+                if (handlers.onActionClick?.connecting) {
+                  await handlers.onActionClick.connecting(modalData);
+                } else {
+                  await handleConnect(
+                    getConnectorTypeFromName(selectedAdapter, activeConnector) as ConnectorType,
+                    selectedAdapter,
+                  );
+                }
               },
-            }}
-          >
-            <ModalContainer className={classNames.modalContainer?.({ modalData })} modalData={modalData}>
-              <ModalHeader className={classNames.header?.({ modalData })} modalData={modalData}>
-                <Title className={classNames.title?.({ modalData })} modalData={modalData}>
-                  {connectModalContentType === 'connectors' && (
-                    <InfoButton
-                      className={classNames.infoButton?.({ modalData })}
-                      onClick={handleInfoClick}
-                      aria-label={
-                        config.ariaLabels?.infoButton?.(modalData) || `${labels.learnMore} ${labels.aboutWallets}`
-                      }
-                      modalData={modalData}
-                    />
-                  )}
-                  {getTitle()}
-                </Title>
+            }
+          : undefined;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    connectModalContentType,
+    labels,
+    handlers,
+    modalData,
+    selectedAdapter,
+    connectors,
+    impersonatedAddress,
+    connectionError,
+    handleConnect,
+    activeConnector,
+  ]);
 
-                <CloseButton
-                  className={classNames.closeButton?.({ modalData })}
-                  onClick={() => handleOpenChange(false)}
-                  aria-label={config.ariaLabels?.closeButton?.(modalData) || labels.closeModal}
-                  modalData={modalData}
-                />
-              </ModalHeader>
+  const bottomButtonConfig = getBottomButtonConfig();
 
-              <MainContent className={classNames.mainContent?.({ modalData })} modalData={modalData}>
-                {renderMainContent()}
-              </MainContent>
+  /**
+   * Get action description text
+   */
+  const getActionDescription = useCallback(() => {
+    switch (connectModalContentType) {
+      case 'getWallet':
+        return 'Opens external wallet selection page';
+      case 'about':
+        return 'Opens external documentation';
+      case 'impersonate':
+        return 'Connects with impersonated wallet address';
+      case 'connecting':
+        return 'Retries wallet connection';
+      default:
+        return '';
+    }
+  }, [connectModalContentType]);
 
-              <Footer className={classNames.footer?.({ modalData })} modalData={modalData}>
-                <div className="novacon:flex novacon:items-center novacon:gap-4">
-                  {connectModalContentType !== 'connectors' && (
-                    <BackButton
-                      className={classNames.backButton?.({ modalData })}
-                      onClick={handleBack}
-                      aria-label={config.ariaLabels?.backButton?.(modalData) || `${labels.back} to previous step`}
-                      modalData={modalData}
-                    >
-                      {labels.back}
-                    </BackButton>
-                  )}
-                </div>
-                {bottomButtonConfig && (
-                  <div className="novacon:flex novacon:items-center novacon:gap-3">
-                    <ActionButton
-                      className={classNames.actionButton?.({ modalData, buttonConfig: bottomButtonConfig })}
-                      onClick={bottomButtonConfig.onClick}
-                      disabled={bottomButtonConfig.disabled}
-                      loading={bottomButtonConfig.loading}
-                      aria-describedby="bottom-action-description"
-                      modalData={modalData}
-                      buttonConfig={bottomButtonConfig}
-                    >
-                      {bottomButtonConfig.title}
-                    </ActionButton>
-                    <ActionDescription
-                      id="bottom-action-description"
-                      className={classNames.actionDescription?.({ modalData })}
-                      modalData={modalData}
-                    >
-                      {getActionDescription()}
-                    </ActionDescription>
-                  </div>
+  return (
+    <CustomDialog open={isConnectModalOpen} onOpenChange={handleOpenChange}>
+      <CustomDialogContent className={cn('novacon:w-full novacon:sm:max-w-md')}>
+        <CustomMotionDiv
+          layout
+          transition={{
+            layout: {
+              duration: config.animation?.disabled ? 0 : (config.animation?.layoutDuration ?? 0.0001),
+            },
+          }}
+        >
+          <ModalContainer className={classNames.modalContainer?.({ modalData })} modalData={modalData}>
+            <ModalHeader className={classNames.header?.({ modalData })} modalData={modalData}>
+              <Title className={classNames.title?.({ modalData })} modalData={modalData}>
+                {connectModalContentType === 'connectors' && (
+                  <InfoButton
+                    className={classNames.infoButton?.({ modalData })}
+                    onClick={handleInfoClick}
+                    aria-label={
+                      config.ariaLabels?.infoButton?.(modalData) || `${labels.learnMore} ${labels.aboutWallets}`
+                    }
+                    modalData={modalData}
+                  />
                 )}
-              </Footer>
-            </ModalContainer>
-          </CustomMotionDiv>
-        </CustomDialogContent>
-      </CustomDialog>
-    );
-  },
-);
+                {getTitle()}
+              </Title>
+
+              <CloseButton
+                className={classNames.closeButton?.({ modalData })}
+                onClick={() => handleOpenChange(false)}
+                aria-label={config.ariaLabels?.closeButton?.(modalData) || labels.closeModal}
+                modalData={modalData}
+              />
+            </ModalHeader>
+
+            <MainContent className={classNames.mainContent?.({ modalData })} modalData={modalData}>
+              {renderMainContent()}
+            </MainContent>
+
+            <Footer className={classNames.footer?.({ modalData })} modalData={modalData}>
+              <div className="novacon:flex novacon:items-center novacon:gap-4">
+                {connectModalContentType !== 'connectors' && (
+                  <BackButton
+                    className={classNames.backButton?.({ modalData })}
+                    onClick={handleBack}
+                    aria-label={config.ariaLabels?.backButton?.(modalData) || `${labels.back} to previous step`}
+                    modalData={modalData}
+                  >
+                    {labels.back}
+                  </BackButton>
+                )}
+              </div>
+              {bottomButtonConfig && (
+                <div className="novacon:flex novacon:items-center novacon:gap-3">
+                  <ActionButton
+                    className={classNames.actionButton?.({ modalData, buttonConfig: bottomButtonConfig })}
+                    onClick={bottomButtonConfig.onClick}
+                    disabled={bottomButtonConfig.disabled}
+                    loading={bottomButtonConfig.loading}
+                    aria-describedby="bottom-action-description"
+                    modalData={modalData}
+                    buttonConfig={bottomButtonConfig}
+                  >
+                    {bottomButtonConfig.title}
+                  </ActionButton>
+                  <ActionDescription
+                    id="bottom-action-description"
+                    className={classNames.actionDescription?.({ modalData })}
+                    modalData={modalData}
+                  >
+                    {getActionDescription()}
+                  </ActionDescription>
+                </div>
+              )}
+            </Footer>
+          </ModalContainer>
+        </CustomMotionDiv>
+      </CustomDialogContent>
+    </CustomDialog>
+  );
+});
 
 ConnectModal.displayName = 'ConnectModal';

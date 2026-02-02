@@ -4,6 +4,8 @@
 
 import { CheckIcon, DocumentDuplicateIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import type { TuwaErrorState } from '@tuwaio/orbit-core';
+import { useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
@@ -25,8 +27,8 @@ export type TxErrorBlockClassNames = {
 };
 
 export type TxErrorBlockProps = {
-  /** The error message string to display. If undefined or empty, the component renders nothing. */
-  error?: string;
+  /** The error to display. Can be a string or a TuwaErrorState. If undefined or empty, the component renders nothing. */
+  error?: string | TuwaErrorState;
   /** Optional additional CSS classes for the container. */
   className?: string;
   /** Granular classNames for sub-elements */
@@ -42,15 +44,25 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
+  // Serialize error for display and copy
+  const { displayMessage, copyMessage } = useMemo(() => {
+    if (!error) return { displayMessage: '', copyMessage: '' };
+    if (typeof error === 'string') return { displayMessage: error, copyMessage: error };
+    return {
+      displayMessage: error.message,
+      copyMessage: JSON.stringify(error.raw, null, 2),
+    };
+  }, [error]);
+
   // Don't render anything if there is no error message.
-  if (!error) {
+  if (!error || !displayMessage) {
     return null;
   }
 
   return (
     <div
       className={cn(
-        'novatx:rounded-lg novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
+        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-error-icon)]/30 novatx:bg-[var(--tuwa-error-bg)] novatx:p-3 novatx:text-sm',
         classNames?.container,
         className,
       )}
@@ -68,7 +80,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
         </div>
         <button
           type="button"
-          onClick={() => copy(error)}
+          onClick={() => copy(copyMessage)}
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : `${actions.copy} error message`}
           className={cn(
@@ -97,7 +109,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
             classNames?.messageText,
           )}
         >
-          {error}
+          {displayMessage}
         </p>
       </div>
     </div>

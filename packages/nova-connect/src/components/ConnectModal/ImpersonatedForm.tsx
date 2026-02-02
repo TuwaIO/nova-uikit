@@ -3,7 +3,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core';
-import { isAddress, OrbitAdapter } from '@tuwaio/orbit-core';
+import { isAddress, normalizeError, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -455,7 +455,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           if (hasInteracted || immediate) {
             const error = await validateValue(value);
             if (error) {
-              setConnectionError(error);
+              setConnectionError(normalizeError(new Error(error)));
             } else {
               resetConnectionError();
             }
@@ -534,7 +534,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       // Immediate validation on blur
       const error = await validateValue(inputValue);
       if (error) {
-        setConnectionError(error);
+        setConnectionError(normalizeError(new Error(error)));
       } else {
         resetConnectionError();
       }
@@ -579,14 +579,14 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       ? customization.classNames.input({ hasError: !!connectionError, hasInteracted })
       : cn(
           // Base layout and spacing
-          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-xl',
+          'novacon:mt-1 novacon:w-full novacon:p-3 novacon:rounded-[var(--tuwa-rounded-corners)]',
           // Theme colors
           'novacon:bg-[var(--tuwa-bg-secondary)]',
           'novacon:border novacon:border-[var(--tuwa-border-primary)]',
           'novacon:text-[var(--tuwa-text-primary)]',
           'novacon:placeholder:text-[var(--tuwa-text-secondary)]',
           // Focus and interaction states
-          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)]',
+          'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           // Error state styling
           { 'novacon:border-red-500 novacon:focus:ring-red-500': connectionError },
           // Resolving state styling
@@ -677,7 +677,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         {/* Error message display */}
         {connectionError && (
           <CustomErrorMessage className={errorMessageClasses} id={errorId} role="alert" aria-live="polite">
-            {connectionError}
+            {connectionError.message}
           </CustomErrorMessage>
         )}
       </CustomContainer>

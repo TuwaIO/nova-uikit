@@ -495,7 +495,7 @@ export const NetworkSelections = memo(
           ref={ref}
           className={
             customization?.classNames?.errorContainer?.({ selectionsData }) ??
-            'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-xl novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]'
+            'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]'
           }
           role="alert"
           aria-live="assertive"
@@ -577,10 +577,7 @@ export const NetworkSelections = memo(
               <ConnectCard
                 icon={
                   <CustomNetworkIcon
-                    className={
-                      customization?.classNames?.networkIcon?.({ networkData, selectionsData }) ??
-                      'novacon:w-8 novacon:h-8'
-                    }
+                    className={customization?.classNames?.networkIcon?.({ networkData, selectionsData })}
                     role="img"
                     aria-label={
                       customConfig?.ariaLabels?.networkIcon?.(networkData) ?? `${networkData.name} network icon`

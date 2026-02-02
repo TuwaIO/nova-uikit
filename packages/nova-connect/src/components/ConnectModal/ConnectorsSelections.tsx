@@ -4,10 +4,10 @@
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { formatConnectorName, isSafeApp, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useCallback, useMemo } from 'react';
+import { detectSafeApp, formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
+import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ConnectContentType, NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
+import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { InitialChains } from '../../types';
 import { WalletIcon } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
@@ -38,6 +38,7 @@ export interface ConnectorsSelectionsData {
     installed: GroupedConnector[];
     popular: GroupedConnector[];
     impersonated?: GroupedConnector;
+    [key: string]: GroupedConnector[] | GroupedConnector | undefined;
   };
   /** Current labels from i18n */
   labels: ReturnType<typeof useNovaConnectLabels>;
@@ -213,7 +214,7 @@ export type ConnectorsSelectionsCustomization = {
 /**
  * Props for the ConnectorsSelections component
  */
-export interface ConnectorsSelectionsProps extends Pick<NovaConnectProviderProps, 'withImpersonated'>, InitialChains {
+export interface ConnectorsSelectionsProps extends InitialChains {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
   /** Array of grouped wallet connectors */
@@ -446,12 +447,13 @@ export const ConnectorsSelections = memo(
         appChains,
         solanaRPCUrls,
         setContentType,
-        withImpersonated,
         isOnlyOneNetwork = false,
         customization,
       },
       ref,
     ) => {
+      const { withImpersonated, popularConnectors: popularConnectorsProp, customConnectorGroups } = useNovaConnect();
+
       // Extract customization options
       const {
         Container: CustomContainer = DefaultContainer,
@@ -473,42 +475,75 @@ export const ConnectorsSelections = memo(
       const isTouch = useMemo(() => isTouchDevice(), []);
 
       /**
+       * Safe App detection state
+       */
+      const [isSafeVisible, setIsSafeVisible] = useState(false);
+
+      useEffect(() => {
+        let isMounted = true;
+        detectSafeApp().then((isSafe) => {
+          if (isMounted) {
+            setIsSafeVisible(isSafe);
+          }
+        });
+        return () => {
+          isMounted = false;
+        };
+      }, []);
+
+      /**
        * Memoized connector filtering
        */
       /**
        * Connector filtering
        */
-      const connectorGroups = (() => {
-        const popularDesiredOrder = ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
+      const connectorGroups = useMemo((): Pick<ConnectorsSelectionsData, 'connectorGroups'>['connectorGroups'] => {
+        const popularDesiredOrderRaw = popularConnectorsProp || ['walletconnect', 'porto', 'coinbase', 'geminiwallet'];
+        const popularDesiredOrder = popularDesiredOrderRaw.map((name) => formatConnectorName(name));
+
+        const customGroupsKeys = customConnectorGroups ? Object.keys(customConnectorGroups) : [];
+        const customGroupsConnectorsNamesRaw = customConnectorGroups ? Object.values(customConnectorGroups).flat() : [];
+        const customGroupsConnectorsNames = customGroupsConnectorsNamesRaw.map((name) => formatConnectorName(name));
 
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
           return (
             formattedName !== 'impersonatedwallet' &&
-            formattedName !== popularDesiredOrder[0] &&
-            formattedName !== popularDesiredOrder[1] &&
-            formattedName !== popularDesiredOrder[2] &&
-            formattedName !== popularDesiredOrder[3]
+            !popularDesiredOrder.includes(formattedName) &&
+            !customGroupsConnectorsNames.includes(formattedName)
           );
         });
 
-        const installedConnectors = isSafeApp
+        const installedConnectors = isSafeVisible
           ? installedConnectorsInitial
           : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== 'safe');
 
         const popularConnectors = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
-          return (
-            formattedName === popularDesiredOrder[0] ||
-            formattedName === popularDesiredOrder[1] ||
-            formattedName === popularDesiredOrder[2] ||
-            formattedName === popularDesiredOrder[3]
-          );
+          return popularDesiredOrder.includes(formattedName);
         });
 
         const impersonatedConnector = connectors.find(
           (group) => formatConnectorName(group.name) === 'impersonatedwallet',
         );
+
+        const customGroups: Record<string, GroupedConnector[]> = {};
+        if (customConnectorGroups) {
+          customGroupsKeys.forEach((key) => {
+            const desiredOrderRaw = customConnectorGroups[key];
+            const desiredOrder = desiredOrderRaw.map((name) => formatConnectorName(name));
+
+            const groupConnectors = connectors.filter((group) => {
+              const formattedName = formatConnectorName(group.name);
+              return desiredOrder.includes(formattedName);
+            });
+            customGroups[key] = createCustomSort(
+              groupConnectors,
+              (connector) => formatConnectorName(connector.name),
+              desiredOrder,
+            );
+          });
+        }
 
         return {
           installed: installedConnectors,
@@ -518,8 +553,9 @@ export const ConnectorsSelections = memo(
             popularDesiredOrder,
           ),
           impersonated: impersonatedConnector,
+          ...customGroups,
         };
-      })();
+      }, [connectors, popularConnectorsProp, customConnectorGroups, isSafeVisible]);
 
       /**
        * Memoized selections data
@@ -666,7 +702,7 @@ export const ConnectorsSelections = memo(
 
         emptyState:
           customization?.classNames?.emptyState?.({ selectionsData }) ??
-          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-xl novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
+          'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-8 novacon:text-center novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-secondary)]',
 
         disclaimerSection: customization?.classNames?.disclaimerSection?.({ selectionsData }) ?? '',
       };
@@ -736,6 +772,29 @@ export const ConnectorsSelections = memo(
                 isTitleBold
                 customization={customization?.connectorsBlock?.installed}
               />
+
+              {customConnectorGroups &&
+                Object.keys(customConnectorGroups).map((key) => {
+                  const groupConnectors = connectorGroups[key] as GroupedConnector[];
+                  if (!groupConnectors || groupConnectors.length === 0) return null;
+
+                  return (
+                    <ConnectorsBlock
+                      key={key}
+                      connectors={groupConnectors}
+                      title={key}
+                      selectedAdapter={selectedAdapter}
+                      onClick={onClick}
+                      solanaRPCUrls={solanaRPCUrls}
+                      setIsConnected={setIsConnected}
+                      setIsOpen={setIsOpen}
+                      appChains={appChains}
+                      isOnlyOneNetwork={isOnlyOneNetwork}
+                      customization={customization?.connectorsBlock?.popular}
+                    />
+                  );
+                })}
+
               {!!connectorGroups.popular.length && (
                 <ConnectorsBlock
                   connectors={connectorGroups.popular}

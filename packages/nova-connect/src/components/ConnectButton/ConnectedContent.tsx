@@ -518,7 +518,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       <div {...containerProps}>
         {/* Balance Display */}
         {withBalance && (
-          <div className="novacon:relative" onClick={handleBalanceClick}>
+          <div className="novacon:relative novacon:hidden novacon:sm:block" onClick={handleBalanceClick}>
             <BalanceContainer
               formattedBalance={formattedBalance}
               labels={labels}

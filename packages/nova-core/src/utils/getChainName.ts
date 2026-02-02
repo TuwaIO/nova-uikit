@@ -8,38 +8,96 @@ import { isSolanaDev } from './isSolanaDev';
 const UNKNOWN_NETWORK = 'Unknown';
 
 /**
- * Retrieves the human-readable name of a blockchain network based on its Chain ID.
- *
- * Supports both:
- * - Numeric IDs (EVM): e.g., `1` -> "Ethereum"
- * - String IDs (Non-EVM): e.g., `"solana:devnet"` -> "Solana Devnet"
- *
- * For formatted string IDs (like "solana:devnet"), it capitalizes the suffix
- * if the network is identified as a development environment.
- *
- * @param chainId - The unique identifier of the chain (number for EVM, string for others).
- * @returns The formatted network name or 'Unknown'.
+ * Result of chain name resolution.
  */
-export function getChainName(chainId: number | string): string {
-  // 1. Handle Numeric IDs (EVM standard)
+export interface ChainInfo {
+  /** Human-readable network name (e.g., "Ethereum", "Solana Devnet") */
+  name: string;
+  /** Normalized network identifier for icon libraries (e.g., "ethereum", "solana") */
+  id: string;
+  /** Original chain ID as provided */
+  chainId: number | string;
+  /** File path for icon resolution */
+  filePath: string;
+}
+
+/**
+ * Capitalizes the first letter of a string.
+ *
+ * @param str - String to capitalize
+ * @returns Capitalized string
+ */
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+/**
+ * Retrieves blockchain network information based on its chain ID.
+ *
+ * Supports both EVM and non-EVM chain identifiers:
+ * - **Numeric IDs (EVM):** e.g., `1` → "Ethereum", `137` → "Polygon"
+ * - **String IDs (Non-EVM):** e.g., `"solana:devnet"` → "Solana Devnet"
+ *
+ * For string IDs with environment suffixes (like "solana:devnet"),
+ * the suffix is appended to the name if it's a known dev/test environment.
+ *
+ * @param chainId - Chain identifier (number for EVM, string for non-EVM)
+ * @returns Chain information object with name, id, and original chainId
+ *
+ * @example
+ * ```ts
+ * // EVM network
+ * getChainName(1)
+ * // → { name: "Ethereum", id: "ethereum", chainId: 1 }
+ *
+ * // Solana devnet
+ * getChainName("solana:devnet")
+ * // → { name: "Solana Devnet", id: "solana", chainId: "solana:devnet" }
+ *
+ * // Unknown network
+ * getChainName(999999)
+ * // → { name: "Unknown", id: "unknown", chainId: 999999 }
+ * ```
+ */
+export function getChainName(chainId: number | string): ChainInfo {
+  const unknownResult: ChainInfo = {
+    name: UNKNOWN_NETWORK,
+    id: UNKNOWN_NETWORK.toLowerCase(),
+    filePath: UNKNOWN_NETWORK.toLowerCase(),
+    chainId,
+  };
+
+  // Handle numeric IDs (EVM standard)
   if (typeof chainId === 'number') {
-    return networks.find((network) => network.chainId === chainId)?.name ?? UNKNOWN_NETWORK;
+    const network = networks.find((n) => n.chainId === chainId);
+
+    if (!network) {
+      return unknownResult;
+    }
+
+    return {
+      name: network.name,
+      id: network.id,
+      filePath: network.filePath.split(':')[1],
+      chainId,
+    };
   }
 
-  // 2. Handle String IDs (Tuwa/Web3Icons standard, e.g., "solana:devnet")
+  // Handle string IDs (e.g., "solana:devnet")
   const [baseId, variant] = chainId.split(':');
-  const networkDef = networks.find((network) => network.id === baseId);
+  const network = networks.find((n) => n.id === baseId);
 
-  if (!networkDef) {
-    return UNKNOWN_NETWORK;
+  if (!network) {
+    return unknownResult;
   }
 
-  // 3. Special formatting for Dev/Test networks (e.g., "Solana Devnet")
-  // We only append the variant if it exists and it's a known dev environment
-  if (variant && isSolanaDev(chainId)) {
-    const formattedVariant = variant.charAt(0).toUpperCase() + variant.slice(1).toLowerCase();
-    return `${networkDef.name} ${formattedVariant}`;
-  }
+  // Append variant suffix for dev/test environments
+  const name = variant && isSolanaDev(chainId) ? `${network.name} ${capitalize(variant)}` : network.name;
 
-  return networkDef.name;
+  return {
+    name,
+    id: network.id,
+    filePath: network.filePath.split(':')[1],
+    chainId,
+  };
 }

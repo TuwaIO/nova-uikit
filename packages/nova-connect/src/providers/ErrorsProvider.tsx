@@ -3,6 +3,7 @@
  */
 
 import { ToastCloseButton, ToastCloseButtonProps } from '@tuwaio/nova-core';
+import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition } from 'react-toastify';
 
@@ -13,7 +14,7 @@ import { useSatelliteConnectStore } from '../satellite';
 // --- Types for Customization ---
 type CustomToastErrorProps = {
   title: string;
-  rawError: string;
+  rawError: string | TuwaErrorState;
   onCopyComplete?: (success: boolean) => void;
   errorType: 'wallet' | 'switch' | null;
   isConnected: boolean;
@@ -48,7 +49,7 @@ export type ErrorsProviderCustomization = {
     /** Function to generate toast options */
     error?: (params: {
       title: string;
-      rawError: string;
+      rawError: string | TuwaErrorState;
       errorType: 'wallet' | 'switch' | null;
       isConnected: boolean;
     }) => Partial<Parameters<typeof toast.error>[1]>;
@@ -57,20 +58,20 @@ export type ErrorsProviderCustomization = {
   handlers?: {
     /** Custom error display logic */
     showError?: (
-      originalHandler: (title: string, rawError: string, errorKey: string) => void,
-      params: { title: string; rawError: string; errorKey: string; errorType: 'wallet' | 'switch' | null },
+      originalHandler: (title: string, rawError: string | TuwaErrorState, errorKey: string) => void,
+      params: { title: string; rawError: string | TuwaErrorState; errorKey: string; errorType: 'wallet' | 'switch' | null },
     ) => void;
     /** Custom error dismissal logic */
     dismissError?: (originalHandler: () => void) => void;
     /** Custom copy complete handler */
-    onCopyComplete?: (success: boolean, rawError: string, errorType: 'wallet' | 'switch' | null) => void;
+    onCopyComplete?: (success: boolean, rawError: string | TuwaErrorState, errorType: 'wallet' | 'switch' | null) => void;
   };
   /** Custom error title generator - does NOT customize labels, just allows title modification */
   errorTitle?: (defaultTitle: string, params: { errorType: 'wallet' | 'switch' | null }) => string;
   /** Custom error hash generator for deduplication */
   errorHash?: (
     defaultHash: string | null,
-    params: { primaryError: string | null; errorType: 'wallet' | 'switch' | null },
+    params: { primaryError: TuwaErrorState | null; errorType: 'wallet' | 'switch' | null },
   ) => string | null;
 };
 
@@ -110,8 +111,8 @@ const DefaultContainer = (props: CustomContainerProps) => {
 
 // --- Default Handlers ---
 const defaultShowErrorHandler = (
-  originalHandler: (title: string, rawError: string, errorKey: string) => void,
-  params: { title: string; rawError: string; errorKey: string },
+  originalHandler: (title: string, rawError: string | TuwaErrorState, errorKey: string) => void,
+  params: { title: string; rawError: string | TuwaErrorState; errorKey: string },
 ) => {
   originalHandler(params.title, params.rawError, params.errorKey);
 };
@@ -120,9 +121,13 @@ const defaultDismissErrorHandler = (originalHandler: () => void) => {
   originalHandler();
 };
 
-const defaultCopyCompleteHandler = (success: boolean, rawError: string) => {
+const defaultCopyCompleteHandler = (
+  success: boolean,
+  rawError: string | TuwaErrorState,
+) => {
   if (success && process.env.NODE_ENV === 'development') {
-    console.log('Error copied to clipboard:', rawError.substring(0, 100));
+    const msg = typeof rawError === 'string' ? rawError : rawError.message;
+    console.log('Error copied to clipboard:', msg.substring(0, 100));
   }
 };
 
@@ -199,7 +204,7 @@ export function ErrorsProvider({
 
   // Generate default error hash for deduplication
   const defaultErrorHash = errorState.primaryError
-    ? `${errorState.errorType}-${errorState.primaryError.substring(0, 50)}`
+    ? `${errorState.errorType}-${errorState.primaryError.message.substring(0, 50)}`
     : null;
 
   // Generate custom error hash
@@ -222,7 +227,7 @@ export function ErrorsProvider({
 
   // Handle copy complete
   const handleCopyComplete = useCallback(
-    (success: boolean, rawError: string) => {
+    (success: boolean, rawError: string | TuwaErrorState) => {
       customCopyCompleteHandler(success, rawError, errorState.errorType);
     },
     [customCopyCompleteHandler, errorState.errorType],
@@ -230,7 +235,7 @@ export function ErrorsProvider({
 
   // Original handler for error display - using full customization object in dependencies
   const originalErrorHandler = useCallback(
-    (t: string, r: string, k: string) => {
+    (t: string, r: string | TuwaErrorState, k: string) => {
       // Dismiss previous toast first
       dismissCurrentToast();
 
@@ -293,7 +298,7 @@ export function ErrorsProvider({
 
   // Show error toast
   const showErrorToast = useCallback(
-    (title: string, rawError: string, errorKey: string) => {
+    (title: string, rawError: TuwaErrorState, errorKey: string) => {
       customShowErrorHandler(originalErrorHandler, { title, rawError, errorKey, errorType: errorState.errorType });
     },
     [originalErrorHandler, customShowErrorHandler, errorState.errorType],

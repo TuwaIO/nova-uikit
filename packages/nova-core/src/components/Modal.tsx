@@ -121,7 +121,7 @@ const DialogContent = React.forwardRef<
             >
               <div
                 className={cn(
-                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:gap-3 novacore:overflow-y-auto novacore:rounded-t-2xl novacore:sm:rounded-2xl novacore:shadow-2xl',
+                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:gap-3 novacore:overflow-y-auto novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]',
                   'novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)]',
                 )}
               >

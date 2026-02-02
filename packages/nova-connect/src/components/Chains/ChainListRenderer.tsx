@@ -276,11 +276,11 @@ const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, ComponentProps
         className={cn(
           // Base styles
           'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
-          'novacon:rounded-md novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
+          'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           // Interactive states
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
-          'novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           // Active state
           { 'novacon:bg-[var(--tuwa-bg-muted)]': isActive },
           // Custom classes
@@ -433,7 +433,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
   const renderChainItem = (chain: string | number) => {
     const { formattedChainId } = getChainData(chain);
     const isActive = String(formattedChainId) === selectValue;
-    const chainName = getChainName(formattedChainId);
+    const chainName = getChainName(formattedChainId).name;
 
     // Generate custom classes and styles
     const itemClasses = customization?.classNames?.item?.({ isActive, isMobile, chainId: formattedChainId })
@@ -441,10 +441,10 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
       : cn(
           // Default item styles
           'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
-          'novacon:rounded-md novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
+          'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
-          'novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-2',
+          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           { 'novacon:bg-[var(--tuwa-bg-muted)]': isActive, 'novacon:justify-between': isMobile },
           // Custom classes
           itemClassName,

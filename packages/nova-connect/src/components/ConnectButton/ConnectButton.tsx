@@ -330,10 +330,10 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     classNames.button?.({ buttonData }) ||
     cn(
       'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
-      'novacon:rounded-xl novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
+      'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
       'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
-      'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-offset-2',
-      'novacon:focus:ring-offset-[var(--tuwa-bg-primary)]',
+      'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)]',
+      'novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
       'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:scale-100',
       isConnected
         ? [
@@ -344,12 +344,9 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
             'novacon:border novacon:border-[var(--tuwa-border-primary)]',
           ]
         : [
-            'novacon:bg-gradient-to-r',
-            'novacon:from-[var(--tuwa-button-gradient-from)]',
-            'novacon:to-[var(--tuwa-button-gradient-to)]',
+            'novacon:bg-[var(--tuwa-button-gradient-from)]',
             'novacon:text-[var(--tuwa-text-on-accent)]',
-            'novacon:hover:from-[var(--tuwa-button-gradient-from-hover)]',
-            'novacon:hover:to-[var(--tuwa-button-gradient-to-hover)]',
+            'novacon:hover:bg-[var(--tuwa-button-gradient-from-hover)]',
             'novacon:focus:ring-[var(--tuwa-text-accent)]',
           ],
       className,

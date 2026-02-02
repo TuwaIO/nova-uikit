@@ -157,7 +157,7 @@ export function TxActionButton<T extends Transaction>({
 
   // Default state-specific classes
   const defaultStateClasses = {
-    idle: 'novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
+    idle: 'novatx:bg-[var(--tuwa-button-gradient-from)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
     loading: 'novatx:bg-gray-400 novatx:text-white',
     replaced: 'novatx:bg-gray-500 novatx:text-white',
     succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
@@ -169,7 +169,7 @@ export function TxActionButton<T extends Transaction>({
 
   const baseClass =
     classNames?.base ??
-    'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-md novatx:px-3 novatx:py-1.5 novatx:text-sm novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70';
+    'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-3 novatx:py-1.5 novatx:text-sm novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70';
 
   return (
     <button

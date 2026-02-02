@@ -185,7 +185,7 @@ export const ToBottomButton = forwardRef<HTMLButtonElement, ToBottomButtonProps>
           'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
           'novacon:transition-colors novacon:duration-200',
           'novacon:hover:bg-[var(--tuwa-bg-tertiary)] novacon:hover:text-[var(--tuwa-text-secondary)]',
-          'novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-inset',
+          'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-inset',
           'novacon:active:bg-[var(--tuwa-bg-quaternary)]',
           'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:bg-[var(--tuwa-bg-secondary)] novacon:cursor-default',
           {

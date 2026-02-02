@@ -277,7 +277,7 @@ const DefaultCopyButton: React.FC<CopyButtonProps> = ({
       onKeyDown={handleKeyDown}
       className={cn(
         'novacon:cursor-pointer novacon:flex novacon:items-center novacon:justify-center novacon:text-sm novacon:transition-all novacon:duration-200 novacon:absolute novacon:right-[-40px]',
-        'novacon:rounded-md novacon:p-1.5 novacon:focus:outline-none novacon:focus:ring-2 novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-opacity-50',
+        'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1.5 novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-opacity-50 novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
         'novacon:hover:scale-110 novacon:active:scale-95',
         isCopied
           ? [

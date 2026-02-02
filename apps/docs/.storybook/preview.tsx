@@ -1,38 +1,21 @@
 import '../src/styles/app.css';
 
+import { withThemeByClassName } from '@storybook/addon-themes';
 import type { Preview } from '@storybook/react-vite';
-import { defaultLabels } from '@tuwaio/nova-transactions';
+import { defaultLabels as transactionsLabels } from '@tuwaio/nova-transactions';
 import { NovaTransactionsLabelsProvider } from '@tuwaio/nova-transactions/providers';
-
-// @ts-expect-error - theme is a valid option
-import { tuwaTheme } from './manager';
 
 const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Introduction', 'NovaTransactionsProvider', 'Theming', 'Components', 'API_Reference'],
+        order: ['Introduction', 'Theming', 'ConnectButton', 'Nova Core', 'Nova Transactions', 'API_Reference'],
       },
     },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
-      },
-    },
-    docs: {
-      theme: tuwaTheme,
-    },
-    globalTypes: {
-      theme: {
-        description: 'Global theme for components',
-        defaultValue: 'light',
-        toolbar: {
-          title: 'Theme',
-          icon: 'paintbrush',
-          items: ['light', 'dark'],
-          dynamicTitle: true,
-        },
       },
     },
     status: {
@@ -56,8 +39,16 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Adds .dark class to body in iframe when theme is switched
+    withThemeByClassName({
+      themes: {
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'light',
+    }),
     (Story) => (
-      <NovaTransactionsLabelsProvider labels={defaultLabels}>
+      <NovaTransactionsLabelsProvider labels={transactionsLabels}>
         <Story />
       </NovaTransactionsLabelsProvider>
     ),

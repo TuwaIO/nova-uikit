@@ -1,8 +1,6 @@
 # Theming & Customization Guide
 
-Welcome to the comprehensive theming guide for **Nova UI Kit**. This document provides everything you need to customize the look, feel, and behavior of components to perfectly match your brand and requirements. 🎨
-
-Nova's theming system is designed with **simplicity** and **maximum flexibility** in mind, giving you complete control over every aspect of your Web3 application's appearance.
+Welcome to the comprehensive theming guide for **Nova UI Kit**. This document provides everything you need to customize the look, feel, and behavior of components to perfectly match your brand. 🎨
 
 ---
 
@@ -10,82 +8,77 @@ Nova's theming system is designed with **simplicity** and **maximum flexibility*
 
 Nova's theming system is built on three foundational principles:
 
-1.  **CSS-First Approach:** All styling is controlled through CSS Custom Properties (variables), requiring no JavaScript configuration files or complex build processes.
+1. **CSS Variables First:** All styling is controlled through `--tuwa-*` CSS Custom Properties. Override them once, and every component updates automatically.
 
-2.  **Tailwind CSS v4 Integration:** Seamless compatibility with modern Tailwind workflows, allowing you to use design tokens directly as arbitrary values.
+2. **Tailwind CSS v4 Integration:** Use design tokens directly as arbitrary values: `bg-[var(--tuwa-bg-primary)]`.
 
-3.  **Layered Customization:** Multiple levels of customization—from simple variable overrides to complete component replacement—giving you exactly the control you need.
-
-**Why This Approach?**
-
-Traditional theming systems often require complex JavaScript configurations, vendor lock-in, or limited customization options. Nova UI Kit solves this by exposing every visual aspect through standard CSS variables that integrate perfectly with modern CSS frameworks.
+3. **Layered Customization:** From simple variable overrides to complete component restyling via the `customization` prop.
 
 ---
 
-## 🚀 Quick Start: Theme Customization
+## 🚀 Quick Start
 
-### Step 1: Setup Your CSS Structure
-
-Ensure you have the correct import order in your main stylesheet:
+### Step 1: Setup CSS Imports
 
 ```css
-/* src/styles/app.css or src/styles/globals.css */
+/* src/styles/app.css */
 
-/* 1. Import Nova foundation (REQUIRED) */
+/* 1. Nova foundation (REQUIRED) */
 @import '@tuwaio/nova-core/dist/index.css';
 
-/* 2. Import Nova feature packages (as needed) */
+/* 2. Feature packages (as needed) */
 @import '@tuwaio/nova-connect/dist/index.css';
 @import '@tuwaio/nova-transactions/dist/index.css';
 
-/* 3. Import Tailwind CSS */
+/* 3. Tailwind CSS */
 @import 'tailwindcss';
 
-/* 4. Your custom theme overrides go here */
+/* 4. Your custom theme overrides */
 :root {
-  /* Your custom variables */
+  /* Override TUWA variables here */
 }
 ```
 
 ### Step 2: Override Design Tokens
 
-Add your brand colors and customizations after the imports:
-
 ```css
-/* Your custom theme overrides */
 :root {
-  /* Brand Identity */
-  --tuwa-color-primary: #6366f1; /* Indigo-500 */
-  --tuwa-color-primary-hover: #4f46e5; /* Indigo-600 */
+  /* Text Colors */
+  --tuwa-text-primary: #ebeff5;
+  --tuwa-text-secondary: #c2c6c9;
+  --tuwa-text-tertiary: #9ea2a6;
+  --tuwa-text-accent: #1ad699;
+  --tuwa-text-on-accent: #05291d;
 
-  /* Semantic Colors */
-  --tuwa-success: #10b981; /* Emerald-500 */
-  --tuwa-error: #ef4444; /* Red-500 */
-  --tuwa-warning: #f59e0b; /* Amber-500 */
+  /* Background Colors */
+  --tuwa-bg-primary: #000000;
+  --tuwa-bg-secondary: #171717;
+  --tuwa-bg-muted: #05291d;
 
-  /* Custom Gradients */
-  --tuwa-gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-}
+  /* Border Colors */
+  --tuwa-border-primary: #292b2e;
+  --tuwa-border-secondary: #171717;
 
-/* Dark mode variations */
-.dark {
-  --tuwa-color-primary: #818cf8; /* Indigo-400 */
-  --tuwa-success: #34d399; /* Emerald-400 */
-  --tuwa-error: #f87171; /* Red-400 */
+  /* Status Colors */
+  --tuwa-success-bg: #0b553c;
+  --tuwa-success-text: #1ad699;
+  --tuwa-success-icon: #1ad699;
+
+  --tuwa-error-bg: rgba(224, 36, 36, 0.15);
+  --tuwa-error-text: #e02424;
+  --tuwa-error-icon: #e02424;
+
+  --tuwa-pending-bg: #493f0f;
+  --tuwa-pending-text: #d6bd33;
+  --tuwa-pending-icon: #d6bd33;
 }
 ```
 
-### Step 3: Test Your Changes
-
-Your customizations will automatically apply to all Nova components. Test different components to ensure your theme works across all use cases.
-
 ---
 
-## 🎨 Complete Design Token System
+## 🎨 Complete Design Token Reference
 
-Nova UI Kit provides a comprehensive design token system organized by purpose and scope.
-
-### Core Color System
+### Light Theme (Default)
 
 ```css
 :root {
@@ -126,10 +119,17 @@ Nova UI Kit provides a comprehensive design token system organized by purpose an
 
   --tuwa-standart-button-bg: theme('colors.gray.100');
   --tuwa-standart-button-hover: theme('colors.gray.200');
+
+  --tuwa-testnet-icons: #c4bfb8;
+
+  --tuwa-rounded-corners: 4px;
+  --tuwa-ring-width: 2px;
 }
 ```
 
-### Dark Theme System
+### Dark Theme
+
+Apply `.dark` class to your root element. All variables automatically switch:
 
 ```css
 .dark {
@@ -170,204 +170,278 @@ Nova UI Kit provides a comprehensive design token system organized by purpose an
 
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');
+
+  --tuwa-testnet-icons: #c4bfb8;
 }
 ```
 
 ---
 
-## 🔧 Component-Specific Customization
+## 🔧 Advanced: Component Customization via Props
 
-Beyond design tokens, Nova UI Kit provides advanced customization options for individual component packages.
+Nova components accept a `customization` prop for deep styling control. This is the recommended approach for complete visual overhauls.
 
-### Nova Connect Customization
+### The Pattern: Shared Styles Object
 
-#### Behavioral Customization
+Create a centralized styles file to ensure consistency:
 
-```tsx
-// Comprehensive Nova Connect Provider configuration
-<NovaConnectProvider
-  // Visual Options
-  appChains={appEVMChains}
-  withBalance={true} // Show wallet balance when connected
-  withChain={true} // Show current network
-  withImpersonated={true} // Enable wallet impersonation for testing
-  // Internationalization
-  labels={{
-    connectWallet: 'Connect Wallet',
-    disconnect: 'Disconnect',
-    connecting: 'Connecting...',
-    connected: 'Connected',
-    wrongNetwork: 'Wrong Network',
-    switchNetwork: 'Switch Network',
-    copy: 'Copy',
-    copied: 'Copied!',
-    viewOnExplorer: 'View on Explorer',
-  }}
-  // Advanced Customization
-  modalProps={{
-    showRecentTransactions: true,
-    showNetworkSwitcher: true,
-    customFooter: <MyCustomFooter />,
-  }}
-  // Component Replacement
-  components={{
-    ConnectButton: CustomConnectButton,
-    WalletModal: CustomWalletModal,
-    NetworkSelector: CustomNetworkSelector,
-  }}
->
-  {/* Your app */}
-</NovaConnectProvider>
-```
-
-#### Custom Connect Button Variants
-
-```tsx
-// Create custom styled variants
+```typescript
+// utils/customization/shared_styles.ts
 import { cn } from '@tuwaio/nova-core';
-import { ConnectButton } from '@tuwaio/nova-connect/components';
 
-function CustomConnectButton({ className, ...props }: ConnectButtonProps) {
-  return (
-    <ConnectButton
-      className={cn(
-        // Override base styles
-        'bg-gradient-to-r from-purple-600 to-blue-600',
-        'hover:from-purple-700 hover:to-blue-700',
-        'text-white font-semibold',
-        'px-6 py-3 rounded-xl',
-        'shadow-lg hover:shadow-xl',
-        'transition-all duration-200',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+export const SHARED_STYLES = {
+  // Typography
+  fontMono: 'font-[DM_Mono] font-light',
+  fontMonoMedium: 'font-[DM_Mono] font-medium',
+
+  // Text Colors (using TUWA variables)
+  textPrimary: 'text-[var(--tuwa-text-primary)]',
+  textSecondary: 'text-[var(--tuwa-text-secondary)]',
+  textAccent: 'text-[var(--tuwa-text-accent)]',
+  textError: 'text-[var(--tuwa-error-icon)]',
+
+  // Background Colors
+  bgBase: 'bg-[var(--tuwa-bg-secondary)]',
+  bgDark: 'bg-[var(--tuwa-bg-primary)]',
+  bgAccent: 'bg-[var(--tuwa-text-accent)]',
+  bgMuted: 'bg-[var(--tuwa-bg-muted)]',
+
+  // Borders
+  borderDefault: 'border border-[var(--tuwa-border-primary)]',
+  borderAccent: 'border-[var(--tuwa-text-accent)]',
+
+  // Focus States
+  baseFocus: 'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--tuwa-text-accent)]',
+
+  // Interactive States
+  itemInteractive: cn(
+    'transition-all duration-200 ease-out',
+    'focus:outline-none focus:ring-2 focus:ring-offset-2',
+    'focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-bg-secondary)]',
+  ),
+} as const;
+
+// Reusable button patterns
+export const BUTTON_STYLES = {
+  primary: cn(
+    'cursor-pointer inline-flex items-center justify-center gap-2',
+    'rounded-[4px] transition-all duration-200',
+    'px-4 py-2 text-sm',
+    'bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]',
+    'hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]',
+  ),
+
+  ghost: cn(
+    'cursor-pointer inline-flex items-center justify-center gap-2',
+    'rounded-[4px] transition-all duration-200',
+    'bg-[var(--tuwa-bg-secondary)]',
+    'border border-[var(--tuwa-border-primary)]',
+    'text-[var(--tuwa-text-primary)]',
+    'hover:bg-[var(--tuwa-border-primary)]',
+  ),
+
+  danger: cn(
+    'cursor-pointer inline-flex items-center justify-center gap-2',
+    'rounded-[4px] transition-all duration-200',
+    'border border-[var(--tuwa-border-primary)]',
+    'text-[var(--tuwa-text-primary)]',
+    'hover:bg-[var(--tuwa-error-icon)]/10',
+    'hover:border-[var(--tuwa-error-icon)]',
+    'hover:text-[var(--tuwa-error-icon)]',
+  ),
+} as const;
 ```
 
-### Nova Transactions Customization
+### Customizing Nova Connect
 
-#### Advanced Configuration
-
-```tsx
-<NovaTransactionsProvider
-  transactionsPool={transactionsPool}
-  initialTx={initialTx}
-  closeTxTrackedModal={closeTxTrackedModal}
-  executeTxAction={executeTxAction}
-  connectedWalletAddress={walletAddress}
-  connectedAdapterType={TransactionAdapter.EVM}
-  adapter={adapter}
-  // Internationalization
-  labels={{
-    statuses: {
-      pending: 'Processing Transaction...',
-      success: 'Transaction Successful!',
-      failed: 'Transaction Failed',
-    },
-    actions: {
-      retry: 'Retry Transaction',
-      viewOnExplorer: 'View on Block Explorer',
-      dismiss: 'Dismiss',
-    },
-    toast: {
-      openTransactionsInfo: 'View Transaction Details',
-      transactionSubmitted: 'Transaction Submitted',
-    },
-  }}
-  // Visual Customization
-  modalProps={{
-    showProgressBar: true,
-    showTransactionHash: true,
-    showEstimatedTime: true,
-    autoCloseOnSuccess: true,
-    autoCloseDelay: 3000,
-  }}
-  // Toast Configuration
-  toastProps={{
-    position: 'bottom-right',
-    duration: 5000,
-    showProgressBar: true,
-    pauseOnHover: true,
-  }}
-  // Component Replacement
-  components={{
-    TransactionModal: CustomTransactionModal,
-    ProgressToast: CustomProgressToast,
-    TransactionHistory: CustomTransactionHistory,
-  }}
->
-  {/* Your app */}
-</NovaTransactionsProvider>
-```
-
-#### Custom Transaction Components
-
-```tsx
-// Custom transaction status component
+```typescript
+// utils/customization/nova_connect_provider.ts
+import { NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
 import { cn } from '@tuwaio/nova-core';
-import { TransactionStatus } from '@tuwaio/nova-transactions';
+import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 
-function CustomTransactionStatus({
-  status,
-  hash,
-  className,
-}: {
-  status: TransactionStatus;
-  hash: string;
-  className: string;
-}) {
-  return (
-    <div
-      className={cn(
-        'flex items-center gap-3 p-4 rounded-lg',
-        'border border-[var(--tuwa-border-primary)]',
-        {
-          'bg-[var(--tuwa-success-bg)] border-[var(--tuwa-success-accent)]': status === 'success',
-          'bg-[var(--tuwa-error-bg)] border-[var(--tuwa-error-accent)]': status === 'failed',
-          'bg-[var(--tuwa-pending-bg)] border-[var(--tuwa-pending-accent)]': status === 'pending',
+export const nova_connect_customization: NovaConnectProviderCustomization = {
+  modals: {
+    connectModal: {
+      classNames: {
+        modalContainer: () => 'bg-[var(--tuwa-bg-secondary)]',
+        header: () => cn(
+          'bg-[var(--tuwa-bg-secondary)]',
+          'border-b border-[var(--tuwa-border-primary)]',
+        ),
+        title: () => cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
+        closeButton: () => cn(
+          'cursor-pointer rounded-[4px] p-1 transition-colors',
+          SHARED_STYLES.textSecondary,
+          'hover:bg-[var(--tuwa-bg-muted)]',
+          SHARED_STYLES.baseFocus,
+        ),
+        mainContent: () => 'bg-[var(--tuwa-bg-secondary)]',
+        footer: () => cn(
+          'bg-[var(--tuwa-bg-secondary)]',
+          'border-t border-[var(--tuwa-border-primary)]',
+        ),
+        backButton: () => BUTTON_STYLES.ghost,
+        actionButton: () => BUTTON_STYLES.primary,
+      },
+
+      childComponents: {
+        connectorsSelections: {
+          connectorsBlock: {
+            installed: {
+              classNames: {
+                title: () => cn(
+                  SHARED_STYLES.fontMonoMedium,
+                  SHARED_STYLES.textAccent,
+                  'text-sm uppercase tracking-wide',
+                ),
+              },
+            },
+          },
         },
-        className,
-      )}
+
+        connecting: {
+          classNames: {
+            container: () => 'flex flex-col gap-4 items-center justify-center w-full',
+            statusContainer: ({ statusData }) => cn(
+              'relative flex items-center justify-center',
+              'min-w-[110px] min-h-[110px]',
+              'border-2 rounded-full p-4',
+              'transition-all duration-300 ease-in-out',
+              statusData.state === 'error'
+                ? 'border-[var(--tuwa-error-icon)] bg-[var(--tuwa-error-icon)]/5'
+                : statusData.state === 'success'
+                  ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-text-accent)]/5'
+                  : 'border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)]',
+            ),
+            spinner: () => cn(
+              'absolute animate-spin rounded-full -inset-[2px]',
+              'border-2 border-[var(--tuwa-text-accent)] border-t-transparent',
+            ),
+          },
+        },
+      },
+    },
+  },
+};
+```
+
+### Customizing Connect Card
+
+```typescript
+// utils/customization/connect_card.ts
+import { ConnectCardCustomization } from '@tuwaio/nova-connect/components';
+import { cn } from '@tuwaio/nova-core';
+import { SHARED_STYLES } from './shared_styles';
+
+export const connect_card_customization: ConnectCardCustomization = {
+  classNames: {
+    container: ({ cardData }) => cn(
+      'group cursor-pointer p-4 rounded-xl transition-colors relative border',
+      'w-full h-auto flex items-center justify-between',
+      { 'w-[125px] h-[125px] flex-col text-center': cardData.isTouch },
+      'border-[var(--tuwa-border-primary)]',
+      'bg-[var(--tuwa-bg-secondary)]',
+      'hover:bg-[var(--tuwa-bg-muted)]',
+      'hover:border-[var(--tuwa-text-accent)]',
+      SHARED_STYLES.baseFocus,
+    ),
+
+    content: ({ cardData }) => cn(
+      'flex gap-3 transition duration-300 ease-in-out items-center',
+      { 'flex-col items-center gap-1': cardData.isTouch },
+      'text-[var(--tuwa-text-primary)]',
+      'group-hover:text-[var(--tuwa-text-accent)]',
+    ),
+
+    title: () => cn(
+      SHARED_STYLES.fontMono,
+      'text-[var(--tuwa-text-primary)]',
+      'group-hover:text-[var(--tuwa-text-accent)]',
+      'transition-colors duration-200',
+    ),
+
+    chevron: () => cn(
+      'w-5 h-5 transition duration-300 ease-in-out',
+      'translate-x-[-10px] opacity-0',
+      'group-hover:translate-x-0 group-hover:opacity-100',
+      'text-[var(--tuwa-text-secondary)]',
+      'group-hover:text-[var(--tuwa-text-accent)]',
+    ),
+  },
+};
+```
+
+### Customizing Transactions Toast
+
+```typescript
+// utils/customization/nova_tx_provider.ts
+import { cn } from '@tuwaio/nova-core';
+import { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
+import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
+
+export const nova_tx_customization: NovaTransactionsProviderProps<any>['customization'] = {
+  toast: {
+    classNames: {
+      container: cn(
+        'rounded-[4px]',
+        'border border-[var(--tuwa-border-primary)]',
+        'bg-[var(--tuwa-bg-secondary)]',
+      ),
+      title: cn(SHARED_STYLES.fontMonoMedium, 'text-sm', SHARED_STYLES.textPrimary),
+      description: cn(SHARED_STYLES.fontMono, 'mt-1 text-xs', SHARED_STYLES.textSecondary),
+      hashLink: cn(
+        SHARED_STYLES.fontMono,
+        'text-[var(--tuwa-text-accent)]',
+        'hover:underline transition-colors',
+      ),
+      statusBadge: cn(SHARED_STYLES.fontMono, 'text-xs font-medium'),
+      speedUpButton: BUTTON_STYLES.primary,
+    },
+  },
+
+  trackingTxModal: {
+    classNames: {
+      container: 'bg-[var(--tuwa-bg-secondary)]',
+      header: cn(
+        'bg-[var(--tuwa-bg-secondary)]',
+        'border-[var(--tuwa-border-primary)]',
+      ),
+      headerTitle: cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
+    },
+  },
+};
+```
+
+### Applying Customization
+
+```tsx
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
+import { NovaTransactionsProvider } from '@tuwaio/nova-transactions';
+import { nova_connect_customization } from './utils/customization/nova_connect_provider';
+import { nova_tx_customization } from './utils/customization/nova_tx_provider';
+
+function App() {
+  return (
+    <NovaConnectProvider
+      appChains={chains}
+      customization={nova_connect_customization}
     >
-      <TransactionStatusIcon status={status} />
-      <div className="flex flex-col">
-        <span className="font-medium">
-          {status === 'success' && 'Success'}
-          {status === 'failed' && 'Failed'}
-          {status === 'pending' && 'Pending...'}
-        </span>
-        {hash && (
-          <a
-            href={`https://etherscan.io/tx/${hash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-[var(--tuwa-text-accent)] hover:underline"
-          >
-            {hash.slice(0, 8)}...{hash.slice(-6)}
-          </a>
-        )}
-      </div>
-    </div>
+      <NovaTransactionsProvider customization={nova_tx_customization}>
+        {/* Your app */}
+      </NovaTransactionsProvider>
+    </NovaConnectProvider>
   );
 }
 ```
 
 ---
 
-## 🔗 Resources & Next Steps
+## 🔗 Resources
 
-### Quick Reference
-
-- **🎨 Color Palette Generator:** Use tools like [ColorSpace](https://mycolor.space/) to create your brand palette
-- **♿ Accessibility Checker:** Use [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) for color validation
-- **🎯 Tailwind CSS v4:** [tailwindcss.com/docs](https://tailwindcss.com/docs) - Learn about the underlying CSS framework
-
-### Community & Support
-
-- **📖 Documentation:** [GitHub Repository](https://github.com/TuwaIO/nova-uikit)
-- **🐛 Report Issues:** [GitHub Issues](https://github.com/TuwaIO/nova-uikit/issues)
-- **🤝 Contributing:** [Contribution Guide](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
+- **🎨 Color Palette Generator:** [ColorSpace](https://mycolor.space/)
+- **♿ Contrast Checker:** [WebAIM](https://webaim.org/resources/contrastchecker/)
+- **🎯 Tailwind CSS v4:** [tailwindcss.com/docs](https://tailwindcss.com/docs)
+- **📖 Repository:** [GitHub](https://github.com/TuwaIO/nova-uikit)
 
 **Ready to build something amazing?** Start customizing your Nova UI Kit theme today! 🚀

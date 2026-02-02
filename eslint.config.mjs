@@ -11,7 +11,17 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', '.next', '**/node_modules/**', '**/.next/**', 'storybook-static', '**/storybook-static/**'] },
+  {
+    ignores: [
+      '**/dist',
+      'dist',
+      '.next',
+      '**/node_modules/**',
+      '**/.next/**',
+      'storybook-static',
+      '**/storybook-static/**',
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
