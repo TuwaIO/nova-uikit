@@ -4,29 +4,45 @@
 
 # getChainName()
 
-> **getChainName**(`chainId`): `string`
+> **getChainName**(`chainId`): [`ChainInfo`](../interfaces/ChainInfo.md)
 
-Defined in: [packages/nova-core/src/utils/getChainName.ts:23](https://github.com/TuwaIO/nova-uikit/blob/7a7dfb37365ee46164aa0312fd9525753b0c372d/packages/nova-core/src/utils/getChainName.ts#L23)
+Defined in: [packages/nova-core/src/utils/getChainName.ts:62](https://github.com/TuwaIO/nova-uikit/blob/d62dbdfac1ac07b0d1b6a30bee0249c3bcc2fd8f/packages/nova-core/src/utils/getChainName.ts#L62)
 
-Retrieves the human-readable name of a blockchain network based on its Chain ID.
+Retrieves blockchain network information based on its chain ID.
 
-Supports both:
-- Numeric IDs (EVM): e.g., `1` -> "Ethereum"
-- String IDs (Non-EVM): e.g., `"solana:devnet"` -> "Solana Devnet"
+Supports both EVM and non-EVM chain identifiers:
+- **Numeric IDs (EVM):** e.g., `1` → "Ethereum", `137` → "Polygon"
+- **String IDs (Non-EVM):** e.g., `"solana:devnet"` → "Solana Devnet"
 
-For formatted string IDs (like "solana:devnet"), it capitalizes the suffix
-if the network is identified as a development environment.
+For string IDs with environment suffixes (like "solana:devnet"),
+the suffix is appended to the name if it's a known dev/test environment.
 
 ## Parameters
 
 ### chainId
 
-The unique identifier of the chain (number for EVM, string for others).
+Chain identifier (number for EVM, string for non-EVM)
 
 `string` | `number`
 
 ## Returns
 
-`string`
+[`ChainInfo`](../interfaces/ChainInfo.md)
 
-The formatted network name or 'Unknown'.
+Chain information object with name, id, and original chainId
+
+## Example
+
+```ts
+// EVM network
+getChainName(1)
+// → { name: "Ethereum", id: "ethereum", chainId: 1 }
+
+// Solana devnet
+getChainName("solana:devnet")
+// → { name: "Solana Devnet", id: "solana", chainId: "solana:devnet" }
+
+// Unknown network
+getChainName(999999)
+// → { name: "Unknown", id: "unknown", chainId: 999999 }
+```

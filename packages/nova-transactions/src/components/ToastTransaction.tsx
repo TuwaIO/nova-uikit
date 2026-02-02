@@ -173,7 +173,7 @@ export function ToastTransaction<T extends Transaction>({
       <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
         <div
           className={cn('novatx:w-[40px] novatx:flex-shrink-0', classNames?.iconWrapper)}
-          title={getChainName(setChainId(tx.chainId))}
+          title={getChainName(setChainId(tx.chainId)).name}
         >
           {icon ?? <NetworkIcon chainId={setChainId(tx.chainId)} />}
         </div>

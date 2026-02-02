@@ -99,7 +99,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             <div className="novatx:h-4 novatx:w-4">
               <NetworkIcon chainId={setChainId(chainId)} />
             </div>
-            <span>{getChainName(setChainId(chainId))}</span>
+            <span>{getChainName(setChainId(chainId)).name}</span>
           </div>
         }
         classNames={rowClassNames}

@@ -1,81 +1,67 @@
 import { lazy, Suspense } from 'react';
 
-import { cn, getChainName } from '../utils';
-import { isSolanaDev } from '../utils/isSolanaDev';
+import { cn, formatIconNameForGithub, getChainName, isSolanaDev } from '../utils';
 import { FallbackIcon } from './FallbackIcon';
+import { GithubFallbackIcon } from './GithubFallbackIcon';
+import { SvgToImg } from './SvgToImg';
 
-/**
- * Lazily loaded NetworkIcon component from @web3icons/react.
- * Uses dynamic import to reduce the initial bundle size.
- */
 const NetworkIconLazy = lazy(() =>
   import('@web3icons/react/dynamic').then((mod) => ({
     default: mod.NetworkIcon,
   })),
 );
 
-/**
- * Props for the NetworkIcon component.
- */
 interface NetworkIconProps {
-  /**
-   * Chain identifier.
-   * - `number`: For EVM networks (e.g., 1, 137).
-   * - `string`: For non-EVM networks (e.g., "solana:mainnet", "solana:devnet").
-   */
   chainId: number | string;
-  /**
-   * Visual style variant for the icon.
-   * @default 'background'
-   */
   variant?: 'background' | 'branded' | 'mono';
-  /** Additional CSS class names. */
   className?: string;
 }
 
-/**
- * Renders a network icon based on the chain ID.
- *
- * It handles logic for:
- * 1. Lazy loading the heavy icon library.
- * 2. Normalizing string IDs (e.g., converts "solana:devnet" -> "solana").
- * 3. Applying specific styling for Testnets/Devnets (e.g., muted colors for Solana Devnet).
- *
- * @param props - {@link NetworkIconProps}
- * @returns The network icon or a fallback UI.
- */
+/** CSS variable for testnet icon styling */
+const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
+
 export function NetworkIcon({ chainId, variant = 'background', className }: NetworkIconProps) {
-  const chainName = getChainName(chainId);
+  const chainInfo = getChainName(chainId);
   const isStringId = typeof chainId === 'string';
 
-  // Normalize ID: If "solana:devnet", we need "solana" for the icon library.
+  // Normalize ID for icon library
   const networkId = isStringId ? chainId.split(':')[0].toLowerCase() : chainId;
 
-  // Visual logic: Apply muted fill if it's a known Solana dev environment.
-  const isSolanaTestnet = isStringId && isSolanaDev(chainId);
+  // Determine if testnet styling should be applied
+  const isTestnet = (isStringId && isSolanaDev(chainId)) || chainInfo.name.toLowerCase().includes('testnet');
+  const testnetFill = isTestnet ? TESTNET_FILL : undefined;
 
-  const componentClassName = cn('novacore:w-full novacore:h-full novacore:rounded-full', className, {
-    'novacore:[&_path]:first-of-type:fill-[var(--tuwa-testnet-icons)]':
-      isSolanaTestnet || chainName.toLowerCase().includes('testnet'),
-  });
+  const componentClassName = cn('novacore:w-full novacore:h-full novacore:rounded-full', className);
+
+  // Resolve icon ID for the library
+  const iconId = typeof networkId === 'string' ? networkId : chainInfo.filePath;
+  const githubSrc = `networks/${variant}/${formatIconNameForGithub(iconId)}`;
 
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
-      {typeof networkId === 'string' ? (
-        <NetworkIconLazy
-          id={networkId}
-          variant={variant}
-          className={componentClassName}
-          fallback={<FallbackIcon content="?" className={className} />}
-        />
-      ) : (
-        <NetworkIconLazy
-          chainId={networkId}
-          variant={variant}
-          className={componentClassName}
-          fallback={<FallbackIcon content="?" className={className} />}
-        />
-      )}
+      <SvgToImg iconId={`${chainId}-${variant}`} className={componentClassName} firstPathFill={testnetFill}>
+        {(ref) =>
+          typeof networkId === 'string' ? (
+            <NetworkIconLazy
+              ref={ref}
+              id={networkId}
+              variant={variant}
+              fallback={
+                <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />
+              }
+            />
+          ) : (
+            <NetworkIconLazy
+              ref={ref}
+              chainId={networkId}
+              variant={variant}
+              fallback={
+                <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />
+              }
+            />
+          )
+        }
+      </SvgToImg>
     </Suspense>
   );
 }

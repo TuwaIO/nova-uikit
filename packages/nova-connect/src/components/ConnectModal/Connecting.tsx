@@ -529,7 +529,7 @@ export const Connecting = memo(
         ? customization.classNames.statusContainer({ statusData })
         : cn(
             'novacon:relative novacon:flex novacon:items-center novacon:justify-center',
-            'novacon:min-w-[110px] novacon:min-h-[110px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
+            'novacon:min-w-[180px] novacon:min-h-[180px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
             'novacon:border-2 novacon:rounded-full',
             'novacon:p-4 novacon:md:p-6',
             'novacon:transition-all novacon:duration-300 novacon:ease-in-out',
@@ -695,7 +695,7 @@ export const Connecting = memo(
               className={
                 customization?.classNames?.walletIconContainer?.({ statusData }) ??
                 cn(
-                  'novacon:[&_svg]:w-[60px]! novacon:[&_svg]:h-[auto]! novacon:md:[&_svg]:w-[80px]! novacon:[&_img]:w-[60px]! novacon:[&_img]:h-[auto]! novacon:md:[&_img]:w-[80px]! novacon:leading-[0]',
+                  'novacon:[&_svg]:w-[100px]! novacon:[&_svg]:h-[auto]! novacon:md:[&_svg]:w-[80px]! novacon:[&_img]:w-[100px]! novacon:[&_img]:h-[auto]! novacon:md:[&_img]:w-[80px]! novacon:leading-[0]',
                 )
               }
               statusData={statusData}

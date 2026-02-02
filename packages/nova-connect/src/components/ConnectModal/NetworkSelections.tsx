@@ -577,10 +577,7 @@ export const NetworkSelections = memo(
               <ConnectCard
                 icon={
                   <CustomNetworkIcon
-                    className={
-                      customization?.classNames?.networkIcon?.({ networkData, selectionsData }) ??
-                      'novacon:w-8 novacon:h-8'
-                    }
+                    className={customization?.classNames?.networkIcon?.({ networkData, selectionsData })}
                     role="img"
                     aria-label={
                       customConfig?.ariaLabels?.networkIcon?.(networkData) ?? `${networkData.name} network icon`

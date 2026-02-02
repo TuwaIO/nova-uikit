@@ -1,0 +1,41 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# formatIconNameForGithub()
+
+> **formatIconNameForGithub**(`name`): `string`
+
+Defined in: [packages/nova-core/src/utils/svgUtils.ts:93](https://github.com/TuwaIO/nova-uikit/blob/d62dbdfac1ac07b0d1b6a30bee0249c3bcc2fd8f/packages/nova-core/src/utils/svgUtils.ts#L93)
+
+Formats a name string into a GitHub-compatible SVG filename.
+
+Converts spaces to hyphens and lowercases the string,
+then appends the `.svg` extension.
+
+## Parameters
+
+### name
+
+`string`
+
+The name to format (e.g., "Wallet Connect", "MetaMask")
+
+## Returns
+
+`string`
+
+Formatted filename (e.g., "wallet-connect.svg", "metamask.svg")
+
+## Example
+
+```ts
+formatIconNameForGithub("Wallet Connect")
+// → "wallet-connect.svg"
+
+formatIconNameForGithub("MetaMask")
+// → "metamask.svg"
+
+formatIconNameForGithub("coinbase")
+// → "coinbase.svg"
+```

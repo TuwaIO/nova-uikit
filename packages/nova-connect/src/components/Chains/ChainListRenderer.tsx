@@ -433,7 +433,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
   const renderChainItem = (chain: string | number) => {
     const { formattedChainId } = getChainData(chain);
     const isActive = String(formattedChainId) === selectValue;
-    const chainName = getChainName(formattedChainId);
+    const chainName = getChainName(formattedChainId).name;
 
     // Generate custom classes and styles
     const itemClasses = customization?.classNames?.item?.({ isActive, isMobile, chainId: formattedChainId })

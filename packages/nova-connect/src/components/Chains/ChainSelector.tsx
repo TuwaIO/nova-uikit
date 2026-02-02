@@ -481,7 +481,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   customization,
 }) => {
   const labels = useNovaConnectLabels();
-  const chainName = getChainName(currentFormattedChainId);
+  const chainName = getChainName(currentFormattedChainId).name;
 
   const {
     Icon = DefaultTriggerIcon,
@@ -544,14 +544,13 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
         'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
         'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
         'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
-        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)] novacon:focus:ring-[var(--tuwa-border-primary)]',
+        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)] novacon:focus:ring-[var(--tuwa-text-secondary)]',
         'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
-        {
-          'novacon:ring-2 novacon:ring-[var(--tuwa-text-accent)] novacon:border novacon:border-transparent':
-            isChainsListOpen,
-          'novacon:border novacon:border-[var(--tuwa-border-primary)]': !isChainsListOpen,
-        },
         'novacon:[&_svg]:w-4 novacon:[&_svg]:h-4',
+        'novacon:border novacon:border-[var(--tuwa-border-primary)]',
+        {
+          'novacon:ring-[length:var(--tuwa-ring-width)] novacon:ring-[var(--tuwa-text-secondary)]': isChainsListOpen,
+        },
       );
 
   const innerContentClasses = customization?.classNames?.innerContent
@@ -737,7 +736,7 @@ export function ChainSelector({
   );
 
   const selectValue = String(currentFormattedChainId);
-  const chainName = getChainName(currentFormattedChainId);
+  const chainName = getChainName(currentFormattedChainId).name;
 
   if (chainsList.length <= 1) {
     return (

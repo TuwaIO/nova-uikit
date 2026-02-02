@@ -1,0 +1,39 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# SvgToImg()
+
+> **SvgToImg**(`props`): `Element`
+
+Defined in: [packages/nova-core/src/components/SvgToImg.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/d62dbdfac1ac07b0d1b6a30bee0249c3bcc2fd8f/packages/nova-core/src/components/SvgToImg.tsx#L44)
+
+Converts an SVG element to an `<img>` tag with a base64-encoded data URL.
+
+This component solves the problem of duplicate SVG `id` attributes
+when rendering multiple identical icons on the same page.
+
+Uses a render prop pattern to inject a callback ref that captures
+the SVG immediately when it mounts.
+
+## Parameters
+
+### props
+
+`SvgToImgProps`
+
+SvgToImgProps
+
+## Returns
+
+`Element`
+
+The converted image or the original children while loading
+
+## Example
+
+```tsx
+<SvgToImg iconId={chainId} firstPathFill={TESTNET_FILL}>
+  {(ref) => <NetworkIconLazy ref={ref} chainId={chainId} />}
+</SvgToImg>
+```
