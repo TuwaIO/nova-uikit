@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.0...nova-core-v0.3.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* github fallback icon logic ([1ad3c55](https://github.com/TuwaIO/nova-uikit/commit/1ad3c55504cea683cfe074587e954bd9ccd511b8))
+
 ## [0.3.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.2.6...nova-core-v0.3.0) (2026-02-03)
 
 
