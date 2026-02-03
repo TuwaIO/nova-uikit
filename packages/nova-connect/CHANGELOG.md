@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.10...nova-connect-v0.3.0) (2026-02-03)
+
+
+### Features
+
+* updated styling and storybooks | updated packages | updated web3icons logic ([#68](https://github.com/TuwaIO/nova-uikit/issues/68)) ([e98522e](https://github.com/TuwaIO/nova-uikit/commit/e98522ef36afe6360f13cd80b2ba5d26a4874327))
+
 ## [0.2.10](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.9...nova-connect-v0.2.10) (2026-01-25)
 
 
