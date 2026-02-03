@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.7...nova-transactions-v0.3.0) (2026-02-03)
+
+
+### Features
+
+* updated styling and storybooks | updated packages | updated web3icons logic ([#68](https://github.com/TuwaIO/nova-uikit/issues/68)) ([e98522e](https://github.com/TuwaIO/nova-uikit/commit/e98522ef36afe6360f13cd80b2ba5d26a4874327))
+
 ## [0.2.7](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.2.6...nova-transactions-v0.2.7) (2026-01-25)
 
 
