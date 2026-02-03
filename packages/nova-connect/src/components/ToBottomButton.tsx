@@ -184,13 +184,11 @@ export const ToBottomButton = forwardRef<HTMLButtonElement, ToBottomButtonProps>
           'novacon:flex novacon:w-full novacon:h-6 novacon:items-center novacon:justify-center',
           'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
           'novacon:transition-colors novacon:duration-200',
-          'novacon:hover:bg-[var(--tuwa-bg-tertiary)] novacon:hover:text-[var(--tuwa-text-secondary)]',
+          'novacon:hover:bg-[var(--tuwa-standart-button-hover)] novacon:hover:text-[var(--tuwa-text-secondary)]',
           'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-inset',
-          'novacon:active:bg-[var(--tuwa-bg-quaternary)]',
+          'novacon:active:bg-[var(--tuwa-bg-muted)]',
           'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:bg-[var(--tuwa-bg-secondary)] novacon:cursor-default',
-          {
-            'novacon:cursor-pointer': onClick,
-          },
+          'novacon:cursor-pointer',
           className,
         );
 
