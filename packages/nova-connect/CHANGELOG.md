@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.3.0...nova-connect-v0.3.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* updated to top/to bottom buttons styles ([e67a00d](https://github.com/TuwaIO/nova-uikit/commit/e67a00d2b75184e958e8c054481c099b0b2aef14))
+
 ## [0.3.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.2.10...nova-connect-v0.3.0) (2026-02-03)
 
 
