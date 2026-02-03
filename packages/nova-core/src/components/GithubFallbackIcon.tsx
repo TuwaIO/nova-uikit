@@ -10,6 +10,13 @@ import { SvgImg } from './SvgImg';
 const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/0xa3k5/web3icons/refs/heads/main/raw-svgs';
 
 /**
+ * In-memory cache for fetched SVG icons.
+ * Key: `${githubSrc}|${firstPathFill ?? ''}` → Value: base64 encoded SVG
+ * Persists until page reload.
+ */
+const svgCache = new Map<string, string>();
+
+/**
  * Loading state for the icon fetch operation.
  */
 type LoadingState = 'idle' | 'loading' | 'success' | 'error';
@@ -45,6 +52,15 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
 
   useEffect(() => {
     let isMounted = true;
+    const cacheKey = `${githubSrc}|${firstPathFill ?? ''}`;
+
+    // Check cache first
+    const cached = svgCache.get(cacheKey);
+    if (cached) {
+      setImgSrc(cached);
+      setState('success');
+      return;
+    }
 
     const loadSvg = async () => {
       setState('loading');
@@ -59,7 +75,10 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
         const svg = await response.text();
 
         if (isMounted) {
-          setImgSrc(svgToBase64(svg, firstPathFill));
+          const base64Svg = svgToBase64(svg, firstPathFill);
+          // Cache the result
+          svgCache.set(cacheKey, base64Svg);
+          setImgSrc(base64Svg);
           setState('success');
         }
       } catch {

@@ -37,28 +37,27 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
   const iconId = typeof networkId === 'string' ? networkId : chainInfo.filePath;
   const githubSrc = `networks/${variant}/${formatIconNameForGithub(iconId)}`;
 
+  // If network not found in @web3icons/common metadata, skip NetworkIconLazy entirely
+  // This avoids the async flash from the dynamic component for icons we know don't exist
+  const isUnknownNetwork = chainInfo.name === 'Unknown';
+
+  if (isUnknownNetwork) {
+    // For numeric chainId we can't resolve the icon name, show placeholder
+    // For string chainId (e.g., "base"), try GitHub fallback as the name might match
+    if (typeof chainId === 'number') {
+      return <FallbackIcon content="?" className={className} />;
+    }
+    return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />;
+  }
+
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
       <SvgToImg iconId={`${chainId}-${variant}`} className={componentClassName} firstPathFill={testnetFill}>
         {(ref) =>
           typeof networkId === 'string' ? (
-            <NetworkIconLazy
-              ref={ref}
-              id={networkId}
-              variant={variant}
-              fallback={
-                <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />
-              }
-            />
+            <NetworkIconLazy ref={ref} id={networkId} variant={variant} />
           ) : (
-            <NetworkIconLazy
-              ref={ref}
-              chainId={networkId}
-              variant={variant}
-              fallback={
-                <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />
-              }
-            />
+            <NetworkIconLazy ref={ref} chainId={networkId} variant={variant} />
           )
         }
       </SvgToImg>
