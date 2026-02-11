@@ -40,7 +40,7 @@ import { connectedWalletTransactionsMock } from './connectedWalletTransactionsMo
 export const appConfig = {
   appName: 'Stories TUWA Demo',
   appDescription: 'Stories TUWA Demo Connect Button',
-  projectId: '9077e559e63e099f496b921a027d0f04',
+  projectId: '90f7d88db0bb324b93befd60e35107a4',
   appLogoUrl: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/preview-logo.png',
   appUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:6006/' : 'https://stories.tuwa.io/',
 };
