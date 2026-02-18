@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.1...nova-core-v0.3.2) (2026-02-18)
+
+
+### Bug Fixes
+
+* get chain name ([#72](https://github.com/TuwaIO/nova-uikit/issues/72)) ([955914e](https://github.com/TuwaIO/nova-uikit/commit/955914e314e79945a75a957fa80f1c2d06fe8ac8))
+
 ## [0.3.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.0...nova-core-v0.3.1) (2026-02-03)
 
 
