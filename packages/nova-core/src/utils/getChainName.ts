@@ -78,13 +78,13 @@ export function getChainName(chainId: number | string): ChainInfo {
     return {
       name: network.name,
       id: network.id,
-      filePath: network.filePath.split(':')[1],
+      filePath: network.filePath?.split(':')[1],
       chainId,
     };
   }
 
   // Handle string IDs (e.g., "solana:devnet")
-  const [baseId, variant] = chainId.split(':');
+  const [baseId, variant] = chainId ? chainId.split(':') : [chainId];
   const network = networks.find((n) => n.id === baseId);
 
   if (!network) {
@@ -97,7 +97,7 @@ export function getChainName(chainId: number | string): ChainInfo {
   return {
     name,
     id: network.id,
-    filePath: network.filePath.split(':')[1],
+    filePath: network.filePath?.split(':')[1],
     chainId,
   };
 }
