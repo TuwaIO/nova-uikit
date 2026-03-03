@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.2...nova-core-v0.3.3) (2026-03-03)
+
+
+### Bug Fixes
+
+* updated packages ([96a7fcf](https://github.com/TuwaIO/nova-uikit/commit/96a7fcf64f4e8e42790f18071f69b9b12f79879a))
+
 ## [0.3.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.1...nova-core-v0.3.2) (2026-02-18)
 
 
