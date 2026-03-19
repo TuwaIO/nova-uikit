@@ -229,11 +229,11 @@ export function TransactionsHistory<T extends Transaction>({
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
-      if (entry?.isIntersecting && pagination?.hasMore && !pagination?.isLoading) {
-        void pagination.fetchNextPage();
+      if (entry?.isIntersecting && pagination?.hasMore && !pagination?.isLoading && connectedWalletAddress) {
+        void pagination.fetchNextPage(connectedWalletAddress);
       }
     },
-    [pagination],
+    [pagination, connectedWalletAddress],
   );
 
   /**
