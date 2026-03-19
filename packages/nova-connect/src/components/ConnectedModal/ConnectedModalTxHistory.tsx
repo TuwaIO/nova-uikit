@@ -51,7 +51,7 @@ export type LocalTxPagination = {
   /** The current page number in the paginated history. */
   currentPage: number;
   /** Loads the next page of transaction history and appends it to the pool. */
-  fetchNextPage: () => Promise<void>;
+  fetchNextPage: (walletAddress: string) => Promise<void>;
 };
 
 /**
