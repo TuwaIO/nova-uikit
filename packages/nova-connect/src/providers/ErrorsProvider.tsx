@@ -59,12 +59,21 @@ export type ErrorsProviderCustomization = {
     /** Custom error display logic */
     showError?: (
       originalHandler: (title: string, rawError: string | TuwaErrorState, errorKey: string) => void,
-      params: { title: string; rawError: string | TuwaErrorState; errorKey: string; errorType: 'wallet' | 'switch' | null },
+      params: {
+        title: string;
+        rawError: string | TuwaErrorState;
+        errorKey: string;
+        errorType: 'wallet' | 'switch' | null;
+      },
     ) => void;
     /** Custom error dismissal logic */
     dismissError?: (originalHandler: () => void) => void;
     /** Custom copy complete handler */
-    onCopyComplete?: (success: boolean, rawError: string | TuwaErrorState, errorType: 'wallet' | 'switch' | null) => void;
+    onCopyComplete?: (
+      success: boolean,
+      rawError: string | TuwaErrorState,
+      errorType: 'wallet' | 'switch' | null,
+    ) => void;
   };
   /** Custom error title generator - does NOT customize labels, just allows title modification */
   errorTitle?: (defaultTitle: string, params: { errorType: 'wallet' | 'switch' | null }) => string;
@@ -121,10 +130,7 @@ const defaultDismissErrorHandler = (originalHandler: () => void) => {
   originalHandler();
 };
 
-const defaultCopyCompleteHandler = (
-  success: boolean,
-  rawError: string | TuwaErrorState,
-) => {
+const defaultCopyCompleteHandler = (success: boolean, rawError: string | TuwaErrorState) => {
   if (success && process.env.NODE_ENV === 'development') {
     const msg = typeof rawError === 'string' ? rawError : rawError.message;
     console.log('Error copied to clipboard:', msg.substring(0, 100));

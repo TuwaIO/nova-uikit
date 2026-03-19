@@ -4,7 +4,7 @@
  */
 
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import { Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import { ComponentPropsWithoutRef, ComponentType } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
@@ -41,6 +41,8 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   isOpen?: boolean;
   setIsOpen: (value: boolean) => void;
   customization?: TransactionsInfoModalCustomization<T>;
+  /** Pagination state for infinite scroll, forwarded to TransactionsHistory. */
+  pagination?: TxInMemoryPagination;
 };
 
 type DefaultHeaderClassNames = {
@@ -83,6 +85,7 @@ export function TransactionsInfoModal<T extends Transaction>({
   adapter,
   connectedWalletAddress,
   transactionsPool,
+  pagination,
 }: TransactionsInfoModalProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -123,6 +126,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               transactionsPool={transactionsPool}
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
+              pagination={pagination}
             />
           ) : (
             <TransactionsHistory
@@ -130,6 +134,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               transactionsPool={transactionsPool}
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
+              pagination={pagination}
             />
           )}
         </div>

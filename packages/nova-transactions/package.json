@@ -72,14 +72,14 @@
     "framer-motion": "12.x.x",
     "react": ">=19.2.3",
     "react-toastify": ">=11",
-    "@tuwaio/pulsar-core": ">=0.5",
+    "@tuwaio/pulsar-core": ">=0.6",
     "@tuwaio/nova-core": ">=0.3",
     "@tuwaio/orbit-core": ">=0.2.7",
     "dayjs": "1.x.x"
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "^0.2.7",
-    "@tuwaio/pulsar-core": "^0.5.1",
+    "@tuwaio/pulsar-core": "1.0.0-feat-in-memory-alpha.2.3bc7ad7",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.19",
     "@web3icons/react": "^4.1.17",
