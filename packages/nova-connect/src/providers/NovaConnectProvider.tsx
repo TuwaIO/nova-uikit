@@ -257,6 +257,7 @@ export function NovaConnectProvider({
   customConnectorGroups,
   legal,
   customization,
+  pagination,
 }: NovaConnectProviderPropsWithCustomization) {
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const connectionError = useSatelliteConnectStore((store) => store.connectionError);
@@ -388,6 +389,7 @@ export function NovaConnectProvider({
         transactionPool={transactionPool}
         pulsarAdapter={pulsarAdapter}
         customization={customization?.modals?.connectedModal}
+        pagination={pagination}
       />
     ) : null;
 

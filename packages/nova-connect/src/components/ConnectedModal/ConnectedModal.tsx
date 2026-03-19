@@ -124,7 +124,7 @@ type HeaderProps = {
 /**
  * Props for custom MainContent component
  */
-type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'> & {
+type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'pagination'> & {
   /** Current content type */
   contentType: ConnectedContentType;
   /** Native balance result */
@@ -318,7 +318,7 @@ export type ConnectedModalCustomization = {
 export interface ConnectedModalProps
   extends
     Omit<ConnectButtonProps, 'className' | 'customization'>,
-    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls'> {
+    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls' | 'pagination'> {
   /** Additional CSS classes for the modal */
   className?: string;
   /** Customization options */
@@ -467,6 +467,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
   getChainData,
   className,
   childCustomizations,
+  pagination,
 }) => {
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
@@ -480,6 +481,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             ensNameAbbreviated={ensNameAbbreviated}
             avatarIsLoading={avatarIsLoading}
             balanceLoading={balanceLoading}
+            txsLoading={pagination?.isLoading ?? false}
             ensAvatar={ensAvatar}
             chainsList={chainsList}
             transactionPool={transactionPool}
@@ -492,6 +494,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
             transactionPool={transactionPool}
             pulsarAdapter={pulsarAdapter}
             customization={childCustomizations?.txHistory}
+            pagination={pagination}
           />
         );
       case 'chains':
@@ -581,7 +584,7 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
  * ```
  */
 export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
-  ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, customization }, ref) => {
+  ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, customization, pagination }, ref) => {
     // Get localized labels for UI text
     const labels = useNovaConnectLabels();
 
@@ -864,6 +867,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           getChainData={getChainData}
           childCustomizations={customization?.childCustomizations}
           className={customization?.classNames?.mainContent?.({ contentType: connectedModalContentType })}
+          pagination={pagination}
         />
 
         {/* Footer with additional controls */}
