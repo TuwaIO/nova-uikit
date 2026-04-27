@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.3.1...nova-transactions-v0.4.0) (2026-04-27)
+
+
+### Features
+
+* added pagination to support in memory store; updated: packages; ([#75](https://github.com/TuwaIO/nova-uikit/issues/75)) ([2bdce29](https://github.com/TuwaIO/nova-uikit/commit/2bdce2907a7aee29f6ae81c8fb7ad98ddd452e96))
+
 ## [0.3.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.3.0...nova-transactions-v0.3.1) (2026-03-03)
 
 
