@@ -6,11 +6,11 @@
 
 > **TxActionButtonProps**\<`T`\> = `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"onClick"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TxActionButton.tsx#L42)
+Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TxActionButton.tsx#L42)
 
 ## Type Declaration
 
-### action()
+### action
 
 > **action**: () => `Promise`\<`void`\>
 
@@ -24,63 +24,63 @@ Defined in: [packages/nova-transactions/src/components/TxActionButton.tsx:42](ht
 
 ### classNames?
 
-> `optional` **classNames**: `object`
+> `optional` **classNames?**: `object`
 
 Granular classNames for state-specific styling. Each overrides default styles for that state.
 
 #### classNames.base?
 
-> `optional` **base**: `string`
+> `optional` **base?**: `string`
 
 Base button classes (always applied)
 
 #### classNames.failed?
 
-> `optional` **failed**: `string`
+> `optional` **failed?**: `string`
 
 Classes for failed state (replaces default if provided)
 
 #### classNames.icon?
 
-> `optional` **icon**: `string`
+> `optional` **icon?**: `string`
 
 Classes for the status icon
 
 #### classNames.idle?
 
-> `optional` **idle**: `string`
+> `optional` **idle?**: `string`
 
 Classes for idle state (replaces default if provided)
 
 #### classNames.label?
 
-> `optional` **label**: `string`
+> `optional` **label?**: `string`
 
 Classes for the label text
 
 #### classNames.loading?
 
-> `optional` **loading**: `string`
+> `optional` **loading?**: `string`
 
 Classes for loading state (replaces default if provided)
 
 #### classNames.replaced?
 
-> `optional` **replaced**: `string`
+> `optional` **replaced?**: `string`
 
 Classes for replaced state (replaces default if provided)
 
 #### classNames.succeed?
 
-> `optional` **succeed**: `string`
+> `optional` **succeed?**: `string`
 
 Classes for succeed state (replaces default if provided)
 
 ### failedContent?
 
-> `optional` **failedContent**: `ReactNode`
+> `optional` **failedContent?**: `ReactNode`
 
-### getLastTxKey()
+### getLastTxKey
 
 > **getLastTxKey**: () => `string` \| `undefined`
 
@@ -90,19 +90,19 @@ Classes for succeed state (replaces default if provided)
 
 ### loadingContent?
 
-> `optional` **loadingContent**: `ReactNode`
+> `optional` **loadingContent?**: `ReactNode`
 
 ### replacedContent?
 
-> `optional` **replacedContent**: `ReactNode`
+> `optional` **replacedContent?**: `ReactNode`
 
 ### resetTimeout?
 
-> `optional` **resetTimeout**: `number`
+> `optional` **resetTimeout?**: `number`
 
 ### succeedContent?
 
-> `optional` **succeedContent**: `ReactNode`
+> `optional` **succeedContent?**: `ReactNode`
 
 ### transactionsPool
 
@@ -110,7 +110,7 @@ Classes for succeed state (replaces default if provided)
 
 ### walletAddress?
 
-> `optional` **walletAddress**: `string`
+> `optional` **walletAddress?**: `string`
 
 ## Type Parameters
 

@@ -130,9 +130,6 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
               classNames={rowClassNames}
             />
           )}
-          {(typeof solanaTx?.confirmations === 'number' || typeof solanaTx?.confirmations === 'string') && (
-            <InfoRow label={statuses.confirmationsLabel} value={solanaTx.confirmations} classNames={rowClassNames} />
-          )}
           {solanaTx?.recentBlockhash && (
             <InfoRow
               label={hashLabels.recentBlockhash}
@@ -141,6 +138,10 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
             />
           )}
         </>
+      )}
+
+      {'confirmations' in tx && (typeof tx?.confirmations === 'number' || typeof tx?.confirmations === 'string') && (
+        <InfoRow label={statuses.confirmationsLabel} value={tx.confirmations} classNames={rowClassNames} />
       )}
 
       {'txKey' in tx && tx.txKey && (

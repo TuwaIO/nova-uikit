@@ -2,6 +2,7 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
 import { createContext, useContext } from 'react';
 
+import { LocalTxPagination } from '../components';
 import { NovaConnectLabels } from '../i18n';
 import { InitialChains } from '../types';
 
@@ -33,6 +34,11 @@ export interface NovaConnectProviderProps extends InitialChains {
   customConnectorGroups?: Record<string, string[]>;
   /** Legal configuration for Terms of Service and Privacy Policy links */
   legal?: LegalConfig;
+  /**
+   * Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
+   * Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
+   */
+  pagination?: LocalTxPagination;
   children: React.ReactNode;
   labels?: Partial<NovaConnectLabels>;
 }

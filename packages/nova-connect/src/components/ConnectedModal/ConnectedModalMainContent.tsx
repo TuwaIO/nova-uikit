@@ -294,6 +294,7 @@ export interface ConnectedModalMainContentProps extends Pick<NovaConnectProvider
   ensAvatar: string | null;
   avatarIsLoading: boolean;
   balanceLoading: boolean;
+  txsLoading: boolean;
   ensNameAbbreviated: string | undefined;
   balance: NativeBalanceResult | null;
   refetch: () => void;
@@ -579,6 +580,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       ensAvatar,
       avatarIsLoading,
       balanceLoading,
+      txsLoading,
       ensNameAbbreviated,
       balance,
       refetch,
@@ -689,7 +691,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      * State calculations
      */
     const hasActiveWallet = Boolean(activeConnection?.isConnected);
-    const isLoading = avatarIsLoading || balanceLoading;
+    const isLoading = avatarIsLoading || balanceLoading || txsLoading;
     const hasTransactions = walletTransactions.length > 0;
 
     /**

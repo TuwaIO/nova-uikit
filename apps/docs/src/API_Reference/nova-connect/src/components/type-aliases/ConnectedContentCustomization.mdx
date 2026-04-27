@@ -6,7 +6,7 @@
 
 > **ConnectedContentCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L64)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L64)
 
 Customization options for ConnectedContent component
 
@@ -14,39 +14,39 @@ Customization options for ConnectedContent component
 
 ### childCustomizations?
 
-> `optional` **childCustomizations**: `object`
+> `optional` **childCustomizations?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L92)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L92)
 
 Customization options for child components
 
 #### statusIcon?
 
-> `optional` **statusIcon**: `object`
+> `optional` **statusIcon?**: `object`
 
 StatusIcon customization for transaction states
 
 ##### statusIcon.failed?
 
-> `optional` **failed**: [`StatusIconCustomization`](StatusIconCustomization.md)
+> `optional` **failed?**: [`StatusIconCustomization`](StatusIconCustomization.md)
 
 StatusIcon customization for failed state
 
 ##### statusIcon.replaced?
 
-> `optional` **replaced**: [`StatusIconCustomization`](StatusIconCustomization.md)
+> `optional` **replaced?**: [`StatusIconCustomization`](StatusIconCustomization.md)
 
 StatusIcon customization for replaced state
 
 ##### statusIcon.succeed?
 
-> `optional` **succeed**: [`StatusIconCustomization`](StatusIconCustomization.md)
+> `optional` **succeed?**: [`StatusIconCustomization`](StatusIconCustomization.md)
 
 StatusIcon customization for success state
 
 #### walletAvatar?
 
-> `optional` **walletAvatar**: [`WalletAvatarCustomization`](WalletAvatarCustomization.md)
+> `optional` **walletAvatar?**: [`WalletAvatarCustomization`](WalletAvatarCustomization.md)
 
 WalletAvatar customization for idle and loading states
 
@@ -54,15 +54,15 @@ WalletAvatar customization for idle and loading states
 
 ### classNames?
 
-> `optional` **classNames**: `object`
+> `optional` **classNames?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L79)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L79)
 
 Custom class name generators
 
-#### balanceContainer()?
+#### balanceContainer?
 
-> `optional` **balanceContainer**: (`params`) => `string`
+> `optional` **balanceContainer?**: (`params`) => `string`
 
 Function to generate balance container classes
 
@@ -78,9 +78,9 @@ Function to generate balance container classes
 
 `string`
 
-#### balanceDivider()?
+#### balanceDivider?
 
-> `optional` **balanceDivider**: () => `string`
+> `optional` **balanceDivider?**: () => `string`
 
 Function to generate balance divider classes
 
@@ -88,9 +88,9 @@ Function to generate balance divider classes
 
 `string`
 
-#### container()?
+#### container?
 
-> `optional` **container**: (`params`) => `string`
+> `optional` **container?**: (`params`) => `string`
 
 Function to generate container classes
 
@@ -110,9 +110,9 @@ Function to generate container classes
 
 `string`
 
-#### loadingAnimation()?
+#### loadingAnimation?
 
-> `optional` **loadingAnimation**: (`params`) => `string`
+> `optional` **loadingAnimation?**: (`params`) => `string`
 
 Function to generate loading animation classes
 
@@ -128,9 +128,9 @@ Function to generate loading animation classes
 
 `string`
 
-#### mainContent()?
+#### mainContent?
 
-> `optional` **mainContent**: (`params`) => `string`
+> `optional` **mainContent?**: (`params`) => `string`
 
 Function to generate main content classes
 
@@ -150,33 +150,33 @@ Function to generate main content classes
 
 ### components?
 
-> `optional` **components**: `object`
+> `optional` **components?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L68)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L68)
 
 Custom components
 
 #### BalanceContainer?
 
-> `optional` **BalanceContainer**: `ComponentType`\<`CustomBalanceContainerProps`\>
+> `optional` **BalanceContainer?**: `ComponentType`\<`CustomBalanceContainerProps`\>
 
 Custom balance container component
 
 #### BalanceDivider?
 
-> `optional` **BalanceDivider**: `ComponentType`\<`CustomBalanceDividerProps`\>
+> `optional` **BalanceDivider?**: `ComponentType`\<`CustomBalanceDividerProps`\>
 
 Custom balance divider component
 
 #### LoadingAnimation?
 
-> `optional` **LoadingAnimation**: `ComponentType`\<`CustomLoadingAnimationProps`\>
+> `optional` **LoadingAnimation?**: `ComponentType`\<`CustomLoadingAnimationProps`\>
 
 Custom loading animation component
 
 #### MainContent?
 
-> `optional` **MainContent**: `ComponentType`\<`CustomMainContentProps`\>
+> `optional` **MainContent?**: `ComponentType`\<`CustomMainContentProps`\>
 
 Custom main content wrapper component
 
@@ -184,27 +184,27 @@ Custom main content wrapper component
 
 ### config?
 
-> `optional` **config**: `object`
+> `optional` **config?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L111)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L111)
 
 Configuration options
 
 #### showBalanceDivider?
 
-> `optional` **showBalanceDivider**: `boolean`
+> `optional` **showBalanceDivider?**: `boolean`
 
 Whether to show balance divider
 
 #### showLoadingAnimation?
 
-> `optional` **showLoadingAnimation**: `boolean`
+> `optional` **showLoadingAnimation?**: `boolean`
 
 Whether to show loading animation
 
 #### statusResetTimeout?
 
-> `optional` **statusResetTimeout**: `number`
+> `optional` **statusResetTimeout?**: `number`
 
 Custom timeout for auto-reset status (in milliseconds)
 
@@ -212,9 +212,9 @@ Custom timeout for auto-reset status (in milliseconds)
 
 ### containerProps?
 
-> `optional` **containerProps**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+> `optional` **containerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L66)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L66)
 
 Override root container props
 
@@ -222,15 +222,15 @@ Override root container props
 
 ### handlers?
 
-> `optional` **handlers**: `object`
+> `optional` **handlers?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L106)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L106)
 
 Custom event handlers
 
-#### onBalanceClick()?
+#### onBalanceClick?
 
-> `optional` **onBalanceClick**: (`formattedBalance`, `event`) => `void`
+> `optional` **onBalanceClick?**: (`formattedBalance`, `event`) => `void`
 
 Custom handler for balance click events
 

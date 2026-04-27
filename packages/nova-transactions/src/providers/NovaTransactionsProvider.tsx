@@ -6,7 +6,14 @@
 
 import { deepMerge, ToastCloseButton, ToastCloseButtonProps, useMediaQuery } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { ITxTrackingStore, Transaction, TransactionPool, TransactionStatus, TxAdapter } from '@tuwaio/pulsar-core';
+import {
+  ITxTrackingStore,
+  Transaction,
+  TransactionPool,
+  TransactionStatus,
+  TxAdapter,
+  TxInMemoryPagination,
+} from '@tuwaio/pulsar-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast, ToastContainer, ToastContainerProps, ToastContentProps, TypeOptions } from 'react-toastify';
 
@@ -51,6 +58,8 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
     transactionsInfoModal?: TransactionsInfoModalCustomization<T>;
     trackingTxModal?: TrackingTxModalCustomization<T>;
   };
+  /** Pagination state for infinite scroll, forwarded to TransactionsInfoModal and TransactionsHistory. */
+  pagination?: TxInMemoryPagination;
 } & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'executeTxAction' | 'initialTx'> &
   Omit<ToastContainerProps, 'containerId'>;
 
@@ -69,6 +78,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   labels,
   features,
   customization,
+  pagination,
   ...toastProps
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
@@ -193,6 +203,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
           connectedWalletAddress={connectedWalletAddress}
           connectedAdapterType={connectedAdapterType}
           transactionsPool={transactionsPool}
+          pagination={pagination}
         />
       )}
 

@@ -6,33 +6,33 @@
 
 > **TransactionKeyProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionKey.tsx#L14)
+Defined in: [packages/nova-transactions/src/components/TransactionKey.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionKey.tsx#L14)
 
 ## Type Declaration
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
 ### confirmations?
 
-> `optional` **confirmations**: `number`
+> `optional` **confirmations?**: `number`
 
 ### hashLinkClassNames?
 
-> `optional` **hashLinkClassNames**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
+> `optional` **hashLinkClassNames?**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
 
 ClassNames to pass to HashLink components (default and replaced hash)
 
 ### originalHashLinkClassNames?
 
-> `optional` **originalHashLinkClassNames**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
+> `optional` **originalHashLinkClassNames?**: [`HashLinkProps`](HashLinkProps.md)\[`"classNames"`\]
 
 ClassNames for original hash link in replaced transactions (falls back to hashLinkClassNames)
 
-### renderHashLink()?
+### renderHashLink?
 
-> `optional` **renderHashLink**: (`props`) => `ReactNode`
+> `optional` **renderHashLink?**: (`props`) => `ReactNode`
 
 #### Parameters
 
@@ -50,7 +50,7 @@ ClassNames for original hash link in replaced transactions (falls back to hashLi
 
 ### variant?
 
-> `optional` **variant**: `"toast"` \| `"history"`
+> `optional` **variant?**: `"toast"` \| `"history"`
 
 ## Type Parameters
 

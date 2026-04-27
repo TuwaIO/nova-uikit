@@ -38,6 +38,23 @@ const DEFAULT_ERROR_ANIMATION_VARIANTS: Variants = {
 // ─────────────────────────────────────────────────────────────────────
 
 /**
+ * Local mirror of TxInMemoryPagination from @tuwaio/pulsar-core.
+ * Defined inline because pulsar-core is an optional peer dependency in nova-connect.
+ */
+export type LocalTxPagination = {
+  /** Indicates whether the store is currently loading transaction history. */
+  isLoading: boolean;
+  /** Indicates whether the last loading request ended with an error. */
+  isError: boolean;
+  /** Indicates whether more history pages are available. */
+  hasMore: boolean;
+  /** The current page number in the paginated history. */
+  currentPage: number;
+  /** Loads the next page of transaction history and appends it to the pool. */
+  fetchNextPage: (walletAddress: string) => Promise<void>;
+};
+
+/**
  * Local customization options for TransactionsHistory component.
  * This is a copy of the type from @tuwaio/nova-transactions to avoid
  * breaking dynamic import logic.
@@ -59,6 +76,14 @@ export type LocalTransactionsHistoryCustomization = {
     placeholderTitle?: string;
     /** Classes for the placeholder message */
     placeholderMessage?: string;
+    /** Classes for the infinite scroll loader container */
+    loaderContainer?: string;
+    /** Classes for the infinite scroll loader icon (spinner) */
+    loaderIcon?: string;
+    /** Classes for the error indicator container */
+    errorContainer?: string;
+    /** Classes for the error indicator icon */
+    errorIcon?: string;
     // --- TransactionHistoryItem classNames ---
     /** Classes for individual transaction item container */
     itemContainer?: string;
@@ -294,6 +319,8 @@ export interface ConnectedModalTxHistoryProps extends Pick<
   'aria-label'?: string;
   /** Customization options */
   customization?: ConnectedModalTxHistoryCustomization;
+  /** Pagination state for infinite scroll, forwarded to TransactionsHistory. */
+  pagination?: LocalTxPagination;
 }
 
 /**
@@ -575,7 +602,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
  * ```
  */
 export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModalTxHistoryProps>(
-  ({ transactionPool, pulsarAdapter, className, 'aria-label': ariaLabel, customization, ...props }, ref) => {
+  (
+    { transactionPool, pulsarAdapter, className, 'aria-label': ariaLabel, customization, pagination, ...props },
+    ref,
+  ) => {
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
@@ -717,6 +747,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   connectedWalletAddress={activeConnection!.address}
                   className="novacon:w-full"
                   customization={customization?.transactionsHistory}
+                  pagination={pagination}
                 />
               </TransactionsHistoryWrapper>
             </ErrorBoundary>

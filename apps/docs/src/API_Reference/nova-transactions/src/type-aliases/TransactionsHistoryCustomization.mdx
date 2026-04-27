@@ -6,7 +6,7 @@
 
 > **TransactionsHistoryCustomization**\<`T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionsHistory.tsx#L18)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsHistory.tsx#L25)
 
 Customization options for TransactionsHistory component.
 Allows styling of all sub-elements including individual transaction items.
@@ -21,147 +21,171 @@ Allows styling of all sub-elements including individual transaction items.
 
 ### classNames?
 
-> `optional` **classNames**: `object`
+> `optional` **classNames?**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionsHistory.tsx#L22)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsHistory.tsx#L29)
 
 Custom class name generators for all elements
 
 #### container?
 
-> `optional` **container**: `string`
+> `optional` **container?**: `string`
 
 Classes for the outer container
 
+#### errorContainer?
+
+> `optional` **errorContainer?**: `string`
+
+Classes for the error indicator container
+
+#### errorIcon?
+
+> `optional` **errorIcon?**: `string`
+
+Classes for the error indicator icon
+
 #### itemContainer?
 
-> `optional` **itemContainer**: `string`
+> `optional` **itemContainer?**: `string`
 
 Classes for individual transaction item container
 
 #### itemContentWrapper?
 
-> `optional` **itemContentWrapper**: `string`
+> `optional` **itemContentWrapper?**: `string`
 
 Classes for the content wrapper (title, timestamp, description)
 
 #### itemDescription?
 
-> `optional` **itemDescription**: `string`
+> `optional` **itemDescription?**: `string`
 
 Classes for the description text
 
 #### itemHashCopyButton?
 
-> `optional` **itemHashCopyButton**: `string`
+> `optional` **itemHashCopyButton?**: `string`
 
 Classes for the default hash copy button
 
 #### itemHashLabel?
 
-> `optional` **itemHashLabel**: `string`
+> `optional` **itemHashLabel?**: `string`
 
 Classes for the default hash link label
 
 #### itemHashLink?
 
-> `optional` **itemHashLink**: `string`
+> `optional` **itemHashLink?**: `string`
 
 Classes for the default hash link
 
 #### itemIcon?
 
-> `optional` **itemIcon**: `string`
+> `optional` **itemIcon?**: `string`
 
 Classes for the icon itself
 
 #### itemIconWrapper?
 
-> `optional` **itemIconWrapper**: `string`
+> `optional` **itemIconWrapper?**: `string`
 
 Classes for the icon wrapper
 
 #### itemOriginalHashCopyButton?
 
-> `optional` **itemOriginalHashCopyButton**: `string`
+> `optional` **itemOriginalHashCopyButton?**: `string`
 
 Classes for the original hash copy button (replaced transactions)
 
 #### itemOriginalHashLabel?
 
-> `optional` **itemOriginalHashLabel**: `string`
+> `optional` **itemOriginalHashLabel?**: `string`
 
 Classes for the original hash link label (replaced transactions)
 
 #### itemOriginalHashLink?
 
-> `optional` **itemOriginalHashLink**: `string`
+> `optional` **itemOriginalHashLink?**: `string`
 
 Classes for the original hash link (replaced transactions)
 
 #### itemStatusBadge?
 
-> `optional` **itemStatusBadge**: `string`
+> `optional` **itemStatusBadge?**: `string`
 
 Classes for the status badge container
 
 #### itemStatusBadgeIcon?
 
-> `optional` **itemStatusBadgeIcon**: `string`
+> `optional` **itemStatusBadgeIcon?**: `string`
 
 Classes for the status badge icon
 
 #### itemStatusBadgeLabel?
 
-> `optional` **itemStatusBadgeLabel**: `string`
+> `optional` **itemStatusBadgeLabel?**: `string`
 
 Classes for the status badge label
 
 #### itemTimestamp?
 
-> `optional` **itemTimestamp**: `string`
+> `optional` **itemTimestamp?**: `string`
 
 Classes for the timestamp text
 
 #### itemTitle?
 
-> `optional` **itemTitle**: `string`
+> `optional` **itemTitle?**: `string`
 
 Classes for the title text
 
 #### itemTxKeyContainer?
 
-> `optional` **itemTxKeyContainer**: `string`
+> `optional` **itemTxKeyContainer?**: `string`
 
 Classes for the transaction key container
 
 #### listWrapper?
 
-> `optional` **listWrapper**: `string`
+> `optional` **listWrapper?**: `string`
 
 Classes for the list wrapper container
 
+#### loaderContainer?
+
+> `optional` **loaderContainer?**: `string`
+
+Classes for the infinite scroll loader container
+
+#### loaderIcon?
+
+> `optional` **loaderIcon?**: `string`
+
+Classes for the infinite scroll loader icon (spinner)
+
 #### placeholderContainer?
 
-> `optional` **placeholderContainer**: `string`
+> `optional` **placeholderContainer?**: `string`
 
 Classes for the placeholder container
 
 #### placeholderMessage?
 
-> `optional` **placeholderMessage**: `string`
+> `optional` **placeholderMessage?**: `string`
 
 Classes for the placeholder message
 
 #### placeholderTitle?
 
-> `optional` **placeholderTitle**: `string`
+> `optional` **placeholderTitle?**: `string`
 
 Classes for the placeholder title
 
 #### titleText?
 
-> `optional` **titleText**: `string`
+> `optional` **titleText?**: `string`
 
 Classes for the title element
 
@@ -169,21 +193,27 @@ Classes for the title element
 
 ### components?
 
-> `optional` **components**: `object`
+> `optional` **components?**: `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionsHistory.tsx#L72)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsHistory.tsx#L87)
 
 Custom components
 
 #### HistoryItem?
 
-> `optional` **HistoryItem**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`T`\>\>
+> `optional` **HistoryItem?**: `ComponentType`\<[`TransactionHistoryItemProps`](TransactionHistoryItemProps.md)\<`T`\>\>
 
 Custom history item component
 
+#### Loader?
+
+> `optional` **Loader?**: `ComponentType`\<[`TransactionsHistoryLoaderProps`](TransactionsHistoryLoaderProps.md)\>
+
+Custom loader component rendered at the bottom during pagination loading
+
 #### Placeholder?
 
-> `optional` **Placeholder**: `ComponentType`\<`CustomPlaceholderProps`\>
+> `optional` **Placeholder?**: `ComponentType`\<`CustomPlaceholderProps`\>
 
 Custom placeholder component
 
@@ -191,8 +221,8 @@ Custom placeholder component
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title?**: `string`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionsHistory.tsx#L20)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsHistory.tsx#L27)
 
 Custom title for the transactions history section

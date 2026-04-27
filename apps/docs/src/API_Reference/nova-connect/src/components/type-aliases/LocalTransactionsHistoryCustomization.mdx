@@ -6,7 +6,7 @@
 
 > **LocalTransactionsHistoryCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L45)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L62)
 
 Local customization options for TransactionsHistory component.
 This is a copy of the type from @tuwaio/nova-transactions to avoid
@@ -16,147 +16,171 @@ breaking dynamic import logic.
 
 ### classNames?
 
-> `optional` **classNames**: `object`
+> `optional` **classNames?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L49)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L66)
 
 Custom class name generators
 
 #### container?
 
-> `optional` **container**: `string`
+> `optional` **container?**: `string`
 
 Classes for the outer container
 
+#### errorContainer?
+
+> `optional` **errorContainer?**: `string`
+
+Classes for the error indicator container
+
+#### errorIcon?
+
+> `optional` **errorIcon?**: `string`
+
+Classes for the error indicator icon
+
 #### itemContainer?
 
-> `optional` **itemContainer**: `string`
+> `optional` **itemContainer?**: `string`
 
 Classes for individual transaction item container
 
 #### itemContentWrapper?
 
-> `optional` **itemContentWrapper**: `string`
+> `optional` **itemContentWrapper?**: `string`
 
 Classes for the content wrapper
 
 #### itemDescription?
 
-> `optional` **itemDescription**: `string`
+> `optional` **itemDescription?**: `string`
 
 Classes for the description text
 
 #### itemHashCopyButton?
 
-> `optional` **itemHashCopyButton**: `string`
+> `optional` **itemHashCopyButton?**: `string`
 
 Classes for the default hash copy button
 
 #### itemHashLabel?
 
-> `optional` **itemHashLabel**: `string`
+> `optional` **itemHashLabel?**: `string`
 
 Classes for the default hash link label
 
 #### itemHashLink?
 
-> `optional` **itemHashLink**: `string`
+> `optional` **itemHashLink?**: `string`
 
 Classes for the default hash link
 
 #### itemIcon?
 
-> `optional` **itemIcon**: `string`
+> `optional` **itemIcon?**: `string`
 
 Classes for the icon itself
 
 #### itemIconWrapper?
 
-> `optional` **itemIconWrapper**: `string`
+> `optional` **itemIconWrapper?**: `string`
 
 Classes for the icon wrapper
 
 #### itemOriginalHashCopyButton?
 
-> `optional` **itemOriginalHashCopyButton**: `string`
+> `optional` **itemOriginalHashCopyButton?**: `string`
 
 Classes for the original hash copy button (replaced transactions)
 
 #### itemOriginalHashLabel?
 
-> `optional` **itemOriginalHashLabel**: `string`
+> `optional` **itemOriginalHashLabel?**: `string`
 
 Classes for the original hash link label (replaced transactions)
 
 #### itemOriginalHashLink?
 
-> `optional` **itemOriginalHashLink**: `string`
+> `optional` **itemOriginalHashLink?**: `string`
 
 Classes for the original hash link (replaced transactions)
 
 #### itemStatusBadge?
 
-> `optional` **itemStatusBadge**: `string`
+> `optional` **itemStatusBadge?**: `string`
 
 Classes for the status badge container
 
 #### itemStatusBadgeIcon?
 
-> `optional` **itemStatusBadgeIcon**: `string`
+> `optional` **itemStatusBadgeIcon?**: `string`
 
 Classes for the status badge icon
 
 #### itemStatusBadgeLabel?
 
-> `optional` **itemStatusBadgeLabel**: `string`
+> `optional` **itemStatusBadgeLabel?**: `string`
 
 Classes for the status badge label
 
 #### itemTimestamp?
 
-> `optional` **itemTimestamp**: `string`
+> `optional` **itemTimestamp?**: `string`
 
 Classes for the timestamp text
 
 #### itemTitle?
 
-> `optional` **itemTitle**: `string`
+> `optional` **itemTitle?**: `string`
 
 Classes for the title text
 
 #### itemTxKeyContainer?
 
-> `optional` **itemTxKeyContainer**: `string`
+> `optional` **itemTxKeyContainer?**: `string`
 
 Classes for the transaction key container
 
 #### listWrapper?
 
-> `optional` **listWrapper**: `string`
+> `optional` **listWrapper?**: `string`
 
 Classes for the list wrapper container
 
+#### loaderContainer?
+
+> `optional` **loaderContainer?**: `string`
+
+Classes for the infinite scroll loader container
+
+#### loaderIcon?
+
+> `optional` **loaderIcon?**: `string`
+
+Classes for the infinite scroll loader icon (spinner)
+
 #### placeholderContainer?
 
-> `optional` **placeholderContainer**: `string`
+> `optional` **placeholderContainer?**: `string`
 
 Classes for the placeholder container
 
 #### placeholderMessage?
 
-> `optional` **placeholderMessage**: `string`
+> `optional` **placeholderMessage?**: `string`
 
 Classes for the placeholder message
 
 #### placeholderTitle?
 
-> `optional` **placeholderTitle**: `string`
+> `optional` **placeholderTitle?**: `string`
 
 Classes for the placeholder title
 
 #### titleText?
 
-> `optional` **titleText**: `string`
+> `optional` **titleText?**: `string`
 
 Classes for the title element
 
@@ -164,8 +188,8 @@ Classes for the title element
 
 ### title?
 
-> `optional` **title**: `string`
+> `optional` **title?**: `string`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L47)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L64)
 
 Custom title for the transactions history section

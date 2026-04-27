@@ -6,19 +6,19 @@
 
 > **TrackingTxModalProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"executeTxAction"` \| `"initialTx"` \| `"transactionsPool"` \| `"adapter"` \| `"connectedWalletAddress"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L106)
+Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L106)
 
 ## Type Declaration
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
 ### customization?
 
-> `optional` **customization**: [`TrackingTxModalCustomization`](TrackingTxModalCustomization.md)\<`T`\>
+> `optional` **customization?**: [`TrackingTxModalCustomization`](TrackingTxModalCustomization.md)\<`T`\>
 
-### onClose()
+### onClose
 
 > **onClose**: (`txKey?`) => `void`
 
@@ -32,7 +32,7 @@ Defined in: [packages/nova-transactions/src/components/TrackingTxModal/TrackingT
 
 `void`
 
-### onOpenAllTransactions()
+### onOpenAllTransactions
 
 > **onOpenAllTransactions**: () => `void`
 

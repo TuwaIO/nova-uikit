@@ -6,19 +6,25 @@
 
 > **TransactionsInfoModalProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"` \| `"connectedAdapterType"` \| `"connectedWalletAddress"` \| `"transactionsPool"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsInfoModal.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/ce6baf77f49298f99507f9e1d0ab688bc5ed60f1/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L37)
+Defined in: [packages/nova-transactions/src/components/TransactionsInfoModal.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L37)
 
 ## Type Declaration
 
 ### customization?
 
-> `optional` **customization**: [`TransactionsInfoModalCustomization`](TransactionsInfoModalCustomization.md)\<`T`\>
+> `optional` **customization?**: [`TransactionsInfoModalCustomization`](TransactionsInfoModalCustomization.md)\<`T`\>
 
 ### isOpen?
 
-> `optional` **isOpen**: `boolean`
+> `optional` **isOpen?**: `boolean`
 
-### setIsOpen()
+### pagination?
+
+> `optional` **pagination?**: `TxInMemoryPagination`
+
+Pagination state for infinite scroll, forwarded to TransactionsHistory.
+
+### setIsOpen
 
 > **setIsOpen**: (`value`) => `void`
 
