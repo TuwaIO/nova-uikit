@@ -6,21 +6,21 @@
 
 > **TransactionsHistoryProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"` \| `"transactionsPool"` \| `"connectedWalletAddress"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-transactions/src/components/TransactionsHistory.tsx#L97)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/TransactionsHistory.tsx#L97)
 
 ## Type Declaration
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
 ### customization?
 
-> `optional` **customization**: [`TransactionsHistoryCustomization`](TransactionsHistoryCustomization.md)\<`T`\>
+> `optional` **customization?**: [`TransactionsHistoryCustomization`](TransactionsHistoryCustomization.md)\<`T`\>
 
 ### pagination?
 
-> `optional` **pagination**: `TxInMemoryPagination`
+> `optional` **pagination?**: `TxInMemoryPagination`
 
 Pagination state for infinite scroll. Uses TxInMemoryPagination from @tuwaio/pulsar-core.
 

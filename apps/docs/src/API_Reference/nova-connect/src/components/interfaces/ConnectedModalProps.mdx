@@ -4,7 +4,7 @@
 
 # ConnectedModalProps
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:318](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L318)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:318](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L318)
 
 Props for the ConnectedModal component
 
@@ -16,9 +16,9 @@ Props for the ConnectedModal component
 
 ### appChains?
 
-> `optional` **appChains**: `any`
+> `optional` **appChains?**: `any`
 
-Defined in: [packages/nova-connect/src/types.ts:16](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/types.ts#L16)
+Defined in: [packages/nova-connect/src/types.ts:16](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/types.ts#L16)
 
 App chains configuration - defaults to any, gets enhanced by chain-specific packages
 
@@ -34,9 +34,9 @@ any - Will be typed as `readonly [Chain, ...Chain[]]` when viem is available
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:323](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L323)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:323](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L323)
 
 Additional CSS classes for the modal
 
@@ -44,9 +44,9 @@ Additional CSS classes for the modal
 
 ### customization?
 
-> `optional` **customization**: [`ConnectedModalCustomization`](../type-aliases/ConnectedModalCustomization.md)
+> `optional` **customization?**: [`ConnectedModalCustomization`](../type-aliases/ConnectedModalCustomization.md)
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:325](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L325)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:325](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L325)
 
 Customization options
 
@@ -54,9 +54,9 @@ Customization options
 
 ### pagination?
 
-> `optional` **pagination**: [`LocalTxPagination`](../type-aliases/LocalTxPagination.md)
+> `optional` **pagination?**: [`LocalTxPagination`](../type-aliases/LocalTxPagination.md)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:41](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/hooks/useNovaConnect.ts#L41)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:41](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/hooks/useNovaConnect.ts#L41)
 
 Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
 Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
@@ -69,9 +69,9 @@ Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency)
 
 ### pulsarAdapter?
 
-> `optional` **pulsarAdapter**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+> `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:24](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/hooks/useNovaConnect.ts#L24)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:24](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/hooks/useNovaConnect.ts#L24)
 
 Pulsar adapter(s) for transaction handling
 
@@ -83,9 +83,9 @@ Pulsar adapter(s) for transaction handling
 
 ### solanaRPCUrls?
 
-> `optional` **solanaRPCUrls**: `any`
+> `optional` **solanaRPCUrls?**: `any`
 
-Defined in: [packages/nova-connect/src/types.ts:23](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/types.ts#L23)
+Defined in: [packages/nova-connect/src/types.ts:23](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/types.ts#L23)
 
 Solana RPC URLs configuration - defaults to any, gets enhanced by Solana packages
 
@@ -101,9 +101,9 @@ any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when gill
 
 ### transactionPool?
 
-> `optional` **transactionPool**: `TransactionPool`\<`Transaction`\>
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:22](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-connect/src/hooks/useNovaConnect.ts#L22)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:22](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-connect/src/hooks/useNovaConnect.ts#L22)
 
 Transaction pool for pending transactions display
 

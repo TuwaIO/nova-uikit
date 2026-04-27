@@ -6,7 +6,7 @@
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L44)
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L44)
 
 Defines the props for the NovaTransactionsProvider component.
 
@@ -18,55 +18,55 @@ Defines the props for the NovaTransactionsProvider component.
 
 ### connectedAdapterType?
 
-> `optional` **connectedAdapterType**: `OrbitAdapter`
+> `optional` **connectedAdapterType?**: `OrbitAdapter`
 
 ### connectedWalletAddress?
 
-> `optional` **connectedWalletAddress**: `string`
+> `optional` **connectedWalletAddress?**: `string`
 
 ### customization?
 
-> `optional` **customization**: `object`
+> `optional` **customization?**: `object`
 
 #### customization.toast?
 
-> `optional` **toast**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`T`\>
+> `optional` **toast?**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`T`\>
 
 #### customization.toastCloseButton?
 
-> `optional` **toastCloseButton**: `Omit`\<`ToastCloseButtonProps`, `"closeToast"`\>
+> `optional` **toastCloseButton?**: `Omit`\<`ToastCloseButtonProps`, `"closeToast"`\>
 
 #### customization.trackingTxModal?
 
-> `optional` **trackingTxModal**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`T`\>
+> `optional` **trackingTxModal?**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`T`\>
 
 #### customization.transactionsInfoModal?
 
-> `optional` **transactionsInfoModal**: [`TransactionsInfoModalCustomization`](../../type-aliases/TransactionsInfoModalCustomization.md)\<`T`\>
+> `optional` **transactionsInfoModal?**: [`TransactionsInfoModalCustomization`](../../type-aliases/TransactionsInfoModalCustomization.md)\<`T`\>
 
 ### features?
 
-> `optional` **features**: `object`
+> `optional` **features?**: `object`
 
 #### features.toasts?
 
-> `optional` **toasts**: `boolean`
+> `optional` **toasts?**: `boolean`
 
 #### features.trackingTxModal?
 
-> `optional` **trackingTxModal**: `boolean`
+> `optional` **trackingTxModal?**: `boolean`
 
 #### features.transactionsModal?
 
-> `optional` **transactionsModal**: `boolean`
+> `optional` **transactionsModal?**: `boolean`
 
 ### labels?
 
-> `optional` **labels**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
+> `optional` **labels?**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
 
 ### pagination?
 
-> `optional` **pagination**: `TxInMemoryPagination`
+> `optional` **pagination?**: `TxInMemoryPagination`
 
 Pagination state for infinite scroll, forwarded to TransactionsInfoModal and TransactionsHistory.
 

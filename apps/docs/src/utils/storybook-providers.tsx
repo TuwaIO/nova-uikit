@@ -213,7 +213,10 @@ export function StorybookProviders({
           onSignIn={(session) => console.log('sign in', session)}
         >
           <SatelliteConnectProvider
-            adapter={[satelliteEVMAdapter(wagmiConfig), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
+            adapter={[
+              satelliteEVMAdapter(wagmiConfig, appEVMChains),
+              satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls }),
+            ]}
             autoConnect={false}
           >
             {customization && <div className="custom-theme" style={{ display: 'none' }} />}

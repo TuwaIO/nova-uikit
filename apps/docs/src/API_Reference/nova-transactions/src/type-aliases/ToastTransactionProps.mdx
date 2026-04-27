@@ -6,29 +6,29 @@
 
 > **ToastTransactionProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"` \| `"connectedWalletAddress"`\>
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/d9cb0592017ba8785db83187dd0a7191551b65f5/packages/nova-transactions/src/components/ToastTransaction.tsx#L75)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/280b46a6d43acbe403882f872abaf8647e1a970a/packages/nova-transactions/src/components/ToastTransaction.tsx#L75)
 
 ## Type Declaration
 
 ### className?
 
-> `optional` **className**: `string`
+> `optional` **className?**: `string`
 
 ### closeToast?
 
-> `optional` **closeToast**: `ToastContentProps`\[`"closeToast"`\]
+> `optional` **closeToast?**: `ToastContentProps`\[`"closeToast"`\]
 
 ### customization?
 
-> `optional` **customization**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`T`\>
+> `optional` **customization?**: [`ToastTransactionCustomization`](ToastTransactionCustomization.md)\<`T`\>
 
 ### icon?
 
-> `optional` **icon**: `ReactNode`
+> `optional` **icon?**: `ReactNode`
 
-### openTxInfoModal()?
+### openTxInfoModal?
 
-> `optional` **openTxInfoModal**: () => `void`
+> `optional` **openTxInfoModal?**: () => `void`
 
 #### Returns
 
@@ -36,7 +36,7 @@ Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:75](
 
 ### toastProps?
 
-> `optional` **toastProps**: `ToastContainerProps`
+> `optional` **toastProps?**: `ToastContainerProps`
 
 ### tx
 
