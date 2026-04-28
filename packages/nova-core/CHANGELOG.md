@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.0...nova-core-v0.4.1) (2026-04-28)
+
+
+### Bug Fixes
+
+* toast padding styles ([c948640](https://github.com/TuwaIO/nova-uikit/commit/c9486405cd2bb327790cd9fd4323eb468b2b0fa7))
+
 ## [0.4.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.3.3...nova-core-v0.4.0) (2026-04-27)
 
 
