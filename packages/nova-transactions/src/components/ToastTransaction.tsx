@@ -4,7 +4,7 @@
 
 import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
 import { selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
@@ -24,6 +24,7 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     TxInfoButton?: ComponentType<CustomActionButtonProps>;
     SpeedUpButton?: ComponentType<CustomActionButtonProps>;
     CancelButton?: ComponentType<CustomActionButtonProps>;
+    ConfirmationsBadge?: ComponentType<{ count: number | string; className?: string }>;
   };
   /** Granular classNames for all sub-elements */
   classNames?: {
@@ -69,6 +70,8 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     cancelButton?: string;
     /** Classes for the TxInfo button */
     txInfoButton?: string;
+    /** Classes for the confirmations badge */
+    confirmationsBadge?: string;
   };
 };
 
@@ -121,6 +124,31 @@ const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButto
   );
 };
 
+const DefaultConfirmationsBadge = ({
+  count,
+  required,
+  isSuccess,
+  className,
+}: {
+  count: number | string;
+  required?: number;
+  isSuccess?: boolean;
+  className?: string;
+}) => (
+  <div
+    className={cn(
+      'novatx:absolute novatx:-left-1 novatx:-top-1 novatx:z-10 novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:text-[10px] novatx:font-bold novatx:shadow-sm novatx:backdrop-blur-sm novatx:transition-colors',
+      isSuccess
+        ? 'novatx:border-[var(--tuwa-border-accent)] novatx:bg-[var(--tuwa-bg-accent)] novatx:text-[var(--tuwa-text-on-accent)]'
+        : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',
+      className,
+    )}
+  >
+    {count}
+    {required && required > 1 ? `/${required}` : ''}
+  </div>
+);
+
 export function ToastTransaction<T extends Transaction>({
   openTxInfoModal,
   tx,
@@ -158,6 +186,7 @@ export function ToastTransaction<T extends Transaction>({
     SpeedUpButton = DefaultSpeedUpButton,
     CancelButton = DefaultCancelButton,
     TxInfoButton = DefaultTxInfoButton,
+    ConfirmationsBadge = DefaultConfirmationsBadge,
   } = customization?.components ?? {};
 
   const classNames = customization?.classNames;
@@ -165,11 +194,19 @@ export function ToastTransaction<T extends Transaction>({
   return (
     <div
       className={cn(
-        'novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        'novatx:relative novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
         classNames?.container,
         className,
       )}
     >
+      {tx.confirmations && Number(tx.confirmations) > 0 && (
+        <ConfirmationsBadge
+          count={tx.confirmations}
+          required={tx.requiredConfirmations}
+          isSuccess={tx.status === TransactionStatus.Success}
+          className={classNames?.confirmationsBadge}
+        />
+      )}
       <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
         <div
           className={cn('novatx:w-[40px] novatx:flex-shrink-0', classNames?.iconWrapper)}

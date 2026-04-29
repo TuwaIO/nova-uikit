@@ -6,7 +6,7 @@
 
 > **ToastTransactionCustomization**\<`T`\> = `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/d674a29a62fa46c8aca96808741d8f4976712c8a/packages/nova-transactions/src/components/ToastTransaction.tsx#L18)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/e3c5fee57776888006a9c43c1a591390aa53c6a7/packages/nova-transactions/src/components/ToastTransaction.tsx#L18)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:18](
 
 > `optional` **classNames?**: `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/d674a29a62fa46c8aca96808741d8f4976712c8a/packages/nova-transactions/src/components/ToastTransaction.tsx#L29)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/e3c5fee57776888006a9c43c1a591390aa53c6a7/packages/nova-transactions/src/components/ToastTransaction.tsx#L30)
 
 Granular classNames for all sub-elements
 
@@ -35,6 +35,12 @@ Classes for the actions container
 > `optional` **cancelButton?**: `string`
 
 Classes for the Cancel button
+
+#### confirmationsBadge?
+
+> `optional` **confirmationsBadge?**: `string`
+
+Classes for the confirmations badge
 
 #### container?
 
@@ -156,13 +162,17 @@ Classes for the TxInfo button
 
 > `optional` **components?**: `object`
 
-Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/d674a29a62fa46c8aca96808741d8f4976712c8a/packages/nova-transactions/src/components/ToastTransaction.tsx#L20)
+Defined in: [packages/nova-transactions/src/components/ToastTransaction.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/e3c5fee57776888006a9c43c1a591390aa53c6a7/packages/nova-transactions/src/components/ToastTransaction.tsx#L20)
 
 Custom components
 
 #### CancelButton?
 
 > `optional` **CancelButton?**: `ComponentType`\<`CustomActionButtonProps`\>
+
+#### ConfirmationsBadge?
+
+> `optional` **ConfirmationsBadge?**: `ComponentType`\<\{ `className?`: `string`; `count`: `number` \| `string`; \}\>
 
 #### SpeedUpButton?
 
