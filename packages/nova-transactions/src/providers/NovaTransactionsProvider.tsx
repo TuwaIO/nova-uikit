@@ -82,6 +82,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   ...toastProps
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
+  const [selectedTxKey, setSelectedTxKey] = useState<string | null>(null);
   const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
 
   const toastContainerId = 'nova-transactions';
@@ -110,7 +111,18 @@ export function NovaTransactionsProvider<T extends Transaction>({
         <ToastTransaction
           {...props}
           tx={tx}
-          openTxInfoModal={enabledFeatures.transactionsModal ? () => setIsTransactionsInfoModalOpen(true) : undefined}
+          openTxInfoModal={
+            enabledFeatures.transactionsModal
+              ? (txKey) => {
+                  if (txKey && typeof txKey === 'string') {
+                    setSelectedTxKey(txKey);
+                  } else {
+                    setSelectedTxKey(null);
+                  }
+                  setIsTransactionsInfoModalOpen(true);
+                }
+              : undefined
+          }
           customization={customization?.toast}
           adapter={adapter}
           connectedWalletAddress={connectedWalletAddress}
@@ -197,7 +209,11 @@ export function NovaTransactionsProvider<T extends Transaction>({
       {enabledFeatures.transactionsModal && (
         <TransactionsInfoModal
           isOpen={isTransactionsInfoModalOpen}
-          setIsOpen={setIsTransactionsInfoModalOpen}
+          setIsOpen={(open) => {
+            setIsTransactionsInfoModalOpen(open);
+            if (!open) setSelectedTxKey(null);
+          }}
+          selectedTxKey={selectedTxKey}
           customization={customization?.transactionsInfoModal}
           adapter={adapter}
           connectedWalletAddress={connectedWalletAddress}

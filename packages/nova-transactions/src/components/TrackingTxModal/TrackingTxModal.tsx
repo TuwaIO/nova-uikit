@@ -145,6 +145,7 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter?.speedUpTxAction &&
     foundAdapter?.cancelTxAction &&
     activeTx?.pending &&
+    (!activeTx.confirmations || Number(activeTx.confirmations) < 1) &&
     activeTx.tracker === 'ethereum'
   );
 

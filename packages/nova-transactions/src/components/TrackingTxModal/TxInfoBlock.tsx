@@ -140,7 +140,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         </>
       )}
 
-      {'confirmations' in tx && (typeof tx?.confirmations === 'number' || typeof tx?.confirmations === 'string') && (
+      {'confirmations' in tx && Number(tx.confirmations) > 0 && (
         <InfoRow label={statuses.confirmationsLabel} value={tx.confirmations} classNames={rowClassNames} />
       )}
 

@@ -80,6 +80,10 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
   customization?: TransactionHistoryItemCustomization<T>;
   /** Optional additional CSS classes for the container. */
   className?: string;
+  /** Callback triggered when the item is selected to view details. */
+  onSelectTx?: () => void;
+  /** Whether transaction details can be viewed by clicking on history items. */
+  canViewDetails?: boolean;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 const DefaultIcon = ({ chainId, className }: CustomIconProps) => (
@@ -99,6 +103,8 @@ export function TransactionHistoryItem<T extends Transaction>({
   adapter,
   className,
   customization,
+  onSelectTx,
+  canViewDetails = true,
 }: TransactionHistoryItemProps<T>): JSX.Element {
   const {
     Icon = DefaultIcon,
@@ -113,8 +119,14 @@ export function TransactionHistoryItem<T extends Transaction>({
 
   return (
     <div
+      onClick={(e) => {
+        // Prevent trigger if clicking on a button or link inside
+        if ((e.target as HTMLElement).closest('button, a')) return;
+        if (canViewDetails) onSelectTx?.();
+      }}
       className={cn(
-        'novatx:flex novatx:flex-col novatx:gap-2 novatx:border-b novatx:border-[var(--tuwa-border-secondary)] novatx:p-3 novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-secondary)]',
+        'novatx:flex novatx:flex-col novatx:gap-2 novatx:border-b novatx:border-[var(--tuwa-border-secondary)] novatx:p-3 novatx:transition-colors novatx:last:border-b-0',
+        onSelectTx && canViewDetails && 'novatx:cursor-pointer novatx:hover:bg-[var(--tuwa-bg-secondary)]',
         classNames?.container,
         className,
       )}

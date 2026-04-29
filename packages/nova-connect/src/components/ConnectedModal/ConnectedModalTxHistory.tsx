@@ -748,6 +748,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   className="novacon:w-full"
                   customization={customization?.transactionsHistory}
                   pagination={pagination}
+                  canViewDetails={false}
                 />
               </TransactionsHistoryWrapper>
             </ErrorBoundary>

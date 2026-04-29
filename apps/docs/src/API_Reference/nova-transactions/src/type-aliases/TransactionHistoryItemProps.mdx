@@ -6,9 +6,15 @@
 
 > **TransactionHistoryItemProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"`\>
 
-Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/e3c5fee57776888006a9c43c1a591390aa53c6a7/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L76)
+Defined in: [packages/nova-transactions/src/components/TransactionHistoryItem.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/bc1cb87946c697ed4ec430b7111177f22b9036fe/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L76)
 
 ## Type Declaration
+
+### canViewDetails?
+
+> `optional` **canViewDetails?**: `boolean`
+
+Whether transaction details can be viewed by clicking on history items.
 
 ### className?
 
@@ -21,6 +27,16 @@ Optional additional CSS classes for the container.
 > `optional` **customization?**: [`TransactionHistoryItemCustomization`](TransactionHistoryItemCustomization.md)\<`T`\>
 
 An object to customize and override the default internal components.
+
+### onSelectTx?
+
+> `optional` **onSelectTx?**: () => `void`
+
+Callback triggered when the item is selected to view details.
+
+#### Returns
+
+`void`
 
 ### tx
 

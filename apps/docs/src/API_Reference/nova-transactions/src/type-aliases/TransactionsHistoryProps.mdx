@@ -6,9 +6,15 @@
 
 > **TransactionsHistoryProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](../providers/type-aliases/NovaTransactionsProviderProps.md)\<`T`\>, `"adapter"` \| `"transactionsPool"` \| `"connectedWalletAddress"`\> & `object`
 
-Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/e3c5fee57776888006a9c43c1a591390aa53c6a7/packages/nova-transactions/src/components/TransactionsHistory.tsx#L97)
+Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:100](https://github.com/TuwaIO/nova-uikit/blob/bc1cb87946c697ed4ec430b7111177f22b9036fe/packages/nova-transactions/src/components/TransactionsHistory.tsx#L100)
 
 ## Type Declaration
+
+### canViewDetails?
+
+> `optional` **canViewDetails?**: `boolean`
+
+Whether transaction details can be viewed by clicking on history items. Defaults to true.
 
 ### className?
 
@@ -17,6 +23,12 @@ Defined in: [packages/nova-transactions/src/components/TransactionsHistory.tsx:9
 ### customization?
 
 > `optional` **customization?**: [`TransactionsHistoryCustomization`](TransactionsHistoryCustomization.md)\<`T`\>
+
+### initialTxKey?
+
+> `optional` **initialTxKey?**: `string` \| `null`
+
+Optional transaction key to open directly in detail view
 
 ### pagination?
 

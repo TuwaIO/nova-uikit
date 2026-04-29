@@ -77,7 +77,7 @@ export type ToastTransactionCustomization<T extends Transaction> = {
 
 export type ToastTransactionProps<T extends Transaction> = {
   tx: T;
-  openTxInfoModal?: () => void;
+  openTxInfoModal?: (txKey?: string) => void;
   icon?: ReactNode;
   className?: string;
   customization?: ToastTransactionCustomization<T>;
@@ -139,7 +139,7 @@ const DefaultConfirmationsBadge = ({
     className={cn(
       'novatx:absolute novatx:-left-1 novatx:-top-1 novatx:z-10 novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:text-[10px] novatx:font-bold novatx:shadow-sm novatx:backdrop-blur-sm novatx:transition-colors',
       isSuccess
-        ? 'novatx:border-[var(--tuwa-border-accent)] novatx:bg-[var(--tuwa-bg-accent)] novatx:text-[var(--tuwa-text-on-accent)]'
+        ? 'novatx:border-[var(--tuwa-success-icon)]/30 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]'
         : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',
       className,
     )}
@@ -165,6 +165,7 @@ export function ToastTransaction<T extends Transaction>({
   const canBeReplaced = !!(
     tx.tracker === 'ethereum' &&
     tx.pending &&
+    (!tx.confirmations || Number(tx.confirmations) < 1) &&
     foundAdapter?.speedUpTxAction &&
     foundAdapter?.cancelTxAction &&
     tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() &&
@@ -271,8 +272,8 @@ export function ToastTransaction<T extends Transaction>({
           ) : (
             openTxInfoModal &&
             tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() && (
-              <TxInfoButton onClick={openTxInfoModal} className={classNames?.txInfoButton}>
-                {toast.openTransactionsInfo}
+              <TxInfoButton onClick={() => openTxInfoModal(tx.txKey)} className={classNames?.txInfoButton}>
+                {toast.openTransaction}
               </TxInfoButton>
             )
           )}
