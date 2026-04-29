@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.4.0...nova-connect-v0.4.1) (2026-04-29)
+
+
+### Bug Fixes
+
+* added tx details and badge to toast with confirmations ([#78](https://github.com/TuwaIO/nova-uikit/issues/78)) ([bd0112d](https://github.com/TuwaIO/nova-uikit/commit/bd0112d88a3421b3dd501f8a377741af854fde25))
+
 ## [0.4.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.3.2...nova-connect-v0.4.0) (2026-04-27)
 
 
