@@ -107,7 +107,7 @@ export function TransactionKey<T extends Transaction>({
     <div className={cn(containerClasses, className)}>
       {shouldShowTrackerKey && trackerKeyElement}
       {onChainHashesElement}
-      {typeof confirmations === 'number' && (
+      {typeof confirmations === 'number' && confirmations > 0 && (
         <p className="novatx:text-xs novatx:text-[var(--tuwa-text-tertiary)]">
           {statuses.confirmationsLabel}: {confirmations}
         </p>

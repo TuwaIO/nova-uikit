@@ -43,6 +43,8 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   customization?: TransactionsInfoModalCustomization<T>;
   /** Pagination state for infinite scroll, forwarded to TransactionsHistory. */
   pagination?: TxInMemoryPagination;
+  /** Optional transaction key to open directly in detail view */
+  selectedTxKey?: string | null;
 };
 
 type DefaultHeaderClassNames = {
@@ -86,6 +88,7 @@ export function TransactionsInfoModal<T extends Transaction>({
   connectedWalletAddress,
   transactionsPool,
   pagination,
+  selectedTxKey,
 }: TransactionsInfoModalProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -135,6 +138,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
               pagination={pagination}
+              initialTxKey={selectedTxKey}
             />
           )}
         </div>

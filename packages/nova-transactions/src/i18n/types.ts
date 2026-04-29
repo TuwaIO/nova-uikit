@@ -26,7 +26,7 @@ export type NovaTransactionsLabels = {
   /** Labels related to toast notifications. */
   toast: {
     /** Text for the button/link within a toast to open the wallet modal. */
-    openTransactionsInfo: string;
+    openTransaction: string;
   };
   /** Standard labels for transaction statuses. */
   statuses: {
@@ -123,5 +123,82 @@ export type NovaTransactionsLabels = {
     cancel: string;
     /** Text for a generic "Speed up" action. */
     speedUp: string;
+  };
+  /** Labels for the detailed transaction view. */
+  transactionDetails: {
+    /** Main title for the detailed view. */
+    title: string;
+    /** Subtitle for the detailed view. */
+    subtitle: string;
+    /** Label for the metadata section. */
+    metadata: string;
+    /** Label for the execution data section. */
+    executionData: string;
+    /** Label for the adapter type. */
+    adapter: string;
+    /** Label for the submission time. */
+    submittedAt: string;
+    /** Label for the completion time. */
+    finishedAt: string;
+    /** Label for the tracker name. */
+    tracker: string;
+    /** Label for the connector type. */
+    connector: string;
+    /** Label for the confirmations count. */
+    confirmations: string;
+    /** Label for the internal transaction key. */
+    txKey: string;
+    /** Label for the origin address. */
+    from: string;
+    /** Label for the recipient address. */
+    to: string;
+    /** Label for the transaction hash. */
+    hash: string;
+    /** Label for the network name. */
+    network: string;
+    /** Label for the raw input data. */
+    inputData: string;
+    /** Label for the payload data section. */
+    payload: string;
+    /** Label for the context block. */
+    context: string;
+    /** Label for the nonce. */
+    nonce: string;
+    /** Label for the raw value. */
+    value: string;
+    /** Label for the max fee per gas. */
+    maxFee: string;
+    /** Label for the max priority fee per gas. */
+    maxPriorityFee: string;
+    /** Label for the Solana section title. */
+    solanaTitle: string;
+    /** Label for the Starknet section title. */
+    starknetTitle: string;
+    /** Label for the Context section title. */
+    contextTitle: string;
+    /** Label for the Fee. */
+    fee: string;
+    /** Label for the Slot. */
+    slot: string;
+    /** Label for the Instructions. */
+    instructions: string;
+    /** Label for the Recent Blockhash. */
+    recentBlockhash: string;
+    /** Label for the Contract Address. */
+    contractAddress: string;
+    /** Label for the Actual Fee. */
+    actualFee: string;
+    /** Label for the Title Context. */
+    titleContext: string;
+    /** Label for the Description Context. */
+    descriptionContext: string;
+    /** Label for the Error Context. */
+    errorContext: string;
+    /** Label for the Full Payload. */
+    fullPayload: string;
+    /** Label for the RPC URL. */
+    rpcUrl: string;
+    /** Label for the Replaced Hash. */
+    replacedHash: string;
   };
 };

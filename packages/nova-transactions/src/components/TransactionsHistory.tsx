@@ -8,6 +8,7 @@ import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination 
 import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
 type CustomPlaceholderProps = { title: string; message: string; className?: string };
@@ -92,6 +93,8 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
     /** Custom loader component rendered at the bottom during pagination loading */
     Loader?: ComponentType<TransactionsHistoryLoaderProps>;
   };
+  /** Customization for the detailed transaction view */
+  detailsCustomization?: TransactionDetailsCustomization;
 };
 
 export type TransactionsHistoryProps<T extends Transaction> = Pick<
@@ -102,6 +105,10 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   customization?: TransactionsHistoryCustomization<T>;
   /** Pagination state for infinite scroll. Uses TxInMemoryPagination from @tuwaio/pulsar-core. */
   pagination?: TxInMemoryPagination;
+  /** Optional transaction key to open directly in detail view */
+  initialTxKey?: string | null;
+  /** Whether transaction details can be viewed by clicking on history items. Defaults to true. */
+  canViewDetails?: boolean;
 };
 
 /** Duration (ms) for the error indicator to stay visible before fading out. */
@@ -184,8 +191,20 @@ export function TransactionsHistory<T extends Transaction>({
   className,
   customization,
   pagination,
+  initialTxKey,
+  canViewDetails = true,
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
+
+  const [selectedTxKey, setSelectedTxKey] = useState<string | null>(canViewDetails ? (initialTxKey ?? null) : null);
+
+  // Sync initialTxKey if it changes externally (e.g. from provider)
+  useEffect(() => {
+    if (initialTxKey && canViewDetails) {
+      const timer = setTimeout(() => setSelectedTxKey(initialTxKey), 0);
+      return () => clearTimeout(timer);
+    }
+  }, [initialTxKey, canViewDetails]);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const prevIsErrorRef = useRef(false);
@@ -303,7 +322,14 @@ export function TransactionsHistory<T extends Transaction>({
           )}
         >
           {sortedTransactions.map((tx) => (
-            <HistoryItem key={tx.txKey} tx={tx} adapter={adapter} customization={{ classNames: itemClassNames }} />
+            <HistoryItem
+              key={tx.txKey}
+              tx={tx}
+              adapter={adapter}
+              canViewDetails={canViewDetails}
+              customization={{ classNames: itemClassNames }}
+              onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
+            />
           ))}
 
           {/* Infinite scroll sentinel — observed by IntersectionObserver */}
@@ -340,6 +366,20 @@ export function TransactionsHistory<T extends Transaction>({
       />
     );
   };
+
+  if (selectedTxKey) {
+    const selectedTx = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
+    if (selectedTx) {
+      return (
+        <TransactionDetails
+          tx={selectedTx}
+          adapter={adapter}
+          onBack={() => setSelectedTxKey(null)}
+          customization={customization?.detailsCustomization}
+        />
+      );
+    }
+  }
 
   return (
     <div className={cn('novatx:flex novatx:flex-col novatx:gap-y-3', customization?.classNames?.container, className)}>
