@@ -6,9 +6,9 @@
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/b9a01412ca18afbe7fefbcbd3b658ec16a5f4445/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L44)
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L49)
 
-Defines the props for the NovaTransactionsProvider component.
+Defines the props for the `NovaTransactionsProvider` component.
 
 ## Type Declaration
 
@@ -16,53 +16,111 @@ Defines the props for the NovaTransactionsProvider component.
 
 > **adapter**: `TxAdapter`\<`T`\> \| `TxAdapter`\<`T`\>[]
 
+The chain adapter (or array of adapters) passed through to all child components.
+
 ### connectedAdapterType?
 
 > `optional` **connectedAdapterType?**: `OrbitAdapter`
+
+The active adapter type, used for chain-specific logic in modals.
 
 ### connectedWalletAddress?
 
 > `optional` **connectedWalletAddress?**: `string`
 
+The currently connected wallet address, used to gate certain UI actions.
+
 ### customization?
 
 > `optional` **customization?**: `object`
+
+Customization overrides for individual UI sub-systems.
 
 #### customization.toast?
 
 > `optional` **toast?**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`T`\>
 
+Overrides for the bottom-right transaction progress toast body.
+
 #### customization.toastCloseButton?
 
 > `optional` **toastCloseButton?**: `Omit`\<`ToastCloseButtonProps`, `"closeToast"`\>
+
+Overrides for the close button shared by all transaction toasts.
 
 #### customization.trackingTxModal?
 
 > `optional` **trackingTxModal?**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`T`\>
 
+Overrides for the step-by-step tracking modal.
+
 #### customization.transactionsInfoModal?
 
 > `optional` **transactionsInfoModal?**: [`TransactionsInfoModalCustomization`](../../type-aliases/TransactionsInfoModalCustomization.md)\<`T`\>
+
+Overrides for the full-screen transaction history modal.
+
+#### customization.validationErrorToast?
+
+> `optional` **validationErrorToast?**: [`ToastValidationErrorCustomization`](../../type-aliases/ToastValidationErrorCustomization.md)
+
+Overrides for the top-center pre-submission validation error toast.
+See `ToastValidationErrorCustomization` for available slots.
 
 ### features?
 
 > `optional` **features?**: `object`
 
+Feature flags to selectively enable or disable UI sub-systems.
+All features are **enabled** by default.
+
 #### features.toasts?
 
 > `optional` **toasts?**: `boolean`
+
+Enables bottom-right transaction progress toasts.
+
+##### Default Value
+
+`true`
 
 #### features.trackingTxModal?
 
 > `optional` **trackingTxModal?**: `boolean`
 
+Enables the step-by-step tracking modal that opens on submission.
+
+##### Default Value
+
+`true`
+
 #### features.transactionsModal?
 
 > `optional` **transactionsModal?**: `boolean`
 
+Enables the full-screen transaction history modal.
+
+##### Default Value
+
+`true`
+
+#### features.validationErrorToast?
+
+> `optional` **validationErrorToast?**: `boolean`
+
+Enables the top-center pre-submission error toast.
+This fires when `executeTxAction` throws before the transaction reaches the pool
+(validation failures, `beforeTxProcess` rejections, missing adapter, etc.).
+
+##### Default Value
+
+`true`
+
 ### labels?
 
 > `optional` **labels?**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
+
+Partial label overrides for i18n. Merged with the built-in English defaults.
 
 ### pagination?
 
@@ -74,8 +132,12 @@ Pagination state for infinite scroll, forwarded to TransactionsInfoModal and Tra
 
 > **transactionsPool**: `TransactionPool`\<`T`\>
 
+The live transaction pool from the Pulsar store.
+
 ## Type Parameters
 
 ### T
 
 `T` *extends* `Transaction`
+
+The specific transaction type, extending the base `Transaction`.

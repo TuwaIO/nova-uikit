@@ -265,22 +265,17 @@ export const nova_connect_customization: NovaConnectProviderCustomization = {
     connectModal: {
       classNames: {
         modalContainer: () => 'bg-[var(--tuwa-bg-secondary)]',
-        header: () => cn(
-          'bg-[var(--tuwa-bg-secondary)]',
-          'border-b border-[var(--tuwa-border-primary)]',
-        ),
+        header: () => cn('bg-[var(--tuwa-bg-secondary)]', 'border-b border-[var(--tuwa-border-primary)]'),
         title: () => cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
-        closeButton: () => cn(
-          'cursor-pointer rounded-[4px] p-1 transition-colors',
-          SHARED_STYLES.textSecondary,
-          'hover:bg-[var(--tuwa-bg-muted)]',
-          SHARED_STYLES.baseFocus,
-        ),
+        closeButton: () =>
+          cn(
+            'cursor-pointer rounded-[4px] p-1 transition-colors',
+            SHARED_STYLES.textSecondary,
+            'hover:bg-[var(--tuwa-bg-muted)]',
+            SHARED_STYLES.baseFocus,
+          ),
         mainContent: () => 'bg-[var(--tuwa-bg-secondary)]',
-        footer: () => cn(
-          'bg-[var(--tuwa-bg-secondary)]',
-          'border-t border-[var(--tuwa-border-primary)]',
-        ),
+        footer: () => cn('bg-[var(--tuwa-bg-secondary)]', 'border-t border-[var(--tuwa-border-primary)]'),
         backButton: () => BUTTON_STYLES.ghost,
         actionButton: () => BUTTON_STYLES.primary,
       },
@@ -290,11 +285,8 @@ export const nova_connect_customization: NovaConnectProviderCustomization = {
           connectorsBlock: {
             installed: {
               classNames: {
-                title: () => cn(
-                  SHARED_STYLES.fontMonoMedium,
-                  SHARED_STYLES.textAccent,
-                  'text-sm uppercase tracking-wide',
-                ),
+                title: () =>
+                  cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textAccent, 'text-sm uppercase tracking-wide'),
               },
             },
           },
@@ -303,21 +295,23 @@ export const nova_connect_customization: NovaConnectProviderCustomization = {
         connecting: {
           classNames: {
             container: () => 'flex flex-col gap-4 items-center justify-center w-full',
-            statusContainer: ({ statusData }) => cn(
-              'relative flex items-center justify-center',
-              'min-w-[110px] min-h-[110px]',
-              'border-2 rounded-full p-4',
-              'transition-all duration-300 ease-in-out',
-              statusData.state === 'error'
-                ? 'border-[var(--tuwa-error-icon)] bg-[var(--tuwa-error-icon)]/5'
-                : statusData.state === 'success'
-                  ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-text-accent)]/5'
-                  : 'border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)]',
-            ),
-            spinner: () => cn(
-              'absolute animate-spin rounded-full -inset-[2px]',
-              'border-2 border-[var(--tuwa-text-accent)] border-t-transparent',
-            ),
+            statusContainer: ({ statusData }) =>
+              cn(
+                'relative flex items-center justify-center',
+                'min-w-[110px] min-h-[110px]',
+                'border-2 rounded-full p-4',
+                'transition-all duration-300 ease-in-out',
+                statusData.state === 'error'
+                  ? 'border-[var(--tuwa-error-icon)] bg-[var(--tuwa-error-icon)]/5'
+                  : statusData.state === 'success'
+                    ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-text-accent)]/5'
+                    : 'border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)]',
+              ),
+            spinner: () =>
+              cn(
+                'absolute animate-spin rounded-full -inset-[2px]',
+                'border-2 border-[var(--tuwa-text-accent)] border-t-transparent',
+              ),
           },
         },
       },
@@ -336,38 +330,42 @@ import { SHARED_STYLES } from './shared_styles';
 
 export const connect_card_customization: ConnectCardCustomization = {
   classNames: {
-    container: ({ cardData }) => cn(
-      'group cursor-pointer p-4 rounded-xl transition-colors relative border',
-      'w-full h-auto flex items-center justify-between',
-      { 'w-[125px] h-[125px] flex-col text-center': cardData.isTouch },
-      'border-[var(--tuwa-border-primary)]',
-      'bg-[var(--tuwa-bg-secondary)]',
-      'hover:bg-[var(--tuwa-bg-muted)]',
-      'hover:border-[var(--tuwa-text-accent)]',
-      SHARED_STYLES.baseFocus,
-    ),
+    container: ({ cardData }) =>
+      cn(
+        'group cursor-pointer p-4 rounded-xl transition-colors relative border',
+        'w-full h-auto flex items-center justify-between',
+        { 'w-[125px] h-[125px] flex-col text-center': cardData.isTouch },
+        'border-[var(--tuwa-border-primary)]',
+        'bg-[var(--tuwa-bg-secondary)]',
+        'hover:bg-[var(--tuwa-bg-muted)]',
+        'hover:border-[var(--tuwa-text-accent)]',
+        SHARED_STYLES.baseFocus,
+      ),
 
-    content: ({ cardData }) => cn(
-      'flex gap-3 transition duration-300 ease-in-out items-center',
-      { 'flex-col items-center gap-1': cardData.isTouch },
-      'text-[var(--tuwa-text-primary)]',
-      'group-hover:text-[var(--tuwa-text-accent)]',
-    ),
+    content: ({ cardData }) =>
+      cn(
+        'flex gap-3 transition duration-300 ease-in-out items-center',
+        { 'flex-col items-center gap-1': cardData.isTouch },
+        'text-[var(--tuwa-text-primary)]',
+        'group-hover:text-[var(--tuwa-text-accent)]',
+      ),
 
-    title: () => cn(
-      SHARED_STYLES.fontMono,
-      'text-[var(--tuwa-text-primary)]',
-      'group-hover:text-[var(--tuwa-text-accent)]',
-      'transition-colors duration-200',
-    ),
+    title: () =>
+      cn(
+        SHARED_STYLES.fontMono,
+        'text-[var(--tuwa-text-primary)]',
+        'group-hover:text-[var(--tuwa-text-accent)]',
+        'transition-colors duration-200',
+      ),
 
-    chevron: () => cn(
-      'w-5 h-5 transition duration-300 ease-in-out',
-      'translate-x-[-10px] opacity-0',
-      'group-hover:translate-x-0 group-hover:opacity-100',
-      'text-[var(--tuwa-text-secondary)]',
-      'group-hover:text-[var(--tuwa-text-accent)]',
-    ),
+    chevron: () =>
+      cn(
+        'w-5 h-5 transition duration-300 ease-in-out',
+        'translate-x-[-10px] opacity-0',
+        'group-hover:translate-x-0 group-hover:opacity-100',
+        'text-[var(--tuwa-text-secondary)]',
+        'group-hover:text-[var(--tuwa-text-accent)]',
+      ),
   },
 };
 ```
@@ -383,18 +381,10 @@ import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 export const nova_tx_customization: NovaTransactionsProviderProps<any>['customization'] = {
   toast: {
     classNames: {
-      container: cn(
-        'rounded-[4px]',
-        'border border-[var(--tuwa-border-primary)]',
-        'bg-[var(--tuwa-bg-secondary)]',
-      ),
+      container: cn('rounded-[4px]', 'border border-[var(--tuwa-border-primary)]', 'bg-[var(--tuwa-bg-secondary)]'),
       title: cn(SHARED_STYLES.fontMonoMedium, 'text-sm', SHARED_STYLES.textPrimary),
       description: cn(SHARED_STYLES.fontMono, 'mt-1 text-xs', SHARED_STYLES.textSecondary),
-      hashLink: cn(
-        SHARED_STYLES.fontMono,
-        'text-[var(--tuwa-text-accent)]',
-        'hover:underline transition-colors',
-      ),
+      hashLink: cn(SHARED_STYLES.fontMono, 'text-[var(--tuwa-text-accent)]', 'hover:underline transition-colors'),
       statusBadge: cn(SHARED_STYLES.fontMono, 'text-xs font-medium'),
       speedUpButton: BUTTON_STYLES.primary,
     },
@@ -403,10 +393,7 @@ export const nova_tx_customization: NovaTransactionsProviderProps<any>['customiz
   trackingTxModal: {
     classNames: {
       container: 'bg-[var(--tuwa-bg-secondary)]',
-      header: cn(
-        'bg-[var(--tuwa-bg-secondary)]',
-        'border-[var(--tuwa-border-primary)]',
-      ),
+      header: cn('bg-[var(--tuwa-bg-secondary)]', 'border-[var(--tuwa-border-primary)]'),
       headerTitle: cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
     },
   },
@@ -423,13 +410,8 @@ import { nova_tx_customization } from './utils/customization/nova_tx_provider';
 
 function App() {
   return (
-    <NovaConnectProvider
-      appChains={chains}
-      customization={nova_connect_customization}
-    >
-      <NovaTransactionsProvider customization={nova_tx_customization}>
-        {/* Your app */}
-      </NovaTransactionsProvider>
+    <NovaConnectProvider appChains={chains} customization={nova_connect_customization}>
+      <NovaTransactionsProvider customization={nova_tx_customization}>{/* Your app */}</NovaTransactionsProvider>
     </NovaConnectProvider>
   );
 }

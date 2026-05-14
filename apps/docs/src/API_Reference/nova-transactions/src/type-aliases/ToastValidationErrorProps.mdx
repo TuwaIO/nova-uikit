@@ -1,0 +1,77 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# ToastValidationErrorProps
+
+> **ToastValidationErrorProps** = `object`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:131](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L131)
+
+Props accepted by the `ToastValidationError` component.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L150)
+
+Optional additional CSS class on the outermost container.
+
+***
+
+### closeToast?
+
+> `optional` **closeToast?**: `ToastContentProps`\[`"closeToast"`\]
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:155](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L155)
+
+Injected by `react-toastify` when used as toast content.
+Calling it programmatically closes this specific toast instance.
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ToastValidationErrorCustomization`](ToastValidationErrorCustomization.md)
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:157](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L157)
+
+Full customization override object.
+
+***
+
+### fieldName?
+
+> `optional` **fieldName?**: `string`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L148)
+
+The name of the field that triggered the validation failure.
+When provided (e.g. `"title"`, `"description"`), a small badge is rendered
+below the header so users know exactly which input to fix.
+Omit for generic pre-flight errors (`beforeTxProcess` rejections).
+
+***
+
+### message
+
+> **message**: `string`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L136)
+
+The human-readable error message to display.
+Typically `error.message` from the caught `Error`.
+
+***
+
+### rawError?
+
+> `optional` **rawError?**: `string`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L141)
+
+The raw error text that will be written to the clipboard.
+Falls back to `message` when not provided.

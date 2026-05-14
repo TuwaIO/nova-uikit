@@ -1,0 +1,55 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# useNovaTransactionsError()
+
+> **useNovaTransactionsError**(): `object`
+
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L106)
+
+Hook that returns `showPreSubmitErrorToast` — a function that fires the
+top-center validation error toast.
+
+**Works from anywhere in the React tree**, not just inside
+`NovaTransactionsProvider`. It calls `toast()` directly (react-toastify's
+global API), so as long as a `ToastContainer` with
+`VALIDATION_ERROR_CONTAINER_ID` is mounted, the toast will appear.
+
+When rendered inside a `NovaTransactionsProvider`, the hook additionally picks
+up any `customization.validationErrorToast` settings via context.
+
+## Returns
+
+`object`
+
+`{ showPreSubmitErrorToast }` — call with any caught error value.
+
+### showPreSubmitErrorToast
+
+> **showPreSubmitErrorToast**: (`error`) => `void`
+
+#### Parameters
+
+##### error
+
+`unknown`
+
+#### Returns
+
+`void`
+
+## Example
+
+```tsx
+const { showPreSubmitErrorToast } = useNovaTransactionsError();
+
+const handleAction = async () => {
+  try {
+    await executeTxAction({ ... });
+  } catch (e) {
+    showPreSubmitErrorToast(e);
+    throw e;
+  }
+};
+```

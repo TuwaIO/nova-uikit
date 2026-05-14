@@ -1,0 +1,16 @@
+[**@tuwaio/nova-uikit**](../../../../README.md)
+
+***
+
+# NovaTransactionsErrorContext
+
+> `const` **NovaTransactionsErrorContext**: `Context`\<[`NovaTransactionsErrorContextValue`](../type-aliases/NovaTransactionsErrorContextValue.md)\>
+
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L72)
+
+Internal context that forwards `customization` and the `enabled` flag from
+`NovaTransactionsProvider` to any descendant component.
+
+The default value keeps `enabled: true` and uses no customization, so
+components rendered **outside** a `NovaTransactionsProvider` receive a
+fully-functional hook with default styling.

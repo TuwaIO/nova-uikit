@@ -1,6 +1,7 @@
 export * from './HashLink';
 export * from './StatusAwareText';
 export * from './ToastTransaction';
+export * from './ToastValidationError';
 export * from './TrackingTxModal';
 export * from './TransactionDetails';
 export * from './TransactionHistoryItem';

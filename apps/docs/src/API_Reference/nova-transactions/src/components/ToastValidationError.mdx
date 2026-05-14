@@ -1,0 +1,46 @@
+[**@tuwaio/nova-uikit**](../../../README.md)
+
+***
+
+# ToastValidationError()
+
+> **ToastValidationError**(`__namedParameters`): `Element`
+
+Defined in: [packages/nova-transactions/src/components/ToastValidationError.tsx:251](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/components/ToastValidationError.tsx#L251)
+
+`ToastValidationError` is a self-contained toast body for pre-submission errors.
+
+It is designed to be rendered inside a `react-toastify` `ToastContainer` with
+`position="top-center"` and `autoClose={6000}` / `pauseOnHover`. The visual
+language mirrors `TxErrorBlock` and `nova-connect`'s `ToastError`:
+
+- Error color tokens (`--tuwa-error-*`)
+- `ExclamationTriangleIcon` header icon
+- Optional field badge identifying the offending input
+- Scrollable monospace message body
+- One-click copy-to-clipboard with feedback
+
+## Parameters
+
+### \_\_namedParameters
+
+[`ToastValidationErrorProps`](../type-aliases/ToastValidationErrorProps.md)
+
+## Returns
+
+`Element`
+
+## Example
+
+```tsx
+toast(
+  (props) => (
+    <ToastValidationError
+      {...props}
+      message={error.message}
+      fieldName={(error as PulsarTransactionValidationError).field}
+    />
+  ),
+  { containerId: 'nova-validation-errors', type: 'error' }
+);
+```

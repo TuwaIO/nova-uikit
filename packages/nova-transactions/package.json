@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@tuwaio/orbit-core": "^0.2.8",
-    "@tuwaio/pulsar-core": "^0.6.2",
+    "@tuwaio/pulsar-core": "^0.6.3",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.20",
     "@web3icons/react": "^4.1.17",

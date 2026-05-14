@@ -50,6 +50,12 @@ export const defaultLabels: NovaTransactionsLabels = {
     title: 'Error',
     copied: 'Copied!',
   },
+  validationError: {
+    title: 'Validation Error',
+    field: 'Field',
+    copy: 'Copy error',
+    copied: 'Copied!',
+  },
   trackingModal: {
     title: 'Transaction Overview',
     processing: 'Processing...',

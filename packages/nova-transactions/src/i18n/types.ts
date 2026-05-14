@@ -78,6 +78,21 @@ export type NovaTransactionsLabels = {
     /** Confirmation text shown after copying an error message. */
     copied: string;
   };
+  /**
+   * Labels for the pre-submission validation error toast.
+   * This toast fires when `executeTxAction` throws before the transaction
+   * is added to the pool (e.g., validation failure, `beforeTxProcess` rejection).
+   */
+  validationError: {
+    /** The main title shown in the toast header. */
+    title: string;
+    /** Prefix label for the field that caused the validation failure, e.g. "Field: title". */
+    field: string;
+    /** Label for the copy-error button before it is clicked. */
+    copy: string;
+    /** Label for the copy-error button after a successful copy. */
+    copied: string;
+  };
   /** Labels for the detailed transaction tracking modal. */
   trackingModal: {
     /** The main title of the tracking modal. */

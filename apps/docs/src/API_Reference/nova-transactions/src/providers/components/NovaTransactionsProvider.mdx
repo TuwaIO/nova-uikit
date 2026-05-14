@@ -6,16 +6,28 @@
 
 > **NovaTransactionsProvider**\<`T`\>(`__namedParameters`): `Element`
 
-Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/b9a01412ca18afbe7fefbcbd3b658ec16a5f4445/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L70)
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:116](https://github.com/TuwaIO/nova-uikit/blob/8b22bb13ca0c2798336b08e606aeb03cbffe5320/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L116)
 
-The main component for the Nova UI ecosystem. It renders and orchestrates all
-UI elements like toasts and modals, and provides the i18n context.
+The root provider for the Nova UI ecosystem.
+
+Renders and orchestrates all UI sub-systems:
+- **Bottom-right transaction toasts** — live progress updates for every tracked transaction.
+- **Top-center validation error toast** — fires when `executeTxAction` throws *before*
+  the transaction is added to the pool (e.g., metadata validation failure,
+  `beforeTxProcess` rejection, or missing adapter).
+- **Transaction history modal** — paginated full-screen history.
+- **Tracking modal** — step-by-step view for the most recent transaction.
+
+Place this component once at the top level of your application, passing the live
+Pulsar store state as props.
 
 ## Type Parameters
 
 ### T
 
 `T` *extends* `Transaction`
+
+The specific transaction type, extending the base `Transaction`.
 
 ## Parameters
 
