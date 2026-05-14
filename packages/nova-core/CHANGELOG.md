@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.2...nova-core-v0.4.3) (2026-05-14)
+
+
+### Bug Fixes
+
+* added support of tx validation error ([0c8eb15](https://github.com/TuwaIO/nova-uikit/commit/0c8eb155da91473a76d8a5da7559bf02c0c01b27))
+
 ## [0.4.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.1...nova-core-v0.4.2) (2026-05-09)
 
 
