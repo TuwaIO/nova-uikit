@@ -7,3 +7,16 @@ allowBuilds:
   esbuild: false
   sharp: false
   utf-8-validate: false
+minimumReleaseAgeExclude:
+  - "@tuwaio/*"
+  - viem
+  - '@tuwaio/orbit-evm@0.2.13'
+  - '@tuwaio/pulsar-core@0.6.4'
+  - '@tuwaio/pulsar-evm@0.5.3'
+  - '@tuwaio/pulsar-react@0.4.3'
+  - '@tuwaio/pulsar-solana@0.6.4'
+  - '@tuwaio/satellite-evm@0.3.4'
+  - '@tuwaio/satellite-react@0.3.5'
+  - '@tuwaio/satellite-siwe-next-auth@0.3.5'
+  - '@tuwaio/satellite-solana@0.3.6'
+  - viem@2.51.3
