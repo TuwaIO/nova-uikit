@@ -2,3 +2,20 @@
 @import '@tuwaio/nova-transactions/dist/index.css';
 @import '@tuwaio/nova-connect/dist/index.css';
 @import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STORYBOOK DOCS HEADINGS — Geist Mono
+   Applies Geist Mono to all h1-h6 inside the Storybook docs container, 
+   but strictly EXCLUDES any heading that is inside a component preview 
+   (.sbdocs-preview or .docs-story) via CSS :not() selectors.
+   This guarantees zero leakage into the actual components!
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sbdocs-content h1:not(.sbdocs-preview h1):not(.docs-story h1),
+.sbdocs-content h2:not(.sbdocs-preview h2):not(.docs-story h2),
+.sbdocs-content h3:not(.sbdocs-preview h3):not(.docs-story h3),
+.sbdocs-content h4:not(.sbdocs-preview h4):not(.docs-story h4),
+.sbdocs-content h5:not(.sbdocs-preview h5):not(.docs-story h5),
+.sbdocs-content h6:not(.sbdocs-preview h6):not(.docs-story h6) {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  letter-spacing: -0.02em !important;
+}

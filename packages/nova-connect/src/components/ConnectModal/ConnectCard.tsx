@@ -386,14 +386,12 @@ const NetworkIcons = memo(
      */
     const visibleNetworksData =
       adapters && adapters.length
-        ? adapters.slice(0, 3).map(
-            (adapter, index): NetworkData => ({
-              adapter,
-              chainId: getNetworkData(adapter)?.chain?.chainId,
-              name: getNetworkData(adapter)?.chain?.name,
-              index,
-            }),
-          )
+        ? adapters.slice(0, 3).map((adapter, index): NetworkData => ({
+            adapter,
+            chainId: getNetworkData(adapter)?.chain?.chainId,
+            name: getNetworkData(adapter)?.chain?.name,
+            index,
+          }))
         : [];
 
     const overflowCount = adapters?.length ? Math.max(0, adapters.length - 3) : 0;
@@ -659,14 +657,12 @@ export const ConnectCard = memo(
       const networkStats = (() => {
         const networkCount = adapters?.length || 0;
         const visibleNetworks =
-          adapters?.slice(0, 3).map(
-            (adapter, index): NetworkData => ({
-              adapter,
-              chainId: getNetworkData(adapter)?.chain?.chainId,
-              name: String(adapter),
-              index,
-            }),
-          ) || [];
+          adapters?.slice(0, 3).map((adapter, index): NetworkData => ({
+            adapter,
+            chainId: getNetworkData(adapter)?.chain?.chainId,
+            name: String(adapter),
+            index,
+          })) || [];
         const overflowCount = Math.max(0, networkCount - 3);
 
         return {

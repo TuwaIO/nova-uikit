@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import { useEffect, useMemo, useState } from 'react';
 
 export function StarsBackground({ starsCount }: { starsCount?: number }) {

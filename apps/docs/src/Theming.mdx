@@ -9,9 +9,7 @@ Welcome to the comprehensive theming guide for **Nova UI Kit**. This document pr
 Nova's theming system is built on three foundational principles:
 
 1. **CSS Variables First:** All styling is controlled through `--tuwa-*` CSS Custom Properties. Override them once, and every component updates automatically.
-
 2. **Tailwind CSS v4 Integration:** Use design tokens directly as arbitrary values: `bg-[var(--tuwa-bg-primary)]`.
-
 3. **Layered Customization:** From simple variable overrides to complete component restyling via the `customization` prop.
 
 ---
@@ -198,7 +196,7 @@ export const SHARED_STYLES = {
   textPrimary: 'text-[var(--tuwa-text-primary)]',
   textSecondary: 'text-[var(--tuwa-text-secondary)]',
   textAccent: 'text-[var(--tuwa-text-accent)]',
-  textError: 'text-[var(--tuwa-error-icon)]',
+  textError: 'red',
 
   // Background Colors
   bgBase: 'bg-[var(--tuwa-bg-secondary)]',
@@ -416,14 +414,3 @@ function App() {
   );
 }
 ```
-
----
-
-## 🔗 Resources
-
-- **🎨 Color Palette Generator:** [ColorSpace](https://mycolor.space/)
-- **♿ Contrast Checker:** [WebAIM](https://webaim.org/resources/contrastchecker/)
-- **🎯 Tailwind CSS v4:** [tailwindcss.com/docs](https://tailwindcss.com/docs)
-- **📖 Repository:** [GitHub](https://github.com/TuwaIO/nova-uikit)
-
-**Ready to build something amazing?** Start customizing your Nova UI Kit theme today! 🚀

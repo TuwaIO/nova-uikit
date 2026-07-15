@@ -1,203 +1,165 @@
-# TUWA Nova Transactions
+# @tuwaio/nova-transactions
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-transactions.svg)](./LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 
-The official React UI component library for the Pulsar transaction engine. It provides a suite of pre-built, accessible, and highly customizable modals, toasts, and history widgets to visualize the entire transaction lifecycle.
+`@tuwaio/nova-transactions` is the **UI Components (L7)** package of the TUWA Ecosystem transaction lifecycle tracking system. It provides the visual layer to monitor, display, and manage active on-chain transactions, consuming state directly from the headless **[Pulsar Engine](https://github.com/TuwaIO/pulsar-core)** state machine.
 
----
-
-## 🏛️ Architecture
-
-This package provides the **View Layer** for TUWA's transaction tracking ecosystem. It works by consuming the state from your headless Pulsar store and rendering the appropriate UI. You must connect your Pulsar store's state and actions to the `<NovaTransactionsProvider />` component, which acts as a self-contained UI manager that renders modals and toasts.
+By coupling the UI manager to Pulsar stores, it automatically handles pending loaders, speed-up options, failure overlays, and success notifications, keeping the user in the loop even during congested block space periods.
 
 ---
 
-## ✨ Core Features
+## 🏛️ Core Capabilities
 
-- **🧩 Pre-built UI Suite:** A set of accessible components including `TrackingTxModal`, `TransactionsInfoModal`, and `ToastTransaction`, all managed internally by the `NovaTransactionsProvider`.
-- **🔌 Plug-and-Play Integration:** Once connected to your Pulsar store, the UI automatically reacts to all transaction state changes.
-- **🌐 Internationalization (custom version of i18n):** Built-in support for multiple languages with easy overrides for all text content via the `labels` prop.
-- **🎨 Highly Customizable:** Styled with `@tuwaio/nova-core` to be easily themed using CSS variables. Almost every sub-component can be replaced with your own implementation via the `customization` prop.
+- **🧩 Interactive Visual Nodes:** Built-in dialogs and widget cards (`TrackingTxModal` for individual status, `TransactionsInfoModal` for full transaction lists, and `ToastTransaction` feeds).
+- **🔌 Isolated Provider Hooks:** The `<NovaTransactionsProvider />` bridges your React tree with Pulsar's transaction history pools and signature polling events.
+- **🎨 Custom Styling overrides:** Style sub-components via CSS variables from `@tuwaio/nova-core` or replace components using the `customization` property.
+- **🌍 Dynamic Internationalization:** Supports overriding labels configuration to localize status messages (`pending`, `success`, `failed`, `replaced`) and actions.
 
 ---
 
 ## 💾 Installation
 
-### Basic Installation
-
-Install the main package:
-
 ```bash
-pnpm add @tuwaio/nova-transactions
+pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/pulsar-react
 ```
 
-### Peer Dependencies
+### Peer Dependencies Check
 
-This package requires several peer dependencies for UI rendering:
-
-```bash
-# Core dependencies
-pnpm add @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core
-
-# React ecosystem
-pnpm add react react-dom zustand immer
-
-# UI libraries
-pnpm add framer-motion @radix-ui/react-dialog @heroicons/react
-pnpm add react-toastify @web3icons/common @web3icons/react
-
-# Utilities
-pnpm add dayjs clsx tailwind-merge
-```
-
-### Complete Installation (All Packages)
-
-For a complete setup with all TUWA packages:
+Make sure your project contains the required layout and utility engines:
 
 ```bash
-# Using pnpm (recommended), but you can use npm, yarn or bun as well
-pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify framer-motion @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react dayjs react immer zustand clsx tailwind-merge
+# State & Utilities
+pnpm add zustand immer dayjs clsx tailwind-merge framer-motion
+
+# Dialog Primitives & Notifications
+pnpm add @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react react-toastify
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start Setup
 
-To use this library, you must render the `<NovaTransactionsProvider />` component at a high level in your application and pass the state and actions from your Pulsar store to it as props.
+### 1. Create the Transaction Store (Pulsar)
 
-Here is a complete example of a `src/providers/index.tsx` file that configures the entire system.
-
-### 1. Create Transaction Store
+Initialize the local-first persistent transaction store with chain-specific state adapters:
 
 ```tsx
-// src/hooks/txTrackingHooks.tsx
-import { createBoundedUseStore, createPulsarStore } from '@tuwaio/pulsar-core';
-import { evmAdapter } from '@tuwaio/pulsar-evm';
+// src/hooks/usePulsarStore.ts
+'use client';
 
-import { appChains, config } from '@/configs/wagmiConfig';
+import { createBoundedUseStore, createPulsarStore, Transaction } from '@tuwaio/pulsar-core';
+import { pulsarEvmAdapter } from '@tuwaio/pulsar-evm';
+import { pulsarSolanaAdapter } from '@tuwaio/pulsar-solana';
+import { wagmiConfig, appEVMChains, solanaRPCUrls } from '@/config/appConfig';
 
 const storageName = 'transactions-tracking-storage';
 
 export enum TxType {
-  example = 'example',
+  swap = 'swap',
 }
 
-type ExampleTx = Transaction & {
-  type: TxType.example;
-  payload: {
-    value: number;
-  };
+type SwapTx = Transaction & {
+  type: TxType.swap;
+  payload: { from: string; to: string; amount: string };
 };
 
-export type TransactionUnion = ExampleTx;
+export type TransactionUnion = SwapTx;
 
 export const usePulsarStore = createBoundedUseStore(
   createPulsarStore<TransactionUnion>({
     name: storageName,
-    adapter: evmAdapter(config, appChains),
+    adapter: [pulsarEvmAdapter(wagmiConfig, appEVMChains), pulsarSolanaAdapter({ rpcUrls: solanaRPCUrls })],
+    maxTransactions: 50, // prevent localStorage bloat
   }),
 );
 ```
 
-### 2. Setup Provider Component
+### 2. Setup the Transactions UI Provider
+
+Create a bridge component connecting your Pulsar store parameters and Satellite wallet state with the Nova Transactions UI:
 
 ```tsx
-// src/providers/NovaTransactionsProvider.tsx
-import { NovaTransactionsProvider as NP } from '@tuwaio/nova-transactions/providers';
-import { TransactionAdapter } from '@tuwaio/pulsar-core';
+// src/providers/NovaTransactionsWrapper.tsx
+'use client';
+
+import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { NovaTransactionsProvider as NTP } from '@tuwaio/nova-transactions/providers';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
-import { useAccount } from 'wagmi';
 
-import { usePulsarStore } from '@/hooks/txTrackingHooks';
+import { usePulsarStore } from '@/hooks/usePulsarStore';
 
-export function NovaTransactionsProvider() {
-  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
+export function NovaTransactionsWrapper() {
+  const getAdapter = usePulsarStore((state) => state.getAdapter);
   const initialTx = usePulsarStore((state) => state.initialTx);
   const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
-  const handleTransaction = usePulsarStore((state) => state.handleTransaction);
+  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
+  const executeTxAction = usePulsarStore((state) => state.executeTxAction);
   const initializeTransactionsPool = usePulsarStore((state) => state.initializeTransactionsPool);
-  const getAdapter = usePulsarStore((state) => state.getAdapter);
 
+  const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
+
+  // Resume tracking for active pending signatures on mount
   useInitializeTransactionsPool({ initializeTransactionsPool });
 
-  const { address } = useAccount();
-
   return (
-    <NP
+    <NTP
       transactionsPool={transactionsPool}
       initialTx={initialTx}
       closeTxTrackedModal={closeTxTrackedModal}
-      handleTransaction={handleTransaction}
-      connectedWalletAddress={address}
-      connectedAdapterType={TransactionAdapter.EVM}
+      executeTxAction={executeTxAction}
+      connectedWalletAddress={activeConnection?.isConnected ? activeConnection.address : undefined}
+      connectedAdapterType={getAdapterFromConnectorType(activeConnection?.connectorType ?? 'evm:')}
       adapter={getAdapter()}
     />
   );
 }
 ```
 
-### 3. Integrate into App
+### 3. Usage in Action Buttons
+
+Call the action wrapper to trigger on-chain operations and auto-render status modals:
 
 ```tsx
-// src/providers/index.tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
-import { WagmiProvider } from 'wagmi';
+import { usePulsarStore, TxType } from '@/hooks/usePulsarStore';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { mainnet } from 'viem/chains';
 
-import { config } from '@/configs/wagmiConfig';
+export function SwapButton() {
+  const executeTxAction = usePulsarStore((state) => state.executeTxAction);
 
-import { NovaTransactionsProvider } from './NovaTransactionsProvider';
+  const triggerSwap = async () => {
+    const swapFunction = async () => {
+      // Execute smart contract write method and return the hash
+      return '0x...';
+    };
 
-const queryClient = new QueryClient();
+    await executeTxAction({
+      actionFunction: swapFunction,
+      onSuccess: (tx) => console.log('Transaction succeeded!', tx.hash),
+      params: {
+        type: TxType.swap,
+        adapter: OrbitAdapter.EVM,
+        desiredChainID: mainnet.id,
+        title: 'Swap ETH',
+        description: 'Swapping 1 ETH for USDC',
+        payload: { from: 'ETH', to: 'USDC', amount: '1' },
+        withTrackedModal: true, // opens tracking overlay automatically
+      },
+    });
+  };
 
-export function Providers({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <NovaTransactionsProvider />
-        {children}
-      </QueryClientProvider>
-    </WagmiProvider>
+    <button onClick={triggerSwap} className="btn-primary">
+      Execute Swap
+    </button>
   );
 }
 ```
 
-## 🎨 Customization
-
-You can easily override the default English text by passing a `labels` prop, or replace entire components using the `customization` prop.
-
-```tsx
-<NovaTransactionsProvider
-  // 1. Override text labels
-  labels={{
-    statuses: {
-      pending: 'В обработке...',
-      success: 'Успешно!',
-      failed: 'Ошибка!',
-    },
-    // ... other keys
-  }}
-  customization={{
-    components: {
-      statusBadge: ({ tx }) => <MyCustomBadge status={tx.status} />,
-    },
-  }}
-  // ... other required props
-/>
-```
-
 ---
-
-## 🤝 Contributing & Support
-
-Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
-
-If you find this library useful, please consider supporting its development. Every contribution helps!
-
-[**➡️ View Support Options**](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
 
 ## 📄 License
 
-This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.
+Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.

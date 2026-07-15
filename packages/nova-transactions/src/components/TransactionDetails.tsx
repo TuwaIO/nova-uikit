@@ -347,8 +347,7 @@ export function TransactionDetails<T extends Transaction>({
   className,
   customization,
 }: TransactionDetailsProps<T>) {
-  const { transactionDetails, statuses, actions, txError } = useLabels();
-  const { isCopied, copy } = useCopyToClipboard();
+  const { transactionDetails, statuses, actions } = useLabels();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
 
