@@ -1029,6 +1029,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // Initial load and sync with connections changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateRecentList();
   }, [updateRecentList]);
 

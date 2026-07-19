@@ -47,23 +47,25 @@ interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'src'> {
  * @returns Loading indicator, the fetched icon, or an error fallback
  */
 export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, ...props }: GithubFallbackIconProps) {
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const [state, setState] = useState<LoadingState>('idle');
+  const cacheKey = `${githubSrc}|${firstPathFill ?? ''}`;
+  const cachedImgSrc = svgCache.get(cacheKey);
+
+  const [fetchedImgSrc, setFetchedImgSrc] = useState<string | null>(null);
+  const [fetchState, setFetchState] = useState<LoadingState>('idle');
+
+  const imgSrc = cachedImgSrc || fetchedImgSrc;
+  const state = cachedImgSrc ? 'success' : fetchState;
 
   useEffect(() => {
     let isMounted = true;
-    const cacheKey = `${githubSrc}|${firstPathFill ?? ''}`;
 
-    // Check cache first
-    const cached = svgCache.get(cacheKey);
-    if (cached) {
-      setImgSrc(cached);
-      setState('success');
+    // Check cache first (might be loaded by another instance)
+    if (svgCache.has(cacheKey)) {
       return;
     }
 
     const loadSvg = async () => {
-      setState('loading');
+      setFetchState('loading');
 
       try {
         const response = await fetch(`${GITHUB_RAW_URL}/${githubSrc}`);
@@ -78,12 +80,12 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
           const base64Svg = svgToBase64(svg, firstPathFill);
           // Cache the result
           svgCache.set(cacheKey, base64Svg);
-          setImgSrc(base64Svg);
-          setState('success');
+          setFetchedImgSrc(base64Svg);
+          setFetchState('success');
         }
       } catch {
         if (isMounted) {
-          setState('error');
+          setFetchState('error');
         }
       }
     };
@@ -93,7 +95,7 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
     return () => {
       isMounted = false;
     };
-  }, [githubSrc, firstPathFill]);
+  }, [githubSrc, firstPathFill, cacheKey]);
 
   if (state === 'loading' || state === 'idle') {
     return <FallbackIcon animate className={className} />;

@@ -171,6 +171,7 @@ applyTheme(getInitialTheme());
 
 const preview: Preview = {
   parameters: {
+    backgrounds: { disable: true },
     docs: {
       container: ThemedDocsContainer,
     },

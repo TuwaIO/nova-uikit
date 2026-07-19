@@ -114,79 +114,82 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
   }, []);
 
   // Main fetch function
-  const fetchNameData = useCallback(async () => {
-    cleanup();
+  const fetchNameData = useCallback(
+    async function fetchNameDataInner() {
+      cleanup();
 
-    // Exit conditions
-    if (!walletAddress || !foundAdapter || !hasNameResolver) {
+      // Exit conditions
+      if (!walletAddress || !foundAdapter || !hasNameResolver) {
+        setEnsName(null);
+        setEnsAvatar(null);
+        setIsLoading(false);
+        setError(null);
+        return;
+      }
+
+      // Create new abort controller for this request
+      abortControllerRef.current = new AbortController();
+      const { signal } = abortControllerRef.current;
+
+      // Start loading
+      setIsLoading(true);
+      setError(null);
       setEnsName(null);
       setEnsAvatar(null);
-      setIsLoading(false);
-      setError(null);
-      return;
-    }
 
-    // Create new abort controller for this request
-    abortControllerRef.current = new AbortController();
-    const { signal } = abortControllerRef.current;
+      try {
+        // Check if request was aborted
+        if (signal.aborted) return;
 
-    // Start loading
-    setIsLoading(true);
-    setError(null);
-    setEnsName(null);
-    setEnsAvatar(null);
+        // Attempt to resolve the name
+        const name = await foundAdapter.getName?.(walletAddress);
 
-    try {
-      // Check if request was aborted
-      if (signal.aborted) return;
+        if (signal.aborted) return;
 
-      // Attempt to resolve the name
-      const name = await foundAdapter.getName?.(walletAddress);
+        if (name) {
+          setEnsName(name);
 
-      if (signal.aborted) return;
-
-      if (name) {
-        setEnsName(name);
-
-        // If avatar resolution is supported, fetch the avatar
-        if (hasAvatarResolver) {
-          try {
-            const avatar = await foundAdapter.getAvatar?.(name);
-            if (!signal.aborted) {
-              // Handle undefined case by converting to null
-              setEnsAvatar(avatar ?? null);
-            }
-          } catch (avatarError) {
-            // Avatar fetch failed, but name succeeded - not critical
-            console.warn('Failed to fetch avatar:', avatarError);
-            if (!signal.aborted) {
-              setEnsAvatar(null);
+          // If avatar resolution is supported, fetch the avatar
+          if (hasAvatarResolver) {
+            try {
+              const avatar = await foundAdapter.getAvatar?.(name);
+              if (!signal.aborted) {
+                // Handle undefined case by converting to null
+                setEnsAvatar(avatar ?? null);
+              }
+            } catch (avatarError) {
+              // Avatar fetch failed, but name succeeded - not critical
+              console.warn('Failed to fetch avatar:', avatarError);
+              if (!signal.aborted) {
+                setEnsAvatar(null);
+              }
             }
           }
         }
-      }
-    } catch (error) {
-      if (signal.aborted) return;
+      } catch (error) {
+        if (signal.aborted) return;
 
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch name service data';
-      console.error('Failed to fetch name service data:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to fetch name service data';
+        console.error('Failed to fetch name service data:', error);
 
-      setError(errorMessage);
-      setEnsName(null);
-      setEnsAvatar(null);
+        setError(errorMessage);
+        setEnsName(null);
+        setEnsAvatar(null);
 
-      // Auto retry if enabled
-      if (autoRetry) {
-        retryTimeoutRef.current = setTimeout(() => {
-          fetchNameData();
-        }, retryDelay) as unknown as number;
+        // Auto retry if enabled
+        if (autoRetry) {
+          retryTimeoutRef.current = setTimeout(() => {
+            fetchNameDataInner();
+          }, retryDelay) as unknown as number;
+        }
+      } finally {
+        if (!signal.aborted) {
+          setIsLoading(false);
+        }
       }
-    } finally {
-      if (!signal.aborted) {
-        setIsLoading(false);
-      }
-    }
-  }, [walletAddress, foundAdapter, hasNameResolver, hasAvatarResolver, autoRetry, retryDelay, cleanup]);
+    },
+    [walletAddress, foundAdapter, hasNameResolver, hasAvatarResolver, autoRetry, retryDelay, cleanup],
+  );
 
   // Manual retry function
   const retry = useCallback(() => {

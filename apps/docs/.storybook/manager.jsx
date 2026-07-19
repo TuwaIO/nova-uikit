@@ -17,7 +17,11 @@ const SunIcon = ({ size = 18, color = 'currentColor', style }) => (
 
 const MoonIcon = ({ size = 18, color = 'currentColor', style }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill={color} style={style}>
-    <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clipRule="evenodd" />
+    <path
+      fillRule="evenodd"
+      d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+      clipRule="evenodd"
+    />
   </svg>
 );
 
@@ -49,8 +53,12 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
         borderRadius: BORDER_RADIUS,
         border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
         background: isDark
-          ? (hovered ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)')
-          : (hovered ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.05)'),
+          ? hovered
+            ? 'rgba(255,255,255,0.2)'
+            : 'rgba(255,255,255,0.1)'
+          : hovered
+            ? 'rgba(0,0,0,0.1)'
+            : 'rgba(0,0,0,0.05)',
         cursor: 'pointer',
         padding: '3px',
         transition: 'background 0.3s ease, border-color 0.3s ease',
@@ -89,14 +97,14 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <SunIcon
             size={ICON_SIZE}
-            color={!isDark ? '#eab308' : (hovered ? '#facc15' : '#64748b')}
+            color={!isDark ? '#eab308' : hovered ? '#facc15' : '#64748b'}
             style={{ transition: 'color 0.3s ease', position: 'relative', left: -1 }}
           />
         </div>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <MoonIcon
             size={ICON_SIZE}
-            color={isDark ? '#818cf8' : (hovered ? '#a5b4fc' : '#64748b')}
+            color={isDark ? '#818cf8' : hovered ? '#a5b4fc' : '#64748b'}
             style={{ transition: 'color 0.3s ease', position: 'relative', left: 1 }}
           />
         </div>

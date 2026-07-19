@@ -234,9 +234,9 @@ export function ErrorsProvider({
   // Handle copy complete
   const handleCopyComplete = useCallback(
     (success: boolean, rawError: string | TuwaErrorState) => {
-      customCopyCompleteHandler(success, rawError, errorState.errorType);
+      customCopyCompleteHandler(success, rawError, errorType);
     },
-    [customCopyCompleteHandler, errorState.errorType],
+    [customCopyCompleteHandler, errorType],
   );
 
   // Original handler for error display - using full customization object in dependencies
@@ -305,9 +305,9 @@ export function ErrorsProvider({
   // Show error toast
   const showErrorToast = useCallback(
     (title: string, rawError: TuwaErrorState, errorKey: string) => {
-      customShowErrorHandler(originalErrorHandler, { title, rawError, errorKey, errorType: errorState.errorType });
+      customShowErrorHandler(originalErrorHandler, { title, rawError, errorKey, errorType });
     },
-    [originalErrorHandler, customShowErrorHandler, errorState.errorType],
+    [originalErrorHandler, customShowErrorHandler, errorType],
   );
 
   // Main effect to handle error display logic

@@ -340,7 +340,6 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Show success indicator when loading completes
   useEffect(() => {
     if (prevLoading.current && !isLoading) {
-      // eslint-disable-next-line
       setShowSuccess(true);
       const timer = setTimeout(() => setShowSuccess(false), successDuration);
       return () => clearTimeout(timer);
