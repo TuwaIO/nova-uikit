@@ -637,7 +637,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
     const titleClasses =
       customization?.classNames?.title?.({ compact }) ??
       cn(
-        'novacon:font-bold novacon:mb-2 novacon:text-[var(--tuwa-text-primary)]',
+        'novacon:font-bold novacon:font-mono novacon:mb-2 novacon:text-[var(--tuwa-text-primary)]',
         compact ? 'novacon:text-lg' : 'novacon:text-xl',
       );
 

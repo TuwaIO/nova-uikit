@@ -210,7 +210,7 @@ export function TxActionButton<T extends Transaction>({
 
   const baseClass =
     classNames?.base ??
-    'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-3 novatx:py-1.5 novatx:text-sm novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70';
+    'novatx:flex novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-3 novatx:py-1.5 novatx:min-h-[42px] novatx:text-sm novatx:font-mono novatx:font-medium novatx:transition-all novatx:duration-200 novatx:disabled:cursor-not-allowed novatx:disabled:opacity-70';
 
   return (
     <button

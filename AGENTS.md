@@ -2,18 +2,18 @@
 
 ## 1. Project Philosophy & Goal
 
-- **What is this?** A monorepo for **Nova UI Kit** — the official, high-performance design system and component library for the TUWA ecosystem. It provides the "View Layer" that visualizes the state managed by `satellite` (wallet connection) and `pulsar` (transaction tracking).
+- **What is this?** A monorepo for **Nova UI Kit** — the official, high-performance design system and component library for the TUWA ecosystem. It provides the visual View Layer that represents the state managed by `satellite` (wallet connection) and `pulsar` (transaction tracking).
 - **Role in TUWA:** The Visual Interface. It connects purely logical, headless libraries to beautiful, interactive React components.
 - **Philosophy:** "Pure Web3", Headless-First, Framework Agnostic (React implementation), Strict Separation of Concerns (UI vs. Logic).
 
 ## 2. Tech Stack (Verified)
 
-- **Core:** TypeScript v5.9+, Node.js (v20-24), pnpm v10+ (Workspace).
+- **Core:** TypeScript v6.0+, Node.js (v20-24), pnpm v11+ (Workspace).
 - **Framework:** React v19+.
 - **Styling:** Tailwind CSS v4, Framer Motion v12.
 - **State Management:** Zustand v5.x.
 - **Web3 (EVM):** `viem` v2.x, `@wagmi/core` v3.x.
-- **Web3 (Solana):** `gill` v0.14+ (formerly `rpc-helpers`), `@wallet-standard/react`, `@wallet-standard/base`.
+- **Web3 (Solana):** `gill` v0.14+, `@wallet-standard/react`, `@wallet-standard/base`.
 - **Icons:** `@web3icons/react` v4+.
 - **Build/Monorepo:**
   - `tsup`: Bundler for `packages/*` (ESM/CJS/DTS).
@@ -31,17 +31,17 @@ nova-uikit/
 │   └── docs/                   # Storybook Instance (React + Vite)
 │       └── .storybook/         # Storybook configuration
 ├── packages/
-│   ├── nova-core/              # FOUNDATION. Styling primitives & Utils.
+│   ├── nova-core/              # UI Core (L6). Styling primitives & Utils.
 │   │   ├── src/styles/         # CSS Variables & Tailwind setup
 │   │   ├── src/hooks/          # Shared hooks (useTheme, etc.)
 │   │   └── src/utils/          # Helper functions (cn, formatters)
-│   ├── nova-connect/           # CONNECTIVITY. Wallet Connection Components.
+│   ├── nova-connect/           # UI Components (L7). Wallet Connection Components.
 │   │   ├── src/satellite/      # Integration with @tuwaio/satellite-core
 │   │   ├── src/evm/            # EVM-specific connectors (Wagmi/Viem)
 │   │   ├── src/solana/         # Solana-specific connectors (Gill)
 │   │   ├── src/components/     # UI Components (ConnectButton, Modal)
 │   │   └── src/providers/      # NovaConnectProvider logic
-│   └── nova-transactions/      # FEEDBACK. Transaction Status Components.
+│   └── nova-transactions/      # UI Components (L7). Transaction Status Components.
 │       ├── src/components/     # Toasts, Modals, Feed lists
 │       └── src/providers/      # TransactionProvider
 ├── package.json                # Root scripts & dependencies
@@ -50,9 +50,9 @@ nova-uikit/
 
 ### Module Breakdown
 
-- **`nova-core`**: The bedrock. Contains the Tailwind configuration, shared CSS variables, and utility functions like `cn` (classnames). Zero Web3 logic.
-- **`nova-connect`**: The bridge to wallets. Consumes `@tuwaio/satellite-*` packages to provide UI for wallet selection, connection status, and account management.
-- **`nova-transactions`**: The feedback loop. Consumes `@tuwaio/pulsar-core` to visualize transaction lifecycles (pending -> success/fail) via toasts and history lists.
+- **`nova-core` (UI Core - L6)**: The bedrock. Contains the Tailwind configuration, shared CSS variables, and utility functions like `cn` (classnames). Zero Web3 logic.
+- **`nova-connect` (UI Components - L7)**: The bridge to wallets. Consumes `@tuwaio/satellite-*` packages to provide UI for wallet selection, connection status, and account management.
+- **`nova-transactions` (UI Components - L7)**: The feedback loop. Consumes `@tuwaio/pulsar-core` to visualize transaction lifecycles (pending -> success/fail) via toasts and history lists.
 
 ## 4. Coding Standards (STRICT)
 

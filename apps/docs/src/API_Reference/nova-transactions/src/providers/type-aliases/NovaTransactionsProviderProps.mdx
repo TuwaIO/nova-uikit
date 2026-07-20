@@ -1,4 +1,4 @@
-[**@tuwaio/nova-uikit**](../../../../README.md)
+[**@tuwaio/nova-uikit**](?path=/docs/api-reference-readme--docs)
 
 ***
 
@@ -6,7 +6,7 @@
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/d37b37e3a7ee0109634feda80af1e6b33d0c6919/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L49)
+Defined in: [packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/18d684123e9647f18533e1d4f8043d41e0d95042/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L49)
 
 Defines the props for the `NovaTransactionsProvider` component.
 
@@ -38,7 +38,7 @@ Customization overrides for individual UI sub-systems.
 
 #### customization.toast?
 
-> `optional` **toast?**: [`ToastTransactionCustomization`](../../type-aliases/ToastTransactionCustomization.md)\<`T`\>
+> `optional` **toast?**: [`ToastTransactionCustomization`](?path=/docs/api-reference-nova-transactions-src-type-aliases-toasttransactioncustomization--docs)\<`T`\>
 
 Overrides for the bottom-right transaction progress toast body.
 
@@ -50,19 +50,19 @@ Overrides for the close button shared by all transaction toasts.
 
 #### customization.trackingTxModal?
 
-> `optional` **trackingTxModal?**: [`TrackingTxModalCustomization`](../../type-aliases/TrackingTxModalCustomization.md)\<`T`\>
+> `optional` **trackingTxModal?**: [`TrackingTxModalCustomization`](?path=/docs/api-reference-nova-transactions-src-type-aliases-trackingtxmodalcustomization--docs)\<`T`\>
 
 Overrides for the step-by-step tracking modal.
 
 #### customization.transactionsInfoModal?
 
-> `optional` **transactionsInfoModal?**: [`TransactionsInfoModalCustomization`](../../type-aliases/TransactionsInfoModalCustomization.md)\<`T`\>
+> `optional` **transactionsInfoModal?**: [`TransactionsInfoModalCustomization`](?path=/docs/api-reference-nova-transactions-src-type-aliases-transactionsinfomodalcustomization--docs)\<`T`\>
 
 Overrides for the full-screen transaction history modal.
 
 #### customization.validationErrorToast?
 
-> `optional` **validationErrorToast?**: [`ToastValidationErrorCustomization`](../../type-aliases/ToastValidationErrorCustomization.md)
+> `optional` **validationErrorToast?**: [`ToastValidationErrorCustomization`](?path=/docs/api-reference-nova-transactions-src-type-aliases-toastvalidationerrorcustomization--docs)
 
 Overrides for the top-center pre-submission validation error toast.
 See `ToastValidationErrorCustomization` for available slots.
@@ -118,7 +118,7 @@ This fires when `executeTxAction` throws before the transaction reaches the pool
 
 ### labels?
 
-> `optional` **labels?**: `Partial`\<[`NovaTransactionsLabels`](../../type-aliases/NovaTransactionsLabels.md)\>
+> `optional` **labels?**: `Partial`\<[`NovaTransactionsLabels`](?path=/docs/api-reference-nova-transactions-src-type-aliases-novatransactionslabels--docs)\>
 
 Partial label overrides for i18n. Merged with the built-in English defaults.
 

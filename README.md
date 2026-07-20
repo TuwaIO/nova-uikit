@@ -1,91 +1,138 @@
 # TUWA Nova UI Kit
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](./LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 [![Contributors](https://img.shields.io/github/contributors/TuwaIO/nova-uikit)](https://github.com/TuwaIO/nova-uikit/graphs/contributors)
 
-<img src="https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/repos/nova_uikit.png" alt="Nova UI Kit" width="400" style="border-radius: 10px; text-align: center; margin-bottom: 20px; margin-top: 20px; margin-left: auto; margin-right: auto; display: block;" />
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/repos/nova_uikit.png" alt="Nova UI Kit" width="450" style="border-radius: 12px; margin: 24px auto;" />
+</p>
 
-Welcome to the official monorepo for the **Nova UI Kit**, the comprehensive design system and component library for the TUWA ecosystem. This project provides all the necessary tools to build beautiful, consistent, and high-performance Web3 applications.
+TUWA Nova UI Kit is the official UI framework and visual component library of the TUWA Ecosystem. It provides the visual view layer that integrates with **[Satellite Connect](https://github.com/TuwaIO/satellite-connect)** (for wallet connection states) and **[Pulsar Engine](https://github.com/TuwaIO/pulsar-core)** (for transaction tracking lifecycles), transforming headless state managers into beautiful, accessible, and high-performance React user experiences.
 
-## 🏛️ Architecture Philosophy
-
-Our ecosystem is built on a clear separation of concerns:
-
-- **Orbit Utils (`orbit-core`, `orbit-evm`, `orbit-solana`):** The headless helper functions for interactions with multi networks in Web3.
-- **Satellite Connect (`satellite-core`, `satellite-evm`, `satellite-solana`):** The headless state management libraries that handle Web3 wallet connect logic.
-- **Pulsar Engine (`pulsar-core`, `pulsar-evm`, `pulsar-solana`):** The headless state management libraries that handle Web3 transactions tracking logic.
-- **Nova UI Kit (this repo):** The view layer, providing foundational styles and React components to visualize the state managed by Satellite and Pulsar.
-
-## 📦 Packages in this Monorepo
-
-This repository is managed using `pnpm` workspaces.
-
-| Package                            | Version                                                                                                                               | Description                                                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 🎨 **`@tuwaio/nova-core`**         | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)                 | Foundational package with styling primitives, CSS variables, base react components and helper utilities. |
-| 🔗 **`@tuwaio/nova-connect`**      | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)           | React components for Web3 wallet connection flows, including connect modals and buttons.                 |
-| 🧩 **`@tuwaio/nova-transactions`** | [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-transactions.svg)](https://www.npmjs.com/package/@tuwaio/nova-transactions) | React component library for visualizing transaction states (modals, toasts, etc.).                       |
-
-## 🛠 Tech Stack
-
-- **Framework**: React 19+
-- **Styling**: Tailwind CSS v4
-- **State Management**: Zustand
-- **Tooling**: TypeScript, pnpm, Vite, Storybook
+Nova enforces a clear separation of concerns, decoupling UI styling and component structures from underlying blockchain communication logic. It resides at the top of the frontend integration stack, representing **UI Core (L6)** and **UI Components (L7)** of the TUWA Ecosystem.
 
 ---
 
-## 🚀 Getting Started
+## 🏛️ Ecosystem Architecture & Tiers
 
-Follow these steps to set up the development environment on your local machine.
+The Nova monorepo splits styling tokens, wallet connectivity widgets, and transaction tracking views into isolated packages:
 
-### 1. Clone the Repository
+### UI Core (L6)
 
-```bash
-git clone https://github.com/TuwaIO/nova-uikit.git
+- **`@tuwaio/nova-core`**: The bedrock of the design system. Contains core styling primitives, CSS custom properties, shared utility hooks (like clipboard copy and media queries), and the foundational `cn` classname merger. It is completely independent of Web3 logic.
 
-cd nova-uikit
+### UI Components (L7)
+
+- **`@tuwaio/nova-connect`**: React UI components, modals, and buttons for multi-chain wallet connection flows. Interacts directly with `@tuwaio/satellite-react` to display connection states.
+- **`@tuwaio/nova-transactions`**: React UI components for transaction progress tracking. Interacts with `@tuwaio/pulsar-react` to present status feeds, modal popups, and toast notifications.
+
+---
+
+## 🔧 Monorepo Structure
+
+```
+nova-uikit/
+├── apps/
+│   └── docs/                   # Documentation portal & Storybook instance
+├── packages/
+│   ├── nova-core/              # UI Core (L6): CSS variables, utilities, base hooks
+│   ├── nova-connect/           # UI Components (L7): Wallet connection modals & buttons
+│   └── nova-transactions/      # UI Components (L7): Transaction toasts & tracking modals
 ```
 
-### 2. Install Dependencies
+---
 
-This project uses `pnpm`. Make sure you have it installed (). Then run: `npm install -g pnpm`
+## 💾 Installation
 
-```bash
-pnpm install
-```
-
-### 3. Build All Packages
-
-After installation, it's a good practice to build all packages to ensure everything is linked correctly.
+Nova is modular. Install the UI Core foundation and the components you need, along with their respective logic engines:
 
 ```bash
-pnpm build
+# L6 UI Core
+pnpm add @tuwaio/nova-core
+
+# L7 Wallet Connection UI (requires Satellite Connect)
+pnpm add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/satellite-react
+
+# L7 Transaction Progress UI (requires Pulsar Engine)
+pnpm add @tuwaio/nova-transactions @tuwaio/pulsar-core @tuwaio/pulsar-react
 ```
 
-## 💻 Development Workflow
+---
 
-The primary way to develop and test components is through Storybook.
+## 🚀 Quick Start Example
 
-### Running Storybook
+### Global Providers Wrapper
 
-To start the Storybook development server, run the following command from the root of the repository:
+Wrap your application in the correct order to bridge headless state managers to the Nova UI layer:
 
-```bash
-pnpm storybook
+```tsx
+import { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
+import { SatelliteConnectProvider, useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { EVMConnectorsWatcher } from '@tuwaio/nova-connect/evm';
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
+import { NovaTransactionsProvider } from '@tuwaio/nova-transactions/providers';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
+import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
+
+import { wagmiConfig, appEVMChains } from './config/appConfig';
+import { usePulsarStore } from './hooks/usePulsarStore';
+
+const queryClient = new QueryClient();
+
+// Connects headless Pulsar state to the Nova Transactions visual nodes
+function NovaTransactionsWrapper() {
+  const getAdapter = usePulsarStore((state) => state.getAdapter);
+  const initialTx = usePulsarStore((state) => state.initialTx);
+  const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
+  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
+  const executeTxAction = usePulsarStore((state) => state.executeTxAction);
+  const initializeTransactionsPool = usePulsarStore((state) => state.initializeTransactionsPool);
+
+  const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
+
+  useInitializeTransactionsPool({ initializeTransactionsPool });
+
+  return (
+    <NovaTransactionsProvider
+      transactionsPool={transactionsPool}
+      initialTx={initialTx}
+      closeTxTrackedModal={closeTxTrackedModal}
+      executeTxAction={executeTxAction}
+      connectedWalletAddress={activeConnection?.isConnected ? activeConnection.address : undefined}
+      connectedAdapterType={getAdapterFromConnectorType(activeConnection?.connectorType ?? 'evm:')}
+      adapter={getAdapter()}
+    />
+  );
+}
+
+export function AppProviders({ children }: { children: ReactNode }) {
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <SatelliteConnectProvider adapter={satelliteEVMAdapter(wagmiConfig)} autoConnect={true}>
+          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
+
+          <NovaConnectProvider appChains={appEVMChains} withBalance withChain>
+            <NovaTransactionsWrapper />
+            {children}
+          </NovaConnectProvider>
+        </SatelliteConnectProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
 ```
 
-This will open Storybook at **[http://localhost:6006](http://localhost:6006)**.
+---
 
-## 🤝 Contributing & Support
+## 🤝 Contribution & Auditing
 
-Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
-
-If you find this library useful, please consider supporting its development. Every contribution helps!
-
-[**➡️ View Support Options**](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
+Please review our ecosystem **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
 
 ## 📄 License
 
-This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.
+Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.

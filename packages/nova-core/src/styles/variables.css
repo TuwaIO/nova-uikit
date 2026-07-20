@@ -1,6 +1,19 @@
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme) prefix(novacore);
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(novacore);
+@import './fonts.css';
+
+@theme {
+  --font-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+@layer base {
+  [class*='font-mono'] {
+    letter-spacing: -0.025em !important;
+    line-height: 1 !important;
+  }
+}
 
 :root {
   --tuwa-success-bg: theme('colors.green.100');

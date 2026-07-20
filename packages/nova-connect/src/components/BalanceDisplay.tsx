@@ -255,7 +255,7 @@ const DefaultBalanceValue: React.FC<BalanceValueProps> = ({ balance, labels, cla
   return (
     <p
       className={cn(
-        'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)]',
+        'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:font-mono novacon:text-[var(--tuwa-text-tertiary)]',
         className,
       )}
       role="text"
@@ -340,7 +340,6 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Show success indicator when loading completes
   useEffect(() => {
     if (prevLoading.current && !isLoading) {
-      // eslint-disable-next-line
       setShowSuccess(true);
       const timer = setTimeout(() => setShowSuccess(false), successDuration);
       return () => clearTimeout(timer);

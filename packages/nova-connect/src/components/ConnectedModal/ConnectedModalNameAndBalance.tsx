@@ -236,7 +236,7 @@ export interface ConnectedModalNameAndBalanceProps extends Pick<
 const DefaultWalletNameDisplay: React.FC<WalletNameDisplayProps> = ({ ensNameAbbreviated, className }) => {
   return (
     <h3
-      className={cn('novacon:text-xl novacon:font-bold', className)}
+      className={cn('novacon:text-xl novacon:font-bold novacon:font-mono', className)}
       role="heading"
       aria-level={3}
       aria-label={`Wallet name: ${ensNameAbbreviated || 'Loading wallet name'}`}

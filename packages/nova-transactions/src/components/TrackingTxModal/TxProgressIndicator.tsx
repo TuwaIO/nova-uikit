@@ -112,7 +112,7 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
 
       <span
         className={cn(
-          'novatx:mt-2 novatx:text-center novatx:text-xs',
+          'novatx:mt-2 novatx:text-center novatx:text-xs novatx:font-mono',
           status !== 'inactive'
             ? 'novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
             : 'novatx:text-[var(--tuwa-text-secondary)]',

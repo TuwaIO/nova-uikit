@@ -229,7 +229,7 @@ const DefaultActiveIndicatorWrapper: React.FC<CustomActiveIndicatorWrapperProps>
     return (
       <div
         className={cn(
-          'novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]',
+          'novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-mono novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]',
           className,
         )}
       >
@@ -471,7 +471,9 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
     // Create content element
     const contentElement = (
       <ChainContent chainId={formattedChainId} isActive={isActive} icon={iconElement}>
-        <span className={cn('novacon:text-sm novacon:font-medium', chainNameClasses)}>{chainName}</span>
+        <span className={cn('novacon:text-sm novacon:font-mono novacon:font-medium', chainNameClasses)}>
+          {chainName}
+        </span>
       </ChainContent>
     );
 

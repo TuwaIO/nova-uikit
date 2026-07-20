@@ -330,7 +330,7 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     classNames.button?.({ buttonData }) ||
     cn(
       'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
-      'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
+      'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-mono novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
       'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
       'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)]',
       'novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',

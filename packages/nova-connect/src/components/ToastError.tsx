@@ -286,7 +286,7 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
     const buttonClasses = customization?.classNames?.button
       ? customization.classNames.button({ isCopied, disabled })
       : cn(
-          'novacon:cursor-pointer novacon:mt-2 novacon:text-xs novacon:font-medium novacon:inline-flex novacon:items-center novacon:space-x-1.5',
+          'novacon:cursor-pointer novacon:mt-2 novacon:font-mono novacon:text-xs novacon:font-medium novacon:inline-flex novacon:items-center novacon:space-x-1.5',
           'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-error-text)] novacon:focus:ring-opacity-50 novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:px-2 novacon:py-1 novacon:transition-all novacon:duration-200',
           'novacon:hover:bg-[var(--tuwa-error-text)] novacon:hover:bg-opacity-10',

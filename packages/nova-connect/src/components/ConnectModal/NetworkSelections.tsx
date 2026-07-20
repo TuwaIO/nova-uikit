@@ -514,7 +514,7 @@ export const NetworkSelections = memo(
           <CustomErrorTitle
             className={
               customization?.classNames?.errorTitle?.({ selectionsData }) ??
-              'novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)] novacon:mb-1'
+              'novacon:text-lg novacon:font-semibold novacon:font-mono novacon:text-[var(--tuwa-text-primary)] novacon:mb-1'
             }
             role="heading"
             aria-level={2}

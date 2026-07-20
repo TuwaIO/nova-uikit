@@ -161,7 +161,7 @@ export function useWalletNativeBalance(): NativeBalanceData {
         }
       }
     },
-    [activeConnection?.address, foundAdapter, activeConnection?.chainId, cacheKey, hasBalanceResolver, balanceCache],
+    [activeConnection, foundAdapter, cacheKey, hasBalanceResolver, balanceCache],
   );
 
   // Memoized refetch function that forces a refresh
@@ -174,9 +174,11 @@ export function useWalletNativeBalance(): NativeBalanceData {
   useEffect(() => {
     // Only fetch if we have all required data and no cached result
     if (cacheKey && hasBalanceResolver && !balanceCache[cacheKey]) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchBalance(false);
     } else if (!cacheKey || !hasBalanceResolver) {
       // Reset loading state if we can't fetch
+
       setIsLoading(false);
     }
   }, [cacheKey, hasBalanceResolver, balanceCache, fetchBalance]);

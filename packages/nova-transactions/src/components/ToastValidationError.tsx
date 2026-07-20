@@ -171,7 +171,10 @@ const DefaultIcon = ({ isCopied: _, className, ...props }: ToastValidationErrorI
 
 const DefaultTitle = ({ title, className }: ToastValidationErrorTitleProps) => (
   <span
-    className={cn('novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-error-icon)]', className)}
+    className={cn(
+      'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-error-icon)]',
+      className,
+    )}
     role="heading"
     aria-level={3}
   >
@@ -277,7 +280,7 @@ export function ToastValidationError({
     cn(
       'novatx:mt-3 novatx:inline-flex novatx:cursor-pointer novatx:items-center novatx:gap-1.5',
       'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-2 novatx:py-1',
-      'novatx:text-xs novatx:font-medium novatx:text-[var(--tuwa-error-text)]',
+      'novatx:text-xs novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-error-text)]',
       'novatx:transition-all novatx:duration-200',
       'novatx:hover:bg-[var(--tuwa-error-icon)]/10',
       'novatx:focus:outline-none novatx:focus:ring-[length:var(--tuwa-ring-width)] novatx:focus:ring-[var(--tuwa-error-text)]/50',

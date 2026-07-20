@@ -49,7 +49,7 @@ export function ToastCloseButton({
       aria-label={ariaLabel}
       title={title}
       className={cn(
-        'novacore:absolute novacore:top-2 novacore:right-2 novacore:cursor-pointer novacore:rounded-full novacore:p-1',
+        'novacore:absolute novacore:top-2 novacore:right-2 novacore:cursor-pointer novacore:rounded-[var(--tuwa-rounded-corners)] novacore:p-1',
         'novacore:text-[var(--tuwa-text-tertiary)] novacore:transition-colors',
         'novacore:hover:bg-[var(--tuwa-bg-muted)] novacore:hover:text-[var(--tuwa-text-primary)]',
         className,

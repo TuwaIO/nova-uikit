@@ -71,7 +71,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
       <div className={cn('novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div
           className={cn(
-            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-bold novatx:text-[var(--tuwa-error-icon)]',
+            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-icon)]',
             classNames?.title,
           )}
         >

@@ -326,7 +326,7 @@ const DefaultHeader = ({
           onClick={() => onClose()}
           aria-label={actions.close}
           className={cn(
-            'novatx:cursor-pointer novatx:rounded-full novatx:p-1 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
+            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:p-1 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
             classNames?.closeButton,
           )}
         >
@@ -357,7 +357,7 @@ const MainActionButton = ({
         type="button"
         onClick={onRetry}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
+          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
           classNames?.retryButton,
         )}
       >
@@ -371,7 +371,7 @@ const MainActionButton = ({
         type="button"
         onClick={onOpenAllTransactions}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
+          'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
           classNames?.allTransactionsButton,
         )}
       >
@@ -410,7 +410,7 @@ const DefaultFooter = ({
               type="button"
               onClick={onSpeedUp}
               className={cn(
-                'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+                'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
                 classNames?.speedUpButton,
               )}
             >
@@ -420,7 +420,7 @@ const DefaultFooter = ({
               type="button"
               onClick={onCancel}
               className={cn(
-                'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+                'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
                 classNames?.cancelButton,
               )}
             >
@@ -444,7 +444,7 @@ const DefaultFooter = ({
           onClick={onClose}
           disabled={isProcessing && !canReplace}
           className={cn(
-            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
+            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
             classNames?.closeModalButton,
           )}
         >

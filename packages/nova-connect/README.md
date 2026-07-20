@@ -1,99 +1,85 @@
-# TUWA Nova Connect
+# @tuwaio/nova-connect
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-connect.svg)](https://www.npmjs.com/package/@tuwaio/nova-connect)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-connect.svg)](./LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/TuwaIO/nova-uikit/release.yml?branch=main)](https://github.com/TuwaIO/nova-uikit/actions)
 
-Feature-rich React components for connecting Web3 wallets with a comprehensive customization system and support for multiple blockchain networks.
+`@tuwaio/nova-connect` is the **UI Components (L7)** package of the TUWA Ecosystem wallet connectivity layer. It translates the headless connection status of `@tuwaio/satellite-react` into beautiful, accessible, and highly customizable React user interface elements.
 
----
-
-## 🏛️ What is `@tuwaio/nova-connect`?
-
-`@tuwaio/nova-connect` is a comprehensive solution for integrating Web3 wallets into React applications. The package provides ready-to-use components with deep customization and support for both EVM and Solana blockchains.
-
-Built on top of the Satellite Connect ecosystem, Nova Connect offers a unified interface for working with various wallet types and blockchain networks.
+Nova Connect natively supports both EVM and Solana wallet standard connectors, providing ready-made buttons, dialog selectors, network switchers, and balance widgets while keeping styling decisions decoupled from the underlying connection state store.
 
 ---
 
-## ✨ Key Features
+## 🏛️ Core Capabilities
 
-- **🎨 Full Customization**: Comprehensive customization system for all components and behaviors.
-- **⚡ TypeScript**: Full TypeScript support with proper type definitions.
-- **🌐 Multi-Blockchain**: Unified support for EVM and Solana wallets.
-- **🔗 Modern React**: Built using React 19+ features and best practices.
-- **🎯 Ready-made Components**: Connection button, modals, network selectors.
-- **♿ Accessibility**: Full ARIA and keyboard navigation support.
-- **🎭 Internationalization**: Support for multiple languages.
-- **🔄 State Management**: Zustand-based store for efficient state management.
+- **🔌 Plug-and-Play Widgets:** Ready-to-use wallet components (`ConnectButton`, `ConnectCard`, `DisconnectButton`, `AccountImpersonationIndicator`).
+- **⛓️ Cohesive Multi-Chain Interface:** Consistently handles EVM wallets (via `@tuwaio/satellite-evm` and `wagmi`) and Solana standard wallets (via `@tuwaio/satellite-solana` and `gill`).
+- **🎨 Deep Customization:** Change typography, borders, and margins using the `customization` prop or override colors via the `@tuwaio/nova-core` token variables.
+- **♿ Built-in Accessibility:** Dialog primitives powered by Radix UI, featuring complete keyboard navigation, viewport trapping, and screen reader announcements.
+- **🌍 Internationalization (i18n):** Overridable labels configuration for localizing connection prompts and wallet state tags.
 
 ---
 
 ## 💾 Installation
 
-### Requirements
+```bash
+pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/satellite-core @tuwaio/satellite-react
+```
 
-- React 19+
-- Node.js 20-24
-- TypeScript 5.9+
+### Peer Dependencies Check
+
+Ensure your React application contains required core packages:
 
 ```bash
-# Using pnpm (recommended), but you can use npm, yarn or bun as well
-pnpm add @tuwaio/nova-connect @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/pulsar-core @tuwaio/nova-core zustand immer framer-motion react-toastify ethereum-blockies-base64 @emotion/is-prop-valid @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog @radix-ui/react-select
+# State & Utilities
+pnpm add zustand immer dayjs clsx tailwind-merge framer-motion @emotion/is-prop-valid
+
+# Dialog & Icons Primitives
+pnpm add @radix-ui/react-dialog @radix-ui/react-select @heroicons/react @web3icons/react @web3icons/common
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start Setup
 
-### Basic Provider Setup
+### 1. Global Providers Integration
+
+Wrap your React tree with the Wagmi configuration, Satellite logic connection provider, and Nova Connect layout provider:
 
 ```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { satelliteEVMAdapter, createDefaultTransports } from '@tuwaio/satellite-evm';
-import { NovaConnectProvider } from '@tuwaio/nova-connect';
-import { SatelliteConnectProvider } from '@tuwaio/nova-connect/satellite';
-import { EVMWalletsWatcher } from '@tuwaio/nova-connect/evm';
-import { SolanaWalletsWatcher } from '@tuwaio/nova-connect/solana';
-import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
-import { WagmiProvider } from 'wagmi';
 import { ReactNode } from 'react';
-import { createConfig } from '@wagmi/core';
-import { injected } from '@wagmi/connectors';
-import { mainnet, sepolia } from 'viem/chains';
-import type { Chain } from 'viem/chains';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
+import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
+import { SatelliteConnectProvider } from '@tuwaio/nova-connect/satellite';
+import { EVMConnectorsWatcher } from '@tuwaio/nova-connect/evm';
+import { SolanaConnectorsWatcher } from '@tuwaio/nova-connect/solana';
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
 
-export const appEVMChains = [mainnet, sepolia] as readonly [Chain, ...Chain[]];
-
-export const wagmiConfig = createConfig({
-  connectors: [injected()],
-  transports: createDefaultTransports(appEVMChains), // Automatically creates http transports
-  chains: appEVMChains,
-  ssr: true, // Enable SSR support if needed (e.g., in Next.js)
-});
-
-export const solanaRPCUrls = {
-  devnet: 'https://api.devnet.solana.com',
-};
+import { wagmiConfig, appEVMChains, solanaRPCUrls } from './config/appConfig';
 
 const queryClient = new QueryClient();
 
-export function Providers({ children }: { children: ReactNode }) {
+export function Web3Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
+        {/* Layer 1: Headless Connection logic */}
         <SatelliteConnectProvider
-          adapter={[satelliteEVMAdapter(wagmiConfig), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
+          adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
           autoConnect={true}
         >
-          <EVMWalletsWatcher wagmiConfig={wagmiConfig} />
-          <SolanaWalletsWatcher />
+          {/* Watchers sync native connector states to the store */}
+          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
+          <SolanaConnectorsWatcher />
+
+          {/* Layer 2: Visual Connection component provider */}
           <NovaConnectProvider
             appChains={appEVMChains}
             solanaRPCUrls={solanaRPCUrls}
-            withImpersonated
             withBalance
             withChain
+            withImpersonated
           >
             {children}
           </NovaConnectProvider>
@@ -104,76 +90,53 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 ```
 
-### Using ConnectButton
+### 2. Rendering the Connection Button
+
+Place the component in your header or navigation bar:
 
 ```tsx
 import { ConnectButton } from '@tuwaio/nova-connect/components';
 
-function App() {
+export function NavigationHeader() {
   return (
-    <div>
+    <header className="flex justify-between items-center p-4 border-b border-[var(--tuwa-border-primary)]">
+      <span className="font-bold">My dApp</span>
       <ConnectButton />
-    </div>
+    </header>
   );
 }
 ```
 
 ---
 
-## 🧩 Key Components
+## 🎨 Component Customization
 
-### 1. **ConnectButton**
-
-- Main component for wallet connection.
-- Full customization system.
-
-### 2. **NovaConnectProvider**
-
-- Context provider with state management.
-- Customizable error handling.
-- Flexible internationalization system.
-
----
-
-## 🌍 Internationalization
-
-Nova Connect supports full label customization:
+Pass class names and layout overrides using the `customization` property to match components with your custom UI:
 
 ```tsx
-const customLabels = {
-  connectWallet: 'Connect Wallet',
-  disconnect: 'Disconnect',
-  connecting: 'Connecting...',
-  connected: 'Connected',
-  // ... other labels
-};
+import { ConnectButton } from '@tuwaio/nova-connect/components';
+import { cn } from '@tuwaio/nova-core';
 
-<NovaConnectProvider
-  labels={customLabels}
-  // ... other props
-/>;
+export function CustomHeader() {
+  return (
+    <ConnectButton
+      customization={{
+        classNames: {
+          connectButton: () =>
+            cn(
+              'px-6 py-2 rounded-full font-mono text-sm uppercase transition-all duration-300',
+              'bg-emerald-500 text-slate-950 hover:bg-emerald-600 focus:ring-2 focus:ring-emerald-500',
+            ),
+          walletName: () => 'text-xs text-slate-300 font-semibold',
+        },
+      }}
+    />
+  );
+}
 ```
 
 ---
 
-## ♿ Accessibility
-
-Nova Connect fully supports accessibility standards:
-
-- ARIA labels and descriptions
-- Keyboard navigation
-- Screen reader support
-- Semantic HTML elements
-- High contrast
-
-## 🤝 Contributing & Support
-
-Contributions are welcome! Please read our main **[Contribution Guidelines](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)**.
-
-If you find this library useful, please consider supporting its development. Every contribution helps!
-
-[**➡️ View Support Options**](https://github.com/TuwaIO/workflows/blob/main/Donation.md)
-
 ## 📄 License
 
-This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.
+Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.

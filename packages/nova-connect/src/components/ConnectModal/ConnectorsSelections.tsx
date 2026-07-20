@@ -730,7 +730,7 @@ export const ConnectorsSelections = memo(
               className="novacon:text-[var(--tuwa-text-accent)] novacon:mb-3"
               aria-hidden="true"
             />
-            <h2 className="novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)] novacon:mb-1">
+            <h2 className="novacon:text-lg novacon:font-semibold novacon:font-mono novacon:text-[var(--tuwa-text-primary)] novacon:mb-1">
               {labels.noConnectorsFound}
             </h2>
             <p className="novacon:text-sm">{labels.noConnectorsDescription}</p>

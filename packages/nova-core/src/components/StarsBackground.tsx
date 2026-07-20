@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/purity */
 import { useEffect, useMemo, useState } from 'react';
 
 export function StarsBackground({ starsCount }: { starsCount?: number }) {
   const [isMounted, setIsMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setIsMounted(true), []);
 
   const stars = useMemo(() => {

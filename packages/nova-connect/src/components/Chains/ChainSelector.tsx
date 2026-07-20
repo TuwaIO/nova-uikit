@@ -541,8 +541,8 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
   const buttonClasses = customization?.classNames?.button
     ? customization.classNames.button({ isMobile, isOpen: isChainsListOpen, hasMultipleChains })
     : cn(
-        'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center',
-        'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
+        'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:min-h-[42px] novacon:py-1',
+        'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-mono novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
         'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
         'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)] novacon:focus:ring-[var(--tuwa-text-secondary)]',
         'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
@@ -555,7 +555,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 
   const innerContentClasses = customization?.classNames?.innerContent
     ? customization.classNames.innerContent({ isMobile, isOpen: isChainsListOpen })
-    : 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 sm:novacon:px-4 novacon:min-w-[60px] novacon:min-h-[42px] novacon:py-1';
+    : 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 sm:novacon:px-4 novacon:min-w-[60px]';
 
   const arrowWrapperClasses = customization?.classNames?.arrowWrapper
     ? customization.classNames.arrowWrapper({ isMobile })

@@ -82,6 +82,7 @@ const DialogContent = React.forwardRef<
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(isTouchDevice());
   }, []);
 
@@ -169,7 +170,7 @@ const DialogTitle = React.forwardRef<
     ref={ref}
     aria-describedby="tuwa:modal-title"
     className={cn(
-      'novacore:text-lg novacore:font-bold novacore:leading-none novacore:tracking-tight novacore:text-[var(--tuwa-text-primary)] novacore:m-0',
+      'novacore:text-lg novacore:font-bold novacore:leading-none novacore:tracking-tight novacore:text-[var(--tuwa-text-primary)] novacore:m-0 novacore:font-mono',
       className,
     )}
     {...props}

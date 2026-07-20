@@ -56,9 +56,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
     classNames?.label,
   );
 
-  const hashContent = (
-    <span className={cn('novatx:font-mono', classNames?.hash)}>{textCenterEllipsis(hash, 5, 5)}</span>
-  );
+  const hashContent = <span className={cn('', classNames?.hash)}>{textCenterEllipsis(hash, 5, 5)}</span>;
 
   return (
     <div className={containerClasses}>

@@ -590,7 +590,7 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, CustomActiveSe
       <div ref={ref} className={className} {...props}>
         <h3
           className={cn(
-            'novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
             classNames?.title,
           )}
         >
@@ -617,7 +617,7 @@ const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, CustomRecentS
       <div ref={ref} className={className} {...props}>
         <h3
           className={cn(
-            'novacon:mb-2 novacon:text-xs novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
             classNames?.title,
           )}
         >
@@ -701,7 +701,12 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             badgeClassName={classNames?.iconBadge}
           />
           <div className="novacon:flex novacon:flex-col">
-            <span className={cn('novacon:font-medium novacon:text-[var(--tuwa-text-primary)]', classNames?.walletName)}>
+            <span
+              className={cn(
+                'novacon:font-medium novacon:font-mono novacon:text-[var(--tuwa-text-primary)]',
+                classNames?.walletName,
+              )}
+            >
               {displayName || address}
             </span>
             <span
@@ -720,7 +725,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
               <button
                 onClick={handleCopy}
                 className={cn(
-                  'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                  'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:font-mono novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                   classNames?.copyButton,
                 )}
                 title="Copy Address"
@@ -732,7 +737,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                 <button
                   onClick={handleExplorer}
                   className={cn(
-                    'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                    'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:font-mono novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                     classNames?.explorerButton,
                   )}
                   title="View on Explorer"
@@ -748,7 +753,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <button
           onClick={onDisconnect}
           className={cn(
-            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
@@ -806,7 +811,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
           <div className="novacon:flex novacon:flex-col">
             <span
               className={cn(
-                'novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
+                'novacon:text-sm novacon:font-medium novacon:font-mono novacon:text-[var(--tuwa-text-primary)]',
                 classNames?.walletName,
               )}
             >
@@ -864,7 +869,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
           <div className="novacon:flex novacon:flex-col">
             <span
               className={cn(
-                'novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
+                'novacon:text-sm novacon:font-medium novacon:font-mono novacon:text-[var(--tuwa-text-primary)]',
                 classNames?.walletName,
               )}
             >
@@ -883,7 +888,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               onClick={onConnect}
               disabled={isConnecting}
               className={cn(
-                'novacon:relative novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
+                'novacon:relative novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
                 isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
                 classNames?.connectButton,
               )}
@@ -1029,6 +1034,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // Initial load and sync with connections changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateRecentList();
   }, [updateRecentList]);
 
@@ -1410,7 +1416,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             setIsConnectModalOpen(true);
           }}
           className={cn(
-            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
+            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
             customization?.classNames?.addWalletButton?.({}),
           )}
         >
