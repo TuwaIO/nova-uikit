@@ -255,7 +255,7 @@ const DefaultBalanceValue: React.FC<BalanceValueProps> = ({ balance, labels, cla
   return (
     <p
       className={cn(
-        'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:text-[var(--tuwa-text-tertiary)]',
+        'novacon:flex novacon:items-center novacon:gap-1 novacon:text-sm novacon:font-mono novacon:text-[var(--tuwa-text-tertiary)]',
         className,
       )}
       role="text"

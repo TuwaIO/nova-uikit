@@ -531,7 +531,7 @@ export const ConnectorsBlock = memo(
 
         title:
           customization?.classNames?.title?.({ blockData }) ??
-          cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', {
+          cn('novacon:text-sm novacon:font-mono novacon:text-[var(--tuwa-text-secondary)]', {
             'novacon:font-bold novacon:text-[var(--tuwa-text-accent)]': blockData.isTitleBold,
           }),
 

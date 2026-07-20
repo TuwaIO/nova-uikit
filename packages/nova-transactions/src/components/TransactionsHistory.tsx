@@ -176,7 +176,14 @@ function HistoryPlaceholder({
         className,
       )}
     >
-      <h4 className={cn('novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]', classNames?.title)}>{title}</h4>
+      <h4
+        className={cn(
+          'novatx:text-lg novatx:font-bold novatx:font-mono novatx:text-[var(--tuwa-text-primary)]',
+          classNames?.title,
+        )}
+      >
+        {title}
+      </h4>
       <p className={cn('novatx:mt-1 novatx:text-sm novatx:text-[var(--tuwa-text-secondary)]', classNames?.message)}>
         {message}
       </p>
@@ -386,7 +393,7 @@ export function TransactionsHistory<T extends Transaction>({
       {customization?.title && (
         <h3
           className={cn(
-            'novatx:text-lg novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
+            'novatx:text-lg novatx:font-bold novatx:font-mono novatx:text-[var(--tuwa-text-primary)]',
             customization?.classNames?.titleText,
           )}
         >

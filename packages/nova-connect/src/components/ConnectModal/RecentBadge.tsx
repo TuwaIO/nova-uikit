@@ -341,12 +341,14 @@ export const RecentBadge = memo(
         }
 
         const sizeClasses = isTouch
-          ? 'novacon:px-1.5 novacon:py-0 novacon:text-[10px]'
-          : 'novacon:px-2.5 novacon:py-0.5 novacon:text-xs';
+          ? 'novacon:px-1.5 novacon:py-0.5 novacon:text-[10px]'
+          : 'novacon:px-2.5 novacon:py-1 novacon:text-xs';
 
         return cn(
-          'novacon:inline-flex novacon:items-center novacon:rounded-full novacon:font-medium novacon:relative novacon:overflow-hidden',
+          'novacon:flex novacon:items-center novacon:justify-center novacon:overflow-hidden',
+          'novacon:font-mono novacon:font-medium',
           'novacon:text-[var(--tuwa-text-secondary)] novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          'novacon:rounded-[var(--tuwa-rounded-corners)]',
           sizeClasses,
           className,
         );
@@ -360,7 +362,7 @@ export const RecentBadge = memo(
        */
       const animatedGradientClasses =
         customization?.classNames?.animatedGradient?.() ??
-        'novacon:absolute novacon:inset-0 novacon:z-0 novacon:pointer-events-none novacon:rounded-full';
+        'novacon:absolute novacon:inset-0 novacon:z-0 novacon:pointer-events-none novacon:rounded-[var(--tuwa-rounded-corners)]';
 
       /**
        * Memoized background overlay classes
@@ -370,7 +372,7 @@ export const RecentBadge = memo(
        */
       const backgroundOverlayClasses =
         customization?.classNames?.backgroundOverlay?.() ??
-        'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)] novacon:inset-[1px]';
+        'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-bg-primary)] novacon:inset-[1px]';
 
       /**
        * Memoized content classes

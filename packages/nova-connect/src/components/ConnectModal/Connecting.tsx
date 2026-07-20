@@ -722,11 +722,14 @@ export const Connecting = memo(
               id="connecting-message"
               className={
                 customization?.classNames?.statusMessage?.({ statusData }) ??
-                cn('novacon:text-lg novacon:font-semibold novacon:transition-colors novacon:duration-300', {
-                  'novacon:text-[var(--tuwa-error-text)]': connectionState === 'error',
-                  'novacon:text-[var(--tuwa-success-text)]': connectionState === 'success',
-                  'novacon:text-[var(--tuwa-text-primary)]': connectionState === 'connecting',
-                })
+                cn(
+                  'novacon:text-lg novacon:font-semibold novacon:font-mono novacon:transition-colors novacon:duration-300',
+                  {
+                    'novacon:text-[var(--tuwa-error-text)]': connectionState === 'error',
+                    'novacon:text-[var(--tuwa-success-text)]': connectionState === 'success',
+                    'novacon:text-[var(--tuwa-text-primary)]': connectionState === 'connecting',
+                  },
+                )
               }
               role="heading"
               aria-level={2}

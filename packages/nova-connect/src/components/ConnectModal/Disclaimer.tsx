@@ -403,7 +403,7 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
     const titleClasses =
       customization?.classNames?.title?.({ compact }) ??
       cn(
-        'novacon:font-bold novacon:text-[var(--tuwa-text-primary)]',
+        'novacon:font-bold novacon:font-mono novacon:text-[var(--tuwa-text-primary)]',
         compact ? 'novacon:text-base' : 'novacon:text-lg',
       );
 

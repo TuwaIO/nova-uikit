@@ -102,7 +102,7 @@ const SectionCard = ({ children, className }: { children: ReactNode; className?:
 const SectionHeading = ({ children, className }: { children: ReactNode; className?: string }) => (
   <h4
     className={cn(
-      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] sm:novatx:mb-4 sm:novatx:pb-4',
+      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] sm:novatx:mb-4 sm:novatx:pb-4',
       className,
     )}
   >
@@ -178,7 +178,7 @@ const DefaultDetailItem = ({ label, value, mono = false, className, classNames }
       <FieldLabel className={classNames?.label}>{label}</FieldLabel>
       <span
         className={cn(
-          'novatx:block novatx:break-all novatx:text-sm novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
+          'novatx:block novatx:break-all novatx:text-sm novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
           mono && 'novatx:font-mono novatx:text-xs',
           classNames?.value,
         )}
@@ -204,7 +204,7 @@ const DefaultMetadataRow = ({ icon: Icon, label, children, className, classNames
     </div>
     <div
       className={cn(
-        'novatx:ml-4 novatx:max-w-[55%] novatx:shrink-0 novatx:truncate novatx:text-right novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
+        'novatx:ml-4 novatx:max-w-[55%] novatx:shrink-0 novatx:truncate novatx:text-right novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
         classNames?.value,
       )}
     >
@@ -253,6 +253,7 @@ export type TransactionDetailsCustomization = {
     statusIconContainer?: string;
     title?: string;
     subtitle?: string;
+    sectionHeader?: string;
     coreInfoCard?: string;
     networkBadge?: string;
     metadataSection?: string;
@@ -390,7 +391,7 @@ export function TransactionDetails<T extends Transaction>({
           <div>
             <h3
               className={cn(
-                'novatx:text-lg novatx:font-black novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]',
+                'novatx:text-lg novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]',
                 classNames?.title,
               )}
             >
@@ -398,7 +399,7 @@ export function TransactionDetails<T extends Transaction>({
             </h3>
             <p
               className={cn(
-                'novatx:text-[10px] novatx:font-bold novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-tertiary)]',
+                'novatx:text-[10px] novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-tertiary)]',
                 classNames?.subtitle,
               )}
             >
@@ -433,7 +434,7 @@ export function TransactionDetails<T extends Transaction>({
               )}
             </div>
             <div>
-              <h3 className="novatx:text-lg novatx:font-black novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]">
+              <h3 className="novatx:text-lg novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]">
                 {tx.type}
               </h3>
               <p
@@ -484,7 +485,7 @@ export function TransactionDetails<T extends Transaction>({
                 )}
               >
                 <NetworkIcon chainId={setChainId(tx.chainId)} className="novatx:h-5 novatx:w-5 novatx:shrink-0" />
-                <span className="novatx:truncate novatx:text-sm novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
+                <span className="novatx:truncate novatx:text-sm novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
                   {getChainName(setChainId(tx.chainId)).name}
                 </span>
                 <span className="novatx:ml-auto novatx:shrink-0 novatx:font-mono novatx:text-[10px] novatx:text-[var(--tuwa-text-tertiary)]">

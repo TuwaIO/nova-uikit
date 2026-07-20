@@ -60,7 +60,7 @@ export function TransactionStatusBadge<T extends Transaction>({
   const statusConfig = getStatusConfig(statuses);
 
   const baseClasses =
-    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:rounded-full novatx:px-2 novatx:py-1 novatx:text-xs novatx:font-medium';
+    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:rounded-full novatx:px-2 novatx:py-1 novatx:text-xs novatx:font-mono novatx:font-medium';
 
   const statusKey = tx.pending ? 'Pending' : tx.status;
   const config = statusKey ? statusConfig[statusKey as keyof typeof statusConfig] : null;

@@ -59,7 +59,9 @@ function DefaultInfoRow({ label, value, classNames }: CustomInfoRowProps) {
       )}
     >
       <span className={cn('novatx:text-[var(--tuwa-text-secondary)]', classNames?.label)}>{label}</span>
-      <span className={cn('novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}>
+      <span
+        className={cn('novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}
+      >
         {value}
       </span>
     </div>

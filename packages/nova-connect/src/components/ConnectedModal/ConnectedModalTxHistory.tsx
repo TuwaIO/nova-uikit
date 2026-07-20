@@ -388,7 +388,7 @@ const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className,
       <div className={cn('novacon:space-y-2', classNames?.content)}>
         <h2
           className={cn(
-            'novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)]',
+            'novacon:text-lg novacon:font-semibold novacon:font-mono novacon:text-[var(--tuwa-text-primary)]',
             classNames?.title,
           )}
         >
@@ -457,7 +457,7 @@ function PulsarAdapterRequired({
   const contentClasses = customization?.classNames?.pulsarRequiredContent?.() ?? 'novacon:space-y-2';
   const titleClasses =
     customization?.classNames?.pulsarRequiredTitle?.() ??
-    'novacon:text-lg novacon:font-semibold novacon:text-[var(--tuwa-text-primary)]';
+    'novacon:text-lg novacon:font-semibold novacon:font-mono novacon:text-[var(--tuwa-text-primary)]';
   const descriptionClasses =
     customization?.classNames?.pulsarRequiredDescription?.() ??
     'novacon:text-sm novacon:text-[var(--tuwa-text-secondary)] novacon:max-w-md novacon:leading-relaxed';

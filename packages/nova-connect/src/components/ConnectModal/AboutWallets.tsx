@@ -410,7 +410,7 @@ const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideInde
     >
       <h2
         className={cn(
-          'novacon:text-xl novacon:font-bold novacon:text-[var(--tuwa-text-primary)] novacon:mb-2',
+          'novacon:text-xl novacon:font-bold novacon:font-mono novacon:text-[var(--tuwa-text-primary)] novacon:mb-2',
           titleClassName,
         )}
         id={`slide-title-${slideIndex}`}

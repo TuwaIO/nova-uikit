@@ -69,7 +69,7 @@ export function StatusAwareText({
 
   const baseClasses =
     variant === 'title'
-      ? 'novatx:text-sm novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
+      ? 'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
       : 'novatx:mt-1 novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]';
 
   return <div className={cn(baseClasses, colorClass, className)}>{displayText}</div>;

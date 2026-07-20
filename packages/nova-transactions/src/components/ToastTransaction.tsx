@@ -90,7 +90,7 @@ const DefaultSpeedUpButton = ({ onClick, children, className }: CustomActionButt
     onClick={onClick}
     type="button"
     className={cn(
-      'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+      'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
       className,
     )}
   >
@@ -103,7 +103,7 @@ const DefaultCancelButton = ({ onClick, children, className }: CustomActionButto
     onClick={onClick}
     type="button"
     className={cn(
-      'novatx:cursor-pointer novatx:text-sm novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+      'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
       className,
     )}
   >
@@ -115,7 +115,7 @@ const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButto
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
-    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-3 novatx:py-1 novatx:text-xs novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)] novatx:active:scale-95';
+    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-gradient-from)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-gradient-from-hover)] novatx:active:scale-95';
 
   return (
     <button className={buttonClassName} onClick={onClick} type="button">
@@ -137,7 +137,7 @@ const DefaultConfirmationsBadge = ({
 }) => (
   <div
     className={cn(
-      'novatx:absolute novatx:-left-1 novatx:-top-1 novatx:z-10 novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:text-[10px] novatx:font-bold novatx:shadow-sm novatx:backdrop-blur-sm novatx:transition-colors',
+      'novatx:absolute novatx:-left-1 novatx:-top-1 novatx:z-10 novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:shadow-sm novatx:backdrop-blur-sm novatx:transition-colors',
       isSuccess
         ? 'novatx:border-[var(--tuwa-success-icon)]/30 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]'
         : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',
