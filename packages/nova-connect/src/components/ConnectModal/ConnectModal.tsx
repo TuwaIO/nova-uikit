@@ -392,7 +392,7 @@ const DefaultCloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
         type="button"
         onClick={onClick}
         className={cn(
-          'novacon:cursor-pointer novacon:rounded-full novacon:p-1 novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
+          'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1 novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
           className,
         )}
         {...props}

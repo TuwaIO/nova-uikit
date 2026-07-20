@@ -9,7 +9,7 @@
 }
 
 @layer base {
-  [class*="font-mono"] {
+  [class*='font-mono'] {
     letter-spacing: -0.025em !important;
     line-height: 1 !important;
   }

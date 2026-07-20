@@ -381,7 +381,7 @@ export function TransactionDetails<T extends Transaction>({
             type="button"
             onClick={onBack}
             className={cn(
-              'novatx:cursor-pointer novatx:rounded-full novatx:p-2 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
+              'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:p-2 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
               classNames?.backButton,
             )}
             title={actions.close}
