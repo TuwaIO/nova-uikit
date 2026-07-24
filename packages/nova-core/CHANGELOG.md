@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.5...nova-core-v0.4.6) (2026-07-24)
+
+
+### Bug Fixes
+
+* updated packages and added socket.json ([d9cfeab](https://github.com/TuwaIO/nova-uikit/commit/d9cfeab59ecaaf4201b6408ed18031e655ef4b17))
+
 ## [0.4.5](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.4...nova-core-v0.4.5) (2026-07-20)
 
 
