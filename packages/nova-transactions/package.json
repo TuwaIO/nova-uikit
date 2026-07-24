@@ -26,7 +26,8 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "socket.json"
   ],
   "scripts": {
     "build": "tsup && pnpm exec postcss ./src/styles/app.css -o ./dist/index.css"
@@ -78,23 +79,23 @@
     "dayjs": "1.x.x"
   },
   "devDependencies": {
-    "@tuwaio/orbit-core": "^0.2.13",
-    "@tuwaio/pulsar-core": "^0.6.7",
+    "@tuwaio/orbit-core": "^0.2.15",
+    "@tuwaio/pulsar-core": "^0.6.8",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.21",
     "@web3icons/react": "^4.1.19",
     "@web3icons/common": "^0.11.48",
     "@heroicons/react": "^2.2.0",
-    "@radix-ui/react-dialog": "^1.1.20",
+    "@radix-ui/react-dialog": "^1.1.22",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "^19.2.17",
     "autoprefixer": "^10.5.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "immer": "^11.1.15",
-    "postcss": "^8.5.20",
+    "postcss": "^8.5.23",
     "postcss-cli": "^11.0.1",
-    "react": "^19.2.7",
+    "react": "^19.2.8",
     "react-toastify": "^11.1.0",
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
