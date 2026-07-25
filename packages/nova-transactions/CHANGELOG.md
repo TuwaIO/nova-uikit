@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.9](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.8...nova-transactions-v0.4.9) (2026-07-25)
+
+
+### Bug Fixes
+
+* styles ([e88ffb9](https://github.com/TuwaIO/nova-uikit/commit/e88ffb9e85dfad576f8036a117769097e081f26c))
+
 ## [0.4.8](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.7...nova-transactions-v0.4.8) (2026-07-25)
 
 
