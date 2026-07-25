@@ -118,12 +118,12 @@ const DialogContent = React.forwardRef<
               animate="animate"
               initial="initial"
               exit="exit"
-              className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
+              className="NovaNoScrolling novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
             >
               <div
                 className={cn(
-                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]',
-                  'novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)] novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
+                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
+                  'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
                 )}
               >
                 {children}
