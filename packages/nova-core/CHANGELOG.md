@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.7](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.6...nova-core-v0.4.7) (2026-07-25)
+
+
+### Bug Fixes
+
+* styles ([5f2ce9f](https://github.com/TuwaIO/nova-uikit/commit/5f2ce9fb8b13ddbf22060c1e684a1226de59f5e3))
+
 ## [0.4.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.5...nova-core-v0.4.6) (2026-07-24)
 
 
