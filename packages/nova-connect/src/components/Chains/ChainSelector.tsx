@@ -324,22 +324,18 @@ const DefaultTriggerIcon = ({ chainId, className, ...props }: CustomTriggerIconP
  */
 const DefaultTriggerContent = ({ icon, chainName, isMobile }: CustomTriggerContentProps) => {
   return (
-    <>
-      <div className="novacon:flex novacon:items-center novacon:sm:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
-        <div aria-hidden="true">{icon}</div>
-        {isMobile ? (
-          <span className="novacon:hidden novacon:sm:inline-block novacon:sr-only novacon:sm:not-sr-only">
-            {chainName}
-          </span>
-        ) : (
-          <Select.Value asChild>
-            <span className="novacon:hidden novacon:sm:inline-block novacon:sr-only novacon:sm:not-sr-only">
-              {chainName}
-            </span>
-          </Select.Value>
-        )}
-      </div>
-    </>
+    <div className="novacon:flex novacon:items-center novacon:sm:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
+      <div aria-hidden="true">{icon}</div>
+      {isMobile ? (
+        <span className="novacon:hidden novacon:sm:inline-block novacon:sr-only novacon:sm:not-sr-only">
+          {chainName}
+        </span>
+      ) : (
+        <Select.Value className="novacon:hidden novacon:sm:inline-block novacon:sr-only novacon:sm:not-sr-only">
+          {chainName}
+        </Select.Value>
+      )}
+    </div>
   );
 };
 

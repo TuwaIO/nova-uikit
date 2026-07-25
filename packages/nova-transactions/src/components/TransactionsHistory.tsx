@@ -389,7 +389,13 @@ export function TransactionsHistory<T extends Transaction>({
   }
 
   return (
-    <div className={cn('novatx:flex novatx:flex-col novatx:gap-y-3', customization?.classNames?.container, className)}>
+    <div
+      className={cn(
+        'novatx:flex novatx:flex-col novatx:gap-y-3 novatx:p-4',
+        customization?.classNames?.container,
+        className,
+      )}
+    >
       {customization?.title && (
         <h3
           className={cn(

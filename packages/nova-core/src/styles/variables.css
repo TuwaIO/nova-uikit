@@ -143,6 +143,7 @@
     }
   }
 
+
   .NovaCustomScrollNoPadding::-webkit-scrollbar {
     width: 4px;
     border-radius: 4px;
@@ -159,6 +160,11 @@
   }
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 .NovaModalOpen {
   overflow: hidden;
+  scrollbar-gutter: stable;
 }
