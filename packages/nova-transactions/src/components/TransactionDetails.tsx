@@ -484,7 +484,9 @@ export function TransactionDetails<T extends Transaction>({
                   classNames?.networkBadge,
                 )}
               >
-                <NetworkIcon chainId={setChainId(tx.chainId)} className="novatx:h-5 novatx:w-5 novatx:shrink-0" />
+                <div className="novatx:h-5 novatx:w-5">
+                  <NetworkIcon chainId={setChainId(tx.chainId)} />
+                </div>
                 <span className="novatx:truncate novatx:text-sm novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
                   {getChainName(setChainId(tx.chainId)).name}
                 </span>

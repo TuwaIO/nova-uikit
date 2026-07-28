@@ -86,7 +86,7 @@
     "@web3icons/react": "^4.1.19",
     "@web3icons/common": "^0.11.48",
     "@heroicons/react": "^2.2.0",
-    "@radix-ui/react-dialog": "^1.1.22",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "^19.2.17",
     "autoprefixer": "^10.5.4",
