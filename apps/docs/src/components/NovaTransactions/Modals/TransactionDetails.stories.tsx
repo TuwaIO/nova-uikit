@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionDetails } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { EvmTransaction, SolanaTransaction, StarknetTransaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import {
+  EvmTransaction,
+  SolanaTransaction,
+  StarknetTransaction,
+  TransactionStatus,
+  TransactionTracker,
+} from '@tuwaio/pulsar-core';
 import { action } from 'storybook/actions';
 import { polygon } from 'viem/chains';
 
@@ -67,7 +73,7 @@ const mockEvmPendingTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   maxPriorityFeePerGas: '1500000000',
   nonce: 42,
   input: '0x5f5755290000000000000000000000000000000000000000000000000000000000000020',
-}) as EvmTransaction;
+} as any) as EvmTransaction;
 
 const mockEvmSuccessTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   title: 'Stake 1000 MATIC',
@@ -85,23 +91,25 @@ const mockEvmSuccessTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   gasUsed: '142850',
   effectiveGasPrice: '32000000000',
   cumulativeGasUsed: '8401920',
-}) as EvmTransaction;
+} as any) as EvmTransaction;
 
 const mockEvmFailedTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   title: 'Approve DAI Spend',
   description: 'Approve ERC20 token allowance for Vault contract',
   pending: false,
-  status: TransactionStatus.Fail,
+  status: TransactionStatus.Failed,
   type: 'ERC20 Approval',
   from: '0x8b99f36611f7c8b07043818e69248496bc120935',
   to: '0x6b175474e89094c44da98b954eedeac495271d0f',
   error: {
     message: 'execution reverted: ERC20: transfer amount exceeds balance',
-    code: 'CALL_EXCEPTION',
-    stack:
-      'Error: execution reverted: ERC20: transfer amount exceeds balance\n    at Contract.approve (ethers.js:104)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)',
+    raw: {
+      code: 'CALL_EXCEPTION',
+      stack:
+        'Error: execution reverted: ERC20: transfer amount exceeds balance\n    at Contract.approve (ethers.js:104)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)',
+    },
   },
-}) as EvmTransaction;
+} as any) as EvmTransaction;
 
 const mockSolanaPendingTx: SolanaTransaction = {
   ...createMockTx(OrbitAdapter.SOLANA, {
@@ -111,11 +119,11 @@ const mockSolanaPendingTx: SolanaTransaction = {
     status: undefined,
     type: 'SOL Transfer',
     chainId: 'solana:mainnet',
-  }),
-  fee: '0.000005 SOL',
+  } as any),
+  fee: 5000,
   slot: 284910294,
   recentBlockhash: '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN',
-} as SolanaTransaction;
+} as unknown as SolanaTransaction;
 
 const mockSolanaSuccessTx: SolanaTransaction = {
   ...createMockTx(OrbitAdapter.SOLANA, {
@@ -125,15 +133,16 @@ const mockSolanaSuccessTx: SolanaTransaction = {
     status: TransactionStatus.Success,
     type: 'DEX Swap',
     chainId: 'solana:mainnet',
-  }),
-  fee: '0.000012 SOL',
+  } as any),
+  fee: 12000,
   slot: 284915830,
   recentBlockhash: '9Px7mR2vK4nL8wQ0sB3vC1dE5fG9hJ2kL6mN4pQ8rT0v',
   confirmations: 32,
-} as SolanaTransaction;
+} as unknown as SolanaTransaction;
 
 const mockStarknetSuccessTx: StarknetTransaction = {
-  adapter: OrbitAdapter.STARKNET,
+  adapter: OrbitAdapter.Starknet,
+  tracker: TransactionTracker.Ethereum,
   txKey: '0x04a912840a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d',
   hash: '0x04a912840a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d',
   title: 'Starknet Account Deployment',
@@ -149,7 +158,7 @@ const mockStarknetSuccessTx: StarknetTransaction = {
     amount: '0.00042',
     unit: 'ETH',
   },
-} as StarknetTransaction;
+} as unknown as StarknetTransaction;
 
 // --- Stories ---
 
@@ -222,8 +231,7 @@ export const WithCustomization: Story = {
     adapter: [mockEvmAdapter],
     customization: {
       classNames: {
-        headerContainer:
-          'novatx:bg-gradient-to-r novatx:from-indigo-500/10 novatx:to-purple-500/10 novatx:border-purple-500/30',
+        header: 'novatx:bg-gradient-to-r novatx:from-indigo-500/10 novatx:to-purple-500/10 novatx:border-purple-500/30',
         title: 'novatx:text-purple-400',
         networkBadge: 'novatx:border-purple-500/40 novatx:bg-purple-500/10',
       },

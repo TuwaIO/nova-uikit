@@ -94,7 +94,7 @@ export const Failed: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Failed,
-      errorMessage: 'Transaction failed due to an unexpected error. Please try again.',
+      error: { message: 'Transaction failed due to an unexpected error. Please try again.', raw: {} },
     }),
   },
 };

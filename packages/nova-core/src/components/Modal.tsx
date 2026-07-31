@@ -122,7 +122,7 @@ const DialogContent = React.forwardRef<
             >
               <div
                 className={cn(
-                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[98dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
+                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
                   'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
                 )}
               >

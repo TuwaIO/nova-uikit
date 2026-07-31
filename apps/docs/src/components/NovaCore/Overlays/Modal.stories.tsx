@@ -50,7 +50,7 @@ export const Default: Story = {
       <DialogTrigger asChild>
         <button className={primaryButtonStyles}>Open Modal</button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-md">
+      <DialogContent className="w-full sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
@@ -97,7 +97,7 @@ export const Controlled: Story = {
           Open Controlled Modal
         </button>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="w-full max-w-md">
+          <DialogContent className="w-full sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Controlled State</DialogTitle>
             </DialogHeader>
@@ -141,7 +141,7 @@ export const ConfirmationDialog: Story = {
         <DialogTrigger asChild>
           <button className={dangerButtonStyles}>Delete Account</button>
         </DialogTrigger>
-        <DialogContent className="w-full max-w-sm">
+        <DialogContent className="w-full sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Are you sure?</DialogTitle>
           </DialogHeader>
@@ -174,7 +174,7 @@ export const ScrollableContent: Story = {
       <DialogTrigger asChild>
         <button className={primaryButtonStyles}>Open Scrollable Modal</button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-lg">
+      <DialogContent className="w-full sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Terms of Service</DialogTitle>
         </DialogHeader>
@@ -219,7 +219,7 @@ export const InfoDialog: Story = {
         <DialogTrigger asChild>
           <button className={infoButtonStyles}>Show Info</button>
         </DialogTrigger>
-        <DialogContent className="w-full max-w-sm">
+        <DialogContent className="w-full sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Information</DialogTitle>
           </DialogHeader>

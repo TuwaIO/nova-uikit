@@ -105,7 +105,7 @@ export function TransactionsInfoModal<T extends Transaction>({
       >
         <div
           className={cn(
-            'novatx:relative novatx:max-h-[95dvh] novatx:w-full novatx:flex novatx:flex-col',
+            'novatx:relative novatx:max-h-[100dvh] novatx:w-full novatx:flex novatx:flex-col',
             customization?.classNames?.contentWrapper,
           )}
         >

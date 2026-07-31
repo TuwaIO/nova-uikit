@@ -97,8 +97,6 @@ export const FullLifecycle: Story = {
 export const Idle: Story = {
   args: {
     transactionsPool: {},
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     action: action('action-triggered'),
   },
 };
@@ -125,8 +123,6 @@ export const Success: Story = {
         status: TransactionStatus.Success,
       }),
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     action: action('action-triggered'),
   },
 };
@@ -141,8 +137,6 @@ export const Failed: Story = {
         status: TransactionStatus.Failed,
       }),
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     action: action('action-triggered'),
   },
 };

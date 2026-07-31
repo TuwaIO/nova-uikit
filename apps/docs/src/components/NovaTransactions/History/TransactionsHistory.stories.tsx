@@ -66,11 +66,14 @@ export const Default: Story = {
     transactionsPool: {
       ...[
         createMockTx(OrbitAdapter.EVM, {
+          txKey: '0x_tx_success_1',
+          hash: '0x_tx_success_1',
           status: TransactionStatus.Success,
           localTimestamp: dayjs().subtract(2, 'minutes').unix(),
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
         }),
         createMockTx(OrbitAdapter.EVM, {
+          txKey: '0x_tx_pending_2',
           pending: true,
           status: undefined,
           hash: undefined,
@@ -78,7 +81,10 @@ export const Default: Story = {
           localTimestamp: dayjs().subtract(30, 'seconds').unix(),
         }),
         createMockTx(OrbitAdapter.EVM, {
+          txKey: '0x_tx_failed_3',
+          hash: '0x_tx_failed_3',
           status: TransactionStatus.Failed,
+          error: { message: 'Transaction failed due to an unexpected error.', raw: {} },
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(1, 'hour').unix(),
         }),
@@ -89,6 +95,8 @@ export const Default: Story = {
           localTimestamp: dayjs().subtract(15, 'minutes').unix(),
         }),
         createMockTx(OrbitAdapter.SOLANA, {
+          txKey: '0x_solana_tx_5',
+          hash: '0x_solana_tx_5',
           from: 'mockedSolanaWalletAddress',
           localTimestamp: dayjs().subtract(5, 'minutes').unix(),
         }),
@@ -128,6 +136,8 @@ export const WithScrolling: Story = {
     connectedWalletAddress: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
     transactionsPool: Array.from({ length: 15 }, (_, i) =>
       createMockTx(OrbitAdapter.EVM, {
+        txKey: `0x_mock_tx_${i}_key`,
+        hash: `0x_mock_tx_${i}_hash`,
         from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
         localTimestamp: dayjs()
           .subtract(i * 10, 'minutes')

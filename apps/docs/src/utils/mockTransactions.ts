@@ -2,27 +2,25 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { EvmTransaction, InitialTransaction, SolanaTransaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { action } from 'storybook/actions';
-import { zeroAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 
 /**
  * Creates a mock EVM or Solana transaction object for stories.
  * Dynamically adjusts fields based on the adapter.
  */
-export const createMockTx = (
-  adapterKey: OrbitAdapter,
-  overrides: Partial<EvmTransaction | SolanaTransaction>,
-): EvmTransaction | SolanaTransaction => {
+export function createMockTx(adapterKey: OrbitAdapter, overrides: Record<string, any> = {}): any {
+  const isSolana = adapterKey === OrbitAdapter.SOLANA;
   const baseTx = {
     adapter: adapterKey,
-    tracker: adapterKey === OrbitAdapter.SOLANA ? TransactionTracker.Solana : TransactionTracker.Ethereum,
+    tracker: isSolana ? TransactionTracker.Solana : TransactionTracker.Ethereum,
     txKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
     type: 'storybook-action',
-    chainId: mainnet.id,
-    from: zeroAddress,
+    chainId: isSolana ? 'solana:mainnet' : mainnet.id,
+    from: isSolana ? '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN' : '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     pending: true,
     localTimestamp: dayjs().subtract(5, 'minutes').unix(),
-    walletType: 'injected',
+    connectorType: isSolana ? 'phantom' : 'injected',
+    walletType: isSolana ? 'phantom' : 'injected',
     status: undefined,
     hash: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
     title: ['Swapping tokens...', 'Swap successful!', 'Swap failed', 'Swap replaced'],
@@ -34,15 +32,15 @@ export const createMockTx = (
     ],
     ...overrides,
   };
-  return adapterKey === OrbitAdapter.EVM
-    ? (baseTx as EvmTransaction)
-    : ({
+  return isSolana
+    ? ({
         ...baseTx,
         slot: 12345,
         recentBlockhash: 'mocked-recent-blockhash',
         confirmations: 3,
-      } as SolanaTransaction);
-};
+      } as unknown as SolanaTransaction)
+    : (baseTx as unknown as EvmTransaction);
+}
 
 /**
  * Creates a mock InitialTransaction object for stories.

@@ -1,5 +1,6 @@
 // Customization CSS - only loaded for this story file
-import './../utils/customization/style.css';
+// @ts-expect-error Side-effect CSS import for Storybook story
+import '../utils/customization/style.css';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ConnectButton } from '@tuwaio/nova-connect/components';

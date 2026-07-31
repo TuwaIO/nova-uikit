@@ -698,7 +698,9 @@ export const ConnectorsSelections = memo(
 
         impersonateTitle:
           (impersonateData && customization?.classNames?.impersonateTitle?.({ impersonateData, selectionsData })) ??
-          cn('novacon:text-sm novacon:hidden', { 'novacon:block novacon:opacity-0': isTouch }),
+          cn('novacon:text-sm novacon:font-mono novacon:hidden', {
+            'novacon:block novacon:opacity-0': isTouch,
+          }),
 
         emptyState:
           customization?.classNames?.emptyState?.({ selectionsData }) ??

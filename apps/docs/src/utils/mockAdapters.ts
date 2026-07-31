@@ -37,7 +37,7 @@ export const mockEvmAdapter = {
    * Mock method to check transaction tracker data.
    */
   checkTransactionsTracker: () => ({
-    txKey: 'mock',
+    txKey: '0x_mock_tx_key',
     tracker: TransactionTracker.Ethereum,
   }),
 
@@ -118,7 +118,7 @@ export const mockSolanaAdapter = {
    * Mock method to check if a transaction tracker is available on Solana.
    */
   checkTransactionsTracker: () => ({
-    txKey: 'mock_solana_tx_key',
+    txKey: '0x_mock_solana_tx_key',
     tracker: TransactionTracker.Solana,
   }),
 
