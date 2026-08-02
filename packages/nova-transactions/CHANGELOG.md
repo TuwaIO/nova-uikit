@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.13](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.12...nova-transactions-v0.4.13) (2026-08-02)
+
+
+### Bug Fixes
+
+* updated packages and connected button tx status ([d9b4f22](https://github.com/TuwaIO/nova-uikit/commit/d9b4f22ad661b41b65f431c746118eabd8162343))
+
 ## [0.4.12](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.11...nova-transactions-v0.4.12) (2026-08-02)
 
 
