@@ -213,7 +213,7 @@
     "@tuwaio/satellite-core": "^0.3.8",
     "@tuwaio/satellite-evm": "^0.3.10",
     "@tuwaio/satellite-solana": "^0.3.12",
-    "@tuwaio/pulsar-core": "^0.6.9",
+    "@tuwaio/pulsar-core": "^0.6.10",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "@wallet-standard/react": "^1.0.3",

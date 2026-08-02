@@ -339,7 +339,10 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
         for (const currentTx of currentPool) {
           const prevTx = prevPool.find((tx) => tx.txKey === currentTx.txKey);
 
-          if (currentTx.status && currentTx.status !== prevTx?.status) {
+          // Only trigger status change if the transaction was previously pending
+          const wasPending = prevTx?.pending;
+
+          if (wasPending && currentTx.status && currentTx.status !== prevTx?.status) {
             switch (currentTx.status) {
               case TransactionStatus.Success:
                 newStatus = 'succeed';
