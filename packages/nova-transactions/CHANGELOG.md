@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.12](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.11...nova-transactions-v0.4.12) (2026-08-02)
+
+
+### Bug Fixes
+
+* updated packages and added cloud sync badge to tx details ([f4f9016](https://github.com/TuwaIO/nova-uikit/commit/f4f9016c04a1e77e831856599fdaf2799069d161))
+
 ## [0.4.11](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.10...nova-transactions-v0.4.11) (2026-07-31)
 
 
