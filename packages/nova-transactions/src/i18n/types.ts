@@ -215,5 +215,12 @@ export type NovaTransactionsLabels = {
     rpcUrl: string;
     /** Label for the Replaced Hash. */
     replacedHash: string;
+    /** Labels for the sync status indicator. */
+    syncStatus: {
+      pending: string;
+      pendingTooltip: string;
+      synced: string;
+      syncedTooltip: string;
+    };
   };
 };

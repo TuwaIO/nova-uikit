@@ -29,8 +29,8 @@ minimumReleaseAgeExclude:
   - '@typescript-eslint/typescript-estree@8.64.0'
   - '@typescript-eslint/utils@8.64.0'
   - '@typescript-eslint/visitor-keys@8.64.0'
-  - '@web3icons/common@0.11.48'
-  - '@web3icons/react@4.1.19'
+  - '@web3icons/common@0.11.48 || 0.11.49'
+  - '@web3icons/react@4.1.19 || 4.1.20'
   - postcss@8.5.19 || 8.5.20 || 8.5.23
   - typescript-eslint@8.64.0
   - '@radix-ui/primitive@1.1.6'

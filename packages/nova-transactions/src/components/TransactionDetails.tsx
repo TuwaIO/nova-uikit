@@ -8,6 +8,8 @@ import {
   CheckBadgeIcon,
   CheckCircleIcon,
   ClockIcon,
+  CloudArrowUpIcon,
+  CloudIcon,
   CpuChipIcon,
   DocumentDuplicateIcon,
   ExclamationTriangleIcon,
@@ -412,7 +414,7 @@ export function TransactionDetails<T extends Transaction>({
       {/* ── Core Transaction Card ── */}
       <CSectionCard className={classNames?.coreInfoCard}>
         {/* Status Header */}
-        <div className="novatx:flex novatx:items-center novatx:justify-between novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-4">
+        <div className="novatx:flex novatx:gap-2 novatx:flex-wrap novatx:items-center novatx:justify-between novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-4">
           <div className="novatx:flex novatx:items-center novatx:gap-3">
             <div
               className={cn(
@@ -451,6 +453,29 @@ export function TransactionDetails<T extends Transaction>({
               </p>
             </div>
           </div>
+          {/* Sync Status Badge */}
+          {tx.syncStatus === 'pending-sync' && (
+            <div
+              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-amber-500/10 novatx:px-2.5 novatx:py-1.5 novatx:text-amber-500"
+              title={transactionDetails.syncStatus.pendingTooltip}
+            >
+              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse" />
+              <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
+                {transactionDetails.syncStatus.pending}
+              </span>
+            </div>
+          )}
+          {tx.syncStatus === 'synced' && (
+            <div
+              className="novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-2.5 novatx:py-1.5 novatx:text-[var(--tuwa-text-tertiary)]"
+              title={transactionDetails.syncStatus.syncedTooltip}
+            >
+              <CloudIcon className="novatx:h-4 novatx:w-4" />
+              <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
+                {transactionDetails.syncStatus.synced}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Body */}

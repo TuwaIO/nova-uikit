@@ -119,5 +119,11 @@ export const defaultLabels: NovaTransactionsLabels = {
     fullPayload: 'Full Payload',
     rpcUrl: 'RPC URL',
     replacedHash: 'Replaced Hash',
+    syncStatus: {
+      pending: 'Pending Sync',
+      pendingTooltip: 'Queued for Cloud Sync',
+      synced: 'Synced',
+      syncedTooltip: 'Synced to Quasar Cloud',
+    },
   },
 };
