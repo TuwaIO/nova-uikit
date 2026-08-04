@@ -26,7 +26,7 @@
     "@tuwaio/orbit-evm": "^0.2.21",
     "@tuwaio/orbit-solana": "^0.2.13",
     "@tuwaio/pulsar-core": "^0.6.10",
-    "@tuwaio/pulsar-evm": "^0.5.8",
+    "@tuwaio/pulsar-evm": "^0.5.9",
     "@tuwaio/pulsar-react": "^0.4.8",
     "@tuwaio/pulsar-solana": "^0.6.9",
     "@tuwaio/satellite-core": "^0.3.8",
