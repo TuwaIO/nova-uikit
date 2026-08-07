@@ -69,9 +69,9 @@ export function Web3Providers({ children }: { children: ReactNode }) {
           adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
           autoConnect={true}
         >
-          {/* Watchers sync native connector states to the store */}
-          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
-          <SolanaConnectorsWatcher />
+          {/* Watchers sync native connector states to the store (pass optional siwx for session state monitoring) */}
+          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} siwx={siwxSession} />
+          <SolanaConnectorsWatcher siwx={siwxSession} />
 
           {/* Layer 2: Visual Connection component provider */}
           <NovaConnectProvider

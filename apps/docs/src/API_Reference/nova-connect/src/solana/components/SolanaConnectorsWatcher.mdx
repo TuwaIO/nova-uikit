@@ -4,15 +4,40 @@
 
 # SolanaConnectorsWatcher()
 
-> **SolanaConnectorsWatcher**(): `Element` \| `null`
+> **SolanaConnectorsWatcher**(`props?`): `Element` \| `null`
 
-Defined in: node\_modules/.pnpm/@tuwaio+satellite-react@0.3.11\_23525b2c78eb47a58663c252b17c3ac8/node\_modules/@tuwaio/satellite-react/dist/solana/index.d.ts:11
+Defined in: node\_modules/.pnpm/@tuwaio+satellite-react@1.0.0-fix-siwe-deprec-alpha.2.ffb5e95\_9d2d49b9231a9531cf9fe65dabf37eaa/node\_modules/@tuwaio/satellite-react/dist/solana/index.d.ts:39
 
 A dynamic version of the SolanaConnectorsWatcher component that avoids static imports.
 This component dynamically imports the dependencies only when they are available.
+
+## Parameters
+
+### props?
+
+`SolanaConnectorsWatcherProps`
+
+Component props containing optional SIWX session state.
 
 ## Returns
 
 `Element` \| `null`
 
 null - This is a headless component
+
+## Example
+
+```tsx
+import { useSiwxSession } from '@tuwaio/siwx-react';
+import { SolanaConnectorsWatcher } from '@tuwaio/satellite-react/solana';
+
+function WatcherContainer() {
+  const siwxSession = useSiwxSession();
+  return <SolanaConnectorsWatcher siwx={siwxSession} />;
+}
+```
+
+## Remarks
+
+Monitors Wallet Standard account changes. Automatically disconnects wallet state if SIWX
+session validation fails or is rejected.

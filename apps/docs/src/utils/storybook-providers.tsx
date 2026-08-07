@@ -11,8 +11,8 @@ import { pulsarEvmAdapter } from '@tuwaio/pulsar-evm';
 import { pulsarSolanaAdapter } from '@tuwaio/pulsar-solana';
 import { createDefaultTransports, impersonated, safeSdkOptions } from '@tuwaio/satellite-evm';
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { SiweNextAuthProvider } from '@tuwaio/satellite-siwe-next-auth';
 import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
+import { useSiwxSession } from '@tuwaio/siwx-react';
 import { baseAccount, safe, walletConnect } from '@wagmi/connectors';
 import { createConfig, injected } from '@wagmi/core';
 import {
@@ -165,11 +165,12 @@ function SatelliteConnectProvidersInner({
 }: SatelliteConnectProvidersProps) {
   const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
   const getAdapter = usePulsarStore((state) => state.getAdapter);
+  const siwxSession = useSiwxSession();
 
   return (
     <>
-      <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
-      <SolanaConnectorsWatcher />
+      <EVMConnectorsWatcher wagmiConfig={wagmiConfig} siwx={siwxSession} />
+      <SolanaConnectorsWatcher siwx={siwxSession} />
 
       <NovaConnectProvider
         appChains={appEVMChains}
@@ -206,33 +207,23 @@ export function StorybookProviders({
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <SiweNextAuthProvider
-          wagmiConfig={wagmiConfig}
-          enabled={false}
-          onSignOut={() => console.log('sign out')}
-          onSignIn={(session) => console.log('sign in', session)}
+        <SatelliteConnectProvider
+          adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
+          autoConnect={false}
         >
-          <SatelliteConnectProvider
-            adapter={[
-              satelliteEVMAdapter(wagmiConfig, appEVMChains),
-              satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls }),
-            ]}
-            autoConnect={false}
+          {customization && <div className="custom-theme" style={{ display: 'none' }} />}
+          <SatelliteConnectProvidersInner
+            withBalance={withBalance}
+            withChain={withChain}
+            withImpersonated={withImpersonated}
+            customization={customization}
+            customConnectorGroups={customConnectorGroups}
+            popularConnectors={popularConnectors}
+            legal={legal}
           >
-            {customization && <div className="custom-theme" style={{ display: 'none' }} />}
-            <SatelliteConnectProvidersInner
-              withBalance={withBalance}
-              withChain={withChain}
-              withImpersonated={withImpersonated}
-              customization={customization}
-              customConnectorGroups={customConnectorGroups}
-              popularConnectors={popularConnectors}
-              legal={legal}
-            >
-              {children}
-            </SatelliteConnectProvidersInner>
-          </SatelliteConnectProvider>
-        </SiweNextAuthProvider>
+            {children}
+          </SatelliteConnectProvidersInner>
+        </SatelliteConnectProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
