@@ -101,6 +101,7 @@
     "@tuwaio/satellite-evm": ">=0.3.2",
     "@tuwaio/satellite-solana": ">=0.3.2",
     "@tuwaio/satellite-react": ">=0.3.2",
+    "@tuwaio/siwx-react": ">=1.0.0-fix-initialize-alpha.7",
     "@tuwaio/pulsar-core": ">=0.6",
     "@tuwaio/nova-core": ">=0.3",
     "@tuwaio/nova-transactions": ">=0.3",
@@ -171,6 +172,9 @@
     "@tuwaio/satellite-react": {
       "optional": false
     },
+    "@tuwaio/siwx-react": {
+      "optional": true
+    },
     "dayjs": {
       "optional": true
     },
@@ -209,10 +213,11 @@
     "@tuwaio/orbit-core": "^0.2.15",
     "@tuwaio/orbit-evm": "^0.2.21",
     "@tuwaio/orbit-solana": "^0.2.13",
-    "@tuwaio/satellite-react": "1.0.0-fix-siwe-deprec-alpha.3.722e74d",
-    "@tuwaio/satellite-core": "1.0.0-fix-siwe-deprec-alpha.3.722e74d",
-    "@tuwaio/satellite-evm": "1.0.0-fix-siwe-deprec-alpha.3.722e74d",
-    "@tuwaio/satellite-solana": "1.0.0-fix-siwe-deprec-alpha.3.722e74d",
+    "@tuwaio/satellite-react": "1.0.0-fix-siwe-deprec-alpha.4.83f5397",
+    "@tuwaio/satellite-core": "1.0.0-fix-siwe-deprec-alpha.4.83f5397",
+    "@tuwaio/satellite-evm": "1.0.0-fix-siwe-deprec-alpha.4.83f5397",
+    "@tuwaio/satellite-solana": "1.0.0-fix-siwe-deprec-alpha.4.83f5397",
+    "@tuwaio/siwx-react": "1.0.0-fix-initialize-alpha.7.25e4a00",
     "@tuwaio/pulsar-core": "1.0.0-fix-docs-alpha.2.819c1d9",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",

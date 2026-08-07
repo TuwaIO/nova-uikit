@@ -1,0 +1,58 @@
+[**@tuwaio/nova-uikit**](?path=/docs/api-reference-readme--docs)
+
+***
+
+# useNovaSiwx()
+
+> **useNovaSiwx**(`options?`): `object`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:31](https://github.com/TuwaIO/nova-uikit/blob/9f77db498ef8e33dee9b1f11d3ee15de6fa8bb48/packages/nova-connect/src/hooks/useNovaSiwx.ts#L31)
+
+React hook that exposes SIWX authentication controls within NovaConnect applications.
+
+## Parameters
+
+### options?
+
+[`UseNovaSiwxOptions`](?path=/docs/api-reference-nova-connect-src-hooks-interfaces-usenovasiwxoptions--docs)
+
+Default SIWX field options and verifier callback.
+
+## Returns
+
+`object`
+
+Object containing `signIn` and `signOut` handlers.
+
+### signIn
+
+> **signIn**: (`overrideConnection?`, `customVerifier?`) => `Promise`\<`void`\> = `handleSignIn`
+
+#### Parameters
+
+##### overrideConnection?
+
+`Connector`\<`Connection`\>
+
+##### customVerifier?
+
+(`payload`) => `Promise`\<`SiwxClientSession` \| `null`\>
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### signOut
+
+> **signOut**: () => `void`
+
+#### Returns
+
+`void`
+
+## Example
+
+```tsx
+const { signIn, signOut } = useNovaSiwx({ verifier: myVerifier });
+await signIn();
+```
