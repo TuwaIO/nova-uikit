@@ -40,6 +40,12 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const lastPromptedAddress = useRef<string | null>(null);
 
   useEffect(() => {
+    if (!activeConnection?.isConnected || !activeConnection?.address) {
+      lastPromptedAddress.current = null;
+    }
+  }, [activeConnection?.isConnected, activeConnection?.address]);
+
+  useEffect(() => {
     if (!enabled || !activeConnection?.isConnected || !activeConnection?.address || !activeConnection?.chainId) {
       return;
     }
@@ -83,7 +89,6 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       const handleFailure = (err: unknown) => {
         const errMessage = err instanceof Error ? err.message : String(err);
         console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
-        lastPromptedAddress.current = null;
         if (activeConnection.connectorType) {
           disconnect(activeConnection.connectorType);
         }
