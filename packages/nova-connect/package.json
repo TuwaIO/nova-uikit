@@ -57,7 +57,7 @@
   "scripts": {
     "start": "tsup src/index.ts --watch",
     "build": "tsup && pnpm exec postcss ./src/styles/app.css -o ./dist/index.css",
-    "test": "vitest"
+    "test": "vitest run --passWithNoTests"
   },
   "keywords": [
     "web3",
@@ -213,12 +213,12 @@
     "@tuwaio/orbit-core": "^0.2.15",
     "@tuwaio/orbit-evm": "^0.2.21",
     "@tuwaio/orbit-solana": "^0.2.13",
-    "@tuwaio/satellite-react": "1.0.0-fix-siwe-deprec-alpha.8.14fc0ca",
-    "@tuwaio/satellite-core": "1.0.0-fix-siwe-deprec-alpha.8.14fc0ca",
-    "@tuwaio/satellite-evm": "1.0.0-fix-siwe-deprec-alpha.8.14fc0ca",
-    "@tuwaio/satellite-solana": "1.0.0-fix-siwe-deprec-alpha.8.14fc0ca",
-    "@tuwaio/siwx-react": "1.0.0-fix-initialize-alpha.10.167aa43",
-    "@tuwaio/pulsar-core": "1.0.0-fix-docs-alpha.2.819c1d9",
+    "@tuwaio/satellite-react": "1.0.0-fix-siwe-deprec-alpha.9.6efff89",
+    "@tuwaio/satellite-core": "1.0.0-fix-siwe-deprec-alpha.9.6efff89",
+    "@tuwaio/satellite-evm": "1.0.0-fix-siwe-deprec-alpha.9.6efff89",
+    "@tuwaio/satellite-solana": "1.0.0-fix-siwe-deprec-alpha.9.6efff89",
+    "@tuwaio/siwx-react": "1.0.0-fix-initialize-alpha.12.626c94c",
+    "@tuwaio/pulsar-core": "1.0.0-fix-docs-alpha.3.3dc4a6c",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "@wallet-standard/react": "^1.0.3",

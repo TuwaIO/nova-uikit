@@ -31,9 +31,11 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const { enabled = true, verifier, domain, uri, statement, onSuccess, onError } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
+  const disconnect = useSatelliteConnectStore((s) => s.disconnect);
   const { signIn } = useSiwx();
   const session = useSiwxSessionStore((s) => s.session);
   const status = useSiwxSessionStore((s) => s.status);
+  const resetSession = useSiwxSessionStore((s) => s.reset);
 
   const lastPromptedAddress = useRef<string | null>(null);
 
@@ -78,15 +80,24 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         return;
       }
 
+      const handleFailure = (err: unknown) => {
+        const errMessage = err instanceof Error ? err.message : String(err);
+        console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
+        lastPromptedAddress.current = null;
+        if (activeConnection.connectorType) {
+          disconnect(activeConnection.connectorType);
+        }
+        resetSession();
+        onError?.(errMessage);
+      };
+
       signIn({
         signer: activeConnection.signMessage,
         verifier,
         fields,
         onSuccess,
-        onError,
-      }).catch((err) => {
-        console.warn('[NovaSiwxWatcher] SIWX authentication failed:', err);
-      });
+        onError: handleFailure,
+      }).catch(handleFailure);
     } catch (err) {
       console.warn('[NovaSiwxWatcher] Failed to build SIWX fields:', err);
     }
@@ -95,6 +106,8 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     activeConnection?.address,
     activeConnection?.chainId,
     activeConnection?.signMessage,
+    activeConnection?.connectorType,
+    disconnect,
     enabled,
     status,
     session?.address,
@@ -103,6 +116,8 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     uri,
     statement,
     signIn,
+    resetSession,
+    onError,
   ]);
 
   return null;
