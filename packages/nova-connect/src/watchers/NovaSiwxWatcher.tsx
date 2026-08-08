@@ -17,6 +17,10 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
   enabled?: boolean;
   /** Optional backend verification callback function */
   verifier?: UseSiwxSignInOptions['verifier'];
+  /** Optional callback triggered immediately after successful SIWX authentication */
+  onSuccess?: UseSiwxSignInOptions['onSuccess'];
+  /** Optional callback triggered if SIWX signing or verification fails */
+  onError?: UseSiwxSignInOptions['onError'];
 }
 
 /**
@@ -25,7 +29,7 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  * Uses a `lastPromptedAddress` ref lock to prevent infinite retry loops on prompt rejection.
  */
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
-  const { enabled = true, verifier, domain, uri, statement } = props;
+  const { enabled = true, verifier, domain, uri, statement, onSuccess, onError } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
   const { signIn } = useSiwx();
   const session = useSiwxSessionStore((s) => s.session);
@@ -78,6 +82,8 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         signer: activeConnection.signMessage,
         verifier,
         fields,
+        onSuccess,
+        onError,
       }).catch((err) => {
         console.warn('[NovaSiwxWatcher] SIWX authentication failed:', err);
       });
