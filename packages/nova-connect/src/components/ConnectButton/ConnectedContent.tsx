@@ -288,7 +288,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     const prevTxPoolRef = useRef<Transaction[]>(
       Object.values(transactionPool ?? {}).filter(
-        (tx) => tx.from.toLowerCase() === activeConnection?.address.toLowerCase(),
+        (tx) => tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
       ),
     );
 
@@ -325,7 +325,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
       const currentPool =
         Object.values(transactionPool ?? {}).filter(
-          (tx) => tx.from.toLowerCase() === activeConnection?.address.toLowerCase(),
+          (tx) => tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];

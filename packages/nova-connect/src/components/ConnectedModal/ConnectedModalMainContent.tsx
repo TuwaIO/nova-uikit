@@ -668,7 +668,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     const walletTransactions =
       activeConnection && transactionPool
         ? Object.values(transactionPool).filter(
-            (tx) => tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
+            (tx) => tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
           )
         : [];
 
