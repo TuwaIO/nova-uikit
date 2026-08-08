@@ -31,7 +31,7 @@
     "@tuwaio/pulsar-solana": "^0.6.10",
     "@tuwaio/satellite-core": "^0.4.1",
     "@tuwaio/satellite-evm": "^0.4.2",
-    "@tuwaio/satellite-react": "^0.4.2",
+    "@tuwaio/satellite-react": "^0.4.3",
     "@tuwaio/satellite-solana": "^0.4.2",
     "@tuwaio/siwx-core": "^0.1.0",
     "@tuwaio/siwx-evm": "^0.1.0",
