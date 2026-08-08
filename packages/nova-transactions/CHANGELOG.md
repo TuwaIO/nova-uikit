@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.13...nova-transactions-v0.5.0) (2026-08-08)
+
+
+### Features
+
+* SIWX integration | docs and packages update ([#93](https://github.com/TuwaIO/nova-uikit/issues/93)) ([e686ea6](https://github.com/TuwaIO/nova-uikit/commit/e686ea634c15c193037da49d80f53b046ab5819b))
+
 ## [0.4.13](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.4.12...nova-transactions-v0.4.13) (2026-08-02)
 
 
