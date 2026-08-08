@@ -20,6 +20,7 @@ import {
 } from '../hooks';
 import { defaultLabels, NovaConnectLabels } from '../i18n';
 import { useSatelliteConnectStore } from '../satellite';
+import { NovaSiwxWatcher } from '../watchers/NovaSiwxWatcher';
 import { ErrorsProvider, ErrorsProviderCustomization } from './ErrorsProvider';
 import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
 
@@ -256,6 +257,7 @@ export function NovaConnectProvider({
   popularConnectors,
   customConnectorGroups,
   legal,
+  siwx,
   customization,
   pagination,
 }: NovaConnectProviderPropsWithCustomization) {
@@ -395,6 +397,7 @@ export function NovaConnectProvider({
 
   const mainContentElement = (
     <NovaConnectProviderContext.Provider value={contextValue}>
+      <NovaSiwxWatcher {...siwx} />
       {errorsProviderElement}
       {labelsProviderElement}
       {connectModalElement}
@@ -405,6 +408,7 @@ export function NovaConnectProvider({
   // Create default provider tree with modals
   const defaultProviderTree = (
     <NovaConnectProviderContext.Provider value={contextValue}>
+      <NovaSiwxWatcher {...siwx} />
       {errorsProviderElement}
       {labelsProviderElement}
       {connectModalElement}

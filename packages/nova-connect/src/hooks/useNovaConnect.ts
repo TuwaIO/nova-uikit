@@ -5,6 +5,7 @@ import { createContext, useContext } from 'react';
 import { LocalTxPagination } from '../components';
 import { NovaConnectLabels } from '../i18n';
 import { InitialChains } from '../types';
+import { NovaSiwxWatcherProps } from '../watchers/NovaSiwxWatcher';
 
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 export type ConnectContentType = 'network' | 'connectors' | 'about' | 'getWallet' | 'connecting' | 'impersonate';
@@ -34,6 +35,8 @@ export interface NovaConnectProviderProps extends InitialChains {
   customConnectorGroups?: Record<string, string[]>;
   /** Legal configuration for Terms of Service and Privacy Policy links */
   legal?: LegalConfig;
+  /** SIWX auto-authentication watcher configuration */
+  siwx?: NovaSiwxWatcherProps;
   /**
    * Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
    * Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).

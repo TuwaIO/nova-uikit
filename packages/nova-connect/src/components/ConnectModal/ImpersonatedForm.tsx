@@ -260,7 +260,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
     const [hasInteracted, setHasInteracted] = useState(false);
 
     // Validation timeout ref
-    const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const validationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isInitializedRef = useRef(false);
 
     // Extract customization options

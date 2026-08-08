@@ -332,7 +332,7 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    let scrollTimeout: NodeJS.Timeout;
+    let scrollTimeout: ReturnType<typeof setTimeout>;
 
     const handleScroll = () => {
       setIsScrolling(true);

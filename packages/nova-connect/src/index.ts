@@ -4,6 +4,7 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 export * from './providers';
 export * from './types';
 export * from './utils';
+export * from './watchers';
 
 // ========================================
 // Modern Conditional Export System
