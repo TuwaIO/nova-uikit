@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.7](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.6...nova-connect-v0.5.7) (2026-08-09)
+
+
+### Bug Fixes
+
+* added destroyer to siwx watcher ([ce5f755](https://github.com/TuwaIO/nova-uikit/commit/ce5f755f00142129d38404e0d824adad024b378e))
+
 ## [0.5.6](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.5...nova-connect-v0.5.6) (2026-08-09)
 
 
