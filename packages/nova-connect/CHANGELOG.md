@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.5...nova-connect-v0.5.6) (2026-08-09)
+
+
+### Bug Fixes
+
+* updated packages ([ecffe28](https://github.com/TuwaIO/nova-uikit/commit/ecffe28e2139a007189c8750b648dec2be26575e))
+
 ## [0.5.5](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.4...nova-connect-v0.5.5) (2026-08-09)
 
 
