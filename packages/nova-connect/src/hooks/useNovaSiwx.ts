@@ -14,6 +14,11 @@ import { useSatelliteConnectStore } from '../satellite';
 export interface UseNovaSiwxOptions extends SatelliteSiwxFieldOptions {
   /** Optional backend verification callback */
   verifier?: UseSiwxSignInOptions['verifier'];
+  /**
+   * Optional callback triggered when `signOut` is called.
+   * Useful for hitting a `/logout` endpoint to clear the backend cookie.
+   */
+  destroyer?: () => Promise<void>;
 }
 
 /**
@@ -24,13 +29,13 @@ export interface UseNovaSiwxOptions extends SatelliteSiwxFieldOptions {
  *
  * @example
  * ```tsx
- * const { signIn, signOut } = useNovaSiwx({ verifier: myVerifier });
+ * const { signIn, signOut } = useNovaSiwx({ verifier: myVerifier, destroyer: myDestroyer });
  * await signIn();
  * ```
  */
 export function useNovaSiwx(options?: UseNovaSiwxOptions) {
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
-  const { signIn, signOut } = useSiwx();
+  const { signIn, signOut: _signOut } = useSiwx();
 
   const handleSignIn = useCallback(
     async (overrideConnection?: typeof activeConnection, customVerifier?: UseSiwxSignInOptions['verifier']) => {
@@ -64,6 +69,17 @@ export function useNovaSiwx(options?: UseNovaSiwxOptions) {
     },
     [activeConnection, signIn, options],
   );
+
+  const signOut = useCallback(async () => {
+    _signOut();
+    if (options?.destroyer) {
+      try {
+        await options.destroyer();
+      } catch (err) {
+        console.warn('[useNovaSiwx] Failed to execute session destroyer on signOut:', err);
+      }
+    }
+  }, [_signOut, options?.destroyer]);
 
   return {
     signIn: handleSignIn,

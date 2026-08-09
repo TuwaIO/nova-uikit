@@ -4,7 +4,7 @@
 
 # UseNovaSiwxOptions
 
-Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:14](https://github.com/TuwaIO/nova-uikit/blob/c40600e69b59dad5140d18003241e83f047dd531/packages/nova-connect/src/hooks/useNovaSiwx.ts#L14)
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:14](https://github.com/TuwaIO/nova-uikit/blob/ec9f25ddba9623ed0a922e6e36541af5128f314a/packages/nova-connect/src/hooks/useNovaSiwx.ts#L14)
 
 Options for the `useNovaSiwx` hook.
 
@@ -13,6 +13,21 @@ Options for the `useNovaSiwx` hook.
 - `SatelliteSiwxFieldOptions`
 
 ## Properties
+
+### destroyer?
+
+> `optional` **destroyer?**: () => `Promise`\<`void`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:21](https://github.com/TuwaIO/nova-uikit/blob/ec9f25ddba9623ed0a922e6e36541af5128f314a/packages/nova-connect/src/hooks/useNovaSiwx.ts#L21)
+
+Optional callback triggered when `signOut` is called.
+Useful for hitting a `/logout` endpoint to clear the backend cookie.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
 
 ### domain?
 
@@ -54,7 +69,7 @@ Defined in: node\_modules/.pnpm/@tuwaio+siwx-react@0.1.1\_@tuwaio+siwx-core@0.1.
 
 > `optional` **verifier?**: (`payload`) => `Promise`\<`SiwxClientSession` \| `null`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:16](https://github.com/TuwaIO/nova-uikit/blob/c40600e69b59dad5140d18003241e83f047dd531/packages/nova-connect/src/hooks/useNovaSiwx.ts#L16)
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:16](https://github.com/TuwaIO/nova-uikit/blob/ec9f25ddba9623ed0a922e6e36541af5128f314a/packages/nova-connect/src/hooks/useNovaSiwx.ts#L16)
 
 Optional backend verification callback
 

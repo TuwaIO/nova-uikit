@@ -17,6 +17,11 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
   enabled?: boolean;
   /** Optional backend verification callback function */
   verifier?: UseSiwxSignInOptions['verifier'];
+  /**
+   * Optional callback triggered when the wallet disconnects or when `signOut` is called.
+   * Useful for hitting a `/logout` endpoint to clear the backend cookie.
+   */
+  destroyer?: () => Promise<void>;
   /** Optional callback triggered immediately after successful SIWX authentication */
   onSuccess?: UseSiwxSignInOptions['onSuccess'];
   /** Optional callback triggered if SIWX signing or verification fails */
@@ -29,7 +34,7 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  * Uses a `lastPromptedAddress` ref lock to prevent infinite retry loops on prompt rejection.
  */
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
-  const { enabled = true, verifier, domain, uri, statement, onSuccess, onError } = props;
+  const { enabled = true, verifier, destroyer, domain, uri, statement, onSuccess, onError } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
   const disconnect = useSatelliteConnectStore((s) => s.disconnect);
   const { signIn } = useSiwx();
@@ -43,8 +48,16 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   useEffect(() => {
     if (!activeConnection?.isConnected || !activeConnection?.address) {
       lastPromptedAddress.current = null;
+      if (status === 'authenticated' || session) {
+        resetSession();
+        if (destroyer) {
+          destroyer().catch((err) => {
+            console.warn('[NovaSiwxWatcher] Failed to execute session destroyer:', err);
+          });
+        }
+      }
     }
-  }, [activeConnection?.isConnected, activeConnection?.address]);
+  }, [activeConnection?.isConnected, activeConnection?.address, status, session, resetSession, destroyer]);
 
   useEffect(() => {
     if (!enabled || !activeConnection?.isConnected || !activeConnection?.address || !activeConnection?.chainId) {
