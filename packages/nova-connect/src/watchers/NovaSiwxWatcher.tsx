@@ -38,6 +38,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const resetSession = useSiwxSessionStore((s) => s.reset);
 
   const lastPromptedAddress = useRef<string | null>(null);
+  const isSigningLock = useRef<boolean>(false);
 
   useEffect(() => {
     if (!activeConnection?.isConnected || !activeConnection?.address) {
@@ -51,6 +52,10 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     }
 
     if (!activeConnection.signMessage) {
+      return;
+    }
+
+    if (isSigningLock.current) {
       return;
     }
 
@@ -89,12 +94,18 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       const handleFailure = (err: unknown) => {
         const errMessage = err instanceof Error ? err.message : String(err);
         console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
-        if (activeConnection.connectorType) {
+        
+        // Ensure we only disconnect if this connection is STILL the active connection
+        const currentActiveConnectionId = activeConnection.address;
+        
+        if (activeConnection.connectorType && currentActiveConnectionId === activeConnection.address) {
           disconnect(activeConnection.connectorType);
         }
         resetSession();
         onError?.(errMessage);
       };
+
+      isSigningLock.current = true;
 
       signIn({
         signer: activeConnection.signMessage,
@@ -102,7 +113,11 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         fields,
         onSuccess,
         onError: handleFailure,
-      }).catch(handleFailure);
+      })
+        .catch(handleFailure)
+        .finally(() => {
+          isSigningLock.current = false;
+        });
     } catch (err) {
       console.warn('[NovaSiwxWatcher] Failed to build SIWX fields:', err);
     }
