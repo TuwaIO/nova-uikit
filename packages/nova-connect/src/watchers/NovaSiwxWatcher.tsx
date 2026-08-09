@@ -94,10 +94,10 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       const handleFailure = (err: unknown) => {
         const errMessage = err instanceof Error ? err.message : String(err);
         console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
-        
+
         // Ensure we only disconnect if this connection is STILL the active connection
         const currentActiveConnectionId = activeConnection.address;
-        
+
         if (activeConnection.connectorType && currentActiveConnectionId === activeConnection.address) {
           disconnect(activeConnection.connectorType);
         }
