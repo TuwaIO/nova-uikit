@@ -34,7 +34,21 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  * Uses a `lastPromptedAddress` ref lock to prevent infinite retry loops on prompt rejection.
  */
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
-  const { enabled = true, verifier, destroyer, domain, uri, statement, onSuccess, onError } = props;
+  const {
+    enabled = true,
+    verifier,
+    destroyer,
+    domain,
+    uri,
+    statement,
+    expirationTime,
+    expirationSeconds,
+    notBefore,
+    requestId,
+    resources,
+    onSuccess,
+    onError,
+  } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
   const disconnect = useSatelliteConnectStore((s) => s.disconnect);
   const { signIn } = useSiwx();
@@ -84,7 +98,16 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         isConnected: activeConnection.isConnected,
       };
 
-      const fields = getSatelliteSiwxFields(minimalConnection, { domain, uri, statement });
+      const fields = getSatelliteSiwxFields(minimalConnection, {
+        domain,
+        uri,
+        statement,
+        expirationTime,
+        expirationSeconds,
+        notBefore,
+        requestId,
+        resources,
+      });
 
       // If already authenticated for this exact CAIP-10 address, skip prompt
       if (status === 'authenticated' && session?.address === fields.address) {
@@ -148,6 +171,11 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     domain,
     uri,
     statement,
+    expirationTime,
+    expirationSeconds,
+    notBefore,
+    requestId,
+    resources,
     signIn,
     resetSession,
     onSuccess,
