@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.8](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.7...nova-connect-v0.5.8) (2026-08-14)
+
+
+### Bug Fixes
+
+* updated siwx logic & docs & packages ([8ab6708](https://github.com/TuwaIO/nova-uikit/commit/8ab67081e7bdacedfa0c732050d739b8e7d9f6c1))
+
 ## [0.5.7](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.6...nova-connect-v0.5.7) (2026-08-09)
 
 
