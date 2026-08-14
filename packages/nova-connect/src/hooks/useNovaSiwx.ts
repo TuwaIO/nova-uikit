@@ -70,16 +70,18 @@ export function useNovaSiwx(options?: UseNovaSiwxOptions) {
     [activeConnection, signIn, options],
   );
 
+  const destroyer = options?.destroyer;
+
   const signOut = useCallback(async () => {
     _signOut();
-    if (options?.destroyer) {
+    if (destroyer) {
       try {
-        await options.destroyer();
+        await destroyer();
       } catch (err) {
         console.warn('[useNovaSiwx] Failed to execute session destroyer on signOut:', err);
       }
     }
-  }, [_signOut, options?.destroyer]);
+  }, [_signOut, destroyer]);
 
   return {
     signIn: handleSignIn,

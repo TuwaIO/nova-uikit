@@ -13,7 +13,7 @@ import { createDefaultTransports, impersonated, safeSdkOptions } from '@tuwaio/s
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
 import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
 import { useSiwxSession } from '@tuwaio/siwx-react';
-import { baseAccount, safe, walletConnect } from '@wagmi/connectors';
+import { safe, walletConnect } from '@wagmi/connectors';
 import { createConfig, injected } from '@wagmi/core';
 import {
   arbitrum,
@@ -70,10 +70,6 @@ export const appEVMChains = [
 export const wagmiConfig = createConfig({
   connectors: [
     injected(),
-    baseAccount({
-      appName: appConfig.appName,
-      appLogoUrl: appConfig.appLogoUrl,
-    }),
     safe({
       ...safeSdkOptions,
     }),

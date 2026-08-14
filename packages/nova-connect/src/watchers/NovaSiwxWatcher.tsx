@@ -150,6 +150,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     statement,
     signIn,
     resetSession,
+    onSuccess,
     onError,
   ]);
 

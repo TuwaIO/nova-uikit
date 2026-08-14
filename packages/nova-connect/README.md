@@ -19,7 +19,7 @@ Nova Connect natively supports both EVM and Solana wallet standard connectors, p
 - **🌍 Internationalization (i18n):** Overridable labels configuration for localizing connection prompts and wallet state tags.
 
 > [!WARNING]
-> **SIWE Deprecation Notice**: Legacy `siwe` options inside `EVMConnectorsWatcher` and `NovaConnectProvider` are **deprecated**. Migrate to the `siwx` prop or `<NovaSiwxWatcher />` component powered by `@tuwaio/siwx-react` and `@tuwaio/siwx-server` for multi-chain CAIP-122 authentication.
+> **SIWX Migration Notice**: Legacy `siwe` options inside `EVMConnectorsWatcher` and `NovaConnectProvider` are **deprecated**. Migrate to the `siwx` prop or `<NovaSiwxWatcher />` component powered by `@tuwaio/siwx-react` and `@tuwaio/siwx-server` for multi-chain CAIP-122 authentication.
 
 ---
 
@@ -141,6 +141,67 @@ export function CustomHeader() {
 
 ---
 
-## 📄 License
+## 🔐 SIWX Auto-Authentication (`NovaSiwxWatcher` & `useNovaSiwx`)
+
+Nova Connect includes native integration with `@tuwaio/siwx-react` for CAIP-122 multi-chain authentication:
+
+### 1. Auto-Authentication via `NovaSiwxWatcher`
+
+Pass `siwx` configuration into `NovaConnectProvider` or render `<NovaSiwxWatcher />` directly inside your provider tree:
+
+```tsx
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
+import { NovaSiwxWatcher } from '@tuwaio/nova-connect/watchers';
+
+export function Web3Providers({ children }: { children: ReactNode }) {
+  return (
+    <NovaConnectProvider
+      appChains={appEVMChains}
+      siwx={{
+        enabled: true,
+        statement: 'Sign in to TUWA Ecosystem.',
+        verifier: async (payload) => {
+          const res = await fetch('/api/siwx/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          return res.ok ? res.json() : null;
+        },
+        destroyer: async () => {
+          await fetch('/api/siwx/logout', { method: 'POST' });
+        },
+      }}
+    >
+      {children}
+    </NovaConnectProvider>
+  );
+}
+```
+
+### 2. Manual Sign-In Controls via `useNovaSiwx`
+
+For custom login buttons or gated actions:
+
+```tsx
+import { useNovaSiwx } from '@tuwaio/nova-connect/hooks';
+
+export function CustomLoginButton() {
+  const { signIn, signOut } = useNovaSiwx({
+    verifier: async (payload) => {
+      const res = await fetch('/api/siwx/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      return res.ok ? res.json() : null;
+    },
+  });
+
+  return <button onClick={() => signIn()}>Sign In with Wallet</button>;
+}
+```
+
+---
 
 Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.
