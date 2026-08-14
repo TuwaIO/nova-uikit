@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.5.0...nova-core-v0.5.1) (2026-08-14)
+
+
+### Bug Fixes
+
+* updated siwx logic & docs & packages ([8ab6708](https://github.com/TuwaIO/nova-uikit/commit/8ab67081e7bdacedfa0c732050d739b8e7d9f6c1))
+
 ## [0.5.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.4.11...nova-core-v0.5.0) (2026-08-08)
 
 

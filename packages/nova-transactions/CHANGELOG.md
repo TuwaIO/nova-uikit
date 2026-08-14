@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.5.2...nova-transactions-v0.5.3) (2026-08-14)
+
+
+### Bug Fixes
+
+* updated siwx logic & docs & packages ([8ab6708](https://github.com/TuwaIO/nova-uikit/commit/8ab67081e7bdacedfa0c732050d739b8e7d9f6c1))
+
 ## [0.5.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.5.1...nova-transactions-v0.5.2) (2026-08-09)
 
 
