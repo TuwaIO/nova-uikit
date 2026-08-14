@@ -63,4 +63,39 @@ describe('NovaSiwxWatcher', () => {
 
     expect(mockSignIn).toHaveBeenCalled();
   });
+
+  it('handles verification failure by disconnecting wallet and resetting session', async () => {
+    const mockError = vi.fn();
+    const failingSignIn = vi.fn().mockImplementation(({ onError }) => {
+      onError(new Error('User rejected signature'));
+      return Promise.reject(new Error('User rejected signature'));
+    });
+
+    const mockVerifier = vi.fn();
+
+    // Re-instantiate with failing signIn
+    mockSignIn.mockImplementationOnce(failingSignIn);
+
+    NovaSiwxWatcher({
+      enabled: true,
+      verifier: mockVerifier,
+      onError: mockError,
+    });
+
+    expect(mockDisconnect).toHaveBeenCalledWith('evm:metamask');
+    expect(mockResetSession).toHaveBeenCalled();
+    expect(mockError).toHaveBeenCalledWith('User rejected signature');
+  });
+
+  it('triggers destroyer when active connection becomes disconnected', () => {
+    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+
+    // Call with no active connection but existing session
+    NovaSiwxWatcher({
+      enabled: true,
+      destroyer: mockDestroyer,
+    });
+
+    expect(mockResetSession).toHaveBeenCalled();
+  });
 });

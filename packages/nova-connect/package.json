@@ -213,11 +213,11 @@
     "@tuwaio/orbit-core": "^0.2.15",
     "@tuwaio/orbit-evm": "^0.2.22",
     "@tuwaio/orbit-solana": "^0.2.13",
-    "@tuwaio/satellite-react": "^0.4.7",
-    "@tuwaio/satellite-core": "^0.4.2",
-    "@tuwaio/satellite-evm": "^0.4.3",
-    "@tuwaio/satellite-solana": "^0.4.7",
-    "@tuwaio/siwx-react": "^0.2.0",
+    "@tuwaio/satellite-react": "^0.4.8",
+    "@tuwaio/satellite-core": "^0.4.3",
+    "@tuwaio/satellite-evm": "^0.4.4",
+    "@tuwaio/satellite-solana": "^0.4.8",
+    "@tuwaio/siwx-react": "^0.2.1",
     "@tuwaio/pulsar-core": "^0.6.12",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
@@ -246,7 +246,7 @@
     "tailwindcss": "^4.3.3",
     "@emotion/is-prop-valid": "^1.4.0",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^6.0.3",
+    "typescript": "6.0.3",
     "tsup": "^8.5.1"
   }
 }
