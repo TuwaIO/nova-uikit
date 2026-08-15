@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.11](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.10...nova-connect-v0.5.11) (2026-08-15)
+
+
+### Bug Fixes
+
+* updated packages and added getNonce ([f669178](https://github.com/TuwaIO/nova-uikit/commit/f6691786aa294c9fb3e2b52941a83547953ce4f7))
+
 ## [0.5.10](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.5.9...nova-connect-v0.5.10) (2026-08-14)
 
 
