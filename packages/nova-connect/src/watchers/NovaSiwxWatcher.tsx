@@ -15,6 +15,8 @@ import { useSatelliteConnectStore } from '../satellite';
 export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
   /** Enables or disables automatic SIWX authentication prompt (defaults to true) */
   enabled?: boolean;
+  /** Optional function to fetch challenge nonce from backend */
+  getNonce?: () => Promise<string>;
   /** Optional backend verification callback function */
   verifier?: UseSiwxSignInOptions['verifier'];
   /**
@@ -36,6 +38,7 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const {
     enabled = true,
+    getNonce,
     verifier,
     destroyer,
     domain,
@@ -146,6 +149,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       signIn({
         signer: activeConnection.signMessage,
         verifier,
+        getNonce,
         fields,
         onSuccess,
         onError: handleFailure,
@@ -167,6 +171,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     enabled,
     status,
     session?.address,
+    getNonce,
     verifier,
     domain,
     uri,

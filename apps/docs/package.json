@@ -34,7 +34,7 @@
     "@tuwaio/satellite-solana": "^0.4.9",
     "@tuwaio/siwx-core": "^0.2.2",
     "@tuwaio/siwx-evm": "^0.2.1",
-    "@tuwaio/siwx-react": "^0.2.2",
+    "@tuwaio/siwx-react": "^0.2.3",
     "@tuwaio/siwx-solana": "^0.2.1",
     "@wagmi/connectors": "^8.1.0",
     "@wagmi/core": "^3.6.4",
