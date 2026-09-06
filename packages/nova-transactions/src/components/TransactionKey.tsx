@@ -63,8 +63,9 @@ export function TransactionKey<T extends Transaction>({
     : null;
 
   const onChainHashesElement = (() => {
-    const onChainHash = (tx as any).hash;
-    const replacedHash = (tx as any).replacedTxHash;
+    const txRecord = tx as Record<string, unknown>;
+    const onChainHash = typeof txRecord.hash === 'string' ? txRecord.hash : undefined;
+    const replacedHash = typeof txRecord.replacedTxHash === 'string' ? txRecord.replacedTxHash : undefined;
 
     if (!onChainHash && !replacedHash) return null;
 
@@ -101,7 +102,8 @@ export function TransactionKey<T extends Transaction>({
     );
   })();
 
-  const shouldShowTrackerKey = trackerLabel && trackerLabel !== hashLabels.default && tx.txKey !== (tx as any).hash;
+  const shouldShowTrackerKey =
+    trackerLabel && trackerLabel !== hashLabels.default && tx.txKey !== (tx as Record<string, unknown>).hash;
 
   return (
     <div className={cn(containerClasses, className)}>

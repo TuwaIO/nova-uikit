@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('react', () => ({
   useEffect: (fn: () => void | (() => void)) => {
@@ -13,7 +13,7 @@ const mockResetSession = vi.fn();
 const mockSignIn = vi.fn().mockResolvedValue({ success: true });
 
 vi.mock('../satellite', () => ({
-  useSatelliteConnectStore: vi.fn((selector) =>
+  useSatelliteConnectStore: vi.fn((selector: (state: unknown) => unknown) =>
     selector({
       activeConnection: {
         connectorType: 'evm:metamask',
@@ -32,7 +32,7 @@ vi.mock('@tuwaio/siwx-react', () => ({
     signIn: mockSignIn,
     signOut: vi.fn(),
   }),
-  useSiwxSessionStore: vi.fn((selector) =>
+  useSiwxSessionStore: vi.fn((selector: (state: unknown) => unknown) =>
     selector({
       session: null,
       status: 'idle',
@@ -48,9 +48,21 @@ vi.mock('@tuwaio/siwx-react', () => ({
   }),
 }));
 
-import { NovaSiwxWatcher } from '../watchers/NovaSiwxWatcher';
+import { NovaSiwxWatcher } from './NovaSiwxWatcher';
 
 describe('NovaSiwxWatcher', () => {
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
   it('triggers SIWX signIn on active connection', async () => {
     const mockVerifier = vi.fn().mockResolvedValue({ address: '0x1234567890123456789012345678901234567890' });
     const mockSuccess = vi.fn();
@@ -66,14 +78,13 @@ describe('NovaSiwxWatcher', () => {
 
   it('handles verification failure by disconnecting wallet and resetting session', async () => {
     const mockError = vi.fn();
-    const failingSignIn = vi.fn().mockImplementation(({ onError }) => {
+    const failingSignIn = vi.fn().mockImplementation(({ onError }: { onError: (err: Error) => void }) => {
       onError(new Error('User rejected signature'));
       return Promise.reject(new Error('User rejected signature'));
     });
 
     const mockVerifier = vi.fn();
 
-    // Re-instantiate with failing signIn
     mockSignIn.mockImplementationOnce(failingSignIn);
 
     NovaSiwxWatcher({
@@ -90,7 +101,6 @@ describe('NovaSiwxWatcher', () => {
   it('triggers destroyer when active connection becomes disconnected', () => {
     const mockDestroyer = vi.fn().mockResolvedValue(undefined);
 
-    // Call with no active connection but existing session
     NovaSiwxWatcher({
       enabled: true,
       destroyer: mockDestroyer,

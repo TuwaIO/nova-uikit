@@ -11,6 +11,7 @@
     "packages/nova-connect/src/components/index.ts"
   ],
   "entryPointStrategy": "expand",
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "**/tests/**"],
   "tsconfig": "tsconfig.json",
   "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-react"],
   "out": "apps/docs/src/API_Reference",

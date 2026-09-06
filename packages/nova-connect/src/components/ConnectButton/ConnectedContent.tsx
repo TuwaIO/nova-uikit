@@ -284,7 +284,11 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     const { balance } = useWalletNativeBalance();
 
-    const formattedBalance = balance?.value ? parseFloat(balance.value).toFixed(3) : '0.000';
+    const formattedBalance = (() => {
+      if (!balance?.value) return '0.000';
+      const parsed = parseFloat(balance.value);
+      return Number.isFinite(parsed) ? parsed.toFixed(3) : '0.000';
+    })();
 
     const prevTxPoolRef = useRef<Transaction[]>(
       Object.values(transactionPool ?? {}).filter(

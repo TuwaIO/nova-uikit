@@ -98,7 +98,7 @@ async function checkEvmUtils(): Promise<boolean> {
 async function checkSolanaUtils(): Promise<boolean> {
   try {
     // Check if actual Solana packages are available
-    await import('gill');
+    await import('@solana/kit');
     await import('@tuwaio/orbit-solana');
     return true;
   } catch {
@@ -204,7 +204,7 @@ export async function getSolanaUtils(): Promise<BlockchainUtilityResult> {
     if (!hasSolanaPackages) {
       return {
         available: false,
-        error: 'Solana packages (gill, @tuwaio/orbit-solana) not available',
+        error: 'Solana packages (@solana/kit, @tuwaio/orbit-solana) not available',
       };
     }
 

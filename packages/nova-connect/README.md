@@ -13,7 +13,7 @@ Nova Connect natively supports both EVM and Solana wallet standard connectors, p
 
 - **🔌 Plug-and-Play Widgets:** Ready-to-use wallet components (`ConnectButton`, `ConnectCard`, `DisconnectButton`, `AccountImpersonationIndicator`).
 - **🛡️ CAIP-122 Multi-Chain Auto-Auth (`NovaSiwxWatcher`):** Automatically triggers off-chain authentication upon wallet connection via `@tuwaio/siwx-react`.
-- **⛓️ Cohesive Multi-Chain Interface:** Consistently handles EVM wallets (via `@tuwaio/satellite-evm` and `wagmi`) and Solana standard wallets (via `@tuwaio/satellite-solana` and `gill`).
+- **⛓️ Cohesive Multi-Chain Interface:** Consistently handles EVM wallets (via `@tuwaio/satellite-evm` and `wagmi`) and Solana standard wallets (via `@tuwaio/satellite-solana` and `@solana/kit`).
 - **🎨 Deep Customization:** Change typography, borders, and margins using the `customization` prop or override colors via the `@tuwaio/nova-core` token variables.
 - **♿ Built-in Accessibility:** Dialog primitives powered by Radix UI, featuring complete keyboard navigation, viewport trapping, and screen reader announcements.
 - **🌍 Internationalization (i18n):** Overridable labels configuration for localizing connection prompts and wallet state tags.

@@ -17,7 +17,7 @@ export interface AllChainConfigs {
 
   /**
    * Solana RPC URLs configuration - defaults to any, gets enhanced by Solana packages
-   * @default any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when gill is available
+   * @default any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when @tuwaio/orbit-solana is available
    */
   // eslint-disable-next-line
   solanaRPCUrls?: any;
@@ -36,7 +36,7 @@ export interface AllChainConfigs {
  * }
  *
  * // With viem package installed - gets proper Chain[] typing
- * // With gill package installed - gets proper SolanaClusterMoniker typing
+ * // With @tuwaio/orbit-solana package installed - gets proper SolanaClusterMoniker typing
  * ```
  */
 export type InitialChains = AllChainConfigs;
