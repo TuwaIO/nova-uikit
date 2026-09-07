@@ -80,8 +80,8 @@
     "dayjs": "1.x.x"
   },
   "devDependencies": {
-    "@tuwaio/orbit-core": "1.0.0-feat-update-alpha.2.addd21d",
-    "@tuwaio/pulsar-core": "1.0.0-feat-update-alpha.1.ea1149b",
+    "@tuwaio/orbit-core": "1.0.0-feat-update-alpha.3.d6b82d7",
+    "@tuwaio/pulsar-core": "1.0.0-feat-update-alpha.2.e014931",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.23",
     "@web3icons/react": "^4.1.21",
@@ -102,6 +102,6 @@
     "typescript": "6.0.3",
     "tailwindcss": "^4.3.3",
     "zustand": "^5.0.15",
-    "vitest": "4.1.11"
+    "vitest": "^5.0.0"
   }
 }

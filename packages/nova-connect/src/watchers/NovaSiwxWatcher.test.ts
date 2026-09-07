@@ -1,4 +1,8 @@
+import { useSiwxSessionStore } from '@tuwaio/siwx-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { useSatelliteConnectStore } from '../satellite';
+import { NovaSiwxWatcher } from './NovaSiwxWatcher';
 
 vi.mock('react', () => ({
   useEffect: (fn: () => void | (() => void)) => {
@@ -48,21 +52,42 @@ vi.mock('@tuwaio/siwx-react', () => ({
   }),
 }));
 
-import { NovaSiwxWatcher } from './NovaSiwxWatcher';
-
 describe('NovaSiwxWatcher', () => {
   let errorSpy: ReturnType<typeof vi.spyOn>;
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    vi.clearAllMocks();
     errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
+      selector({
+        activeConnection: {
+          connectorType: 'evm:metamask',
+          address: '0x1234567890123456789012345678901234567890',
+          chainId: 1,
+          isConnected: true,
+          signMessage: vi.fn().mockResolvedValue('0xsignature'),
+        },
+        disconnect: mockDisconnect,
+      } as never),
+    );
+
+    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
+      selector({
+        session: null,
+        status: 'idle',
+        reset: mockResetSession,
+      } as never),
+    );
   });
 
   afterEach(() => {
     errorSpy.mockRestore();
     warnSpy.mockRestore();
   });
+
   it('triggers SIWX signIn on active connection', async () => {
     const mockVerifier = vi.fn().mockResolvedValue({ address: '0x1234567890123456789012345678901234567890' });
     const mockSuccess = vi.fn();
@@ -101,11 +126,27 @@ describe('NovaSiwxWatcher', () => {
   it('triggers destroyer when active connection becomes disconnected', () => {
     const mockDestroyer = vi.fn().mockResolvedValue(undefined);
 
+    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
+      selector({
+        activeConnection: null,
+        disconnect: mockDisconnect,
+      } as never),
+    );
+
+    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
+      selector({
+        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
+        status: 'authenticated',
+        reset: mockResetSession,
+      } as never),
+    );
+
     NovaSiwxWatcher({
       enabled: true,
       destroyer: mockDestroyer,
     });
 
     expect(mockResetSession).toHaveBeenCalled();
+    expect(mockDestroyer).toHaveBeenCalled();
   });
 });
