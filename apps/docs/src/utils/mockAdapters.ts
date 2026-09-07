@@ -1,5 +1,5 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
+import { EvmTransaction, Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { action } from 'storybook/actions';
 import { zeroAddress } from 'viem';
 
@@ -15,7 +15,8 @@ export const mockEvmAdapter = {
    * @template T The specific transaction type.
    */
   getExplorerTxUrl: (tx: Transaction): string => {
-    return `https://etherscan.io/tx/${tx.adapter === OrbitAdapter.EVM ? tx?.hash : tx.txKey}`;
+    const hash = (tx.adapter === OrbitAdapter.EVM ? (tx as unknown as EvmTransaction)?.hash : undefined) || tx.txKey;
+    return `https://etherscan.io/tx/${hash}`;
   },
 
   /**

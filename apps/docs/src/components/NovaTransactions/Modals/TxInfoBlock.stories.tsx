@@ -137,3 +137,20 @@ export const SolanaTransaction: Story = {
     adapter: [mockSolanaAdapter],
   },
 };
+
+/**
+ * An ERC-4337 UserOperation in TxInfoBlock, showing UserOp Hash and on-chain Tx Hash.
+ */
+export const UserOpTransaction: Story = {
+  name: 'ERC-4337 UserOp Transaction',
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      tracker: TransactionTracker.ERC4337,
+      txKey: '0x1faf8bda15b6e7abc620db9b23af8af286545142ba973ab318ac4d46980920ce',
+      hash: '0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b',
+      status: TransactionStatus.Success,
+      pending: false,
+    }),
+    adapter: [mockEvmAdapter],
+  },
+};

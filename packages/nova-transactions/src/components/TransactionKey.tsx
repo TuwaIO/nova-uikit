@@ -56,8 +56,13 @@ export function TransactionKey<T extends Transaction>({
         hash: tx.txKey,
         variant: tx.tracker !== TransactionTracker.Solana ? 'compact' : 'default',
         explorerUrl:
-          foundAdapter.getExplorerTxUrl && tx.tracker === TransactionTracker.Solana
-            ? foundAdapter?.getExplorerTxUrl(tx)
+          foundAdapter.getExplorerTxUrl &&
+          (tx.tracker === TransactionTracker.Solana || tx.tracker === TransactionTracker.ERC4337)
+            ? foundAdapter.getExplorerTxUrl(
+                tx.tracker === TransactionTracker.ERC4337 && (tx as Record<string, unknown>).hash
+                  ? ({ ...tx, hash: undefined, replacedTxHash: undefined } as T)
+                  : tx,
+              )
             : undefined,
       })
     : null;

@@ -74,4 +74,69 @@ describe('TransactionKey component', () => {
     expect(confirmationEl).toBeDefined();
     expect(confirmationEl.props.children).toContain(3);
   });
+
+  it('renders UserOp Hash with explorer link for pending ERC-4337 transaction', () => {
+    const renderedProps: Array<{ label?: string; hash?: string; explorerUrl?: string }> = [];
+
+    const erc4337PendingTx: EvmTransaction = {
+      ...baseTx,
+      tracker: TransactionTracker.ERC4337,
+      txKey: '0xuserOpHashPending',
+    };
+
+    const mockEvmAdapter = {
+      key: OrbitAdapter.EVM,
+      getExplorerTxUrl: (tx: EvmTransaction) => `https://sepolia.etherscan.io/tx/${tx.hash || tx.txKey}`,
+    } as unknown as TxAdapter<EvmTransaction>;
+
+    TransactionKey({
+      tx: erc4337PendingTx,
+      adapter: mockEvmAdapter,
+      renderHashLink: (props) => {
+        renderedProps.push(props);
+        return null;
+      },
+    });
+
+    expect(renderedProps).toHaveLength(1);
+    expect(renderedProps[0]?.label).toBe('UserOp Hash');
+    expect(renderedProps[0]?.hash).toBe('0xuserOpHashPending');
+    expect(renderedProps[0]?.explorerUrl).toBe('https://sepolia.etherscan.io/tx/0xuserOpHashPending');
+  });
+
+  it('renders both UserOp Hash and on-chain Tx Hash for mined ERC-4337 transaction', () => {
+    const renderedProps: Array<{ label?: string; hash?: string; explorerUrl?: string }> = [];
+
+    const erc4337MinedTx: EvmTransaction = {
+      ...baseTx,
+      tracker: TransactionTracker.ERC4337,
+      txKey: '0xuserOpHashMined',
+      hash: '0xonChainMinedHash',
+    };
+
+    const mockEvmAdapter = {
+      key: OrbitAdapter.EVM,
+      getExplorerTxUrl: (tx: EvmTransaction) => `https://sepolia.etherscan.io/tx/${tx.hash || tx.txKey}`,
+    } as unknown as TxAdapter<EvmTransaction>;
+
+    TransactionKey({
+      tx: erc4337MinedTx,
+      adapter: mockEvmAdapter,
+      renderHashLink: (props) => {
+        renderedProps.push(props);
+        return null;
+      },
+    });
+
+    expect(renderedProps).toHaveLength(2);
+    // First: tracker key (UserOp Hash)
+    expect(renderedProps[0]?.label).toBe('UserOp Hash');
+    expect(renderedProps[0]?.hash).toBe('0xuserOpHashMined');
+    expect(renderedProps[0]?.explorerUrl).toBe('https://sepolia.etherscan.io/tx/0xuserOpHashMined');
+
+    // Second: on-chain tx hash (Tx Hash)
+    expect(renderedProps[1]?.label).toBe('Tx Hash');
+    expect(renderedProps[1]?.hash).toBe('0xonChainMinedHash');
+    expect(renderedProps[1]?.explorerUrl).toBe('https://sepolia.etherscan.io/tx/0xonChainMinedHash');
+  });
 });

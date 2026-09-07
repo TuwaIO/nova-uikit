@@ -80,8 +80,8 @@
     "dayjs": "1.x.x"
   },
   "devDependencies": {
-    "@tuwaio/orbit-core": "1.0.0-feat-update-alpha.3.d6b82d7",
-    "@tuwaio/pulsar-core": "1.0.0-feat-update-alpha.2.e014931",
+    "@tuwaio/orbit-core": "1.0.0-feat-update-alpha.4.d411095",
+    "@tuwaio/pulsar-core": "1.0.0-feat-update-alpha.3.51498c2",
     "@tuwaio/nova-core": "workspace:^",
     "dayjs": "^1.11.23",
     "@web3icons/react": "^4.1.21",
