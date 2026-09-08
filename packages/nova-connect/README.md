@@ -12,6 +12,7 @@ Nova Connect natively supports both EVM and Solana wallet standard connectors, p
 ## 🏛️ Core Capabilities
 
 - **🔌 Plug-and-Play Widgets:** Ready-to-use wallet components (`ConnectButton`, `ConnectCard`, `DisconnectButton`, `AccountImpersonationIndicator`).
+- **💰 Robust Balance Parsing (`ConnectedContent`):** Validates and formats account balances across chains using `Number.isFinite`, safely handling `@solana/kit` fixed-point decimal strings and EVM balances while preventing `NaN` or `[object Object]` display bugs.
 - **🛡️ CAIP-122 Multi-Chain Auto-Auth (`NovaSiwxWatcher`):** Automatically triggers off-chain authentication upon wallet connection via `@tuwaio/siwx-react`.
 - **⛓️ Cohesive Multi-Chain Interface:** Consistently handles EVM wallets (via `@tuwaio/satellite-evm` and `wagmi`) and Solana standard wallets (via `@tuwaio/satellite-solana` and `@solana/kit`).
 - **🎨 Deep Customization:** Change typography, borders, and margins using the `customization` prop or override colors via the `@tuwaio/nova-core` token variables.
@@ -26,19 +27,17 @@ Nova Connect natively supports both EVM and Solana wallet standard connectors, p
 ## 💾 Installation
 
 ```bash
-pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/satellite-core @tuwaio/satellite-react
-```
+# 1. Core Nova Connect & UI Primitives (Mandatory)
+pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/orbit-core react zustand immer @radix-ui/react-dialog @radix-ui/react-select @heroicons/react @web3icons/react @web3icons/common framer-motion react-toastify @emotion/is-prop-valid ethereum-blockies-base64
 
-### Peer Dependencies Check
+# 2. EVM Support (Optional)
+pnpm add @tuwaio/satellite-evm @tuwaio/orbit-evm @wagmi/core viem
 
-Ensure your React application contains required core packages:
+# 3. Solana Support (Optional)
+pnpm add @tuwaio/satellite-solana @tuwaio/orbit-solana @solana/kit @wallet-standard/react
 
-```bash
-# State & Utilities
-pnpm add zustand immer dayjs clsx tailwind-merge framer-motion @emotion/is-prop-valid
-
-# Dialog & Icons Primitives
-pnpm add @radix-ui/react-dialog @radix-ui/react-select @heroicons/react @web3icons/react @web3icons/common
+# 4. SIWX Authentication Support (Optional)
+pnpm add @tuwaio/siwx-react
 ```
 
 ---
@@ -73,9 +72,9 @@ export function Web3Providers({ children }: { children: ReactNode }) {
           adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
           autoConnect={true}
         >
-          {/* Watchers sync native connector states to the store (pass optional siwx for session state monitoring) */}
-          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} siwx={siwxSession} />
-          <SolanaConnectorsWatcher siwx={siwxSession} />
+          {/* Watchers sync native connector states to the store */}
+          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
+          <SolanaConnectorsWatcher />
 
           {/* Layer 2: Visual Connection component provider */}
           <NovaConnectProvider
@@ -203,5 +202,7 @@ export function CustomLoginButton() {
 ```
 
 ---
+
+## 📄 License
 
 Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.

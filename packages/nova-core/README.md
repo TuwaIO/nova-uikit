@@ -20,7 +20,7 @@
 ## 💾 Installation
 
 ```bash
-pnpm add @tuwaio/nova-core
+pnpm add @tuwaio/nova-core @radix-ui/react-dialog @web3icons/react @web3icons/common clsx framer-motion tailwind-merge react
 ```
 
 ### CSS Setup

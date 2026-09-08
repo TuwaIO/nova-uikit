@@ -49,13 +49,13 @@ Nova is modular. Install the UI Core foundation and the components you need, alo
 
 ```bash
 # L6 UI Core
-pnpm add @tuwaio/nova-core
+pnpm add @tuwaio/nova-core @radix-ui/react-dialog @web3icons/react @web3icons/common clsx framer-motion tailwind-merge react
 
 # L7 Wallet Connection UI (requires Satellite Connect)
-pnpm add @tuwaio/nova-connect @tuwaio/satellite-core @tuwaio/satellite-react
+pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/satellite-core @tuwaio/satellite-react @tuwaio/orbit-core react zustand immer @radix-ui/react-dialog @radix-ui/react-select @heroicons/react @web3icons/react @web3icons/common framer-motion react-toastify @emotion/is-prop-valid ethereum-blockies-base64
 
 # L7 Transaction Progress UI (requires Pulsar Engine)
-pnpm add @tuwaio/nova-transactions @tuwaio/pulsar-core @tuwaio/pulsar-react
+pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog framer-motion react-toastify dayjs react
 ```
 
 ---
