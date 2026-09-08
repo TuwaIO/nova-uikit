@@ -51,6 +51,8 @@ export type NovaTransactionsLabels = {
     gelato: string;
     /** Label for a Safe Transaction Hash. */
     safe: string;
+    /** Label for an ERC-4337 UserOperation Hash. */
+    erc4337: string;
     /** Label for the original transaction hash (before replacement). */
     original: string;
     /** Label for the new transaction hash that replaced the original. */

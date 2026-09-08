@@ -8,8 +8,8 @@
  * @param {any} item - The item to check.
  * @returns {item is Record<string, any>} True if the item is a plain object, otherwise false.
  */
-const isObject = (item: any): item is Record<string, any> => {
-  return item && typeof item === 'object' && !Array.isArray(item);
+const isObject = (item: unknown): item is Record<string, unknown> => {
+  return typeof item === 'object' && item !== null && !Array.isArray(item);
 };
 
 /**
@@ -41,10 +41,10 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
       if (isObject(targetValue) && isObject(sourceValue)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
-        (output as Record<string, any>)[key] = deepMerge(targetValue, sourceValue);
+        (output as Record<string, unknown>)[key] = deepMerge(targetValue, sourceValue);
       } else {
         // Otherwise, the source value overwrites the target value.
-        (output as Record<string, any>)[key] = sourceValue;
+        (output as Record<string, unknown>)[key] = sourceValue;
       }
     });
   }

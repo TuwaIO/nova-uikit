@@ -56,15 +56,21 @@ export function TransactionKey<T extends Transaction>({
         hash: tx.txKey,
         variant: tx.tracker !== TransactionTracker.Solana ? 'compact' : 'default',
         explorerUrl:
-          foundAdapter.getExplorerTxUrl && tx.tracker === TransactionTracker.Solana
-            ? foundAdapter?.getExplorerTxUrl(tx)
+          foundAdapter.getExplorerTxUrl &&
+          (tx.tracker === TransactionTracker.Solana || tx.tracker === TransactionTracker.ERC4337)
+            ? foundAdapter.getExplorerTxUrl(
+                tx.tracker === TransactionTracker.ERC4337 && (tx as Record<string, unknown>).hash
+                  ? ({ ...tx, hash: undefined, replacedTxHash: undefined } as T)
+                  : tx,
+              )
             : undefined,
       })
     : null;
 
   const onChainHashesElement = (() => {
-    const onChainHash = (tx as any).hash;
-    const replacedHash = (tx as any).replacedTxHash;
+    const txRecord = tx as Record<string, unknown>;
+    const onChainHash = typeof txRecord.hash === 'string' ? txRecord.hash : undefined;
+    const replacedHash = typeof txRecord.replacedTxHash === 'string' ? txRecord.replacedTxHash : undefined;
 
     if (!onChainHash && !replacedHash) return null;
 
@@ -101,7 +107,8 @@ export function TransactionKey<T extends Transaction>({
     );
   })();
 
-  const shouldShowTrackerKey = trackerLabel && trackerLabel !== hashLabels.default && tx.txKey !== (tx as any).hash;
+  const shouldShowTrackerKey =
+    trackerLabel && trackerLabel !== hashLabels.default && tx.txKey !== (tx as Record<string, unknown>).hash;
 
   return (
     <div className={cn(containerClasses, className)}>

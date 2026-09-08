@@ -13,7 +13,7 @@
 - **Styling:** Tailwind CSS v4, Framer Motion v12.
 - **State Management:** Zustand v5.x.
 - **Web3 (EVM):** `viem` v2.x, `@wagmi/core` v3.x.
-- **Web3 (Solana):** `gill` v0.14+, `@wallet-standard/react`, `@wallet-standard/base`.
+- **Web3 (Solana):** `@solana/kit` v8.x, `@wallet-standard/react`, `@wallet-standard/base`, `@tuwaio/orbit-solana`.
 - **Icons:** `@web3icons/react` v4+.
 - **Build/Monorepo:**
   - `tsup`: Bundler for `packages/*` (ESM/CJS/DTS).
@@ -38,7 +38,7 @@ nova-uikit/
 │   ├── nova-connect/           # UI Components (L7). Wallet Connection Components.
 │   │   ├── src/satellite/      # Integration with @tuwaio/satellite-core
 │   │   ├── src/evm/            # EVM-specific connectors (Wagmi/Viem)
-│   │   ├── src/solana/         # Solana-specific connectors (Gill)
+│   │   ├── src/solana/         # Solana-specific connectors (Orbit / Solana Kit)
 │   │   ├── src/components/     # UI Components (ConnectButton, Modal)
 │   │   └── src/providers/      # NovaConnectProvider logic
 │   └── nova-transactions/      # UI Components (L7). Transaction Status Components.
@@ -81,6 +81,7 @@ nova-uikit/
 - **Dependency Rule:** Never install new packages without explicit user permission.
 - **Hallucination Check:**
   - Do **NOT** import `ethers.js` (We use `viem`).
-  - Do **NOT** import legacy `@solana/web3.js` unless via `gill`.
+  - Do **NOT** import `gill` (Eradicated; we use `@solana/kit` and `@tuwaio/orbit-solana`).
+  - Do **NOT** import legacy `@solana/web3.js` methods.
   - Do **NOT** implement business logic in `nova-*` packages (Logic belongs in `satellite-*` or `pulsar-*`).
   - Do **NOT** use `style={{...}}` for styling (Use Tailwind classes).

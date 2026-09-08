@@ -11,14 +11,14 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./providers": {
+      "types": "./dist/providers/index.d.ts",
       "import": "./dist/providers/index.js",
-      "require": "./dist/providers/index.cjs",
-      "types": "./dist/providers/index.d.ts"
+      "require": "./dist/providers/index.cjs"
     },
     "./dist/index.css": "./dist/index.css"
   },
@@ -30,7 +30,8 @@
     "socket.json"
   ],
   "scripts": {
-    "build": "tsup && pnpm exec postcss ./src/styles/app.css -o ./dist/index.css"
+    "build": "tsup && pnpm exec postcss ./src/styles/app.css -o ./dist/index.css",
+    "test": "vitest run"
   },
   "keywords": [
     "react",
@@ -73,33 +74,34 @@
     "framer-motion": "12.x.x",
     "react": ">=19.2.3",
     "react-toastify": ">=11",
-    "@tuwaio/pulsar-core": "^0.6.11",
+    "@tuwaio/pulsar-core": ">=0.7",
     "@tuwaio/nova-core": "workspace:^",
-    "@tuwaio/orbit-core": "^0.2.15",
+    "@tuwaio/orbit-core": ">=0.3",
     "dayjs": "1.x.x"
   },
   "devDependencies": {
-    "@tuwaio/orbit-core": "^0.2.15",
-    "@tuwaio/pulsar-core": "^0.6.12",
+    "@tuwaio/orbit-core": "1.0.0-feat-update-alpha.4.d411095",
+    "@tuwaio/pulsar-core": "1.0.0-feat-update-alpha.3.51498c2",
     "@tuwaio/nova-core": "workspace:^",
-    "dayjs": "^1.11.21",
-    "@web3icons/react": "^4.1.20",
-    "@web3icons/common": "^0.11.49",
+    "dayjs": "^1.11.23",
+    "@web3icons/react": "^4.1.21",
+    "@web3icons/common": "^0.11.50",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.23",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "^19.2.18",
-    "autoprefixer": "^10.5.4",
+    "autoprefixer": "^10.5.5",
     "clsx": "^2.1.1",
-    "framer-motion": "^13.1.0",
-    "immer": "^11.1.16",
-    "postcss": "^8.5.26",
-    "postcss-cli": "^11.0.1",
+    "framer-motion": "^13.2.0",
+    "immer": "^11.1.18",
+    "postcss": "^8.5.28",
+    "postcss-cli": "^12.0.0",
     "react": "^19.2.8",
     "react-toastify": "^11.1.0",
     "tsup": "^8.5.1",
-    "typescript": "^6.0.3",
+    "typescript": "6.0.3",
     "tailwindcss": "^4.3.3",
-    "zustand": "^5.0.15"
+    "zustand": "^5.0.15",
+    "vitest": "^5.0.0"
   }
 }

@@ -12,6 +12,7 @@ By coupling the UI manager to Pulsar stores, it automatically handles pending lo
 ## 🏛️ Core Capabilities
 
 - **🧩 Interactive Visual Nodes:** Built-in dialogs and widget cards (`TrackingTxModal` for individual status, `TransactionsInfoModal` for full transaction lists, and `ToastTransaction` feeds).
+- **⚡ ERC-4337 Account Abstraction & Two-Stage Presentation:** Native handling of UserOperation tracking. Displays `UserOp Hash` while in the bundler mempool (Stage 1), automatically transitioning to the mined on-chain transaction hash (Stage 2) with native explorer links.
 - **🔌 Isolated Provider Hooks:** The `<NovaTransactionsProvider />` bridges your React tree with Pulsar's transaction history pools and signature polling events.
 - **🎨 Custom Styling overrides:** Style sub-components via CSS variables from `@tuwaio/nova-core` or replace components using the `customization` property.
 - **🌍 Dynamic Internationalization:** Supports overriding labels configuration to localize status messages (`pending`, `success`, `failed`, `replaced`) and actions.
@@ -21,20 +22,21 @@ By coupling the UI manager to Pulsar stores, it automatically handles pending lo
 ## 💾 Installation
 
 ```bash
-pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/pulsar-react
+pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core @web3icons/react @web3icons/common @heroicons/react @radix-ui/react-dialog framer-motion react-toastify dayjs react
 ```
 
-### Peer Dependencies Check
+> [!IMPORTANT]
+> All peer dependencies listed above must be present in your project for `@tuwaio/nova-transactions` to operate correctly.
 
-Make sure your project contains the required layout and utility engines:
+---
 
-```bash
-# State & Utilities
-pnpm add zustand immer dayjs clsx tailwind-merge framer-motion
+## ⚡ ERC-4337 Support & Hash Labels
 
-# Dialog Primitives & Notifications
-pnpm add @radix-ui/react-dialog @heroicons/react @web3icons/common @web3icons/react react-toastify
-```
+When tracking ERC-4337 Smart Account transactions (dispatched via Pimlico or native bundlers):
+
+1. **UserOp Hash (Mempool Stage)**: While the operation is pending execution by the bundler, the UI displays the transaction key labeled as **`UserOp Hash`** (`hashLabels.erc4337 = 'UserOp Hash'`).
+2. **On-Chain Settlement (Mined Stage)**: Once the UserOp is bundled into an on-chain transaction, the UI updates seamlessly to show the mined block transaction hash, linking directly to the standard blockchain explorer (e.g. Etherscan `/tx/${hash}`).
+3. **Custom Labels**: Localize or customize hash labels via `NovaTransactionsLabelsProvider` or the `labels` prop on `NovaTransactionsProvider`.
 
 ---
 
@@ -131,7 +133,7 @@ export function SwapButton() {
 
   const triggerSwap = async () => {
     const swapFunction = async () => {
-      // Execute smart contract write method and return the hash
+      // Execute smart contract write method or UserOperation and return the hash
       return '0x...';
     };
 

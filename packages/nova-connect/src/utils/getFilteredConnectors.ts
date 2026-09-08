@@ -15,13 +15,11 @@ type ConnectorWithAdapter = Connector & { adapter: OrbitAdapter };
 
 /**
  * Helper function to safely access connector adapter property
- * Uses any type to avoid TypeScript inference issues with complex types
  */
-function getConnectorAdapter(connector: any): OrbitAdapter | undefined {
-  // Safe property access without type guards
+function getConnectorAdapter(connector: unknown): OrbitAdapter | undefined {
   try {
-    if (connector && typeof connector === 'object' && connector.adapter) {
-      return connector.adapter as OrbitAdapter;
+    if (connector && typeof connector === 'object' && 'adapter' in connector) {
+      return (connector as { adapter: OrbitAdapter }).adapter;
     }
   } catch {
     // Silently handle any errors in property access
@@ -32,7 +30,7 @@ function getConnectorAdapter(connector: any): OrbitAdapter | undefined {
 /**
  * Helper function to check if connector matches the selected adapter
  */
-function connectorMatchesAdapter(connector: any, selectedAdapter: OrbitAdapter): boolean {
+function connectorMatchesAdapter(connector: unknown, selectedAdapter: OrbitAdapter): boolean {
   const connectorAdapter = getConnectorAdapter(connector);
   return connectorAdapter === selectedAdapter;
 }

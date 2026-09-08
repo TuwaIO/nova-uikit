@@ -138,3 +138,33 @@ export const WithCustomRender: Story = {
     adapter: mockEvmAdapter,
   },
 };
+
+/**
+ * An ERC-4337 UserOperation in pending state, displaying the UserOp Hash with block explorer link.
+ */
+export const UserOpPending: Story = {
+  name: 'ERC-4337 UserOp (Pending)',
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      tracker: TransactionTracker.ERC4337,
+      txKey: '0x1faf8bda15b6e7abc620db9b23af8af286545142ba973ab318ac4d46980920ce',
+      hash: undefined,
+    }),
+    adapter: mockEvmAdapter,
+  },
+};
+
+/**
+ * An ERC-4337 UserOperation in mined state, displaying both UserOp Hash and on-chain Tx Hash.
+ */
+export const UserOpMined: Story = {
+  name: 'ERC-4337 UserOp (Mined)',
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      tracker: TransactionTracker.ERC4337,
+      txKey: '0x1faf8bda15b6e7abc620db9b23af8af286545142ba973ab318ac4d46980920ce',
+      hash: '0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b',
+    }),
+    adapter: mockEvmAdapter,
+  },
+};

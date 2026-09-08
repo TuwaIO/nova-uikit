@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('react', () => ({
-  useCallback: (fn: any) => fn,
-  useEffect: (fn: any) => fn(),
-  useRef: (val: any) => ({ current: val }),
+  useCallback: (fn: unknown) => fn,
+  useEffect: (fn: () => void | (() => void)) => fn(),
+  useRef: (val: unknown) => ({ current: val }),
 }));
 
 // Mock dependencies
 vi.mock('../satellite', () => ({
-  useSatelliteConnectStore: vi.fn((selector) =>
+  useSatelliteConnectStore: vi.fn((selector: (state: unknown) => unknown) =>
     selector({
       activeConnection: {
         address: '0x1234567890123456789012345678901234567890',
@@ -34,7 +34,7 @@ vi.mock('@tuwaio/siwx-react', () => ({
   }),
 }));
 
-import { useNovaSiwx } from '../hooks/useNovaSiwx';
+import { useNovaSiwx } from './useNovaSiwx';
 
 describe('useNovaSiwx', () => {
   it('exposes signIn and signOut functions', () => {

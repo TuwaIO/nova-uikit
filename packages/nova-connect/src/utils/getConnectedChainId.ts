@@ -14,7 +14,7 @@ const DEFAULT_CHAIN_IDS = {
  */
 interface BasicChain {
   id: number | string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -91,11 +91,15 @@ export function getAvailableChainIds({
   solanaRPCUrls,
 }: { selectedAdapter: OrbitAdapter } & InitialChains): Array<number | string> {
   switch (selectedAdapter) {
-    case OrbitAdapter.EVM:
-      return appChains?.map((chain: BasicChain) => chain.id).filter(Boolean) ?? [DEFAULT_CHAIN_IDS[OrbitAdapter.EVM]];
+    case OrbitAdapter.EVM: {
+      const ids = appChains?.map((chain: BasicChain) => chain.id).filter(Boolean);
+      return ids && ids.length > 0 ? ids : [DEFAULT_CHAIN_IDS[OrbitAdapter.EVM]];
+    }
 
-    case OrbitAdapter.SOLANA:
-      return solanaRPCUrls ? Object.keys(solanaRPCUrls) : [DEFAULT_CHAIN_IDS[OrbitAdapter.SOLANA]];
+    case OrbitAdapter.SOLANA: {
+      const networks = solanaRPCUrls ? Object.keys(solanaRPCUrls) : [];
+      return networks.length > 0 ? networks : [DEFAULT_CHAIN_IDS[OrbitAdapter.SOLANA]];
+    }
 
     case OrbitAdapter.Starknet:
       return [DEFAULT_CHAIN_IDS[OrbitAdapter.Starknet]];

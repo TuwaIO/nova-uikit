@@ -1,5 +1,5 @@
 // Export types only, not implementations
-export type { SolanaClusterMoniker } from 'gill';
+export type { SolanaClusterMoniker } from '@tuwaio/orbit-solana';
 
 // Import types from satellite-react/solana
 import { OrbitAdapter } from '@tuwaio/orbit-core';
@@ -56,7 +56,7 @@ declare module '@tuwaio/nova-connect' {
   interface AllChainConfigs {
     /**
      * Solana RPC URLs configuration - enhanced from default any type
-     * @override Replaces default `any` with specific SolanaClusterMoniker typing when gill is available
+     * @override Replaces default `any` with specific SolanaClusterMoniker typing when @tuwaio/orbit-solana is available
      */
     // eslint-disable-next-line
     // @ts-ignore - Need for declaration merging
