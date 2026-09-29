@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/RecentBadge" />
+
+# RecentBadge
+
+> `const` **RecentBadge**: `NamedExoticComponent`\<[`RecentBadgeProps`](?path=/docs/packages-nova-connect-components-interfaces-recentbadgeprops--docs) & `RefAttributes`\<`HTMLSpanElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:296](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L296)
+
+The "Recent" badge of a wallet card: a small label with a gradient border that moves with Framer Motion. It is
+smaller on touch devices.
+
+Props: [RecentBadgeProps](?path=/docs/packages-nova-connect-components-interfaces-recentbadgeprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { RecentBadge } from '@tuwaio/nova-connect/components';
+
+export const Badge = (
+  <RecentBadge
+    customization={{
+      config: {
+        animation: { duration: 2, ease: 'easeInOut' },
+        gradient: {
+          direction: '45deg',
+          stops: [
+            { position: 0, color: 'transparent' },
+            { position: 50, color: 'rgba(59, 130, 246, 0.8)' },
+            { position: 100, color: 'transparent' },
+          ],
+        },
+      },
+    }}
+  >
+    Last used
+  </RecentBadge>
+);
+```

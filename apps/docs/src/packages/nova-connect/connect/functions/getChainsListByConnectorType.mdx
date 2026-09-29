@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getChainsListByConnectorType" />
+
+# getChainsListByConnectorType()
+
+> **getChainsListByConnectorType**(`params`): (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L51)
+
+Returns the chains of the app for the network of a connector type.
+
+- EVM: the IDs of `appChains` (`getEvmChains` of `@tuwaio/orbit-evm` when `@tuwaio/nova-connect/evm` is imported).
+- Solana: when `@tuwaio/nova-connect/solana` is imported, `getSolanaClusters` of `@tuwaio/orbit-solana`: the cluster
+  monikers of `solanaRPCUrls` (every cluster with a public RPC URL without it), filtered by `chains` when set.
+  Otherwise the keys of `solanaRPCUrls`.
+
+## Parameters
+
+### params
+
+[`GetChainsListByConnectorTypeParams`](?path=/docs/packages-nova-connect-connect-interfaces-getchainslistbyconnectortypeparams--docs)
+
+See [GetChainsListByConnectorTypeParams](?path=/docs/packages-nova-connect-connect-interfaces-getchainslistbyconnectortypeparams--docs).
+
+## Returns
+
+(`string` \| `number`)[]
+
+The chain IDs or cluster monikers (empty without `connectorType`, with a warning).
+
+## Example
+
+```ts
+import { getChainsListByConnectorType } from '@tuwaio/nova-connect';
+import { mainnet, polygon } from 'viem/chains';
+
+getChainsListByConnectorType({ connectorType: 'evm:metamask', appChains: [mainnet, polygon] }); // [1, 137]
+getChainsListByConnectorType({
+  connectorType: 'solana:phantom',
+  solanaRPCUrls: { devnet: 'https://api.devnet.solana.com' },
+}); // ['devnet']
+```

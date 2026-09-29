@@ -1,0 +1,133 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionDetailsCustomization" />
+
+# TransactionDetailsCustomization
+
+> **TransactionDetailsCustomization** = `object`
+
+Defined in: [components/TransactionDetails.tsx:289](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L289)
+
+Class names and replacement components for the parts of [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/TransactionDetails.tsx:291](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L291)
+
+Classes added to the parts of the view.
+
+#### backButton?
+
+> `optional` **backButton?**: `string`
+
+The back button.
+
+#### container?
+
+> `optional` **container?**: `string`
+
+The whole view.
+
+#### coreInfoCard?
+
+> `optional` **coreInfoCard?**: `string`
+
+The main card with the status, hash, network, sender and recipient.
+
+#### executionSection?
+
+> `optional` **executionSection?**: `string`
+
+The execution data section.
+
+#### header?
+
+> `optional` **header?**: `string`
+
+The header row with the back button and the title.
+
+#### metadataSection?
+
+> `optional` **metadataSection?**: `string`
+
+The metadata section.
+
+#### networkBadge?
+
+> `optional` **networkBadge?**: `string`
+
+The network badge in the main card.
+
+#### sectionHeader?
+
+> `optional` **sectionHeader?**: `string`
+
+The headings of the metadata and execution data sections.
+
+#### statusIconContainer?
+
+> `optional` **statusIconContainer?**: `string`
+
+The status icon in the main card.
+
+#### subtitle?
+
+> `optional` **subtitle?**: `string`
+
+The subtitle under the title (the `transactionDetails.subtitle` label).
+
+#### title?
+
+> `optional` **title?**: `string`
+
+The title (the `transactionDetails.title` label).
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [components/TransactionDetails.tsx:316](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L316)
+
+Components that replace the default parts.
+
+#### CopyableField?
+
+> `optional` **CopyableField?**: `ComponentType`\<[`CopyableFieldProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-copyablefieldprops--docs)\>
+
+A field with a copy button.
+
+#### DetailItem?
+
+> `optional` **DetailItem?**: `ComponentType`\<[`DetailItemProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-detailitemprops--docs)\>
+
+A label and value pair.
+
+#### JsonBlock?
+
+> `optional` **JsonBlock?**: `ComponentType`\<[`JsonBlockProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-jsonblockprops--docs)\>
+
+A code block with a copy button.
+
+#### MetadataRow?
+
+> `optional` **MetadataRow?**: `ComponentType`\<[`MetadataRowProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-metadatarowprops--docs)\>
+
+A row of the metadata section.
+
+#### SectionCard?
+
+> `optional` **SectionCard?**: `ComponentType`\<\{ `children`: `ReactNode`; `className?`: `string`; \}\>
+
+A card around a section (props: `children`, `className`).
+
+#### SectionHeading?
+
+> `optional` **SectionHeading?**: `ComponentType`\<\{ `children`: `ReactNode`; `className?`: `string`; \}\>
+
+A section heading (props: `children`, `className`).

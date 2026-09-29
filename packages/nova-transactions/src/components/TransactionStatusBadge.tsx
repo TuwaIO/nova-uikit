@@ -36,8 +36,15 @@ const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
   },
 });
 
+/**
+ * Props of {@link TransactionStatusBadge}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionStatusBadgeProps<T extends Transaction> = {
+  /** The transaction whose status is shown. */
   tx: T;
+  /** Classes of the badge. */
   className?: string;
   /** Granular class names for sub-elements */
   classNames?: {
@@ -50,6 +57,14 @@ export type TransactionStatusBadgeProps<T extends Transaction> = {
   };
 };
 
+/**
+ * A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), success, failed
+ * or replaced, or a neutral badge when the status is not set.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionStatusBadgeProps}.
+ * @returns The badge.
+ */
 export function TransactionStatusBadge<T extends Transaction>({
   tx,
   className,

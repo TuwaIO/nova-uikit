@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/ToastTransaction" />
+
+# ToastTransaction()
+
+> **ToastTransaction**\<`T`\>(`props`): `Element`
+
+Defined in: [components/ToastTransaction.tsx:205](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L205)
+
+The body of a transaction toast: the network icon, the title and description (colored by status), the hashes with
+explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent
+with
+MetaMask by the connected wallet, it offers speed-up and cancel (when the adapter has `speedUpTxAction` and
+`cancelTxAction`); otherwise, for transactions of the connected wallet, a button that opens the transaction in the
+history modal. `NovaTransactionsProvider` shows one for every tracked transaction.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`ToastTransactionProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toasttransactionprops--docs)\<`T`\>
+
+See [ToastTransactionProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-toasttransactionprops--docs).
+
+## Returns
+
+`Element`
+
+The toast body.

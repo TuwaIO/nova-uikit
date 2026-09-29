@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalWalletNameConfig" />
+
+# ConnectedModalWalletNameConfig
+
+> **ConnectedModalWalletNameConfig** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:166](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L166)
+
+Options of `useGetWalletNameAndAvatar` used by [ConnectedModal](?path=/docs/packages-nova-connect-components-variables-connectedmodal--docs) (`config.hooks.walletNameAndAvatar`). When
+set, the object replaces the defaults (`6`, `30`, `false`, `3000`), and omitted fields take the defaults of the hook.
+
+## Properties
+
+### abbreviateSymbols?
+
+> `optional` **abbreviateSymbols?**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:168](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L168)
+
+Characters kept at each end of a shortened address
+
+***
+
+### autoRetry?
+
+> `optional` **autoRetry?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:172](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L172)
+
+Whether to retry a failed name lookup
+
+***
+
+### maxNameLength?
+
+> `optional` **maxNameLength?**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:170](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L170)
+
+Names longer than this are shortened
+
+***
+
+### retryDelay?
+
+> `optional` **retryDelay?**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L174)
+
+Delay before a retry, in milliseconds

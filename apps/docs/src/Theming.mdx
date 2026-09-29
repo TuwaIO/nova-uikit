@@ -374,9 +374,10 @@ export const connect_card_customization: ConnectCardCustomization = {
 // utils/customization/nova_tx_provider.ts
 import { cn } from '@tuwaio/nova-core';
 import { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 
-export const nova_tx_customization: NovaTransactionsProviderProps<any>['customization'] = {
+export const nova_tx_customization: NovaTransactionsProviderProps<Transaction>['customization'] = {
   toast: {
     classNames: {
       container: cn('rounded-[4px]', 'border border-[var(--tuwa-border-primary)]', 'bg-[var(--tuwa-bg-secondary)]'),
@@ -402,14 +403,23 @@ export const nova_tx_customization: NovaTransactionsProviderProps<any>['customiz
 
 ```tsx
 import { NovaConnectProvider } from '@tuwaio/nova-connect';
-import { NovaTransactionsProvider } from '@tuwaio/nova-transactions';
+import { NovaTransactionsProvider, type NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
+import type { Transaction } from '@tuwaio/pulsar-core';
+import type { ReactNode } from 'react';
+import { mainnet } from 'viem/chains';
+
 import { nova_connect_customization } from './utils/customization/nova_connect_provider';
 import { nova_tx_customization } from './utils/customization/nova_tx_provider';
 
-function App() {
+// The Pulsar store values and adapters, passed as in the README of @tuwaio/nova-transactions
+type PulsarProps = Omit<NovaTransactionsProviderProps<Transaction>, 'customization'>;
+
+// Rendered inside SatelliteConnectProvider, as in the README of @tuwaio/nova-connect
+export function Providers({ children, pulsar }: { children: ReactNode; pulsar: PulsarProps }) {
   return (
-    <NovaConnectProvider appChains={chains} customization={nova_connect_customization}>
-      <NovaTransactionsProvider customization={nova_tx_customization}>{/* Your app */}</NovaTransactionsProvider>
+    <NovaConnectProvider appChains={[mainnet]} customization={nova_connect_customization}>
+      {children}
+      <NovaTransactionsProvider {...pulsar} customization={nova_tx_customization} />
     </NovaConnectProvider>
   );
 }

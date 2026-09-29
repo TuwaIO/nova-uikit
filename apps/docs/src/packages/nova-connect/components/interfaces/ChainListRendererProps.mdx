@@ -1,0 +1,159 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ChainListRendererProps" />
+
+# ChainListRendererProps
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:257](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L257)
+
+Props for the [ChainListRenderer](?path=/docs/packages-nova-connect-components-variables-chainlistrenderer--docs) component.
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:286](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L286)
+
+ARIA label for the list container (default: the `selectChain` label)
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:259](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L259)
+
+List of chain identifiers to render
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:280](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L280)
+
+Classes added to the container
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ChainListRendererCustomization`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrenderercustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:284](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L284)
+
+Customization options
+
+***
+
+### error?
+
+> `optional` **error?**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:290](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L290)
+
+Shows this error instead of the list (default: `null`)
+
+***
+
+### getChainData
+
+> **getChainData**: (`chain`) => [`ChainListRendererChainData`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendererchaindata--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:274](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L274)
+
+Formats a chain of `chainsList` for the connector.
+
+#### Parameters
+
+##### chain
+
+`string` \| `number`
+
+A chain of `chainsList`.
+
+#### Returns
+
+[`ChainListRendererChainData`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendererchaindata--docs)
+
+The chain data.
+
+***
+
+### handleValueChange
+
+> **handleValueChange**: (`newChainId`) => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:267](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L267)
+
+Selects a chain, through `handlers.onSelect` of the customization when set.
+
+#### Parameters
+
+##### newChainId
+
+`string`
+
+The formatted chain ID, as a string.
+
+#### Returns
+
+`void`
+
+***
+
+### isLoading?
+
+> `optional` **isLoading?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:288](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L288)
+
+Shows the loading message instead of the list (default: `false`)
+
+***
+
+### isMobile?
+
+> `optional` **isMobile?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:278](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L278)
+
+Whether to render the mobile list (plain items) instead of Radix `Select.Item` elements (default: `false`)
+
+***
+
+### itemClassName?
+
+> `optional` **itemClassName?**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:282](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L282)
+
+Classes added to the default classes of the items
+
+***
+
+### onClose
+
+> **onClose**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:276](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L276)
+
+Closes the list after a selection
+
+#### Returns
+
+`void`
+
+***
+
+### selectValue
+
+> **selectValue**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:261](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L261)
+
+The formatted chain ID of the active connection, as a string (marks the active item)

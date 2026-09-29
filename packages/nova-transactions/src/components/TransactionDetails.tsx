@@ -34,56 +34,95 @@ import { NovaTransactionsProviderProps, useLabels } from '../providers';
 
 // --- Sub-components Prop Types ---
 
-/** Props for a copyable field block */
+/** Props of a field with a copy button in {@link TransactionDetails} (hash, sender, recipient, replaced hash). */
 export type CopyableFieldProps = {
+  /** Label shown above the field. */
   label: string;
+  /** Value shown in the field and copied to the clipboard by the copy button. */
   value: string;
+  /** Whether the value uses a monospace font. Defaults to `true`. */
   mono?: boolean;
+  /** Classes of the field. */
   className?: string;
+  /** Content shown instead of the value (the copy button still copies `value`); used for the explorer link. */
   children?: ReactNode;
+  /** Classes of the parts of the field. */
   classNames?: {
+    /** The label. */
     label?: string;
+    /** The row with the value and the copy button. */
     container?: string;
+    /** The value. */
     code?: string;
+    /** The copy button. */
     copyButton?: string;
   };
 };
 
-/** Props for a single detail item (Label + Value) */
+/** Props of a label and value pair in the execution data of {@link TransactionDetails}. */
 export type DetailItemProps = {
+  /** Label shown above the value. */
   label: string;
+  /** The value. The default item renders nothing when it is `null`, `undefined` or an empty string. */
   value: string | number | null | undefined;
+  /** Whether the value uses a smaller monospace font. Defaults to `false`. */
   mono?: boolean;
+  /** Classes of the item. */
   className?: string;
+  /** Classes of the parts of the item. */
   classNames?: {
+    /** The label. */
     label?: string;
+    /** The value. */
     value?: string;
   };
 };
 
-/** Props for a row in the metadata section */
+/** Props of a row of the metadata section of {@link TransactionDetails} (adapter, times, tracker, connector…). */
 export type MetadataRowProps = {
+  /** Icon component (a Heroicons icon by default), rendered with a `className`. */
   icon: ComponentType<{ className?: string }>;
+  /** Label shown on the left. */
   label: string;
+  /** Value shown on the right. */
   children: ReactNode;
+  /** Classes of the row. */
   className?: string;
+  /** Classes of the parts of the row. */
   classNames?: {
+    /** The icon. */
     icon?: string;
+    /** The label. */
     label?: string;
+    /** The value. */
     value?: string;
   };
 };
 
-/** Props for a JSON/Code block */
+/**
+ * Props of a code block with a copy button in {@link TransactionDetails} (input data, instructions, payload, error).
+ */
 export type JsonBlockProps = {
+  /** Label shown above the block. */
   label: string;
+  /**
+   * Data to show: strings as they are, other values as formatted JSON. The default block renders nothing for empty
+   * values and empty objects.
+   */
   data: unknown;
+  /** Classes of the block. */
   className?: string;
+  /** Classes of the parts of the block. */
   classNames?: {
+    /** The row with the label and the copy button. */
     header?: string;
+    /** The label. */
     label?: string;
+    /** The copy button. */
     copyButton?: string;
+    /** The scrollable container of the code. */
     container?: string;
+    /** The `<pre>` element with the code. */
     pre?: string;
   };
 };
@@ -246,36 +285,63 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
 
 // --- Customization Types ---
 
+/** Class names and replacement components for the parts of {@link TransactionDetails}. */
 export type TransactionDetailsCustomization = {
-  /** Custom class names for all sub-elements */
+  /** Classes added to the parts of the view. */
   classNames?: {
+    /** The whole view. */
     container?: string;
+    /** The header row with the back button and the title. */
     header?: string;
+    /** The back button. */
     backButton?: string;
+    /** The status icon in the main card. */
     statusIconContainer?: string;
+    /** The title (the `transactionDetails.title` label). */
     title?: string;
+    /** The subtitle under the title (the `transactionDetails.subtitle` label). */
     subtitle?: string;
+    /** The headings of the metadata and execution data sections. */
     sectionHeader?: string;
+    /** The main card with the status, hash, network, sender and recipient. */
     coreInfoCard?: string;
+    /** The network badge in the main card. */
     networkBadge?: string;
+    /** The metadata section. */
     metadataSection?: string;
+    /** The execution data section. */
     executionSection?: string;
   };
-  /** Custom components to override default elements */
+  /** Components that replace the default parts. */
   components?: {
+    /** A card around a section (props: `children`, `className`). */
     SectionCard?: ComponentType<{ children: ReactNode; className?: string }>;
+    /** A section heading (props: `children`, `className`). */
     SectionHeading?: ComponentType<{ children: ReactNode; className?: string }>;
+    /** A field with a copy button. */
     CopyableField?: ComponentType<CopyableFieldProps>;
+    /** A label and value pair. */
     DetailItem?: ComponentType<DetailItemProps>;
+    /** A row of the metadata section. */
     MetadataRow?: ComponentType<MetadataRowProps>;
+    /** A code block with a copy button. */
     JsonBlock?: ComponentType<JsonBlockProps>;
   };
 };
 
+/**
+ * Props of {@link TransactionDetails}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactionsProviderProps<T>, 'adapter'> & {
+  /** The transaction to show. */
   tx: T;
+  /** Called by the back button. */
   onBack: () => void;
+  /** Classes of the view. */
   className?: string;
+  /** Class names and replacement components for the parts of the view. */
   customization?: TransactionDetailsCustomization;
 };
 
@@ -341,7 +407,17 @@ const StarknetExecutionData = ({
 );
 
 /**
- * TransactionDetails component provides a deep look into a specific transaction's metadata and execution state.
+ * A detailed view of one transaction, shown by {@link TransactionsHistory} when a transaction is selected: the status,
+ * hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
+ * recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
+ * the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
+ * (EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
+ * contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
+ * Pulsar store (`syncStatus`). Values can be copied to the clipboard.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionDetailsProps}.
+ * @returns The view.
  */
 export function TransactionDetails<T extends Transaction>({
   tx,
@@ -535,7 +611,7 @@ export function TransactionDetails<T extends Transaction>({
 
       {/* ── Metadata Section ── */}
       <CSectionCard className={cn('novatx:p-4', classNames?.metadataSection)}>
-        <CSectionHeading>{transactionDetails.metadata}</CSectionHeading>
+        <CSectionHeading className={classNames?.sectionHeader}>{transactionDetails.metadata}</CSectionHeading>
         <div className="novatx:divide-y novatx:divide-[var(--tuwa-border-primary)]">
           <CMetadataRow icon={GlobeAltIcon} label={transactionDetails.adapter}>
             <span className="novatx:capitalize">{tx.adapter}</span>
@@ -560,13 +636,6 @@ export function TransactionDetails<T extends Transaction>({
               {tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}
             </CMetadataRow>
           )}
-          {tx.rpcUrl && (
-            <CMetadataRow icon={GlobeAltIcon} label={transactionDetails.rpcUrl}>
-              <span className="novatx:block novatx:max-w-[200px] novatx:truncate" title={tx.rpcUrl}>
-                {tx.rpcUrl}
-              </span>
-            </CMetadataRow>
-          )}
           <CMetadataRow icon={KeyIcon} label={transactionDetails.txKey}>
             <div className="novatx:flex novatx:min-w-0 novatx:items-center novatx:gap-1.5">
               <span className="novatx:truncate font-mono">{tx.txKey}</span>
@@ -578,7 +647,7 @@ export function TransactionDetails<T extends Transaction>({
 
       {/* ── Execution Data Section (Unified) ── */}
       <CSectionCard className={cn('novatx:p-4', classNames?.executionSection)}>
-        <CSectionHeading>{transactionDetails.executionData}</CSectionHeading>
+        <CSectionHeading className={classNames?.sectionHeader}>{transactionDetails.executionData}</CSectionHeading>
 
         <div className="novatx:space-y-6">
           {/* Chain Specific Metrics */}

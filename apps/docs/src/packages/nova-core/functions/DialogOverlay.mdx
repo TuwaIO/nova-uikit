@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/DialogOverlay" />
+
+# DialogOverlay()
+
+> **DialogOverlay**(`props`): `Element`
+
+Defined in: [components/Modal.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/Modal.tsx#L61)
+
+The dimmed, blurred backdrop behind the dialog, faded in and out with `framer-motion`. [DialogContent](?path=/docs/packages-nova-core-variables-dialogcontent--docs) renders
+it.
+
+Side effect: while it is mounted, the `NovaModalOpen` class is set on `document.body`; the stylesheet of this package
+uses it to stop the page from scrolling.
+
+## Parameters
+
+### props
+
+The overlay props.
+
+#### backdropAnimation?
+
+`Variants`
+
+`framer-motion` variants (`initial`, `animate`, `exit`) of the backdrop; a fade by
+default.
+
+#### className?
+
+`string`
+
+Classes added to the backdrop element.
+
+## Returns
+
+`Element`
+
+The backdrop.

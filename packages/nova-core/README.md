@@ -1,31 +1,30 @@
 # @tuwaio/nova-core
 
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)
-[![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](./LICENSE)
+[![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/LICENSE)
 
-`@tuwaio/nova-core` is the **UI Core (L6)** package of the TUWA Ecosystem design system. It acts as the shared foundation for styling primitives, CSS variable definitions, base React elements, and helper utilities. Fully independent of Web3 logic, it provides the common design boundaries consumed by visual modules like `@tuwaio/nova-connect` and `@tuwaio/nova-transactions` to maintain visual consistency across all TUWA interfaces.
+`@tuwaio/nova-core` is the core Layer 6 (L6) package of **Nova UI Kit**, the user interface project of TUWA Stage 4 ("User Interface"). It holds what the L7 packages [`@tuwaio/nova-connect`](https://stories.tuwa.io/?path=/docs/packages-nova-connect-overview--docs) and [`@tuwaio/nova-transactions`](https://stories.tuwa.io/?path=/docs/packages-nova-transactions-overview--docs) share: the `--tuwa-*` CSS variables of the theme, a dialog built on Radix UI, network and wallet icons, and small React hooks and helpers. It has no Web3 logic and no wallet or transaction state.
 
 ---
 
 ## 🏛️ Core Capabilities
 
-- **🎨 Design Token System:** Declares variables for colors, typography, borders, animations, and spacing, with built-in switching for light and dark modes.
-- **🛠️ Style Merger (`cn`):** An optimized composition utility blending `clsx` and `tailwind-merge` to resolve style overrides dynamically without class conflicts.
-- **⚡ Tailwind CSS v4 Native:** Configured to map variables into Tailwind's modern engine, allowing arbitrary class declarations.
-- **♿ Base Components & Primitives:** Shared layout modules, dialog nodes, overlays, and common utility indicators.
-- **📱 Shared React Hooks:** Reusable, performance-optimized hooks for clipboards (`useCopyToClipboard`) and responsive layouts (`useMediaQuery`).
+- **Theme variables:** `dist/index.css` defines the `--tuwa-*` CSS variables (colors, borders, rounded corners, status colors) for the light theme on `:root` and for the dark theme on `.dark`, the Geist Mono font (embedded, no font request), the Tailwind CSS v4 utilities of the package, prefixed with `novacore:`, and a few global rules: `scrollbar-gutter: stable` on `html`, no page scrolling while a Nova dialog is open, and no padding and background on `react-toastify` toasts (`.Toastify__toast`), which the Nova toasts draw themselves. Every Nova component reads these variables, so overriding them restyles the whole kit.
+- **Dialog:** `Dialog`, `DialogTrigger`, `DialogPortal`, `DialogClose` are the Radix UI primitives; `DialogOverlay`, `DialogContent`, `DialogHeader`, `DialogFooter`, `DialogTitle` and `DialogDescription` add the Nova styles and `framer-motion` animations. The connect and transaction modals of the L7 packages use them.
+- **Icons:** `NetworkIcon` and `WalletIcon` render icons from `@web3icons/react` (loaded on demand), fetch missing ones from the web3icons repository on GitHub (`GithubFallbackIcon`) and show `FallbackIcon` otherwise; `NetworkIcon` recolors the icons of testnets and of the Solana devnet and testnet with `--tuwa-testnet-icons`. `SvgToImg` and `SvgImg` render an SVG as an `<img>`, so identical icons on one page do not share SVG `id`s. `CloseIcon`, `ChevronArrowWithAnim`, `ToastCloseButton` and `StarsBackground` are small shared parts.
+- **Hooks and helpers:** `useCopyToClipboard` and `useMediaQuery`; `cn` (`clsx` + `tailwind-merge`), `deepMerge`, `getChainName`, `isSolanaDev`, `isTouchDevice`, `textCenterEllipsis`, the SVG helpers used by the icons and `standardButtonClasses`.
 
 ---
 
 ## 💾 Installation
 
 ```bash
-pnpm add @tuwaio/nova-core @radix-ui/react-dialog @web3icons/react @web3icons/common clsx framer-motion tailwind-merge react
+pnpm add @tuwaio/nova-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
 ```
 
-### CSS Setup
+Peer dependencies: `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x).
 
-Import the core CSS styles into the entrypoint of your application (e.g., `main.css` or `globals.css`):
+Import the stylesheet once, before the stylesheets of the other Nova packages:
 
 ```css
 @import '@tuwaio/nova-core/dist/index.css';
@@ -33,68 +32,38 @@ Import the core CSS styles into the entrypoint of your application (e.g., `main.
 
 ---
 
-## 🚀 Usage Guide
+## 🚀 Usage
 
-### 1. Tailwind Arbitrary Tokens
+Most apps use `@tuwaio/nova-core` through Nova Connect and Nova Transactions and only override its CSS variables:
 
-Use Nova custom variables directly in components for consistent styling:
+```css
+:root {
+  --tuwa-rounded-corners: 8px;
+}
 
-```tsx
-export function AccentCard() {
-  return (
-    <div className="p-6 bg-[var(--tuwa-bg-secondary)] border border-[var(--tuwa-border-primary)] rounded-[var(--tuwa-rounded-corners)]">
-      <h3 className="text-[var(--tuwa-text-primary)] font-medium">Core Primitive Card</h3>
-      <p className="mt-2 text-[var(--tuwa-text-secondary)] text-sm">Styled using central ecosystem design tokens.</p>
-      <button className="mt-4 px-4 py-2 bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]">Action</button>
-    </div>
-  );
+.dark {
+  --tuwa-bg-primary: #050505;
 }
 ```
 
-### 2. Styling Composition (`cn`)
-
-Blend default styles with external prop overrides cleanly:
+The variables and a full theme example are on the **[Theming](https://stories.tuwa.io/?path=/docs/theming--docs)** page. The components and helpers can also be used directly:
 
 ```tsx
-import { cn } from '@tuwaio/nova-core';
+import { cn, NetworkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary';
-}
-
-export function Button({ variant = 'primary', className, ...props }: ButtonProps) {
-  return (
-    <button
-      className={cn(
-        'px-4 py-2 font-medium rounded transition-colors',
-        variant === 'primary'
-          ? 'bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]'
-          : 'bg-[var(--tuwa-standart-button-bg)] text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-standart-button-hover)]',
-        className,
-      )}
-      {...props}
-    />
-  );
-}
-```
-
-### 3. Clipboard copy with `useCopyToClipboard`
-
-Easily build wallet address display nodes with copying feedback:
-
-```tsx
-import { useCopyToClipboard } from '@tuwaio/nova-core';
-
-export function AddressDisplay({ address }: { address: string }) {
-  const [copied, copy] = useCopyToClipboard();
+export function AddressChip({ address, chainId }: { address: string; chainId: number }) {
+  const { isCopied, copy } = useCopyToClipboard();
 
   return (
     <button
+      type="button"
       onClick={() => copy(address)}
-      className="font-mono text-xs text-[var(--tuwa-text-secondary)] hover:text-[var(--tuwa-text-accent)]"
+      className={cn('flex items-center gap-2', isCopied && 'opacity-70')}
     >
-      {address.slice(0, 6)}...{address.slice(-4)}
-      {copied ? ' (Copied ✓)' : ' (Copy)'}
+      <span className="h-4 w-4">
+        <NetworkIcon chainId={chainId} />
+      </span>
+      {isCopied ? 'Copied' : textCenterEllipsis(address, 6, 4)}
     </button>
   );
 }
@@ -102,40 +71,20 @@ export function AddressDisplay({ address }: { address: string }) {
 
 ---
 
-## 🎨 Theme Customization
+## 🌐 External Services
 
-Override default tokens in your global CSS stylesheet to match your brand:
+| Helper                                                     | Host                                                            | Purpose                                                                                                                                |
+| ---------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `GithubFallbackIcon` (used by `NetworkIcon`, `WalletIcon`) | `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository) | SVG of a network or wallet that the installed `@web3icons/common` does not list. The SVGs are cached in memory until the page reloads. |
 
-```css
-:root {
-  /* Customize Brand Accent Colors */
-  --tuwa-text-accent: #10b981; /* Emerald-500 */
-  --tuwa-text-on-accent: #ffffff;
-  --tuwa-rounded-corners: 8px;
-}
-
-/* Customize Dark Mode styling */
-.dark {
-  --tuwa-bg-primary: #050505;
-  --tuwa-bg-secondary: #121212;
-  --tuwa-border-primary: #222222;
-}
-```
+The other icons come from the installed `@web3icons/react`, and the font is embedded in the stylesheet. The package does not use `localStorage`.
 
 ---
 
-## 🔧 API & Module Architecture
+## 📚 API Reference
 
-`@tuwaio/nova-core` exports the following modules and functions:
-
-- **Style Composition:** `cn`.
-- **React Hooks:** `useCopyToClipboard`, `useMediaQuery`.
-- **UI Dialog Primitives:** `Dialog`, `DialogOverlay`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`.
-- **Utility Indicators:** `StarsBackground`, `FallbackIcon`, `GithubFallbackIcon`, `ChevronArrowWithAnim`, `ToastCloseButton`, `ToastValidationError`, `NetworkIcon`, `WalletIcon`.
-- **Formatters:** `deepMerge`, `svgToBase64`, `isTouchDevice`, `textCenterEllipsis`, `resolveCssVariable`.
-
----
+Every export, with signatures and types generated from the source, is documented at **[stories.tuwa.io → Packages → nova-core](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs)**.
 
 ## 📄 License
 
-Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.
+Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/LICENSE) file for details.

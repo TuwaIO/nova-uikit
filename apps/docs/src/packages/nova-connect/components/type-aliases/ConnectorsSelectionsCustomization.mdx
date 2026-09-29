@@ -1,0 +1,507 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsSelectionsCustomization" />
+
+# ConnectorsSelectionsCustomization
+
+> **ConnectorsSelectionsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:176](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L176)
+
+Customization options of [ConnectorsSelections](?path=/docs/packages-nova-connect-components-variables-connectorsselections--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:195](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L195)
+
+Custom class name generators
+
+#### connectorsArea?
+
+> `optional` **connectorsArea?**: (`params`) => `string`
+
+Returns the classes of the connectors area, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selection.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selection.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### contentWrapper?
+
+> `optional` **contentWrapper?**: (`params`) => `string`
+
+Returns the classes of the content wrapper, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selection.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### disclaimerSection?
+
+> `optional` **disclaimerSection?**: (`params`) => `string`
+
+Returns the classes of the disclaimer wrapper, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selection.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyState?
+
+> `optional` **emptyState?**: (`params`) => `string`
+
+Returns the classes of the empty state, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selection.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### impersonateSection?
+
+> `optional` **impersonateSection?**: (`params`) => `string`
+
+Returns the classes of the impersonation section, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The impersonation section.
+
+###### impersonateData
+
+[`ImpersonateSectionData`](?path=/docs/packages-nova-connect-components-interfaces-impersonatesectiondata--docs)
+
+The impersonation section.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### impersonateTitle?
+
+> `optional` **impersonateTitle?**: (`params`) => `string`
+
+Returns the classes of the impersonation title, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The impersonation section.
+
+###### impersonateData
+
+[`ImpersonateSectionData`](?path=/docs/packages-nova-connect-components-interfaces-impersonatesectiondata--docs)
+
+The impersonation section.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:178](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L178)
+
+Custom components
+
+#### ConnectorsArea?
+
+> `optional` **ConnectorsArea?**: `ComponentType`\<[`ConnectorsSelectionsConnectorsAreaProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionsconnectorsareaprops--docs)\>
+
+Custom connectors area wrapper
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ConnectorsSelectionsContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionscontainerprops--docs)\>
+
+Custom container wrapper
+
+#### ContentWrapper?
+
+> `optional` **ContentWrapper?**: `ComponentType`\<[`ConnectorsSelectionsContentWrapperProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionscontentwrapperprops--docs)\>
+
+Custom content wrapper
+
+#### DisclaimerSection?
+
+> `optional` **DisclaimerSection?**: `ComponentType`\<[`ConnectorsSelectionsDisclaimerSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionsdisclaimersectionprops--docs)\>
+
+Custom disclaimer section wrapper
+
+#### EmptyState?
+
+> `optional` **EmptyState?**: `ComponentType`\<[`ConnectorsSelectionsEmptyStateProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionsemptystateprops--docs)\>
+
+Custom empty state
+
+#### ImpersonateSection?
+
+> `optional` **ImpersonateSection?**: `ComponentType`\<[`ConnectorsSelectionsImpersonateSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionsimpersonatesectionprops--docs)\>
+
+Custom impersonate section
+
+#### ImpersonateTitle?
+
+> `optional` **ImpersonateTitle?**: `ComponentType`\<[`ConnectorsSelectionsImpersonateTitleProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionsimpersonatetitleprops--docs)\>
+
+Custom impersonate title
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:290](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L290)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.connectorsArea?
+
+> `optional` **connectorsArea?**: (`selectionsData`) => `string`
+
+Returns the ARIA label of the connectors area (default: the `availableWalletConnectors` label).
+
+###### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.container?
+
+> `optional` **container?**: (`selectionsData`) => `string`
+
+Returns the ARIA label of the container (default: the `connectWallet` label).
+
+###### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.impersonateSection?
+
+> `optional` **impersonateSection?**: (`impersonateData`) => `string`
+
+Returns the ARIA label of the impersonation section (default: the `impersonate` label).
+
+###### Parameters
+
+###### impersonateData
+
+[`ImpersonateSectionData`](?path=/docs/packages-nova-connect-components-interfaces-impersonatesectiondata--docs)
+
+The impersonation section.
+
+###### Returns
+
+`string`
+
+The label.
+
+#### features?
+
+> `optional` **features?**: `object`
+
+Show/hide features
+
+##### features.showDisclaimer?
+
+> `optional` **showDisclaimer?**: `boolean`
+
+Whether to show the wallet disclaimer on touch devices (default: `true`)
+
+##### features.showEmptyState?
+
+> `optional` **showEmptyState?**: `boolean`
+
+Whether to show the empty state; `false` renders nothing (default: `true`)
+
+##### features.showImpersonate?
+
+> `optional` **showImpersonate?**: `boolean`
+
+Whether to show the impersonation section when it is available (default: `true`)
+
+#### layout?
+
+> `optional` **layout?**: `object`
+
+Layout configuration
+
+##### layout.mouseConnectorsClasses?
+
+> `optional` **mouseConnectorsClasses?**: `string`[]
+
+Mouse device classes for connectors area
+
+##### layout.mouseContentClasses?
+
+> `optional` **mouseContentClasses?**: `string`[]
+
+Mouse device classes for content wrapper
+
+##### layout.touchConnectorsClasses?
+
+> `optional` **touchConnectorsClasses?**: `string`[]
+
+Touch device classes for connectors area
+
+##### layout.touchContentClasses?
+
+> `optional` **touchContentClasses?**: `string`[]
+
+Touch device classes for content wrapper
+
+***
+
+### connectorsBlock?
+
+> `optional` **connectorsBlock?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:337](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L337)
+
+ConnectorsBlock customization for each connector block
+
+#### installed?
+
+> `optional` **installed?**: [`ConnectorsBlockCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockcustomization--docs)
+
+Customization for installed connectors block
+
+#### popular?
+
+> `optional` **popular?**: [`ConnectorsBlockCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockcustomization--docs)
+
+Customization for the popular connectors block and the blocks of custom groups
+
+***
+
+### disclaimer?
+
+> `optional` **disclaimer?**: [`DisclaimerCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimercustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:346](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L346)
+
+Disclaimer customization
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:262](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L262)
+
+Custom event handlers
+
+#### onDisclaimerLearnMore?
+
+> `optional` **onDisclaimerLearnMore?**: (`selectionsData`, `originalHandler`) => `void`
+
+Wraps "Learn more" of the wallet disclaimer: call `originalHandler()` to show the "About wallets" screen.
+
+##### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+###### originalHandler
+
+() => `void`
+
+Shows the "About wallets" screen.
+
+##### Returns
+
+`void`
+
+#### onEmptyStateAction?
+
+> `optional` **onEmptyStateAction?**: (`selectionsData`) => `void`
+
+Called when the empty state is clicked.
+
+##### Parameters
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+##### Returns
+
+`void`
+
+#### onImpersonateClick?
+
+> `optional` **onImpersonateClick?**: (`impersonateData`, `selectionsData`, `originalHandler`) => `void`
+
+Wraps the click on the impersonated wallet card: call `originalHandler()` to run the `onClick` prop with it.
+
+##### Parameters
+
+###### impersonateData
+
+[`ImpersonateSectionData`](?path=/docs/packages-nova-connect-components-interfaces-impersonatesectiondata--docs)
+
+The impersonation section.
+
+###### selectionsData
+
+[`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list.
+
+###### originalHandler
+
+() => `void`
+
+Runs the `onClick` prop with the impersonated wallet.
+
+##### Returns
+
+`void`
+
+***
+
+### impersonateCard?
+
+> `optional` **impersonateCard?**: [`ConnectCardCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectcardcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:344](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L344)
+
+ConnectCard customization for impersonate card

@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/resolveCssVariable" />
+
+# resolveCssVariable()
+
+> **resolveCssVariable**(`value`): `string`
+
+Defined in: [utils/svgUtils.ts:8](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/svgUtils.ts#L8)
+
+Resolves a CSS variable to its computed value on `document.documentElement`.
+Returns the original value if it's not a CSS variable. Call it in the browser: it reads `getComputedStyle`.
+
+## Parameters
+
+### value
+
+`string`
+
+Color value, potentially a CSS variable like `var(--my-color)`
+
+## Returns
+
+`string`
+
+Resolved color value (e.g., `#ff0000`) or original if not a variable

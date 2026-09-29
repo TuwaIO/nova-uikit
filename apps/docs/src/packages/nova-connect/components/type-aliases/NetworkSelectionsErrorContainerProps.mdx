@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/NetworkSelectionsErrorContainerProps" />
+
+# NetworkSelectionsErrorContainerProps
+
+> **NetworkSelectionsErrorContainerProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L144)
+
+Props for a custom error container (shown when no wallet matches `activeConnector`).
+
+## Type Declaration
+
+### aria-live?
+
+> `optional` **aria-live?**: `"polite"` \| `"assertive"`
+
+`assertive`
+
+### children
+
+> **children**: `React.ReactNode`
+
+The error icon, title and message
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.errorContainer` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`alert`
+
+### selectionsData
+
+> **selectionsData**: [`NetworkSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-networkselectionsdata--docs)
+
+State of the network selection

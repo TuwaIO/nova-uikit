@@ -1,0 +1,411 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ChainListRendererCustomization" />
+
+# ChainListRendererCustomization
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:122](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L122)
+
+Customization options of [ChainListRenderer](?path=/docs/packages-nova-connect-components-variables-chainlistrenderer--docs).
+
+## Properties
+
+### animations?
+
+> `optional` **animations?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:241](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L241)
+
+Animation configuration
+
+#### container?
+
+> `optional` **container?**: [`ChainListRendererContainerAnimationConfig`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrenderercontaineranimationconfig--docs)
+
+Container animation
+
+#### item?
+
+> `optional` **item?**: [`ChainListRendererItemAnimationConfig`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendereritemanimationconfig--docs)
+
+Item animation (mobile list only)
+
+***
+
+### behavior?
+
+> `optional` **behavior?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:248](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L248)
+
+Behavior configuration
+
+#### loadingMessage?
+
+> `optional` **loadingMessage?**: `string`
+
+Message shown while `isLoading` is `true` (default: the `loading` label followed by `...`)
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L135)
+
+Custom class name generators
+
+#### activeIndicator?
+
+> `optional` **activeIndicator?**: (`params`) => `string`
+
+Returns classes added to the active indicator.
+
+##### Parameters
+
+###### params
+
+The list state.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeIndicatorWrapper?
+
+> `optional` **activeIndicatorWrapper?**: (`params`) => `string`
+
+Returns classes added to the active indicator wrapper.
+
+##### Parameters
+
+###### params
+
+The item state.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### chainName?
+
+> `optional` **chainName?**: (`params`) => `string`
+
+Returns classes added to the chain name.
+
+##### Parameters
+
+###### params
+
+The item state.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns classes added to the list container (before the `className` prop).
+
+##### Parameters
+
+###### params
+
+The list state.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile list.
+
+###### itemCount
+
+`number`
+
+Number of chains.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### icon?
+
+> `optional` **icon?**: (`params`) => `string`
+
+Returns the classes passed to the chain icon.
+
+##### Parameters
+
+###### params
+
+The item state.
+
+###### chainId
+
+`string` \| `number`
+
+The formatted chain ID.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### item?
+
+> `optional` **item?**: (`params`) => `string`
+
+Returns the classes of an item, instead of the default ones and `itemClassName`. An empty string keeps the
+defaults.
+
+##### Parameters
+
+###### params
+
+The item state.
+
+###### chainId
+
+`string` \| `number`
+
+The formatted chain ID.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile list.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L124)
+
+Custom components
+
+#### ActiveIndicator?
+
+> `optional` **ActiveIndicator?**: `ComponentType`\<[`ChainListRendererActiveIndicatorProps`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendereractiveindicatorprops--docs)\>
+
+Custom active indicator component
+
+#### ActiveIndicatorWrapper?
+
+> `optional` **ActiveIndicatorWrapper?**: `ComponentType`\<[`ChainListRendererActiveIndicatorWrapperProps`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendereractiveindicatorwrapperprops--docs)\>
+
+Custom active indicator wrapper component
+
+#### ChainContent?
+
+> `optional` **ChainContent?**: `ComponentType`\<[`ChainListRendererChainContentProps`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendererchaincontentprops--docs)\>
+
+Custom chain content layout component
+
+#### ChainIcon?
+
+> `optional` **ChainIcon?**: `ComponentType`\<[`ChainListRendererChainIconProps`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrendererchainiconprops--docs)\>
+
+Custom chain icon component
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainListRenderer.tsx:193](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainListRenderer.tsx#L193)
+
+Custom event handlers
+
+#### onClick?
+
+> `optional` **onClick?**: (`originalHandler`, `context`) => `void`
+
+Wraps the activation of an item with a pointer (a click or a tap): call `originalHandler()` to select the chain
+(through `onSelect`) and close the list.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Selects the chain and closes the list.
+
+###### context
+
+The item.
+
+###### chainId
+
+`string` \| `number`
+
+The formatted chain ID.
+
+###### chainName
+
+`string`
+
+The chain name.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+##### Returns
+
+`void`
+
+#### onKeyDown?
+
+> `optional` **onKeyDown?**: (`originalHandler`, `event`, `context`) => `void`
+
+Wraps the key handler of an item: call `originalHandler(event)` to select the chain on Enter and Space (in the
+desktop list, Space within a second of typing a chain name continues the type-ahead search instead).
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`KeyboardEvent`
+
+The keyboard event.
+
+###### context
+
+The item.
+
+###### chainId
+
+`string` \| `number`
+
+The formatted chain ID.
+
+###### chainName
+
+`string`
+
+The chain name.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+##### Returns
+
+`void`
+
+#### onSelect?
+
+> `optional` **onSelect?**: (`originalHandler`, `chainId`, `context`) => `void`
+
+Wraps the selection of a chain: call `originalHandler(chainId)` to run `handleValueChange`. The list closes after
+this handler returns.
+
+##### Parameters
+
+###### originalHandler
+
+(`chainId`) => `void`
+
+The `handleValueChange` prop.
+
+###### chainId
+
+`string`
+
+The formatted chain ID, as a string.
+
+###### context
+
+The item.
+
+###### chainName
+
+`string`
+
+The chain name.
+
+###### isActive
+
+`boolean`
+
+Whether this is the chain of the active connection.
+
+##### Returns
+
+`void`

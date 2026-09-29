@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `WaitForConnectionContent` component, a customizable connection prompt with comprehensive styling control and animation options.
+ * @file This file contains the `WaitForConnectionContent` component, a customizable connection prompt with
+ * comprehensive styling control and animation options.
  */
 
 import { cn } from '@tuwaio/nova-core';
@@ -22,33 +23,58 @@ const DEFAULT_CONTAINER_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type CustomIconProps = {
+/** Props of the wallet icon of {@link WaitForConnectionContent} (`customization.components.Icon`). */
+export type WaitForConnectionContentIconProps = {
+  /** Path data (`d`) of the icon (`customization.svg.pathData`, or a wallet icon). */
   pathData: string;
+  /** Classes from `customization.classNames.icon`. */
   className?: string;
+  /** Always `true`: the container has the accessible label. */
   'aria-hidden'?: boolean;
+  /** Always `false`. */
   focusable?: boolean;
 };
 
-type CustomPathProps = {
+/** Props of the animated path of {@link WaitForConnectionContent} (`customization.components.Path`). */
+export type WaitForConnectionContentPathProps = {
+  /** Path data (`d`). */
   pathData: string;
+  /** `framer-motion` variants of the path (`customization.variants.path`, or a drawing animation). */
   variants?: Variants;
+  /** Classes from `customization.classNames.path`. */
   className?: string;
+  /** Stroke line cap (`customization.svg.strokeLinecap`). */
   strokeLinecap?: 'butt' | 'round' | 'square';
+  /** Stroke line join (`customization.svg.strokeLinejoin`). */
   strokeLinejoin?: 'miter' | 'bevel' | 'round';
+  /** Stroke width (`customization.svg.strokeWidth`). */
   strokeWidth?: string | number;
 };
 
-type CustomTextProps = {
+/** Props of the text of {@link WaitForConnectionContent} (`customization.components.Text`). */
+export type WaitForConnectionContentTextProps = {
+  /** The text: `customization.config.customText`, or the `connectWallet` label. */
   text: string;
+  /** Classes from `customization.classNames.text`. */
   className?: string;
+  /** Always `true`: the container has the accessible label. */
   'aria-hidden'?: boolean;
+  /** ARIA role of the text. Defaults to `'text'`. */
   role?: string;
 };
 
-type CustomContentProps = {
+/**
+ * Props of the content of {@link WaitForConnectionContent} (`customization.components.Content`), which replaces the
+ * icon and text.
+ */
+export type WaitForConnectionContentContentProps = {
+  /** The rendered icon. */
   icon: ReactNode;
+  /** The rendered text. */
   text: ReactNode;
+  /** Whether a wallet is connected. */
   isConnected: boolean;
+  /** Accessible label of the container. */
   finalAriaLabel: string;
 };
 
@@ -61,23 +87,41 @@ export type WaitForConnectionContentCustomization = {
   /** Custom components */
   components?: {
     /** Custom icon SVG component */
-    Icon?: ComponentType<CustomIconProps>;
+    Icon?: ComponentType<WaitForConnectionContentIconProps>;
     /** Custom path component */
-    Path?: ComponentType<CustomPathProps>;
+    Path?: ComponentType<WaitForConnectionContentPathProps>;
     /** Custom text component */
-    Text?: ComponentType<CustomTextProps>;
+    Text?: ComponentType<WaitForConnectionContentTextProps>;
     /** Custom content component (wraps everything) */
-    Content?: ComponentType<CustomContentProps>;
+    Content?: ComponentType<WaitForConnectionContentContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and `className`.
+     *
+     * @param params - The connection state.
+     * @param params.isConnected - Whether a wallet is connected.
+     * @returns The classes.
+     */
     container?: (params: { isConnected: boolean }) => string;
-    /** Function to generate icon classes */
+    /**
+     * Returns the classes of the icon.
+     *
+     * @param params - The connection state.
+     * @param params.isConnected - Whether a wallet is connected.
+     * @returns The classes.
+     */
     icon?: (params: { isConnected: boolean }) => string;
     /** Function to generate path classes */
     path?: () => string;
-    /** Function to generate text classes */
+    /**
+     * Returns the classes of the text.
+     *
+     * @param params - The connection state.
+     * @param params.isConnected - Whether a wallet is connected.
+     * @returns The classes.
+     */
     text?: (params: { isConnected: boolean }) => string;
   };
   /** Custom animation variants */
@@ -127,13 +171,14 @@ export type WaitForConnectionContentCustomization = {
     disableAnimation?: boolean;
     /** Whether to reduce motion for accessibility */
     reduceMotion?: boolean;
-    /** Whether to hide the component when connected */
+    /** Whether to render nothing while a wallet is connected. Defaults to `true`. */
     hideWhenConnected?: boolean;
     /** Custom text to display */
     customText?: string;
   };
 };
 
+/** Props of {@link WaitForConnectionContent}. The other props are passed to the `framer-motion` container. */
 export interface WaitForConnectionContentProps extends Omit<
   HTMLMotionProps<'div'>,
   'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
@@ -153,7 +198,7 @@ const DefaultIcon = ({
   'aria-hidden': ariaHidden = true,
   focusable = false,
   ...props
-}: CustomIconProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>) => {
+}: WaitForConnectionContentIconProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>) => {
   return (
     <svg
       className={cn('novacon:w-5 novacon:h-5', className)}
@@ -177,7 +222,7 @@ const DefaultPath = ({
   strokeLinejoin = 'round',
   strokeWidth = 1.5,
   ...props
-}: CustomPathProps & Omit<ComponentPropsWithoutRef<typeof motion.path>, 'style'>) => {
+}: WaitForConnectionContentPathProps & Omit<ComponentPropsWithoutRef<typeof motion.path>, 'style'>) => {
   return (
     <motion.path
       d={pathData}
@@ -204,7 +249,7 @@ const DefaultText = ({
   'aria-hidden': ariaHidden = true,
   role = 'text',
   ...props
-}: CustomTextProps & Omit<ComponentPropsWithoutRef<'span'>, 'style'>) => {
+}: WaitForConnectionContentTextProps & Omit<ComponentPropsWithoutRef<'span'>, 'style'>) => {
   return (
     <span className={cn('novacon:font-medium', className)} role={role} aria-hidden={ariaHidden} {...props}>
       {text}
@@ -212,7 +257,7 @@ const DefaultText = ({
   );
 };
 
-const DefaultContent = ({ icon, text }: Pick<CustomContentProps, 'icon' | 'text'>) => {
+const DefaultContent = ({ icon, text }: Pick<WaitForConnectionContentContentProps, 'icon' | 'text'>) => {
   return (
     <>
       {icon}
@@ -222,56 +267,25 @@ const DefaultContent = ({ icon, text }: Pick<CustomContentProps, 'icon' | 'text'
 };
 
 /**
- * A highly customizable connection prompt component with extensive styling options and accessibility features.
- * Displays an animated wallet icon and text prompting users to connect their wallet, with comprehensive customization support.
+ * The content of the connect button while no wallet is connected: an animated wallet icon and the `connectWallet`
+ * label (or `customization.config.customText`). By default it renders nothing while a wallet is connected
+ * (`hideWhenConnected`). Animations can be turned off with `customization.config.disableAnimation` or `reduceMotion`.
  *
- * Features:
- * - Animated container and wallet icon with Framer Motion
- * - Comprehensive customization for all visual elements and animations
- * - Full accessibility support with ARIA labels and proper roles
- * - Configurable animation timing and easing
- * - Reduced motion support for accessibility
- * - Custom SVG properties and path styling
- * - Conditional rendering based on connection status
- * - Performance-optimized with memoized calculations
- * - Custom text and icon support
+ * Props: {@link WaitForConnectionContentProps}; the ref is forwarded to the container.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <WaitForConnectionContent />
- * ```
+ * import { WaitForConnectionContent } from '@tuwaio/nova-connect/components';
  *
- * @example With full customization
- * ```tsx
- * <WaitForConnectionContent
- *   customization={{
- *     classNames: {
- *       container: ({ isConnected }) =>
- *         `custom-container ${isConnected ? 'connected' : 'disconnected'}`,
- *       text: () => "custom-text-styling text-blue-500",
- *     },
- *     animation: {
- *       container: { duration: 0.8, ease: "easeOut" },
- *       path: { duration: 1.2, delay: 0.3 },
- *     },
- *     variants: {
- *       container: {
- *         initial: { scale: 0, rotate: -180 },
- *         animate: { scale: 1, rotate: 0 },
- *       },
- *     },
- *     svg: {
- *       strokeWidth: 2,
- *       strokeLinecap: "square",
- *       pathData: "M12 2L2 7v10l10 5 10-5V7L12 2z", // Custom wallet icon
- *     },
- *     config: {
- *       customText: "Please Connect Your Wallet",
- *       hideWhenConnected: true,
- *       reduceMotion: false,
- *     },
- *   }}
- * />
+ * export const Prompt = (
+ *   <WaitForConnectionContent
+ *     customization={{
+ *       classNames: { text: () => 'text-blue-500' },
+ *       animation: { path: { duration: 1.2, delay: 0.3 } },
+ *       config: { customText: 'Please connect your wallet' },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnectionContentProps>(

@@ -15,6 +15,8 @@ import {
 } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
@@ -25,7 +27,7 @@ import { ConnectorsSelectionsProps } from './ConnectorsSelections';
 // --- Types ---
 
 /**
- * Connector block data for customization context
+ * State of a {@link ConnectorsBlock}, passed to its custom components, class name generators and handlers.
  */
 export interface ConnectorsBlockData {
   /** Currently selected network adapter */
@@ -38,144 +40,253 @@ export interface ConnectorsBlockData {
   isTitleBold: boolean;
   /** Whether only one network is available */
   isOnlyOneNetwork: boolean;
-  /** Whether device is touch-enabled */
+  /** Whether the device has a touch screen */
   isTouch: boolean;
   /** Whether there are connectors to display */
   hasConnectors: boolean;
-  /** Recent wallets data */
+  /** The three most recently disconnected wallets (connector type and data), read from `localStorage` on mount */
   recentWallets: [string, RecentlyConnectedConnectorData][] | null;
-  /** Section ID for accessibility */
+  /** `connectors-<title in kebab case>`, the prefix of the title ID */
   sectionId: string;
 }
 
 /**
- * Individual connector item data
+ * A wallet of a {@link ConnectorsBlock}.
  */
 export interface ConnectorItemData {
-  /** Grouped connector configuration */
+  /** The wallet */
   group: GroupedConnector;
-  /** Formatted wallet name */
+  /** The wallet name as `formatConnectorName` of `@tuwaio/orbit-core` returns it */
   name: string;
-  /** Whether this wallet was recently used */
+  /** Whether the wallet is one of the three most recent ones (the card shows the "Recent" badge) */
   isRecent: boolean;
   /** Item index in the list */
   index: number;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container (a `section` by default).
+ */
+export type ConnectorsBlockContainerProps = {
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** The title and the wallet list, or the empty state */
   children: React.ReactNode;
+  /** `group` */
   role?: string;
+  /** ID of the title (not set in the empty state without a title) */
   'aria-labelledby'?: string;
+  /** `config.ariaLabels.container` or the `connectorsSection` label with the title */
   'aria-label'?: string;
+  /** State of the group */
   blockData: ConnectorsBlockData;
 } & React.RefAttributes<HTMLElement>;
 
-type TitleProps = {
+/**
+ * Props for a custom title.
+ */
+export type ConnectorsBlockTitleProps = {
+  /** Classes from `classNames.title` or the defaults (bold accent with `isTitleBold`) */
   className?: string;
+  /** The `title` prop */
   children: React.ReactNode;
+  /** `<sectionId>-title` */
   id?: string;
+  /** `heading` */
   role?: string;
+  /** `3` */
   'aria-level'?: number;
+  /** Calls `handlers.onTitleClick`, when set */
   onClick?: () => void;
+  /** State of the group */
   blockData: ConnectorsBlockData;
 } & React.RefAttributes<HTMLHeadingElement>;
 
-type ConnectorsListProps = {
+/**
+ * Props for a custom wallet list.
+ */
+export type ConnectorsBlockConnectorsListProps = {
+  /** Classes from `classNames.connectorsList`, or the defaults with the `config.layout` classes */
   className?: string;
+  /** The wallet items */
   children: React.ReactNode;
+  /** `list` */
   role?: string;
+  /** `config.ariaLabels.connectorsList` or the `connectorsList` label with the title */
   'aria-label'?: string;
-  blockData: ConnectorsBlockData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ConnectorItemProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  itemData: ConnectorItemData;
-  blockData: ConnectorsBlockData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type EmptyStateProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  onClick?: () => void;
+  /** State of the group */
   blockData: ConnectorsBlockData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * Customization options for ConnectorsBlock component
+ * Props for a custom wallet item.
+ */
+export type ConnectorsBlockConnectorItemProps = {
+  /** Classes from `classNames.connectorItem` or the defaults */
+  className?: string;
+  /** The `ConnectCard` of the wallet */
+  children: React.ReactNode;
+  /** `listitem` */
+  role?: string;
+  /** The wallet */
+  itemData: ConnectorItemData;
+  /** State of the group */
+  blockData: ConnectorsBlockData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom empty state (shown when the group has no wallets).
+ */
+export type ConnectorsBlockEmptyStateProps = {
+  /** Classes from `classNames.emptyState` or the defaults */
+  className?: string;
+  /** The `noGroupWallets` label with the title */
+  children: React.ReactNode;
+  /** `status` */
+  role?: string;
+  /** `config.ariaLabels.emptyState` or the `noGroupConnectors` label with the title */
+  'aria-label'?: string;
+  /** Calls `handlers.onEmptyStateAction`, when set */
+  onClick?: () => void;
+  /** State of the group */
+  blockData: ConnectorsBlockData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link ConnectorsBlock}.
  */
 export type ConnectorsBlockCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<ConnectorsBlockContainerProps>;
     /** Custom title component */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<ConnectorsBlockTitleProps>;
     /** Custom connectors list */
-    ConnectorsList?: ComponentType<ConnectorsListProps>;
+    ConnectorsList?: ComponentType<ConnectorsBlockConnectorsListProps>;
     /** Custom connector item wrapper */
-    ConnectorItem?: ComponentType<ConnectorItemProps>;
+    ConnectorItem?: ComponentType<ConnectorsBlockConnectorItemProps>;
     /** Custom empty state component */
-    EmptyState?: ComponentType<EmptyStateProps>;
+    EmptyState?: ComponentType<ConnectorsBlockEmptyStateProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The group.
+     * @param params.blockData - State of the group.
+     * @returns The classes.
+     */
     container?: (params: { blockData: ConnectorsBlockData }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title, instead of the default ones.
+     *
+     * @param params - The group.
+     * @param params.blockData - State of the group.
+     * @returns The classes.
+     */
     title?: (params: { blockData: ConnectorsBlockData }) => string;
-    /** Function to generate connectors list classes */
+    /**
+     * Returns the classes of the wallet list, instead of the default ones.
+     *
+     * @param params - The group.
+     * @param params.blockData - State of the group.
+     * @returns The classes.
+     */
     connectorsList?: (params: { blockData: ConnectorsBlockData }) => string;
-    /** Function to generate connector item classes */
+    /**
+     * Returns the classes of a wallet item, instead of the default ones.
+     *
+     * @param params - The wallet.
+     * @param params.itemData - The wallet.
+     * @param params.blockData - State of the group.
+     * @returns The classes.
+     */
     connectorItem?: (params: { itemData: ConnectorItemData; blockData: ConnectorsBlockData }) => string;
-    /** Function to generate empty state classes */
+    /**
+     * Returns the classes of the empty state, instead of the default ones.
+     *
+     * @param params - The group.
+     * @param params.blockData - State of the group.
+     * @returns The classes.
+     */
     emptyState?: (params: { blockData: ConnectorsBlockData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom connector click handler */
+    /**
+     * Wraps the click on a wallet card: call `originalHandler(itemData.group)` to run the default behavior. A wallet
+     * with several networks and no selected network goes to `onClick` (the network choice); otherwise `onClick` runs
+     * and the wallet connects through `connect` of the Satellite store, then the modal closes.
+     *
+     * @param itemData - The clicked wallet.
+     * @param blockData - State of the group.
+     * @param originalHandler - The default behavior.
+     */
     onConnectorClick?: (
       itemData: ConnectorItemData,
       blockData: ConnectorsBlockData,
       originalHandler: (group: GroupedConnector) => Promise<void>,
     ) => void;
-    /** Custom title click handler */
+    /**
+     * Called when the title is clicked.
+     *
+     * @param blockData - State of the group.
+     */
     onTitleClick?: (blockData: ConnectorsBlockData) => void;
-    /** Custom empty state action handler */
+    /**
+     * Called when the empty state is clicked.
+     *
+     * @param blockData - State of the group.
+     */
     onEmptyStateAction?: (blockData: ConnectorsBlockData) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /**
+       * Returns the ARIA label of the container (default: the `connectorsSection` label with the title).
+       *
+       * @param blockData - State of the group.
+       * @returns The label.
+       */
       container?: (blockData: ConnectorsBlockData) => string;
+      /**
+       * Returns the ARIA label of the wallet list (default: the `connectorsList` label with the title).
+       *
+       * @param blockData - State of the group.
+       * @returns The label.
+       */
       connectorsList?: (blockData: ConnectorsBlockData) => string;
+      /**
+       * Returns the ARIA label of the empty state (default: the `noGroupConnectors` label with the title).
+       *
+       * @param blockData - State of the group.
+       * @returns The label.
+       */
       emptyState?: (blockData: ConnectorsBlockData) => string;
     };
-    /** Custom layout configuration */
+    /** Classes of the default wallet list (ignored when `classNames.connectorsList` is set) */
     layout?: {
-      /** Touch device gap between items */
+      /** Gap on touch devices, used without `touchClasses` (default: `novacon:gap-3`) */
       touchGap?: string;
-      /** Mouse device gap between items */
+      /** Gap on devices without a touch screen, used without `mouseClasses` (default: `novacon:gap-2`) */
       mouseGap?: string;
-      /** Custom touch layout classes */
+      /** Classes on touch devices (default: a row with `touchGap`) */
       touchClasses?: string[];
-      /** Custom mouse layout classes */
+      /** Classes on devices without a touch screen (default: a column with `mouseGap`) */
       mouseClasses?: string[];
     };
     /** Show/hide features */
     features?: {
-      /** Whether to show empty state */
+      /** Whether to show the empty state; `false` renders nothing without wallets (default: `true`) */
       showEmptyState?: boolean;
-      /** Whether to show title when no connectors */
+      /** Whether the empty state has the title (default: `true`) */
       showTitleWhenEmpty?: boolean;
-      /** Whether to show recent indicators */
+      /** Whether cards of recent wallets show the "Recent" badge (default: `true`) */
       showRecentIndicators?: boolean;
     };
   };
@@ -186,9 +297,9 @@ export type ConnectorsBlockCustomization = {
 };
 
 /**
- * Props for the ConnectorsBlock component
+ * Props for the {@link ConnectorsBlock} component. The props picked from `ConnectorsSelectionsProps` work as there.
  */
-interface ConnectorsBlockProps extends Pick<
+export interface ConnectorsBlockProps extends Pick<
   ConnectorsSelectionsProps,
   'setIsOpen' | 'setIsConnected' | 'onClick' | 'appChains' | 'solanaRPCUrls'
 > {
@@ -198,38 +309,42 @@ interface ConnectorsBlockProps extends Pick<
   connectors: GroupedConnector[];
   /** Title text for the connector group */
   title: string;
-  /** Whether to render the title in bold accent color */
+  /** Whether to render the title in bold accent color (default: `false`) */
   isTitleBold?: boolean;
-  /** Whether only one network is available */
+  /** Whether only one network is available; hides the network icons of the cards (default: `false`) */
   isOnlyOneNetwork?: boolean;
   /** Customization options */
   customization?: ConnectorsBlockCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLElement, ContainerProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { blockData: _blockData, ...restProps } = props;
-  return (
-    <section ref={ref} className={className} {...restProps}>
-      {children}
-    </section>
-  );
-});
+const DefaultContainer = forwardRef<HTMLElement, ConnectorsBlockContainerProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { blockData: _blockData, ...restProps } = props;
+    return (
+      <section ref={ref} className={className} {...restProps}>
+        {children}
+      </section>
+    );
+  },
+);
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultTitle = forwardRef<HTMLHeadingElement, TitleProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { blockData: _blockData, ...restProps } = props;
-  return (
-    <h3 ref={ref} className={className} {...restProps}>
-      {children}
-    </h3>
-  );
-});
+const DefaultTitle = forwardRef<HTMLHeadingElement, ConnectorsBlockTitleProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { blockData: _blockData, ...restProps } = props;
+    return (
+      <h3 ref={ref} className={className} {...restProps}>
+        {children}
+      </h3>
+    );
+  },
+);
 DefaultTitle.displayName = 'DefaultTitle';
 
-const DefaultConnectorsList = forwardRef<HTMLDivElement, ConnectorsListProps>(
+const DefaultConnectorsList = forwardRef<HTMLDivElement, ConnectorsBlockConnectorsListProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { blockData: _blockData, ...restProps } = props;
@@ -242,7 +357,7 @@ const DefaultConnectorsList = forwardRef<HTMLDivElement, ConnectorsListProps>(
 );
 DefaultConnectorsList.displayName = 'DefaultConnectorsList';
 
-const DefaultConnectorItem = forwardRef<HTMLDivElement, ConnectorItemProps>(
+const DefaultConnectorItem = forwardRef<HTMLDivElement, ConnectorsBlockConnectorItemProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { itemData: _itemData, blockData: _blockData, ...restProps } = props;
@@ -255,99 +370,62 @@ const DefaultConnectorItem = forwardRef<HTMLDivElement, ConnectorItemProps>(
 );
 DefaultConnectorItem.displayName = 'DefaultConnectorItem';
 
-const DefaultEmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { blockData: _blockData, ...restProps } = props;
-  return (
-    <div ref={ref} className={className} {...restProps}>
-      {children}
-    </div>
-  );
-});
+const DefaultEmptyState = forwardRef<HTMLDivElement, ConnectorsBlockEmptyStateProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { blockData: _blockData, ...restProps } = props;
+    return (
+      <div ref={ref} className={className} {...restProps}>
+        {children}
+      </div>
+    );
+  },
+);
 DefaultEmptyState.displayName = 'DefaultEmptyState';
 
 /**
- * ConnectorsBlock component - Displays a grouped section of wallet connectors with full customization
+ * A titled group of wallet cards in the connect modal ("Installed", "Popular" or a custom group). The cards of the
+ * three most recently used wallets (read from `localStorage` key `orbit-core:recentlyConnectedConnectorsListHelpers`
+ * on mount) show a "Recent" badge.
  *
- * This component renders a section of wallet connectors with:
- * - Responsive layout adapting to touch/mouse interfaces
- * - Support for multi-network wallet selection
- * - Automatic connection handling for single-network wallets
- * - Recent wallet indicators and prioritization
- * - Full accessibility support with proper labeling
- * - Error handling and connection retry logic
- * - Complete customization of all child components and styling
+ * Clicking a wallet with several networks while no network is selected calls `onClick` (the modal shows the network
+ * choice). Otherwise it calls `onClick`, connects the wallet through `connect` of the Satellite store to the chain
+ * from `appChains` or `solanaRPCUrls`, waits up to 10 seconds for the connection and closes the modal 400 ms later.
+ * A second click while a connection is running is ignored.
  *
- * Layout features:
- * - Touch devices: Horizontal scrolling layout with cards
- * - Mouse devices: Vertical stacked layout for better readability
- * - Dynamic title styling based on section importance
- * - Consistent spacing and visual hierarchy
- * - Customizable layout parameters and responsive behavior
+ * Props: {@link ConnectorsBlockProps}; the ref is forwarded to the container.
  *
- * Connection flow:
- * - Single adapter: Direct connection attempt
- * - Multiple adapters without selection: Triggers network selection
- * - Selected adapter: Uses specific adapter for connection
- * - Recent wallets: Visual indicators for previously used wallets
- * - Error handling with retry mechanisms
- *
- * Accessibility features:
- * - Semantic heading structure with proper levels
- * - Group labeling for related connector sets
- * - Screen reader friendly section descriptions
- * - Proper focus management and keyboard navigation
- * - ARIA live regions for dynamic content updates
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectorsBlock
- *   selectedAdapter={OrbitAdapter.EVM}
- *   connectors={installedConnectors}
- *   title="Installed"
- *   isTitleBold={true}
- *   isOnlyOneNetwork={false}
- *   onClick={(group) => handleWalletSelection(group)}
- *   appChains={appConfiguration}
- *   solanaRPCUrls={rpcConfig}
- *   store={walletStore}
- * />
- * ```
+ * import { getFilteredConnectors } from '@tuwaio/nova-connect';
+ * import { ConnectorsBlock } from '@tuwaio/nova-connect/components';
+ * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+ * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
+ * import { mainnet } from 'viem/chains';
  *
- * @example With full customization
- * ```tsx
- * <ConnectorsBlock
- *   selectedAdapter={undefined}
- *   connectors={popularConnectors}
- *   title="Popular"
- *   isTitleBold={false}
- *   isOnlyOneNetwork={true}
- *   onClick={(group) => initiateConnection(group)}
- *   customization={{
- *     components: {
- *       Container: CustomConnectorsContainer,
- *       Title: CustomSectionTitle
- *     },
- *     classNames: {
- *       connectorsList: ({ blockData }) =>
- *         blockData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
- *       connectorItem: ({ itemData, blockData }) =>
- *         itemData.isRecent ? 'recent-connector' : 'standard-connector'
- *     },
- *     handlers: {
- *       onConnectorClick: (itemData, blockData, originalHandler) => {
- *         analytics.track('connector_clicked', { wallet: itemData.name });
- *         originalHandler(itemData.group);
- *       }
- *     },
- *     connectCard: {
- *       classNames: {
- *         container: ({ cardData }) =>
- *           cardData.isRecent ? 'bg-accent' : 'bg-default'
- *       }
- *     }
- *   }}
- * />
+ * export function InstalledWallets() {
+ *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const { setIsConnected, setIsConnectModalOpen } = useNovaConnect();
+ *
+ *   return (
+ *     <ConnectorsBlock
+ *       title="Installed"
+ *       isTitleBold
+ *       selectedAdapter={OrbitAdapter.EVM}
+ *       connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+ *       onClick={(connector) => console.log('selected', connector.name)}
+ *       setIsConnected={setIsConnected}
+ *       setIsOpen={setIsConnectModalOpen}
+ *       appChains={[mainnet]}
+ *       customization={{
+ *         classNames: {
+ *           connectorItem: ({ itemData }) => (itemData.isRecent ? 'recent-connector' : 'standard-connector'),
+ *         },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectorsBlock = memo(
@@ -380,6 +458,7 @@ export const ConnectorsBlock = memo(
         EmptyState: CustomEmptyState = DefaultEmptyState,
       } = customization?.components ?? {};
 
+      const labels = useNovaConnectLabels();
       const customHandlers = customization?.handlers;
       const customConfig = customization?.config;
 
@@ -587,22 +666,24 @@ export const ConnectorsBlock = memo(
               className={cssClasses.emptyState}
               role="status"
               aria-label={
-                customConfig?.ariaLabels?.emptyState?.(blockData) ?? `No ${title.toLowerCase()} connectors available`
+                customConfig?.ariaLabels?.emptyState?.(blockData) ??
+                formatLabel(labels.noGroupConnectors, { title: title.toLowerCase() })
               }
               blockData={blockData}
               onClick={
                 customHandlers?.onEmptyStateAction ? () => customHandlers.onEmptyStateAction!(blockData) : undefined
               }
             >
-              No {title.toLowerCase()} wallets available
+              {formatLabel(labels.noGroupWallets, { title: title.toLowerCase() })}
             </CustomEmptyState>
           </CustomContainer>
         );
       }
 
       const containerAriaLabel =
-        customConfig?.ariaLabels?.container?.(blockData) ?? `${title} wallet connectors section`;
-      const listAriaLabel = customConfig?.ariaLabels?.connectorsList?.(blockData) ?? `${title} wallet connectors`;
+        customConfig?.ariaLabels?.container?.(blockData) ?? formatLabel(labels.connectorsSection, { title });
+      const listAriaLabel =
+        customConfig?.ariaLabels?.connectorsList?.(blockData) ?? formatLabel(labels.connectorsList, { title });
 
       return (
         <CustomContainer

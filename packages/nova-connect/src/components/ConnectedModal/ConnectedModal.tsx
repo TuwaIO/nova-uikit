@@ -3,7 +3,7 @@
  */
 
 import { ChevronLeftIcon } from '@heroicons/react/24/solid';
-import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
+import { CloseIcon, cn, Dialog, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
 import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect } from 'react';
@@ -19,27 +19,15 @@ import {
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import {
-  ScrollableChainList,
-  ScrollableChainListCustomization,
-  ScrollableChainListProps,
-} from '../Chains/ScrollableChainList';
+import { ScrollableChainList, ScrollableChainListCustomization } from '../Chains/ScrollableChainList';
 import { ConnectButtonProps } from '../ConnectButton';
 import {
   ConnectedModalFooter,
   ConnectedModalFooterCustomization,
   ConnectedModalFooterProps,
 } from './ConnectedModalFooter';
-import {
-  ConnectedModalMainContent,
-  ConnectedModalMainContentCustomization,
-  ConnectedModalMainContentProps,
-} from './ConnectedModalMainContent';
-import {
-  ConnectedModalTxHistory,
-  ConnectedModalTxHistoryCustomization,
-  ConnectedModalTxHistoryProps,
-} from './ConnectedModalTxHistory';
+import { ConnectedModalMainContent, ConnectedModalMainContentCustomization } from './ConnectedModalMainContent';
+import { ConnectedModalTxHistory, ConnectedModalTxHistoryCustomization } from './ConnectedModalTxHistory';
 import { ConnectionsContent, ConnectionsContentCustomization } from './ConnectionsContent';
 
 // --- Default Motion Variants ---
@@ -65,7 +53,7 @@ const DEFAULT_MODAL_ANIMATION_VARIANTS: Variants = {
  * Props for custom DialogTitle component
  * DialogTitle is the main title element that includes back button and title text
  */
-type DialogTitleProps = {
+export type ConnectedModalDialogTitleProps = {
   /** Current title text */
   title: string;
   /** Current content type for conditional rendering */
@@ -81,7 +69,7 @@ type DialogTitleProps = {
 /**
  * Props for custom BackButton component
  */
-type BackButtonProps = {
+export type ConnectedModalBackButtonProps = {
   /** Handler for back button click */
   onBack: () => void;
   /** Localized labels */
@@ -93,7 +81,7 @@ type BackButtonProps = {
 /**
  * Props for custom CloseButton component
  */
-type CloseButtonProps = {
+export type ConnectedModalCloseButtonProps = {
   /** Handler for close button click */
   onClose: () => void;
   /** Localized labels */
@@ -106,7 +94,7 @@ type CloseButtonProps = {
  * Props for custom Header component
  * Header wraps DialogTitle and CloseButton together
  */
-type HeaderProps = {
+export type ConnectedModalHeaderProps = {
   /** Current content type */
   contentType: ConnectedContentType;
   /** Current title text */
@@ -122,9 +110,12 @@ type HeaderProps = {
 };
 
 /**
- * Props for custom MainContent component
+ * Props for a custom main content (the default one renders the screen of `contentType`).
  */
-type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'pagination'> & {
+export type ConnectedModalMainContentSlotProps = Pick<
+  NovaConnectProviderProps,
+  'transactionPool' | 'pulsarAdapter' | 'pagination'
+> & {
   /** Current content type */
   contentType: ConnectedContentType;
   /** Native balance result */
@@ -141,33 +132,55 @@ type MainContentProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'puls
   ensAvatar: string | null;
   /** List of available chains */
   chainsList: (string | number)[];
-  /** Handler for chain change */
+  /**
+   * Runs `handlers.onChainChange`, or `switchNetwork` of the Satellite store.
+   *
+   * @param chainId - The selected chain ID, formatted for the connector.
+   */
   onChainChange: (chainId: string) => void;
-  /** Handler for back navigation */
+  /** Runs `handlers.onBack`, or shows the main screen */
   onBack: () => void;
-  /** Function to get chain data */
-  getChainData: (chain: string | number) => { formattedChainId: string | number; chain: string | number };
-  /** Additional CSS classes */
+  /**
+   * Formats a chain of `chainsList` for the connector of the active connection.
+   *
+   * @param chain - A chain of `chainsList`.
+   * @returns The formatted chain ID and the original one.
+   */
+  getChainData: (chain: string | number) => {
+    /** The chain ID formatted for the connector */
+    formattedChainId: string | number;
+    /** The chain as given */
+    chain: string | number;
+  };
+  /** Classes from `classNames.mainContent` */
   className?: string;
   /** Child component customizations */
   childCustomizations?: ConnectedModalCustomization['childCustomizations'];
 };
 
 // --- Wallet Name Hook Config Type ---
-type WalletNameConfig = {
+/**
+ * Options of `useGetWalletNameAndAvatar` used by {@link ConnectedModal} (`config.hooks.walletNameAndAvatar`). When
+ * set, the object replaces the defaults (`6`, `30`, `false`, `3000`), and omitted fields take the defaults of the hook.
+ */
+export type ConnectedModalWalletNameConfig = {
+  /** Characters kept at each end of a shortened address */
   abbreviateSymbols?: number;
+  /** Names longer than this are shortened */
   maxNameLength?: number;
+  /** Whether to retry a failed name lookup */
   autoRetry?: boolean;
+  /** Delay before a retry, in milliseconds */
   retryDelay?: number;
 };
 
 /**
- * Customization options for ConnectedModal component
+ * Customization options of {@link ConnectedModal}.
  */
 export type ConnectedModalCustomization = {
-  /** Override root dialog props */
+  /** Props of the dialog, applied after `open` and `onOpenChange` (they override them) */
   dialogProps?: Partial<ComponentPropsWithoutRef<typeof Dialog>>;
-  /** Override dialog content props */
+  /** Props of the dialog content, applied last (they override the generated ones) */
   dialogContentProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   /** Custom components */
   components?: {
@@ -180,25 +193,19 @@ export type ConnectedModalCustomization = {
      * Includes back button (when not on main view) and title text
      * Use this to customize the entire title area
      */
-    DialogTitle?: ComponentType<DialogTitleProps>;
+    DialogTitle?: ComponentType<ConnectedModalDialogTitleProps>;
     /**
      * Custom header component
      * Wraps DialogTitle and CloseButton together
      * Use this to customize the entire header layout
      */
-    Header?: ComponentType<HeaderProps>;
+    Header?: ComponentType<ConnectedModalHeaderProps>;
     /** Custom back button component (chevron left icon button) */
-    BackButton?: ComponentType<BackButtonProps>;
+    BackButton?: ComponentType<ConnectedModalBackButtonProps>;
     /** Custom close button component (X icon button) */
-    CloseButton?: ComponentType<CloseButtonProps>;
+    CloseButton?: ComponentType<ConnectedModalCloseButtonProps>;
     /** Custom main content component (renders different views based on contentType) */
-    MainContent?: ComponentType<MainContentProps>;
-    /** Custom main content renderer for main view */
-    MainContentRenderer?: ComponentType<ConnectedModalMainContentProps>;
-    /** Custom transactions content renderer */
-    TransactionsContentRenderer?: ComponentType<ConnectedModalTxHistoryProps>;
-    /** Custom chains content renderer */
-    ChainsContentRenderer?: ComponentType<ScrollableChainListProps>;
+    MainContent?: ComponentType<ConnectedModalMainContentSlotProps>;
     /** Custom footer component */
     Footer?: ComponentType<ConnectedModalFooterProps>;
     /** Custom motion container for animations */
@@ -206,33 +213,70 @@ export type ConnectedModalCustomization = {
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate dialog classes */
-    dialog?: () => string;
-    /** Function to generate dialog content classes */
+    /**
+     * Returns the classes of the dialog content, instead of the default ones and the `className` prop.
+     *
+     * @param params - The modal state.
+     * @param params.contentType - The current screen.
+     * @param params.hasActiveWallet - Always `true` (nothing is rendered without a connected wallet).
+     * @returns The classes.
+     */
     dialogContent?: (params: { contentType: ConnectedContentType; hasActiveWallet: boolean }) => string;
-    /** Function to generate motion container classes */
+    /**
+     * Returns the classes of the layout animation container.
+     *
+     * @returns The classes.
+     */
     motionContainer?: () => string;
-    /** Function to generate content container classes */
+    /**
+     * Returns the classes of the content container, instead of the default ones (an empty string keeps them).
+     *
+     * @param params - The modal state.
+     * @param params.contentType - The current screen.
+     * @returns The classes.
+     */
     contentContainer?: (params: { contentType: ConnectedContentType }) => string;
-    /** Function to generate header classes */
+    /**
+     * Returns the classes of the header, added to the default ones.
+     *
+     * @param params - The modal state.
+     * @param params.contentType - The current screen.
+     * @returns The classes.
+     */
     header?: (params: { contentType: ConnectedContentType }) => string;
-    /** Function to generate dialog title classes */
+    /**
+     * Returns the classes of the title, the only classes of the title.
+     *
+     * @param params - The modal state.
+     * @param params.contentType - The current screen.
+     * @returns The classes.
+     */
     dialogTitle?: (params: { contentType: ConnectedContentType }) => string;
-    /** Function to generate back button classes */
-    backButton?: () => string;
-    /** Function to generate close button classes */
+    /**
+     * Returns classes added to the close button.
+     *
+     * @returns The classes.
+     */
     closeButton?: () => string;
-    /** Function to generate main content classes */
+    /**
+     * Returns the classes of the main content, added to the default ones.
+     *
+     * @param params - The modal state.
+     * @param params.contentType - The current screen.
+     * @returns The classes.
+     */
     mainContent?: (params: { contentType: ConnectedContentType }) => string;
-    /** Function to generate footer classes */
+    /**
+     * Returns classes added to the footer.
+     *
+     * @returns The classes.
+     */
     footer?: () => string;
   };
   /** Custom animation variants */
   variants?: {
-    /** Modal animation variants */
+    /** Variants of the animation container (`initial`, `animate`, `exit`) */
     modal?: Variants;
-    /** Content animation variants */
-    content?: Variants;
   };
   /** Custom animation configuration */
   animation?: {
@@ -245,18 +289,9 @@ export type ConnectedModalCustomization = {
       /** Animation delay in seconds */
       delay?: number;
     };
-    /** Content animation configuration */
-    content?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-    /** Layout animation configuration */
+    /** Layout animation between screens */
     layout?: {
-      /** Animation duration in seconds */
+      /** Animation duration in seconds (default: `0.0001`) */
       duration?: number;
       /** Animation easing curve */
       ease?: Easing | Easing[];
@@ -264,16 +299,23 @@ export type ConnectedModalCustomization = {
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for modal open state change */
+    /**
+     * Replaces the open state change of the dialog (Escape, click outside, close button). The modal stays open until
+     * the handler calls `setIsConnectedModalOpen(open)` from `useNovaConnect`.
+     *
+     * @param open - The requested state.
+     */
     onOpenChange?: (open: boolean) => void;
-    /** Custom handler for back navigation */
+    /** Replaces the back button (and the return after a chain is selected), which shows the main screen by default */
     onBack?: () => void;
-    /** Custom handler for modal close */
+    /** Replaces the close button, which closes the modal by default (through `onOpenChange` when it is set) */
     onClose?: () => void;
-    /** Custom handler for chain change */
+    /**
+     * Replaces the network switch of the network screen (`switchNetwork` of the Satellite store by default).
+     *
+     * @param chainId - The selected chain ID, formatted for the connector.
+     */
     onChainChange?: (chainId: string) => void;
-    /** Custom handler for content type change */
-    onContentTypeChange?: (type: ConnectedContentType) => void;
   };
   /** Child component customizations */
   childCustomizations?: {
@@ -290,36 +332,34 @@ export type ConnectedModalCustomization = {
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
+    /** Disables the modal and layout animations (default: `false`) */
     disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
+    /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
-    /** Whether to auto-reset to main view when opening */
+    /** Whether to show the main screen each time the modal opens (default: `true`) */
     autoResetToMain?: boolean;
     /** Custom ARIA labels for different states */
     ariaLabels?: {
+      /** ARIA label of the dialog content */
       dialog?: string;
-      header?: string;
-      backButton?: string;
-      closeButton?: string;
-      mainContent?: string;
     };
     /** Hook configurations */
     hooks?: {
       /** Configuration for wallet name and avatar hook */
-      walletNameAndAvatar?: WalletNameConfig;
+      walletNameAndAvatar?: ConnectedModalWalletNameConfig;
     };
   };
 };
 
 /**
- * Props for the ConnectedModal component
+ * Props for the {@link ConnectedModal} component. `appChains` and `solanaRPCUrls` give the chains of the network
+ * screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history.
  */
 export interface ConnectedModalProps
   extends
     Omit<ConnectButtonProps, 'className' | 'customization'>,
     Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls' | 'pagination'> {
-  /** Additional CSS classes for the modal */
+  /** Classes added to the dialog content classes (ignored when `classNames.dialogContent` is set) */
   className?: string;
   /** Customization options */
   customization?: ConnectedModalCustomization;
@@ -330,7 +370,7 @@ export interface ConnectedModalProps
 /**
  * Default back button component
  */
-const DefaultBackButton: React.FC<BackButtonProps> = ({ onBack, labels, className }) => (
+const DefaultBackButton: React.FC<ConnectedModalBackButtonProps> = ({ onBack, labels, className }) => (
   <button
     type="button"
     onClick={onBack}
@@ -350,37 +390,31 @@ const DefaultBackButton: React.FC<BackButtonProps> = ({ onBack, labels, classNam
 /**
  * Default close button component
  */
-const DefaultCloseButton: React.FC<CloseButtonProps> = ({ onClose, labels, className }) => (
-  <DialogClose asChild>
-    <button
-      type="button"
-      onClick={onClose}
-      aria-label={labels.closeModal}
-      className={cn(
-        'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1',
-        'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
-        'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
-        'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
-        className,
-      )}
-    >
-      <CloseIcon />
-    </button>
-  </DialogClose>
+// Not wrapped in `DialogClose`: `onClose` closes the modal, and `DialogClose` would also call `onOpenChange`
+const DefaultCloseButton: React.FC<ConnectedModalCloseButtonProps> = ({ onClose, labels, className }) => (
+  <button
+    type="button"
+    onClick={onClose}
+    aria-label={labels.closeModal}
+    className={cn(
+      'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1',
+      'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors',
+      'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
+      'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+      className,
+    )}
+  >
+    <CloseIcon />
+  </button>
 );
 
 /**
  * Default dialog title component
  * Combines back button (conditional) and title text
  */
-const DefaultDialogTitle: React.FC<DialogTitleProps & { BackButton?: ComponentType<BackButtonProps> }> = ({
-  title,
-  contentType,
-  onBack,
-  labels,
-  className,
-  BackButton = DefaultBackButton,
-}) => (
+const DefaultDialogTitle: React.FC<
+  ConnectedModalDialogTitleProps & { BackButton?: ComponentType<ConnectedModalBackButtonProps> }
+> = ({ title, contentType, onBack, labels, className, BackButton = DefaultBackButton }) => (
   <DialogTitle className={className}>
     <div className="novacon:flex novacon:items-center novacon:justify-between novacon:gap-2">
       {contentType !== 'main' && <BackButton onBack={onBack} labels={labels} />}
@@ -394,13 +428,12 @@ const DefaultDialogTitle: React.FC<DialogTitleProps & { BackButton?: ComponentTy
  * Wraps DialogTitle and CloseButton
  */
 const DefaultHeader: React.FC<
-  HeaderProps & {
-    DialogTitleComponent?: ComponentType<DialogTitleProps>;
-    CloseButtonComponent?: ComponentType<CloseButtonProps>;
-    BackButtonComponent?: ComponentType<BackButtonProps>;
+  ConnectedModalHeaderProps & {
+    DialogTitleComponent?: ComponentType<ConnectedModalDialogTitleProps>;
+    CloseButtonComponent?: ComponentType<ConnectedModalCloseButtonProps>;
+    BackButtonComponent?: ComponentType<ConnectedModalBackButtonProps>;
     dialogTitleClassName?: string;
     closeButtonClassName?: string;
-    backButtonClassName?: string;
   }
 > = ({
   contentType,
@@ -451,7 +484,7 @@ const DefaultHeader: React.FC<
  * Default main content component
  * Renders different views based on contentType
  */
-const DefaultMainContent: React.FC<MainContentProps> = ({
+const DefaultMainContent: React.FC<ConnectedModalMainContentSlotProps> = ({
   contentType,
   balance,
   refetch,
@@ -534,53 +567,31 @@ const DefaultMainContent: React.FC<MainContentProps> = ({
 };
 
 /**
- * Modal component that displays wallet connection status and provides access to wallet controls with comprehensive customization options.
+ * The connected modal: the main screen (avatar, name, balance, transactions button), the network screen, the
+ * transaction history and the connections screen, with a footer to disconnect and open the explorer. Open it with
+ * `setIsConnectedModalOpen(true)` from `useNovaConnect`; `NovaConnectProvider` renders it when `appChains` or
+ * `solanaRPCUrls` is set. Renders nothing without a connected wallet.
  *
- * This modal serves as the main interface for connected wallet management, offering:
- * - Wallet connection status and information
- * - Network switching capabilities
- * - Transaction history viewing
- * - Wallet disconnection controls
- * - Comprehensive customization for all UI elements and behaviors
- * - Animation support with reduced motion options
- * - Custom event handlers for enhanced interactivity
- * - Performance-optimized with memoized calculations
- * - Full customization of child components through parent
+ * The name and avatar come from `useGetWalletNameAndAvatar` (ENS or SNS lookups), the balance from
+ * `useWalletNativeBalance`; both send requests through the Satellite adapter.
  *
- * The modal adapts its content based on the current view state and provides
- * full WCAG compliance with proper ARIA labels and keyboard navigation support.
+ * Props: {@link ConnectedModalProps}; the ref is forwarded to the dialog content.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedModal
- *   solanaRPCUrls={solanaConfig}
- *   transactionPool={txPool}
- *   pulsarAdapter={adapter}
- *   appChains={chainConfig}
- *   store={store}
- * />
- * ```
+ * import { ConnectedModal } from '@tuwaio/nova-connect/components';
+ * import { mainnet, polygon } from 'viem/chains';
  *
- * @example Customizing DialogTitle
- * ```tsx
- * <ConnectedModal
- *   customization={{
- *     components: {
- *       DialogTitle: ({ title, contentType, onBack, labels }) => (
- *         <div className="custom-title">
- *           {contentType !== 'main' && (
- *             <button onClick={onBack}>{labels.back}</button>
- *           )}
- *           <h2>{title}</h2>
- *         </div>
- *       ),
- *     },
- *     classNames: {
- *       dialogTitle: ({ contentType }) =>
- *         contentType === 'main' ? 'main-title' : 'sub-title',
- *     },
- *   }}
- * />
+ * export const Modal = (
+ *   <ConnectedModal
+ *     appChains={[mainnet, polygon]}
+ *     customization={{
+ *       classNames: {
+ *         dialogTitle: ({ contentType }) => (contentType === 'main' ? 'main-title' : 'sub-title'),
+ *       },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
@@ -619,7 +630,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
     const customHandlers = customization?.handlers;
 
     // Hook configurations
-    const walletNameConfig: WalletNameConfig = hooksConfig?.walletNameAndAvatar ?? {
+    const walletNameConfig: ConnectedModalWalletNameConfig = hooksConfig?.walletNameAndAvatar ?? {
       abbreviateSymbols: 6,
       maxNameLength: 30,
       autoRetry: false,
@@ -745,10 +756,10 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       if (customHandlers?.onClose) {
         customHandlers.onClose();
       } else {
-        setIsConnectedModalOpen(false);
+        handleOpenChange(false);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [customHandlers?.onClose, setIsConnectedModalOpen]);
+    }, [customHandlers?.onClose, handleOpenChange]);
 
     /**
      * Memoized state calculations
@@ -839,7 +850,6 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           BackButtonComponent={CustomBackButton}
           CloseButtonComponent={CustomCloseButton}
           dialogTitleClassName={customization?.classNames?.dialogTitle?.({ contentType: connectedModalContentType })}
-          backButtonClassName={customization?.classNames?.backButton?.()}
           closeButtonClassName={customization?.classNames?.closeButton?.()}
         />
       );

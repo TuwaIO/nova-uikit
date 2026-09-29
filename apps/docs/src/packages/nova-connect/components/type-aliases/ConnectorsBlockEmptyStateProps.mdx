@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsBlockEmptyStateProps" />
+
+# ConnectorsBlockEmptyStateProps
+
+> **ConnectorsBlockEmptyStateProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L141)
+
+Props for a custom empty state (shown when the group has no wallets).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.emptyState` or the `noGroupConnectors` label with the title
+
+### blockData
+
+> **blockData**: [`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group
+
+### children
+
+> **children**: `React.ReactNode`
+
+The `noGroupWallets` label with the title
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.emptyState` or the defaults
+
+### onClick?
+
+> `optional` **onClick?**: () => `void`
+
+Calls `handlers.onEmptyStateAction`, when set
+
+#### Returns
+
+`void`
+
+### role?
+
+> `optional` **role?**: `string`
+
+`status`

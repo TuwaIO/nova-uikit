@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectCardRecentBadgeWrapperProps" />
+
+# ConnectCardRecentBadgeWrapperProps
+
+> **ConnectCardRecentBadgeWrapperProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:301](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L301)
+
+Props for a custom wrapper of the recent badge (rendered when the `isRecent` prop is `true`).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.recentBadge`, or the title with the `recent` label
+
+### cardData
+
+> **cardData**: [`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card
+
+### children
+
+> **children**: `React.ReactNode`
+
+The `RecentBadge`
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.recentBadgeWrapper` or the defaults

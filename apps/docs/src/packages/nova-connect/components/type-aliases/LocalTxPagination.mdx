@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/LocalTxPagination" />
+
+# LocalTxPagination
+
+> **LocalTxPagination** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L45)
+
+Local mirror of TxInMemoryPagination from @tuwaio/pulsar-core.
+Defined inline because pulsar-core is an optional peer dependency in nova-connect.
+
+## Properties
+
+### currentPage
+
+> **currentPage**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L53)
+
+The current page number in the paginated history.
+
+***
+
+### fetchNextPage
+
+> **fetchNextPage**: (`walletAddress`) => `Promise`\<`void`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L60)
+
+Loads the next page of transaction history and appends it to the pool.
+
+#### Parameters
+
+##### walletAddress
+
+`string`
+
+The address whose history is loaded.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Resolves when the page is loaded.
+
+***
+
+### hasMore
+
+> **hasMore**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L51)
+
+Indicates whether more history pages are available.
+
+***
+
+### isError
+
+> **isError**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L49)
+
+Indicates whether the last loading request ended with an error.
+
+***
+
+### isLoading
+
+> **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L47)
+
+Indicates whether the store is currently loading transaction history.

@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalMainContentTransactionsSectionProps" />
+
+# ConnectedModalMainContentTransactionsSectionProps
+
+> **ConnectedModalMainContentTransactionsSectionProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:138](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L138)
+
+Props for a custom transactions section: the "View transactions" button (rendered only when the wallet has
+transactions).
+
+## Properties
+
+### buttonClassName?
+
+> `optional` **buttonClassName?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L152)
+
+Classes from `classNames.transactionsButton` (default: `standardButtonClasses` of `@tuwaio/nova-core`)
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L150)
+
+Classes from `classNames.transactionsSection`
+
+***
+
+### hasPendingTransactions
+
+> **hasPendingTransactions**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:142](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L142)
+
+Whether one of them is pending
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L144)
+
+The Nova Connect labels
+
+***
+
+### onViewTransactions
+
+> **onViewTransactions**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L146)
+
+Runs `handlers.onViewTransactions`, or shows the transaction history
+
+#### Returns
+
+`void`
+
+***
+
+### showPendingIndicators?
+
+> `optional` **showPendingIndicators?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L148)
+
+`config.showPendingIndicators`
+
+***
+
+### walletTransactions
+
+> **walletTransactions**: `Transaction`[]
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:140](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L140)
+
+Transactions of `transactionPool` sent from the active address

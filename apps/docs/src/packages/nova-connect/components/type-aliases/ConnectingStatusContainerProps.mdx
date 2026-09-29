@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingStatusContainerProps" />
+
+# ConnectingStatusContainerProps
+
+> **ConnectingStatusContainerProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L74)
+
+Props for a custom status container (the circle around the wallet icon).
+
+## Type Declaration
+
+### children
+
+> **children**: `React.ReactNode`
+
+The spinner or the status icon, and the wallet icon
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.statusContainer` or the defaults (the border color follows the state)
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

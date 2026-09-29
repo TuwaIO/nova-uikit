@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `StatusIcon` component, a customizable animated status icon with comprehensive styling control.
+ * @file This file contains the `StatusIcon` component, a customizable animated status icon with comprehensive styling
+ * control.
  */
 
 import { cn } from '@tuwaio/nova-core';
@@ -21,26 +22,43 @@ const DEFAULT_CONTAINER_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type CustomSvgProps = {
+/** Props of the SVG of {@link StatusIcon} (`customization.components.Svg`). */
+export type StatusIconSvgProps = {
+  /** Path data (`d`) of the icon. */
   pathData: string;
+  /** Classes from `customization.classNames.svg`. */
   className?: string;
+  /** Always `true`: the container has the accessible label. */
   'aria-hidden'?: boolean;
+  /** Always `false`. */
   focusable?: boolean;
 };
 
-type CustomPathProps = {
+/** Props of the animated path of {@link StatusIcon} (`customization.components.Path`). */
+export type StatusIconPathProps = {
+  /** Path data (`d`). */
   pathData: string;
+  /** `framer-motion` variants of the path (`customization.variants.path`, or a drawing animation). */
   variants?: Variants;
+  /** Classes from `customization.classNames.path`. */
   className?: string;
+  /** Stroke line cap (`customization.svg.strokeLinecap`). */
   strokeLinecap?: 'butt' | 'round' | 'square';
+  /** Stroke line join (`customization.svg.strokeLinejoin`). */
   strokeLinejoin?: 'miter' | 'bevel' | 'round';
+  /** Stroke width (`customization.svg.strokeWidth`). */
   strokeWidth?: string | number;
 };
 
-type CustomContentProps = {
+/** Props of the content of {@link StatusIcon} (`customization.components.Content`), which replaces the SVG. */
+export type StatusIconContentProps = {
+  /** The transaction status shown. */
   txStatus: 'succeed' | 'failed' | 'replaced';
+  /** The `colorVar` prop. */
   colorVar: string;
+  /** Path data (`d`) of the icon. */
   pathData: string;
+  /** Accessible label of the icon. */
   finalAriaLabel: string;
 };
 
@@ -55,19 +73,39 @@ export type StatusIconCustomization = {
   /** Custom components */
   components?: {
     /** Custom SVG component */
-    Svg?: ComponentType<CustomSvgProps>;
+    Svg?: ComponentType<StatusIconSvgProps>;
     /** Custom path component */
-    Path?: ComponentType<CustomPathProps>;
+    Path?: ComponentType<StatusIconPathProps>;
     /** Custom content component (wraps everything) */
-    Content?: ComponentType<CustomContentProps>;
+    Content?: ComponentType<StatusIconContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The icon state.
+     * @param params.txStatus - The status shown.
+     * @param params.colorVar - The `colorVar` prop.
+     * @returns The classes.
+     */
     container?: (params: { txStatus: 'succeed' | 'failed' | 'replaced'; colorVar: string }) => string;
-    /** Function to generate SVG classes */
+    /**
+     * Returns the classes of the SVG, instead of the default ones.
+     *
+     * @param params - The icon state.
+     * @param params.txStatus - The status shown.
+     * @param params.colorVar - The `colorVar` prop.
+     * @returns The classes.
+     */
     svg?: (params: { txStatus: 'succeed' | 'failed' | 'replaced'; colorVar: string }) => string;
-    /** Function to generate path classes */
+    /**
+     * Returns the classes of the path.
+     *
+     * @param params - The icon state.
+     * @param params.txStatus - The status shown.
+     * @returns The classes.
+     */
     path?: (params: { txStatus: 'succeed' | 'failed' | 'replaced' }) => string;
   };
   /** Custom animation variants */
@@ -118,15 +156,16 @@ export type StatusIconCustomization = {
   };
 };
 
+/** Props of {@link StatusIcon}. The other props are passed to the `framer-motion` container. */
 export interface StatusIconProps extends Omit<
   HTMLMotionProps<'div'>,
   'children' | 'initial' | 'animate' | 'exit' | 'variants' | 'transition' | 'style'
 > {
   /** Transaction status type */
   txStatus: 'succeed' | 'failed' | 'replaced';
-  /** Color variable name (without --tuwa- prefix) */
+  /** Color name: the icon uses `--tuwa-<colorVar>-text` (for example `success`, `error`). */
   colorVar: string;
-  /** SVG path data */
+  /** Path data (`d`) of the icon, as a string; other children are ignored. */
   children: ReactNode;
   /** Custom aria-label for accessibility */
   'aria-label'?: string;
@@ -143,7 +182,7 @@ const DefaultSvg = ({
   'aria-hidden': ariaHidden = true,
   focusable = false,
   ...props
-}: CustomSvgProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>) => {
+}: StatusIconSvgProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>) => {
   return (
     <svg
       className={cn('novacon:w-4 novacon:h-4', className)}
@@ -169,7 +208,7 @@ const DefaultPath = ({
   strokeLinejoin = 'round',
   strokeWidth = 2,
   ...props
-}: CustomPathProps & Omit<ComponentPropsWithoutRef<typeof motion.path>, 'style'>) => {
+}: StatusIconPathProps & Omit<ComponentPropsWithoutRef<typeof motion.path>, 'style'>) => {
   return (
     <motion.path
       d={pathData}
@@ -190,62 +229,41 @@ const DefaultPath = ({
   );
 };
 
-const DefaultContent = ({ pathData, finalAriaLabel }: Pick<CustomContentProps, 'pathData' | 'finalAriaLabel'>) => {
+const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProps, 'pathData' | 'finalAriaLabel'>) => {
   return <DefaultSvg pathData={pathData} aria-label={finalAriaLabel} />;
 };
 
 /**
- * A highly customizable animated status icon component with comprehensive styling and animation options.
- * Provides visual feedback for transaction states with smooth animations and full accessibility support.
+ * An animated status icon: an SVG path, drawn with `framer-motion`, in a circle colored with the
+ * `--tuwa-<colorVar>-text` variable. The connect button shows it after a transaction of the connected wallet succeeded,
+ * failed or was replaced. Pass the path data as children. Animations can be turned off with
+ * `customization.config.disableAnimation` or `reduceMotion`.
  *
- * Features:
- * - Animated container and path with Framer Motion
- * - Comprehensive customization for all visual elements and animations
- * - Full accessibility support with ARIA labels and proper roles
- * - Status-based styling with CSS custom properties
- * - Configurable animation timing and easing
- * - Reduced motion support for accessibility
- * - Custom SVG properties and path styling
- * - Performance-optimized with memoized calculations
+ * Props: {@link StatusIconProps}; the ref is forwarded to the container.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <StatusIcon txStatus="succeed" colorVar="success">
- *   m4.5 12.75 6 6 9-13.5
- * </StatusIcon>
- * ```
+ * import { StatusIcon } from '@tuwaio/nova-connect/components';
  *
- * @example With full customization
- * ```tsx
- * <StatusIcon
- *   txStatus="failed"
- *   colorVar="error"
- *   customization={{
- *     classNames: {
- *       container: ({ txStatus }) => `custom-status-${txStatus} novacon:shadow-lg`,
- *       svg: () => "custom-svg-styling",
- *     },
- *     animation: {
- *       container: { duration: 0.5, ease: "easeOut" },
- *       path: { duration: 1, delay: 0.2 },
- *     },
- *     variants: {
- *       container: {
- *         initial: { rotate: -180, scale: 0 },
- *         animate: { rotate: 0, scale: 1 },
- *       },
- *     },
- *     svg: {
- *       strokeWidth: 3,
- *       strokeLinecap: "square",
- *     },
- *     config: {
- *       reduceMotion: false,
- *     },
- *   }}
- * >
- *   M6 18 18 6M6 6l12 12
- * </StatusIcon>
+ * export const SucceedIcon = (
+ *   <StatusIcon txStatus="succeed" colorVar="success">
+ *     m4.5 12.75 6 6 9-13.5
+ *   </StatusIcon>
+ * );
+ *
+ * export const FailedIcon = (
+ *   <StatusIcon
+ *     txStatus="failed"
+ *     colorVar="error"
+ *     customization={{
+ *       classNames: { container: ({ txStatus }) => `custom-status-${txStatus}` },
+ *       animation: { path: { duration: 1, delay: 0.2 } },
+ *       svg: { strokeWidth: 3, strokeLinecap: 'square' },
+ *     }}
+ *   >
+ *     M6 18 18 6M6 6l12 12
+ *   </StatusIcon>
+ * );
  * ```
  */
 export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(

@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedModal" />
+
+# ConnectedModal
+
+> `const` **ConnectedModal**: `ForwardRefExoticComponent`\<[`ConnectedModalProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:597](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L597)
+
+The connected modal: the main screen (avatar, name, balance, transactions button), the network screen, the
+transaction history and the connections screen, with a footer to disconnect and open the explorer. Open it with
+`setIsConnectedModalOpen(true)` from `useNovaConnect`; `NovaConnectProvider` renders it when `appChains` or
+`solanaRPCUrls` is set. Renders nothing without a connected wallet.
+
+The name and avatar come from `useGetWalletNameAndAvatar` (ENS or SNS lookups), the balance from
+`useWalletNativeBalance`; both send requests through the Satellite adapter.
+
+Props: [ConnectedModalProps](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalprops--docs); the ref is forwarded to the dialog content.
+
+## Example
+
+```tsx
+import { ConnectedModal } from '@tuwaio/nova-connect/components';
+import { mainnet, polygon } from 'viem/chains';
+
+export const Modal = (
+  <ConnectedModal
+    appChains={[mainnet, polygon]}
+    customization={{
+      classNames: {
+        dialogTitle: ({ contentType }) => (contentType === 'main' ? 'main-title' : 'sub-title'),
+      },
+    }}
+  />
+);
+```

@@ -24,7 +24,7 @@ type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 /**
  * Props for the GithubFallbackIcon component.
  */
-interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'src'> {
+export interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'src'> {
   /**
    * Path to the SVG file within the web3icons repository.
    * @example "networks/background/ethereum.svg"

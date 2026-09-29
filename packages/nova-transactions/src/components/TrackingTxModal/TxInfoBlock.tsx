@@ -14,13 +14,36 @@ import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
 // --- Types for Customization & Props ---
-type CustomInfoRowProps = { label: ReactNode; value: ReactNode; classNames?: InfoRowClassNames };
-type InfoRowClassNames = { row?: string; label?: string; value?: string };
+/** Props of a row of {@link TxInfoBlock} (`customization.components.InfoRow`). */
+export type TxInfoBlockInfoRowProps = {
+  /** Label on the left. */
+  label: ReactNode;
+  /** Value on the right. */
+  value: ReactNode;
+  /** Classes of the parts of the row. */
+  classNames?: TxInfoBlockInfoRowClassNames;
+};
+/** Class names of a row of {@link TxInfoBlock}. */
+export type TxInfoBlockInfoRowClassNames = {
+  /** The row (from `customization.classNames.row`). */
+  row?: string;
+  /** The label (from `customization.classNames.rowLabel`). */
+  label?: string;
+  /** The value (from `customization.classNames.rowValue`). */
+  value?: string;
+};
 
+/**
+ * Class names and replacement parts for {@link TxInfoBlock}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TxInfoBlockCustomization<T extends Transaction> = {
-  /** Custom components */
+  /** Components that replace the default parts. */
   components?: {
-    InfoRow?: ComponentType<CustomInfoRowProps>;
+    /** A row with a label and a value (network, start time, slot…). */
+    InfoRow?: ComponentType<TxInfoBlockInfoRowProps>;
+    /** Renders each hash of the transaction key section (`renderHashLink` of `TransactionKey`). */
     transactionKey?: TransactionKeyProps<T>['renderHashLink'];
   };
   /** Granular classNames for sub-elements */
@@ -42,15 +65,22 @@ export type TxInfoBlockCustomization<T extends Transaction> = {
   };
 };
 
+/**
+ * Props of {@link TxInfoBlock}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TxInfoBlockProps<T extends Transaction> = {
   /** The transaction object to display, which can be a full transaction or an initial one. */
   tx: T | InitialTransaction;
+  /** Classes of the block. */
   className?: string;
+  /** Class names and replacement parts for the block. */
   customization?: TxInfoBlockCustomization<T>;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
 // --- Default Sub-Component ---
-function DefaultInfoRow({ label, value, classNames }: CustomInfoRowProps) {
+function DefaultInfoRow({ label, value, classNames }: TxInfoBlockInfoRowProps) {
   return (
     <div
       className={cn(
@@ -122,11 +152,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
               value={
                 <HashLink
                   hash={solanaTx.slot.toString()}
-                  explorerUrl={
-                    foundAdapter?.getExplorerUrl
-                      ? `${foundAdapter?.getExplorerUrl(`/block/${solanaTx.slot}`)}`
-                      : undefined
-                  }
+                  explorerUrl={foundAdapter?.getExplorerUrl?.(`/block/${solanaTx.slot}`, chainId)}
                 />
               }
               classNames={rowClassNames}

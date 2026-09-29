@@ -8,32 +8,34 @@ import { ReactNode, useMemo } from 'react';
 import { NovaConnectLabelsContext } from '../hooks/useNovaConnectLabels';
 import { NovaConnectLabels } from '../i18n';
 
-interface NovaConnectLabelsProviderProps {
-  /** An object containing the custom labels */
+/**
+ * Props for the {@link NovaConnectLabelsProvider} component.
+ */
+export interface NovaConnectLabelsProviderProps {
+  /** All labels (spread `defaultLabels` of `@tuwaio/nova-connect/i18n` to change only some) */
   labels: NovaConnectLabels;
   /** The child components to render */
   children: ReactNode;
 }
 
 /**
- * A React component that provides a custom set of labels to all child components.
- * Wrap your application or component tree with this provider to apply custom translations.
+ * Provides labels to the Nova Connect components below it. `NovaConnectProvider` already renders it with the `labels`
+ * prop merged into the defaults, so use it directly only to give a part of the tree other texts. In development it
+ * warns about missing basic labels.
  *
- * The provider uses React.memo optimization and validates labels in development mode.
+ * @param props - See {@link NovaConnectLabelsProviderProps}.
+ * @returns The labels context provider.
  *
  * @example
- * ```typescript
- * import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
+ * ```tsx
+ * import { NovaConnectLabelsProvider } from '@tuwaio/nova-connect';
+ * import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+ * import type { ReactNode } from 'react';
  *
- * function App() {
- *   const customLabels = {
- *     connectWallet: 'Подключить кошелек',
- *     disconnect: 'Отключиться',
- *   };
- *
+ * export function CustomTexts({ children }: { children: ReactNode }) {
  *   return (
- *     <NovaConnectLabelsProvider labels={customLabels}>
- *       <YourApp />
+ *     <NovaConnectLabelsProvider labels={{ ...defaultLabels, connectWallet: 'Link wallet' }}>
+ *       {children}
  *     </NovaConnectLabelsProvider>
  *   );
  * }

@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Interfaces/SvgToImgProps" />
+
+# SvgToImgProps
+
+Defined in: [components/SvgToImg.tsx:9](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/SvgToImg.tsx#L9)
+
+Props for the SvgToImg component.
+
+## Extends
+
+- `Omit`\<`ComponentProps`\<`"img"`\>, `"ref"` \| `"src"` \| `"children"`\>
+
+## Properties
+
+### children
+
+> **children**: (`ref`) => `ReactNode`
+
+Defined in: [components/SvgToImg.tsx:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/SvgToImg.tsx#L16)
+
+Renders the SVG. Pass `ref` to the `<svg>` element: when it mounts, its markup is converted to an image.
+
+#### Parameters
+
+##### ref
+
+(`node`) => `void`
+
+Callback ref for the `<svg>` element; it receives the element (or `null` when it unmounts).
+
+#### Returns
+
+`ReactNode`
+
+The SVG to convert.
+
+***
+
+### firstPathFill?
+
+> `optional` **firstPathFill?**: `string`
+
+Defined in: [components/SvgToImg.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/SvgToImg.tsx#L27)
+
+Optional fill color to apply to the first `<path>` element.
+Used for testnet/devnet visual differentiation.
+
+#### Example
+
+```ts
+"var(--tuwa-testnet-icons)"
+```
+
+***
+
+### iconId
+
+> **iconId**: `string` \| `number`
+
+Defined in: [components/SvgToImg.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/SvgToImg.tsx#L21)
+
+Unique identifier for the icon. When this changes, the cached image is reset.
+Prevents showing stale icons when content changes dynamically.

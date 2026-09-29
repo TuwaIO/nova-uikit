@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 
 import { useLabels } from '../../providers';
 
+/** Class names of the parts of {@link TxErrorBlock}. */
 export type TxErrorBlockClassNames = {
   /** Classes for the container */
   container?: string;
@@ -26,8 +27,11 @@ export type TxErrorBlockClassNames = {
   messageText?: string;
 };
 
+/** Props of {@link TxErrorBlock}. */
 export type TxErrorBlockProps = {
-  /** The error to display. Can be a string or a TuwaErrorState. If undefined or empty, the component renders nothing. */
+  /**
+   * The error to display. Can be a string or a TuwaErrorState. If undefined or empty, the component renders nothing.
+   */
   error?: string | TuwaErrorState;
   /** Optional additional CSS classes for the container. */
   className?: string;
@@ -39,6 +43,9 @@ export type TxErrorBlockProps = {
  * A component that displays a formatted block for a transaction error message.
  * It includes a title, an icon, the error message in a scrollable area,
  * and a button to copy the message to the clipboard.
+ *
+ * @param props - See {@link TxErrorBlockProps}.
+ * @returns The block, or `null` without an error.
  */
 export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps) {
   const { isCopied, copy } = useCopyToClipboard();
@@ -82,7 +89,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
           type="button"
           onClick={() => copy(copyMessage)}
           title={isCopied ? txError.copied : actions.copy}
-          aria-label={isCopied ? txError.copied : `${actions.copy} error message`}
+          aria-label={isCopied ? txError.copied : actions.copy}
           className={cn(
             'novatx:cursor-pointer novatx:text-[var(--tuwa-error-icon)]/50 novatx:transition-colors novatx:hover:text-[var(--tuwa-error-icon)]',
             classNames?.copyButton,

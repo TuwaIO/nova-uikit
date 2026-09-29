@@ -17,21 +17,39 @@ import { TransactionStatusBadge, TransactionStatusBadgeProps } from './Transacti
 
 dayjs.extend(relativeTime);
 
-type CustomIconProps = { chainId: number | string; className?: string };
-type CustomTimestampProps = { timestamp?: number; className?: string };
+/** Props of the icon of {@link TransactionHistoryItem} (`customization.components.Icon`). */
+export type TransactionHistoryItemIconProps = {
+  /** Chain of the transaction. */
+  chainId: number | string;
+  /** Classes from `customization.classNames.icon`. */
+  className?: string;
+};
+/** Props of the timestamp of {@link TransactionHistoryItem} (`customization.components.Timestamp`). */
+export type TransactionHistoryItemTimestampProps = {
+  /** Submission time of the transaction, in seconds (`localTimestamp`). */
+  timestamp?: number;
+  /** Classes from `customization.classNames.timestamp`. */
+  className?: string;
+};
 
 /**
  * Customization options for TransactionHistoryItem component.
  * Allows styling of all sub-elements including icon, text, badge, and hash link.
  */
 export type TransactionHistoryItemCustomization<T extends Transaction> = {
-  /** Custom components */
+  /** Components that replace the default parts. */
   components?: {
-    Icon?: ComponentType<CustomIconProps>;
+    /** The network icon. */
+    Icon?: ComponentType<TransactionHistoryItemIconProps>;
+    /** The title (the transaction title, or its type). */
     Title?: ComponentType<StatusAwareTextProps>;
+    /** The description. */
     Description?: ComponentType<StatusAwareTextProps>;
-    Timestamp?: ComponentType<CustomTimestampProps>;
+    /** The relative submission time ("5 minutes ago"). */
+    Timestamp?: ComponentType<TransactionHistoryItemTimestampProps>;
+    /** The status badge. */
     StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
+    /** The hashes of the transaction. */
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
   };
   /** Custom class name generators for all sub-elements */
@@ -73,6 +91,11 @@ export type TransactionHistoryItemCustomization<T extends Transaction> = {
   };
 };
 
+/**
+ * Props of {@link TransactionHistoryItem}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionHistoryItemProps<T extends Transaction> = {
   /** The transaction object to display. */
   tx: T;
@@ -86,18 +109,27 @@ export type TransactionHistoryItemProps<T extends Transaction> = {
   canViewDetails?: boolean;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter'>;
 
-const DefaultIcon = ({ chainId, className }: CustomIconProps) => (
+const DefaultIcon = ({ chainId, className }: TransactionHistoryItemIconProps) => (
   <div className={cn('novatx:h-8 novatx:w-8 novatx:text-[var(--tuwa-text-secondary)]', className)}>
     <NetworkIcon chainId={setChainId(chainId)} />
   </div>
 );
 
-const DefaultTimestamp = ({ timestamp, className }: CustomTimestampProps) => (
+const DefaultTimestamp = ({ timestamp, className }: TransactionHistoryItemTimestampProps) => (
   <span className={cn('novatx:mb-1 novatx:block novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]', className)}>
     {timestamp ? dayjs.unix(timestamp).fromNow() : '...'}
   </span>
 );
 
+/**
+ * One transaction of the history list: the network icon, title, relative submission time (`dayjs` with the
+ * `relativeTime` plugin, which this module adds to `dayjs` when it is imported), description, status badge and hashes.
+ * Clicking the item (outside its links and buttons) calls `onSelectTx` when `canViewDetails` is `true`.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionHistoryItemProps}.
+ * @returns The item.
+ */
 export function TransactionHistoryItem<T extends Transaction>({
   tx,
   adapter,

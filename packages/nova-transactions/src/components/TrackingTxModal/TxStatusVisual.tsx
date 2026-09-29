@@ -1,20 +1,27 @@
 /**
- * @file This file contains the `TxStatusVisual` component, which displays a large icon representing the transaction's status.
+ * @file This file contains the `TxStatusVisual` component, which displays a large icon representing the transaction's
+ * status.
  */
 
 import { ArrowPathIcon, CheckCircleIcon, ClockIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
 
-type StatusKey = 'succeed' | 'failed' | 'replaced' | 'processing' | 'initializing';
+/**
+ * State shown by {@link TxStatusVisual}: the first that applies of succeed, failed, replaced and processing, else
+ * initializing.
+ */
+export type TxStatusVisualStatusKey = 'succeed' | 'failed' | 'replaced' | 'processing' | 'initializing';
 
+/** Class names of the icon of {@link TxStatusVisual}. */
 export type TxStatusVisualClassNames = {
   /** Base icon className applied to all statuses */
   icon?: string;
   /** Status-specific icon overrides */
-  statusOverrides?: Partial<Record<StatusKey, string>>;
+  statusOverrides?: Partial<Record<TxStatusVisualStatusKey, string>>;
 };
 
+/** Props of {@link TxStatusVisual}. */
 export type TxStatusVisualProps = {
   /** True if the transaction is currently being processed (e.g., in the mempool). */
   isProcessing?: boolean;
@@ -30,7 +37,10 @@ export type TxStatusVisualProps = {
   iconClassNames?: TxStatusVisualClassNames;
 };
 
-const STATUS_VISUAL_CONFIG: Record<StatusKey, { Icon: ComponentType<{ className?: string }>; className: string }> = {
+const STATUS_VISUAL_CONFIG: Record<
+  TxStatusVisualStatusKey,
+  { Icon: ComponentType<{ className?: string }>; className: string }
+> = {
   succeed: {
     Icon: CheckCircleIcon,
     className: 'novatx:text-[var(--tuwa-success-icon)]',
@@ -56,6 +66,9 @@ const STATUS_VISUAL_CONFIG: Record<StatusKey, { Icon: ComponentType<{ className?
 /**
  * A component that renders a large, animated icon to visually represent the
  * current state of a transaction within the tracking modal.
+ *
+ * @param props - See {@link TxStatusVisualProps}.
+ * @returns The icon in its container.
  */
 export function TxStatusVisual({
   isProcessing,
@@ -65,7 +78,7 @@ export function TxStatusVisual({
   className: containerClassName,
   iconClassNames,
 }: TxStatusVisualProps) {
-  const statusKey: StatusKey =
+  const statusKey: TxStatusVisualStatusKey =
     (isSucceed && 'succeed') ||
     (isFailed && 'failed') ||
     (isReplaced && 'replaced') ||

@@ -90,6 +90,12 @@ export const wagmiConfig = createConfig({
   syncConnectedChain: true,
 });
 
+// Created once: `SatelliteConnectProvider` passes a new `adapter` value to its store on every change
+const satelliteAdapters = [
+  satelliteEVMAdapter(wagmiConfig, appEVMChains),
+  satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls }),
+];
+
 // ============================================================================
 // Pulsar Store
 // ============================================================================
@@ -203,10 +209,7 @@ export function StorybookProviders({
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <SatelliteConnectProvider
-          adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
-          autoConnect={false}
-        >
+        <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false}>
           {customization && <div className="custom-theme" style={{ display: 'none' }} />}
           <SatelliteConnectProvidersInner
             withBalance={withBalance}

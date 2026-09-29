@@ -1,0 +1,405 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/NetworkTabsCustomization" />
+
+# NetworkTabsCustomization
+
+> **NetworkTabsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:163](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L163)
+
+Customization options of [NetworkTabs](?path=/docs/packages-nova-connect-components-variables-networktabs--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L182)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: () => `string`
+
+Returns the classes of the container, instead of the `className` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### iconContainer?
+
+> `optional` **iconContainer?**: (`params`) => `string`
+
+Returns the classes of an icon container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The tab.
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### indicator?
+
+> `optional` **indicator?**: (`params`) => `string`
+
+Returns the classes of the selection indicator, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The tab.
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The selected tab.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### tab?
+
+> `optional` **tab?**: (`params`) => `string`
+
+Returns the classes of a tab wrapper, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The tab.
+
+###### index
+
+`number`
+
+Tab index.
+
+###### isSelected
+
+`boolean`
+
+Whether the tab is selected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### tabButton?
+
+> `optional` **tabButton?**: (`params`) => `string`
+
+Returns the classes of a tab button, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The tab.
+
+###### isSelected
+
+`boolean`
+
+Whether the tab is selected.
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### tabList?
+
+> `optional` **tabList?**: () => `string`
+
+Returns the classes of the tab list, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### tabText?
+
+> `optional` **tabText?**: (`params`) => `string`
+
+Returns the classes of a tab name, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The tab.
+
+###### isSelected
+
+`boolean`
+
+Whether the tab is selected.
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:165](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L165)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`NetworkTabsContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabscontainerprops--docs)\>
+
+Custom container wrapper
+
+#### IconContainer?
+
+> `optional` **IconContainer?**: `ComponentType`\<[`NetworkTabsIconContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabsiconcontainerprops--docs)\>
+
+Custom icon container
+
+#### Indicator?
+
+> `optional` **Indicator?**: `ComponentType`\<[`NetworkTabsIndicatorProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabsindicatorprops--docs)\>
+
+Custom selection indicator
+
+#### Tab?
+
+> `optional` **Tab?**: `ComponentType`\<[`NetworkTabsTabProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabstabprops--docs)\>
+
+Custom tab wrapper
+
+#### TabButton?
+
+> `optional` **TabButton?**: `ComponentType`\<[`NetworkTabsTabButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabstabbuttonprops--docs)\>
+
+Custom tab button
+
+#### TabList?
+
+> `optional` **TabList?**: `ComponentType`\<[`NetworkTabsTabListProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabstablistprops--docs)\>
+
+Custom tab list container
+
+#### TabText?
+
+> `optional` **TabText?**: `ComponentType`\<[`NetworkTabsTabTextProps`](?path=/docs/packages-nova-connect-components-type-aliases-networktabstabtextprops--docs)\>
+
+Custom tab text
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:268](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L268)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation?**: `Partial`\<[`AnimationConfig`](?path=/docs/packages-nova-connect-components-interfaces-animationconfig--docs)\>
+
+Custom animation configuration
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the tab list (default: the `networkSelectionTabs` label)
+
+##### ariaLabels.iconSuffix?
+
+> `optional` **iconSuffix?**: `string`
+
+Last word of the ARIA label of a tab icon, after the `networkTab` label (default: the `networkNameIcon` label)
+
+##### ariaLabels.selectedSuffix?
+
+> `optional` **selectedSuffix?**: `string`
+
+Text after the ARIA label of the selected tab (default: a comma and the `currentlySelected` label)
+
+##### ariaLabels.tabPrefix?
+
+> `optional` **tabPrefix?**: `string`
+
+Text before the ARIA label of a tab (the `networkTab` label; default: empty)
+
+#### minNetworksToShow?
+
+> `optional` **minNetworksToShow?**: `number`
+
+The tabs render only when there are more networks than this (default: `1`)
+
+#### networkNames?
+
+> `optional` **networkNames?**: `object`
+
+Tab names by adapter, for example `{ evm: 'EVM' }` (default: the chain name from `getNetworkData`)
+
+##### Index Signature
+
+\[`key`: `string`\]: `string`
+
+#### showAllOption?
+
+> `optional` **showAllOption?**: `boolean`
+
+Whether to show "All" option (default: `true`)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:240](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L240)
+
+Custom event handlers
+
+#### onMount?
+
+> `optional` **onMount?**: () => `void`
+
+Called after mount
+
+##### Returns
+
+`void`
+
+#### onTabFocus?
+
+> `optional` **onTabFocus?**: (`network`, `tabData`) => `void`
+
+Called when a tab gets focus.
+
+##### Parameters
+
+###### network
+
+`OrbitAdapter` \| `undefined`
+
+The adapter of the tab, `undefined` for "All".
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`void`
+
+#### onTabHover?
+
+> `optional` **onTabHover?**: (`network`, `tabData`) => `void`
+
+Called when the pointer enters a tab.
+
+##### Parameters
+
+###### network
+
+`OrbitAdapter` \| `undefined`
+
+The adapter of the tab, `undefined` for "All".
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`void`
+
+#### onTabSelect?
+
+> `optional` **onTabSelect?**: (`network`, `tabData`) => `void`
+
+Called after `onSelect` when a tab is clicked.
+
+##### Parameters
+
+###### network
+
+`OrbitAdapter` \| `undefined`
+
+The adapter of the tab, `undefined` for "All".
+
+###### tabData
+
+[`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab.
+
+##### Returns
+
+`void`
+
+#### onUnmount?
+
+> `optional` **onUnmount?**: () => `void`
+
+Called on unmount
+
+##### Returns
+
+`void`

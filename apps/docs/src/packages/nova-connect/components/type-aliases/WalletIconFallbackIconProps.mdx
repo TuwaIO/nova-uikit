@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/WalletIconFallbackIconProps" />
+
+# WalletIconFallbackIconProps
+
+> **WalletIconFallbackIconProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L34)
+
+Props of the icon shown by [WalletIcon](?path=/docs/packages-nova-connect-components-variables-walleticon--docs) when there is no valid `icon` URL or the image fails to load
+(`customization.components.FallbackIcon`). The default one is `WalletIcon` from `@tuwaio/nova-core`.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L40)
+
+Classes of the image (the result of `customization.classNames.image`, or the default ones).
+
+***
+
+### size
+
+> **size**: `number`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L38)
+
+Icon size in pixels.
+
+***
+
+### walletName
+
+> **walletName**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L36)
+
+Wallet name, formatted with `formatConnectorName` from `@tuwaio/orbit-core`.

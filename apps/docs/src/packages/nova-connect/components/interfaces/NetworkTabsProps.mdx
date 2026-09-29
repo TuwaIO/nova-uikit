@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/NetworkTabsProps" />
+
+# NetworkTabsProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:296](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L296)
+
+Props for the [NetworkTabs](?path=/docs/packages-nova-connect-components-variables-networktabs--docs) component.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:308](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L308)
+
+Classes of the container (ignored when `classNames.container` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`NetworkTabsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-networktabscustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:310](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L310)
+
+Customization options
+
+***
+
+### networks
+
+> **networks**: `OrbitAdapter`[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:298](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L298)
+
+Array of available network adapters
+
+***
+
+### onSelect
+
+> **onSelect**: (`adapter`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:306](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L306)
+
+Called when a tab is clicked.
+
+#### Parameters
+
+##### adapter
+
+`OrbitAdapter` \| `undefined`
+
+The adapter of the tab, `undefined` for "All".
+
+#### Returns
+
+`void`
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:300](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L300)
+
+Currently selected network adapter (undefined means "All" is selected)

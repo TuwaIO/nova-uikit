@@ -5,9 +5,10 @@
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useEffect, useRef } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
@@ -15,190 +16,344 @@ import { GroupedConnector } from './ConnectModal';
 // --- Types ---
 
 /**
- * Connection states
+ * State of a wallet connection: `error` when the Satellite store has a `connectionError` (or `customErrorMessage` is
+ * set), `success` when `isConnected` is `true`, otherwise `connecting`.
  */
 export type ConnectionState = 'connecting' | 'success' | 'error';
 
 /**
- * Connection status data
+ * Status of the connection shown by {@link Connecting}, passed to its custom components, class name generators and
+ * handlers.
  */
 export interface ConnectingStatusData {
   /** Connection state */
   state: ConnectionState;
-  /** Display message */
+  /** The heading: `customErrorMessage` or the `connectionError` label, `connectedSuccessfully`, or `connectingTo` */
   message: string;
-  /** Error message if any */
+  /**
+   * Text under the heading in the `error` state (`customErrorMessage` with `showDetailedError`, or the
+   * `cannotConnectWallet` label), otherwise `null`
+   */
   errorMessage: string | null;
-  /** Currently active connector */
+  /** The `activeConnector` prop */
   activeConnector: string | undefined;
-  /** Selected adapter */
+  /** The `selectedAdapter` prop */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Current connector configuration */
+  /** The wallet of `connectors` whose formatted name contains `activeConnector` */
   currentConnector: GroupedConnector | null;
-  /** Whether to show detailed error */
+  /** The `showDetailedError` prop */
   showDetailedError: boolean;
-  /** Raw error object */
+  /** `connectionError` of the Satellite store */
   rawError: unknown;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container (a `section` by default).
+ */
+export type ConnectingContainerProps = {
+  /** Classes from `classNames.container`, or the defaults with the `className` prop */
   className?: string;
+  /** The status container, messages and screen reader texts */
   children: React.ReactNode;
+  /** `status` */
   role?: string;
+  /** `config.ariaLabels.container`, or the `connectionStatus` label with the heading */
   'aria-label'?: string;
+  /** `polite` */
   'aria-live'?: 'polite' | 'assertive' | 'off';
+  /** `true` */
   'aria-atomic'?: boolean;
+  /** The connection status */
   statusData: ConnectingStatusData;
 } & React.RefAttributes<HTMLElement>;
 
-type StatusContainerProps = {
+/**
+ * Props for a custom status container (the circle around the wallet icon).
+ */
+export type ConnectingStatusContainerProps = {
+  /** Classes from `classNames.statusContainer` or the defaults (the border color follows the state) */
   className?: string;
+  /** The spinner or the status icon, and the wallet icon */
   children: React.ReactNode;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type SpinnerProps = {
-  className?: string;
-  role?: string;
-  'aria-label'?: string;
-  'aria-describedby'?: string;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type StatusIconProps = {
-  className?: string;
-  role?: string;
-  'aria-label'?: string;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type WalletIconContainerProps = {
-  className?: string;
-  children: React.ReactNode;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type MessageContainerProps = {
-  className?: string;
-  children: React.ReactNode;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type StatusMessageProps = {
-  className?: string;
-  children: React.ReactNode;
-  id?: string;
-  role?: string;
-  'aria-level'?: number;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLHeadingElement>;
-
-type ErrorMessageProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-describedby'?: string;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLParagraphElement>;
-
-type ErrorDetailsProps = {
-  className?: string;
-  children: React.ReactNode;
-  statusData: ConnectingStatusData;
-} & React.RefAttributes<HTMLDetailsElement>;
-
-type LoadingPlaceholderProps = {
-  className?: string;
-  role?: string;
-  'aria-label'?: string;
+  /** The connection status */
   statusData: ConnectingStatusData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * Customization options for Connecting component
+ * Props for a custom spinner (shown in the `connecting` state).
+ */
+export type ConnectingSpinnerProps = {
+  /** Classes from `classNames.spinner` or the defaults */
+  className?: string;
+  /** `progressbar` */
+  role?: string;
+  /** `config.ariaLabels.spinner` or the `connecting` label */
+  'aria-label'?: string;
+  /** ID of the heading */
+  'aria-describedby'?: string;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom status icon (shown in the `success` and `error` states).
+ */
+export type ConnectingStatusIconProps = {
+  /** Classes from `classNames.statusIcon` or the defaults */
+  className?: string;
+  /** `img` */
+  role?: string;
+  /** `config.ariaLabels.successIcon` or `errorIcon`, or the `successIcon` or `errorIcon` label */
+  'aria-label'?: string;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom wallet icon container.
+ */
+export type ConnectingWalletIconContainerProps = {
+  /** Classes from `classNames.walletIconContainer` or the defaults */
+  className?: string;
+  /** The `WalletIcon` of the wallet */
+  children: React.ReactNode;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom message container.
+ */
+export type ConnectingMessageContainerProps = {
+  /** Classes from `classNames.messageContainer` or the defaults */
+  className?: string;
+  /** The heading, the error message and the error details */
+  children: React.ReactNode;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom heading.
+ */
+export type ConnectingStatusMessageProps = {
+  /** Classes from `classNames.statusMessage` or the defaults (the color follows the state) */
+  className?: string;
+  /** `statusData.message` */
+  children: React.ReactNode;
+  /** `connecting-message` */
+  id?: string;
+  /** `heading` */
+  role?: string;
+  /** `2` */
+  'aria-level'?: number;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLHeadingElement>;
+
+/**
+ * Props for a custom error message (shown when `statusData.errorMessage` is set).
+ */
+export type ConnectingErrorMessageProps = {
+  /** Classes from `classNames.errorMessage` or the defaults */
+  className?: string;
+  /** `statusData.errorMessage` */
+  children: React.ReactNode;
+  /** `alert` */
+  role?: string;
+  /** ID of the heading */
+  'aria-describedby'?: string;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLParagraphElement>;
+
+/**
+ * Props for custom error details (shown with `showDetailedError` when the store has a `connectionError`).
+ */
+export type ConnectingErrorDetailsProps = {
+  /** Classes from `classNames.errorDetails` or the defaults */
+  className?: string;
+  /** A summary with the `copyRawError` label and the error as JSON */
+  children: React.ReactNode;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDetailsElement>;
+
+/**
+ * Props for a custom loading placeholder (shown while `selectedAdapter`, `activeConnector` or the matching wallet is
+ * missing).
+ */
+export type ConnectingLoadingPlaceholderProps = {
+  /** Classes from `classNames.loadingPlaceholder` or the defaults */
+  className?: string;
+  /** `status` */
+  role?: string;
+  /** `config.ariaLabels.loading` or the `loading` label */
+  'aria-label'?: string;
+  /** The connection status */
+  statusData: ConnectingStatusData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link Connecting}.
  */
 export type ConnectingCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<ConnectingContainerProps>;
     /** Custom status container */
-    StatusContainer?: ComponentType<StatusContainerProps>;
+    StatusContainer?: ComponentType<ConnectingStatusContainerProps>;
     /** Custom loading spinner */
-    Spinner?: ComponentType<SpinnerProps>;
+    Spinner?: ComponentType<ConnectingSpinnerProps>;
     /** Custom status icon */
-    StatusIcon?: ComponentType<StatusIconProps>;
+    StatusIcon?: ComponentType<ConnectingStatusIconProps>;
     /** Custom wallet icon container */
-    WalletIconContainer?: ComponentType<WalletIconContainerProps>;
+    WalletIconContainer?: ComponentType<ConnectingWalletIconContainerProps>;
     /** Custom message container */
-    MessageContainer?: ComponentType<MessageContainerProps>;
+    MessageContainer?: ComponentType<ConnectingMessageContainerProps>;
     /** Custom status message */
-    StatusMessage?: ComponentType<StatusMessageProps>;
+    StatusMessage?: ComponentType<ConnectingStatusMessageProps>;
     /** Custom error message */
-    ErrorMessage?: ComponentType<ErrorMessageProps>;
+    ErrorMessage?: ComponentType<ConnectingErrorMessageProps>;
     /** Custom error details */
-    ErrorDetails?: ComponentType<ErrorDetailsProps>;
+    ErrorDetails?: ComponentType<ConnectingErrorDetailsProps>;
     /** Custom loading placeholder */
-    LoadingPlaceholder?: ComponentType<LoadingPlaceholderProps>;
+    LoadingPlaceholder?: ComponentType<ConnectingLoadingPlaceholderProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     container?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate status container classes */
+    /**
+     * Returns the classes of the status container, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     statusContainer?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate spinner classes */
+    /**
+     * Returns the classes of the spinner, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     spinner?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate status icon classes */
+    /**
+     * Returns the classes of the status icon, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     statusIcon?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate wallet icon container classes */
+    /**
+     * Returns the classes of the wallet icon container, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     walletIconContainer?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate message container classes */
+    /**
+     * Returns the classes of the message container, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     messageContainer?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate status message classes */
+    /**
+     * Returns the classes of the heading, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     statusMessage?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate error message classes */
+    /**
+     * Returns the classes of the error message, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     errorMessage?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate error details classes */
+    /**
+     * Returns the classes of the error details, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     errorDetails?: (params: { statusData: ConnectingStatusData }) => string;
-    /** Function to generate loading placeholder classes */
+    /**
+     * Returns the classes of the loading placeholder, instead of the default ones.
+     *
+     * @param params - The status.
+     * @param params.statusData - The connection status.
+     * @returns The classes.
+     */
     loadingPlaceholder?: (params: { statusData: ConnectingStatusData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for state change */
+    /**
+     * Called after the first render and whenever the state changes.
+     *
+     * @param state - The new state.
+     * @param statusData - The connection status.
+     */
     onStateChange?: (state: ConnectionState, statusData: ConnectingStatusData) => void;
-    /** Custom handler for error occurrence */
+    /**
+     * Called when the state becomes `error`.
+     *
+     * @param error - `connectionError` of the Satellite store (`undefined` when only `customErrorMessage` is set).
+     * @param statusData - The connection status.
+     */
     onError?: (error: unknown, statusData: ConnectingStatusData) => void;
-    /** Custom handler for successful connection */
+    /**
+     * Called when the state becomes `success`.
+     *
+     * @param statusData - The connection status.
+     */
     onSuccess?: (statusData: ConnectingStatusData) => void;
-    /** Custom handler for connection start */
+    /**
+     * Called when the state becomes `connecting`.
+     *
+     * @param statusData - The connection status.
+     */
     onConnectingStart?: (statusData: ConnectingStatusData) => void;
-    /** Custom cleanup handler called on unmount */
+    /**
+     * Called on unmount with the last connection status. Errors are logged.
+     *
+     * @param statusData - The last connection status.
+     */
     onCleanup?: (statusData: ConnectingStatusData) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the container (default: the `connectionStatus` label with the heading) */
       container?: string;
+      /** ARIA label of the spinner (default: the `connecting` label) */
       spinner?: string;
+      /** ARIA label of the success icon (default: the `successIcon` label) */
       successIcon?: string;
+      /** ARIA label of the error icon (default: the `errorIcon` label) */
       errorIcon?: string;
+      /** ARIA label of the loading placeholder (default: the `loading` label) */
       loading?: string;
-    };
-    /** Custom animation settings */
-    animation?: {
-      spinnerDuration?: string;
-      transitionDuration?: string;
-    };
-    /** Custom icon settings */
-    icons?: {
-      showSuccessIcon?: boolean;
-      showErrorIcon?: boolean;
-      customSuccessIcon?: ComponentType<{ className?: string }>;
-      customErrorIcon?: ComponentType<{ className?: string }>;
     };
   };
   /** WalletIcon customization (for the wallet icon shown during connection) */
@@ -206,29 +361,31 @@ export type ConnectingCustomization = {
 };
 
 /**
- * Connection status component props interface
+ * Props for the {@link Connecting} component.
  */
 export interface ConnectingProps {
-  /** Currently active connector identifier */
+  /**
+   * The wallet being connected, as `formatConnectorName` of `@tuwaio/orbit-core` returns it (for example `metamask`)
+   */
   activeConnector: string | undefined;
   /** Selected orbit adapter for the connection */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Array of available wallet connectors */
+  /** Wallets with their connectors (the icon comes from the wallet matching `activeConnector`) */
   connectors: GroupedConnector[];
   /** Whether the wallet connection is successfully established */
   isConnected: boolean;
-  /** Optional custom error message to display */
+  /** Shows the `error` state with this heading */
   customErrorMessage?: string;
-  /** Whether to show detailed error information */
+  /** Shows `customErrorMessage` under the heading and the store error as JSON (default: `false`) */
   showDetailedError?: boolean;
-  /** Custom CSS classes for styling the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
   /** Customization options */
   customization?: ConnectingCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLElement, ContainerProps>(({ children, className, ...props }, ref) => {
+const DefaultContainer = forwardRef<HTMLElement, ConnectingContainerProps>(({ children, className, ...props }, ref) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { statusData: _statusData, ...restProps } = props;
   return (
@@ -239,7 +396,7 @@ const DefaultContainer = forwardRef<HTMLElement, ContainerProps>(({ children, cl
 });
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultStatusContainer = forwardRef<HTMLDivElement, StatusContainerProps>(
+const DefaultStatusContainer = forwardRef<HTMLDivElement, ConnectingStatusContainerProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ children, className, statusData: _statusData }, ref) => (
     <div ref={ref} className={className}>
@@ -249,30 +406,33 @@ const DefaultStatusContainer = forwardRef<HTMLDivElement, StatusContainerProps>(
 );
 DefaultStatusContainer.displayName = 'DefaultStatusContainer';
 
-const DefaultSpinner = forwardRef<HTMLDivElement, SpinnerProps>(({ className, ...props }, ref) => {
+const DefaultSpinner = forwardRef<HTMLDivElement, ConnectingSpinnerProps>(({ className, ...props }, ref) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { statusData: _statusData, ...restProps } = props;
+  const labels = useNovaConnectLabels();
   return (
     <div ref={ref} className={className} {...restProps}>
-      <span className="novacon:sr-only">Loading...</span>
+      <span className="novacon:sr-only">{labels.loading}...</span>
     </div>
   );
 });
 DefaultSpinner.displayName = 'DefaultSpinner';
 
-const DefaultStatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(({ className, statusData, ...props }, ref) => {
-  const isSuccess = statusData.state === 'success';
-  const IconComponent = isSuccess ? CheckCircleIcon : ExclamationCircleIcon;
+const DefaultStatusIcon = forwardRef<HTMLDivElement, ConnectingStatusIconProps>(
+  ({ className, statusData, ...props }, ref) => {
+    const isSuccess = statusData.state === 'success';
+    const IconComponent = isSuccess ? CheckCircleIcon : ExclamationCircleIcon;
 
-  return (
-    <div ref={ref} className={className} {...props}>
-      <IconComponent className="novacon:w-6 novacon:h-6 novacon:text-white" aria-hidden="true" />
-    </div>
-  );
-});
+    return (
+      <div ref={ref} className={className} {...props}>
+        <IconComponent className="novacon:w-6 novacon:h-6 novacon:text-white" aria-hidden="true" />
+      </div>
+    );
+  },
+);
 DefaultStatusIcon.displayName = 'DefaultStatusIcon';
 
-const DefaultWalletIconContainer = forwardRef<HTMLDivElement, WalletIconContainerProps>(
+const DefaultWalletIconContainer = forwardRef<HTMLDivElement, ConnectingWalletIconContainerProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ children, className, statusData: _statusData }, ref) => (
     <div ref={ref} className={className}>
@@ -282,7 +442,7 @@ const DefaultWalletIconContainer = forwardRef<HTMLDivElement, WalletIconContaine
 );
 DefaultWalletIconContainer.displayName = 'DefaultWalletIconContainer';
 
-const DefaultMessageContainer = forwardRef<HTMLDivElement, MessageContainerProps>(
+const DefaultMessageContainer = forwardRef<HTMLDivElement, ConnectingMessageContainerProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ children, className, statusData: _statusData }, ref) => (
     <div ref={ref} className={className}>
@@ -292,7 +452,7 @@ const DefaultMessageContainer = forwardRef<HTMLDivElement, MessageContainerProps
 );
 DefaultMessageContainer.displayName = 'DefaultMessageContainer';
 
-const DefaultStatusMessage = forwardRef<HTMLHeadingElement, StatusMessageProps>(
+const DefaultStatusMessage = forwardRef<HTMLHeadingElement, ConnectingStatusMessageProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { statusData: _statusData, ...restProps } = props;
@@ -305,7 +465,7 @@ const DefaultStatusMessage = forwardRef<HTMLHeadingElement, StatusMessageProps>(
 );
 DefaultStatusMessage.displayName = 'DefaultStatusMessage';
 
-const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
+const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ConnectingErrorMessageProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { statusData: _statusData, ...restProps } = props;
@@ -318,7 +478,7 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 );
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
-const DefaultErrorDetails = forwardRef<HTMLDetailsElement, ErrorDetailsProps>(
+const DefaultErrorDetails = forwardRef<HTMLDetailsElement, ConnectingErrorDetailsProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ children, className, statusData: _statusData }, ref) => (
     <details ref={ref} className={className}>
@@ -328,7 +488,7 @@ const DefaultErrorDetails = forwardRef<HTMLDetailsElement, ErrorDetailsProps>(
 );
 DefaultErrorDetails.displayName = 'DefaultErrorDetails';
 
-const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, LoadingPlaceholderProps>(
+const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, ConnectingLoadingPlaceholderProps>(
   ({ className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { statusData: _statusData, ...restProps } = props;
@@ -343,64 +503,32 @@ const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, LoadingPlaceholderP
 DefaultLoadingPlaceholder.displayName = 'DefaultLoadingPlaceholder';
 
 /**
- * Connection status display component for wallet connection flow
+ * The connection screen of the connect modal: the wallet icon in a circle with a spinner while connecting, a success
+ * or error icon, the heading and, on error, a message. Reads `connectionError` from the Satellite store.
  *
- * This component provides comprehensive visual feedback during wallet connection:
- * - Animated loading spinner for connection in progress
- * - Success state with checkmark icon for completed connections
- * - Error state with warning icon and detailed error messages
- * - Fully internationalized text content with translation support
- * - WCAG compliant accessibility with proper ARIA labels and live regions
- * - Responsive design that adapts to different screen sizes
- * - Visual status indicators with semantic colors and icons
- * - Screen reader announcements for state changes
- *
- * The component automatically detects connection state and displays appropriate
- * visual feedback with proper semantic markup for accessibility tools.
- *
- * @param activeConnector - Identifier of the currently connecting wallet
- * @param selectedAdapter - Orbit adapter instance for the connection
- * @param connectors - Array of available wallet connector options
- * @param isConnected - Boolean flag indicating successful connection
- * @param customErrorMessage - Optional custom error message override
- * @param showDetailedError - Flag to show detailed error information
- * @returns JSX element displaying connection status with visual feedback
+ * Props: {@link ConnectingProps}; the ref is forwarded to the container.
  *
  * @example
  * ```tsx
- * <Connecting
- *   activeConnector="metamask"
- *   selectedAdapter={ethereumAdapter}
- *   connectors={availableConnectors}
- *   isConnected={false}
- * />
- * ```
+ * import { getFilteredConnectors } from '@tuwaio/nova-connect';
+ * import { Connecting } from '@tuwaio/nova-connect/components';
+ * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
  *
- * @example
- * ```tsx
- * // With custom error handling
- * <Connecting
- *   activeConnector="walletconnect"
- *   selectedAdapter={polygonAdapter}
- *   connectors={connectors}
- *   isConnected={false}
- *   customErrorMessage="Custom connection error occurred"
- *   showDetailedError={true}
- * />
- * ```
+ * export function MetaMaskStatus({ isConnected }: { isConnected: boolean }) {
+ *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const connectors = getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM });
  *
- * @example
- * ```tsx
- * // Successful connection state
- * <Connecting
- *   activeConnector="phantom"
- *   selectedAdapter={solanaAdapter}
- *   connectors={solanaConnectors}
- *   isConnected={true}
- * />
+ *   return (
+ *     <Connecting
+ *       activeConnector="metamask"
+ *       selectedAdapter={OrbitAdapter.EVM}
+ *       connectors={connectors}
+ *       isConnected={isConnected}
+ *     />
+ *   );
+ * }
  * ```
- *
- * @public
  */
 export const Connecting = memo(
   forwardRef<HTMLDivElement, ConnectingProps>(
@@ -564,56 +692,50 @@ export const Connecting = memo(
         }
       };
 
+      // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the
+      // effects
+      const onStateChanged = useEffectEvent((state: ConnectionState, data: ConnectingStatusData) => {
+        customHandlers?.onStateChange?.(state, data);
+
+        if (state === 'error') {
+          customHandlers?.onError?.(connectionError, data);
+        } else if (state === 'success') {
+          customHandlers?.onSuccess?.(data);
+        } else if (state === 'connecting') {
+          customHandlers?.onConnectingStart?.(data);
+        }
+      });
+
+      const onUnmount = useEffectEvent((data: ConnectingStatusData) => {
+        try {
+          customHandlers?.onCleanup?.(data);
+        } catch (error) {
+          console.warn('Error in custom cleanup handler:', error);
+        }
+      });
+
       useEffect(() => {
         if (!isMountedRef.current) return;
 
         if (prevStateRef.current !== connectionState) {
-          customHandlers?.onStateChange?.(connectionState, statusData);
-
-          if (connectionState === 'error') {
-            customHandlers?.onError?.(connectionError, statusData);
-          } else if (connectionState === 'success') {
-            customHandlers?.onSuccess?.(statusData);
-          } else if (connectionState === 'connecting') {
-            customHandlers?.onConnectingStart?.(statusData);
-          }
-
+          onStateChanged(connectionState, statusData);
           prevStateRef.current = connectionState;
         }
 
         prevStatusDataRef.current = statusData;
-      }, [connectionState, statusData, customHandlers, connectionError]);
+      }, [connectionState, statusData]);
 
       useEffect(() => {
         isMountedRef.current = true;
         cleanupCalled.current = false;
 
-        // Cleanup function
         return () => {
-          if (customHandlers?.onCleanup && prevStatusDataRef.current) {
-            try {
-              customHandlers.onCleanup(prevStatusDataRef.current);
-            } catch (error) {
-              console.warn('Error in custom cleanup handler:', error);
-            }
+          if (prevStatusDataRef.current) {
+            onUnmount(prevStatusDataRef.current);
           }
           performDefaultCleanup();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customHandlers?.onCleanup]);
-
-      useEffect(() => {
-        return () => {
-          if (!cleanupCalled.current && customHandlers?.onCleanup && prevStatusDataRef.current) {
-            try {
-              customHandlers.onCleanup(prevStatusDataRef.current);
-            } catch (error) {
-              console.warn('Error in custom cleanup handler on dependency change:', error);
-            }
-          }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customHandlers?.onCleanup]);
+      }, []);
 
       // Early return for missing required data
       if (!selectedAdapter || !activeConnector || !currentConnector) {
@@ -634,7 +756,8 @@ export const Connecting = memo(
         );
       }
 
-      const containerAriaLabel = customConfig?.ariaLabels?.container ?? `Connection status: ${displayMessage}`;
+      const containerAriaLabel =
+        customConfig?.ariaLabels?.container ?? formatLabel(labels.connectionStatus, { status: displayMessage });
 
       return (
         <CustomContainer
@@ -783,7 +906,11 @@ export const Connecting = memo(
           {/* Hidden Content for Screen Readers */}
           <div className="novacon:sr-only">
             <p>
-              Wallet: {activeConnector}, Network: {selectedAdapter}, Status: {connectionState}
+              {formatLabel(labels.connectingDetails, {
+                wallet: activeConnector,
+                network: selectedAdapter,
+                status: connectionState,
+              })}
             </p>
           </div>
         </CustomContainer>

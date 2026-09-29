@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Type Aliases/ErrorsProviderToastErrorProps" />
+
+# ErrorsProviderToastErrorProps
+
+> **ErrorsProviderToastErrorProps** = `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L17)
+
+Props of the toast content of [ErrorsProvider](?path=/docs/packages-nova-connect-connect-functions-errorsprovider--docs) (`customization.components.ToastError`).
+
+## Properties
+
+### errorType
+
+> **errorType**: `"wallet"` \| `"switch"` \| `null`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L29)
+
+`'wallet'` for `connectionError`, `'switch'` for `switchNetworkError`.
+
+***
+
+### isConnected
+
+> **isConnected**: `boolean`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L31)
+
+Whether a wallet is connected.
+
+***
+
+### onCopyComplete?
+
+> `optional` **onCopyComplete?**: (`success`) => `void`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L27)
+
+Called after the error was copied (or not).
+
+#### Parameters
+
+##### success
+
+`boolean`
+
+Whether the error was copied.
+
+#### Returns
+
+`void`
+
+***
+
+### rawError
+
+> **rawError**: `string` \| `TuwaErrorState`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L21)
+
+The error: `connectionError` or `switchNetworkError` of the Satellite Connect store.
+
+***
+
+### title
+
+> **title**: `string`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L19)
+
+The toast title (from `errorTitle`, by default the label of the error type).

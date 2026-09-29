@@ -1,0 +1,158 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionsContentConnectedRowProps" />
+
+# ConnectionsContentConnectedRowProps
+
+> **ConnectionsContentConnectedRowProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L150)
+
+Props for a custom row of another connected wallet (click it to make it active). The component also passes
+`isActive: false`.
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L154)
+
+The address shortened to `0x1234…abcd`
+
+***
+
+### chainId?
+
+> `optional` **chainId?**: `number` \| `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L156)
+
+Chain of the connection
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:168](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L168)
+
+Granular classNames for sub-elements
+
+#### connectorName?
+
+> `optional` **connectorName?**: `string`
+
+From `classNames.connectedRowConnectorName`
+
+#### container?
+
+> `optional` **container?**: `string`
+
+From `classNames.connectedRowContainer`
+
+#### content?
+
+> `optional` **content?**: `string`
+
+From `classNames.connectedRowContent`
+
+#### disconnectButton?
+
+> `optional` **disconnectButton?**: `string`
+
+From `classNames.connectedRowDisconnectButton`
+
+#### disconnectIcon?
+
+> `optional` **disconnectIcon?**: `string`
+
+From `classNames.connectedRowDisconnectIcon`
+
+#### iconBadge?
+
+> `optional` **iconBadge?**: `string`
+
+From `classNames.connectorIconBadge`
+
+#### iconWrapper?
+
+> `optional` **iconWrapper?**: `string`
+
+From `classNames.connectorIconWrapper`
+
+#### switchIcon?
+
+> `optional` **switchIcon?**: `string`
+
+From `classNames.connectedRowSwitchIcon`
+
+#### switchIndicator?
+
+> `optional` **switchIndicator?**: `string`
+
+From `classNames.connectedRowSwitchIndicator`
+
+#### walletName?
+
+> `optional` **walletName?**: `string`
+
+From `classNames.connectedRowWalletName`
+
+***
+
+### connectorType
+
+> **connectorType**: `ConnectorType`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L152)
+
+Connector type of the wallet
+
+***
+
+### icon?
+
+> `optional` **icon?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:166](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L166)
+
+Wallet icon of the connection
+
+***
+
+### onDisconnect
+
+> **onDisconnect**: (`e`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L164)
+
+Disconnects the wallet.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`
+
+The click event.
+
+#### Returns
+
+`void`
+
+***
+
+### onSwitch
+
+> **onSwitch**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:158](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L158)
+
+Makes this connection active (`switchConnection` of the Satellite store)
+
+#### Returns
+
+`void`

@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedModalMainContent" />
+
+# ConnectedModalMainContent
+
+> `const` **ConnectedModalMainContent**: `ForwardRefExoticComponent`\<[`ConnectedModalMainContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalmaincontentprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:592](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L592)
+
+The main screen of the connected modal: the wallet avatar with buttons to the connections and network screens, the
+name and balance, and a "View transactions" button when the wallet has transactions. Renders nothing without a
+connected wallet.
+
+Props: [ConnectedModalMainContentProps](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalmaincontentprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { ConnectedModalMainContent } from '@tuwaio/nova-connect/components';
+import { useGetWalletNameAndAvatar, useWalletNativeBalance } from '@tuwaio/nova-connect/hooks';
+
+export function WalletSummary() {
+  const { ensAvatar, ensNameAbbreviated, isLoading } = useGetWalletNameAndAvatar({});
+  const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance();
+
+  return (
+    <ConnectedModalMainContent
+      chainsList={[1, 8453]}
+      ensAvatar={ensAvatar}
+      avatarIsLoading={isLoading}
+      balanceLoading={balanceLoading}
+      txsLoading={false}
+      ensNameAbbreviated={ensNameAbbreviated}
+      balance={balance}
+      refetch={refetch}
+      customization={{
+        classNames: { avatarSection: () => 'custom-avatar-section' },
+        handlers: { onViewTransactions: () => console.log('view transactions') },
+      }}
+    />
+  );
+}
+```

@@ -1,28 +1,58 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": [
-    "packages/nova-core/src/index.ts",
-    "packages/nova-transactions/src/index.ts",
-    "packages/nova-transactions/src/providers/index.ts",
-    "packages/nova-connect/src/hooks/index.ts",
-    "packages/nova-connect/src/evm/index.ts",
-    "packages/nova-connect/src/solana/index.ts",
-    "packages/nova-connect/src/utils/index.ts",
-    "packages/nova-connect/src/components/index.ts"
+  "name": "Packages",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/*"],
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "tsconfig": "../../tsconfig.json",
+    "exclude": [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "**/*.stories.tsx",
+      "**/__tests__/**",
+      "**/tests/**",
+      "**/testing/**"
+    ],
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "gitRevision": "main",
+    "compilerOptions": {
+      "paths": {
+        "@tuwaio/nova-core": ["./packages/nova-core/src/index.ts"],
+        "@tuwaio/nova-connect": ["./packages/nova-connect/src/index.ts"],
+        "@tuwaio/nova-connect/components": ["./packages/nova-connect/src/components/index.ts"],
+        "@tuwaio/nova-connect/hooks": ["./packages/nova-connect/src/hooks/index.ts"],
+        "@tuwaio/nova-connect/i18n": ["./packages/nova-connect/src/i18n/index.ts"],
+        "@tuwaio/nova-connect/satellite": ["./packages/nova-connect/src/satellite/index.ts"],
+        "@tuwaio/nova-connect/evm": ["./packages/nova-connect/src/evm/index.ts"],
+        "@tuwaio/nova-connect/solana": ["./packages/nova-connect/src/solana/index.ts"],
+        "@tuwaio/nova-transactions": ["./packages/nova-transactions/src/index.ts"],
+        "@tuwaio/nova-transactions/providers": ["./packages/nova-transactions/src/providers/index.ts"]
+      }
+    }
+  },
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "./apps/docs/typedoc/preserveTypeAnnotations.mjs",
+    "./apps/docs/typedoc/hideExternalMembers.mjs",
+    "./apps/docs/typedoc/storybookRoutes.mjs"
   ],
-  "entryPointStrategy": "expand",
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "**/__tests__/**", "**/tests/**"],
-  "tsconfig": "tsconfig.json",
-  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-react"],
-  "out": "apps/docs/src/API_Reference",
+  "out": "apps/docs/src/packages",
   "fileExtension": ".mdx",
-  "readme": "none",
-  "githubPages": false,
-  "hideGenerator": true,
-  "cleanOutputDir": true,
-  "categorizeByGroup": false,
-  "hideBreadcrumbs": true,
+  "sanitizeComments": true,
+  "readme": "apps/docs/typedoc/packages-overview.md",
+  "mergeReadme": true,
+  "entryFileName": "index",
+  "excludeScopesInPaths": true,
   "pageTitleTemplates": {
     "member": "{name}"
-  }
+  },
+  "githubPages": false,
+  "hideGenerator": true,
+  "hideBreadcrumbs": true,
+  "hidePageHeader": true,
+  "cleanOutputDir": true
 }

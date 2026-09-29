@@ -11,11 +11,26 @@ import { ReactNode } from 'react';
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { HashLink, HashLinkProps } from './HashLink';
 
+/**
+ * Props of {@link TransactionKey}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsProviderProps<T>, 'adapter'> & {
+  /** The transaction. */
   tx: T;
+  /** Layout: `'toast'` adds a top border and spacing. Defaults to `'toast'`. */
   variant?: 'toast' | 'history';
+  /** Classes of the container. */
   className?: string;
+  /**
+   * Renders each hash instead of {@link HashLink}.
+   *
+   * @param props - The props the default `HashLink` would receive.
+   * @returns The rendered hash.
+   */
   renderHashLink?: (props: HashLinkProps) => ReactNode;
+  /** Number of confirmations, shown below the hashes when it is above 0. */
   confirmations?: number;
   /** ClassNames to pass to HashLink components (default and replaced hash) */
   hashLinkClassNames?: HashLinkProps['classNames'];
@@ -23,6 +38,16 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsPr
   originalHashLinkClassNames?: HashLinkProps['classNames'];
 };
 
+/**
+ * The identifiers of a transaction: the key of its tracker when it differs from the on-chain hash (Safe transaction
+ * hash, Gelato task ID, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
+ * transaction, the original and the replacing hash. Hashes link to the explorer URL of the adapter's
+ * `getExplorerTxUrl` when there is one.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionKeyProps}.
+ * @returns The identifiers, or `null` when no adapter matches the transaction.
+ */
 export function TransactionKey<T extends Transaction>({
   tx,
   adapter,

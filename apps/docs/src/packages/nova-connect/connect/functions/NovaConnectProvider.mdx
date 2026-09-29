@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/NovaConnectProvider" />
+
+# NovaConnectProvider()
+
+> **NovaConnectProvider**(`props`): `Element`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:268](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L268)
+
+The provider of Nova Connect. Place it inside `SatelliteConnectProvider` (from `@tuwaio/nova-connect/satellite`): it
+reads the Satellite store. It keeps the UI state of the modals (read it with `useNovaConnect`), provides the labels
+(the `labels` prop merged into the English defaults), shows connection and network switch errors as toasts
+(`ErrorsProvider`), signs in with SIWX when `siwx` is set (`NovaSiwxWatcher`), and renders the connect and connected
+modals when `appChains` or `solanaRPCUrls` is set.
+
+## Parameters
+
+### props
+
+[`NovaConnectProviderPropsWithCustomization`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs)
+
+See [NovaConnectProviderPropsWithCustomization](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs).
+
+## Returns
+
+`Element`
+
+The provider tree.
+
+## Example
+
+```tsx
+import { NovaConnectProvider } from '@tuwaio/nova-connect';
+import type { ReactNode } from 'react';
+import { mainnet, polygon } from 'viem/chains';
+
+export function WalletUI({ children }: { children: ReactNode }) {
+  return (
+    <NovaConnectProvider
+      appChains={[mainnet, polygon]}
+      solanaRPCUrls={{ devnet: 'https://api.devnet.solana.com' }}
+      withBalance
+      withChain
+      legal={{ termsUrl: 'https://example.com/terms', privacyUrl: 'https://example.com/privacy' }}
+      customization={{
+        modals: { connectModal: { classNames: { title: () => 'custom-title' } } },
+      }}
+    >
+      {children}
+    </NovaConnectProvider>
+  );
+}
+```

@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectedContentProps" />
+
+# ConnectedContentProps
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L174)
+
+Props of [ConnectedContent](?path=/docs/packages-nova-connect-components-variables-connectedcontent--docs). The other props are passed to the container `<div>`.
+
+## Extends
+
+- `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"withBalance"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:178](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L178)
+
+Custom aria-label for the container
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:176](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L176)
+
+Custom CSS classes for the container
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectedContentCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedcontentcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L180)
+
+Customization options
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`transactionPool`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#transactionpool)
+
+***
+
+### withBalance?
+
+> `optional` **withBalance?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L46)
+
+Whether the connect button shows the native balance
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`withBalance`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#withbalance)

@@ -1,3 +1,10 @@
+/**
+ * The React components of Nova Connect (connect button, connect and connected modals, chain selector and their
+ * parts), imported from `@tuwaio/nova-connect/components`. They read the state of `NovaConnectProvider`.
+ *
+ * @module components
+ */
+
 export * from './BalanceDisplay';
 export * from './Chains/ChainListRenderer';
 export * from './Chains/ChainSelector';

@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/isEvmChainList" />
+
+# isEvmChainList()
+
+> **isEvmChainList**(`chains`): `boolean`
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:80](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L80)
+
+Checks whether a chain list has only EVM chain IDs (numbers), with `isEvmChainList` of `@tuwaio/orbit-evm` when
+`@tuwaio/nova-connect/evm` is imported.
+
+## Parameters
+
+### chains
+
+(`string` \| `number`)[]
+
+Chain identifiers.
+
+## Returns
+
+`boolean`
+
+`true` when the list is not empty and has only numbers.

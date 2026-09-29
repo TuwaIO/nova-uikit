@@ -1,5 +1,5 @@
 /**
- * @fileoverview Custom React hook exposing manual SIWX sign-in and sign-out functionality.
+ * @file Custom React hook exposing manual SIWX sign-in and sign-out functionality.
  */
 
 import type { MinimalSatelliteConnection, SatelliteSiwxFieldOptions, UseSiwxSignInOptions } from '@tuwaio/siwx-react';
@@ -9,28 +9,42 @@ import { useCallback } from 'react';
 import { useSatelliteConnectStore } from '../satellite';
 
 /**
- * Options for the `useNovaSiwx` hook.
+ * Options of {@link useNovaSiwx}: the verifier, the destroyer and the SIWX message fields of `getSatelliteSiwxFields`
+ * from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
  */
 export interface UseNovaSiwxOptions extends SatelliteSiwxFieldOptions {
-  /** Optional backend verification callback */
+  /** Sends the signed message to your backend for verification (required unless passed to `signIn`) */
   verifier?: UseSiwxSignInOptions['verifier'];
-  /**
-   * Optional callback triggered when `signOut` is called.
-   * Useful for hitting a `/logout` endpoint to clear the backend cookie.
-   */
+  /** Called by `signOut` after the session is cleared, for example to call a `/logout` endpoint of your backend */
   destroyer?: () => Promise<void>;
 }
 
 /**
- * React hook that exposes SIWX authentication controls within NovaConnect applications.
+ * Signs the active wallet in and out with SIWX on demand (for a "Sign in" button; `NovaConnectProvider` with `siwx`
+ * does it automatically on connect).
  *
- * @param options - Default SIWX field options and verifier callback.
- * @returns Object containing `signIn` and `signOut` handlers.
+ * - `signIn(connection?, verifier?)` builds the SIWX message for the active connection (or `connection`), asks the
+ *   wallet to sign it and sends it to `verifier` (the argument, or `options.verifier`), through `signIn` of `useSiwx`
+ *   from `@tuwaio/siwx-react`. It rejects without a connection, without `signMessage` or without a verifier.
+ * - `signOut()` clears the SIWX session and then calls `options.destroyer` (a failure is logged).
+ *
+ * @param options - See {@link UseNovaSiwxOptions}.
+ * @returns The `signIn` and `signOut` actions.
  *
  * @example
  * ```tsx
- * const { signIn, signOut } = useNovaSiwx({ verifier: myVerifier, destroyer: myDestroyer });
- * await signIn();
+ * import { useNovaSiwx, type UseNovaSiwxOptions } from '@tuwaio/nova-connect/hooks';
+ *
+ * export function SignInButtons({ verifier }: Pick<UseNovaSiwxOptions, 'verifier'>) {
+ *   const { signIn, signOut } = useNovaSiwx({ verifier, statement: 'Sign in to the app.' });
+ *
+ *   return (
+ *     <>
+ *       <button onClick={() => signIn()}>Sign in</button>
+ *       <button onClick={() => signOut()}>Sign out</button>
+ *     </>
+ *   );
+ * }
  * ```
  */
 export function useNovaSiwx(options?: UseNovaSiwxOptions) {

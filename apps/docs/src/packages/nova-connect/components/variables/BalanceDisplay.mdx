@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/BalanceDisplay" />
+
+# BalanceDisplay
+
+> `const` **BalanceDisplay**: `React.FC`\<[`BalanceDisplayProps`](?path=/docs/packages-nova-connect-components-interfaces-balancedisplayprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:337](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L337)
+
+Shows a balance (`value symbol`) with an optional refresh button, a loading state while loading without a balance,
+and an empty state without a balance. After a refresh finishes, the button shows a check for
+`config.successDuration`. It does not request the balance itself: pass it with `balance` and `onRefetch` (for
+example from `useWalletNativeBalance`).
+
+Props: [BalanceDisplayProps](?path=/docs/packages-nova-connect-components-interfaces-balancedisplayprops--docs).
+
+## Example
+
+```tsx
+import { BalanceDisplay } from '@tuwaio/nova-connect/components';
+
+export const UsdcBalance = (
+  <BalanceDisplay
+    balance={{ value: '1,234.56', symbol: 'USDC' }}
+    onRefetch={() => console.log('refresh')}
+    customization={{
+      classNames: { balanceValue: () => 'text-lg font-bold' },
+      config: { showRefreshButton: true },
+    }}
+  />
+);
+```

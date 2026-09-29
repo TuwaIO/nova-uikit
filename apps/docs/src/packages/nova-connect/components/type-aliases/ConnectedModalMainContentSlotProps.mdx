@@ -1,0 +1,135 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalMainContentSlotProps" />
+
+# ConnectedModalMainContentSlotProps
+
+> **ConnectedModalMainContentSlotProps** = `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"pulsarAdapter"` \| `"pagination"`\> & `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L115)
+
+Props for a custom main content (the default one renders the screen of `contentType`).
+
+## Type Declaration
+
+### avatarIsLoading
+
+> **avatarIsLoading**: `boolean`
+
+Whether avatar is loading
+
+### balance
+
+> **balance**: [`NativeBalanceResult`](?path=/docs/packages-nova-connect-connect-interfaces-nativebalanceresult--docs) \| `null`
+
+Native balance result
+
+### balanceLoading
+
+> **balanceLoading**: `boolean`
+
+Whether balance is loading
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+List of available chains
+
+### childCustomizations?
+
+> `optional` **childCustomizations?**: [`ConnectedModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalcustomization--docs)\[`"childCustomizations"`\]
+
+Child component customizations
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.mainContent`
+
+### contentType
+
+> **contentType**: [`ConnectedContentType`](?path=/docs/packages-nova-connect-connect-type-aliases-connectedcontenttype--docs)
+
+Current content type
+
+### ensAvatar
+
+> **ensAvatar**: `string` \| `null`
+
+ENS avatar URL
+
+### ensNameAbbreviated
+
+> **ensNameAbbreviated**: `string` \| `undefined`
+
+Abbreviated ENS name or address
+
+### getChainData
+
+> **getChainData**: (`chain`) => `object`
+
+Formats a chain of `chainsList` for the connector of the active connection.
+
+#### Parameters
+
+##### chain
+
+`string` \| `number`
+
+A chain of `chainsList`.
+
+#### Returns
+
+The formatted chain ID and the original one.
+
+##### chain
+
+> **chain**: `string` \| `number`
+
+The chain as given
+
+##### formattedChainId
+
+> **formattedChainId**: `string` \| `number`
+
+The chain ID formatted for the connector
+
+### onBack
+
+> **onBack**: () => `void`
+
+Runs `handlers.onBack`, or shows the main screen
+
+#### Returns
+
+`void`
+
+### onChainChange
+
+> **onChainChange**: (`chainId`) => `void`
+
+Runs `handlers.onChainChange`, or `switchNetwork` of the Satellite store.
+
+#### Parameters
+
+##### chainId
+
+`string`
+
+The selected chain ID, formatted for the connector.
+
+#### Returns
+
+`void`
+
+### refetch
+
+> **refetch**: () => `void`
+
+Refetch balance function
+
+#### Returns
+
+`void`

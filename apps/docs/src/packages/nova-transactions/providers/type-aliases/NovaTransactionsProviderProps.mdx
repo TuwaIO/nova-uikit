@@ -1,0 +1,143 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/providers/Type Aliases/NovaTransactionsProviderProps" />
+
+# NovaTransactionsProviderProps\<T\>
+
+> **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
+
+Defined in: [providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L49)
+
+Defines the props for the `NovaTransactionsProvider` component.
+
+## Type Declaration
+
+### adapter
+
+> **adapter**: `TxAdapter`\<`T`\> \| `TxAdapter`\<`T`\>[]
+
+The chain adapter (or array of adapters) passed through to all child components.
+
+### connectedAdapterType?
+
+> `optional` **connectedAdapterType?**: `OrbitAdapter`
+
+The active adapter type, used for chain-specific logic in modals.
+
+### connectedWalletAddress?
+
+> `optional` **connectedWalletAddress?**: `string`
+
+The currently connected wallet address, used to gate certain UI actions.
+
+### customization?
+
+> `optional` **customization?**: `object`
+
+Customization overrides for individual UI sub-systems.
+
+#### customization.toast?
+
+> `optional` **toast?**: [`ToastTransactionCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toasttransactioncustomization--docs)\<`T`\>
+
+Overrides for the bottom-right transaction progress toast body.
+
+#### customization.toastCloseButton?
+
+> `optional` **toastCloseButton?**: `Omit`\<[`ToastCloseButtonProps`](?path=/docs/packages-nova-core-type-aliases-toastclosebuttonprops--docs), `"closeToast"`\>
+
+Overrides for the close button shared by all transaction toasts.
+
+#### customization.trackingTxModal?
+
+> `optional` **trackingTxModal?**: [`TrackingTxModalCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-trackingtxmodalcustomization--docs)\<`T`\>
+
+Overrides for the step-by-step tracking modal.
+
+#### customization.transactionsInfoModal?
+
+> `optional` **transactionsInfoModal?**: [`TransactionsInfoModalCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionsinfomodalcustomization--docs)\<`T`\>
+
+Overrides for the full-screen transaction history modal.
+
+#### customization.validationErrorToast?
+
+> `optional` **validationErrorToast?**: [`ToastValidationErrorCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrorcustomization--docs)
+
+Overrides for the top-center pre-submission validation error toast.
+See `ToastValidationErrorCustomization` for available slots.
+
+### features?
+
+> `optional` **features?**: `object`
+
+Feature flags to selectively enable or disable UI sub-systems.
+All features are **enabled** by default.
+
+#### features.toasts?
+
+> `optional` **toasts?**: `boolean`
+
+Enables bottom-right transaction progress toasts.
+
+##### Default Value
+
+`true`
+
+#### features.trackingTxModal?
+
+> `optional` **trackingTxModal?**: `boolean`
+
+Enables the step-by-step tracking modal that opens on submission.
+
+##### Default Value
+
+`true`
+
+#### features.transactionsModal?
+
+> `optional` **transactionsModal?**: `boolean`
+
+Enables the full-screen transaction history modal.
+
+##### Default Value
+
+`true`
+
+#### features.validationErrorToast?
+
+> `optional` **validationErrorToast?**: `boolean`
+
+Enables the top-center pre-submission error toast.
+This fires when `executeTxAction` throws before the transaction reaches the pool
+(validation failures, `beforeTxProcess` rejections, missing adapter, etc.).
+
+##### Default Value
+
+`true`
+
+### labels?
+
+> `optional` **labels?**: `Partial`\<[`NovaTransactionsLabels`](?path=/docs/packages-nova-transactions-transactions-type-aliases-novatransactionslabels--docs)\>
+
+Partial label overrides for i18n. Merged with the built-in English defaults.
+
+### pagination?
+
+> `optional` **pagination?**: `TxInMemoryPagination`
+
+Pagination state for infinite scroll, forwarded to TransactionsInfoModal and TransactionsHistory.
+
+### transactionsPool
+
+> **transactionsPool**: `TransactionPool`\<`T`\>
+
+The live transaction pool from the Pulsar store.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The specific transaction type, extending the base `Transaction`.

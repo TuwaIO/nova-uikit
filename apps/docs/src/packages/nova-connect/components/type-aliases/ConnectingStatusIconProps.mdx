@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingStatusIconProps" />
+
+# ConnectingStatusIconProps
+
+> **ConnectingStatusIconProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L102)
+
+Props for a custom status icon (shown in the `success` and `error` states).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.successIcon` or `errorIcon`, or the `successIcon` or `errorIcon` label
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.statusIcon` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`img`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

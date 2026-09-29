@@ -6,7 +6,9 @@
 import { ArrowPathIcon, CheckIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useState } from 'react';
+
+import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
 // --- Animation Variants ---
 const DEFAULT_LOADING_ANIMATION_VARIANTS: Variants = {
@@ -33,52 +35,61 @@ export type BalanceData = {
  * Labels for accessibility
  */
 export type BalanceDisplayLabels = {
+  /** Accessible label of the loading state (default: the `loading` label of Nova Connect) */
   loading?: string;
+  /** Accessible label of the balance (default: the `walletBalance` label) */
   walletBalance?: string;
+  /** Label of the refresh button (default: the `refreshBalance` label) */
   refreshBalance?: string;
+  /** Text of the empty state (default: the `noBalanceAvailable` label) */
   noBalanceAvailable?: string;
 };
 
-const DEFAULT_LABELS: Required<BalanceDisplayLabels> = {
-  loading: 'Loading',
-  walletBalance: 'Balance',
-  refreshBalance: 'Refresh balance',
-  noBalanceAvailable: 'No balance information available',
-};
-
 /**
- * Props for RefreshButton sub-component
+ * Props for a custom refresh button of `BalanceDisplay` (rendered when `onRefetch` is set).
  */
 export type RefreshButtonProps = {
+  /** The `isLoading` prop */
   isLoading: boolean;
+  /** Whether a refresh has just finished (for `config.successDuration`) */
   showSuccess: boolean;
+  /** Calls the `onRefetch` prop */
   onRefetch: () => void;
+  /** The labels, with the defaults applied */
   labels: Required<BalanceDisplayLabels>;
+  /** Classes from `classNames.refreshButton` */
   className?: string;
 };
 
 /**
- * Props for LoadingState sub-component
+ * Props for a custom loading state of `BalanceDisplay` (shown while loading without a balance).
  */
 export type LoadingStateProps = {
+  /** The labels, with the defaults applied */
   labels: Required<BalanceDisplayLabels>;
+  /** Classes from `classNames.loadingState` */
   className?: string;
 };
 
 /**
- * Props for BalanceValue sub-component
+ * Props for a custom balance value of `BalanceDisplay`.
  */
 export type BalanceValueProps = {
+  /** The balance */
   balance: BalanceData;
+  /** The labels, with the defaults applied */
   labels: Required<BalanceDisplayLabels>;
+  /** Classes from `classNames.balanceValue` */
   className?: string;
 };
 
 /**
- * Props for EmptyState sub-component
+ * Props for a custom empty state of `BalanceDisplay` (shown without a balance).
  */
 export type EmptyStateProps = {
+  /** The labels, with the defaults applied */
   labels: Required<BalanceDisplayLabels>;
+  /** Classes from `classNames.emptyState` */
   className?: string;
 };
 
@@ -117,7 +128,14 @@ export type BalanceDisplayCustomization = {
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container.
+     *
+     * @param params - The balance state.
+     * @param params.isLoading - The `isLoading` prop.
+     * @param params.hasBalance - Whether a balance is set.
+     * @returns The classes.
+     */
     container?: (params: { isLoading: boolean; hasBalance: boolean }) => string;
     /** Function to generate loading state classes */
     loadingState?: () => string;
@@ -129,7 +147,14 @@ export type BalanceDisplayCustomization = {
     balanceSymbol?: () => string;
     /** Function to generate balance icon classes */
     balanceIcon?: () => string;
-    /** Function to generate refresh button classes */
+    /**
+     * Returns the classes of the refresh button.
+     *
+     * @param params - The button state.
+     * @param params.isLoading - The `isLoading` prop.
+     * @param params.showSuccess - Whether the success check is shown after a refresh.
+     * @returns The classes.
+     */
     refreshButton?: (params: { isLoading: boolean; showSuccess: boolean }) => string;
     /** Function to generate refresh icon classes */
     refreshIcon?: () => string;
@@ -286,26 +311,27 @@ const DefaultEmptyState: React.FC<EmptyStateProps> = ({ labels, className }) => 
 };
 
 /**
- * BalanceDisplay component for showing token balances with optional refresh functionality.
- * Fully customizable through the customization prop.
+ * Shows a balance (`value symbol`) with an optional refresh button, a loading state while loading without a balance,
+ * and an empty state without a balance. After a refresh finishes, the button shows a check for
+ * `config.successDuration`. It does not request the balance itself: pass it with `balance` and `onRefetch` (for
+ * example from `useWalletNativeBalance`).
+ *
+ * Props: {@link BalanceDisplayProps}.
  *
  * @example
  * ```tsx
- * <BalanceDisplay
- *   balance={{ value: '1,234.56', symbol: 'USDC' }}
- *   isLoading={false}
- *   onRefetch={() => refetchBalance()}
- *   customization={{
- *     classNames: {
- *       container: () => 'flex items-center gap-2',
- *       balanceValue: () => 'text-lg font-bold',
- *       refreshButton: () => 'hover:bg-accent/10',
- *     },
- *     config: {
- *       showRefreshButton: true,
- *     },
- *   }}
- * />
+ * import { BalanceDisplay } from '@tuwaio/nova-connect/components';
+ *
+ * export const UsdcBalance = (
+ *   <BalanceDisplay
+ *     balance={{ value: '1,234.56', symbol: 'USDC' }}
+ *     onRefetch={() => console.log('refresh')}
+ *     customization={{
+ *       classNames: { balanceValue: () => 'text-lg font-bold' },
+ *       config: { showRefreshButton: true },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
@@ -318,11 +344,15 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   'data-testid': testId,
 }) => {
   const [showSuccess, setShowSuccess] = useState(false);
-  const prevLoading = useRef(isLoading);
+  const [prevIsLoading, setPrevIsLoading] = useState(isLoading);
+  const novaConnectLabels = useNovaConnectLabels();
 
   // Merge labels with defaults
   const labels: Required<BalanceDisplayLabels> = {
-    ...DEFAULT_LABELS,
+    loading: novaConnectLabels.loading,
+    walletBalance: novaConnectLabels.walletBalance,
+    refreshBalance: novaConnectLabels.refreshBalance,
+    noBalanceAvailable: novaConnectLabels.noBalanceAvailable,
     ...customLabels,
   };
 
@@ -337,15 +367,18 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Extract config
   const { showRefreshButton = true, successDuration = 1500 } = customization?.config ?? {};
 
-  // Show success indicator when loading completes
+  // Show the success indicator when a load completes
+  if (prevIsLoading !== isLoading) {
+    setPrevIsLoading(isLoading);
+    if (prevIsLoading && !isLoading) setShowSuccess(true);
+  }
+
+  // Hide it after `successDuration`
   useEffect(() => {
-    if (prevLoading.current && !isLoading) {
-      setShowSuccess(true);
-      const timer = setTimeout(() => setShowSuccess(false), successDuration);
-      return () => clearTimeout(timer);
-    }
-    prevLoading.current = isLoading;
-  }, [isLoading, successDuration]);
+    if (!showSuccess) return;
+    const timer = setTimeout(() => setShowSuccess(false), successDuration);
+    return () => clearTimeout(timer);
+  }, [showSuccess, successDuration]);
 
   // Handle refetch
   const handleRefetch = useCallback(() => {

@@ -1,5 +1,4 @@
 // Customization CSS - only loaded for this story file
-// @ts-expect-error Side-effect CSS import for Storybook story
 import '../utils/customization/style.css';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';

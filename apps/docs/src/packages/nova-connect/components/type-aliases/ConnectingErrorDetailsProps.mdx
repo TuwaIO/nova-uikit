@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingErrorDetailsProps" />
+
+# ConnectingErrorDetailsProps
+
+> **ConnectingErrorDetailsProps** = `object` & `React.RefAttributes`\<`HTMLDetailsElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L174)
+
+Props for custom error details (shown with `showDetailedError` when the store has a `connectionError`).
+
+## Type Declaration
+
+### children
+
+> **children**: `React.ReactNode`
+
+A summary with the `copyRawError` label and the error as JSON
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.errorDetails` or the defaults
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

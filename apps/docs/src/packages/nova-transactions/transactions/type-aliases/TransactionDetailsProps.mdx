@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionDetailsProps" />
+
+# TransactionDetailsProps\<T\>
+
+> **TransactionDetailsProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\> & `object`
+
+Defined in: [components/TransactionDetails.tsx:337](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L337)
+
+Props of [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs).
+
+## Type Declaration
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the view.
+
+### customization?
+
+> `optional` **customization?**: [`TransactionDetailsCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactiondetailscustomization--docs)
+
+Class names and replacement components for the parts of the view.
+
+### onBack
+
+> **onBack**: () => `void`
+
+Called by the back button.
+
+#### Returns
+
+`void`
+
+### tx
+
+> **tx**: `T`
+
+The transaction to show.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

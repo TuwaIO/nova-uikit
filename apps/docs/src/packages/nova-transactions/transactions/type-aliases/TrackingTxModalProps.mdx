@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TrackingTxModalProps" />
+
+# TrackingTxModalProps\<T\>
+
+> **TrackingTxModalProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"executeTxAction"` \| `"initialTx"` \| `"transactionsPool"` \| `"adapter"` \| `"connectedWalletAddress"`\> & `object`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L144)
+
+Props of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs). The Pulsar values come from `NovaTransactionsProvider`.
+
+## Type Declaration
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the modal content.
+
+### customization?
+
+> `optional` **customization?**: [`TrackingTxModalCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-trackingtxmodalcustomization--docs)\<`T`\>
+
+Props, class names and replacement components for the parts of the modal.
+
+### onClose
+
+> **onClose**: (`txKey?`) => `void`
+
+Closes the modal.
+
+#### Parameters
+
+##### txKey?
+
+`string`
+
+Key of the shown transaction, when it is in the pool.
+
+#### Returns
+
+`void`
+
+### onOpenAllTransactions
+
+> **onOpenAllTransactions**: () => `void`
+
+Opens the transaction history modal.
+
+#### Returns
+
+`void`
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

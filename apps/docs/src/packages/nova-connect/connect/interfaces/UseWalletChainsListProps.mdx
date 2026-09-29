@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/UseWalletChainsListProps" />
+
+# UseWalletChainsListProps
+
+Defined in: [packages/nova-connect/src/hooks/useWalletChainsList.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletChainsList.ts#L11)
+
+Props of [useWalletChainsList](?path=/docs/packages-nova-connect-connect-functions-usewalletchainslist--docs).
+
+## Extends
+
+- [`InitialChains`](?path=/docs/packages-nova-connect-connect-type-aliases-initialchains--docs)
+
+## Properties
+
+### activeConnection
+
+> **activeConnection**: `Pick`\<`BaseConnector`, `"connectorType"`\> \| `undefined`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletChainsList.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletChainsList.ts#L13)
+
+The active connection of the Satellite store, or `undefined` when no wallet is connected
+
+***
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`

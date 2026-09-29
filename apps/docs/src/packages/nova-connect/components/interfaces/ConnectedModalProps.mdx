@@ -1,0 +1,106 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectedModalProps" />
+
+# ConnectedModalProps
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:358](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L358)
+
+Props for the [ConnectedModal](?path=/docs/packages-nova-connect-components-variables-connectedmodal--docs) component. `appChains` and `solanaRPCUrls` give the chains of the network
+screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history.
+
+## Extends
+
+- `Omit`\<[`ConnectButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectbuttonprops--docs), `"className"` \| `"customization"`\>.`Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"pulsarAdapter"` \| `"appChains"` \| `"solanaRPCUrls"` \| `"pagination"`\>
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+[`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs).[`appChains`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs#appchains)
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:363](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L363)
+
+Classes added to the dialog content classes (ignored when `classNames.dialogContent` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectedModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:365](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L365)
+
+Customization options
+
+***
+
+### pagination?
+
+> `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
+
+Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
+Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`pagination`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#pagination)
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L44)
+
+Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
+
+#### Inherited from
+
+[`NovaConnectProviderPropsWithCustomization`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs).[`pulsarAdapter`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs#pulsaradapter)
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+[`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs).[`solanaRPCUrls`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs#solanarpcurls)
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`transactionPool`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#transactionpool)

@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/ToastValidationErrorCustomization" />
+
+# ToastValidationErrorCustomization
+
+> **ToastValidationErrorCustomization** = `object`
+
+Defined in: [components/ToastValidationError.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastValidationError.tsx#L98)
+
+Customization options for `ToastValidationError`.
+
+All keys are optional. Provide only what you want to override — defaults
+follow the same visual language as the rest of `nova-transactions`.
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"button"`\>, `"style"`\>\>
+
+Defined in: [components/ToastValidationError.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastValidationError.tsx#L119)
+
+Override native HTML props on the copy button.
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: [`ToastValidationErrorClassNames`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrorclassnames--docs)
+
+Defined in: [components/ToastValidationError.tsx:121](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastValidationError.tsx#L121)
+
+Granular Tailwind class overrides for every sub-element.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [components/ToastValidationError.tsx:104](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastValidationError.tsx#L104)
+
+Replace any default sub-component with your own.
+Each slot receives the same props the default component does,
+so you can wrap or fully replace the rendering.
+
+#### CopyContent?
+
+> `optional` **CopyContent?**: `ComponentType`\<[`ToastValidationErrorCopyContentProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrorcopycontentprops--docs)\>
+
+Custom inner content for the copy button (icon + label).
+
+#### FieldBadge?
+
+> `optional` **FieldBadge?**: `ComponentType`\<[`ToastValidationErrorFieldProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrorfieldprops--docs)\>
+
+Custom field-badge renderer (shown only when `fieldName` is provided).
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`ToastValidationErrorIconProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerroriconprops--docs)\>
+
+Custom warning icon (top-left of the header).
+
+#### Message?
+
+> `optional` **Message?**: `ComponentType`\<[`ToastValidationErrorMessageProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrormessageprops--docs)\>
+
+Custom error message renderer.
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`ToastValidationErrorTitleProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrortitleprops--docs)\>
+
+Custom title renderer.
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"style"`\>\>
+
+Defined in: [components/ToastValidationError.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastValidationError.tsx#L117)
+
+Override native HTML props on the root container.

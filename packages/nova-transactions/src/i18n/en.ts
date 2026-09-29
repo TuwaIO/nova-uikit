@@ -118,7 +118,6 @@ export const defaultLabels: NovaTransactionsLabels = {
     descriptionContext: 'Description Context',
     errorContext: 'Error Context',
     fullPayload: 'Full Payload',
-    rpcUrl: 'RPC URL',
     replacedHash: 'Replaced Hash',
     syncStatus: {
       pending: 'Pending Sync',

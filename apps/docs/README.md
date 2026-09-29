@@ -1,88 +1,106 @@
-# @tuwaio/storybook
+# Nova UI Kit — Storybook
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+Source of the Nova UI Kit Storybook at **[stories.tuwa.io](https://stories.tuwa.io/)**: the documentation of `@tuwaio/nova-core`, `@tuwaio/nova-connect` and `@tuwaio/nova-transactions`, and the live components with their customization options. The private package name is `@tuwaio/storybook`.
 
-`@tuwaio/storybook` is the private documentation hub and interactive development sandbox for the **TUWA Nova UI Kit** ecosystem. It provides the visual playground to test component configurations, review props interfaces, and verify internationalization and theme variables across different responsive layouts.
+The Storybook follows the TUWA **Packages** layout of the other documentation sites (Orbit Utils, SIWX, Pulsar, Satellite Connect): a hand-written Introduction plus one page per npm package, where the package README is followed by a reference of every export generated from the source. Here the pages are MDX docs pages of Storybook instead of a Nextra site, next to the component stories.
 
 ---
 
-## 🏛️ Monorepo Integration
+## 🛠 Tech Stack
 
-Storybook imports code directly from local packages inside the monorepo:
-
-- **🎨 `@tuwaio/nova-core` (UI Core - L6)** - Primary styling variables, base hooks, and overlay wrappers.
-- **🔌 `@tuwaio/nova-connect` (UI Components - L7)** - Multi-chain wallet connection modals, buttons, and state connectors.
-- **📊 `@tuwaio/nova-transactions` (UI Components - L7)** - Transaction monitoring feeds, toast panels, and status alerts.
+- **Framework:** Storybook 10 (`@storybook/react-vite`, `@storybook/addon-docs`, `@storybook/addon-themes`)
+- **Styling:** Tailwind CSS 4 and the stylesheets of the Nova packages
+- **Web3 in stories:** wagmi, Satellite Connect, Pulsar and SIWX, configured in [`src/utils/storybook-providers.tsx`](./src/utils/storybook-providers.tsx)
+- **Reference generation:** TypeDoc + `typedoc-plugin-markdown`, plus three local plugins in [`typedoc/`](./typedoc)
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Installation
-
-From the monorepo root directory, install all dependencies:
+Install dependencies from the **monorepo root** (this also builds all packages through the root `postinstall` script):
 
 ```bash
 pnpm install
 ```
 
-### 2. Run Local Development Server
-
-Launch the Storybook server (which will watch local files and reload automatically):
+Regenerate the reference and start Storybook from the monorepo root:
 
 ```bash
 pnpm storybook
 ```
 
-Storybook will compile and open at: **[http://localhost:6006](http://localhost:6006)**.
+Storybook runs at **[http://localhost:6006](http://localhost:6006)**. Build the static site into `apps/docs/storybook-static` with:
 
----
-
-## 📝 Writing Stories (CSF 3.0)
-
-We write story modules using Storybook's **Component Story Format (CSF 3.0)** to keep sandbox declarations concise and readable:
-
-```tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ToastCloseButton } from '@tuwaio/nova-core';
-
-const meta: Meta<typeof ToastCloseButton> = {
-  title: 'Nova Core/Feedback/ToastCloseButton',
-  component: ToastCloseButton,
-  tags: ['autodocs'],
-  argTypes: {
-    ariaLabel: { control: 'text' },
-    title: { control: 'text' },
-  },
-  parameters: {
-    layout: 'centered',
-  },
-};
-
-export default meta;
-type Story = StoryObj<typeof ToastCloseButton>;
-
-export const Default: Story = {
-  args: {
-    title: 'Dismiss',
-    ariaLabel: 'Dismiss dialog',
-  },
-};
+```bash
+pnpm --filter @tuwaio/storybook build-storybook
 ```
 
 ---
 
-## 🛠️ Package Workflow Commands
+## 🗂 Content Structure
 
-Execute these scripts from the monorepo root to build or compile the documentation portal:
+```
+apps/docs/
+├── .storybook/
+│   ├── main.ts                # Stories: src/**/*.mdx and src/**/*.stories.tsx
+│   ├── preview.tsx            # Themes, docs container and the sidebar order (storySort)
+│   └── manager.jsx            # Manager theme
+├── src/
+│   ├── Introduction.mdx       # Introduction (hand-written)
+│   ├── Theming.mdx            # Theme variables and customization (hand-written)
+│   ├── components/            # Component stories (ConnectButton, Nova Core, Nova Transactions)
+│   ├── utils/                 # Providers, mock data and customization examples used by the stories
+│   └── packages/              # GENERATED — do not edit by hand
+│       ├── index.mdx          # Packages overview (typedoc/packages-overview.md + package list)
+│       ├── nova-core/         # One folder per package
+│       │   ├── index.mdx      # Package README + list of exports
+│       │   ├── functions/     # One page per exported function or component
+│       │   ├── interfaces/
+│       │   ├── type-aliases/
+│       │   └── variables/
+│       ├── nova-connect/      # Seven entry points, one module folder each
+│       │   ├── index.mdx      # Package README + list of modules
+│       │   ├── connect/       # Exports of `@tuwaio/nova-connect`
+│       │   ├── components/    # Exports of `@tuwaio/nova-connect/components`
+│       │   └── …              # hooks, i18n, satellite, evm, solana
+│       └── nova-transactions/ # Two entry points: transactions/ (`.`) and providers/ (`./providers`)
+└── typedoc/
+    ├── packages-overview.md        # Intro text of the Packages overview page
+    ├── preserveTypeAnnotations.mjs # Keeps named library types (e.g. viem's Chain) from being inlined
+    ├── hideExternalMembers.mjs     # Hides props inherited from external mapped types (e.g. HTMLMotionProps)
+    └── storybookRoutes.mjs         # Adds <Meta title> to every page and rewrites links to Storybook routes
+```
 
-| Command                    | Action                                                      |
-| :------------------------- | :---------------------------------------------------------- |
-| **`pnpm storybook`**       | Launches Storybook in local development mode at port `6006` |
-| **`pnpm build-storybook`** | Compiles static production bundle into `storybook-static/`  |
+The **Introduction** explains what Nova UI Kit is, where it fits in TUWA, how the UI works with Satellite Connect and Pulsar, the packages and the installation, and links to the package pages instead of repeating code. Usage examples live in the package READMEs; the full-stack integration with SIWX and a server is documented in the [TUWA SDK docs](https://sdk.docs.tuwa.io/full-stack).
 
 ---
 
+## 📦 Packages Reference
+
+Everything under `src/packages` is generated by TypeDoc from the root [`typedoc.json`](../../typedoc.json):
+
+```bash
+pnpm docs:gen   # run from the monorepo root; also runs in the pre-commit hook and before `pnpm storybook`
+```
+
+- **Source of truth:** each package's entry point exports, their JSDoc, and the package `README.md` (which becomes the package overview page). To change a package page, edit the package README or the JSDoc in the source, never the generated MDX.
+- **Entry points:** `src/index.ts` of every package. `nova-connect` and `nova-transactions` document all their entry points, configured in their `typedoc.json`; the modules are named with `@module` tags (`connect`, `components`, `hooks`, `i18n`, `satellite`, `evm`, `solana`; `transactions`, `providers`).
+- **Storybook pages:** `storybookRoutes.mjs` gives every page a title from its output path (`Packages/Overview`, `Packages/<package>/Overview`, `Packages/<package>/<module>/<Kind>/<Name>`) and rewrites the links between pages to `?path=/docs/<id>`, computing the IDs with `sanitize` from `storybook/internal/csf`, as Storybook does. The sidebar order of the section is set in `.storybook/preview.tsx`. Link to a page from outside with `https://stories.tuwa.io/?path=/docs/<id>`, for example `packages-nova-connect-overview--docs`.
+- **MDX:** the pages are MDX, so `sanitizeComments` escapes `<`, `>`, `{` and `}` in JSDoc text. Package READMEs are included as they are: outside code blocks they must not contain raw `{…}` or unclosed HTML tags.
+- **Cross-package types:** `compilerOptions.paths` in `typedoc.json` resolves the `@tuwaio/nova-*` imports to their sources. `@tuwaio/orbit-*`, `@tuwaio/satellite-*`, `@tuwaio/pulsar-*` and `@tuwaio/siwx-*` types are external and shown by name.
+- **README rules:** use absolute URLs for links (TypeDoc copies relative link targets into the output), and do not hand-write lists of exports; the generated reference lists them.
+- **Stable output:** source links point to `main` instead of a commit hash, so a regeneration only changes pages whose source changed. Exports marked `@internal` are left out.
+
+## 🔗 Quick Links
+
+| Resource                         | Link                                                               |
+| -------------------------------- | ------------------------------------------------------------------ |
+| **Live Storybook**               | [stories.tuwa.io](https://stories.tuwa.io/)                        |
+| **TUWA Guides**                  | [docs.tuwa.io/guides](https://docs.tuwa.io/guides)                 |
+| **TUWA SDK (full-stack guide)**  | [sdk.docs.tuwa.io/full-stack](https://sdk.docs.tuwa.io/full-stack) |
+| **Storybook Documentation**      | [storybook.js.org/docs](https://storybook.js.org/docs)             |
+| **TypeDoc Markdown Plugin Docs** | [typedoc-plugin-markdown.org](https://typedoc-plugin-markdown.org) |
+
 ## 📄 License
 
-Licensed under the **Apache-2.0 License**. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the **Apache-2.0 License** - see the [LICENSE](./LICENSE) file for details.

@@ -1,0 +1,99 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectedModalNameAndBalanceProps" />
+
+# ConnectedModalNameAndBalanceProps
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:264](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L264)
+
+Props for the [ConnectedModalNameAndBalance](?path=/docs/packages-nova-connect-components-variables-connectedmodalnameandbalance--docs) component. Other props are passed to the `section` element.
+
+## Extends
+
+- `Pick`\<[`ConnectedModalMainContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalmaincontentprops--docs), `"balanceLoading"` \| `"ensNameAbbreviated"` \| `"balance"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:273](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L273)
+
+ARIA label of the section (default: the `walletBalance` and `walletAddress` labels)
+
+***
+
+### balance
+
+> **balance**: [`NativeBalanceResult`](?path=/docs/packages-nova-connect-connect-interfaces-nativebalanceresult--docs) \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:362](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L362)
+
+The native balance, or `null`
+
+#### Inherited from
+
+`Pick.balance`
+
+***
+
+### balanceLoading
+
+> **balanceLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:356](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L356)
+
+Whether the balance is loading
+
+#### Inherited from
+
+[`ConnectedModalMainContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalmaincontentprops--docs).[`balanceLoading`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalmaincontentprops--docs#balanceloading)
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:271](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L271)
+
+Classes added to the default section classes (ignored when `classNames.container` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectedModalNameAndBalanceCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancecustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L275)
+
+Customization options
+
+***
+
+### ensNameAbbreviated
+
+> **ensNameAbbreviated**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:360](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L360)
+
+The shortened ENS or SNS name, when the address has one
+
+#### Inherited from
+
+`Pick.ensNameAbbreviated`
+
+***
+
+### refetch
+
+> **refetch**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:269](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L269)
+
+Function to manually trigger a balance refresh
+
+#### Returns
+
+`void`

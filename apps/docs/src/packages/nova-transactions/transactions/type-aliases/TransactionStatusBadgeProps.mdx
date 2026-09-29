@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionStatusBadgeProps" />
+
+# TransactionStatusBadgeProps\<T\>
+
+> **TransactionStatusBadgeProps**\<`T`\> = `object`
+
+Defined in: [components/TransactionStatusBadge.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L44)
+
+Props of [TransactionStatusBadge](?path=/docs/packages-nova-transactions-transactions-functions-transactionstatusbadge--docs).
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [components/TransactionStatusBadge.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L48)
+
+Classes of the badge.
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/TransactionStatusBadge.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L50)
+
+Granular class names for sub-elements
+
+#### container?
+
+> `optional` **container?**: `string`
+
+Classes for the badge container
+
+#### icon?
+
+> `optional` **icon?**: `string`
+
+Classes for the status icon
+
+#### label?
+
+> `optional` **label?**: `string`
+
+Classes for the label text
+
+***
+
+### tx
+
+> **tx**: `T`
+
+Defined in: [components/TransactionStatusBadge.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L46)
+
+The transaction whose status is shown.

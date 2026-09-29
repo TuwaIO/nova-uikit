@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectCard" />
+
+# ConnectCard
+
+> `const` **ConnectCard**: `NamedExoticComponent`\<[`ConnectCardProps`](?path=/docs/packages-nova-connect-components-interfaces-connectcardprops--docs) & `RefAttributes`\<`HTMLButtonElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:780](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L780)
+
+A clickable card of a wallet connector: icon, title, optional subtitle, network icons (when the connector supports
+more than one network), a "Recent" badge, an info link and a chevron. On touch devices it is a square tile without
+the chevron.
+
+Props: [ConnectCardProps](?path=/docs/packages-nova-connect-components-interfaces-connectcardprops--docs); the ref is forwarded to the card container.
+
+## Example
+
+```tsx
+import { ConnectCard } from '@tuwaio/nova-connect/components';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+
+export const Card = (
+  <ConnectCard
+    onClick={() => console.log('connect')}
+    title="MetaMask"
+    subtitle="Browser Extension"
+    icon={<img src="/metamask.svg" alt="" />}
+    adapters={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
+    isRecent
+    infoLink="https://metamask.io"
+    customization={{
+      classNames: {
+        container: ({ cardData }) => (cardData.isTouch ? 'touch-card' : 'desktop-card'),
+      },
+      handlers: {
+        onClick: (cardData, originalHandler) => {
+          console.log('card clicked', cardData.title);
+          originalHandler();
+        },
+      },
+    }}
+  />
+);
+```

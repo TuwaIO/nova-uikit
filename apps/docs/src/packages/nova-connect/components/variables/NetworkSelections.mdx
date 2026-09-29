@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/NetworkSelections" />
+
+# NetworkSelections
+
+> `const` **NetworkSelections**: `NamedExoticComponent`\<[`NetworkSelectionsProps`](?path=/docs/packages-nova-connect-components-interfaces-networkselectionsprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:509](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L509)
+
+The network choice of the connect modal for a wallet that supports several networks: a card for each network of
+the active wallet (a horizontal list on touch devices) and a disclaimer about networks with links to
+`academy.binance.com` and `alchemy.com`. Shows an error when `connectors` has no wallet matching `activeConnector`.
+
+Props: [NetworkSelectionsProps](?path=/docs/packages-nova-connect-components-interfaces-networkselectionsprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { getFilteredConnectors } from '@tuwaio/nova-connect';
+import { NetworkSelections } from '@tuwaio/nova-connect/components';
+import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+
+export function MetaMaskNetworks() {
+  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+  const connect = useSatelliteConnectStore((store) => store.connect);
+
+  return (
+    <NetworkSelections
+      activeConnector="metamask"
+      connectors={getFilteredConnectors({ connectors: getConnectors() })}
+      onClick={(adapter, connectorType) =>
+        connect({ connectorType, chainId: adapter === OrbitAdapter.EVM ? 1 : 'solana:devnet' })
+      }
+      customization={{
+        classNames: {
+          networkList: ({ selectionsData }) => (selectionsData.isTouch ? 'touch-list' : 'desktop-list'),
+        },
+      }}
+    />
+  );
+}
+```

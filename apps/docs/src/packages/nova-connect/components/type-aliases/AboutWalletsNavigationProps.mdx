@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/AboutWalletsNavigationProps" />
+
+# AboutWalletsNavigationProps
+
+> **AboutWalletsNavigationProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:263](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L263)
+
+Props for a custom navigation (the slide indicators).
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L275)
+
+Classes from `classNames.navigation`
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: [`AboutWalletsClassNames`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsclassnames--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:279](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L279)
+
+ClassNames for nested customization
+
+***
+
+### currentSlide
+
+> **currentSlide**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:267](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L267)
+
+Index of the current slide
+
+***
+
+### IndicatorComponent?
+
+> `optional` **IndicatorComponent?**: `ComponentType`\<[`AboutWalletsIndicatorProps`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsindicatorprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:281](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L281)
+
+Custom indicator component
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:277](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L277)
+
+The Nova Connect labels
+
+***
+
+### onSlideChange
+
+> **onSlideChange**: (`index`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:273](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L273)
+
+Goes to a slide, pauses auto-play and calls `handlers.onSlideChange` and `handlers.onUserInteraction`.
+
+#### Parameters
+
+##### index
+
+`number`
+
+Index of the slide.
+
+#### Returns
+
+`void`
+
+***
+
+### slides
+
+> **slides**: [`AboutWalletsSlideConfig`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsslideconfig--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:265](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L265)
+
+All slides

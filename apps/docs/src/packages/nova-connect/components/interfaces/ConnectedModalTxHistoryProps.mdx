@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectedModalTxHistoryProps" />
+
+# ConnectedModalTxHistoryProps
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:417](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L417)
+
+Props for the [ConnectedModalTxHistory](?path=/docs/packages-nova-connect-components-variables-connectedmodaltxhistory--docs) component. Without `transactionPool` and `pulsarAdapter` (Pulsar)
+the "Pulsar adapter required" state is shown. Other props are passed to the container.
+
+## Extends
+
+- `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"pulsarAdapter"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:424](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L424)
+
+ARIA label of the container (default: the `transactionsInApp` label)
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:422](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L422)
+
+Classes added to the default container classes (ignored when `classNames.container` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectedModalTxHistoryCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodaltxhistorycustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:426](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L426)
+
+Customization options
+
+***
+
+### pagination?
+
+> `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:428](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L428)
+
+Pagination state for infinite scroll, forwarded to TransactionsHistory.
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L44)
+
+Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
+
+#### Inherited from
+
+[`NovaConnectProviderPropsWithCustomization`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs).[`pulsarAdapter`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs#pulsaradapter)
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`transactionPool`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#transactionpool)

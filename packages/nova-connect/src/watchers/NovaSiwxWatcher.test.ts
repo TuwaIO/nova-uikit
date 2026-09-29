@@ -10,6 +10,7 @@ vi.mock('react', () => ({
   },
   useRef: (initial: unknown) => ({ current: initial }),
   useCallback: (fn: unknown) => fn,
+  useEffectEvent: (fn: unknown) => fn,
 }));
 
 const mockDisconnect = vi.fn();
@@ -121,6 +122,62 @@ describe('NovaSiwxWatcher', () => {
     expect(mockDisconnect).toHaveBeenCalledWith('evm:metamask');
     expect(mockResetSession).toHaveBeenCalled();
     expect(mockError).toHaveBeenCalledWith('User rejected signature');
+  });
+
+  it('keeps a restored session while Satellite auto-connect is still running', () => {
+    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+
+    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
+      selector({
+        activeConnection: undefined,
+        isAutoConnectFinished: false,
+        disconnect: mockDisconnect,
+      } as never),
+    );
+
+    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
+      selector({
+        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
+        status: 'authenticated',
+        reset: mockResetSession,
+      } as never),
+    );
+
+    NovaSiwxWatcher({
+      enabled: true,
+      destroyer: mockDestroyer,
+    });
+
+    expect(mockResetSession).not.toHaveBeenCalled();
+    expect(mockDestroyer).not.toHaveBeenCalled();
+  });
+
+  it('resets a restored session when Satellite auto-connect finishes without a wallet', () => {
+    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+
+    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
+      selector({
+        activeConnection: undefined,
+        isAutoConnectFinished: true,
+        disconnect: mockDisconnect,
+      } as never),
+    );
+
+    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
+      selector({
+        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
+        status: 'authenticated',
+        reset: mockResetSession,
+      } as never),
+    );
+
+    NovaSiwxWatcher({
+      enabled: true,
+      destroyer: mockDestroyer,
+    });
+
+    expect(mockResetSession).toHaveBeenCalled();
+    expect(mockDestroyer).toHaveBeenCalled();
   });
 
   it('triggers destroyer when active connection becomes disconnected', () => {

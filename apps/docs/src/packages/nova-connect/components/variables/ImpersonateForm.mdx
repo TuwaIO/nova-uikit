@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ImpersonateForm" />
+
+# ImpersonateForm
+
+> `const` **ImpersonateForm**: `ForwardRefExoticComponent`\<[`ImpersonateFormProps`](?path=/docs/packages-nova-connect-components-interfaces-impersonateformprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:405](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L405)
+
+The address field of the impersonation screen. It checks the text (not empty, an address or a name, no wallet
+connected) and shows the error. ENS (`.eth`, EVM) and SNS (`.sol`, Solana) names are resolved with `getAddress` of
+the Satellite adapter, which sends a network request.
+
+Validation errors are stored as `connectionError` of the Satellite store (so the connect modal can block the
+"Connect" button), and the error is reset on unmount.
+
+Props: [ImpersonateFormProps](?path=/docs/packages-nova-connect-components-interfaces-impersonateformprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { ImpersonateForm } from '@tuwaio/nova-connect/components';
+import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+
+export function ImpersonateField() {
+  const { impersonatedAddress, setImpersonatedAddress } = useNovaConnect();
+
+  return (
+    <ImpersonateForm
+      selectedAdapter={OrbitAdapter.EVM}
+      impersonatedAddress={impersonatedAddress}
+      setImpersonatedAddress={setImpersonatedAddress}
+      customization={{ config: { validation: { debounceDelay: 300 } } }}
+    />
+  );
+}
+```

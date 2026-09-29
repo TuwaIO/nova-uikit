@@ -3,8 +3,13 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { Connector } from '../satellite';
 import { getGroupedConnectors, GroupedConnector } from './getGroupedConnectors';
 
-interface GetFilteredConnectorsParams {
+/**
+ * Parameters of {@link getFilteredConnectors}.
+ */
+export interface GetFilteredConnectorsParams {
+  /** Connectors by adapter, as `getConnectors()` of the Satellite store returns them */
   connectors: Partial<Record<OrbitAdapter, Connector[]>>;
+  /** Keeps only the wallets (and their connectors) of this adapter */
   selectedAdapter?: OrbitAdapter;
 }
 
@@ -36,12 +41,11 @@ function connectorMatchesAdapter(connector: unknown, selectedAdapter: OrbitAdapt
 }
 
 /**
- * Filters grouped connectors by the selected adapter.
- * Returns all connectors if no adapter is selected, or only connectors
- * that support the specified adapter if one is provided.
+ * Groups the connectors by wallet with {@link getGroupedConnectors} (without the generic `injected` connector) and
+ * keeps the wallets of the selected adapter, with only the connectors of that adapter.
  *
- * @param params Configuration object with connectors and optional adapter filter
- * @returns Filtered array of grouped connectors
+ * @param params - See {@link GetFilteredConnectorsParams}.
+ * @returns The wallets sorted by name (all of them when `selectedAdapter` is not set).
  */
 export function getFilteredConnectors({
   connectors,
@@ -86,7 +90,11 @@ export function getFilteredConnectors({
 }
 
 /**
- * Quick helper to check if any connectors exist for an adapter
+ * Checks whether an adapter has at least one connector.
+ *
+ * @param connectors - Connectors by adapter.
+ * @param adapter - The adapter to check.
+ * @returns `true` when `connectors[adapter]` is a non-empty array.
  */
 export function hasConnectorsForAdapter(
   connectors: Partial<Record<OrbitAdapter, Connector[]>>,

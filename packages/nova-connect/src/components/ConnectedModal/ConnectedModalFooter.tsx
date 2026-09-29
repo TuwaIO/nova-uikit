@@ -4,10 +4,11 @@
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import { type Easing, motion, type Variants } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---
@@ -17,211 +18,178 @@ const DEFAULT_PATH_ANIMATION_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type CustomDisconnectButtonProps = {
+/**
+ * Props for a custom disconnect button.
+ */
+export type ConnectedModalFooterDisconnectButtonProps = {
+  /**
+   * Disconnects all wallets (through the disconnect handlers) and closes the modal.
+   *
+   * @param event - The click event.
+   */
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** The Nova Connect labels, with `labels.disconnectText` applied */
   labels: Record<string, string>;
+  /** Classes from `classNames.disconnectButton`, added to `standardButtonClasses` of `@tuwaio/nova-core` */
   className?: string;
+  /** `config.disconnectButtonTestId` or `disconnect-button` */
   'data-testid'?: string;
+  /** `disconnect-description` */
   'aria-describedby'?: string;
-  disabled?: boolean;
+  /** Number of connected wallets (the default button says "Disconnect all" when there are several) */
   connectionsCount: number;
 };
 
-type CustomExplorerLinkProps = {
+/**
+ * Props for a custom explorer link.
+ */
+export type ConnectedModalFooterExplorerLinkProps = {
+  /** Explorer page of the active address, or `config.explorerUrlFallback` */
   href: string;
+  /** The Nova Connect labels, with `labels.explorerText` applied */
   labels: Record<string, string>;
+  /** The active address */
   walletAddress: string;
+  /** Whether the chain has an explorer (the default link is a disabled button otherwise) */
   isValidUrl: boolean;
+  /** Classes from `classNames.explorerLink`, added to `standardButtonClasses` of `@tuwaio/nova-core` */
   className?: string;
+  /** `config.explorerLinkTestId` or `explorer-link` */
   'data-testid'?: string;
+  /** `explorer-description` */
   'aria-describedby'?: string;
+  /**
+   * Calls `handlers.onExplorerClick`; the link still opens in a new tab.
+   *
+   * @param event - The click event.
+   */
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
-type CustomDisconnectIconProps = {
-  pathData: string;
-  variants?: Variants;
-  className?: string;
-  strokeWidth?: string | number;
-  strokeLinecap?: 'butt' | 'round' | 'square';
-  strokeLinejoin?: 'miter' | 'bevel' | 'round';
-  animation?: {
-    duration?: number;
-    ease?: Easing | Easing[];
-    delay?: number;
-  };
-};
-
-type CustomExplorerIconProps = {
-  pathData: string;
-  variants?: Variants;
-  className?: string;
-  strokeWidth?: string | number;
-  strokeLinecap?: 'butt' | 'round' | 'square';
-  strokeLinejoin?: 'miter' | 'bevel' | 'round';
-  isAnimated?: boolean;
-  animation?: {
-    duration?: number;
-    ease?: Easing | Easing[];
-    delay?: number;
-  };
-};
-
-type CustomFooterContentProps = {
+/**
+ * Props for a custom footer content (the default one renders the two elements side by side).
+ */
+export type ConnectedModalFooterContentProps = {
+  /** The disconnect button, or `null` when `config.showDisconnectButton` is `false` */
   disconnectButton: ReactNode;
+  /** The explorer link, or `null` when `config.showExplorerLink` is `false` */
   explorerLink: ReactNode;
+  /** Whether the chain has an explorer */
   isValidExplorerUrl: boolean;
+  /** The active address */
   walletAddress: string;
+  /** The Nova Connect labels, with the custom labels applied */
   labels: Record<string, string>;
 };
 
 /**
- * Customization options for ConnectedModalFooter component
+ * Customization options of {@link ConnectedModalFooter}.
  */
 export type ConnectedModalFooterCustomization = {
-  /** Override container element props */
+  /** Props of the `footer` element (the component props, `className`, `role` and `aria-label` take precedence) */
   containerProps?: Partial<ComponentPropsWithoutRef<'footer'>>;
   /** Custom components */
   components?: {
     /** Custom disconnect button component */
-    DisconnectButton?: ComponentType<CustomDisconnectButtonProps>;
+    DisconnectButton?: ComponentType<ConnectedModalFooterDisconnectButtonProps>;
     /** Custom explorer link component */
-    ExplorerLink?: ComponentType<CustomExplorerLinkProps>;
-    /** Custom disconnect icon component */
-    DisconnectIcon?: ComponentType<CustomDisconnectIconProps>;
-    /** Custom explorer icon component */
-    ExplorerIcon?: ComponentType<CustomExplorerIconProps>;
+    ExplorerLink?: ComponentType<ConnectedModalFooterExplorerLinkProps>;
     /** Custom footer content component (wraps everything) */
-    FooterContent?: ComponentType<CustomFooterContentProps>;
+    FooterContent?: ComponentType<ConnectedModalFooterContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the footer, instead of the default ones and the `className` prop.
+     *
+     * @param params - The footer state.
+     * @param params.isValidExplorerUrl - Whether the chain has an explorer.
+     * @param params.walletAddress - The active address.
+     * @returns The classes.
+     */
     container?: (params: { isValidExplorerUrl: boolean; walletAddress: string }) => string;
-    /** Function to generate disconnect button classes */
-    disconnectButton?: (params: { disabled?: boolean }) => string;
-    /** Function to generate explorer link classes */
+    /**
+     * Returns classes added to the disconnect button.
+     *
+     * @returns The classes.
+     */
+    disconnectButton?: () => string;
+    /**
+     * Returns classes added to the explorer link.
+     *
+     * @param params - The link state.
+     * @param params.isValidUrl - Whether the chain has an explorer.
+     * @param params.disabled - Whether the link is disabled (no explorer).
+     * @returns The classes.
+     */
     explorerLink?: (params: { isValidUrl: boolean; disabled?: boolean }) => string;
-    /** Function to generate disconnect icon container classes */
-    disconnectIconContainer?: () => string;
-    /** Function to generate explorer icon container classes */
-    explorerIconContainer?: () => string;
-    /** Function to generate disconnect icon classes */
-    disconnectIcon?: () => string;
-    /** Function to generate explorer icon classes */
-    explorerIcon?: (params: { isValidUrl: boolean }) => string;
-    /** Function to generate button text classes */
-    buttonText?: (params: { buttonType: 'disconnect' | 'explorer' }) => string;
-    /** Function to generate screen reader text classes */
-    screenReaderText?: () => string;
-  };
-  /** Custom animation variants */
-  variants?: {
-    /** Disconnect icon animation variants */
-    disconnectIcon?: Variants;
-    /** Explorer icon animation variants */
-    explorerIcon?: Variants;
-  };
-  /** Custom animation configuration */
-  animation?: {
-    /** Disconnect icon animation configuration */
-    disconnectIcon?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-    /** Explorer icon animation configuration */
-    explorerIcon?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-  };
-  /** Custom SVG properties */
-  svg?: {
-    /** Custom disconnect icon path */
-    disconnectIconPath?: string;
-    /** Custom explorer icon path */
-    explorerIconPath?: string;
-    /** Custom disconnect icon viewBox */
-    disconnectIconViewBox?: string;
-    /** Custom explorer icon viewBox */
-    explorerIconViewBox?: string;
-    /** Custom disconnect icon stroke width */
-    disconnectIconStrokeWidth?: string | number;
-    /** Custom explorer icon stroke width */
-    explorerIconStrokeWidth?: string | number;
-    /** Custom disconnect icon stroke linecap */
-    disconnectIconStrokeLinecap?: 'butt' | 'round' | 'square';
-    /** Custom explorer icon stroke linecap */
-    explorerIconStrokeLinecap?: 'butt' | 'round' | 'square';
-    /** Custom disconnect icon stroke linejoin */
-    disconnectIconStrokeLinejoin?: 'miter' | 'bevel' | 'round';
-    /** Custom explorer icon stroke linejoin */
-    explorerIconStrokeLinejoin?: 'miter' | 'bevel' | 'round';
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for disconnect button click */
+    /**
+     * Wraps the disconnect: call `originalHandler()` to disconnect all wallets (`disconnect` of the Satellite store)
+     * and close the modal.
+     *
+     * @param originalHandler - Disconnects and closes the modal.
+     * @param event - The click event.
+     */
     onDisconnectClick?: (originalHandler: () => void, event: React.MouseEvent<HTMLButtonElement>) => void;
-    /** Custom handler for explorer link click */
+    /**
+     * Called when the explorer link is clicked; the link still opens in a new tab.
+     *
+     * @param explorerUrl - The explorer page.
+     * @param walletAddress - The active address.
+     * @param event - The click event.
+     */
     onExplorerClick?: (explorerUrl: string, walletAddress: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
-    /** Custom handler before disconnect */
+    /**
+     * Called before the disconnect. Return `false` to cancel.
+     *
+     * @returns Whether to disconnect.
+     */
     onBeforeDisconnect?: () => boolean | Promise<boolean>;
-    /** Custom handler after disconnect */
+    /** Called right after the disconnect starts (it does not wait for the wallets) */
     onAfterDisconnect?: () => void;
   };
   /** Custom text and aria labels */
   labels?: {
-    /** Custom disconnect button text */
+    /** Text of the disconnect button with one connected wallet (default: the `disconnect` label) */
     disconnectText?: string;
-    /** Custom explorer link text */
+    /** Text of the explorer link (default: the `viewOnExplorer` label) */
     explorerText?: string;
-    /** Custom disconnect description for screen readers */
-    disconnectDescription?: string;
-    /** Custom explorer description for screen readers */
-    explorerDescription?: string;
-    /** Custom footer aria label */
+    /** ARIA label of the footer, after the `aria-label` prop (default: the `walletControls` label) */
     footerAriaLabel?: string;
-    /** Custom explorer unavailable message */
-    explorerUnavailableMessage?: string;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
-    disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
-    reduceMotion?: boolean;
-    /** Whether to show disconnect button */
+    /** Whether to show disconnect button (default: `true`) */
     showDisconnectButton?: boolean;
-    /** Whether to show explorer link */
+    /** Whether to show explorer link (default: `true`) */
     showExplorerLink?: boolean;
-    /** Custom disconnect button test id */
+    /** `data-testid` of the disconnect button (default: `disconnect-button`) */
     disconnectButtonTestId?: string;
-    /** Custom explorer link test id */
+    /** `data-testid` of the explorer link (default: `explorer-link`) */
     explorerLinkTestId?: string;
-    /** Whether to close modal after disconnect */
+    /** Whether to close modal after disconnect (default: `true`) */
     closeModalAfterDisconnect?: boolean;
-    /** Custom explorer URL fallback */
+    /** `href` passed to the explorer link when the chain has no explorer; the link is disabled then (default: `#`) */
     explorerUrlFallback?: string;
   };
 };
 
 /**
- * Props for the ConnectedModalFooter component
+ * Props for the {@link ConnectedModalFooter} component. Other props are passed to the `footer` element.
  */
 export interface ConnectedModalFooterProps {
-  /** Callback to control modal visibility */
+  /**
+   * Opens or closes the connected modal (called with `false` after the disconnect).
+   *
+   * @param isOpen - Whether the modal is open.
+   */
   setIsOpen: (isOpen: boolean) => void;
-  /** Custom CSS classes for the container */
+  /** Classes added to the default footer classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Custom aria-label for the container */
+  /** ARIA label of the footer (default: the `walletControls` label) */
   'aria-label'?: string;
   /** Customization options */
   customization?: ConnectedModalFooterCustomization;
@@ -229,14 +197,13 @@ export interface ConnectedModalFooterProps {
 
 // --- Default Sub-Components ---
 const DefaultDisconnectButton: React.FC<
-  CustomDisconnectButtonProps & Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'style'>
+  ConnectedModalFooterDisconnectButtonProps & Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'style'>
 > = ({
   onClick,
   labels,
   className,
   'data-testid': testId,
   'aria-describedby': ariaDescribedBy,
-  disabled = false,
   connectionsCount,
   ...props
 }) => {
@@ -250,12 +217,11 @@ const DefaultDisconnectButton: React.FC<
       onClick={onClick}
       aria-describedby={ariaDescribedBy}
       data-testid={testId}
-      disabled={disabled}
       {...props}
     >
-      <DefaultDisconnectIcon pathData={iconPath} />
+      <DefaultFooterIcon pathData={iconPath} className="novacon:w-5 novacon:h-5" />
       <span id={ariaDescribedBy} className="novacon:sr-only">
-        {labels.disconnectAll} wallet and close modal
+        {labels.disconnectAllDescription}
       </span>
       {connectionsCount > 1 ? labels.disconnectAll : labels.disconnect}
     </button>
@@ -263,7 +229,7 @@ const DefaultDisconnectButton: React.FC<
 };
 
 const DefaultExplorerLink: React.FC<
-  CustomExplorerLinkProps &
+  ConnectedModalFooterExplorerLinkProps &
     Omit<ComponentPropsWithoutRef<'a'>, 'onClick' | 'style'> &
     Pick<ComponentPropsWithoutRef<'button'>, 'type'>
 > = ({
@@ -295,10 +261,10 @@ const DefaultExplorerLink: React.FC<
       >
         <span className="novacon:flex novacon:items-center novacon:gap-2">
           {labels.viewOnExplorer}
-          <DefaultExplorerIcon pathData={iconPath} isAnimated={true} />
+          <DefaultFooterIcon pathData={iconPath} className="novacon:w-4 novacon:h-4" />
         </span>
         <span id={ariaDescribedBy} className="novacon:sr-only">
-          Opens in new tab - View wallet address {walletAddress} on blockchain explorer
+          {formatLabel(labels.explorerLinkDescription, { address: walletAddress })}
         </span>
       </a>
     );
@@ -310,105 +276,51 @@ const DefaultExplorerLink: React.FC<
       className={cn(standardButtonClasses, 'novacon:opacity-50 novacon:cursor-not-allowed', className)}
       disabled
       aria-describedby={ariaDescribedBy}
-      title="Explorer not available for this network"
+      title={labels.explorerNotAvailable}
     >
       <span className="novacon:flex novacon:items-center novacon:gap-2">
         {labels.viewOnExplorer}
-        <DefaultExplorerIcon pathData={iconPath} isAnimated={false} />
+        <DefaultFooterIcon pathData={iconPath} className="novacon:w-4 novacon:h-4" isAnimated={false} />
       </span>
       <span id={ariaDescribedBy} className="novacon:sr-only">
-        Blockchain explorer is not available for this network
+        {labels.explorerNotAvailable}
       </span>
     </button>
   );
 };
 
-const DefaultDisconnectIcon: React.FC<CustomDisconnectIconProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>> = ({
+// Icon of the default buttons: an SVG path, drawn with an animation unless `isAnimated` is `false`
+const DefaultFooterIcon: React.FC<{ pathData: string; className: string; isAnimated?: boolean }> = ({
   pathData,
-  variants = DEFAULT_PATH_ANIMATION_VARIANTS,
   className,
-  strokeWidth = 1.5,
-  strokeLinecap = 'round',
-  strokeLinejoin = 'round',
-  animation,
-  ...props
-}) => {
-  const animationConfig = {
-    duration: animation?.duration ?? 0.5,
-    ease: animation?.ease ?? 'easeInOut',
-    delay: animation?.delay ?? 0,
-  };
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={strokeWidth}
-      stroke="currentColor"
-      className={cn('novacon:w-5 novacon:h-5', className)}
-      aria-hidden="true"
-      {...props}
-    >
+  isAnimated = true,
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    {isAnimated ? (
       <motion.path
         d={pathData}
-        strokeLinecap={strokeLinecap}
-        strokeLinejoin={strokeLinejoin}
-        variants={variants}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        variants={DEFAULT_PATH_ANIMATION_VARIANTS}
         initial="hidden"
         animate="visible"
-        transition={animationConfig}
+        transition={{ duration: 0.5, ease: 'easeInOut', delay: 0 }}
       />
-    </svg>
-  );
-};
+    ) : (
+      <path d={pathData} strokeLinecap="round" strokeLinejoin="round" />
+    )}
+  </svg>
+);
 
-const DefaultExplorerIcon: React.FC<CustomExplorerIconProps & Omit<ComponentPropsWithoutRef<'svg'>, 'style'>> = ({
-  pathData,
-  variants = DEFAULT_PATH_ANIMATION_VARIANTS,
-  className,
-  strokeWidth = 1.5,
-  strokeLinecap = 'round',
-  strokeLinejoin = 'round',
-  isAnimated = true,
-  animation,
-  ...props
-}) => {
-  const animationConfig = {
-    duration: animation?.duration ?? 0.5,
-    ease: animation?.ease ?? 'easeInOut',
-    delay: animation?.delay ?? 0,
-  };
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={strokeWidth}
-      stroke="currentColor"
-      className={cn('novacon:w-4 novacon:h-4', className)}
-      aria-hidden="true"
-      {...props}
-    >
-      {isAnimated ? (
-        <motion.path
-          d={pathData}
-          strokeLinecap={strokeLinecap}
-          strokeLinejoin={strokeLinejoin}
-          variants={variants}
-          initial="hidden"
-          animate="visible"
-          transition={animationConfig}
-        />
-      ) : (
-        <path d={pathData} strokeLinecap={strokeLinecap} strokeLinejoin={strokeLinejoin} />
-      )}
-    </svg>
-  );
-};
-
-const DefaultFooterContent: React.FC<Pick<CustomFooterContentProps, 'disconnectButton' | 'explorerLink'>> = ({
+const DefaultFooterContent: React.FC<Pick<ConnectedModalFooterContentProps, 'disconnectButton' | 'explorerLink'>> = ({
   disconnectButton,
   explorerLink,
 }) => {
@@ -421,77 +333,34 @@ const DefaultFooterContent: React.FC<Pick<CustomFooterContentProps, 'disconnectB
 };
 
 /**
- * ConnectedModalFooter provides wallet control actions with comprehensive customization options.
- * Displays disconnect button and explorer link with full accessibility support and animation capabilities.
+ * The footer of the connected modal: a button that disconnects all wallets (`disconnect` of the Satellite store) and
+ * closes the modal, and a link to the active address on the block explorer of its chain (opens in a new tab; a
+ * disabled button when the chain has no explorer). Renders nothing without an active connection.
  *
- * Features:
- * - Disconnect button with animated icon and modal closure
- * - Explorer link with external indicator and validation
- * - Comprehensive customization for all UI elements and behaviors
- * - Full accessibility support with ARIA labels and screen reader descriptions
- * - Responsive design with mobile-first approach
- * - Custom event handlers for enhanced interactivity
- * - Animation customization with reduced motion support
- * - Custom SVG icons and paths
- * - Error handling for explorer URL generation
- * - Disabled state for unavailable explorer links
- * - Performance-optimized with memoized calculations
+ * Props: {@link ConnectedModalFooterProps}; the ref is forwarded to the `footer` element.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedModalFooter
- *   setIsOpen={(open) => setModalOpen(open)}
- *   store={walletStore}
- * />
- * ```
+ * import { ConnectedModalFooter } from '@tuwaio/nova-connect/components';
+ * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
  *
- * @example With full customization
- * ```tsx
- * <ConnectedModalFooter
- *   setIsOpen={setModalOpen}
- *   store={walletStore}
- *   customization={{
- *     classNames: {
- *       container: ({ isValidExplorerUrl }) =>
- *         `custom-footer ${isValidExplorerUrl ? 'with-explorer' : 'no-explorer'}`,
- *       disconnectButton: () => "custom-disconnect-btn bg-red-500 text-white",
- *       explorerLink: ({ isValidUrl }) =>
- *         `custom-explorer-link ${isValidUrl ? 'active' : 'disabled'}`,
- *     },
- *     components: {
- *       DisconnectButton: ({ onClick, labels, className }) =>
- *         <button className={className} onClick={onClick}>Custom {labels.disconnect}</button>,
- *     },
- *     handlers: {
- *       onDisconnectClick: (originalHandler, event) => {
- *         console.log("Disconnecting...");
- *         originalHandler();
- *       },
- *       onBeforeDisconnect: async () => {
- *         const confirmed = await showConfirmDialog();
- *         return confirmed;
- *       },
- *       onAfterDisconnect: () => {
- *         showNotification("Wallet disconnected");
- *       },
- *     },
- *     animation: {
- *       disconnectIcon: { duration: 0.8, ease: "easeOut" },
- *       explorerIcon: { duration: 0.6, delay: 0.1 },
- *     },
- *     svg: {
- *       disconnectIconPath: "M12 2L2 7v10l10 5 10-5V7L12 2z",
- *       explorerIconPath: "M8 2L2 8v8l6 6h8l6-6V8L16 2H8z",
- *       disconnectIconStrokeWidth: 2,
- *     },
- *     config: {
- *       closeModalAfterDisconnect: false,
- *       showDisconnectButton: true,
- *       showExplorerLink: true,
- *       reduceMotion: false,
- *     },
- *   }}
- * />
+ * export function Footer() {
+ *   const { setIsConnectedModalOpen } = useNovaConnect();
+ *
+ *   return (
+ *     <ConnectedModalFooter
+ *       setIsOpen={setIsConnectedModalOpen}
+ *       customization={{
+ *         classNames: {
+ *           explorerLink: ({ isValidUrl }) => (isValidUrl ? 'explorer-active' : 'explorer-disabled'),
+ *         },
+ *         handlers: {
+ *           onBeforeDisconnect: () => window.confirm('Disconnect all wallets?'),
+ *         },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooterProps>(
@@ -624,7 +493,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
         <DisconnectButton
           onClick={handleDisconnect}
           labels={finalLabels}
-          className={customization?.classNames?.disconnectButton?.({})}
+          className={customization?.classNames?.disconnectButton?.()}
           data-testid={disconnectButtonTestId}
           aria-describedby="disconnect-description"
           connectionsCount={Object.keys(connections).length}

@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingErrorMessageProps" />
+
+# ConnectingErrorMessageProps
+
+> **ConnectingErrorMessageProps** = `object` & `React.RefAttributes`\<`HTMLParagraphElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:158](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L158)
+
+Props for a custom error message (shown when `statusData.errorMessage` is set).
+
+## Type Declaration
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+ID of the heading
+
+### children
+
+> **children**: `React.ReactNode`
+
+`statusData.errorMessage`
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.errorMessage` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`alert`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TrackingTxModalFooterProps" />
+
+# TrackingTxModalFooterProps
+
+> **TrackingTxModalFooterProps** = `object`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L36)
+
+Props of the footer of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs) (`customization.components.Footer`).
+
+## Properties
+
+### canReplace?
+
+> `optional` **canReplace?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L52)
+
+Whether the pending transaction can be sped up or canceled.
+
+***
+
+### connectedWalletAddress?
+
+> `optional` **connectedWalletAddress?**: `string`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L54)
+
+Address of the connected wallet.
+
+***
+
+### isFailed?
+
+> `optional` **isFailed?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L50)
+
+Whether the submission or the transaction failed.
+
+***
+
+### isProcessing?
+
+> `optional` **isProcessing?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L48)
+
+Whether the transaction is being submitted or is pending.
+
+***
+
+### onCancel?
+
+> `optional` **onCancel?**: () => `void`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L46)
+
+Cancels the pending transaction; set only when it can be replaced.
+
+#### Returns
+
+`void`
+
+***
+
+### onClose
+
+> **onClose**: () => `void`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L38)
+
+Closes the modal.
+
+#### Returns
+
+`void`
+
+***
+
+### onOpenAllTransactions
+
+> **onOpenAllTransactions**: () => `void`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L40)
+
+Opens the transaction history modal.
+
+#### Returns
+
+`void`
+
+***
+
+### onRetry?
+
+> `optional` **onRetry?**: () => `void`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L42)
+
+Retries the failed submission; set only when retry is possible.
+
+#### Returns
+
+`void`
+
+***
+
+### onSpeedUp?
+
+> `optional` **onSpeedUp?**: () => `void`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L44)
+
+Speeds up the pending transaction; set only when it can be replaced.
+
+#### Returns
+
+`void`

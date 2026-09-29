@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/NetworkTabsTabTextProps" />
+
+# NetworkTabsTabTextProps
+
+> **NetworkTabsTabTextProps** = `object` & `React.RefAttributes`\<`HTMLSpanElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L133)
+
+Props for a custom tab name (a `motion.span` shown only for the selected tab by default).
+
+## Type Declaration
+
+### animate?
+
+> `optional` **animate?**: `string`
+
+`active` for the selected tab, otherwise `inactive`
+
+### aria-hidden?
+
+> `optional` **aria-hidden?**: `boolean`
+
+`true` for tabs that are not selected
+
+### children
+
+> **children**: `React.ReactNode`
+
+The display name
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.tabText` or the defaults
+
+### tabData
+
+> **tabData**: [`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab
+
+### variants?
+
+> `optional` **variants?**: `Variants`
+
+Framer Motion variants `active` and `inactive`

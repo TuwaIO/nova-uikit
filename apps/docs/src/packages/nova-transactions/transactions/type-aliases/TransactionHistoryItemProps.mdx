@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionHistoryItemProps" />
+
+# TransactionHistoryItemProps\<T\>
+
+> **TransactionHistoryItemProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\>
+
+Defined in: [components/TransactionHistoryItem.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L99)
+
+Props of [TransactionHistoryItem](?path=/docs/packages-nova-transactions-transactions-functions-transactionhistoryitem--docs).
+
+## Type Declaration
+
+### canViewDetails?
+
+> `optional` **canViewDetails?**: `boolean`
+
+Whether transaction details can be viewed by clicking on history items.
+
+### className?
+
+> `optional` **className?**: `string`
+
+Optional additional CSS classes for the container.
+
+### customization?
+
+> `optional` **customization?**: [`TransactionHistoryItemCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionhistoryitemcustomization--docs)\<`T`\>
+
+An object to customize and override the default internal components.
+
+### onSelectTx?
+
+> `optional` **onSelectTx?**: () => `void`
+
+Callback triggered when the item is selected to view details.
+
+#### Returns
+
+`void`
+
+### tx
+
+> **tx**: `T`
+
+The transaction object to display.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsSelectionsEmptyStateProps" />
+
+# ConnectorsSelectionsEmptyStateProps
+
+> **ConnectorsSelectionsEmptyStateProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L146)
+
+Props for a custom empty state (shown when the selected network has no wallets).
+
+## Type Declaration
+
+### aria-live?
+
+> `optional` **aria-live?**: `"polite"` \| `"assertive"` \| `"off"`
+
+`polite`
+
+### children
+
+> **children**: `React.ReactNode`
+
+A warning icon, the `noConnectorsFound` title and the `noConnectorsDescription` text
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.emptyState` or the defaults
+
+### onClick?
+
+> `optional` **onClick?**: () => `void`
+
+Calls `handlers.onEmptyStateAction`, when set
+
+#### Returns
+
+`void`
+
+### role?
+
+> `optional` **role?**: `string`
+
+`alert`
+
+### selectionsData
+
+> **selectionsData**: [`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list

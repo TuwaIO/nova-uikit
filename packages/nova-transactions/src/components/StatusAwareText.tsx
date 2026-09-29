@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `StatusAwareText` component, which displays different text based on a transaction's status.
+ * @file This file contains the `StatusAwareText` component, which displays different text based on a transaction's
+ * status.
  */
 
 import { cn } from '@tuwaio/nova-core';
@@ -17,6 +18,7 @@ const STATUS_CONFIG = {
   default: { index: 0, colorClass: 'novatx:text-[var(--tuwa-text-primary)]' }, // For pending or undefined status
 } as const;
 
+/** Props of {@link StatusAwareText}. */
 export type StatusAwareTextProps = {
   /** The current status of the transaction, used to select the correct text and color. */
   txStatus?: TransactionStatus;
@@ -38,6 +40,9 @@ export type StatusAwareTextProps = {
 /**
  * A component that renders text conditionally based on a transaction's status.
  * It's designed to work with the `title` and `description` fields of a transaction object.
+ *
+ * @param props - See {@link StatusAwareTextProps}.
+ * @returns The text, or `null` when there is neither `source` nor `fallback`.
  */
 export function StatusAwareText({
   txStatus,

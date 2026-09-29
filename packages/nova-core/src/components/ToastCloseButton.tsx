@@ -9,17 +9,14 @@ import { cn } from '../utils';
  */
 export type ToastCloseButtonProps = {
   /**
-   * The function to call when the button is clicked. This is typically provided by the
-   * toast library (e.g., react-toastify) to dismiss the notification.
+   * Called when the button is clicked. `react-toastify` passes it to a custom close button to dismiss the toast.
+   *
+   * @param e - The click event.
    */
   closeToast?: (e: React.MouseEvent<HTMLElement>) => void;
-  /**
-   * Optional custom aria-label for accessibility.
-   */
+  /** Accessible label of the button. Defaults to `'Close toast notification'`. */
   ariaLabel?: string;
-  /**
-   * Optional custom title for the button tooltip.
-   */
+  /** Tooltip of the button. Defaults to `'Close toast notification'`. */
   title?: string;
   /**
    * Optional custom className for the button container.
@@ -32,8 +29,11 @@ export type ToastCloseButtonProps = {
 };
 
 /**
- * A simple, styled close button component ('X' icon) intended for use within toast notifications.
- * It uses theme-aware CSS variables for styling and i18n labels for accessibility.
+ * A close button with an X icon, placed in the top-right corner of a toast (`absolute`) and styled with the `--tuwa-*`
+ * variables. Pass it to `react-toastify` as `closeButton`, which provides `closeToast`.
+ *
+ * @param props - See {@link ToastCloseButtonProps}.
+ * @returns The button element.
  */
 export function ToastCloseButton({
   closeToast,

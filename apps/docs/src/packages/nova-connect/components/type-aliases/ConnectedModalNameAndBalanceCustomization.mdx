@@ -1,0 +1,367 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalNameAndBalanceCustomization" />
+
+# ConnectedModalNameAndBalanceCustomization
+
+> **ConnectedModalNameAndBalanceCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L117)
+
+Customization options of [ConnectedModalNameAndBalance](?path=/docs/packages-nova-connect-components-variables-connectedmodalnameandbalance--docs).
+
+## Properties
+
+### animation?
+
+> `optional` **animation?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:215](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L215)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container?**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### childCustomizations?
+
+> `optional` **childCustomizations?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:255](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L255)
+
+Child component customizations
+
+#### balanceDisplay?
+
+> `optional` **balanceDisplay?**: [`BalanceDisplayCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-balancedisplaycustomization--docs)
+
+Customization for BalanceDisplay component
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L150)
+
+Custom class name generators
+
+#### balanceContainer?
+
+> `optional` **balanceContainer?**: () => `string`
+
+Returns classes of the balance row, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the section, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The section state.
+
+###### balanceLoading
+
+`boolean`
+
+The `balanceLoading` prop.
+
+###### hasActiveWallet
+
+`boolean`
+
+Always `true` (nothing is rendered without a connected wallet).
+
+###### hasBalance
+
+`boolean`
+
+Whether `balance` has a value and a symbol.
+
+###### isCopied
+
+`boolean`
+
+Whether the address was just copied.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### copyButton?
+
+> `optional` **copyButton?**: (`params`) => `string`
+
+Returns classes added to the copy button.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### disabled
+
+`boolean`
+
+Whether the connection has no address.
+
+###### isCopied
+
+`boolean`
+
+Whether the address was just copied.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### liveRegion?
+
+> `optional` **liveRegion?**: () => `string`
+
+Returns classes of the balance announcement, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### screenReaderFeedback?
+
+> `optional` **screenReaderFeedback?**: () => `string`
+
+Returns classes of the copy announcement, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### walletNameDisplay?
+
+> `optional` **walletNameDisplay?**: (`params`) => `string`
+
+Returns classes added to the wallet name.
+
+##### Parameters
+
+###### params
+
+The name.
+
+###### ensNameAbbreviated?
+
+`string`
+
+The `ensNameAbbreviated` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### walletNameHeaderContainer?
+
+> `optional` **walletNameHeaderContainer?**: () => `string`
+
+Returns classes of the row with the name and the copy button, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L137)
+
+Custom components
+
+#### BalanceDisplay?
+
+> `optional` **BalanceDisplay?**: `ComponentType`\<[`ConnectedModalNameAndBalanceBalanceDisplayProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancebalancedisplayprops--docs)\>
+
+Custom balance display component
+
+#### CopyButton?
+
+> `optional` **CopyButton?**: `ComponentType`\<[`ConnectedModalNameAndBalanceCopyButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancecopybuttonprops--docs)\>
+
+Custom copy button component
+
+#### LiveRegion?
+
+> `optional` **LiveRegion?**: `ComponentType`\<[`ConnectedModalNameAndBalanceLiveRegionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalanceliveregionprops--docs)\>
+
+Custom live region component
+
+#### ScreenReaderFeedback?
+
+> `optional` **ScreenReaderFeedback?**: `ComponentType`\<[`ConnectedModalNameAndBalanceScreenReaderFeedbackProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancescreenreaderfeedbackprops--docs)\>
+
+Custom screen reader feedback component
+
+#### WalletNameDisplay?
+
+> `optional` **WalletNameDisplay?**: `ComponentType`\<[`ConnectedModalNameAndBalanceWalletNameDisplayProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancewalletnamedisplayprops--docs)\>
+
+Custom wallet name display component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:243](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L243)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels for different states
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the section, after the `aria-label` prop
+
+#### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Renders the section without Framer Motion (default: `false`)
+
+#### reduceMotion?
+
+> `optional` **reduceMotion?**: `boolean`
+
+Same as `disableAnimation` (default: `false`)
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"section"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L119)
+
+Props of the `section` element (the component props, `className`, `role` and `aria-label` take precedence)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:227](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L227)
+
+Custom event handlers
+
+#### onCopyError?
+
+> `optional` **onCopyError?**: (`error`, `address`) => `void`
+
+Called when the clipboard write fails (for example when the browser denies the clipboard permission).
+
+##### Parameters
+
+###### error
+
+`Error`
+
+The error of `navigator.clipboard.writeText`.
+
+###### address
+
+`string`
+
+The address that was not copied.
+
+##### Returns
+
+`void`
+
+#### onCopySuccess?
+
+> `optional` **onCopySuccess?**: (`address`) => `void`
+
+Called after the address is copied to the clipboard.
+
+##### Parameters
+
+###### address
+
+`string`
+
+The copied address.
+
+##### Returns
+
+`void`
+
+***
+
+### variants?
+
+> `optional` **variants?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:210](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L210)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container?**: `Variants`
+
+Section animation variants (`initial`, `animate`, `exit`)

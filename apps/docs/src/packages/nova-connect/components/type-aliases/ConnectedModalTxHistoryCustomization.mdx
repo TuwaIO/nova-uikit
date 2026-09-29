@@ -1,0 +1,476 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalTxHistoryCustomization" />
+
+# ConnectedModalTxHistoryCustomization
+
+> **ConnectedModalTxHistoryCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:204](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L204)
+
+Customization options of [ConnectedModalTxHistory](?path=/docs/packages-nova-connect-components-variables-connectedmodaltxhistory--docs).
+
+## Properties
+
+### animation?
+
+> `optional` **animation?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:362](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L362)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container?**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### error?
+
+> `optional` **error?**: `object`
+
+Animation of the "Pulsar adapter required" state
+
+##### error.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### error.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### error.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:235](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L235)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The state.
+
+###### hasActiveWallet
+
+`boolean`
+
+Whether a wallet is connected.
+
+###### hasValidAdapter
+
+`boolean`
+
+Whether `transactionPool` and `pulsarAdapter` are set.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorContainer?
+
+> `optional` **errorContainer?**: () => `string`
+
+Returns classes of the error state, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorContent?
+
+> `optional` **errorContent?**: () => `string`
+
+Returns classes of the error texts, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorDescription?
+
+> `optional` **errorDescription?**: () => `string`
+
+Returns classes of the error description, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorIcon?
+
+> `optional` **errorIcon?**: () => `string`
+
+Returns classes of the error icon, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorIconContainer?
+
+> `optional` **errorIconContainer?**: () => `string`
+
+Returns classes of the error icon container, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorTitle?
+
+> `optional` **errorTitle?**: () => `string`
+
+Returns classes of the error title, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingContainer?
+
+> `optional` **loadingContainer?**: () => `string`
+
+Returns classes of the loading state, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingSpinner?
+
+> `optional` **loadingSpinner?**: () => `string`
+
+Returns classes of the loading spinner, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingText?
+
+> `optional` **loadingText?**: () => `string`
+
+Returns classes of the loading text, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### noWalletContainer?
+
+> `optional` **noWalletContainer?**: () => `string`
+
+Returns classes of the state without a wallet, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### noWalletText?
+
+> `optional` **noWalletText?**: () => `string`
+
+Returns classes of the text without a wallet, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredContainer?
+
+> `optional` **pulsarRequiredContainer?**: () => `string`
+
+Returns classes of the "Pulsar adapter required" state, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredContent?
+
+> `optional` **pulsarRequiredContent?**: () => `string`
+
+Returns classes of its texts, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredDescription?
+
+> `optional` **pulsarRequiredDescription?**: () => `string`
+
+Returns classes of its description, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredIcon?
+
+> `optional` **pulsarRequiredIcon?**: () => `string`
+
+Returns classes of its icon, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredIconContainer?
+
+> `optional` **pulsarRequiredIconContainer?**: () => `string`
+
+Returns classes of its icon container, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### pulsarRequiredTitle?
+
+> `optional` **pulsarRequiredTitle?**: () => `string`
+
+Returns classes of its title, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### transactionsHistoryWrapper?
+
+> `optional` **transactionsHistoryWrapper?**: () => `string`
+
+Returns classes of the transaction history wrapper, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:224](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L224)
+
+Custom components
+
+#### ErrorContainer?
+
+> `optional` **ErrorContainer?**: `ComponentType`\<[`ConnectedModalTxHistoryErrorContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodaltxhistoryerrorcontainerprops--docs)\>
+
+Custom error container component
+
+#### LoadingContainer?
+
+> `optional` **LoadingContainer?**: `ComponentType`\<[`ConnectedModalTxHistoryLoadingContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodaltxhistoryloadingcontainerprops--docs)\>
+
+Custom loading container component
+
+#### NoWalletContainer?
+
+> `optional` **NoWalletContainer?**: `ComponentType`\<[`ConnectedModalTxHistoryNoWalletContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodaltxhistorynowalletcontainerprops--docs)\>
+
+Custom no wallet container component
+
+#### TransactionsHistoryWrapper?
+
+> `optional` **TransactionsHistoryWrapper?**: `ComponentType`\<[`ConnectedModalTxHistoryTransactionsHistoryWrapperProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodaltxhistorytransactionshistorywrapperprops--docs)\>
+
+Custom transactions history wrapper component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:393](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L393)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom aria labels for different states
+
+##### ariaLabels.transactionsHistory?
+
+> `optional` **transactionsHistory?**: `string`
+
+ARIA label of the container, after the `aria-label` prop (default: the `transactionsInApp` label)
+
+#### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Renders without Framer Motion (default: `false`)
+
+#### packageName?
+
+> `optional` **packageName?**: `string`
+
+Name passed to `handlers.onPackageLoadingFailure` (default: `@tuwaio/nova-transactions`)
+
+#### reduceMotion?
+
+> `optional` **reduceMotion?**: `boolean`
+
+Same as `disableAnimation` (default: `false`)
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L206)
+
+Props of the container (the component props, `className` and `aria-label` take precedence)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:383](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L383)
+
+Custom event handlers
+
+#### onPackageLoadingFailure?
+
+> `optional` **onPackageLoadingFailure?**: (`packageName`, `error`) => `void`
+
+Called when `@tuwaio/nova-transactions` fails to load or its `TransactionsHistory` throws.
+
+##### Parameters
+
+###### packageName
+
+`string`
+
+`config.packageName`.
+
+###### error
+
+`Error`
+
+The error.
+
+##### Returns
+
+`void`
+
+***
+
+### transactionsHistory?
+
+> `optional` **transactionsHistory?**: [`LocalTransactionsHistoryCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-localtransactionshistorycustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:410](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L410)
+
+Customization for the TransactionsHistory component (from @tuwaio/nova-transactions).
+Passed through to the dynamically loaded component.
+
+***
+
+### variants?
+
+> `optional` **variants?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:355](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L355)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container?**: `Variants`
+
+Container animation variants (`initial`, `animate`, `exit`)
+
+#### error?
+
+> `optional` **error?**: `Variants`
+
+Variants of the "Pulsar adapter required" state

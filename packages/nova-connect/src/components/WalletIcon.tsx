@@ -9,20 +9,34 @@ import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useSt
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
 // --- Types for Customization ---
-type CustomLoadingOverlayProps = {
+/** Props of the loading overlay of {@link WalletIcon} (`customization.components.LoadingOverlay`). */
+export type WalletIconLoadingOverlayProps = {
+  /** Icon size in pixels. */
   size: number;
+  /** Whether the icon image is loading and `showLoading` is set; the default overlay renders nothing otherwise. */
   isLoading: boolean;
+  /** Classes from `customization.classNames.loadingOverlay`. */
   className?: string;
 };
 
-type CustomErrorIndicatorProps = {
+/** Props of the error indicator of {@link WalletIcon} (`customization.components.ErrorIndicator`). */
+export type WalletIconErrorIndicatorProps = {
+  /** Wallet name, formatted with `formatConnectorName` from `@tuwaio/orbit-core`. */
   walletName: string;
+  /** Whether the icon image failed to load. The default indicator is shown only in development. */
   hasError: boolean;
 };
 
-type CustomFallbackIconProps = {
+/**
+ * Props of the icon shown by {@link WalletIcon} when there is no valid `icon` URL or the image fails to load
+ * (`customization.components.FallbackIcon`). The default one is `WalletIcon` from `@tuwaio/nova-core`.
+ */
+export type WalletIconFallbackIconProps = {
+  /** Wallet name, formatted with `formatConnectorName` from `@tuwaio/orbit-core`. */
   walletName: string;
+  /** Icon size in pixels. */
   size: number;
+  /** Classes of the image (the result of `customization.classNames.image`, or the default ones). */
   className?: string;
 };
 
@@ -37,46 +51,75 @@ export type WalletIconCustomization = {
   /** Custom components */
   components?: {
     /** Custom loading overlay component */
-    LoadingOverlay?: ComponentType<CustomLoadingOverlayProps>;
+    LoadingOverlay?: ComponentType<WalletIconLoadingOverlayProps>;
     /** Custom error indicator component (only shown in development) */
-    ErrorIndicator?: ComponentType<CustomErrorIndicatorProps>;
+    ErrorIndicator?: ComponentType<WalletIconErrorIndicatorProps>;
     /** Custom fallback icon component */
-    FallbackIcon?: ComponentType<CustomFallbackIconProps>;
+    FallbackIcon?: ComponentType<WalletIconFallbackIconProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and `className`.
+     *
+     * @param params - The icon state.
+     * @param params.isLoading - Whether the icon image is loading.
+     * @param params.showLoading - The `showLoading` prop.
+     * @param params.size - Icon size in pixels.
+     * @returns The classes.
+     */
     container?: (params: { isLoading: boolean; showLoading: boolean; size: number }) => string;
-    /** Function to generate image classes */
+    /**
+     * Returns the classes of the image (and of the fallback icon), instead of the default ones.
+     *
+     * @param params - The icon state.
+     * @param params.isLoading - Whether the icon image is loading.
+     * @param params.showLoading - The `showLoading` prop.
+     * @param params.hasError - Whether the icon image failed to load.
+     * @returns The classes.
+     */
     image?: (params: { isLoading: boolean; showLoading: boolean; hasError: boolean }) => string;
-    /** Function to generate loading overlay classes */
+    /**
+     * Returns the classes of the loading overlay.
+     *
+     * @param params - The icon state.
+     * @param params.isLoading - Whether the icon image is loading.
+     * @param params.size - Icon size in pixels.
+     * @returns The classes.
+     */
     loadingOverlay?: (params: { isLoading: boolean; size: number }) => string;
   };
 };
 
+/**
+ * Props of {@link WalletIcon}. The other props are passed to the container `<div>`.
+ */
 export interface WalletIconProps extends Omit<ComponentPropsWithoutRef<'div'>, 'role'> {
-  /** Custom icon URL for the wallet */
+  /**
+   * Icon of the wallet, usually the `icon` of the connector or connection (a data URL). Only `http://`, `https://`,
+   * `data:` and root-relative (`/`) URLs are used; otherwise the fallback icon is shown.
+   */
   icon?: string;
-  /** Name of the wallet */
+  /** Name of the wallet, formatted with `formatConnectorName` from `@tuwaio/orbit-core` for the fallback icon. */
   name: string;
-  /** Size of the icon in pixels */
+  /** Size of the icon in pixels. Defaults to `32`. */
   size?: number;
-  /** Custom alt text for the icon */
+  /** Accessible label of the icon. Defaults to the wallet name and the `walletIcon` label. */
   altText?: string;
-  /** Whether to show loading state */
+  /** Whether to show a pulsing placeholder while the image loads. Defaults to `false`. */
   showLoading?: boolean;
   /** Callback fired when image loads successfully */
   onImageLoad?: () => void;
   /** Callback fired when image fails to load */
   onImageError?: () => void;
-  /** Enable lazy loading for non-critical images */
+  /** Whether the image is loaded lazily (`loading="lazy"`). Defaults to `false`. */
   lazy?: boolean;
   /** Customization options */
   customization?: WalletIconCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultLoadingOverlay = ({ isLoading, className }: CustomLoadingOverlayProps) => {
+const DefaultLoadingOverlay = ({ isLoading, className }: WalletIconLoadingOverlayProps) => {
   if (!isLoading) return null;
 
   return (
@@ -90,7 +133,7 @@ const DefaultLoadingOverlay = ({ isLoading, className }: CustomLoadingOverlayPro
   );
 };
 
-const DefaultErrorIndicator = ({ walletName, hasError }: CustomErrorIndicatorProps) => {
+const DefaultErrorIndicator = ({ walletName, hasError }: WalletIconErrorIndicatorProps) => {
   if (!hasError || process.env.NODE_ENV !== 'development') return null;
 
   return (
@@ -102,13 +145,18 @@ const DefaultErrorIndicator = ({ walletName, hasError }: CustomErrorIndicatorPro
   );
 };
 
-const DefaultFallbackIcon = ({ walletName, className }: CustomFallbackIconProps) => {
+const DefaultFallbackIcon = ({ walletName, className }: WalletIconFallbackIconProps) => {
   return <WI walletName={walletName} className={cn('novacon:flex-shrink-0', className)} />;
 };
 
 /**
- * A highly customizable wallet icon component with loading states, error handling, and fallback support.
- * Provides extensive customization options for container, image, and sub-components while maintaining accessibility.
+ * The icon of a wallet: the `icon` image when it is a valid URL and loads, otherwise the icon of `@tuwaio/nova-core`
+ * for the wallet name. The container has `role="img"` and an accessible label. In development, a red dot marks an icon
+ * that failed to load.
+ *
+ * Props: {@link WalletIconProps}; the ref is forwarded to the container.
+ *
+ * Side effect: the browser loads the `icon` URL (wallet icons are usually data URLs).
  */
 export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
   (

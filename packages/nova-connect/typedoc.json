@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/index.ts",
+    "src/components/index.ts",
+    "src/hooks/index.ts",
+    "src/i18n/index.ts",
+    "src/satellite/index.ts",
+    "src/evm/index.ts",
+    "src/solana/index.ts"
+  ],
+  "sortEntryPoints": false
+}

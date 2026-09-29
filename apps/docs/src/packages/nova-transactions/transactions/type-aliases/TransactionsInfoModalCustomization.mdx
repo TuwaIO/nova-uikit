@@ -1,0 +1,95 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionsInfoModalCustomization" />
+
+# TransactionsInfoModalCustomization\<T\>
+
+> **TransactionsInfoModalCustomization**\<`T`\> = `object`
+
+Defined in: [components/TransactionsInfoModal.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L24)
+
+Props, class names and replacement components for the parts of [TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs).
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/TransactionsInfoModal.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L28)
+
+Granular classNames for modal elements
+
+#### closeButton?
+
+> `optional` **closeButton?**: `string`
+
+Classes for the close button
+
+#### contentWrapper?
+
+> `optional` **contentWrapper?**: `string`
+
+Classes for the content wrapper
+
+#### header?
+
+> `optional` **header?**: `string`
+
+Classes for the header section
+
+#### headerTitle?
+
+> `optional` **headerTitle?**: `string`
+
+Classes for the header title
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [components/TransactionsInfoModal.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L41)
+
+Components that replace the default parts.
+
+#### Header?
+
+> `optional` **Header?**: `ComponentType`\<[`TransactionsInfoModalHeaderProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionsinfomodalheaderprops--docs)\>
+
+The header with the title and the close button.
+
+#### History?
+
+> `optional` **History?**: `ComponentType`\<[`TransactionsHistoryProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistoryprops--docs)\<`T`\>\>
+
+The transaction list.
+
+***
+
+### historyCustomization?
+
+> `optional` **historyCustomization?**: [`TransactionsHistoryProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistoryprops--docs)\<`T`\>\[`"customization"`\]
+
+Defined in: [components/TransactionsInfoModal.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L39)
+
+Customization for TransactionsHistory component
+
+***
+
+### modalProps?
+
+> `optional` **modalProps?**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* [`DialogContent`](?path=/docs/packages-nova-core-variables-dialogcontent--docs)\>\>
+
+Defined in: [components/TransactionsInfoModal.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L26)
+
+Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`).

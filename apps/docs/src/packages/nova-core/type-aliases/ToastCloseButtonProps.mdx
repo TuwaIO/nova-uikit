@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Type Aliases/ToastCloseButtonProps" />
+
+# ToastCloseButtonProps
+
+> **ToastCloseButtonProps** = `object`
+
+Defined in: [components/ToastCloseButton.tsx:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L10)
+
+Defines the props for the ToastCloseButton component.
+
+## Properties
+
+### ariaLabel?
+
+> `optional` **ariaLabel?**: `string`
+
+Defined in: [components/ToastCloseButton.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L18)
+
+Accessible label of the button. Defaults to `'Close toast notification'`.
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [components/ToastCloseButton.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L24)
+
+Optional custom className for the button container.
+
+***
+
+### closeToast?
+
+> `optional` **closeToast?**: (`e`) => `void`
+
+Defined in: [components/ToastCloseButton.tsx:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L16)
+
+Called when the button is clicked. `react-toastify` passes it to a custom close button to dismiss the toast.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`\<`HTMLElement`\>
+
+The click event.
+
+#### Returns
+
+`void`
+
+***
+
+### iconClassName?
+
+> `optional` **iconClassName?**: `string`
+
+Defined in: [components/ToastCloseButton.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L28)
+
+Optional custom className for the close icon SVG.
+
+***
+
+### title?
+
+> `optional` **title?**: `string`
+
+Defined in: [components/ToastCloseButton.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L20)
+
+Tooltip of the button. Defaults to `'Close toast notification'`.

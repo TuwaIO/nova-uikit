@@ -1,0 +1,142 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectedModalMainContentProps" />
+
+# ConnectedModalMainContentProps
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:348](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L348)
+
+Props for the [ConnectedModalMainContent](?path=/docs/packages-nova-connect-components-variables-connectedmodalmaincontent--docs) component. `transactionPool` is the Pulsar transaction pool; the
+transactions sent from the active address are counted. Other props are passed to the container.
+
+## Extends
+
+- `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:368](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L368)
+
+ARIA label of the container (default: the `walletConnected` label and the wallet name)
+
+***
+
+### avatarIsLoading
+
+> **avatarIsLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:354](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L354)
+
+Whether the avatar is loading
+
+***
+
+### balance
+
+> **balance**: [`NativeBalanceResult`](?path=/docs/packages-nova-connect-connect-interfaces-nativebalanceresult--docs) \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:362](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L362)
+
+The native balance, or `null`
+
+***
+
+### balanceLoading
+
+> **balanceLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:356](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L356)
+
+Whether the balance is loading
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:350](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L350)
+
+List of available chains for the current wallet
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:366](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L366)
+
+Classes added to the default container classes (ignored when `classNames.container` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectedModalMainContentCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontentcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:370](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L370)
+
+Customization options
+
+***
+
+### ensAvatar
+
+> **ensAvatar**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:352](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L352)
+
+The ENS or SNS avatar URL, or `null`
+
+***
+
+### ensNameAbbreviated
+
+> **ensNameAbbreviated**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:360](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L360)
+
+The shortened ENS or SNS name, when the address has one
+
+***
+
+### refetch
+
+> **refetch**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:364](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L364)
+
+Reloads the balance
+
+#### Returns
+
+`void`
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`transactionPool`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#transactionpool)
+
+***
+
+### txsLoading
+
+> **txsLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:358](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L358)
+
+Whether the transactions are loading

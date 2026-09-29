@@ -1,0 +1,301 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/WaitForConnectionContentCustomization" />
+
+# WaitForConnectionContentCustomization
+
+> **WaitForConnectionContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L84)
+
+Customization options for WaitForConnectionContent component
+
+## Properties
+
+### animation?
+
+> `optional` **animation?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L135)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container?**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+#### path?
+
+> `optional` **path?**: `object`
+
+Path animation configuration
+
+##### path.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### path.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### path.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L99)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and `className`.
+
+##### Parameters
+
+###### params
+
+The connection state.
+
+###### isConnected
+
+`boolean`
+
+Whether a wallet is connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### icon?
+
+> `optional` **icon?**: (`params`) => `string`
+
+Returns the classes of the icon.
+
+##### Parameters
+
+###### params
+
+The connection state.
+
+###### isConnected
+
+`boolean`
+
+Whether a wallet is connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### path?
+
+> `optional` **path?**: () => `string`
+
+Function to generate path classes
+
+##### Returns
+
+`string`
+
+#### text?
+
+> `optional` **text?**: (`params`) => `string`
+
+Returns the classes of the text.
+
+##### Parameters
+
+###### params
+
+The connection state.
+
+###### isConnected
+
+`boolean`
+
+Whether a wallet is connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L88)
+
+Custom components
+
+#### Content?
+
+> `optional` **Content?**: `ComponentType`\<[`WaitForConnectionContentContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-waitforconnectioncontentcontentprops--docs)\>
+
+Custom content component (wraps everything)
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`WaitForConnectionContentIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-waitforconnectioncontenticonprops--docs)\>
+
+Custom icon SVG component
+
+#### Path?
+
+> `optional` **Path?**: `ComponentType`\<[`WaitForConnectionContentPathProps`](?path=/docs/packages-nova-connect-components-type-aliases-waitforconnectioncontentpathprops--docs)\>
+
+Custom path component
+
+#### Text?
+
+> `optional` **Text?**: `ComponentType`\<[`WaitForConnectionContentTextProps`](?path=/docs/packages-nova-connect-components-type-aliases-waitforconnectioncontenttextprops--docs)\>
+
+Custom text component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L169)
+
+Configuration options
+
+#### customText?
+
+> `optional` **customText?**: `string`
+
+Custom text to display
+
+#### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Whether to disable animations
+
+#### hideWhenConnected?
+
+> `optional` **hideWhenConnected?**: `boolean`
+
+Whether to render nothing while a wallet is connected. Defaults to `true`.
+
+#### reduceMotion?
+
+> `optional` **reduceMotion?**: `boolean`
+
+Whether to reduce motion for accessibility
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`HTMLMotionProps`\<`"div"`\>, `"initial"` \| `"animate"` \| `"exit"` \| `"variants"` \| `"transition"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L86)
+
+Override container element props
+
+***
+
+### svg?
+
+> `optional` **svg?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L156)
+
+Custom SVG properties
+
+#### pathData?
+
+> `optional` **pathData?**: `string`
+
+Custom wallet icon path
+
+#### strokeLinecap?
+
+> `optional` **strokeLinecap?**: `"butt"` \| `"round"` \| `"square"`
+
+Custom stroke linecap
+
+#### strokeLinejoin?
+
+> `optional` **strokeLinejoin?**: `"miter"` \| `"bevel"` \| `"round"`
+
+Custom stroke linejoin
+
+#### strokeWidth?
+
+> `optional` **strokeWidth?**: `string` \| `number`
+
+Custom stroke width
+
+#### viewBox?
+
+> `optional` **viewBox?**: `string`
+
+Custom viewBox
+
+***
+
+### variants?
+
+> `optional` **variants?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L128)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container?**: `Variants`
+
+Container motion variants
+
+#### path?
+
+> `optional` **path?**: `Variants`
+
+Path motion variants

@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/LegalDisclaimerPrivacyLinkProps" />
+
+# LegalDisclaimerPrivacyLinkProps
+
+> **LegalDisclaimerPrivacyLinkProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:83](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L83)
+
+Props for a custom privacy policy link.
+
+## Properties
+
+### children
+
+> **children**: `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:89](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L89)
+
+The `legalPrivacy` label
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:85](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L85)
+
+Classes from `classNames.privacyLink` or the defaults
+
+***
+
+### disclaimerData
+
+> **disclaimerData**: [`LegalDisclaimerData`](?path=/docs/packages-nova-connect-components-interfaces-legaldisclaimerdata--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L91)
+
+The links
+
+***
+
+### href
+
+> **href**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L87)
+
+`privacyUrl`
+
+***
+
+### onClick?
+
+> `optional` **onClick?**: (`e`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L101)
+
+With `handlers.onPrivacyClick`, prevents the navigation and calls the handler.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`\<`HTMLAnchorElement`\>
+
+The click event.
+
+#### Returns
+
+`void`
+
+***
+
+### rel?
+
+> `optional` **rel?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L95)
+
+`config.links.rel` or `noopener noreferrer`, with `target`
+
+***
+
+### target?
+
+> `optional` **target?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L93)
+
+`_blank` unless `config.links.openInNewTab` is `false`

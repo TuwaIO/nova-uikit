@@ -17,6 +17,7 @@ import React, {
 } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---
@@ -50,7 +51,12 @@ export type LocalTxPagination = {
   hasMore: boolean;
   /** The current page number in the paginated history. */
   currentPage: number;
-  /** Loads the next page of transaction history and appends it to the pool. */
+  /**
+   * Loads the next page of transaction history and appends it to the pool.
+   *
+   * @param walletAddress - The address whose history is loaded.
+   * @returns Resolves when the page is loaded.
+   */
   fetchNextPage: (walletAddress: string) => Promise<void>;
 };
 
@@ -123,50 +129,80 @@ export type LocalTransactionsHistoryCustomization = {
 };
 
 // --- Types for Customization ---
-type CustomLoadingContainerProps = {
+/**
+ * Props for a custom loading state (shown while `@tuwaio/nova-transactions` loads).
+ */
+export type ConnectedModalTxHistoryLoadingContainerProps = {
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Classes from `classNames.loadingContainer` */
   className?: string;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.loadingSpinner` */
     spinner?: string;
+    /** From `classNames.loadingText` */
     text?: string;
   };
 };
 
-type CustomErrorContainerProps = {
+/**
+ * Props for a custom error state (shown when `@tuwaio/nova-transactions` cannot be loaded or its component throws).
+ */
+export type ConnectedModalTxHistoryErrorContainerProps = {
+  /** Classes from `classNames.errorContainer` */
   className?: string;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.errorIconContainer` */
     iconContainer?: string;
+    /** From `classNames.errorIcon` */
     icon?: string;
+    /** From `classNames.errorContent` */
     content?: string;
+    /** From `classNames.errorTitle` */
     title?: string;
+    /** From `classNames.errorDescription` */
     description?: string;
   };
 };
 
-type CustomNoWalletContainerProps = {
+/**
+ * Props for a custom state without a connected wallet.
+ */
+export type ConnectedModalTxHistoryNoWalletContainerProps = {
+  /** Classes from `classNames.noWalletContainer` */
   className?: string;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.noWalletText` */
     text?: string;
   };
 };
 
-type CustomTransactionsHistoryWrapperProps = {
+/**
+ * Props for a custom wrapper of the `TransactionsHistory` of `@tuwaio/nova-transactions`.
+ */
+export type ConnectedModalTxHistoryTransactionsHistoryWrapperProps = {
+  /** The transaction history */
   children: ReactNode;
+  /** The active address */
   activeConnectionAddress: string;
+  /** The `transactionPool` prop */
   transactionPool: NonNullable<NovaConnectProviderProps['transactionPool']>;
+  /** The `pulsarAdapter` prop */
   pulsarAdapter: NonNullable<NovaConnectProviderProps['pulsarAdapter']>;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Classes from `classNames.transactionsHistoryWrapper` */
   className?: string;
 };
 
 /**
- * Customization options for ConnectedModalTxHistory component
+ * Customization options of {@link ConnectedModalTxHistory}.
  */
 export type ConnectedModalTxHistoryCustomization = {
-  /** Override root container props */
+  /** Props of the container (the component props, `className` and `aria-label` take precedence) */
   containerProps?: Partial<
     Omit<
       ComponentPropsWithoutRef<'div'>,
@@ -187,63 +223,140 @@ export type ConnectedModalTxHistoryCustomization = {
   /** Custom components */
   components?: {
     /** Custom loading container component */
-    LoadingContainer?: ComponentType<CustomLoadingContainerProps>;
+    LoadingContainer?: ComponentType<ConnectedModalTxHistoryLoadingContainerProps>;
     /** Custom error container component */
-    ErrorContainer?: ComponentType<CustomErrorContainerProps>;
+    ErrorContainer?: ComponentType<ConnectedModalTxHistoryErrorContainerProps>;
     /** Custom no wallet container component */
-    NoWalletContainer?: ComponentType<CustomNoWalletContainerProps>;
+    NoWalletContainer?: ComponentType<ConnectedModalTxHistoryNoWalletContainerProps>;
     /** Custom transactions history wrapper component */
-    TransactionsHistoryWrapper?: ComponentType<CustomTransactionsHistoryWrapperProps>;
+    TransactionsHistoryWrapper?: ComponentType<ConnectedModalTxHistoryTransactionsHistoryWrapperProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The state.
+     * @param params.hasActiveWallet - Whether a wallet is connected.
+     * @param params.hasValidAdapter - Whether `transactionPool` and `pulsarAdapter` are set.
+     * @returns The classes.
+     */
     container?: (params: { hasActiveWallet: boolean; hasValidAdapter: boolean }) => string;
-    /** Function to generate loading container classes */
+    /**
+     * Returns classes of the loading state, added to the default ones.
+     *
+     * @returns The classes.
+     */
     loadingContainer?: () => string;
-    /** Function to generate loading spinner classes */
+    /**
+     * Returns classes of the loading spinner, added to the default ones.
+     *
+     * @returns The classes.
+     */
     loadingSpinner?: () => string;
-    /** Function to generate loading text classes */
+    /**
+     * Returns classes of the loading text, added to the default ones.
+     *
+     * @returns The classes.
+     */
     loadingText?: () => string;
-    /** Function to generate error container classes */
+    /**
+     * Returns classes of the error state, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorContainer?: () => string;
-    /** Function to generate error icon container classes */
+    /**
+     * Returns classes of the error icon container, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorIconContainer?: () => string;
-    /** Function to generate error icon classes */
+    /**
+     * Returns classes of the error icon, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorIcon?: () => string;
-    /** Function to generate error content classes */
+    /**
+     * Returns classes of the error texts, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorContent?: () => string;
-    /** Function to generate error title classes */
+    /**
+     * Returns classes of the error title, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorTitle?: () => string;
-    /** Function to generate error description classes */
+    /**
+     * Returns classes of the error description, added to the default ones.
+     *
+     * @returns The classes.
+     */
     errorDescription?: () => string;
-    /** Function to generate no wallet container classes */
+    /**
+     * Returns classes of the state without a wallet, added to the default ones.
+     *
+     * @returns The classes.
+     */
     noWalletContainer?: () => string;
-    /** Function to generate no wallet text classes */
+    /**
+     * Returns classes of the text without a wallet, added to the default ones.
+     *
+     * @returns The classes.
+     */
     noWalletText?: () => string;
-    /** Function to generate pulsar required container classes */
+    /**
+     * Returns classes of the "Pulsar adapter required" state, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredContainer?: () => string;
-    /** Function to generate pulsar required icon container classes */
+    /**
+     * Returns classes of its icon container, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredIconContainer?: () => string;
-    /** Function to generate pulsar required icon classes */
+    /**
+     * Returns classes of its icon, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredIcon?: () => string;
-    /** Function to generate pulsar required content classes */
+    /**
+     * Returns classes of its texts, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredContent?: () => string;
-    /** Function to generate pulsar required title classes */
+    /**
+     * Returns classes of its title, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredTitle?: () => string;
-    /** Function to generate pulsar required description classes */
+    /**
+     * Returns classes of its description, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     pulsarRequiredDescription?: () => string;
-    /** Function to generate transactions history wrapper classes */
+    /**
+     * Returns classes of the transaction history wrapper, added to the default ones.
+     *
+     * @returns The classes.
+     */
     transactionsHistoryWrapper?: () => string;
   };
   /** Custom animation variants */
   variants?: {
-    /** Container animation variants */
+    /** Container animation variants (`initial`, `animate`, `exit`) */
     container?: Variants;
-    /** Error animation variants */
+    /** Variants of the "Pulsar adapter required" state */
     error?: Variants;
-    /** Loading animation variants */
-    loading?: Variants;
   };
   /** Custom animation configuration */
   animation?: {
@@ -256,17 +369,8 @@ export type ConnectedModalTxHistoryCustomization = {
       /** Animation delay in seconds */
       delay?: number;
     };
-    /** Error animation configuration */
+    /** Animation of the "Pulsar adapter required" state */
     error?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-    /** Loading animation configuration */
-    loading?: {
       /** Animation duration in seconds */
       duration?: number;
       /** Animation easing curve */
@@ -277,25 +381,25 @@ export type ConnectedModalTxHistoryCustomization = {
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for error retry actions */
-    onErrorRetry?: (error: Error, event: React.MouseEvent<HTMLButtonElement>) => void;
-    /** Custom handler for package loading failure */
+    /**
+     * Called when `@tuwaio/nova-transactions` fails to load or its `TransactionsHistory` throws.
+     *
+     * @param packageName - `config.packageName`.
+     * @param error - The error.
+     */
     onPackageLoadingFailure?: (packageName: string, error: Error) => void;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
+    /** Renders without Framer Motion (default: `false`) */
     disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
+    /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
-    /** Custom package name for error messages */
+    /** Name passed to `handlers.onPackageLoadingFailure` (default: `@tuwaio/nova-transactions`) */
     packageName?: string;
     /** Custom aria labels for different states */
     ariaLabels?: {
-      loading?: string;
-      error?: string;
-      noWallet?: string;
-      pulsarRequired?: string;
+      /** ARIA label of the container, after the `aria-label` prop (default: the `transactionsInApp` label) */
       transactionsHistory?: string;
     };
   };
@@ -307,15 +411,16 @@ export type ConnectedModalTxHistoryCustomization = {
 };
 
 /**
- * Props for the ConnectedModalTxHistory component
+ * Props for the {@link ConnectedModalTxHistory} component. Without `transactionPool` and `pulsarAdapter` (Pulsar)
+ * the "Pulsar adapter required" state is shown. Other props are passed to the container.
  */
 export interface ConnectedModalTxHistoryProps extends Pick<
   NovaConnectProviderProps,
   'transactionPool' | 'pulsarAdapter'
 > {
-  /** Additional CSS classes for the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Custom aria-label for the container */
+  /** ARIA label of the container (default: the `transactionsInApp` label) */
   'aria-label'?: string;
   /** Customization options */
   customization?: ConnectedModalTxHistoryCustomization;
@@ -323,24 +428,17 @@ export interface ConnectedModalTxHistoryProps extends Pick<
   pagination?: LocalTxPagination;
 }
 
-/**
- * Lazy import of TransactionsHistory component with error handling
- * This allows the component to work even if the @tuwaio/nova-transactions package is not available
- */
-const TransactionsHistory = lazy(() => {
-  try {
-    return import('@tuwaio/nova-transactions').then((module) => ({
-      default: module.TransactionsHistory,
-    }));
-  } catch (error) {
-    console.warn('Failed to load @tuwaio/nova-transactions package:', error);
-    // Return a promise that never resolves to trigger error boundary
-    return new Promise(() => {});
-  }
-});
+// Loaded on the first render of the history, in a chunk of its own
+const TransactionsHistory = lazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsHistory })),
+);
 
 // --- Default Sub-Components ---
-const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels, className, classNames }) => {
+const DefaultLoadingContainer: React.FC<ConnectedModalTxHistoryLoadingContainerProps> = ({
+  labels,
+  className,
+  classNames,
+}) => {
   return (
     <div
       className={cn(
@@ -363,7 +461,8 @@ const DefaultLoadingContainer: React.FC<CustomLoadingContainerProps> = ({ labels
   );
 };
 
-const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className, classNames }) => {
+const DefaultErrorContainer: React.FC<ConnectedModalTxHistoryErrorContainerProps> = ({ className, classNames }) => {
+  const labels = useNovaConnectLabels();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -392,7 +491,7 @@ const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className,
             classNames?.title,
           )}
         >
-          Transaction History Not Available
+          {labels.transactionHistoryNotAvailable}
         </h2>
         <p
           className={cn(
@@ -400,28 +499,31 @@ const DefaultErrorContainer: React.FC<CustomErrorContainerProps> = ({ className,
             classNames?.description,
           )}
         >
-          Transaction history is not supported by this application at the moment. The required package is not installed
-          or configured.
+          {labels.transactionHistoryLoadError}
         </p>
       </div>
     </motion.div>
   );
 };
 
-const DefaultNoWalletContainer: React.FC<CustomNoWalletContainerProps> = ({ className, classNames }) => {
+const DefaultNoWalletContainer: React.FC<ConnectedModalTxHistoryNoWalletContainerProps> = ({
+  className,
+  classNames,
+}) => {
+  const labels = useNovaConnectLabels();
   return (
     <div
       className={cn('novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:p-6', className)}
       role="status"
     >
       <p className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', classNames?.text)}>
-        No wallet connected
+        {labels.walletNotConnected}
       </p>
     </div>
   );
 };
 
-const DefaultTransactionsHistoryWrapper: React.FC<CustomTransactionsHistoryWrapperProps> = ({
+const DefaultTransactionsHistoryWrapper: React.FC<ConnectedModalTxHistoryTransactionsHistoryWrapperProps> = ({
   children,
   activeConnectionAddress,
   labels,
@@ -430,7 +532,7 @@ const DefaultTransactionsHistoryWrapper: React.FC<CustomTransactionsHistoryWrapp
   return (
     <div
       className={cn('novacon:w-full', className)}
-      aria-label={`${labels.transactionsInApp} for ${activeConnectionAddress}`}
+      aria-label={formatLabel(labels.transactionsInAppFor, { address: activeConnectionAddress })}
     >
       {children}
     </div>
@@ -541,64 +643,34 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 /**
- * Component for displaying transaction history with comprehensive customization options.
+ * The transaction history screen of the connected modal: the `TransactionsHistory` of `@tuwaio/nova-transactions`
+ * for the active address (loaded with a dynamic import, without the details view). Shows a loading state while the
+ * package loads, an error state when it cannot be loaded, a "Pulsar adapter required" state without
+ * `transactionPool` and `pulsarAdapter`, and a message without a connected wallet.
  *
- * This component provides comprehensive transaction history functionality:
- * - Conditional loading of the @tuwaio/nova-transactions package
- * - Graceful fallback when the package is not available
- * - Loading states with proper accessibility support
- * - Error handling for missing configuration
- * - Full WCAG compliance with ARIA labels
- * - Comprehensive customization for all UI elements and behaviors
- * - Animation support with reduced motion options
- * - Custom event handlers for enhanced interactivity
- * - Performance-optimized with memoized calculations
+ * Props: {@link ConnectedModalTxHistoryProps}; the ref is forwarded to the container.
  *
- * The component automatically detects if the required dependencies are available
- * and provides appropriate fallbacks for different scenarios.
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedModalTxHistory
- *   transactionPool={txPool}
- *   pulsarAdapter={adapter}
- *   className="custom-styling"
- * />
- * ```
+ * import { ConnectedModalTxHistory } from '@tuwaio/nova-connect/components';
+ * import type { NovaConnectProviderProps } from '@tuwaio/nova-connect/hooks';
  *
- * @example With full customization
- * ```tsx
- * <ConnectedModalTxHistory
- *   transactionPool={txPool}
- *   pulsarAdapter={adapter}
- *   customization={{
- *     classNames: {
- *       container: ({ hasActiveWallet }) =>
- *         `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
- *       loadingContainer: () => "custom-loading bg-blue-100",
- *       errorContainer: () => "custom-error bg-red-100",
- *     },
- *     components: {
- *       LoadingContainer: ({ className }) =>
- *         <div className={cn("custom-spinner", className)} />,
- *     },
- *     handlers: {
- *       onPackageLoadingFailure: (packageName, error) =>
- *         console.error(`Failed to load ${packageName}:`, error),
- *     },
- *     config: {
- *       packageName: '@custom/transactions',
- *       ariaLabels: {
- *         loading: 'Loading transaction history...',
- *         error: 'Error loading transactions',
- *       },
- *     },
- *     animation: {
- *       container: { duration: 0.3, ease: 'easeOut' },
- *       error: { duration: 0.2, ease: 'easeIn' },
- *     },
- *   }}
- * />
+ * type HistoryProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'>;
+ *
+ * export function History({ transactionPool, pulsarAdapter }: HistoryProps) {
+ *   return (
+ *     <ConnectedModalTxHistory
+ *       transactionPool={transactionPool}
+ *       pulsarAdapter={pulsarAdapter}
+ *       customization={{
+ *         classNames: { loadingContainer: () => 'bg-blue-100' },
+ *         handlers: {
+ *           onPackageLoadingFailure: (packageName, error) => console.error(packageName, error),
+ *         },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModalTxHistoryProps>(

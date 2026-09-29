@@ -1,78 +1,57 @@
 import { ConnectorType, OrbitAdapter } from '@tuwaio/orbit-core';
-import { useEffect, useState } from 'react';
+import type { BaseConnector } from '@tuwaio/satellite-core';
+import { useMemo } from 'react';
 
 import { InitialChains } from '../types';
-import { getChainsListByConnectorTypeAsync, getWalletChains } from '../utils';
+import { getChainsListByConnectorType, getWalletChains } from '../utils';
 
 /**
- * Props for the useWalletChainsList hook
+ * Props of {@link useWalletChainsList}.
  */
-interface UseWalletChainsListProps extends InitialChains {
-  /** The active connection object from the store */
-  activeConnection: any; // Using any to avoid complex store type imports, similar to usage in components
+export interface UseWalletChainsListProps extends InitialChains {
+  /** The active connection of the Satellite store, or `undefined` when no wallet is connected */
+  activeConnection: Pick<BaseConnector, 'connectorType'> | undefined;
 }
 
 /**
- * Custom hook to asynchronously fetch the list of available chains for the active wallet.
- * Handles the loading state and updates when the active connection or configuration changes.
+ * Returns the chains of the app for the network of the active connection (see `getChainsListByConnectorType`): the EVM
+ * chain IDs of `appChains`, or the Solana clusters of `solanaRPCUrls` that the connected wallet supports. Without a
+ * connection, the EVM chains.
  *
- * @param props - Hook properties
- * @returns Object containing the chains list and loading state
+ * @param props - See {@link UseWalletChainsListProps}.
+ * @returns `chainsList`, recomputed when the connection or the chain configuration changes.
+ *
+ * @example
+ * ```tsx
+ * import { useWalletChainsList } from '@tuwaio/nova-connect/hooks';
+ * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { mainnet, polygon } from 'viem/chains';
+ *
+ * const appChains = [mainnet, polygon] as const;
+ *
+ * export function ChainCount() {
+ *   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+ *   const { chainsList } = useWalletChainsList({ activeConnection, appChains });
+ *   return <span>{chainsList.length} chains</span>;
+ * }
+ * ```
  */
-export function useWalletChainsList({ activeConnection, appChains, solanaRPCUrls }: UseWalletChainsListProps) {
-  const [chainsList, setChainsList] = useState<(string | number)[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+export function useWalletChainsList({ activeConnection, appChains, solanaRPCUrls }: UseWalletChainsListProps): {
+  /** Chain IDs (EVM) or cluster monikers (Solana) */
+  chainsList: (string | number)[];
+} {
+  const chainsList = useMemo(
+    () =>
+      getChainsListByConnectorType({
+        connectorType: activeConnection
+          ? activeConnection.connectorType
+          : (`${OrbitAdapter.EVM}:not-connected` as ConnectorType),
+        appChains,
+        solanaRPCUrls,
+        chains: getWalletChains(activeConnection),
+      }),
+    [activeConnection, appChains, solanaRPCUrls],
+  );
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchChains = async () => {
-      setIsLoading(true);
-      try {
-        if (!activeConnection) {
-          const list = await getChainsListByConnectorTypeAsync({
-            connectorType: `${OrbitAdapter.EVM}:not-connected` as ConnectorType,
-            appChains,
-            solanaRPCUrls,
-            chains: [],
-          });
-          if (isMounted) {
-            setChainsList(list);
-          }
-          return;
-        }
-
-        // Safely extract wallet chains using shared utility
-        const walletChains = getWalletChains(activeConnection);
-
-        const list = await getChainsListByConnectorTypeAsync({
-          connectorType: (activeConnection as { connectorType: ConnectorType }).connectorType,
-          appChains,
-          solanaRPCUrls,
-          chains: walletChains,
-        });
-
-        if (isMounted) {
-          setChainsList(list);
-        }
-      } catch (error) {
-        console.error('Failed to fetch chains list:', error);
-        if (isMounted) {
-          setChainsList([]);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchChains();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeConnection, appChains, solanaRPCUrls]);
-
-  return { chainsList, isLoading };
+  return { chainsList };
 }

@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/GetWallet" />
+
+# GetWallet
+
+> `const` **GetWallet**: `ForwardRefExoticComponent`\<[`GetWalletProps`](?path=/docs/packages-nova-connect-components-interfaces-getwalletprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:611](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L611)
+
+The "Get a wallet" screen of the connect modal: floating icons of popular wallets (MetaMask, Coinbase, Trust, Rabby,
+Phantom by default) over a stars background, a title and a description from the Nova Connect labels.
+
+Props: [GetWalletProps](?path=/docs/packages-nova-connect-components-interfaces-getwalletprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { GetWallet } from '@tuwaio/nova-connect/components';
+
+export const Intro = (
+  <GetWallet
+    compact
+    customization={{
+      classNames: {
+        container: ({ compact }) => (compact ? 'custom-compact' : 'custom-full'),
+      },
+      config: { animation: { durationMultiplier: 1.5, delayMultiplier: 0.8 } },
+    }}
+  />
+);
+```

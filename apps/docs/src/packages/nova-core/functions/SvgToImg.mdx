@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/SvgToImg" />
+
+# SvgToImg()
+
+> **SvgToImg**(`props`): `Element`
+
+Defined in: [components/SvgToImg.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/SvgToImg.tsx#L57)
+
+Converts an SVG element to an `<img>` tag with a base64-encoded data URL.
+
+This component solves the problem of duplicate SVG `id` attributes
+when rendering multiple identical icons on the same page.
+
+Uses a render prop pattern to inject a callback ref that captures
+the SVG immediately when it mounts.
+
+## Parameters
+
+### props
+
+[`SvgToImgProps`](?path=/docs/packages-nova-core-interfaces-svgtoimgprops--docs)
+
+See [SvgToImgProps](?path=/docs/packages-nova-core-interfaces-svgtoimgprops--docs); the other props are passed to the `<img>` element.
+
+## Returns
+
+`Element`
+
+The `<img>` with the converted SVG, or the output of `children` until the SVG has mounted.
+
+## Example
+
+```tsx
+import { SvgToImg } from '@tuwaio/nova-core';
+
+export const DotIcon = () => (
+  <SvgToImg iconId="dot" alt="Dot">
+    {(ref) => (
+      <svg ref={ref} viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    )}
+  </SvgToImg>
+);
+```

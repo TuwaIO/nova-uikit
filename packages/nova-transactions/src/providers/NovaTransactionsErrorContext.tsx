@@ -91,16 +91,21 @@ export const NovaTransactionsErrorContext = createContext<NovaTransactionsErrorC
  *
  * @example
  * ```tsx
- * const { showPreSubmitErrorToast } = useNovaTransactionsError();
+ * import { useNovaTransactionsError } from '@tuwaio/nova-transactions/providers';
  *
- * const handleAction = async () => {
- *   try {
- *     await executeTxAction({ ... });
- *   } catch (e) {
- *     showPreSubmitErrorToast(e);
- *     throw e;
- *   }
- * };
+ * export function SubmitButton({ submit }: { submit: () => Promise<void> }) {
+ *   const { showPreSubmitErrorToast } = useNovaTransactionsError();
+ *
+ *   const handleClick = async () => {
+ *     try {
+ *       await submit();
+ *     } catch (error) {
+ *       showPreSubmitErrorToast(error);
+ *     }
+ *   };
+ *
+ *   return <button onClick={handleClick}>Submit</button>;
+ * }
  * ```
  */
 export function useNovaTransactionsError(): {

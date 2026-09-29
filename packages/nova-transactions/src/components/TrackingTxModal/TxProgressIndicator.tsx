@@ -8,6 +8,7 @@ import { ComponentType } from 'react';
 
 import { useLabels } from '../../providers';
 
+/** State of a step of {@link TxProgressIndicator}, which sets its colors and icon. */
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';
 
 /** ClassNames for step styling overrides */
@@ -24,11 +25,17 @@ export type StepClassNames = {
   statusOverrides?: Partial<Record<StepStatus, { line?: string; circle?: string; label?: string }>>;
 };
 
+/** Props of a step of {@link TxProgressIndicator} (`StepComponent`). */
 export type StepProps = {
+  /** State of the step. */
   status: StepStatus;
+  /** Label under the step. */
   label: string;
+  /** Whether it is the first step; the default step draws no line before it. */
   isFirst?: boolean;
+  /** Whether it is the last step (not used by the default step). */
   isLast?: boolean;
+  /** Class names of the step (`stepClassNames` of the indicator). */
   classNames?: StepClassNames;
 };
 
@@ -126,17 +133,31 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
   );
 }
 
+/** Props of {@link TxProgressIndicator}. */
 export interface TxProgressIndicatorProps {
+  /** Whether the transaction is being submitted or is pending. */
   isProcessing?: boolean;
+  /** Whether the transaction succeeded. */
   isSucceed?: boolean;
+  /** Whether the submission or the transaction failed. */
   isFailed?: boolean;
+  /** Whether the transaction was replaced (sped up or canceled). */
   isReplaced?: boolean;
+  /** Classes of the indicator. */
   className?: string;
+  /** Component that renders each step. */
   StepComponent?: ComponentType<StepProps>;
   /** ClassNames for step customization */
   stepClassNames?: StepClassNames;
 }
 
+/**
+ * Three steps of the transaction lifecycle, used by the tracking modal: "created" (always completed), "processing"
+ * (active while processing, completed after) and a final step that shows success, failure or replacement.
+ *
+ * @param props - See {@link TxProgressIndicatorProps}.
+ * @returns The indicator.
+ */
 export function TxProgressIndicator({
   isProcessing,
   isSucceed,

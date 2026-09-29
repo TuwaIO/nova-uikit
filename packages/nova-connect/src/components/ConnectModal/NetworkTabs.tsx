@@ -6,36 +6,38 @@ import { GlobeAltIcon } from '@heroicons/react/24/solid';
 import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import React, { ComponentType, forwardRef, memo, useEffect } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 
 /**
- * Animation configuration
+ * Animation settings of {@link NetworkTabs} (`config.animation`).
  */
 export interface AnimationConfig {
-  /** Layout animation duration */
-  layoutDuration: number;
-  /** Layout animation easing */
-  layoutEasing: number[];
-  /** Text transition duration */
+  /** Duration of the fade of the tab name, in seconds (default: `0.2`) */
   textDuration: number;
-  /** Text transition delay */
+  /** Delay before the name of the selected tab appears, in seconds (default: `0`) */
   textDelay?: number;
 }
 
 /**
- * Network tab data
+ * A tab of {@link NetworkTabs}.
  */
 export interface NetworkTabData {
   /** Network adapter (undefined for "All") */
   network: OrbitAdapter | undefined;
-  /** Display name */
+  /** The `all` label, the name from `config.networkNames`, or the chain name from `getNetworkData` */
   displayName: string;
-  /** Network info from utils */
-  networkInfo: { chainId: number | string; name: string } | null;
+  /** Default chain of the network (`chain` of `getNetworkData` from `@tuwaio/orbit-core`), `null` for "All" */
+  networkInfo: {
+    /** Chain ID of the network icon */
+    chainId: number | string;
+    /** Chain name */
+    name: string;
+  } | null;
   /** Whether this tab is selected */
   isSelected: boolean;
   /** Tab index */
@@ -43,111 +45,223 @@ export interface NetworkTabData {
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container (a `motion.div` with a layout animation by default).
+ */
+export type NetworkTabsContainerProps = {
+  /** Classes from `classNames.container` or the `className` prop */
   className?: string;
+  /** The tab list */
   children: React.ReactNode;
+  /** `tablist` */
   role?: string;
+  /** `config.ariaLabels.container` or the `networkSelectionTabs` label */
   'aria-label'?: string;
 } & React.RefAttributes<HTMLDivElement>;
 
-type TabListProps = {
+/**
+ * Props for a custom tab list.
+ */
+export type NetworkTabsTabListProps = {
+  /** Classes from `classNames.tabList` or the defaults */
   className?: string;
+  /** The tabs */
   children: React.ReactNode;
 } & React.RefAttributes<HTMLDivElement>;
 
-type TabProps = {
+/**
+ * Props for a custom tab wrapper.
+ */
+export type NetworkTabsTabProps = {
+  /** Classes from `classNames.tab` or the defaults */
   className?: string;
+  /** The tab button and, for the selected tab, the indicator */
   children: React.ReactNode;
+  /** The adapter of the tab, or `all` */
   'data-network': string;
 } & React.RefAttributes<HTMLDivElement>;
 
-type TabButtonProps = {
+/**
+ * Props for a custom tab button.
+ */
+export type NetworkTabsTabButtonProps = {
+  /** Classes from `classNames.tabButton` or the defaults */
   className?: string;
+  /** The icon and the name */
   children: React.ReactNode;
+  /** `button` */
   type?: 'button';
+  /** `tab` */
   role?: string;
+  /** Whether the tab is selected */
   'aria-selected'?: boolean;
+  /** `network-panel-<adapter or all>` */
   'aria-controls'?: string;
+  /** Selects the tab (`onSelect`, then `handlers.onTabSelect`) */
   onClick: () => void;
+  /** Calls `handlers.onTabHover` */
   onMouseEnter?: () => void;
+  /** Calls `handlers.onTabFocus` */
   onFocus?: () => void;
+  /** The display name */
   title?: string;
+  /** `tabPrefix` and the `networkTab` label with the name, followed by `selectedSuffix` for the selected tab */
   'aria-label'?: string;
+  /** The tab */
   tabData: NetworkTabData;
 } & React.RefAttributes<HTMLButtonElement>;
 
-type IconContainerProps = {
+/**
+ * Props for a custom icon container of a tab.
+ */
+export type NetworkTabsIconContainerProps = {
+  /** Classes from `classNames.iconContainer` or the defaults */
   className?: string;
+  /** The network icon, or a globe for "All" */
   children: React.ReactNode;
+  /** `img` */
   role?: string;
+  /** The `networkNameIcon` label with the name, or the `networkTab` label followed by `iconSuffix` */
   'aria-label'?: string;
-  tabData: NetworkTabData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type TabTextProps = {
-  className?: string;
-  children: React.ReactNode;
-  variants?: Variants;
-  animate?: string;
-  'aria-hidden'?: boolean;
-  tabData: NetworkTabData;
-} & React.RefAttributes<HTMLSpanElement>;
-
-type IndicatorProps = {
-  className?: string;
-  'aria-hidden'?: boolean;
+  /** The tab */
   tabData: NetworkTabData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * Customization options for NetworkTabs component
+ * Props for a custom tab name (a `motion.span` shown only for the selected tab by default).
+ */
+export type NetworkTabsTabTextProps = {
+  /** Classes from `classNames.tabText` or the defaults */
+  className?: string;
+  /** The display name */
+  children: React.ReactNode;
+  /** Framer Motion variants `active` and `inactive` */
+  variants?: Variants;
+  /** `active` for the selected tab, otherwise `inactive` */
+  animate?: string;
+  /** `true` for tabs that are not selected */
+  'aria-hidden'?: boolean;
+  /** The tab */
+  tabData: NetworkTabData;
+} & React.RefAttributes<HTMLSpanElement>;
+
+/**
+ * Props for a custom selection indicator (the background of the selected tab).
+ */
+export type NetworkTabsIndicatorProps = {
+  /** Classes from `classNames.indicator` or the defaults */
+  className?: string;
+  /** `true` */
+  'aria-hidden'?: boolean;
+  /** The selected tab */
+  tabData: NetworkTabData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link NetworkTabs}.
  */
 export type NetworkTabsCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<NetworkTabsContainerProps>;
     /** Custom tab list container */
-    TabList?: ComponentType<TabListProps>;
+    TabList?: ComponentType<NetworkTabsTabListProps>;
     /** Custom tab wrapper */
-    Tab?: ComponentType<TabProps>;
+    Tab?: ComponentType<NetworkTabsTabProps>;
     /** Custom tab button */
-    TabButton?: ComponentType<TabButtonProps>;
+    TabButton?: ComponentType<NetworkTabsTabButtonProps>;
     /** Custom icon container */
-    IconContainer?: ComponentType<IconContainerProps>;
+    IconContainer?: ComponentType<NetworkTabsIconContainerProps>;
     /** Custom tab text */
-    TabText?: ComponentType<TabTextProps>;
+    TabText?: ComponentType<NetworkTabsTabTextProps>;
     /** Custom selection indicator */
-    Indicator?: ComponentType<IndicatorProps>;
+    Indicator?: ComponentType<NetworkTabsIndicatorProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the `className` prop.
+     *
+     * @returns The classes.
+     */
     container?: () => string;
-    /** Function to generate tab list classes */
+    /**
+     * Returns the classes of the tab list, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     tabList?: () => string;
-    /** Function to generate tab classes */
+    /**
+     * Returns the classes of a tab wrapper, instead of the default ones.
+     *
+     * @param params - The tab.
+     * @param params.isSelected - Whether the tab is selected.
+     * @param params.index - Tab index.
+     * @returns The classes.
+     */
     tab?: (params: { isSelected: boolean; index: number }) => string;
-    /** Function to generate tab button classes */
+    /**
+     * Returns the classes of a tab button, instead of the default ones.
+     *
+     * @param params - The tab.
+     * @param params.isSelected - Whether the tab is selected.
+     * @param params.tabData - The tab.
+     * @returns The classes.
+     */
     tabButton?: (params: { isSelected: boolean; tabData: NetworkTabData }) => string;
-    /** Function to generate icon container classes */
+    /**
+     * Returns the classes of an icon container, instead of the default ones.
+     *
+     * @param params - The tab.
+     * @param params.tabData - The tab.
+     * @returns The classes.
+     */
     iconContainer?: (params: { tabData: NetworkTabData }) => string;
-    /** Function to generate tab text classes */
+    /**
+     * Returns the classes of a tab name, instead of the default ones.
+     *
+     * @param params - The tab.
+     * @param params.isSelected - Whether the tab is selected.
+     * @param params.tabData - The tab.
+     * @returns The classes.
+     */
     tabText?: (params: { isSelected: boolean; tabData: NetworkTabData }) => string;
-    /** Function to generate indicator classes */
+    /**
+     * Returns the classes of the selection indicator, instead of the default ones.
+     *
+     * @param params - The tab.
+     * @param params.tabData - The selected tab.
+     * @returns The classes.
+     */
     indicator?: (params: { tabData: NetworkTabData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for tab selection (called after default logic) */
+    /**
+     * Called after `onSelect` when a tab is clicked.
+     *
+     * @param network - The adapter of the tab, `undefined` for "All".
+     * @param tabData - The tab.
+     */
     onTabSelect?: (network: OrbitAdapter | undefined, tabData: NetworkTabData) => void;
-    /** Custom handler for tab hover */
+    /**
+     * Called when the pointer enters a tab.
+     *
+     * @param network - The adapter of the tab, `undefined` for "All".
+     * @param tabData - The tab.
+     */
     onTabHover?: (network: OrbitAdapter | undefined, tabData: NetworkTabData) => void;
-    /** Custom handler for tab focus */
+    /**
+     * Called when a tab gets focus.
+     *
+     * @param network - The adapter of the tab, `undefined` for "All".
+     * @param tabData - The tab.
+     */
     onTabFocus?: (network: OrbitAdapter | undefined, tabData: NetworkTabData) => void;
-    /** Custom handler for component mount */
+    /** Called after mount */
     onMount?: () => void;
-    /** Custom handler for component unmount */
+    /** Called on unmount */
     onUnmount?: () => void;
   };
   /** Configuration options */
@@ -156,33 +270,41 @@ export type NetworkTabsCustomization = {
     animation?: Partial<AnimationConfig>;
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the tab list (default: the `networkSelectionTabs` label) */
       container?: string;
+      /** Text before the ARIA label of a tab (the `networkTab` label; default: empty) */
       tabPrefix?: string;
+      /** Last word of the ARIA label of a tab icon, after the `networkTab` label (default: the `networkNameIcon` label) */
       iconSuffix?: string;
+      /** Text after the ARIA label of the selected tab (default: a comma and the `currentlySelected` label) */
       selectedSuffix?: string;
     };
-    /** Whether to show "All" option */
+    /** Whether to show "All" option (default: `true`) */
     showAllOption?: boolean;
-    /** Custom network display names */
+    /** Tab names by adapter, for example `{ evm: 'EVM' }` (default: the chain name from `getNetworkData`) */
     networkNames?: {
       [key: string]: string;
     };
-    /** Minimum networks to show tabs */
+    /** The tabs render only when there are more networks than this (default: `1`) */
     minNetworksToShow?: number;
   };
 };
 
 /**
- * Props for the NetworkTabs component
+ * Props for the {@link NetworkTabs} component.
  */
 export interface NetworkTabsProps {
   /** Array of available network adapters */
   networks: OrbitAdapter[];
   /** Currently selected network adapter (undefined means "All" is selected) */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Handler for network selection changes */
+  /**
+   * Called when a tab is clicked.
+   *
+   * @param adapter - The adapter of the tab, `undefined` for "All".
+   */
   onSelect: (adapter: OrbitAdapter | undefined) => void;
-  /** Custom CSS classes for styling the container */
+  /** Classes of the container (ignored when `classNames.container` is set) */
   className?: string;
   /** Customization options */
   customization?: NetworkTabsCustomization;
@@ -192,8 +314,6 @@ export interface NetworkTabsProps {
  * Default animation configuration
  */
 const defaultAnimationConfig: AnimationConfig = {
-  layoutDuration: 0.6,
-  layoutEasing: [0.1, 0.1, 0.2, 1],
   textDuration: 0.2,
   textDelay: 0,
 };
@@ -224,25 +344,27 @@ const getTextVariant = (config: AnimationConfig): Variants => ({
 });
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(({ children, className, ...props }, ref) => (
-  <motion.div
-    ref={ref}
-    className={className}
-    layout
-    transition={{
-      layout: {
-        duration: 0.6,
-        ease: [0.1, 0.1, 0.2, 1],
-      },
-    }}
-    {...props}
-  >
-    {children}
-  </motion.div>
-));
+const DefaultContainer = forwardRef<HTMLDivElement, NetworkTabsContainerProps>(
+  ({ children, className, ...props }, ref) => (
+    <motion.div
+      ref={ref}
+      className={className}
+      layout
+      transition={{
+        layout: {
+          duration: 0.6,
+          ease: [0.1, 0.1, 0.2, 1],
+        },
+      }}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  ),
+);
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultTabList = forwardRef<HTMLDivElement, TabListProps>(({ children, className }, ref) => (
+const DefaultTabList = forwardRef<HTMLDivElement, NetworkTabsTabListProps>(({ children, className }, ref) => (
   <motion.div
     ref={ref}
     className={className}
@@ -258,7 +380,7 @@ const DefaultTabList = forwardRef<HTMLDivElement, TabListProps>(({ children, cla
 ));
 DefaultTabList.displayName = 'DefaultTabList';
 
-const DefaultTab = forwardRef<HTMLDivElement, TabProps>(({ children, className, ...props }, ref) => (
+const DefaultTab = forwardRef<HTMLDivElement, NetworkTabsTabProps>(({ children, className, ...props }, ref) => (
   <motion.div
     ref={ref}
     className={className}
@@ -276,7 +398,7 @@ const DefaultTab = forwardRef<HTMLDivElement, TabProps>(({ children, className, 
 ));
 DefaultTab.displayName = 'DefaultTab';
 
-const DefaultTabButton = forwardRef<HTMLButtonElement, TabButtonProps>(
+const DefaultTabButton = forwardRef<HTMLButtonElement, NetworkTabsTabButtonProps>(
   // eslint-disable-next-line
   ({ children, className, tabData: _, ...props }, ref) => (
     <motion.button
@@ -296,7 +418,7 @@ const DefaultTabButton = forwardRef<HTMLButtonElement, TabButtonProps>(
 );
 DefaultTabButton.displayName = 'DefaultTabButton';
 
-const DefaultIconContainer = forwardRef<HTMLDivElement, IconContainerProps>(
+const DefaultIconContainer = forwardRef<HTMLDivElement, NetworkTabsIconContainerProps>(
   // eslint-disable-next-line
   ({ children, className, tabData: _, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -306,7 +428,7 @@ const DefaultIconContainer = forwardRef<HTMLDivElement, IconContainerProps>(
 );
 DefaultIconContainer.displayName = 'DefaultIconContainer';
 
-const DefaultTabText = forwardRef<HTMLSpanElement, TabTextProps>(
+const DefaultTabText = forwardRef<HTMLSpanElement, NetworkTabsTabTextProps>(
   // eslint-disable-next-line
   ({ children, className, tabData: _, ...props }, ref) => (
     <motion.span ref={ref} className={className} {...props}>
@@ -316,7 +438,7 @@ const DefaultTabText = forwardRef<HTMLSpanElement, TabTextProps>(
 );
 DefaultTabText.displayName = 'DefaultTabText';
 
-const DefaultIndicator = forwardRef<HTMLDivElement, IndicatorProps>(
+const DefaultIndicator = forwardRef<HTMLDivElement, NetworkTabsIndicatorProps>(
   // eslint-disable-next-line
   ({ className, tabData: _, ...props }, ref) => (
     <motion.div ref={ref} className={className} layoutId="indicator" {...props} />
@@ -325,91 +447,34 @@ const DefaultIndicator = forwardRef<HTMLDivElement, IndicatorProps>(
 DefaultIndicator.displayName = 'DefaultIndicator';
 
 /**
- * NetworkTabs component - Animated tab navigation for network selection with comprehensive customization
+ * The network tabs of the connect modal: an "All" tab and a tab for each network, with the network icon and the name
+ * of the selected tab, animated with Framer Motion. Renders nothing when there is only one network.
  *
- * This component provides an animated tab interface for selecting blockchain networks:
- * - Animated tab transitions with smooth layouts powered by Framer Motion
- * - Visual network icons with Web3Icon integration and fallbacks
- * - Configurable "All networks" option for viewing all connectors
- * - Responsive horizontal scrolling for mobile-friendly experience
- * - Full accessibility support with proper ARIA labels and keyboard navigation
- * - Motion-based UI feedback with customizable animation timing
- * - Complete customization of all child components and animations
+ * Props: {@link NetworkTabsProps}; the ref is forwarded to the container.
  *
- * Key features:
- * - Framer Motion powered animations with configurable timing and easing
- * - Dynamic tab indicator that smoothly morphs between selections
- * - Network icons with proper Web3Icon integration and fallback support
- * - Conditional rendering based on configurable minimum network threshold
- * - Touch-friendly interface with horizontal scrolling support
- * - Full component tree customization through render prop pattern
- *
- * Animation system:
- * - Layout animations for smooth tab movement with configurable duration
- * - Text fade transitions with customizable timing when switching tabs
- * - Morphing background indicator with layoutId for smooth transitions
- * - Optimized animation durations tuned for natural feel
- * - Support for reduced motion preferences
- *
- * Accessibility features:
- * - Proper tablist and tab ARIA semantics for screen readers
- * - Keyboard navigation support (Tab, Space, Enter, Arrow keys)
- * - Dynamic ARIA labels with selection state announcements
- * - Focus management with visible focus indicators
- * - Meaningful tooltips and descriptions for each network
- * - Screen reader friendly icon descriptions
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <NetworkTabs
- *   networks={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
- *   selectedAdapter={OrbitAdapter.EVM}
- *   onSelect={(adapter) => handleNetworkChange(adapter)}
- * />
- * ```
+ * import { NetworkTabs } from '@tuwaio/nova-connect/components';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
+ * import { useState } from 'react';
  *
- * @example With custom animation timing
- * ```tsx
- * <NetworkTabs
- *   networks={networks}
- *   selectedAdapter={selectedNetwork}
- *   onSelect={setSelectedNetwork}
- *   customization={{
- *     config: {
- *       animation: {
- *         layoutDuration: 0.3,
- *         textDuration: 0.15
- *       }
- *     }
- *   }}
- * />
- * ```
+ * export function Tabs() {
+ *   const [adapter, setAdapter] = useState<OrbitAdapter | undefined>();
  *
- * @example With full customization
- * ```tsx
- * <NetworkTabs
- *   networks={networks}
- *   selectedAdapter={selectedNetwork}
- *   onSelect={setSelectedNetwork}
- *   customization={{
- *     components: {
- *       TabButton: CustomTabButton,
- *       Indicator: CustomIndicator
- *     },
- *     classNames: {
- *       tabButton: ({ isSelected }) => isSelected ? 'custom-selected' : 'custom-normal'
- *     },
- *     handlers: {
- *       onTabSelect: (network, tabData) => {
- *         analytics.track('network_tab_selected', { network: network?.name });
- *       }
- *     },
- *     config: {
- *       minNetworksToShow: 2,
- *       showAllOption: false
- *     }
- *   }}
- * />
+ *   return (
+ *     <NetworkTabs
+ *       networks={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
+ *       selectedAdapter={adapter}
+ *       onSelect={setAdapter}
+ *       customization={{
+ *         classNames: {
+ *           tabButton: ({ isSelected }) => (isSelected ? 'custom-selected' : 'custom-normal'),
+ *         },
+ *         config: { animation: { textDuration: 0.15 } },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const NetworkTabs = memo(
@@ -468,15 +533,15 @@ export const NetworkTabs = memo(
           return customConfig.networkNames[networkKey];
         }
 
-        return getNetworkData(network)?.chain?.name ?? 'Unknown';
+        return getNetworkData(network)?.chain?.name ?? labels.unknown;
       };
 
       const getNetworkAriaLabel = (network: OrbitAdapter | undefined, isSelected: boolean): string => {
         const displayName = getNetworkDisplayName(network);
         const tabPrefix = customConfig?.ariaLabels?.tabPrefix ?? '';
-        const selectedSuffix = customConfig?.ariaLabels?.selectedSuffix ?? ', currently selected';
+        const selectedSuffix = customConfig?.ariaLabels?.selectedSuffix ?? `, ${labels.currentlySelected}`;
 
-        return `${tabPrefix}${displayName} network${isSelected ? selectedSuffix : ''}`.trim();
+        return `${tabPrefix}${formatLabel(labels.networkTab, { name: displayName })}${isSelected ? selectedSuffix : ''}`.trim();
       };
 
       /**
@@ -507,17 +572,18 @@ export const NetworkTabs = memo(
         customization?.classNames?.tabList?.() ??
         'novacon:flex novacon:overflow-x-auto novacon:gap-2 novacon:p-2 novacon:mb-2 novacon:border-b novacon:border-[var(--tuwa-border-primary)] novacon:relative';
 
-      // Mount/unmount effect
+      // The handlers are read through Effect Events, so new handler functions on every render do not re-run the effect
+      const onMount = useEffectEvent(() => customHandlers?.onMount?.());
+      const onUnmount = useEffectEvent(() => customHandlers?.onUnmount?.());
       useEffect(() => {
-        customHandlers?.onMount?.();
-        return () => customHandlers?.onUnmount?.();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customHandlers?.onMount, customHandlers?.onUnmount]);
+        onMount();
+        return () => onUnmount();
+      }, []);
 
       // Don't render if not enough networks
       if (!shouldRender) return null;
 
-      const containerAriaLabel = customConfig?.ariaLabels?.container ?? 'Network selection tabs';
+      const containerAriaLabel = customConfig?.ariaLabels?.container ?? labels.networkSelectionTabs;
 
       return (
         <CustomContainer ref={ref} className={containerClasses} role="tablist" aria-label={containerAriaLabel}>
@@ -578,7 +644,11 @@ export const NetworkTabs = memo(
                     <CustomIconContainer
                       className={iconContainerClasses}
                       role="img"
-                      aria-label={`${tabData.displayName} network ${customConfig?.ariaLabels?.iconSuffix ?? 'icon'}`}
+                      aria-label={
+                        customConfig?.ariaLabels?.iconSuffix
+                          ? `${formatLabel(labels.networkTab, { name: tabData.displayName })} ${customConfig.ariaLabels.iconSuffix}`
+                          : formatLabel(labels.networkNameIcon, { name: tabData.displayName })
+                      }
                       tabData={tabData}
                     >
                       {tabData.network ? (

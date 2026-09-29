@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaConnectOptional" />
+
+# useNovaConnectOptional()
+
+> **useNovaConnectOptional**(): [`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs) \| `null`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:280](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L280)
+
+Like [useNovaConnect](?path=/docs/packages-nova-connect-connect-functions-usenovaconnect--docs), but returns `null` outside `NovaConnectProvider` instead of throwing.
+
+## Returns
+
+[`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs) \| `null`
+
+The provider state, or `null`.
+
+## Example
+
+```tsx
+import { useNovaConnectOptional } from '@tuwaio/nova-connect/hooks';
+
+export function OptionalOpenButton() {
+  const context = useNovaConnectOptional();
+
+  if (!context) return null;
+  return <button onClick={() => context.setIsConnectModalOpen(true)}>Connect Wallet</button>;
+}
+```

@@ -1,0 +1,17 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/WalletAvatar" />
+
+# WalletAvatar
+
+> `const` **WalletAvatar**: `ForwardRefExoticComponent`\<[`WalletAvatarProps`](?path=/docs/packages-nova-connect-components-interfaces-walletavatarprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L275)
+
+The round avatar of a wallet: `ensAvatar` (an ENS or SNS avatar URL from the Satellite adapters) when it loads,
+otherwise a blockie of the address on a background color derived from it. The container has `role="img"` and an
+accessible label.
+
+Props: [WalletAvatarProps](?path=/docs/packages-nova-connect-components-interfaces-walletavatarprops--docs); the ref is forwarded to the container.
+
+Side effect: the browser loads the `ensAvatar` URL.

@@ -1,0 +1,169 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/NovaConnectProviderProps" />
+
+# NovaConnectProviderProps
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L40)
+
+Props of `NovaConnectProvider`. `appChains` and `solanaRPCUrls` give the chains of the app; without both, the
+modals are not rendered.
+
+## Extends
+
+- [`InitialChains`](?path=/docs/packages-nova-connect-connect-type-aliases-initialchains--docs)
+
+## Extended by
+
+- [`NovaConnectProviderPropsWithCustomization`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs)
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
+
+### children
+
+> **children**: `ReactNode`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L68)
+
+The app
+
+***
+
+### customConnectorGroups?
+
+> `optional` **customConnectorGroups?**: `Record`\<`string`, `string`[]\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L54)
+
+Extra wallet groups of the wallet list: group title → wallet names, in order
+
+***
+
+### labels?
+
+> `optional` **labels?**: `Partial`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L70)
+
+Texts to override, merged over the English defaults
+
+***
+
+### legal?
+
+> `optional` **legal?**: [`LegalConfig`](?path=/docs/packages-nova-connect-connect-interfaces-legalconfig--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L56)
+
+Legal configuration for Terms of Service and Privacy Policy links
+
+***
+
+### pagination?
+
+> `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
+
+Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
+Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
+
+***
+
+### popularConnectors?
+
+> `optional` **popularConnectors?**: `string`[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L52)
+
+Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini)
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L44)
+
+Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
+
+***
+
+### siwx?
+
+> `optional` **siwx?**: [`NovaSiwxWatcherProps`](?path=/docs/packages-nova-connect-connect-interfaces-novasiwxwatcherprops--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L61)
+
+SIWX sign-in of the connected wallet (see `NovaSiwxWatcher`). Without it, Nova Connect does not sign in and does
+not touch the SIWX session.
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+***
+
+### withBalance?
+
+> `optional` **withBalance?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L46)
+
+Whether the connect button shows the native balance
+
+***
+
+### withChain?
+
+> `optional` **withChain?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+
+Whether the connect button shows a chain selector
+
+***
+
+### withImpersonated?
+
+> `optional` **withImpersonated?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
+
+Whether the wallet list offers the impersonated wallet (a read-only address, for development)

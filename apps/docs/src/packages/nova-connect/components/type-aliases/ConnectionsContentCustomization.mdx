@@ -1,0 +1,1000 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionsContentCustomization" />
+
+# ConnectionsContentCustomization
+
+> **ConnectionsContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:244](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L244)
+
+Customization options of [ConnectionsContent](?path=/docs/packages-nova-connect-components-variables-connectionscontent--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:261](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L261)
+
+Custom class name generators
+
+#### activeRowActionsContainer?
+
+> `optional` **activeRowActionsContainer?**: () => `string`
+
+Returns classes added to the copy and explorer buttons container.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowBadge?
+
+> `optional` **activeRowBadge?**: () => `string`
+
+Returns classes added to the "Active" badge.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowConnectorName?
+
+> `optional` **activeRowConnectorName?**: () => `string`
+
+Returns classes added to the connector name of the active wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowContainer?
+
+> `optional` **activeRowContainer?**: (`params`) => `string`
+
+Returns classes added to the row of the active wallet.
+
+##### Parameters
+
+###### params
+
+The row.
+
+###### connectorType
+
+`ConnectorType`
+
+Connector type of the wallet.
+
+###### hasExplorer
+
+`boolean`
+
+Whether the chain of the connection has a block explorer.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowContent?
+
+> `optional` **activeRowContent?**: () => `string`
+
+Returns classes added to the icon and texts of the active row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowCopyButton?
+
+> `optional` **activeRowCopyButton?**: () => `string`
+
+Returns classes added to the copy button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowCopyIcon?
+
+> `optional` **activeRowCopyIcon?**: () => `string`
+
+Returns classes added to the copy icon.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowDisconnectButton?
+
+> `optional` **activeRowDisconnectButton?**: () => `string`
+
+Returns classes added to the disconnect button of the active row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowExplorerButton?
+
+> `optional` **activeRowExplorerButton?**: () => `string`
+
+Returns classes added to the explorer button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowExplorerIcon?
+
+> `optional` **activeRowExplorerIcon?**: () => `string`
+
+Returns classes added to the explorer icon.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeRowWalletName?
+
+> `optional` **activeRowWalletName?**: () => `string`
+
+Returns classes added to the name or address of the active wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeSectionTitle?
+
+> `optional` **activeSectionTitle?**: () => `string`
+
+Returns classes added to the title of the connected wallets section.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### activeSectionWrapper?
+
+> `optional` **activeSectionWrapper?**: () => `string`
+
+Returns classes added to the box of the connected wallets.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### addWalletButton?
+
+> `optional` **addWalletButton?**: () => `string`
+
+Returns classes added to the "Connect new wallet" button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowConnectorName?
+
+> `optional` **connectedRowConnectorName?**: () => `string`
+
+Returns classes added to the connector name of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowContainer?
+
+> `optional` **connectedRowContainer?**: (`params`) => `string`
+
+Returns classes added to the row of another connected wallet.
+
+##### Parameters
+
+###### params
+
+The row.
+
+###### connectorType
+
+`ConnectorType`
+
+Connector type of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowContent?
+
+> `optional` **connectedRowContent?**: () => `string`
+
+Returns classes added to the icon and texts of the row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowDisconnectButton?
+
+> `optional` **connectedRowDisconnectButton?**: () => `string`
+
+Returns classes added to the disconnect button of the row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowDisconnectIcon?
+
+> `optional` **connectedRowDisconnectIcon?**: () => `string`
+
+Returns classes added to the disconnect icon of the row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowSwitchIcon?
+
+> `optional` **connectedRowSwitchIcon?**: () => `string`
+
+Returns classes added to the switch icon.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowSwitchIndicator?
+
+> `optional` **connectedRowSwitchIndicator?**: () => `string`
+
+Returns classes added to the switch indicator (shown on hover).
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectedRowWalletName?
+
+> `optional` **connectedRowWalletName?**: () => `string`
+
+Returns classes added to the address of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectorIconBadge?
+
+> `optional` **connectorIconBadge?**: (`params`) => `string`
+
+Returns classes added to the network badge of the wallet icon.
+
+##### Parameters
+
+###### params
+
+The badge.
+
+###### badgeSize
+
+`number`
+
+Badge size in pixels (`20` in the active row, `16` in the others).
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectorIconWrapper?
+
+> `optional` **connectorIconWrapper?**: (`params`) => `string`
+
+Returns classes added to the wallet icon of a row.
+
+##### Parameters
+
+###### params
+
+The icon.
+
+###### size
+
+`number`
+
+Icon size in pixels (`40` in the active row, `32` in the others).
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop (not in the empty
+state).
+
+##### Parameters
+
+###### params
+
+The lists.
+
+###### connectionsCount
+
+`number`
+
+Number of connected wallets.
+
+###### recentCount
+
+`number`
+
+Number of recent wallets shown.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyState?
+
+> `optional` **emptyState?**: () => `string`
+
+Returns classes added to the container in the empty state.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyStateMessage?
+
+> `optional` **emptyStateMessage?**: () => `string`
+
+Returns classes added to the empty state message.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowActionsContainer?
+
+> `optional` **recentRowActionsContainer?**: () => `string`
+
+Returns classes added to the buttons container.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowConnectButton?
+
+> `optional` **recentRowConnectButton?**: (`params`) => `string`
+
+Returns classes added to the connect button.
+
+##### Parameters
+
+###### params
+
+The row.
+
+###### isConnecting
+
+`boolean`
+
+Whether this wallet is being connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowConnectorName?
+
+> `optional` **recentRowConnectorName?**: () => `string`
+
+Returns classes added to the connector name of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowConnectSpinner?
+
+> `optional` **recentRowConnectSpinner?**: () => `string`
+
+Returns classes added to the spinner of the connect button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowContainer?
+
+> `optional` **recentRowContainer?**: (`params`) => `string`
+
+Returns classes added to the row of a recent wallet.
+
+##### Parameters
+
+###### params
+
+The row.
+
+###### connectorType
+
+`ConnectorType`
+
+Connector type of the wallet.
+
+###### isConnecting
+
+`boolean`
+
+Whether this wallet is being connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowContent?
+
+> `optional` **recentRowContent?**: () => `string`
+
+Returns classes added to the icon and texts of the row.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowRemoveButton?
+
+> `optional` **recentRowRemoveButton?**: (`params`) => `string`
+
+Returns classes added to the remove button.
+
+##### Parameters
+
+###### params
+
+The row.
+
+###### isConnecting
+
+`boolean`
+
+Whether this wallet is being connected.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowRemoveIcon?
+
+> `optional` **recentRowRemoveIcon?**: () => `string`
+
+Returns classes added to the remove icon.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentRowWalletName?
+
+> `optional` **recentRowWalletName?**: () => `string`
+
+Returns classes added to the address of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentSectionList?
+
+> `optional` **recentSectionList?**: () => `string`
+
+Returns classes added to the scrollable list of recent wallets.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### recentSectionTitle?
+
+> `optional` **recentSectionTitle?**: () => `string`
+
+Returns classes added to the title of the recent wallets section.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:246](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L246)
+
+Custom components
+
+#### ActiveConnectorRow?
+
+> `optional` **ActiveConnectorRow?**: `ComponentType`\<[`ConnectionsContentActiveRowProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentactiverowprops--docs)\>
+
+Custom active connector row
+
+#### ActiveConnectorsSection?
+
+> `optional` **ActiveConnectorsSection?**: `ComponentType`\<[`ConnectionsContentActiveSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentactivesectionprops--docs)\>
+
+Custom active connectors section
+
+#### ConnectedConnectorRow?
+
+> `optional` **ConnectedConnectorRow?**: `ComponentType`\<[`ConnectionsContentConnectedRowProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentconnectedrowprops--docs)\>
+
+Custom connected connector row
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ConnectionsContentContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentcontainerprops--docs)\>
+
+Custom container component (forward `ref` and `onKeyDown` to the container element)
+
+#### RecentlyConnectedRow?
+
+> `optional` **RecentlyConnectedRow?**: `ComponentType`\<[`ConnectionsContentRecentRowProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentrecentrowprops--docs)\>
+
+Custom recently connected row
+
+#### RecentlyConnectedSection?
+
+> `optional` **RecentlyConnectedSection?**: `ComponentType`\<[`ConnectionsContentRecentSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectionscontentrecentsectionprops--docs)\>
+
+Custom recently connected section
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:634](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L634)
+
+Configuration options
+
+#### autoFocus?
+
+> `optional` **autoFocus?**: `boolean`
+
+Whether to focus the first interactive element on mount (default: `false`)
+
+#### enableKeyboardShortcuts?
+
+> `optional` **enableKeyboardShortcuts?**: `boolean`
+
+Whether keyboard shortcuts work while the focus is inside the screen: Ctrl or Cmd with ArrowDown or ArrowUp
+switches to the next or previous connection, Ctrl or Cmd with Backspace disconnects the active wallet (default:
+`true`)
+
+#### keyboardShortcuts?
+
+> `optional` **keyboardShortcuts?**: `object`
+
+Keys used with Ctrl or Cmd (`KeyboardEvent.key` values)
+
+##### keyboardShortcuts.disconnect?
+
+> `optional` **disconnect?**: `string`
+
+Key for disconnecting active wallet (default: `Backspace`)
+
+##### keyboardShortcuts.nextConnection?
+
+> `optional` **nextConnection?**: `string`
+
+Key for switching to next connection (default: `ArrowDown`)
+
+##### keyboardShortcuts.prevConnection?
+
+> `optional` **prevConnection?**: `string`
+
+Key for switching to previous connection (default: `ArrowUp`)
+
+#### maxRecentConnections?
+
+> `optional` **maxRecentConnections?**: `number`
+
+Maximum recent connections to show (default: `10`)
+
+#### showAddWalletButton?
+
+> `optional` **showAddWalletButton?**: `boolean`
+
+Whether to show the "Connect new wallet" button, which opens the connect modal (default: `true`)
+
+#### showEmptyState?
+
+> `optional` **showEmptyState?**: `boolean`
+
+Whether to show the empty state; `false` renders nothing without wallets (default: `true`)
+
+#### showRecentSection?
+
+> `optional` **showRecentSection?**: `boolean`
+
+Whether to show the recent wallets (default: `true`)
+
+#### testIds?
+
+> `optional` **testIds?**: `object`
+
+Custom test IDs
+
+##### testIds.container?
+
+> `optional` **container?**: `string`
+
+`data-testid` of the container
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:543](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L543)
+
+Custom event handlers
+
+#### onAfterConnect?
+
+> `optional` **onAfterConnect?**: (`connectorType`) => `void`
+
+Called after `connect` of the Satellite store resolves (the store keeps connection errors in `connectionError`).
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet.
+
+##### Returns
+
+`void`
+
+#### onAfterDisconnect?
+
+> `optional` **onAfterDisconnect?**: (`connectorType`) => `void`
+
+Called right after `disconnect` of the Satellite store is called (without waiting for it).
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The disconnected wallet.
+
+##### Returns
+
+`void`
+
+#### onAfterSwitch?
+
+> `optional` **onAfterSwitch?**: (`connectorType`) => `void`
+
+Called after `switchConnection` of the Satellite store resolves.
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet that became active.
+
+##### Returns
+
+`void`
+
+#### onBeforeConnect?
+
+> `optional` **onBeforeConnect?**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Called before a recent wallet is connected again. Return `false` to cancel.
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet to connect.
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+Whether to connect.
+
+#### onBeforeDisconnect?
+
+> `optional` **onBeforeDisconnect?**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Called before a wallet is disconnected. Return `false` to cancel.
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet to disconnect.
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+Whether to disconnect.
+
+#### onBeforeSwitch?
+
+> `optional` **onBeforeSwitch?**: (`connectorType`) => `boolean` \| `Promise`\<`boolean`\>
+
+Called before a connected wallet becomes active. Return `false` to cancel.
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet to switch to.
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+Whether to switch.
+
+#### onConnectError?
+
+> `optional` **onConnectError?**: (`connectorType`, `error`) => `void`
+
+Called when connecting throws (the error is also logged).
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet.
+
+###### error
+
+`Error`
+
+The error.
+
+##### Returns
+
+`void`
+
+#### onDisconnectError?
+
+> `optional` **onDisconnectError?**: (`connectorType`, `error`) => `void`
+
+Called when the disconnect call throws synchronously (the error is also logged).
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet.
+
+###### error
+
+`Error`
+
+The error.
+
+##### Returns
+
+`void`
+
+#### onSwitchError?
+
+> `optional` **onSwitchError?**: (`connectorType`, `error`) => `void`
+
+Called when switching throws (the error is also logged).
+
+##### Parameters
+
+###### connectorType
+
+`ConnectorType`
+
+The wallet.
+
+###### error
+
+`Error`
+
+The error.
+
+##### Returns
+
+`void`
+
+***
+
+### labels?
+
+> `optional` **labels?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:606](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L606)
+
+Custom text and ARIA labels
+
+#### connectAnnouncement?
+
+> `optional` **connectAnnouncement?**: (`walletName`) => `string`
+
+Returns the screen reader announcement after a recent wallet connects (default: the `connectedWallet` label).
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+The wallet name.
+
+##### Returns
+
+`string`
+
+The announcement.
+
+#### containerAriaLabel?
+
+> `optional` **containerAriaLabel?**: `string`
+
+ARIA label of the container (default: the `walletConnectionsManager` label)
+
+#### disconnectAnnouncement?
+
+> `optional` **disconnectAnnouncement?**: (`walletName`) => `string`
+
+Returns the screen reader announcement after a disconnect (default: the `disconnectedWallet` label).
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+The wallet name.
+
+##### Returns
+
+`string`
+
+The announcement.
+
+#### emptyStateMessage?
+
+> `optional` **emptyStateMessage?**: `string`
+
+Message of the empty state (default: the `noConnectionsFound` label)
+
+#### switchAnnouncement?
+
+> `optional` **switchAnnouncement?**: (`walletName`) => `string`
+
+Returns the screen reader announcement after a switch (default: the `switchedToWallet` label).
+
+##### Parameters
+
+###### walletName
+
+`string`
+
+The wallet name.
+
+##### Returns
+
+`string`
+
+The announcement.

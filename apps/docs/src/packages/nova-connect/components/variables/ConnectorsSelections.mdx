@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectorsSelections" />
+
+# ConnectorsSelections
+
+> `const` **ConnectorsSelections**: `NamedExoticComponent`\<[`ConnectorsSelectionsProps`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:540](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L540)
+
+The wallet list of the connect modal: installed wallets, the groups of `customConnectorGroups`, popular wallets
+(`popularConnectors` of `NovaConnectProvider`, by default WalletConnect, Porto, Coinbase and Gemini) and, with
+`withImpersonated`, the impersonated wallet. On touch devices the list scrolls horizontally and a wallet disclaimer
+is shown. Clicking a wallet that works on one network (or on the selected one) connects it through `connect` of the
+Satellite store.
+
+The Safe connector is listed only inside Safe\{Wallet\}, detected as in `initializeAutoConnect` of the Satellite store:
+in an HTTPS iframe, on mount the component calls `getSafeConnectorChainId` of the EVM adapter (the Safe connector of
+wagmi answers only inside a parent window with an allowed origin).
+
+Props: [ConnectorsSelectionsProps](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { getFilteredConnectors } from '@tuwaio/nova-connect';
+import { ConnectorsSelections } from '@tuwaio/nova-connect/components';
+import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { mainnet } from 'viem/chains';
+
+export function EvmWallets() {
+  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+  const { setIsConnected, setIsConnectModalOpen, setConnectModalContentType } = useNovaConnect();
+
+  return (
+    <ConnectorsSelections
+      selectedAdapter={OrbitAdapter.EVM}
+      connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+      onClick={(connector) => console.log('selected', connector.name)}
+      setIsConnected={setIsConnected}
+      setIsOpen={setIsConnectModalOpen}
+      setContentType={setConnectModalContentType}
+      appChains={[mainnet]}
+      customization={{
+        classNames: {
+          connectorsArea: ({ selectionsData }) => (selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack'),
+        },
+      }}
+    />
+  );
+}
+```

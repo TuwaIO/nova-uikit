@@ -1,0 +1,308 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ChainSelectorCustomization" />
+
+# ChainSelectorCustomization
+
+> **ChainSelectorCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:250](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L250)
+
+Comprehensive customization options for the ChainSelector.
+
+## Properties
+
+### chainListRenderer?
+
+> `optional` **chainListRenderer?**: [`ChainListRendererCustomization`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrenderercustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:337](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L337)
+
+Customization for the chain list renderer (desktop)
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:263](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L263)
+
+Custom CSS class generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the `className` prop.
+
+##### Parameters
+
+###### params
+
+The selector state.
+
+###### hasMultipleChains
+
+`boolean`
+
+Whether more than one chain is available.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### desktopWrapper?
+
+> `optional` **desktopWrapper?**: (`params`) => `string`
+
+Returns the classes of the desktop wrapper, instead of the default ones (hidden below the `sm` breakpoint).
+
+##### Parameters
+
+###### params
+
+The selector state.
+
+###### chainCount
+
+`number`
+
+Number of available chains.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### dialogContent?
+
+> `optional` **dialogContent?**: (`params`) => `string`
+
+Returns the classes of the mobile dialog content, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The selector state.
+
+###### chainCount
+
+`number`
+
+Number of available chains.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### dialogHeader?
+
+> `optional` **dialogHeader?**: () => `string`
+
+Classes for the dialog header
+
+##### Returns
+
+`string`
+
+#### dialogInnerContainer?
+
+> `optional` **dialogInnerContainer?**: () => `string`
+
+Classes for the dialog inner container
+
+##### Returns
+
+`string`
+
+#### mobileWrapper?
+
+> `optional` **mobileWrapper?**: (`params`) => `string`
+
+Returns the classes of the mobile wrapper, instead of the default ones (hidden from the `sm` breakpoint).
+
+##### Parameters
+
+###### params
+
+The selector state.
+
+###### chainCount
+
+`number`
+
+Number of available chains.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### singleChainDisplay?
+
+> `optional` **singleChainDisplay?**: () => `string`
+
+Classes for the single chain display
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:252](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L252)
+
+Custom component overrides
+
+#### DesktopSelector?
+
+> `optional` **DesktopSelector?**: `ComponentType`\<[`ChainSelectorDesktopSelectorProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectordesktopselectorprops--docs)\>
+
+Custom wrapper for the desktop selector
+
+#### DialogHeader?
+
+> `optional` **DialogHeader?**: `ComponentType`\<[`ChainSelectorDialogHeaderProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectordialogheaderprops--docs)\>
+
+Custom dialog header component
+
+#### MobileSelector?
+
+> `optional` **MobileSelector?**: `ComponentType`\<[`ChainSelectorMobileSelectorProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectormobileselectorprops--docs)\>
+
+Custom wrapper for the mobile selector
+
+#### SingleChainDisplay?
+
+> `optional` **SingleChainDisplay?**: `ComponentType`\<[`ChainSelectorSingleChainDisplayProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectorsinglechaindisplayprops--docs)\>
+
+Custom component for displaying a single chain
+
+***
+
+### dialogHeader?
+
+> `optional` **dialogHeader?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:321](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L321)
+
+Dialog header customization
+
+#### closeButton?
+
+> `optional` **closeButton?**: `object`
+
+Close button customization
+
+##### closeButton.className?
+
+> `optional` **className?**: `string`
+
+Close button classes
+
+##### closeButton.iconClassName?
+
+> `optional` **iconClassName?**: `string`
+
+Close button icon classes
+
+##### closeButton.props?
+
+> `optional` **props?**: `Partial`\<`ComponentPropsWithoutRef`\<`"button"`\>\>
+
+Close button props
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:304](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L304)
+
+Custom event handlers
+
+#### onChainChange?
+
+> `optional` **onChainChange?**: (`originalHandler`, `newChainId`) => `void`
+
+Wraps the chain change: call `originalHandler(newChainId)` to run `switchNetwork` of the Satellite store (the
+wallet may ask to confirm).
+
+##### Parameters
+
+###### originalHandler
+
+(`newChainId`) => `void`
+
+Switches the network of the active connection.
+
+###### newChainId
+
+`string`
+
+The selected chain ID (formatted as the connector expects).
+
+##### Returns
+
+`void`
+
+#### onDialogClose?
+
+> `optional` **onDialogClose?**: (`originalHandler`) => `void`
+
+Wraps the close button of the mobile dialog: call `originalHandler()` to close the dialog.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Closes the dialog.
+
+##### Returns
+
+`void`
+
+***
+
+### scrollableChainList?
+
+> `optional` **scrollableChainList?**: [`ScrollableChainListCustomization`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:339](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L339)
+
+Customization for the scrollable chain list (mobile)
+
+***
+
+### selectContent?
+
+> `optional` **selectContent?**: `Partial`\<[`SelectContentAnimatedProps`](?path=/docs/packages-nova-connect-components-interfaces-selectcontentanimatedprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:335](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L335)
+
+Customization for the Select content
+
+***
+
+### triggerButton?
+
+> `optional` **triggerButton?**: [`ChainTriggerButtonCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-chaintriggerbuttoncustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:333](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L333)
+
+Customization for sub-components

@@ -18,7 +18,7 @@ const WalletIconLazy = lazy(() =>
 /**
  * Props for the WalletIcon component.
  */
-interface WalletIconProps {
+export interface WalletIconProps {
   /**
    * The unique identifier of the wallet.
    * Examples: 'metamask', 'phantom', 'coinbase', 'walletconnect'.

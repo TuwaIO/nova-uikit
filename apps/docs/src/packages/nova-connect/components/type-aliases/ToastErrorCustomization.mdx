@@ -1,0 +1,266 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ToastErrorCustomization" />
+
+# ToastErrorCustomization
+
+> **ToastErrorCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L58)
+
+Customization options for ToastError component
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"button"`\>, `"style"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L62)
+
+Override button element props
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L75)
+
+Custom class name generators
+
+#### button?
+
+> `optional` **button?**: (`params`) => `string`
+
+Returns the classes of the copy button, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### disabled
+
+`boolean`
+
+Whether there is nothing to copy.
+
+###### isCopied
+
+`boolean`
+
+Whether the error was just copied.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the toast body, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The toast content.
+
+###### hasError
+
+`boolean`
+
+Whether there is an error to show.
+
+###### hasTitle
+
+`boolean`
+
+Whether the title is not empty.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### description?
+
+> `optional` **description?**: (`params`) => `string`
+
+Returns the classes of the description.
+
+##### Parameters
+
+###### params
+
+The toast content.
+
+###### rawError
+
+`string` \| `TuwaErrorState`
+
+The error.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### icon?
+
+> `optional` **icon?**: (`params`) => `string`
+
+Returns the classes of the copy icon.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### isCopied
+
+`boolean`
+
+Whether the error was just copied.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### title?
+
+> `optional` **title?**: (`params`) => `string`
+
+Returns the classes of the title.
+
+##### Parameters
+
+###### params
+
+The toast content.
+
+###### title
+
+`string`
+
+The title.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L64)
+
+Custom components
+
+#### ButtonContent?
+
+> `optional` **ButtonContent?**: `ComponentType`\<[`ToastErrorButtonContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-toasterrorbuttoncontentprops--docs)\>
+
+Custom button content component
+
+#### Description?
+
+> `optional` **Description?**: `ComponentType`\<[`ToastErrorDescriptionProps`](?path=/docs/packages-nova-connect-components-type-aliases-toasterrordescriptionprops--docs)\>
+
+Custom description component
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`ToastErrorIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-toasterroriconprops--docs)\>
+
+Custom icon component
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`ToastErrorTitleProps`](?path=/docs/packages-nova-connect-components-type-aliases-toasterrortitleprops--docs)\>
+
+Custom title component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"style"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L60)
+
+Override container element props
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L120)
+
+Custom event handlers
+
+#### onClick?
+
+> `optional` **onClick?**: (`originalHandler`, `event`) => `void`
+
+Wraps the click handler of the copy button: call `originalHandler(event)` to copy the error.
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+The click event.
+
+##### Returns
+
+`void`
+
+#### onKeyDown?
+
+> `optional` **onKeyDown?**: (`originalHandler`, `event`) => `void`
+
+Wraps the key handler of the copy button: call `originalHandler(event)` to run the default behavior (Enter and
+Space copy the error).
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`React.KeyboardEvent`\<`HTMLButtonElement`\>
+
+The keyboard event.
+
+##### Returns
+
+`void`

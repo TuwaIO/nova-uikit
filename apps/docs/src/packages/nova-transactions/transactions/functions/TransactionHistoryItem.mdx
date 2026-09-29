@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/TransactionHistoryItem" />
+
+# TransactionHistoryItem()
+
+> **TransactionHistoryItem**\<`T`\>(`props`): `Element`
+
+Defined in: [components/TransactionHistoryItem.tsx:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L133)
+
+One transaction of the history list: the network icon, title, relative submission time (`dayjs` with the
+`relativeTime` plugin, which this module adds to `dayjs` when it is imported), description, status badge and hashes.
+Clicking the item (outside its links and buttons) calls `onSelectTx` when `canViewDetails` is `true`.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`TransactionHistoryItemProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionhistoryitemprops--docs)\<`T`\>
+
+See [TransactionHistoryItemProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionhistoryitemprops--docs).
+
+## Returns
+
+`Element`
+
+The item.

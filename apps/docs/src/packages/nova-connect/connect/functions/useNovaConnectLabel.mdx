@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaConnectLabel" />
+
+# useNovaConnectLabel()
+
+> **useNovaConnectLabel**\<`K`\>(`key`): [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\[`K`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L47)
+
+Returns one label.
+
+## Type Parameters
+
+### K
+
+`K` *extends* keyof [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+## Parameters
+
+### key
+
+`K`
+
+The label key.
+
+## Returns
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\[`K`\]
+
+The label text.
+
+## Example
+
+```tsx
+import { useNovaConnectLabel } from '@tuwaio/nova-connect/hooks';
+
+export function ConnectText() {
+  return <span>{useNovaConnectLabel('connectWallet')}</span>;
+}
+```

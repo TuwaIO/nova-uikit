@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectorsSelectionsData" />
+
+# ConnectorsSelectionsData
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L24)
+
+State of [ConnectorsSelections](?path=/docs/packages-nova-connect-components-variables-connectorsselections--docs), passed to its custom components, class name generators and handlers.
+
+## Properties
+
+### connectorGroups
+
+> **connectorGroups**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L38)
+
+The wallets by group
+
+#### Index Signature
+
+\[`key`: `string`\]: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs) \| [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[] \| `undefined`
+
+Wallets of each group of `customConnectorGroups` of `NovaConnectProvider`, by group title
+
+#### impersonated?
+
+> `optional` **impersonated?**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)
+
+The impersonated wallet
+
+#### installed
+
+> **installed**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Wallets that are not popular, impersonated or in a custom group (Safe only inside Safe\{Wallet\})
+
+#### popular
+
+> **popular**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Wallets of `popularConnectors` of `NovaConnectProvider`, in that order
+
+***
+
+### connectors
+
+> **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L28)
+
+All available connectors
+
+***
+
+### hasImpersonatedConnector
+
+> **hasImpersonatedConnector**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L34)
+
+Whether `connectors` has the impersonated wallet
+
+***
+
+### isOnlyOneNetwork
+
+> **isOnlyOneNetwork**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L30)
+
+Whether only one network is available
+
+***
+
+### isTouch
+
+> **isTouch**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L32)
+
+Whether the device has a touch screen
+
+***
+
+### labels
+
+> **labels**: [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L49)
+
+Current labels from i18n
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L26)
+
+Currently selected network adapter
+
+***
+
+### showImpersonated
+
+> **showImpersonated**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L36)
+
+Whether the impersonated wallet is available and `withImpersonated` of `NovaConnectProvider` is set

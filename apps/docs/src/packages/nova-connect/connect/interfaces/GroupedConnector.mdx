@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/GroupedConnector" />
+
+# GroupedConnector
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:8](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L8)
+
+A wallet with its connectors on each network, returned by [getGroupedConnectors](?path=/docs/packages-nova-connect-connect-functions-getgroupedconnectors--docs).
+
+## Properties
+
+### adapters
+
+> **adapters**: `OrbitAdapter`[]
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L14)
+
+Adapters on which the wallet has a connector
+
+***
+
+### connectors
+
+> **connectors**: `Connector` & `object`[]
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L16)
+
+The connectors of the wallet, each with its adapter
+
+***
+
+### icon?
+
+> `optional` **icon?**: `string`
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L12)
+
+Icon of the first connector that has one (a data URL or URL)
+
+***
+
+### name
+
+> **name**: `string`
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L10)
+
+Name of the first connector of the wallet

@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ImpersonateFormProps" />
+
+# ImpersonateFormProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:272](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L272)
+
+Props for the [ImpersonateForm](?path=/docs/packages-nova-connect-components-variables-impersonateform--docs) component.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:284](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L284)
+
+Classes added to the default container classes (ignored when `classNames.container` is set)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ImpersonateFormCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-impersonateformcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:286](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L286)
+
+Customization options
+
+***
+
+### impersonatedAddress
+
+> **impersonatedAddress**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:276](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L276)
+
+Initial text of the field; a new value before the user types is validated at once
+
+***
+
+### selectedAdapter?
+
+> `optional` **selectedAdapter?**: `OrbitAdapter`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:274](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L274)
+
+Network of the address; its Satellite adapter resolves names (default: EVM)
+
+***
+
+### setImpersonatedAddress
+
+> **setImpersonatedAddress**: (`value`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:282](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L282)
+
+Receives a valid address: the typed address, or the address of a resolved ENS or SNS name.
+
+#### Parameters
+
+##### value
+
+`string`
+
+The address.
+
+#### Returns
+
+`void`

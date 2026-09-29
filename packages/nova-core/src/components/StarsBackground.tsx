@@ -1,6 +1,15 @@
 /* eslint-disable react-hooks/purity */
 import { useEffect, useMemo, useState } from 'react';
 
+/**
+ * An animated background of twinkling stars, drawn as SVG circles with CSS animations. It fills its positioned parent
+ * (`absolute`, `inset-0`); the stars are placed at random over the window size after mount, so nothing is rendered on
+ * the server. Nova Connect uses it in the "about wallets" and "get a wallet" screens of the connect modal.
+ *
+ * @param props - The background props.
+ * @param props.starsCount - Number of stars. Defaults to `200`.
+ * @returns The background element.
+ */
 export function StarsBackground({ starsCount }: { starsCount?: number }) {
   const [isMounted, setIsMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect

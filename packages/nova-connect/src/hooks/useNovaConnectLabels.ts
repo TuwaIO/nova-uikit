@@ -3,49 +3,25 @@ import { createContext, useContext } from 'react';
 import { defaultLabels, NovaConnectLabels } from '../i18n';
 
 /**
- * React Context for storing and providing the UI labels.
- * It is initialized with the default English labels, ensuring that components
- * work even without an explicit provider.
+ * React context of the Nova Connect labels. Its default value is the English `defaultLabels`, so components work
+ * without a labels provider. `NovaConnectProvider` provides the merged labels.
  */
 export const NovaConnectLabelsContext = createContext<NovaConnectLabels>(defaultLabels);
 
 /**
- * A custom hook to easily access the i18n labels from any component
- * within the `NovaConnectLabelsProvider` tree.
+ * Returns the Nova Connect labels: the ones of the nearest labels provider (`NovaConnectProvider` provides the
+ * `labels` prop merged into the defaults), or the English defaults.
  *
- * This hook provides type-safe access to all UI labels and automatically
- * falls back to default English labels if no provider is found.
- *
- * @returns {NovaConnectLabels} The complete object of UI labels for the current locale.
+ * @returns All labels.
  *
  * @example
- * ```typescript
- * import { useNovaConnectLabels } from './hooks/useNovaConnectLabels';
+ * ```tsx
+ * import { useNovaConnectLabels } from '@tuwaio/nova-connect/hooks';
  *
- * function MyComponent() {
+ * export function Title() {
  *   const labels = useNovaConnectLabels();
  *
- *   return (
- *     <div>
- *       <h1>{labels.connectWallet}</h1>
- *       <button>{labels.connect}</button>
- *       <p aria-label={labels.walletBalance}>{formattedBalance}</p>
- *     </div>
- *   );
- * }
- * ```
- *
- * @example
- * ```typescript
- * // Destructuring specific labels for better performance
- * function ConnectButton() {
- *   const { connectWallet, connecting, connected } = useNovaConnectLabels();
- *
- *   return (
- *     <button>
- *       {isConnecting ? connecting : isConnected ? connected : connectWallet}
- *     </button>
- *   );
+ *   return <h2>{labels.connectWallet}</h2>;
  * }
  * ```
  */
@@ -54,18 +30,17 @@ export const useNovaConnectLabels = (): NovaConnectLabels => {
 };
 
 /**
- * Hook to get a specific label by key path with type safety
+ * Returns one label.
  *
- * @param key The label key to retrieve
- * @returns The specific label value
+ * @param key - The label key.
+ * @returns The label text.
  *
  * @example
- * ```typescript
- * function MyComponent() {
- *   const connectLabel = useNovaConnectLabel('connectWallet');
- *   const errorLabel = useNovaConnectLabel('connectionError');
+ * ```tsx
+ * import { useNovaConnectLabel } from '@tuwaio/nova-connect/hooks';
  *
- *   return <button>{connectLabel}</button>;
+ * export function ConnectText() {
+ *   return <span>{useNovaConnectLabel('connectWallet')}</span>;
  * }
  * ```
  */
@@ -75,22 +50,22 @@ export const useNovaConnectLabel = <K extends keyof NovaConnectLabels>(key: K): 
 };
 
 /**
- * Hook to get multiple specific labels for better performance
+ * Returns the given labels. It reads all labels, so it re-renders like {@link useNovaConnectLabels}.
  *
- * @param keys Array of label keys to retrieve
- * @returns Object with only the requested labels
+ * @param keys - The label keys.
+ * @returns An object with the requested labels.
  *
  * @example
- * ```typescript
- * function ConnectModal() {
- *   const { connectWallet, connecting, disconnect } = useNovaConnectLabelsSubset(['connectWallet', 'connecting', 'disconnect']);
+ * ```tsx
+ * import { useNovaConnectLabelsSubset } from '@tuwaio/nova-connect/hooks';
+ *
+ * export function Actions() {
+ *   const { connect, disconnect } = useNovaConnectLabelsSubset(['connect', 'disconnect']);
  *
  *   return (
- *     <div>
- *       <h2>{connectWallet}</h2>
- *       <span>{connecting}</span>
- *       <button>{disconnect}</button>
- *     </div>
+ *     <p>
+ *       {connect} / {disconnect}
+ *     </p>
  *   );
  * }
  * ```
@@ -109,29 +84,33 @@ export const useNovaConnectLabelsSubset = <K extends keyof NovaConnectLabels>(
 };
 
 /**
- * Type-safe helper to check if a label exists
+ * Checks whether a label is set and not blank.
  *
- * @param labels The labels object
- * @param key The key to check
- * @returns Whether the key exists and has a non-empty value
+ * @param labels - The labels.
+ * @param key - The label key.
+ * @returns `true` when the trimmed label is not empty.
  */
 export const hasLabel = (labels: NovaConnectLabels, key: keyof NovaConnectLabels): boolean => {
   return Boolean(labels[key]?.trim());
 };
 
 /**
- * Utility type for extracting label keys by category
+ * Label keys by category, used by {@link useLabelsByCategory}.
  */
 export type LabelCategory = {
+  /** Action texts such as `connectWallet` and `disconnect` */
   actions: Extract<
     keyof NovaConnectLabels,
-    'connectWallet' | 'disconnect' | 'connecting' | 'connected' | 'tryAgain' | 'back' | 'connect' | 'close'
+    'connectWallet' | 'disconnect' | 'connecting' | 'connected' | 'tryAgain' | 'back' | 'connect'
   >;
-  states: Extract<keyof NovaConnectLabels, 'success' | 'error' | 'replaced' | 'loading' | 'idle'>;
+  /** State texts such as `success` and `loading` */
+  states: Extract<keyof NovaConnectLabels, 'success' | 'error' | 'replaced' | 'loading'>;
+  /** ARIA labels such as `closeModal` */
   accessibility: Extract<
     keyof NovaConnectLabels,
     'chainSelector' | 'closeModal' | 'selectChain' | 'walletControls' | 'openWalletModal'
   >;
+  /** Transaction status texts */
   transactions: Extract<
     keyof NovaConnectLabels,
     'transactionLoading' | 'transactionSuccess' | 'transactionError' | 'transactionReplaced' | 'recent'
@@ -139,10 +118,21 @@ export type LabelCategory = {
 };
 
 /**
- * Hook to get labels by category for better organization
+ * Returns the labels of a category of {@link LabelCategory}.
  *
- * @param category The category of labels to retrieve
- * @returns Object with labels from the specified category
+ * @param category - The category.
+ * @returns An object with the labels of the category.
+ *
+ * @example
+ * ```tsx
+ * import { useLabelsByCategory } from '@tuwaio/nova-connect/hooks';
+ *
+ * export function StateText() {
+ *   const { loading } = useLabelsByCategory('states');
+ *
+ *   return <span>{loading}</span>;
+ * }
+ * ```
  */
 export const useLabelsByCategory = <T extends keyof LabelCategory>(
   category: T,
@@ -150,8 +140,8 @@ export const useLabelsByCategory = <T extends keyof LabelCategory>(
   const allLabels = useNovaConnectLabels();
 
   const categoryKeys: Record<keyof LabelCategory, (keyof NovaConnectLabels)[]> = {
-    actions: ['connectWallet', 'disconnect', 'connecting', 'connected', 'tryAgain', 'back', 'connect', 'close'],
-    states: ['success', 'error', 'replaced', 'loading', 'idle'],
+    actions: ['connectWallet', 'disconnect', 'connecting', 'connected', 'tryAgain', 'back', 'connect'],
+    states: ['success', 'error', 'replaced', 'loading'],
     accessibility: ['chainSelector', 'closeModal', 'selectChain', 'walletControls', 'openWalletModal'],
     transactions: ['transactionLoading', 'transactionSuccess', 'transactionError', 'transactionReplaced', 'recent'],
   };
@@ -168,36 +158,29 @@ export const useLabelsByCategory = <T extends keyof LabelCategory>(
 };
 
 /**
- * Utility function to check if labels are default ones (for external use)
- * This is a regular function, not a hook, so it can be used anywhere
+ * Checks whether an object is the `defaultLabels` object itself (a copy with the same texts returns `false`).
  *
- * @param labels The labels to check
- * @returns Whether the labels are the default English labels
- *
- * @example
- * ```typescript
- * function SomeUtilityFunction(labels: NovaConnectLabels) {
- *   if (isDefaultLabels(labels)) {
- *     console.log('Using default English labels');
- *   }
- * }
- * ```
+ * @param labels - The labels.
+ * @returns `true` for the `defaultLabels` object.
  */
 export const isDefaultLabels = (labels: NovaConnectLabels): boolean => {
   return labels === defaultLabels;
 };
 
 /**
- * Utility function to get a formatted label with fallback
+ * Returns a label, or a fallback when it is blank: the `fallback` argument, the English default, then the key.
  *
- * @param labels The labels object
- * @param key The label key
- * @param fallback Optional fallback text
- * @returns The label value or fallback
+ * @param labels - The labels.
+ * @param key - The label key.
+ * @param fallback - Text used when the label is blank.
+ * @returns The text.
  *
  * @example
- * ```typescript
- * const buttonText = getLabelWithFallback(labels, 'connectWallet', 'Connect');
+ * ```ts
+ * import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+ * import { getLabelWithFallback } from '@tuwaio/nova-connect/hooks';
+ *
+ * getLabelWithFallback({ ...defaultLabels, connectWallet: '' }, 'connectWallet', 'Connect'); // 'Connect'
  * ```
  */
 export const getLabelWithFallback = (
@@ -213,15 +196,18 @@ export const getLabelWithFallback = (
 };
 
 /**
- * Utility function to create a labels subset (for use outside of React components)
+ * Returns the given labels of a labels object (usable outside React components).
  *
- * @param labels The source labels object
- * @param keys Array of keys to extract
- * @returns Object with only the requested labels
+ * @param labels - The labels.
+ * @param keys - The label keys.
+ * @returns An object with the requested labels.
  *
  * @example
- * ```typescript
- * const actionLabels = createLabelsSubset(labels, ['connect', 'disconnect', 'tryAgain']);
+ * ```ts
+ * import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+ * import { createLabelsSubset } from '@tuwaio/nova-connect/hooks';
+ *
+ * const actionLabels = createLabelsSubset(defaultLabels, ['connect', 'disconnect', 'tryAgain']);
  * ```
  */
 export const createLabelsSubset = <K extends keyof NovaConnectLabels>(

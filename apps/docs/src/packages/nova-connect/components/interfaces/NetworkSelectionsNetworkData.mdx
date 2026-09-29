@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/NetworkSelectionsNetworkData" />
+
+# NetworkSelectionsNetworkData
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L27)
+
+A network offered by [NetworkSelections](?path=/docs/packages-nova-connect-components-variables-networkselections--docs).
+
+## Properties
+
+### adapter
+
+> **adapter**: `OrbitAdapter`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L29)
+
+Network adapter
+
+***
+
+### chainId?
+
+> `optional` **chainId?**: `string` \| `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L31)
+
+Chain ID of the network icon (from `getNetworkData` of `@tuwaio/orbit-core`)
+
+***
+
+### index
+
+> **index**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L37)
+
+Position of the network in the list
+
+***
+
+### infoLink?
+
+> `optional` **infoLink?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L35)
+
+Page about the network (`links.aboutNetwork` of `getNetworkData`), opened by the info link of the card
+
+***
+
+### name
+
+> **name**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L33)
+
+Network name (`Ethereum` when `getNetworkData` has no data for the adapter)

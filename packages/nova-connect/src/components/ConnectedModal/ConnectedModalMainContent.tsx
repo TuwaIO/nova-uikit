@@ -6,15 +6,24 @@ import { cn, standardButtonClasses } from '@tuwaio/nova-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
+import React, {
+  ComponentPropsWithoutRef,
+  ComponentType,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+} from 'react';
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
-import { WalletAvatar, type WalletAvatarCustomization, WalletAvatarProps } from '../WalletAvatar';
+import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
   ConnectedModalNameAndBalanceCustomization,
-  ConnectedModalNameAndBalanceProps,
 } from './ConnectedModalNameAndBalance';
 import { IconButton, IconButtonProps } from './IconButton';
 
@@ -60,21 +69,39 @@ const DEFAULT_TRANSACTIONS_ANIMATION_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type LoadingIndicatorProps = {
+/**
+ * Props for a custom loading indicator (a spinner in the corner by default).
+ */
+export type ConnectedModalMainContentLoadingIndicatorProps = {
+  /** Whether the avatar, the balance or the transactions are loading */
   isLoading: boolean;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Classes from `classNames.loadingIndicator` */
   className?: string;
 };
 
-type AvatarSectionProps = {
+/**
+ * Props for a custom avatar section: the wallet avatar with the wallet and network buttons.
+ */
+export type ConnectedModalMainContentAvatarSectionProps = {
+  /** The active connection */
   activeConnection: BaseConnector;
+  /** The ENS or SNS avatar URL, or `null` */
   ensAvatar: string | null;
+  /** The wallet part of the connector type (for example `metamask`), or the `unknownWallet` label */
   walletName: string;
+  /** Number of connectors of all networks in the Satellite store */
   connectorsCount: number;
+  /** Chains the wallet can switch to */
   chainsList: (string | number)[];
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Runs `handlers.onSwitchWallet`, or shows the connections screen */
   onSwitchWallet: () => void;
+  /** Runs `handlers.onSwitchNetwork`, or shows the network screen */
   onSwitchNetwork: () => void;
+  /** Classes from `classNames.avatarSection` */
   className?: string;
   /** Customization for switch wallet IconButton */
   switchWalletButtonProps?: Partial<IconButtonProps>;
@@ -84,36 +111,60 @@ type AvatarSectionProps = {
   walletAvatarCustomization?: WalletAvatarCustomization;
 };
 
-type InfoSectionProps = {
+/**
+ * Props for a custom info section: the wallet name and the balance.
+ */
+export type ConnectedModalMainContentInfoSectionProps = {
+  /** The `balanceLoading` prop */
   balanceLoading: boolean;
+  /** The `balance` prop */
   balance: NativeBalanceResult | null;
+  /** The `refetch` prop */
   refetch: () => void;
+  /** The `ensNameAbbreviated` prop */
   ensNameAbbreviated: string | undefined;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Classes from `classNames.infoSection` */
   className?: string;
+  /** `childCustomizations.nameAndBalance` */
   nameAndBalanceCustomization?: ConnectedModalNameAndBalanceCustomization;
 };
 
-type TransactionsSectionProps = {
+/**
+ * Props for a custom transactions section: the "View transactions" button (rendered only when the wallet has
+ * transactions).
+ */
+export type ConnectedModalMainContentTransactionsSectionProps = {
+  /** Transactions of `transactionPool` sent from the active address */
   walletTransactions: Transaction[];
+  /** Whether one of them is pending */
   hasPendingTransactions: boolean;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Runs `handlers.onViewTransactions`, or shows the transaction history */
   onViewTransactions: () => void;
+  /** `config.showPendingIndicators` */
   showPendingIndicators?: boolean;
+  /** Classes from `classNames.transactionsSection` */
   className?: string;
-  /** Custom className for the transactions button */
+  /** Classes from `classNames.transactionsButton` (default: `standardButtonClasses` of `@tuwaio/nova-core`) */
   buttonClassName?: string;
 };
 
-type NoTransactionsIndicatorProps = {
+/**
+ * Props for a custom indicator shown when the wallet has no transactions (a visually hidden status by default).
+ */
+export type ConnectedModalMainContentNoTransactionsIndicatorProps = {
+  /** Classes from `classNames.noTransactions` */
   className?: string;
 };
 
 /**
- * Customization options for ConnectedModalMainContent component
+ * Customization options of {@link ConnectedModalMainContent}.
  */
 export type ConnectedModalMainContentCustomization = {
-  /** Override root container props */
+  /** Props of the container (the component props, `className`, `role` and `aria-label` take precedence) */
   containerProps?: Partial<
     Omit<
       ComponentPropsWithoutRef<'div'>,
@@ -134,74 +185,92 @@ export type ConnectedModalMainContentCustomization = {
   /** Custom components */
   components?: {
     /** Custom loading indicator component */
-    LoadingIndicator?: ComponentType<LoadingIndicatorProps>;
+    LoadingIndicator?: ComponentType<ConnectedModalMainContentLoadingIndicatorProps>;
     /** Custom avatar section component */
-    AvatarSection?: ComponentType<AvatarSectionProps>;
-    /** Custom wallet avatar component */
-    WalletAvatar?: ComponentType<WalletAvatarProps>;
-    /** Custom switch wallet icon button component */
-    SwitchWalletButton?: ComponentType<IconButtonProps>;
-    /** Custom switch network icon button component */
-    SwitchNetworkButton?: ComponentType<IconButtonProps>;
+    AvatarSection?: ComponentType<ConnectedModalMainContentAvatarSectionProps>;
     /** Custom info section component */
-    InfoSection?: ComponentType<InfoSectionProps>;
-    /** Custom name and balance component */
-    NameAndBalance?: ComponentType<ConnectedModalNameAndBalanceProps>;
+    InfoSection?: ComponentType<ConnectedModalMainContentInfoSectionProps>;
     /** Custom transactions section component */
-    TransactionsSection?: ComponentType<TransactionsSectionProps>;
+    TransactionsSection?: ComponentType<ConnectedModalMainContentTransactionsSectionProps>;
     /** Custom no transactions indicator component */
-    NoTransactionsIndicator?: ComponentType<NoTransactionsIndicatorProps>;
+    NoTransactionsIndicator?: ComponentType<ConnectedModalMainContentNoTransactionsIndicatorProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The content state.
+     * @param params.hasActiveWallet - Always `true` (nothing is rendered without a connected wallet).
+     * @param params.isLoading - Whether the avatar, the balance or the transactions are loading.
+     * @param params.hasTransactions - Whether the wallet has transactions in `transactionPool`.
+     * @param params.hasPendingTransactions - Whether one of them is pending.
+     * @returns The classes.
+     */
     container?: (params: {
       hasActiveWallet: boolean;
       isLoading: boolean;
       hasTransactions: boolean;
       hasPendingTransactions: boolean;
     }) => string;
-    /** Function to generate loading indicator classes */
+    /**
+     * Returns classes added to the loading indicator.
+     *
+     * @param params - The loading state.
+     * @param params.isLoading - Whether something is loading.
+     * @returns The classes.
+     */
     loadingIndicator?: (params: { isLoading: boolean }) => string;
-    /** Function to generate loading spinner classes */
-    loadingSpinner?: () => string;
-    /** Function to generate avatar section classes */
+    /**
+     * Returns classes of the avatar section, added to the default ones.
+     *
+     * @returns The classes.
+     */
     avatarSection?: () => string;
-    /** Function to generate wallet avatar classes */
-    walletAvatar?: (params: { ensAvatar: string | null }) => string;
-    /** Function to generate switch wallet button classes */
-    switchWalletButton?: (params: { connectorsCount: number }) => string;
-    /** Function to generate switch network button classes */
-    switchNetworkButton?: (params: { chainsCount: number }) => string;
-    /** Function to generate info section classes */
+    /**
+     * Returns classes of the info section, the only classes of the section.
+     *
+     * @returns The classes.
+     */
     infoSection?: () => string;
-    /** Function to generate transactions section classes */
+    /**
+     * Returns classes added to the transactions section.
+     *
+     * @param params - The transactions.
+     * @param params.transactionsCount - Number of transactions of the wallet.
+     * @param params.hasPendingTransactions - Whether one of them is pending.
+     * @returns The classes.
+     */
     transactionsSection?: (params: { transactionsCount: number; hasPendingTransactions: boolean }) => string;
-    /** Function to generate transactions button classes */
+    /**
+     * Returns classes of the "View transactions" button, instead of `standardButtonClasses` of `@tuwaio/nova-core`.
+     *
+     * @returns The classes.
+     */
     transactionsButton?: () => string;
-    /** Function to generate pending indicator classes */
-    pendingIndicator?: () => string;
-    /** Function to generate pending spinner classes */
-    pendingSpinner?: () => string;
-    /** Function to generate no transactions classes */
+    /**
+     * Returns classes of the no-transactions indicator, added to the default ones.
+     *
+     * @returns The classes.
+     */
     noTransactions?: () => string;
-    /** Function to generate extra balances container classes */
+    /**
+     * Returns classes of the wrapper of `renderExtraBalances`, the only classes of the wrapper.
+     *
+     * @returns The classes.
+     */
     extraBalancesContainer?: () => string;
-    /** Function to generate custom content container classes */
+    /**
+     * Returns classes of the wrapper of `renderCustomContent`, the only classes of the wrapper.
+     *
+     * @returns The classes.
+     */
     customContentContainer?: () => string;
   };
   /** Custom animation variants */
   variants?: {
-    /** Container animation variants */
+    /** Container animation variants (`initial`, `animate`, `exit`) */
     container?: Variants;
-    /** Loading animation variants */
-    loading?: Variants;
-    /** Avatar section animation variants */
-    avatarSection?: Variants;
-    /** Info section animation variants */
-    infoSection?: Variants;
-    /** Transactions animation variants */
-    transactions?: Variants;
   };
   /** Custom animation configuration */
   animation?: {
@@ -216,36 +285,27 @@ export type ConnectedModalMainContentCustomization = {
       /** Children stagger delay */
       staggerChildren?: number;
     };
-    /** Loading animation configuration */
-    loading?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-    /** Sections animation configuration */
-    sections?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for wallet switch */
+    /** Replaces the wallet button, which shows the connections screen by default */
     onSwitchWallet?: () => void;
-    /** Custom handler for network switch */
+    /** Replaces the network button, which shows the network screen by default */
     onSwitchNetwork?: () => void;
-    /** Custom handler for view transactions */
+    /** Replaces the "View transactions" button, which shows the transaction history by default */
     onViewTransactions?: () => void;
-    /** Custom handler for loading state changes */
+    /**
+     * Called after mount and whenever the loading state changes.
+     *
+     * @param isLoading - Whether the avatar, the balance or the transactions are loading.
+     */
     onLoadingStateChange?: (isLoading: boolean) => void;
-    /** Custom handler for transaction updates */
+    /**
+     * Called after mount and whenever the transactions of the active address change.
+     *
+     * @param transactions - Transactions of `transactionPool` sent from the active address.
+     * @param pendingCount - Number of pending ones.
+     */
     onTransactionsUpdate?: (transactions: Transaction[], pendingCount: number) => void;
   };
   /** Child component customizations */
@@ -254,29 +314,25 @@ export type ConnectedModalMainContentCustomization = {
     nameAndBalance?: ConnectedModalNameAndBalanceCustomization;
     /** Customization for WalletAvatar component */
     walletAvatar?: WalletAvatarCustomization;
-    /** Customization for switch wallet IconButton */
+    /** Switch wallet button: only `className` (added) and `customization` are applied */
     switchWalletButton?: Partial<IconButtonProps>;
-    /** Customization for switch network IconButton */
+    /** Switch network button: only `className` (added) and `customization` are applied */
     switchNetworkButton?: Partial<IconButtonProps>;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
+    /** Renders the container without Framer Motion (default: `false`) */
     disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
+    /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
-    /** Whether to show loading indicators */
+    /** Whether to show the loading indicator (default: `true`) */
     showLoadingIndicators?: boolean;
-    /** Whether to show pending transaction indicators */
+    /** Whether to show a spinner next to the transactions button while one is pending (default: `true`) */
     showPendingIndicators?: boolean;
     /** Custom ARIA labels for different states */
     ariaLabels?: {
+      /** ARIA label of the container, after the `aria-label` prop (default: `walletConnected` label and wallet name) */
       container?: string;
-      loadingIndicator?: string;
-      avatarSection?: string;
-      infoSection?: string;
-      transactionsSection?: string;
-      noTransactions?: string;
     };
   };
   /** Render slot for extra balances (tokens like USDC, ETH) - rendered after native balance */
@@ -286,28 +342,40 @@ export type ConnectedModalMainContentCustomization = {
 };
 
 /**
- * Props for the ConnectedModalMainContent component
+ * Props for the {@link ConnectedModalMainContent} component. `transactionPool` is the Pulsar transaction pool; the
+ * transactions sent from the active address are counted. Other props are passed to the container.
  */
 export interface ConnectedModalMainContentProps extends Pick<NovaConnectProviderProps, 'transactionPool'> {
   /** List of available chains for the current wallet */
   chainsList: (string | number)[];
+  /** The ENS or SNS avatar URL, or `null` */
   ensAvatar: string | null;
+  /** Whether the avatar is loading */
   avatarIsLoading: boolean;
+  /** Whether the balance is loading */
   balanceLoading: boolean;
+  /** Whether the transactions are loading */
   txsLoading: boolean;
+  /** The shortened ENS or SNS name, when the address has one */
   ensNameAbbreviated: string | undefined;
+  /** The native balance, or `null` */
   balance: NativeBalanceResult | null;
+  /** Reloads the balance */
   refetch: () => void;
-  /** Additional CSS classes for the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Custom aria-label for the container */
+  /** ARIA label of the container (default: the `walletConnected` label and the wallet name) */
   'aria-label'?: string;
   /** Customization options */
   customization?: ConnectedModalMainContentCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultLoadingIndicator: React.FC<LoadingIndicatorProps> = ({ isLoading, labels, className }) => {
+const DefaultLoadingIndicator: React.FC<ConnectedModalMainContentLoadingIndicatorProps> = ({
+  isLoading,
+  labels,
+  className,
+}) => {
   if (!isLoading) return null;
 
   return (
@@ -326,7 +394,7 @@ const DefaultLoadingIndicator: React.FC<LoadingIndicatorProps> = ({ isLoading, l
   );
 };
 
-const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
+const DefaultAvatarSection: React.FC<ConnectedModalMainContentAvatarSectionProps> = ({
   activeConnection,
   ensAvatar,
   walletName,
@@ -357,7 +425,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
         walletName={walletName}
         items={connectorsCount}
         onClick={onSwitchWallet}
-        aria-label={`${labels.connectWallet} - ${connectorsCount} ${labels.connectWallet.toLowerCase()} available`}
+        aria-label={formatLabel(labels.connectWalletsAvailable, { count: connectorsCount })}
         data-testid="switch-wallet-button"
         customization={switchWalletButtonProps?.customization}
       />
@@ -371,7 +439,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
         walletChainId={activeConnection.chainId}
         items={chainsList.length}
         onClick={onSwitchNetwork}
-        aria-label={`${labels.switchNetwork} - ${chainsList.length} ${labels.listOfNetworks.toLowerCase()} available`}
+        aria-label={formatLabel(labels.switchNetworkNetworksAvailable, { count: chainsList.length })}
         data-testid="switch-network-button"
         customization={switchNetworkButtonProps?.customization}
       />
@@ -388,7 +456,7 @@ const DefaultAvatarSection: React.FC<AvatarSectionProps> = ({
   );
 };
 
-const DefaultInfoSection: React.FC<InfoSectionProps> = ({
+const DefaultInfoSection: React.FC<ConnectedModalMainContentInfoSectionProps> = ({
   balanceLoading,
   balance,
   refetch,
@@ -416,7 +484,7 @@ const DefaultInfoSection: React.FC<InfoSectionProps> = ({
   );
 };
 
-const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
+const DefaultTransactionsSection: React.FC<ConnectedModalMainContentTransactionsSectionProps> = ({
   walletTransactions,
   hasPendingTransactions,
   labels,
@@ -435,7 +503,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
         className,
       )}
       role="group"
-      aria-label={`${labels.transactionsInApp} - ${walletTransactions.length} transactions`}
+      aria-label={formatLabel(labels.transactionsInAppCount, { count: walletTransactions.length })}
     >
       <button
         type="button"
@@ -447,7 +515,7 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
         {labels.viewTransactions}
 
         <span id="transaction-count" className="novacon:sr-only">
-          {walletTransactions.length} transactions available
+          {formatLabel(labels.transactionsAvailable, { count: walletTransactions.length })}
           {hasPendingTransactions && `, ${labels.transactionLoading}`}
         </span>
       </button>
@@ -475,101 +543,50 @@ const DefaultTransactionsSection: React.FC<TransactionsSectionProps> = ({
   );
 };
 
-const DefaultNoTransactionsIndicator: React.FC<NoTransactionsIndicatorProps> = ({ className }) => {
+const DefaultNoTransactionsIndicator: React.FC<ConnectedModalMainContentNoTransactionsIndicatorProps> = ({
+  className,
+}) => {
+  const labels = useNovaConnectLabels();
   return (
     <div className={cn('novacon:sr-only', className)} role="status" aria-live="polite">
-      No transactions found for this wallet
+      {labels.noTransactionsForWallet}
     </div>
   );
 };
 
 /**
- * Main content component for the connected wallet modal with comprehensive customization options.
+ * The main screen of the connected modal: the wallet avatar with buttons to the connections and network screens, the
+ * name and balance, and a "View transactions" button when the wallet has transactions. Renders nothing without a
+ * connected wallet.
  *
- * This component displays the primary interface for connected wallet management:
- * - Large wallet avatar with ENS support
- * - Wallet and network switching controls via IconButton components
- * - Loading indicators for avatar and balance states
- * - Transaction history access when transactions are available
- * - Animated pending transaction indicator
- * - Comprehensive customization for all UI elements and behaviors
- * - Animation support with reduced motion options
- * - Custom event handlers for enhanced interactivity
- * - Performance-optimized with memoized calculations
- * - Full customization of child components through parent
+ * Props: {@link ConnectedModalMainContentProps}; the ref is forwarded to the container.
  *
- * The component provides full WCAG compliance with proper ARIA labels,
- * semantic HTML structure, and keyboard navigation support.
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedModalMainContent
- *   transactionPool={transactionPool}
- *   chainsList={availableChains}
- *   ensAvatar={ensAvatar}
- *   avatarIsLoading={false}
- *   balanceLoading={false}
- *   ensNameAbbreviated="wallet.eth"
- *   balance={{ value: "1.23", symbol: "ETH" }}
- *   store={store}
- * />
- * ```
+ * import { ConnectedModalMainContent } from '@tuwaio/nova-connect/components';
+ * import { useGetWalletNameAndAvatar, useWalletNativeBalance } from '@tuwaio/nova-connect/hooks';
  *
- * @example With full customization
- * ```tsx
- * <ConnectedModalMainContent
- *   transactionPool={transactionPool}
- *   chainsList={availableChains}
- *   ensAvatar={ensAvatar}
- *   avatarIsLoading={false}
- *   balanceLoading={false}
- *   ensNameAbbreviated="wallet.eth"
- *   balance={{ value: "1.23", symbol: "ETH" }}
- *   store={store}
- *   customization={{
- *     classNames: {
- *       container: ({ hasActiveWallet }) =>
- *         `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
- *       avatarSection: () => "custom-avatar-section",
- *       transactionsSection: ({ transactionsCount }) =>
- *         `transactions-section transactions-count-${transactionsCount}`,
- *     },
- *     components: {
- *       LoadingIndicator: ({ isLoading }) =>
- *         isLoading ? <div className="custom-spinner" /> : null,
- *       AvatarSection: ({ activeConnection, onSwitchWallet }) => (
- *         <div onClick={onSwitchWallet}>Custom Avatar: {activeConnection.address}</div>
- *       ),
- *     },
- *     childCustomizations: {
- *       nameAndBalance: {
- *         classNames: {
- *           container: () => "custom-name-balance-container",
- *         },
- *         components: {
- *           WalletNameDisplay: ({ ensNameAbbreviated }) =>
- *             <h2>{ensNameAbbreviated}</h2>,
- *         },
- *       },
- *       walletAvatar: {
- *         className: "custom-wallet-avatar",
- *       },
- *     },
- *     handlers: {
- *       onSwitchWallet: () => console.log('Custom wallet switch'),
- *       onViewTransactions: () => console.log('Custom view transactions'),
- *       onTransactionsUpdate: (transactions, pendingCount) =>
- *         console.log(`Transactions: ${transactions.length}, Pending: ${pendingCount}`),
- *     },
- *     config: {
- *       showLoadingIndicators: true,
- *       showPendingIndicators: true,
- *       ariaLabels: {
- *         container: 'Wallet management interface',
- *       },
- *     },
- *   }}
- * />
+ * export function WalletSummary() {
+ *   const { ensAvatar, ensNameAbbreviated, isLoading } = useGetWalletNameAndAvatar({});
+ *   const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance();
+ *
+ *   return (
+ *     <ConnectedModalMainContent
+ *       chainsList={[1, 8453]}
+ *       ensAvatar={ensAvatar}
+ *       avatarIsLoading={isLoading}
+ *       balanceLoading={balanceLoading}
+ *       txsLoading={false}
+ *       ensNameAbbreviated={ensNameAbbreviated}
+ *       balance={balance}
+ *       refetch={refetch}
+ *       customization={{
+ *         classNames: { avatarSection: () => 'custom-avatar-section' },
+ *         handlers: { onViewTransactions: () => console.log('view transactions') },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedModalMainContentProps>(
@@ -665,13 +682,16 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      * Wallet transactions filtered by current wallet address
      * Only includes transactions from the currently connected wallet
      */
-    const walletTransactions =
-      activeConnection && transactionPool
-        ? Object.values(transactionPool).filter(
-            (tx) =>
-              tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
-          )
-        : [];
+    const activeAddress = activeConnection?.address;
+    const walletTransactions = useMemo(
+      () =>
+        activeAddress && transactionPool
+          ? Object.values(transactionPool).filter(
+              (tx) => tx?.from && tx.from.toLowerCase() === activeAddress.toLowerCase(),
+            )
+          : [],
+      [activeAddress, transactionPool],
+    );
 
     /**
      * Check if there are pending transactions for loading indicator
@@ -700,21 +720,20 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      */
     const pendingCount = walletTransactions.filter((tx) => tx.pending).length;
 
-    // Call transaction update handler when transactions change
-    React.useEffect(() => {
-      if (customHandlers?.onTransactionsUpdate) {
-        customHandlers.onTransactionsUpdate(walletTransactions, pendingCount);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [walletTransactions, pendingCount, customHandlers?.onTransactionsUpdate]);
+    // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the
+    // effects
+    const onTransactionsUpdate = useEffectEvent((transactions: Transaction[], count: number) =>
+      customHandlers?.onTransactionsUpdate?.(transactions, count),
+    );
+    const onLoadingStateChange = useEffectEvent((loading: boolean) => customHandlers?.onLoadingStateChange?.(loading));
 
-    // Call loading state change handler when loading state changes
-    React.useEffect(() => {
-      if (customHandlers?.onLoadingStateChange) {
-        customHandlers.onLoadingStateChange(isLoading);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLoading, customHandlers?.onLoadingStateChange]);
+    useEffect(() => {
+      onTransactionsUpdate(walletTransactions, pendingCount);
+    }, [walletTransactions, pendingCount]);
+
+    useEffect(() => {
+      onLoadingStateChange(isLoading);
+    }, [isLoading]);
 
     /**
      * Generate container classes with custom generator

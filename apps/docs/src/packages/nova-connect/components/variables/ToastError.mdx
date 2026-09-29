@@ -1,0 +1,16 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ToastError" />
+
+# ToastError
+
+> `const` **ToastError**: `ForwardRefExoticComponent`\<[`ToastErrorProps`](?path=/docs/packages-nova-connect-components-interfaces-toasterrorprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:249](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L249)
+
+The content of an error toast: the title, the error message and a button that copies the error (the string, or the
+`raw` value of a `TuwaErrorState` as JSON) to the clipboard. The container is an `alert` with
+`aria-live="assertive"`.
+`ErrorsProvider` (from `@tuwaio/nova-connect`) uses it.
+
+Props: [ToastErrorProps](?path=/docs/packages-nova-connect-components-interfaces-toasterrorprops--docs); the ref is forwarded to the container.

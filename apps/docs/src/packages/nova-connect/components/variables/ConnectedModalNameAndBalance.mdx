@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedModalNameAndBalance" />
+
+# ConnectedModalNameAndBalance
+
+> `const` **ConnectedModalNameAndBalance**: `ForwardRefExoticComponent`\<[`ConnectedModalNameAndBalanceProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalnameandbalanceprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:464](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L464)
+
+The name and balance of the connected modal: the ENS or SNS name with a button that copies the active address to
+the clipboard, and the native balance with a refresh button. Renders nothing without a connected wallet.
+
+Props: [ConnectedModalNameAndBalanceProps](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalnameandbalanceprops--docs); the ref is forwarded to the `section` element.
+
+## Example
+
+```tsx
+import { ConnectedModalNameAndBalance } from '@tuwaio/nova-connect/components';
+
+export const NameAndBalance = (
+  <ConnectedModalNameAndBalance
+    ensNameAbbreviated="vitalik.eth"
+    balanceLoading={false}
+    balance={{ value: '1.23', symbol: 'ETH' }}
+    refetch={() => console.log('refresh the balance')}
+    customization={{
+      classNames: { walletNameDisplay: () => 'text-2xl text-blue-600' },
+      handlers: { onCopySuccess: (address) => console.log('copied', address) },
+    }}
+  />
+);
+```

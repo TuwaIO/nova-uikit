@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/GetGroupedConnectorsParams" />
+
+# GetGroupedConnectorsParams
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L25)
+
+Parameters of [getGroupedConnectors](?path=/docs/packages-nova-connect-connect-functions-getgroupedconnectors--docs).
+
+## Properties
+
+### connectors
+
+> **connectors**: `Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\>
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L27)
+
+Connectors by adapter, as `getConnectors()` of the Satellite store returns them
+
+***
+
+### excludeConnectors?
+
+> `optional` **excludeConnectors?**: `string`[]
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L29)
+
+Names of connectors to leave out, compared after `formatConnectorName` (default: `['injected']`)

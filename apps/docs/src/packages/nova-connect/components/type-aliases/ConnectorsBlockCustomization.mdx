@@ -1,0 +1,415 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsBlockCustomization" />
+
+# ConnectorsBlockCustomization
+
+> **ConnectorsBlockCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L159)
+
+Customization options of [ConnectorsBlock](?path=/docs/packages-nova-connect-components-variables-connectorsblock--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L174)
+
+Custom class name generators
+
+#### connectorItem?
+
+> `optional` **connectorItem?**: (`params`) => `string`
+
+Returns the classes of a wallet item, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The wallet.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+###### itemData
+
+[`ConnectorItemData`](?path=/docs/packages-nova-connect-components-interfaces-connectoritemdata--docs)
+
+The wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### connectorsList?
+
+> `optional` **connectorsList?**: (`params`) => `string`
+
+Returns the classes of the wallet list, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The group.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The group.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyState?
+
+> `optional` **emptyState?**: (`params`) => `string`
+
+Returns the classes of the empty state, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The group.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### title?
+
+> `optional` **title?**: (`params`) => `string`
+
+Returns the classes of the title, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The group.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L161)
+
+Custom components
+
+#### ConnectorItem?
+
+> `optional` **ConnectorItem?**: `ComponentType`\<[`ConnectorsBlockConnectorItemProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockconnectoritemprops--docs)\>
+
+Custom connector item wrapper
+
+#### ConnectorsList?
+
+> `optional` **ConnectorsList?**: `ComponentType`\<[`ConnectorsBlockConnectorsListProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockconnectorslistprops--docs)\>
+
+Custom connectors list
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ConnectorsBlockContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockcontainerprops--docs)\>
+
+Custom container wrapper
+
+#### EmptyState?
+
+> `optional` **EmptyState?**: `ComponentType`\<[`ConnectorsBlockEmptyStateProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockemptystateprops--docs)\>
+
+Custom empty state component
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`ConnectorsBlockTitleProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblocktitleprops--docs)\>
+
+Custom title component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:247](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L247)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.connectorsList?
+
+> `optional` **connectorsList?**: (`blockData`) => `string`
+
+Returns the ARIA label of the wallet list (default: the `connectorsList` label with the title).
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.container?
+
+> `optional` **container?**: (`blockData`) => `string`
+
+Returns the ARIA label of the container (default: the `connectorsSection` label with the title).
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.emptyState?
+
+> `optional` **emptyState?**: (`blockData`) => `string`
+
+Returns the ARIA label of the empty state (default: the `noGroupConnectors` label with the title).
+
+###### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+###### Returns
+
+`string`
+
+The label.
+
+#### features?
+
+> `optional` **features?**: `object`
+
+Show/hide features
+
+##### features.showEmptyState?
+
+> `optional` **showEmptyState?**: `boolean`
+
+Whether to show the empty state; `false` renders nothing without wallets (default: `true`)
+
+##### features.showRecentIndicators?
+
+> `optional` **showRecentIndicators?**: `boolean`
+
+Whether cards of recent wallets show the "Recent" badge (default: `true`)
+
+##### features.showTitleWhenEmpty?
+
+> `optional` **showTitleWhenEmpty?**: `boolean`
+
+Whether the empty state has the title (default: `true`)
+
+#### layout?
+
+> `optional` **layout?**: `object`
+
+Classes of the default wallet list (ignored when `classNames.connectorsList` is set)
+
+##### layout.mouseClasses?
+
+> `optional` **mouseClasses?**: `string`[]
+
+Classes on devices without a touch screen (default: a column with `mouseGap`)
+
+##### layout.mouseGap?
+
+> `optional` **mouseGap?**: `string`
+
+Gap on devices without a touch screen, used without `mouseClasses` (default: `novacon:gap-2`)
+
+##### layout.touchClasses?
+
+> `optional` **touchClasses?**: `string`[]
+
+Classes on touch devices (default: a row with `touchGap`)
+
+##### layout.touchGap?
+
+> `optional` **touchGap?**: `string`
+
+Gap on touch devices, used without `touchClasses` (default: `novacon:gap-3`)
+
+***
+
+### connectCard?
+
+> `optional` **connectCard?**: [`ConnectCardCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectcardcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:294](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L294)
+
+ConnectCard customization for each connector card
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:218](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L218)
+
+Custom event handlers
+
+#### onConnectorClick?
+
+> `optional` **onConnectorClick?**: (`itemData`, `blockData`, `originalHandler`) => `void`
+
+Wraps the click on a wallet card: call `originalHandler(itemData.group)` to run the default behavior. A wallet
+with several networks and no selected network goes to `onClick` (the network choice); otherwise `onClick` runs
+and the wallet connects through `connect` of the Satellite store, then the modal closes.
+
+##### Parameters
+
+###### itemData
+
+[`ConnectorItemData`](?path=/docs/packages-nova-connect-components-interfaces-connectoritemdata--docs)
+
+The clicked wallet.
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+###### originalHandler
+
+(`group`) => `Promise`\<`void`\>
+
+The default behavior.
+
+##### Returns
+
+`void`
+
+#### onEmptyStateAction?
+
+> `optional` **onEmptyStateAction?**: (`blockData`) => `void`
+
+Called when the empty state is clicked.
+
+##### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`void`
+
+#### onTitleClick?
+
+> `optional` **onTitleClick?**: (`blockData`) => `void`
+
+Called when the title is clicked.
+
+##### Parameters
+
+###### blockData
+
+[`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group.
+
+##### Returns
+
+`void`
+
+***
+
+### walletIcon?
+
+> `optional` **walletIcon?**: [`WalletIconCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walleticoncustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:296](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L296)
+
+WalletIcon customization for wallet icons

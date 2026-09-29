@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectModal" />
+
+# ConnectModal
+
+> `const` **ConnectModal**: `NamedExoticComponent`\<[`ConnectModalProps`](?path=/docs/packages-nova-connect-components-interfaces-connectmodalprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:733](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L733)
+
+The connect modal: wallet list with network tabs, network choice for multi-network wallets, connection progress
+with retry, "About wallets", "Get a wallet" and the impersonation form. Open it with `setIsConnectModalOpen(true)`
+from `useNovaConnect`; `NovaConnectProvider` renders it when `appChains` or `solanaRPCUrls` is set.
+
+Opening the modal resets it to the wallet list. A wallet connects through `connect` of the Satellite store to the
+first chain of `appChains` (EVM) or the first cluster of `solanaRPCUrls` (Solana), and the modal closes 400 ms after
+the wallet reports the connection (it waits up to 10 seconds). Texts come from the Nova Connect labels, except a
+few English accessibility texts.
+
+Props: [ConnectModalProps](?path=/docs/packages-nova-connect-components-interfaces-connectmodalprops--docs).
+
+## Example
+
+```tsx
+import { ConnectModal } from '@tuwaio/nova-connect/components';
+import { mainnet, polygon } from 'viem/chains';
+
+export const Modal = (
+  <ConnectModal
+    appChains={[mainnet, polygon]}
+    solanaRPCUrls={{ devnet: 'https://api.devnet.solana.com' }}
+    customization={{
+      classNames: {
+        title: ({ modalData }) => (modalData.contentType === 'about' ? 'custom-about-title' : ''),
+      },
+    }}
+  />
+);
+```

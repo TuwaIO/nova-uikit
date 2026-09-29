@@ -1,0 +1,75 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalNameAndBalanceCopyButtonProps" />
+
+# ConnectedModalNameAndBalanceCopyButtonProps
+
+> **ConnectedModalNameAndBalanceCopyButtonProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L55)
+
+Props for a custom copy button.
+
+## Properties
+
+### activeConnection
+
+> **activeConnection**: `BaseConnector`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L61)
+
+The active connection
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L65)
+
+Classes from `classNames.copyButton`
+
+***
+
+### disabled?
+
+> `optional` **disabled?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L67)
+
+Whether the connection has no address
+
+***
+
+### isCopied
+
+> **isCopied**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L57)
+
+Whether the address was copied in the last 2 seconds
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L63)
+
+The Nova Connect labels
+
+***
+
+### onCopy
+
+> **onCopy**: () => `Promise`\<`void`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalNameAndBalance.tsx#L59)
+
+Copies the active address to the clipboard and calls `handlers.onCopySuccess`
+
+#### Returns
+
+`Promise`\<`void`\>

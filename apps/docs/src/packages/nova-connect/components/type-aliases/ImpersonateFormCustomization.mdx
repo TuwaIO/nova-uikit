@@ -1,0 +1,365 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ImpersonateFormCustomization" />
+
+# ImpersonateFormCustomization
+
+> **ImpersonateFormCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:147](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L147)
+
+Customization options of [ImpersonateForm](?path=/docs/packages-nova-connect-components-variables-impersonateform--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L164)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: () => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorMessage?
+
+> `optional` **errorMessage?**: () => `string`
+
+Returns the classes of the error message, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### input?
+
+> `optional` **input?**: (`params`) => `string`
+
+Returns the classes of the field, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The field state.
+
+###### hasError
+
+`boolean`
+
+Whether the Satellite store has a `connectionError`.
+
+###### hasInteracted
+
+`boolean`
+
+Whether the user has typed, pasted or left the field.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### label?
+
+> `optional` **label?**: () => `string`
+
+Returns the classes of the label, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### resolvedAddress?
+
+> `optional` **resolvedAddress?**: () => `string`
+
+Returns the classes of the resolved address, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### resolvingStatus?
+
+> `optional` **resolvingStatus?**: () => `string`
+
+Returns the classes of the resolution status, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L149)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ImpersonatedFormContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedformcontainerprops--docs)\>
+
+Custom container wrapper
+
+#### ErrorMessage?
+
+> `optional` **ErrorMessage?**: `ComponentType`\<[`ImpersonatedFormErrorMessageProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedformerrormessageprops--docs)\>
+
+Custom error message component
+
+#### Input?
+
+> `optional` **Input?**: `ComponentType`\<[`ImpersonatedFormInputProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedforminputprops--docs)\>
+
+Custom input component
+
+#### Label?
+
+> `optional` **Label?**: `ComponentType`\<[`ImpersonatedFormLabelProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedformlabelprops--docs)\>
+
+Custom label component
+
+#### ResolvedAddress?
+
+> `optional` **ResolvedAddress?**: `ComponentType`\<[`ImpersonatedFormResolvedAddressProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedformresolvedaddressprops--docs)\>
+
+Custom resolved address display component
+
+#### ResolvingStatus?
+
+> `optional` **ResolvingStatus?**: `ComponentType`\<[`ImpersonatedFormResolvingStatusProps`](?path=/docs/packages-nova-connect-components-type-aliases-impersonatedformresolvingstatusprops--docs)\>
+
+Custom resolving status component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:254](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L254)
+
+Configuration options
+
+#### input?
+
+> `optional` **input?**: `object`
+
+Custom input attributes
+
+##### input.autoComplete?
+
+> `optional` **autoComplete?**: `string`
+
+`autoComplete` of the field (default: `off`)
+
+##### input.placeholder?
+
+> `optional` **placeholder?**: `string`
+
+Placeholder of the field
+
+##### input.spellCheck?
+
+> `optional` **spellCheck?**: `boolean`
+
+`spellCheck` of the field (default: `false`)
+
+#### validation?
+
+> `optional` **validation?**: `Partial`\<[`ValidationConfig`](?path=/docs/packages-nova-connect-components-interfaces-validationconfig--docs)\>
+
+Custom validation configuration
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L206)
+
+Custom event handlers
+
+#### onAddressResolved?
+
+> `optional` **onAddressResolved?**: (`originalValue`, `resolvedAddress`) => `void`
+
+Called when an ENS or SNS name resolves.
+
+##### Parameters
+
+###### originalValue
+
+`string`
+
+The name.
+
+###### resolvedAddress
+
+`string`
+
+Its address.
+
+##### Returns
+
+`void`
+
+#### onInputBlur?
+
+> `optional` **onInputBlur?**: (`displayValue`, `resolvedAddress`) => `void`
+
+Called after the blur validation (only with `validateOnBlur`).
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+The text in the field.
+
+###### resolvedAddress
+
+`string` \| `null`
+
+The address of the last resolved ENS or SNS name, or `null`.
+
+##### Returns
+
+`void`
+
+#### onInputChange?
+
+> `optional` **onInputChange?**: (`displayValue`, `resolvedAddress`) => `void`
+
+Called after the text changes.
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+The text in the field.
+
+###### resolvedAddress
+
+`string` \| `null`
+
+The address of the last resolved ENS or SNS name, or `null`.
+
+##### Returns
+
+`void`
+
+#### onInputPaste?
+
+> `optional` **onInputPaste?**: (`displayValue`, `resolvedAddress`) => `void`
+
+Called after a non-empty paste.
+
+##### Parameters
+
+###### displayValue
+
+`string`
+
+The text in the field.
+
+###### resolvedAddress
+
+`string` \| `null`
+
+The address of the last resolved ENS or SNS name, or `null`.
+
+##### Returns
+
+`void`
+
+#### onMount?
+
+> `optional` **onMount?**: () => `void`
+
+Called after mount
+
+##### Returns
+
+`void`
+
+#### onUnmount?
+
+> `optional` **onUnmount?**: () => `void`
+
+Called on unmount
+
+##### Returns
+
+`void`
+
+#### onValidationComplete?
+
+> `optional` **onValidationComplete?**: (`value`, `error`) => `void`
+
+Called when a validation ends.
+
+##### Parameters
+
+###### value
+
+`string`
+
+The validated text.
+
+###### error
+
+`string` \| `null`
+
+The error message, or `null` when the value is valid.
+
+##### Returns
+
+`void`
+
+#### onValidationStart?
+
+> `optional` **onValidationStart?**: (`value`) => `void`
+
+Called when a validation starts.
+
+##### Parameters
+
+###### value
+
+`string`
+
+The validated text.
+
+##### Returns
+
+`void`

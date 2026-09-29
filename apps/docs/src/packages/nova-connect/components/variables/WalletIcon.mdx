@@ -1,0 +1,17 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/WalletIcon" />
+
+# WalletIcon
+
+> `const` **WalletIcon**: `ForwardRefExoticComponent`\<[`WalletIconProps`](?path=/docs/packages-nova-connect-components-interfaces-walleticonprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L161)
+
+The icon of a wallet: the `icon` image when it is a valid URL and loads, otherwise the icon of `@tuwaio/nova-core`
+for the wallet name. The container has `role="img"` and an accessible label. In development, a red dot marks an icon
+that failed to load.
+
+Props: [WalletIconProps](?path=/docs/packages-nova-connect-components-interfaces-walleticonprops--docs); the ref is forwarded to the container.
+
+Side effect: the browser loads the `icon` URL (wallet icons are usually data URLs).

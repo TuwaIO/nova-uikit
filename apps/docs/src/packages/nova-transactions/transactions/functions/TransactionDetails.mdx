@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/TransactionDetails" />
+
+# TransactionDetails()
+
+> **TransactionDetails**\<`T`\>(`props`): `Element`
+
+Defined in: [components/TransactionDetails.tsx:422](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L422)
+
+A detailed view of one transaction, shown by [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs) when a transaction is selected: the status,
+hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
+recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
+the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
+(EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
+contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
+Pulsar store (`syncStatus`). Values can be copied to the clipboard.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`TransactionDetailsProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactiondetailsprops--docs)\<`T`\>
+
+See [TransactionDetailsProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactiondetailsprops--docs).
+
+## Returns
+
+`Element`
+
+The view.

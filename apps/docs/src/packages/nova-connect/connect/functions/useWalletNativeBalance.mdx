@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useWalletNativeBalance" />
+
+# useWalletNativeBalance()
+
+> **useWalletNativeBalance**(): [`UseWalletNativeBalanceData`](?path=/docs/packages-nova-connect-connect-interfaces-usewalletnativebalancedata--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L60)
+
+Returns the native balance of the active wallet on its chain, from `getBalance` of its Satellite adapter (an RPC
+request). Each balance is kept in memory for the address and chain while the component is mounted, so switching
+back does not request it again; `refetch` requests it again.
+
+## Returns
+
+[`UseWalletNativeBalanceData`](?path=/docs/packages-nova-connect-connect-interfaces-usewalletnativebalancedata--docs)
+
+See [UseWalletNativeBalanceData](?path=/docs/packages-nova-connect-connect-interfaces-usewalletnativebalancedata--docs).
+
+## Example
+
+```tsx
+import { useWalletNativeBalance } from '@tuwaio/nova-connect/hooks';
+
+export function NativeBalance() {
+  const { balance, isLoading, refetch } = useWalletNativeBalance();
+
+  if (isLoading) return <p>Loading balance...</p>;
+
+  return (
+    <p>
+      {balance ? `${balance.value} ${balance.symbol}` : 'n/a'} <button onClick={refetch}>Refresh</button>
+    </p>
+  );
+}
+```

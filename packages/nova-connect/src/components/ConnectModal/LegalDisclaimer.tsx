@@ -10,7 +10,7 @@ import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
 // --- Types ---
 
 /**
- * Legal disclaimer data for customization context
+ * The legal links of {@link LegalDisclaimer} (`legal` of `NovaConnectProvider`).
  */
 export interface LegalDisclaimerData {
   /** Whether terms URL is available */
@@ -26,124 +26,203 @@ export interface LegalDisclaimerData {
 }
 
 /**
- * Props for custom container component
+ * Props for a custom container.
  */
-type ContainerProps = {
+export type LegalDisclaimerContainerProps = {
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** The text */
   children: ReactNode;
+  /** The links */
   disclaimerData: LegalDisclaimerData;
+  /** `contentinfo` */
   role?: string;
+  /** `config.ariaLabels.container` or the `legalInformation` label */
   'aria-label'?: string;
 };
 
 /**
- * Props for custom text component
+ * Props for a custom text (a paragraph by default).
  */
-type TextProps = {
+export type LegalDisclaimerTextProps = {
+  /** Classes from `classNames.text` or the defaults */
   className?: string;
+  /** The `legalIntro` label, the links, the separator and a final period */
   children: ReactNode;
+  /** The links */
   disclaimerData: LegalDisclaimerData;
 };
 
 /**
- * Props for custom terms link component
+ * Props for a custom terms of service link.
  */
-type TermsLinkProps = {
+export type LegalDisclaimerTermsLinkProps = {
+  /** Classes from `classNames.termsLink` or the defaults */
   className?: string;
+  /** `termsUrl` */
   href: string;
+  /** The `legalTerms` label */
   children: ReactNode;
+  /** The links */
   disclaimerData: LegalDisclaimerData;
+  /** `_blank` unless `config.links.openInNewTab` is `false` */
   target?: string;
+  /** `config.links.rel` or `noopener noreferrer`, with `target` */
   rel?: string;
+  /**
+   * With `handlers.onTermsClick`, prevents the navigation and calls the handler.
+   *
+   * @param e - The click event.
+   */
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 /**
- * Props for custom privacy link component
+ * Props for a custom privacy policy link.
  */
-type PrivacyLinkProps = {
+export type LegalDisclaimerPrivacyLinkProps = {
+  /** Classes from `classNames.privacyLink` or the defaults */
   className?: string;
+  /** `privacyUrl` */
   href: string;
+  /** The `legalPrivacy` label */
   children: ReactNode;
+  /** The links */
   disclaimerData: LegalDisclaimerData;
+  /** `_blank` unless `config.links.openInNewTab` is `false` */
   target?: string;
+  /** `config.links.rel` or `noopener noreferrer`, with `target` */
   rel?: string;
+  /**
+   * With `handlers.onPrivacyClick`, prevents the navigation and calls the handler.
+   *
+   * @param e - The click event.
+   */
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 };
 
 /**
- * Props for custom separator component
+ * Props for a custom separator between the two links.
  */
-type SeparatorProps = {
+export type LegalDisclaimerSeparatorProps = {
+  /** Classes from `classNames.separator` (none by default) */
   className?: string;
+  /** `config.display.separatorText`, or the `legalAnd` label with spaces */
   children?: ReactNode;
+  /** The links */
   disclaimerData: LegalDisclaimerData;
 };
 
 /**
- * Customization options for LegalDisclaimer component
+ * Customization options of {@link LegalDisclaimer}.
  */
 export type LegalDisclaimerCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<LegalDisclaimerContainerProps>;
     /** Custom text component */
-    Text?: ComponentType<TextProps>;
+    Text?: ComponentType<LegalDisclaimerTextProps>;
     /** Custom terms link component */
-    TermsLink?: ComponentType<TermsLinkProps>;
+    TermsLink?: ComponentType<LegalDisclaimerTermsLinkProps>;
     /** Custom privacy link component */
-    PrivacyLink?: ComponentType<PrivacyLinkProps>;
+    PrivacyLink?: ComponentType<LegalDisclaimerPrivacyLinkProps>;
     /** Custom separator component between terms and privacy */
-    Separator?: ComponentType<SeparatorProps>;
+    Separator?: ComponentType<LegalDisclaimerSeparatorProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The disclaimer.
+     * @param params.disclaimerData - The links.
+     * @returns The classes.
+     */
     container?: (params: { disclaimerData: LegalDisclaimerData }) => string;
-    /** Function to generate text classes */
+    /**
+     * Returns the classes of the text, instead of the default ones.
+     *
+     * @param params - The disclaimer.
+     * @param params.disclaimerData - The links.
+     * @returns The classes.
+     */
     text?: (params: { disclaimerData: LegalDisclaimerData }) => string;
-    /** Function to generate terms link classes */
+    /**
+     * Returns the classes of the terms link, instead of the default ones.
+     *
+     * @param params - The disclaimer.
+     * @param params.disclaimerData - The links.
+     * @returns The classes.
+     */
     termsLink?: (params: { disclaimerData: LegalDisclaimerData }) => string;
-    /** Function to generate privacy link classes */
+    /**
+     * Returns the classes of the privacy link, instead of the default ones.
+     *
+     * @param params - The disclaimer.
+     * @param params.disclaimerData - The links.
+     * @returns The classes.
+     */
     privacyLink?: (params: { disclaimerData: LegalDisclaimerData }) => string;
-    /** Function to generate separator classes */
+    /**
+     * Returns the classes of the separator, instead of the default ones.
+     *
+     * @param params - The disclaimer.
+     * @param params.disclaimerData - The links.
+     * @returns The classes.
+     */
     separator?: (params: { disclaimerData: LegalDisclaimerData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom click handler for terms link */
+    /**
+     * Replaces the navigation of the terms link: call `originalHandler(url)` to open it in a new tab.
+     *
+     * @param disclaimerData - The links.
+     * @param originalHandler - Opens a URL in a new tab.
+     */
     onTermsClick?: (disclaimerData: LegalDisclaimerData, originalHandler: (url: string) => void) => void;
-    /** Custom click handler for privacy link */
+    /**
+     * Replaces the navigation of the privacy link: call `originalHandler(url)` to open it in a new tab.
+     *
+     * @param disclaimerData - The links.
+     * @param originalHandler - Opens a URL in a new tab.
+     */
     onPrivacyClick?: (disclaimerData: LegalDisclaimerData, originalHandler: (url: string) => void) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /**
+       * Returns the ARIA label of the container (default: the `legalInformation` label).
+       *
+       * @param disclaimerData - The links.
+       * @returns The label.
+       */
       container?: (disclaimerData: LegalDisclaimerData) => string;
     };
     /** Link behavior configuration */
     links?: {
-      /** Whether to open links in new tab */
+      /** Whether to open links in a new tab (default: `true`) */
       openInNewTab?: boolean;
-      /** Custom rel attribute for security */
+      /** `rel` of links opened in a new tab (default: `noopener noreferrer`) */
       rel?: string;
     };
     /** Display configuration */
     display?: {
-      /** Show terms link */
+      /** Show the terms link when there is a `termsUrl` (default: `true`) */
       showTerms?: boolean;
-      /** Show privacy link */
+      /** Show the privacy link when there is a `privacyUrl` (default: `true`) */
       showPrivacy?: boolean;
-      /** Custom separator text */
+      /** Text between the two links (default: the `legalAnd` label with spaces) */
       separatorText?: string;
     };
   };
 };
 
 /**
- * Props for LegalDisclaimer component
+ * Props for the {@link LegalDisclaimer} component.
  */
 export interface LegalDisclaimerProps {
   /** Customization options */
@@ -152,35 +231,35 @@ export interface LegalDisclaimerProps {
 
 // --- Default Sub-Components ---
 
-const DefaultContainer = (props: ContainerProps) => {
+const DefaultContainer = (props: LegalDisclaimerContainerProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { role, 'aria-label': ariaLabel, disclaimerData, ...restProps } = props;
   return <div {...restProps} role={role} aria-label={ariaLabel} />;
 };
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultText = (props: TextProps) => {
+const DefaultText = (props: LegalDisclaimerTextProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { disclaimerData, ...restProps } = props;
   return <p {...restProps} />;
 };
 DefaultText.displayName = 'DefaultText';
 
-const DefaultTermsLink = (props: TermsLinkProps) => {
+const DefaultTermsLink = (props: LegalDisclaimerTermsLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
   return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
 };
 DefaultTermsLink.displayName = 'DefaultTermsLink';
 
-const DefaultPrivacyLink = (props: PrivacyLinkProps) => {
+const DefaultPrivacyLink = (props: LegalDisclaimerPrivacyLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
   return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
 };
 DefaultPrivacyLink.displayName = 'DefaultPrivacyLink';
 
-const DefaultSeparator = (props: SeparatorProps) => {
+const DefaultSeparator = (props: LegalDisclaimerSeparatorProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { disclaimerData, ...restProps } = props;
   return <span {...restProps} />;
@@ -188,58 +267,32 @@ const DefaultSeparator = (props: SeparatorProps) => {
 DefaultSeparator.displayName = 'DefaultSeparator';
 
 /**
- * LegalDisclaimer component - Displays Terms of Service and Privacy Policy links with full customization.
+ * The legal line under the wallet list: "By connecting your wallet, you agree to our Terms of Service and Privacy
+ * Policy", with the links from `legal` of `NovaConnectProvider` (read through `useNovaConnect`). Renders nothing
+ * without `legal.termsUrl` and `legal.privacyUrl`.
  *
- * Renders legal disclaimer text with links based on the `legal` configuration
- * passed to NovaConnectProvider. Returns null if neither termsUrl nor privacyUrl
- * is provided.
+ * @param props - See {@link LegalDisclaimerProps}.
+ * @returns The legal line, or `null` without links.
  *
- * Features:
- * - Customizable container, text, and link components
- * - Dynamic styling through classNames generators
- * - Custom event handlers for link clicks
- * - Configurable link behavior and display options
- * - Full accessibility support with ARIA labels
- * - Screen reader friendly content structure
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <LegalDisclaimer />
- * ```
+ * import { LegalDisclaimer } from '@tuwaio/nova-connect/components';
  *
- * @example With full customization
- * ```tsx
- * <LegalDisclaimer
- *   customization={{
- *     components: {
- *       Container: CustomContainer,
- *       TermsLink: CustomTermsLink
- *     },
- *     classNames: {
- *       termsLink: ({ disclaimerData }) =>
- *         'text-blue-500 font-semibold',
- *       privacyLink: ({ disclaimerData }) =>
- *         'text-blue-500 font-semibold'
- *     },
- *     handlers: {
- *       onTermsClick: (disclaimerData, originalHandler) => {
- *         analytics.track('terms_clicked');
- *         originalHandler(disclaimerData.termsUrl!);
- *       }
- *     },
- *     config: {
- *       display: {
- *         separatorText: ' | '
+ * export const Legal = (
+ *   <LegalDisclaimer
+ *     customization={{
+ *       classNames: { termsLink: () => 'text-blue-500 font-semibold' },
+ *       handlers: {
+ *         onTermsClick: (disclaimerData, originalHandler) => {
+ *           console.log('terms clicked');
+ *           originalHandler(disclaimerData.termsUrl ?? '');
+ *         },
  *       },
- *       links: {
- *         openInNewTab: true
- *       }
- *     }
- *   }}
- * />
+ *       config: { display: { separatorText: ' | ' } },
+ *     }}
+ *   />
+ * );
  * ```
- *
- * @public
  */
 export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
   const { legal } = useNovaConnect();
@@ -319,7 +372,7 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
   const showPrivacy = customConfig?.display?.showPrivacy !== false;
   const separatorText = customConfig?.display?.separatorText ?? ` ${labels.legalAnd} `;
 
-  const ariaLabel = customConfig?.ariaLabels?.container?.(disclaimerData) ?? 'Legal information';
+  const ariaLabel = customConfig?.ariaLabels?.container?.(disclaimerData) ?? labels.legalInformation;
 
   return (
     <CustomContainer

@@ -1,0 +1,171 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/WalletIconCustomization" />
+
+# WalletIconCustomization
+
+> **WalletIconCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L46)
+
+Customization options for WalletIcon component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L61)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and `className`.
+
+##### Parameters
+
+###### params
+
+The icon state.
+
+###### isLoading
+
+`boolean`
+
+Whether the icon image is loading.
+
+###### showLoading
+
+`boolean`
+
+The `showLoading` prop.
+
+###### size
+
+`number`
+
+Icon size in pixels.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### image?
+
+> `optional` **image?**: (`params`) => `string`
+
+Returns the classes of the image (and of the fallback icon), instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The icon state.
+
+###### hasError
+
+`boolean`
+
+Whether the icon image failed to load.
+
+###### isLoading
+
+`boolean`
+
+Whether the icon image is loading.
+
+###### showLoading
+
+`boolean`
+
+The `showLoading` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingOverlay?
+
+> `optional` **loadingOverlay?**: (`params`) => `string`
+
+Returns the classes of the loading overlay.
+
+##### Parameters
+
+###### params
+
+The icon state.
+
+###### isLoading
+
+`boolean`
+
+Whether the icon image is loading.
+
+###### size
+
+`number`
+
+Icon size in pixels.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L52)
+
+Custom components
+
+#### ErrorIndicator?
+
+> `optional` **ErrorIndicator?**: `ComponentType`\<[`WalletIconErrorIndicatorProps`](?path=/docs/packages-nova-connect-components-type-aliases-walleticonerrorindicatorprops--docs)\>
+
+Custom error indicator component (only shown in development)
+
+#### FallbackIcon?
+
+> `optional` **FallbackIcon?**: `ComponentType`\<[`WalletIconFallbackIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-walleticonfallbackiconprops--docs)\>
+
+Custom fallback icon component
+
+#### LoadingOverlay?
+
+> `optional` **LoadingOverlay?**: `ComponentType`\<[`WalletIconLoadingOverlayProps`](?path=/docs/packages-nova-connect-components-type-aliases-walleticonloadingoverlayprops--docs)\>
+
+Custom loading overlay component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L48)
+
+Override container element props
+
+***
+
+### imageProps?
+
+> `optional` **imageProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"img"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L50)
+
+Override image element props

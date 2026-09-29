@@ -1,6 +1,5 @@
 /**
  * @file Main NovaConnect provider component with comprehensive customization capabilities.
- * @module NovaConnectProvider
  */
 
 import { deepMerge } from '@tuwaio/nova-core';
@@ -27,24 +26,27 @@ import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
 // --- Customization Types ---
 
 /**
- * Props for custom NovaConnectLabelsProvider component
+ * Props for a custom labels provider (the default one is `NovaConnectLabelsProvider`).
  */
-type CustomLabelsProviderProps = {
+export type NovaConnectProviderLabelsProviderProps = {
+  /** The final labels (after `labels.merge` and `labels.transform`) */
   labels?: Partial<NovaConnectLabels>;
+  /** The app */
   children: ReactNode;
 };
 
 /**
- * Props for custom ErrorsProvider component
+ * Props for a custom errors provider (the default one is `ErrorsProvider`).
  */
-type CustomErrorsProviderProps = {
+export type NovaConnectProviderErrorsProviderProps = {
+  /** `customization.errors` */
   customization?: ErrorsProviderCustomization;
 };
 
 /**
  * Context data passed to custom provider components
  */
-type ProviderContext = {
+export type NovaConnectProviderCustomizationContext = {
   /** Current wallet connection state */
   isConnected: boolean;
   /** Active wallet instance */
@@ -53,18 +55,25 @@ type ProviderContext = {
   connectionError: TuwaErrorState | undefined;
   /** All modal and UI states */
   modalStates: {
+    /** Whether the connect modal is open */
     isConnectModalOpen: boolean;
+    /** Whether the connected modal is open */
     isConnectedModalOpen: boolean;
+    /** Whether the desktop chain list is open */
     isChainsListOpen: boolean;
+    /** Whether the mobile chain dialog is open */
     isChainsListOpenMobile: boolean;
   };
   /** Current content types for modals */
   contentTypes: {
+    /** Screen of the connect modal */
     connectModal: ConnectContentType;
+    /** Screen of the connected modal */
     connectedModal: ConnectedContentType;
   };
   /** Button and transaction statuses */
   statuses: {
+    /** Transaction status of the connect button */
     connectedButton: ButtonTxStatus;
   };
 };
@@ -76,27 +85,65 @@ export type NovaConnectProviderCustomization = {
   /** Custom components */
   components?: {
     /** Custom labels provider component */
-    LabelsProvider?: ComponentType<CustomLabelsProviderProps>;
+    LabelsProvider?: ComponentType<NovaConnectProviderLabelsProviderProps>;
     /** Custom errors provider component */
-    ErrorsProvider?: ComponentType<CustomErrorsProviderProps>;
+    ErrorsProvider?: ComponentType<NovaConnectProviderErrorsProviderProps>;
   };
   /** Labels customization and merging strategy */
   labels?: {
-    /** Custom labels merging function */
+    /**
+     * Merges the `labels` prop into the defaults, instead of a deep merge.
+     *
+     * @param defaultLabels - The English defaults.
+     * @param userLabels - The `labels` prop (an empty object without it).
+     * @returns The merged labels.
+     */
     merge?: (defaultLabels: NovaConnectLabels, userLabels: Partial<NovaConnectLabels>) => NovaConnectLabels;
-    /** Transform final merged labels before use */
-    transform?: (mergedLabels: NovaConnectLabels, context: ProviderContext) => NovaConnectLabels;
+    /**
+     * Transforms the merged labels before they are provided.
+     *
+     * @param mergedLabels - The merged labels.
+     * @param context - State of the provider.
+     * @returns The final labels.
+     */
+    transform?: (
+      mergedLabels: NovaConnectLabels,
+      context: NovaConnectProviderCustomizationContext,
+    ) => NovaConnectLabels;
   };
   /** ErrorsProvider customization - passed through to ErrorsProvider */
   errors?: ErrorsProviderCustomization;
   /** Custom context value transformation */
   contextValue?: {
-    /** Transform context value before providing to children */
-    transform?: (defaultValue: NovaConnectProviderType, context: ProviderContext) => NovaConnectProviderType;
+    /**
+     * Transforms the value of the context before it is provided.
+     *
+     * @param defaultValue - The state of the provider.
+     * @param context - State of the provider for customization.
+     * @returns The context value.
+     */
+    transform?: (
+      defaultValue: NovaConnectProviderType,
+      context: NovaConnectProviderCustomizationContext,
+    ) => NovaConnectProviderType;
   };
   /** Custom rendering logic */
   rendering?: {
-    /** Custom provider tree structure */
+    /**
+     * Returns the rendered tree, instead of the default one. Keep the elements inside the context provider (the
+     * default tree and `MainContent` include it).
+     *
+     * @param defaultTree - The default tree: the context provider with the SIWX watcher, the errors provider, the
+     * labels provider with the app, and the two modals.
+     * @param components - The parts of the tree.
+     * @param components.ErrorsProvider - The errors provider element.
+     * @param components.LabelsProvider - The labels provider element with the app.
+     * @param components.MainContent - The same tree as `defaultTree`.
+     * @param components.ConnectModal - The connect modal (an empty fragment without chains).
+     * @param components.ConnectedModal - The connected modal (an empty fragment without chains).
+     * @param context - State of the provider.
+     * @returns The tree to render.
+     */
     providerTree?: (
       defaultTree: ReactNode,
       components: {
@@ -106,7 +153,7 @@ export type NovaConnectProviderCustomization = {
         ConnectModal: ReactNode;
         ConnectedModal: ReactNode;
       },
-      context: ProviderContext,
+      context: NovaConnectProviderCustomizationContext,
     ) => ReactNode;
   };
   /** Modal customizations */
@@ -119,7 +166,7 @@ export type NovaConnectProviderCustomization = {
 };
 
 /**
- * Extended props for NovaConnectProvider with full customization capabilities
+ * Props for the {@link NovaConnectProvider} component: `NovaConnectProviderProps` with `customization`.
  */
 export interface NovaConnectProviderPropsWithCustomization extends NovaConnectProviderProps {
   /** Comprehensive customization options for the provider and its sub-components */
@@ -131,14 +178,14 @@ export interface NovaConnectProviderPropsWithCustomization extends NovaConnectPr
 /**
  * Default labels provider component
  */
-const DefaultLabelsProvider = ({ labels, children }: CustomLabelsProviderProps) => {
+const DefaultLabelsProvider = ({ labels, children }: NovaConnectProviderLabelsProviderProps) => {
   return <NovaConnectLabelsProvider labels={labels as NovaConnectLabels}>{children}</NovaConnectLabelsProvider>;
 };
 
 /**
  * Default errors provider component
  */
-const DefaultErrorsProvider = ({ customization }: CustomErrorsProviderProps) => {
+const DefaultErrorsProvider = ({ customization }: NovaConnectProviderErrorsProviderProps) => {
   return <ErrorsProvider customization={customization} />;
 };
 
@@ -179,70 +226,44 @@ const defaultProviderTreeRenderer = (
     ConnectedModal: ReactNode;
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  context: ProviderContext,
+  context: NovaConnectProviderCustomizationContext,
 ): ReactNode => {
   return defaultTree;
 };
 
 /**
- * Main NovaConnect provider component with comprehensive customization capabilities.
+ * The provider of Nova Connect. Place it inside `SatelliteConnectProvider` (from `@tuwaio/nova-connect/satellite`): it
+ * reads the Satellite store. It keeps the UI state of the modals (read it with `useNovaConnect`), provides the labels
+ * (the `labels` prop merged into the English defaults), shows connection and network switch errors as toasts
+ * (`ErrorsProvider`), signs in with SIWX when `siwx` is set (`NovaSiwxWatcher`), and renders the connect and connected
+ * modals when `appChains` or `solanaRPCUrls` is set.
  *
- * This provider manages wallet connection state, error handling, internationalization,
- * modal states, and renders the modal components centrally while offering extensive
- * customization options for all sub-components and behaviors.
+ * @param props - See {@link NovaConnectProviderPropsWithCustomization}.
+ * @returns The provider tree.
  *
- * Features:
- * - Complete wallet connection state management
- * - Centralized modal rendering and state management
- * - Customizable error handling through ErrorsProvider
- * - Flexible internationalization system
- * - Modal and UI state coordination
- * - Extensive customization API for all aspects
- * - Custom component replacement capabilities
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <NovaConnectProvider
- *   store={store}
- *   appChains={[mainnet, sepolia, polygon]} // Viem chains
- *   solanaRPCUrls={{
- *     'mainnet': 'https://api.mainnet-beta.solana.com'
- *   }}
- * >
- *   <App />
- * </NovaConnectProvider>
- * ```
+ * import { NovaConnectProvider } from '@tuwaio/nova-connect';
+ * import type { ReactNode } from 'react';
+ * import { mainnet, polygon } from 'viem/chains';
  *
- * @example With customization
- * ```tsx
- * <NovaConnectProvider
- *   labels={customLabels}
- *   appChains={appChains}
- *   solanaRPCUrls={solanaRPCUrls}
- *   transactionPool={txPool}
- *   pulsarAdapter={adapters}
- *   withImpersonated
- *   withBalance
- *   withChain
- *   customization={{
- *     errors: {
- *       position: 'bottom-right',
- *       autoClose: 5000,
- *     },
- *     modals: {
- *       connectModal: {
- *         classNames: {
- *           container: () => 'custom-modal-style'
- *         }
- *       }
- *     }
- *   }}
- * >
- *   <App />
- * </NovaConnectProvider>
+ * export function WalletUI({ children }: { children: ReactNode }) {
+ *   return (
+ *     <NovaConnectProvider
+ *       appChains={[mainnet, polygon]}
+ *       solanaRPCUrls={{ devnet: 'https://api.devnet.solana.com' }}
+ *       withBalance
+ *       withChain
+ *       legal={{ termsUrl: 'https://example.com/terms', privacyUrl: 'https://example.com/privacy' }}
+ *       customization={{
+ *         modals: { connectModal: { classNames: { title: () => 'custom-title' } } },
+ *       }}
+ *     >
+ *       {children}
+ *     </NovaConnectProvider>
+ *   );
+ * }
  * ```
- *
- * @param props - Provider configuration and customization options
  */
 export function NovaConnectProvider({
   labels,
@@ -329,7 +350,7 @@ export function NovaConnectProvider({
 
   // Create provider context for custom handlers
   const providerContext = useMemo(
-    (): ProviderContext => ({
+    (): NovaConnectProviderCustomizationContext => ({
       isConnected,
       activeConnection,
       connectionError,
@@ -395,9 +416,12 @@ export function NovaConnectProvider({
       />
     ) : null;
 
+  // Without `siwx` the app does not use SIWX through Nova Connect: no watcher, no warnings about a missing verifier
+  const siwxWatcherElement = siwx ? <NovaSiwxWatcher {...siwx} /> : null;
+
   const mainContentElement = (
     <NovaConnectProviderContext.Provider value={contextValue}>
-      <NovaSiwxWatcher {...siwx} />
+      {siwxWatcherElement}
       {errorsProviderElement}
       {labelsProviderElement}
       {connectModalElement}
@@ -408,7 +432,7 @@ export function NovaConnectProvider({
   // Create default provider tree with modals
   const defaultProviderTree = (
     <NovaConnectProviderContext.Provider value={contextValue}>
-      <NovaSiwxWatcher {...siwx} />
+      {siwxWatcherElement}
       {errorsProviderElement}
       {labelsProviderElement}
       {connectModalElement}

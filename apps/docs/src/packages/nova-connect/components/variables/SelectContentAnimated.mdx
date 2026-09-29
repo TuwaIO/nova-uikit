@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/SelectContentAnimated" />
+
+# SelectContentAnimated
+
+> `const` **SelectContentAnimated**: `ForwardRefExoticComponent`\<[`SelectContentAnimatedProps`](?path=/docs/packages-nova-connect-components-interfaces-selectcontentanimatedprops--docs) & `RefAttributes`\<`Omit`\<`HTMLDivElement`, `"style"`\>\>\>
+
+Defined in: [packages/nova-connect/src/components/SelectContentAnimated.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/SelectContentAnimated.tsx#L68)
+
+The dropdown of a Radix Select (`@radix-ui/react-select`) with a Framer Motion open and close animation, a maximum
+height and the Nova scroll buttons. It renders `Select.Portal` and `Select.Content`, so use it inside
+`Select.Root`. `ChainSelector` uses it for the desktop chain list.
+
+Props: [SelectContentAnimatedProps](?path=/docs/packages-nova-connect-components-interfaces-selectcontentanimatedprops--docs); the ref is forwarded to `Select.Content`.
+
+## Example
+
+```tsx
+import * as Select from '@radix-ui/react-select';
+import { SelectContentAnimated } from '@tuwaio/nova-connect/components';
+
+export const OptionSelect = (
+  <Select.Root>
+    <Select.Trigger>Select an option</Select.Trigger>
+    <SelectContentAnimated maxHeight={400} animationDuration={0.3} contentClassName="novacon:p-2">
+      <Select.Item value="option1">Option 1</Select.Item>
+      <Select.Item value="option2">Option 2</Select.Item>
+    </SelectContentAnimated>
+  </Select.Root>
+);
+```

@@ -4,28 +4,30 @@
 
 import { cn, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
-import React, {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
-type SlideConfig = {
+/**
+ * A slide of {@link AboutWallets}.
+ */
+export type AboutWalletsSlideConfig = {
+  /** Unique ID. Slides `1` and `2` without `image` get the built-in images (loaded with a dynamic import). */
   id: number;
+  /** Image URL (an empty string shows a placeholder until the built-in image loads) */
   image: string;
+  /** Key of the Nova Connect labels with the slide title (for example `keyToNewInternet`) */
   titleKey: keyof Record<string, string>;
+  /** Key of the Nova Connect labels with the slide description */
   descriptionKey: keyof Record<string, string>;
 };
 
-type SlideDirection = -1 | 0 | 1;
+/**
+ * Direction of a slide change: `1` forward, `-1` back, `0` none yet.
+ */
+export type AboutWalletsSlideDirection = -1 | 0 | 1;
 
 type TouchState = {
   isDragging: boolean;
@@ -34,117 +36,289 @@ type TouchState = {
   threshold: number;
 };
 
-// --- ClassNames Type for customization propagation ---
-type AboutWalletsClassNames = {
+/**
+ * Class name generators of {@link AboutWallets}. Each one returns classes added to the default ones.
+ */
+export type AboutWalletsClassNames = {
+  /**
+   * Returns classes of the carousel section (before the `className` prop).
+   *
+   * @returns The classes.
+   */
   section?: () => string;
+  /**
+   * Returns classes of the slide container.
+   *
+   * @returns The classes.
+   */
   slideContainer?: () => string;
+  /**
+   * Returns classes of the current slide.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @param params.totalSlides - Number of slides.
+   * @returns The classes.
+   */
   slide?: (params: { slideIndex: number; totalSlides: number }) => string;
+  /**
+   * Returns classes of the image section of the default slide.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @returns The classes.
+   */
   imageSection?: (params: { slideIndex: number }) => string;
+  /**
+   * Returns classes of the image of the default image section.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @param params.imageLoaded - Whether the image has loaded (or failed to load).
+   * @returns The classes.
+   */
   image?: (params: { slideIndex: number; imageLoaded: boolean }) => string;
+  /**
+   * Returns classes of the content section of the default slide.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @returns The classes.
+   */
   contentSection?: (params: { slideIndex: number }) => string;
+  /**
+   * Returns classes of the slide title.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @returns The classes.
+   */
   title?: (params: { slideIndex: number }) => string;
+  /**
+   * Returns classes of the slide description.
+   *
+   * @param params - The slide.
+   * @param params.slideIndex - Index of the slide.
+   * @returns The classes.
+   */
   description?: (params: { slideIndex: number }) => string;
+  /**
+   * Returns classes of the navigation.
+   *
+   * @returns The classes.
+   */
   navigation?: () => string;
+  /**
+   * Returns classes of a slide indicator.
+   *
+   * @param params - The indicator.
+   * @param params.index - Index of the slide.
+   * @param params.isActive - Whether this is the current slide.
+   * @returns The classes.
+   */
   indicator?: (params: { index: number; isActive: boolean }) => string;
+  /**
+   * Returns classes of the visually hidden status announcer.
+   *
+   * @returns The classes.
+   */
   status?: () => string;
 };
 
 // --- Component Props Types ---
-type SectionProps = {
+/**
+ * Props for a custom carousel section (a `section` by default).
+ */
+export type AboutWalletsSectionProps = {
+  /** Classes from `classNames.section` and the `className` prop */
   className?: string;
+  /** The slide container, navigation, status and keyboard hint */
   children: React.ReactNode;
+  /**
+   * Keyboard navigation: arrows change the slide, Home and End go to the first and last slide, Space and Enter pause
+   * or resume auto-play.
+   *
+   * @param event - The keyboard event.
+   */
   onKeyDown?: (event: React.KeyboardEvent) => void;
+  /** `0` */
   tabIndex?: number;
+  /** `region` */
   role?: string;
+  /** `config.ariaLabels.carousel` or the `aboutWallets` label */
   'aria-label'?: string;
+  /** `carousel` */
   'aria-roledescription'?: string;
 } & React.RefAttributes<HTMLElement>;
 
-type SlideContainerProps = {
+/**
+ * Props for a custom slide container (the default one draws the stars background).
+ */
+export type AboutWalletsSlideContainerProps = {
+  /** Classes from `classNames.slideContainer` */
   className?: string;
+  /** The swipe area with the current slide */
   children: React.ReactNode;
+  /** `polite` */
   'aria-live'?: 'polite' | 'assertive' | 'off';
+  /** `false` */
   'aria-atomic'?: boolean;
 };
 
-type SlideProps = {
-  slide: SlideConfig;
+/**
+ * Props for a custom slide. The default one animates the slide with Framer Motion and renders the image and content
+ * sections.
+ */
+export type AboutWalletsSlideProps = {
+  /** The slide */
+  slide: AboutWalletsSlideConfig;
+  /** Index of the slide */
   slideIndex: number;
+  /** Number of slides */
   totalSlides: number;
-  direction: SlideDirection;
+  /** Direction of the change that showed this slide */
+  direction: AboutWalletsSlideDirection;
+  /** Whether the image of each slide (by index) has loaded or failed */
   imageLoadedStates: Record<number, boolean>;
+  /**
+   * Marks the image of a slide as loaded and calls `handlers.onImageLoad`.
+   *
+   * @param slideIndex - Index of the slide.
+   */
   onImageLoad: (slideIndex: number) => void;
+  /**
+   * Logs a warning, marks the image of a slide as loaded and calls `handlers.onImageError`.
+   *
+   * @param slideIndex - Index of the slide.
+   */
   onImageError: (slideIndex: number) => void;
+  /** Classes from `classNames.slide` */
   className?: string;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** `variants.slide` or the default variants */
   slideVariants?: Variants;
+  /** `animation.slideTransition` or the default spring */
   slideTransition?: Transition;
+  /** `variants.image` or the default variants */
   imageVariants?: Variants;
+  /** `animation.imageTransition` or the default transition */
   imageTransition?: Transition;
   /** ClassNames for nested customization */
   classNames?: AboutWalletsClassNames;
   /** Custom components */
   components?: {
-    ImageSection?: ComponentType<ImageSectionProps>;
-    ContentSection?: ComponentType<ContentSectionProps>;
+    /** `components.ImageSection` */
+    ImageSection?: ComponentType<AboutWalletsImageSectionProps>;
+    /** `components.ContentSection` */
+    ContentSection?: ComponentType<AboutWalletsContentSectionProps>;
   };
 };
 
-type ImageSectionProps = {
-  slide: SlideConfig;
+/**
+ * Props for a custom image section of a slide.
+ */
+export type AboutWalletsImageSectionProps = {
+  /** The slide */
+  slide: AboutWalletsSlideConfig;
+  /** Whether the image has loaded or failed (the default section shows a placeholder until then) */
   imageLoaded: boolean;
+  /** Call when the image loads */
   onImageLoad: () => void;
+  /** Call when the image fails to load */
   onImageError: () => void;
+  /** Index of the slide */
   slideIndex: number;
+  /** Classes added to the defaults */
   className?: string;
+  /** The Nova Connect labels (the title is the `alt` text of the image) */
   labels: Record<string, string>;
+  /** Framer Motion variants of the image */
   imageVariants?: Variants;
+  /** Framer Motion transition of the image */
   imageTransition?: Transition;
   /** ClassNames for nested customization */
   classNames?: AboutWalletsClassNames;
 };
 
-type ContentSectionProps = {
-  slide: SlideConfig;
+/**
+ * Props for a custom content section of a slide (title and description).
+ */
+export type AboutWalletsContentSectionProps = {
+  /** The slide */
+  slide: AboutWalletsSlideConfig;
+  /** Index of the slide */
   slideIndex: number;
+  /** Classes added to the defaults */
   className?: string;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
   /** ClassNames for nested customization */
   classNames?: AboutWalletsClassNames;
 };
 
-type NavigationProps = {
-  slides: SlideConfig[];
+/**
+ * Props for a custom navigation (the slide indicators).
+ */
+export type AboutWalletsNavigationProps = {
+  /** All slides */
+  slides: AboutWalletsSlideConfig[];
+  /** Index of the current slide */
   currentSlide: number;
+  /**
+   * Goes to a slide, pauses auto-play and calls `handlers.onSlideChange` and `handlers.onUserInteraction`.
+   *
+   * @param index - Index of the slide.
+   */
   onSlideChange: (index: number) => void;
+  /** Classes from `classNames.navigation` */
   className?: string;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
   /** ClassNames for nested customization */
   classNames?: AboutWalletsClassNames;
   /** Custom indicator component */
-  IndicatorComponent?: ComponentType<IndicatorProps>;
+  IndicatorComponent?: ComponentType<AboutWalletsIndicatorProps>;
 };
 
-type IndicatorProps = {
-  slide: SlideConfig;
+/**
+ * Props for a custom slide indicator.
+ */
+export type AboutWalletsIndicatorProps = {
+  /** The slide */
+  slide: AboutWalletsSlideConfig;
+  /** Index of the slide */
   index: number;
+  /** Whether this is the current slide */
   isActive: boolean;
+  /** Goes to the slide */
   onClick: () => void;
+  /** Classes from `classNames.indicator` */
   className?: string;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
 };
 
-type StatusProps = {
+/**
+ * Props for a custom status announcer (a visually hidden live region by default).
+ */
+export type AboutWalletsStatusProps = {
+  /** Index of the current slide */
   currentSlide: number;
+  /** Number of slides */
   totalSlides: number;
-  currentSlideData: SlideConfig;
+  /** The current slide */
+  currentSlideData: AboutWalletsSlideConfig;
+  /** Whether auto-play is on */
   isAutoPlaying: boolean;
+  /** Classes from `classNames.status` */
   className?: string;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
 };
 
 // --- Default slide configuration ---
-const DEFAULT_SLIDES_CONFIG: SlideConfig[] = [
+const DEFAULT_SLIDES_CONFIG: AboutWalletsSlideConfig[] = [
   {
     id: 1,
     image: '', // Loaded dynamically
@@ -161,7 +335,7 @@ const DEFAULT_SLIDES_CONFIG: SlideConfig[] = [
 
 // --- Default motion variants ---
 const DEFAULT_SLIDE_VARIANTS: Variants = {
-  enter: (direction: SlideDirection) => ({
+  enter: (direction: AboutWalletsSlideDirection) => ({
     x: direction > 0 ? '15%' : '-15%',
     opacity: 0,
   }),
@@ -170,7 +344,7 @@ const DEFAULT_SLIDE_VARIANTS: Variants = {
     x: '0%',
     opacity: 1,
   },
-  exit: (direction: SlideDirection) => ({
+  exit: (direction: AboutWalletsSlideDirection) => ({
     zIndex: 0,
     x: direction < 0 ? '15%' : '-15%',
     opacity: 0,
@@ -189,8 +363,6 @@ const DEFAULT_IMAGE_VARIANTS: Variants = {
 // --- Touch configuration ---
 const TOUCH_CONFIG = {
   threshold: 50,
-  velocityThreshold: 500,
-  dampingFactor: 0.3,
 } as const;
 
 // --- Animation configuration ---
@@ -207,33 +379,29 @@ const ANIMATION_CONFIG = {
 } as const;
 
 /**
- * Customization options for AboutWallets component
+ * Customization options of {@link AboutWallets}.
  */
 export type AboutWalletsCustomization = {
   /** Override slide configuration */
-  slidesConfig?: SlideConfig[];
+  slidesConfig?: AboutWalletsSlideConfig[];
   /** Custom components */
   components?: {
     /** Custom section wrapper */
-    Section?: ComponentType<SectionProps>;
+    Section?: ComponentType<AboutWalletsSectionProps>;
     /** Custom slide container */
-    SlideContainer?: ComponentType<SlideContainerProps>;
+    SlideContainer?: ComponentType<AboutWalletsSlideContainerProps>;
     /** Custom slide component */
-    Slide?: ComponentType<SlideProps>;
+    Slide?: ComponentType<AboutWalletsSlideProps>;
     /** Custom image section */
-    ImageSection?: ComponentType<ImageSectionProps>;
+    ImageSection?: ComponentType<AboutWalletsImageSectionProps>;
     /** Custom content section */
-    ContentSection?: ComponentType<ContentSectionProps>;
+    ContentSection?: ComponentType<AboutWalletsContentSectionProps>;
     /** Custom navigation */
-    Navigation?: ComponentType<NavigationProps>;
+    Navigation?: ComponentType<AboutWalletsNavigationProps>;
     /** Custom indicator */
-    Indicator?: ComponentType<IndicatorProps>;
+    Indicator?: ComponentType<AboutWalletsIndicatorProps>;
     /** Custom status announcer */
-    Status?: ComponentType<StatusProps>;
-    /** Custom stars background */
-    StarsBackground?: ComponentType<ComponentPropsWithoutRef<typeof StarsBackground>>;
-    /** Custom motion container */
-    MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
+    Status?: ComponentType<AboutWalletsStatusProps>;
   };
   /** Custom class name generators */
   classNames?: AboutWalletsClassNames;
@@ -246,9 +414,9 @@ export type AboutWalletsCustomization = {
   };
   /** Custom animation configuration */
   animation?: {
-    /** Auto-play interval in milliseconds */
+    /** Auto-play interval in milliseconds (default: `25000`) */
     autoPlayInterval?: number;
-    /** Resume delay after user interaction in milliseconds */
+    /** Delay before auto-play resumes after the user changes the slide, in milliseconds (default: `10000`) */
     resumeDelay?: number;
     /** Slide transition configuration */
     slideTransition?: Transition;
@@ -257,63 +425,73 @@ export type AboutWalletsCustomization = {
   };
   /** Touch interaction configuration */
   touch?: {
-    /** Enable/disable touch interactions */
+    /** Whether swipes change the slide (default: `true`) */
     enabled?: boolean;
-    /** Minimum distance to trigger slide change */
+    /** Minimum swipe distance in pixels to change the slide (default: `50`) */
     threshold?: number;
-    /** Minimum velocity for quick swipe */
-    velocityThreshold?: number;
-    /** How much to dampen the drag */
-    dampingFactor?: number;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for slide change */
+    /**
+     * Called when the user changes the slide (indicators, keys, swipes), not on auto-play.
+     *
+     * @param index - Index of the new slide.
+     */
     onSlideChange?: (index: number) => void;
-    /** Custom handler for auto-play state change */
+    /**
+     * Called when the user pauses or resumes auto-play with Space or Enter.
+     *
+     * @param isPlaying - Whether auto-play is now on.
+     */
     onAutoPlayChange?: (isPlaying: boolean) => void;
-    /** Custom handler for user interaction */
+    /** Called when the user changes the slide or touches the carousel */
     onUserInteraction?: () => void;
-    /** Custom handler for image load */
+    /**
+     * Called when the image of a slide loads.
+     *
+     * @param slideIndex - Index of the slide.
+     */
     onImageLoad?: (slideIndex: number) => void;
-    /** Custom handler for image error */
+    /**
+     * Called when the image of a slide fails to load.
+     *
+     * @param slideIndex - Index of the slide.
+     */
     onImageError?: (slideIndex: number) => void;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable auto-play */
+    /** Whether to disable auto-play (default: `false`) */
     disableAutoPlay?: boolean;
-    /** Initial slide index */
+    /** Initial slide index (default: `0`) */
     initialSlide?: number;
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the carousel (default: the `aboutWallets` label) */
       carousel?: string;
-      slide?: (slideIndex: number, totalSlides: number) => string;
-      navigation?: string;
-      indicator?: (slideIndex: number, slideTitle: string) => string;
     };
   };
 };
 
 /**
- * Props for the AboutWallets component
+ * Props for the {@link AboutWallets} component.
  */
 export interface AboutWalletsProps {
-  /** Additional CSS classes */
+  /** Classes added to the carousel section */
   className?: string;
   /** Customization options */
   customization?: AboutWalletsCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultSection = forwardRef<HTMLElement, SectionProps>(({ children, className, ...props }, ref) => (
+const DefaultSection = forwardRef<HTMLElement, AboutWalletsSectionProps>(({ children, className, ...props }, ref) => (
   <section ref={ref} className={cn('novacon:relative novacon:m-[-16px]', className)} {...props}>
     {children}
   </section>
 ));
 DefaultSection.displayName = 'DefaultSection';
 
-const DefaultSlideContainer: React.FC<SlideContainerProps> = ({ children, className, ...props }) => (
+const DefaultSlideContainer: React.FC<AboutWalletsSlideContainerProps> = ({ children, className, ...props }) => (
   <div className={cn('novacon:relative novacon:z-1 novacon:overflow-hidden novacon:h-full', className)} {...props}>
     <StarsBackground starsCount={50} />
     <div
@@ -325,7 +503,7 @@ const DefaultSlideContainer: React.FC<SlideContainerProps> = ({ children, classN
   </div>
 );
 
-const DefaultImageSection: React.FC<ImageSectionProps> = ({
+const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
   slide,
   imageLoaded,
   onImageLoad,
@@ -395,7 +573,13 @@ const DefaultImageSection: React.FC<ImageSectionProps> = ({
   );
 };
 
-const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideIndex, className, labels, classNames }) => {
+const DefaultContentSection: React.FC<AboutWalletsContentSectionProps> = ({
+  slide,
+  slideIndex,
+  className,
+  labels,
+  classNames,
+}) => {
   // Compute custom title and description classes if provided
   const titleClassName = classNames?.title?.({ slideIndex });
   const descriptionClassName = classNames?.description?.({ slideIndex });
@@ -427,7 +611,14 @@ const DefaultContentSection: React.FC<ContentSectionProps> = ({ slide, slideInde
   );
 };
 
-const DefaultIndicator: React.FC<IndicatorProps> = ({ slide, index, isActive, onClick, className, labels }) => (
+const DefaultIndicator: React.FC<AboutWalletsIndicatorProps> = ({
+  slide,
+  index,
+  isActive,
+  onClick,
+  className,
+  labels,
+}) => (
   <button
     onClick={onClick}
     className={cn(
@@ -442,12 +633,12 @@ const DefaultIndicator: React.FC<IndicatorProps> = ({ slide, index, isActive, on
     role="tab"
     aria-selected={isActive}
     aria-controls={`slide-${index}`}
-    aria-label={`Go to slide ${index + 1}: ${labels[slide.titleKey as string]}`}
+    aria-label={formatLabel(labels.goToSlide, { index: index + 1, title: labels[slide.titleKey as string] })}
     tabIndex={isActive ? 0 : -1}
   />
 );
 
-const DefaultNavigation: React.FC<NavigationProps> = ({
+const DefaultNavigation: React.FC<AboutWalletsNavigationProps> = ({
   slides,
   currentSlide,
   onSlideChange,
@@ -462,7 +653,7 @@ const DefaultNavigation: React.FC<NavigationProps> = ({
       className,
     )}
     role="tablist"
-    aria-label={`${labels.aboutWallets} navigation`}
+    aria-label={labels.carouselNavigation}
   >
     <div
       className="novacon:absolute novacon:left-1/2 novacon:top-1/2 novacon:transform novacon:-translate-x-1/2 novacon:-translate-y-1/2 novacon:z-1 novacon:h-[2px] novacon:w-full novacon:bg-[var(--tuwa-border-primary)]"
@@ -484,7 +675,7 @@ const DefaultNavigation: React.FC<NavigationProps> = ({
   </nav>
 );
 
-const DefaultSlide: React.FC<SlideProps> = ({
+const DefaultSlide: React.FC<AboutWalletsSlideProps> = ({
   slide,
   slideIndex,
   totalSlides,
@@ -516,7 +707,7 @@ const DefaultSlide: React.FC<SlideProps> = ({
       transition={slideTransition}
       className={cn('novacon:flex novacon:flex-col novacon:justify-start novacon:w-full novacon:h-full', className)}
       role="tabpanel"
-      aria-label={`Slide ${slideIndex + 1} of ${totalSlides}`}
+      aria-label={formatLabel(labels.slideOfTotal, { index: slideIndex + 1, total: totalSlides })}
     >
       <ImageSectionComponent
         slide={slide}
@@ -534,7 +725,7 @@ const DefaultSlide: React.FC<SlideProps> = ({
   );
 };
 
-const DefaultStatus: React.FC<StatusProps> = ({
+const DefaultStatus: React.FC<AboutWalletsStatusProps> = ({
   currentSlide,
   totalSlides,
   currentSlideData,
@@ -543,44 +734,34 @@ const DefaultStatus: React.FC<StatusProps> = ({
   labels,
 }) => (
   <div className={cn('novacon:sr-only', className)} aria-live="polite" role="status">
-    {`Slide ${currentSlide + 1} of ${totalSlides}: ${labels[currentSlideData.titleKey as string]}`}
-    {isAutoPlaying ? ' (Auto-playing)' : ' (Paused)'}
+    {`${formatLabel(labels.slideOfTotal, { index: currentSlide + 1, total: totalSlides })}: ${labels[currentSlideData.titleKey as string]}`}
+    {` (${isAutoPlaying ? labels.autoPlaying : labels.paused})`}
   </div>
 );
 
 /**
- * Educational carousel component about wallet functionality with comprehensive customization and touch support.
+ * The "About wallets" carousel of the connect modal: slides explaining wallets, with Framer Motion transitions,
+ * indicators, swipes, keyboard navigation and auto-play (paused after the user changes the slide, resumed after
+ * `animation.resumeDelay`). The built-in slide images are base64 modules of the package, loaded with a dynamic import
+ * (no external host). Texts come from the Nova Connect labels.
  *
- * This component provides an interactive slideshow explaining wallet benefits:
- * - Animated slide transitions with Framer Motion
- * - Touch/swipe gestures for mobile navigation
- * - Keyboard navigation support for accessibility
- * - Auto-play functionality with pause on user interaction
- * - Internationalization support with translation keys
- * - WCAG compliant with proper ARIA labels and semantics
- * - Responsive design with embedded base64 images
- * - Visual indicators for current slide position
- * - Full customization of all child components
- * - Performance-optimized with memoized calculations
+ * Props: {@link AboutWalletsProps}; the ref is forwarded to the carousel section.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <AboutWallets />
- * ```
+ * import { AboutWallets } from '@tuwaio/nova-connect/components';
  *
- * @example With customization via provider
- * ```tsx
- * <AboutWallets
- *   customization={{
- *     classNames: {
- *       section: () => 'my-custom-section',
- *       title: ({ slideIndex }) => slideIndex === 0 ? 'text-blue-500' : 'text-green-500',
- *       description: () => 'text-gray-400',
- *       imageSection: () => 'bg-gradient-to-r from-purple-500 to-pink-500',
- *       indicator: ({ isActive }) => isActive ? 'bg-blue-500 w-8' : 'bg-gray-300',
- *     },
- *   }}
- * />
+ * export const Carousel = (
+ *   <AboutWallets
+ *     customization={{
+ *       classNames: {
+ *         title: ({ slideIndex }) => (slideIndex === 0 ? 'text-blue-500' : 'text-green-500'),
+ *         indicator: ({ isActive }) => (isActive ? 'bg-blue-500 w-8' : 'bg-gray-300'),
+ *       },
+ *       config: { disableAutoPlay: true },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ className, customization }, ref) => {
@@ -647,7 +828,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
 
   // State management
   const [currentSlide, setCurrentSlide] = useState(initialSlide);
-  const [direction, setDirection] = useState<SlideDirection>(0);
+  const [direction, setDirection] = useState<AboutWalletsSlideDirection>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(!disableAutoPlay);
   const [userInteracted, setUserInteracted] = useState(false);
   const [imageLoadedStates, setImageLoadedStates] = useState<Record<number, boolean>>({});
@@ -669,7 +850,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
     (index: number) => {
       if (index === currentSlide || index < 0 || index >= slidesConfig.length) return;
 
-      const newDirection: SlideDirection = index > currentSlide ? 1 : -1;
+      const newDirection: AboutWalletsSlideDirection = index > currentSlide ? 1 : -1;
       setDirection(newDirection);
       setCurrentSlide(index);
       setUserInteracted(true);
@@ -848,7 +1029,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
       className={cn(customClassNames?.section?.(), className)}
       role="region"
       aria-label={ariaLabels?.carousel ?? labels.aboutWallets}
-      aria-roledescription="carousel"
+      aria-roledescription={labels.carousel}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -941,10 +1122,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
         labels={labels}
       />
 
-      <div className="novacon:sr-only">
-        Use arrow keys to navigate slides, Space or Enter to pause/resume auto-play, Home to go to first slide, End to
-        go to last slide. Swipe left or right to navigate on touch devices.
-      </div>
+      <div className="novacon:sr-only">{labels.carouselInstructions}</div>
     </CustomSection>
   );
 });

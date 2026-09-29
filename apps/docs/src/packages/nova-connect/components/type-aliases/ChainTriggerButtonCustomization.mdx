@@ -1,0 +1,262 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ChainTriggerButtonCustomization" />
+
+# ChainTriggerButtonCustomization
+
+> **ChainTriggerButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:162](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L162)
+
+Customization options for the ChainTriggerButton.
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"button"`\>\>
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L164)
+
+Overrides for the button/trigger props
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:177](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L177)
+
+Custom CSS class generators
+
+#### arrowWrapper?
+
+> `optional` **arrowWrapper?**: (`params`) => `string`
+
+Returns the classes of the arrow wrapper (empty by default).
+
+##### Parameters
+
+###### params
+
+The trigger state.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile trigger.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### button?
+
+> `optional` **button?**: (`params`) => `string`
+
+Returns the classes of the trigger button, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The trigger state.
+
+###### hasMultipleChains
+
+`boolean`
+
+Whether more than one chain is available (always `true`: with one chain,
+`ChainSelector` renders no trigger).
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile trigger.
+
+###### isOpen
+
+`boolean`
+
+Whether the chain list is open.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### innerContent?
+
+> `optional` **innerContent?**: (`params`) => `string`
+
+Returns the classes of the content inside the button, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The trigger state.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile trigger.
+
+###### isOpen
+
+`boolean`
+
+Whether the chain list is open.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### wrapper?
+
+> `optional` **wrapper?**: (`params`) => `string`
+
+Returns the classes of the wrapper `div`, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The trigger state.
+
+###### isMobile
+
+`boolean`
+
+Whether this is the mobile trigger.
+
+###### isOpen
+
+`boolean`
+
+Whether the chain list is open.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:168](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L168)
+
+Custom component overrides
+
+#### Arrow?
+
+> `optional` **Arrow?**: `ComponentType`\<[`ChainSelectorTriggerArrowProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectortriggerarrowprops--docs)\>
+
+Custom arrow/chevron component
+
+#### Content?
+
+> `optional` **Content?**: `ComponentType`\<[`ChainSelectorTriggerContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectortriggercontentprops--docs)\>
+
+Custom trigger content wrapper
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`ChainSelectorTriggerIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectortriggericonprops--docs)\>
+
+Custom chain icon component
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:217](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L217)
+
+Custom event handlers
+
+#### onClick?
+
+> `optional` **onClick?**: (`originalHandler`, `event`, `context`) => `void`
+
+Wraps the click handler of the mobile trigger: call `originalHandler()` to open the chain dialog. The desktop
+trigger opens its list through Radix Select.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Opens the chain list.
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+The click event.
+
+###### context
+
+[`ChainSelectorTriggerButtonContext`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectortriggerbuttoncontext--docs)
+
+State of the trigger.
+
+##### Returns
+
+`void`
+
+#### onKeyDown?
+
+> `optional` **onKeyDown?**: (`originalHandler`, `event`, `context`) => `void`
+
+Wraps the key handler: call `originalHandler(event)` to toggle the list on Enter and Space and to close it on
+Escape.
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`React.KeyboardEvent`
+
+The keyboard event.
+
+###### context
+
+[`ChainSelectorTriggerButtonContext`](?path=/docs/packages-nova-connect-components-type-aliases-chainselectortriggerbuttoncontext--docs)
+
+State of the trigger.
+
+##### Returns
+
+`void`
+
+***
+
+### selectTriggerProps?
+
+> `optional` **selectTriggerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `Select.Trigger`\>\>
+
+Defined in: [packages/nova-connect/src/components/Chains/ChainSelector.tsx:166](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ChainSelector.tsx#L166)
+
+Overrides for the Select.Trigger props (desktop only)

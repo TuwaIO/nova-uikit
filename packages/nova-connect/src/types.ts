@@ -1,42 +1,45 @@
 /**
- * @description
- * This interface provides default fallback types for chain configurations.
- * Chain-specific packages will use module augmentation to override these
- * with more specific types while maintaining backward compatibility.
- *
- * Default values are `any` to ensure the system works without specific
- * chain packages, but gets enhanced type safety when they are installed.
+ * Chain configuration types of the networks the app imports. Importing `@tuwaio/nova-connect/evm` adds `appChains`
+ * (the viem chains of your wagmi config, `readonly [Chain, ...Chain[]]`); importing `@tuwaio/nova-connect/solana` adds
+ * `solanaRPCUrls` (`Partial<Record<SolanaClusterMoniker, string>>` from `@tuwaio/orbit-solana`). Read the resulting
+ * types through {@link NovaConnectAppChains} and {@link NovaConnectSolanaRPCUrls}.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface NovaConnectChainConfigTypes {}
+
+/**
+ * Type of `appChains`: the viem chains (`readonly [Chain, ...Chain[]]`) when `@tuwaio/nova-connect/evm` is imported,
+ * otherwise a list of objects with a numeric `id` (a list of viem chains fits too).
+ */
+export type NovaConnectAppChains = NovaConnectChainConfigTypes extends { appChains: infer T }
+  ? T
+  : readonly { readonly id: number }[];
+
+/**
+ * Type of `solanaRPCUrls`: an RPC URL for each cluster moniker (`Partial<Record<SolanaClusterMoniker, string>>`) when
+ * `@tuwaio/nova-connect/solana` is imported, otherwise an RPC URL for each cluster name.
+ */
+export type NovaConnectSolanaRPCUrls = NovaConnectChainConfigTypes extends { solanaRPCUrls: infer T }
+  ? T
+  : Readonly<Partial<Record<string, string>>>;
+
+/**
+ * Chain configuration of the app, passed to `NovaConnectProvider` as `appChains` and `solanaRPCUrls`. The provider
+ * renders the connect and connected modals only when at least one of them is set, and a wallet connects to the first
+ * EVM chain or the first Solana cluster of these lists.
  */
 export interface AllChainConfigs {
-  /**
-   * App chains configuration - defaults to any, gets enhanced by chain-specific packages
-   * @default any - Will be typed as `readonly [Chain, ...Chain[]]` when viem is available
-   */
-  // eslint-disable-next-line
-  appChains?: any;
+  /** EVM chains of the app, the viem chains of your wagmi config. See {@link NovaConnectAppChains}. */
+  appChains?: NovaConnectAppChains;
 
   /**
-   * Solana RPC URLs configuration - defaults to any, gets enhanced by Solana packages
-   * @default any - Will be typed as `Partial<Record<SolanaClusterMoniker, string>>` when @tuwaio/orbit-solana is available
+   * Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+   * {@link NovaConnectSolanaRPCUrls}.
    */
-  // eslint-disable-next-line
-  solanaRPCUrls?: any;
+  solanaRPCUrls?: NovaConnectSolanaRPCUrls;
 }
 
 /**
- * Union type for all supported chain configurations.
- * Gets automatically extended when packages augment AllChainConfigs.
- *
- * @example
- * ```typescript
- * // Without specific packages - uses any types
- * const config: InitialChains = {
- *   appChains: [], // any
- *   solanaRPCUrls: {} // any
- * }
- *
- * // With viem package installed - gets proper Chain[] typing
- * // With @tuwaio/orbit-solana package installed - gets proper SolanaClusterMoniker typing
- * ```
+ * Alias of {@link AllChainConfigs}.
  */
 export type InitialChains = AllChainConfigs;

@@ -1,0 +1,103 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalFooterExplorerLinkProps" />
+
+# ConnectedModalFooterExplorerLinkProps
+
+> **ConnectedModalFooterExplorerLinkProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L46)
+
+Props for a custom explorer link.
+
+## Properties
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L60)
+
+`explorer-description`
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L56)
+
+Classes from `classNames.explorerLink`, added to `standardButtonClasses` of `@tuwaio/nova-core`
+
+***
+
+### data-testid?
+
+> `optional` **data-testid?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L58)
+
+`config.explorerLinkTestId` or `explorer-link`
+
+***
+
+### href
+
+> **href**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L48)
+
+Explorer page of the active address, or `config.explorerUrlFallback`
+
+***
+
+### isValidUrl
+
+> **isValidUrl**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L54)
+
+Whether the chain has an explorer (the default link is a disabled button otherwise)
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L50)
+
+The Nova Connect labels, with `labels.explorerText` applied
+
+***
+
+### onClick?
+
+> `optional` **onClick?**: (`event`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L66)
+
+Calls `handlers.onExplorerClick`; the link still opens in a new tab.
+
+#### Parameters
+
+##### event
+
+`React.MouseEvent`\<`HTMLAnchorElement`\>
+
+The click event.
+
+#### Returns
+
+`void`
+
+***
+
+### walletAddress
+
+> **walletAddress**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L52)
+
+The active address

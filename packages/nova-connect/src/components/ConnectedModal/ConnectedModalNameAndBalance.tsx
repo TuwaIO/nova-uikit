@@ -1,5 +1,6 @@
 /**
- * @file ConnectedModalNameAndBalance component with comprehensive customization options for wallet name and balance display.
+ * @file ConnectedModalNameAndBalance component with comprehensive customization options for wallet name and balance
+ * display.
  */
 
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
@@ -9,6 +10,7 @@ import { AnimatePresence, type Easing, motion, type Variants } from 'framer-moti
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { BalanceDisplay as BalanceDisplayComponent, type BalanceDisplayCustomization } from '../BalanceDisplay';
 import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';
@@ -33,51 +35,87 @@ const DEFAULT_CHECK_ICON_ANIMATION_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type WalletNameDisplayProps = {
+/**
+ * Props for a custom wallet name.
+ */
+export type ConnectedModalNameAndBalanceWalletNameDisplayProps = {
+  /** The `ensNameAbbreviated` prop (the default heading is empty without it) */
   ensNameAbbreviated?: string;
+  /** The active connection */
   activeConnection: BaseConnector;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
-  className?: string;
-};
-
-type CopyButtonProps = {
-  isCopied: boolean;
-  onCopy: () => Promise<void>;
-  activeConnection: BaseConnector;
-  labels: Record<string, string>;
-  className?: string;
-  disabled?: boolean;
-};
-
-type BalanceDisplayProps = {
-  balance?: ConnectedModalMainContentProps['balance'];
-  balanceLoading: boolean;
-  refetch: () => void;
-  labels: Record<string, string>;
-  className?: string;
-  /** Customization for the BalanceDisplay component */
-  customization?: BalanceDisplayCustomization;
-};
-
-type ScreenReaderFeedbackProps = {
-  isCopied: boolean;
-  activeConnection: BaseConnector;
-  labels: Record<string, string>;
-  className?: string;
-};
-
-type LiveRegionProps = {
-  balanceLoading: boolean;
-  balance?: ConnectedModalMainContentProps['balance'];
-  labels: Record<string, string>;
+  /** Classes from `classNames.walletNameDisplay` */
   className?: string;
 };
 
 /**
- * Customization options for ConnectedModalNameAndBalance component
+ * Props for a custom copy button.
+ */
+export type ConnectedModalNameAndBalanceCopyButtonProps = {
+  /** Whether the address was copied in the last 2 seconds */
+  isCopied: boolean;
+  /** Copies the active address to the clipboard and calls `handlers.onCopySuccess` */
+  onCopy: () => Promise<void>;
+  /** The active connection */
+  activeConnection: BaseConnector;
+  /** The Nova Connect labels */
+  labels: Record<string, string>;
+  /** Classes from `classNames.copyButton` */
+  className?: string;
+  /** Whether the connection has no address */
+  disabled?: boolean;
+};
+
+/**
+ * Props for a custom balance (the default one renders `BalanceDisplay` with a refresh button).
+ */
+export type ConnectedModalNameAndBalanceBalanceDisplayProps = {
+  /** The `balance` prop */
+  balance?: ConnectedModalMainContentProps['balance'];
+  /** The `balanceLoading` prop */
+  balanceLoading: boolean;
+  /** The `refetch` prop */
+  refetch: () => void;
+  /** The Nova Connect labels */
+  labels: Record<string, string>;
+  /** Customization for the BalanceDisplay component */
+  customization?: BalanceDisplayCustomization;
+};
+
+/**
+ * Props for a custom screen reader announcement of the copy (a visually hidden live region by default).
+ */
+export type ConnectedModalNameAndBalanceScreenReaderFeedbackProps = {
+  /** Whether the address was just copied */
+  isCopied: boolean;
+  /** The active connection */
+  activeConnection: BaseConnector;
+  /** The Nova Connect labels */
+  labels: Record<string, string>;
+  /** Classes from `classNames.screenReaderFeedback` */
+  className?: string;
+};
+
+/**
+ * Props for a custom screen reader announcement of the balance (a visually hidden live region by default).
+ */
+export type ConnectedModalNameAndBalanceLiveRegionProps = {
+  /** The `balanceLoading` prop */
+  balanceLoading: boolean;
+  /** The `balance` prop */
+  balance?: ConnectedModalMainContentProps['balance'];
+  /** The Nova Connect labels */
+  labels: Record<string, string>;
+  /** Classes from `classNames.liveRegion` */
+  className?: string;
+};
+
+/**
+ * Customization options of {@link ConnectedModalNameAndBalance}.
  */
 export type ConnectedModalNameAndBalanceCustomization = {
-  /** Override root container props */
+  /** Props of the `section` element (the component props, `className`, `role` and `aria-label` take precedence) */
   containerProps?: Partial<
     Omit<
       ComponentPropsWithoutRef<'section'>,
@@ -98,52 +136,80 @@ export type ConnectedModalNameAndBalanceCustomization = {
   /** Custom components */
   components?: {
     /** Custom wallet name display component */
-    WalletNameDisplay?: ComponentType<WalletNameDisplayProps>;
+    WalletNameDisplay?: ComponentType<ConnectedModalNameAndBalanceWalletNameDisplayProps>;
     /** Custom copy button component */
-    CopyButton?: ComponentType<CopyButtonProps>;
+    CopyButton?: ComponentType<ConnectedModalNameAndBalanceCopyButtonProps>;
     /** Custom balance display component */
-    BalanceDisplay?: ComponentType<BalanceDisplayProps>;
+    BalanceDisplay?: ComponentType<ConnectedModalNameAndBalanceBalanceDisplayProps>;
     /** Custom screen reader feedback component */
-    ScreenReaderFeedback?: ComponentType<ScreenReaderFeedbackProps>;
+    ScreenReaderFeedback?: ComponentType<ConnectedModalNameAndBalanceScreenReaderFeedbackProps>;
     /** Custom live region component */
-    LiveRegion?: ComponentType<LiveRegionProps>;
+    LiveRegion?: ComponentType<ConnectedModalNameAndBalanceLiveRegionProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the section, instead of the default ones and the `className` prop.
+     *
+     * @param params - The section state.
+     * @param params.hasActiveWallet - Always `true` (nothing is rendered without a connected wallet).
+     * @param params.isCopied - Whether the address was just copied.
+     * @param params.balanceLoading - The `balanceLoading` prop.
+     * @param params.hasBalance - Whether `balance` has a value and a symbol.
+     * @returns The classes.
+     */
     container?: (params: {
       hasActiveWallet: boolean;
       isCopied: boolean;
       balanceLoading: boolean;
       hasBalance: boolean;
     }) => string;
-    /** Function to generate wallet name header container classes */
+    /**
+     * Returns classes of the row with the name and the copy button, added to the default ones.
+     *
+     * @returns The classes.
+     */
     walletNameHeaderContainer?: () => string;
-    /** Function to generate wallet name display classes */
+    /**
+     * Returns classes added to the wallet name.
+     *
+     * @param params - The name.
+     * @param params.ensNameAbbreviated - The `ensNameAbbreviated` prop.
+     * @returns The classes.
+     */
     walletNameDisplay?: (params: { ensNameAbbreviated?: string }) => string;
-    /** Function to generate copy button classes */
+    /**
+     * Returns classes added to the copy button.
+     *
+     * @param params - The button state.
+     * @param params.isCopied - Whether the address was just copied.
+     * @param params.disabled - Whether the connection has no address.
+     * @returns The classes.
+     */
     copyButton?: (params: { isCopied: boolean; disabled: boolean }) => string;
-    /** Function to generate copy icon classes */
-    copyIcon?: () => string;
-    /** Function to generate check icon classes */
-    checkIcon?: () => string;
-    /** Function to generate balance container wrapper classes */
+    /**
+     * Returns classes of the balance row, added to the default ones.
+     *
+     * @returns The classes.
+     */
     balanceContainer?: () => string;
-    /** Function to generate screen reader feedback classes */
+    /**
+     * Returns classes of the copy announcement, added to the default ones.
+     *
+     * @returns The classes.
+     */
     screenReaderFeedback?: () => string;
-    /** Function to generate live region classes */
+    /**
+     * Returns classes of the balance announcement, added to the default ones.
+     *
+     * @returns The classes.
+     */
     liveRegion?: () => string;
   };
   /** Custom animation variants */
   variants?: {
-    /** Container animation variants */
+    /** Section animation variants (`initial`, `animate`, `exit`) */
     container?: Variants;
-    /** Copy icon animation variants */
-    copyIcon?: Variants;
-    /** Check icon animation variants */
-    checkIcon?: Variants;
-    /** Loading animation variants */
-    loading?: Variants;
   };
   /** Custom animation configuration */
   animation?: {
@@ -156,56 +222,33 @@ export type ConnectedModalNameAndBalanceCustomization = {
       /** Animation delay in seconds */
       delay?: number;
     };
-    /** Icon animation configuration */
-    icon?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
-    /** Loading animation configuration */
-    loading?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for copy success */
+    /**
+     * Called after the address is copied to the clipboard.
+     *
+     * @param address - The copied address.
+     */
     onCopySuccess?: (address: string) => void;
-    /** Custom handler for copy error */
+    /**
+     * Called when the clipboard write fails (for example when the browser denies the clipboard permission).
+     *
+     * @param error - The error of `navigator.clipboard.writeText`.
+     * @param address - The address that was not copied.
+     */
     onCopyError?: (error: Error, address: string) => void;
-    /** Custom handler for balance format */
-    onBalanceFormat?: (balance: ConnectedModalMainContentProps['balance']) => string | null;
-    /** Custom handler for keyboard interactions */
-    onKeyboardInteraction?: (event: React.KeyboardEvent, action: 'copy') => void;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
+    /** Renders the section without Framer Motion (default: `false`) */
     disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
+    /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
-    /** Custom copy button position */
-    copyButtonPosition?: 'right' | 'left' | 'top' | 'bottom';
     /** Custom ARIA labels for different states */
     ariaLabels?: {
+      /** ARIA label of the section, after the `aria-label` prop */
       container?: string;
-      walletNameHeader?: string;
-      walletNameDisplay?: string;
-      copyButton?: string;
-      balanceContainer?: string;
-      balanceLoading?: string;
-      balanceDisplay?: string;
-      noBalance?: string;
-      screenReaderFeedback?: string;
-      liveRegion?: string;
     };
   };
   /** Child component customizations */
@@ -216,7 +259,7 @@ export type ConnectedModalNameAndBalanceCustomization = {
 };
 
 /**
- * Props for the ConnectedModalNameAndBalance component
+ * Props for the {@link ConnectedModalNameAndBalance} component. Other props are passed to the `section` element.
  */
 export interface ConnectedModalNameAndBalanceProps extends Pick<
   ConnectedModalMainContentProps,
@@ -224,29 +267,33 @@ export interface ConnectedModalNameAndBalanceProps extends Pick<
 > {
   /** Function to manually trigger a balance refresh */
   refetch: () => void;
-  /** Additional CSS classes for the container */
+  /** Classes added to the default section classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Custom aria-label for the container */
+  /** ARIA label of the section (default: the `walletBalance` and `walletAddress` labels) */
   'aria-label'?: string;
   /** Customization options */
   customization?: ConnectedModalNameAndBalanceCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultWalletNameDisplay: React.FC<WalletNameDisplayProps> = ({ ensNameAbbreviated, className }) => {
+const DefaultWalletNameDisplay: React.FC<ConnectedModalNameAndBalanceWalletNameDisplayProps> = ({
+  ensNameAbbreviated,
+  labels,
+  className,
+}) => {
   return (
     <h3
       className={cn('novacon:text-xl novacon:font-bold novacon:font-mono', className)}
       role="heading"
       aria-level={3}
-      aria-label={`Wallet name: ${ensNameAbbreviated || 'Loading wallet name'}`}
+      aria-label={formatLabel(labels.walletName, { name: ensNameAbbreviated || labels.loadingWalletName })}
     >
       {ensNameAbbreviated}
     </h3>
   );
 };
 
-const DefaultCopyButton: React.FC<CopyButtonProps> = ({
+const DefaultCopyButton: React.FC<ConnectedModalNameAndBalanceCopyButtonProps> = ({
   isCopied,
   onCopy,
   activeConnection,
@@ -265,7 +312,7 @@ const DefaultCopyButton: React.FC<CopyButtonProps> = ({
   );
 
   const getCopyButtonAriaLabel = useCallback(() => {
-    const baseLabel = isCopied ? labels.copied : `Copy ${labels.walletAddress}`;
+    const baseLabel = isCopied ? labels.copied : labels.copyWalletAddress;
     const addressInfo = activeConnection?.address ? ` (${activeConnection.address})` : '';
     return `${baseLabel}${addressInfo}`;
   }, [isCopied, labels, activeConnection]);
@@ -325,15 +372,13 @@ const DefaultCopyButton: React.FC<CopyButtonProps> = ({
   );
 };
 
-const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
+const DefaultBalanceDisplay: React.FC<ConnectedModalNameAndBalanceBalanceDisplayProps> = ({
   balance,
   balanceLoading,
   refetch,
   labels,
-  className,
   customization,
 }) => {
-  // Convert balance format for BalanceDisplayComponent
   // Convert balance format for BalanceDisplayComponent
   const balanceData =
     balance?.value && balance?.symbol
@@ -344,12 +389,11 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
       : null;
 
   // Merge labels for BalanceDisplayComponent
-  // Merge labels for BalanceDisplayComponent
   const balanceLabels = {
     loading: labels.loading,
     walletBalance: labels.walletBalance,
-    refreshBalance: 'Refresh balance',
-    noBalanceAvailable: 'No balance information available',
+    refreshBalance: labels.refreshBalance,
+    noBalanceAvailable: labels.noBalanceAvailable,
   };
 
   return (
@@ -358,14 +402,13 @@ const DefaultBalanceDisplay: React.FC<BalanceDisplayProps> = ({
       isLoading={balanceLoading}
       onRefetch={refetch}
       labels={balanceLabels}
-      className={className}
       customization={customization}
       data-testid="wallet-balance-display"
     />
   );
 };
 
-const DefaultScreenReaderFeedback: React.FC<ScreenReaderFeedbackProps> = ({
+const DefaultScreenReaderFeedback: React.FC<ConnectedModalNameAndBalanceScreenReaderFeedbackProps> = ({
   isCopied,
   activeConnection,
   labels,
@@ -378,76 +421,44 @@ const DefaultScreenReaderFeedback: React.FC<ScreenReaderFeedbackProps> = ({
   );
 };
 
-const DefaultLiveRegion: React.FC<LiveRegionProps> = ({ balanceLoading, balance, className }) => {
+const DefaultLiveRegion: React.FC<ConnectedModalNameAndBalanceLiveRegionProps> = ({
+  balanceLoading,
+  balance,
+  labels,
+  className,
+}) => {
   const balanceDisplay = balance?.value && balance?.symbol ? `${balance.value} ${balance.symbol}` : null;
 
   return (
     <div className={cn('novacon:sr-only', className)} aria-live="polite" aria-atomic="true" role="status">
       {/* This will announce balance updates to screen readers */}
-      {!balanceLoading && balanceDisplay && `Balance updated: ${balanceDisplay}`}
+      {!balanceLoading && balanceDisplay && formatLabel(labels.balanceUpdated, { balance: balanceDisplay })}
     </div>
   );
 };
 
 /**
- * Component that displays wallet name/ENS and balance information with copy functionality and comprehensive customization options.
+ * The name and balance of the connected modal: the ENS or SNS name with a button that copies the active address to
+ * the clipboard, and the native balance with a refresh button. Renders nothing without a connected wallet.
  *
- * This component provides a comprehensive display of wallet identification and balance:
- * - ENS name or abbreviated wallet address
- * - Animated copy button with visual feedback
- * - Loading states for balance information
- * - Proper accessibility support with ARIA labels
- * - Smooth animations for state transitions
- * - Comprehensive customization for all UI elements and behaviors
- * - Animation support with reduced motion options
- * - Custom event handlers for enhanced interactivity
- * - Performance-optimized with memoized calculations
+ * Props: {@link ConnectedModalNameAndBalanceProps}; the ref is forwarded to the `section` element.
  *
- * The component automatically handles wallet address copying with visual feedback
- * and provides screen reader friendly content throughout all interactions.
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedModalNameAndBalance
- *   ensNameAbbreviated="wallet.eth"
- *   balanceLoading={false}
- *   balance={{ value: "1.23", symbol: "ETH" }}
- *   refetch={() => {}}
- * />
- * ```
+ * import { ConnectedModalNameAndBalance } from '@tuwaio/nova-connect/components';
  *
- * @example With full customization
- * ```tsx
- * <ConnectedModalNameAndBalance
- *   ensNameAbbreviated="wallet.eth"
- *   balanceLoading={false}
- *   balance={{ value: "1.23", symbol: "ETH" }}
- *   refetch={() => {}}
- *   customization={{
- *     classNames: {
- *       container: ({ hasActiveWallet }) =>
- *         `custom-container ${hasActiveWallet ? 'has-wallet' : 'no-wallet'}`,
- *       walletNameDisplay: () => "text-2xl font-bold text-blue-600",
- *       copyButton: ({ isCopied }) =>
- *         `copy-btn ${isCopied ? 'success' : 'default'}`,
- *     },
- *     components: {
- *       WalletNameDisplay: ({ ensNameAbbreviated, className }) =>
- *         <h2 className={className}>{ensNameAbbreviated}</h2>,
- *     },
- *     handlers: {
- *       onCopySuccess: (address) => console.log(`Copied: ${address}`),
- *       onCopyError: (error, address) =>
- *         console.error(`Failed to copy ${address}:`, error),
- *     },
- *     config: {
- *       copyButtonPosition: 'left',
- *       ariaLabels: {
- *         container: 'Wallet information section',
- *       },
- *     },
- *   }}
- * />
+ * export const NameAndBalance = (
+ *   <ConnectedModalNameAndBalance
+ *     ensNameAbbreviated="vitalik.eth"
+ *     balanceLoading={false}
+ *     balance={{ value: '1.23', symbol: 'ETH' }}
+ *     refetch={() => console.log('refresh the balance')}
+ *     customization={{
+ *       classNames: { walletNameDisplay: () => 'text-2xl text-blue-600' },
+ *       handlers: { onCopySuccess: (address) => console.log('copied', address) },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedModalNameAndBalanceProps>(
@@ -494,12 +505,11 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
         return;
       }
 
-      try {
-        await copy(activeConnection.address);
+      const result = await copy(activeConnection.address);
+      if (result.copied) {
         customization?.handlers?.onCopySuccess?.(activeConnection.address);
-      } catch (error) {
-        console.error('Failed to copy wallet address:', error);
-        customization?.handlers?.onCopyError?.(error as Error, activeConnection.address);
+      } else {
+        customization?.handlers?.onCopyError?.(result.error, activeConnection.address);
       }
     }, [activeConnection, copy, customization]);
 
@@ -550,7 +560,7 @@ export const ConnectedModalNameAndBalance = forwardRef<HTMLElement, ConnectedMod
             customization?.classNames?.walletNameHeaderContainer?.(),
           )}
           role="group"
-          aria-label={`${labels.walletAddress}: ${ensNameAbbreviated || 'Loading...'}`}
+          aria-label={`${labels.walletAddress}: ${ensNameAbbreviated || `${labels.loading}...`}`}
         >
           {/* Wallet Name/ENS Display */}
           <WalletNameDisplay

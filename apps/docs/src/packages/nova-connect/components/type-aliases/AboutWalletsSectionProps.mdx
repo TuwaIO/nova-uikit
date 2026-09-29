@@ -1,0 +1,68 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/AboutWalletsSectionProps" />
+
+# AboutWalletsSectionProps
+
+> **AboutWalletsSectionProps** = `object` & `React.RefAttributes`\<`HTMLElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:132](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L132)
+
+Props for a custom carousel section (a `section` by default).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.carousel` or the `aboutWallets` label
+
+### aria-roledescription?
+
+> `optional` **aria-roledescription?**: `string`
+
+`carousel`
+
+### children
+
+> **children**: `React.ReactNode`
+
+The slide container, navigation, status and keyboard hint
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.section` and the `className` prop
+
+### onKeyDown?
+
+> `optional` **onKeyDown?**: (`event`) => `void`
+
+Keyboard navigation: arrows change the slide, Home and End go to the first and last slide, Space and Enter pause
+or resume auto-play.
+
+#### Parameters
+
+##### event
+
+`React.KeyboardEvent`
+
+The keyboard event.
+
+#### Returns
+
+`void`
+
+### role?
+
+> `optional` **role?**: `string`
+
+`region`
+
+### tabIndex?
+
+> `optional` **tabIndex?**: `number`
+
+`0`

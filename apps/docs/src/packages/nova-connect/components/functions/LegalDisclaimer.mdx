@@ -1,0 +1,48 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Functions/LegalDisclaimer" />
+
+# LegalDisclaimer()
+
+> **LegalDisclaimer**(`props`): `Element` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx:297](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/LegalDisclaimer.tsx#L297)
+
+The legal line under the wallet list: "By connecting your wallet, you agree to our Terms of Service and Privacy
+Policy", with the links from `legal` of `NovaConnectProvider` (read through `useNovaConnect`). Renders nothing
+without `legal.termsUrl` and `legal.privacyUrl`.
+
+## Parameters
+
+### props
+
+[`LegalDisclaimerProps`](?path=/docs/packages-nova-connect-components-interfaces-legaldisclaimerprops--docs)
+
+See [LegalDisclaimerProps](?path=/docs/packages-nova-connect-components-interfaces-legaldisclaimerprops--docs).
+
+## Returns
+
+`Element` \| `null`
+
+The legal line, or `null` without links.
+
+## Example
+
+```tsx
+import { LegalDisclaimer } from '@tuwaio/nova-connect/components';
+
+export const Legal = (
+  <LegalDisclaimer
+    customization={{
+      classNames: { termsLink: () => 'text-blue-500 font-semibold' },
+      handlers: {
+        onTermsClick: (disclaimerData, originalHandler) => {
+          console.log('terms clicked');
+          originalHandler(disclaimerData.termsUrl ?? '');
+        },
+      },
+      config: { display: { separatorText: ' | ' } },
+    }}
+  />
+);
+```

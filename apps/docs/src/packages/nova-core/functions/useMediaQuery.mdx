@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/useMediaQuery" />
+
+# useMediaQuery()
+
+> **useMediaQuery**(`query`): `boolean`
+
+Defined in: [hooks/useMediaQuery.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useMediaQuery.ts#L11)
+
+A custom hook to detect if a media query matches the current screen dimensions.
+Returns `false` on the server. In the browser it checks the query again on every `resize` event of `window`
+(a listener that is removed on unmount).
+
+## Parameters
+
+### query
+
+`string`
+
+The media query string (e.g., '(max-width: 767px)').
+
+## Returns
+
+`boolean`
+
+Whether the query matches.

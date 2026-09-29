@@ -1,5 +1,5 @@
 /**
- * @fileoverview Utility function to determine if the current environment supports touch input.
+ * @file Utility function to determine if the current environment supports touch input.
  * This is safe to use in Next.js applications as it checks for the `window` object existence.
  */
 
@@ -13,8 +13,10 @@
  *
  * This function is safe for server-side rendering (SSR) environments like Next.js.
  *
- * @param {number} [maxWidth=1200] The maximum screen width (in pixels) for a device to be considered 'touch' (default is 1200).
- * @returns {boolean} Returns true if the environment is determined to support touch input AND is within the width limit, otherwise false.
+ * @param {number} [maxWidth=1200] The maximum screen width (in pixels) for a device to be considered 'touch' (default
+ * is 1200).
+ * @returns {boolean} Returns true if the environment is determined to support touch input AND is within the width
+ * limit, otherwise false.
  */
 export function isTouchDevice(maxWidth: number = 1200): boolean {
   // 1. Check if we are running in a browser environment (Client Side).

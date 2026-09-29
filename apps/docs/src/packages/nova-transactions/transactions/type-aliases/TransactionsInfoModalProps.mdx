@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionsInfoModalProps" />
+
+# TransactionsInfoModalProps\<T\>
+
+> **TransactionsInfoModalProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"` \| `"connectedAdapterType"` \| `"connectedWalletAddress"` \| `"transactionsPool"`\> & `object`
+
+Defined in: [components/TransactionsInfoModal.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L54)
+
+Props of [TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs).
+
+## Type Declaration
+
+### customization?
+
+> `optional` **customization?**: [`TransactionsInfoModalCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionsinfomodalcustomization--docs)\<`T`\>
+
+Props, class names and replacement components for the parts of the modal.
+
+### isOpen?
+
+> `optional` **isOpen?**: `boolean`
+
+Whether the modal is open.
+
+### pagination?
+
+> `optional` **pagination?**: `TxInMemoryPagination`
+
+Pagination state for infinite scroll, forwarded to TransactionsHistory.
+
+### selectedTxKey?
+
+> `optional` **selectedTxKey?**: `string` \| `null`
+
+Optional transaction key to open directly in detail view
+
+### setIsOpen
+
+> **setIsOpen**: (`value`) => `void`
+
+Opens or closes the modal.
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+`false` when the modal is closed.
+
+#### Returns
+
+`void`
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

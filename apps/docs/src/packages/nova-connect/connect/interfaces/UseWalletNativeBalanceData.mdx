@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/UseWalletNativeBalanceData" />
+
+# UseWalletNativeBalanceData
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L27)
+
+Result of [useWalletNativeBalance](?path=/docs/packages-nova-connect-connect-functions-usewalletnativebalance--docs).
+
+## Properties
+
+### balance
+
+> **balance**: [`UseWalletNativeBalanceState`](?path=/docs/packages-nova-connect-connect-type-aliases-usewalletnativebalancestate--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L29)
+
+The balance, or `null` without a wallet, without `getBalance` or before it resolves
+
+***
+
+### isLoading
+
+> **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L31)
+
+Whether the balance is being requested
+
+***
+
+### refetch
+
+> **refetch**: () => `void`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L33)
+
+Requests the balance again (a failed refresh clears the kept balance)
+
+#### Returns
+
+`void`

@@ -1,0 +1,14 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Variables/DialogContent" />
+
+# DialogContent
+
+> `const` **DialogContent**: `ForwardRefExoticComponent`\<`Omit`\<`DialogContentProps` & `RefAttributes`\<`HTMLDivElement`\>, `"ref"`\> & `object` & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [components/Modal.tsx:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/Modal.tsx#L100)
+
+The dialog panel (`Content` of `@radix-ui/react-dialog`), rendered in a portal above [DialogOverlay](?path=/docs/packages-nova-core-functions-dialogoverlay--docs). It takes
+the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
+the panel scales in at the center of the screen, or slides up from the bottom on touch devices (`isTouchDevice`); its
+content scrolls when it is taller than the viewport. Use it inside [Dialog](?path=/docs/packages-nova-core-variables-dialog--docs).

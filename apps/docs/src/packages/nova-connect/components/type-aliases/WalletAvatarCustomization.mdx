@@ -1,0 +1,286 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/WalletAvatarCustomization" />
+
+# WalletAvatarCustomization
+
+> **WalletAvatarCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L66)
+
+Customization options for WalletAvatar component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L81)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and `className`.
+
+##### Parameters
+
+###### params
+
+The avatar state.
+
+###### address
+
+`string`
+
+The wallet address.
+
+###### bgColor
+
+`string`
+
+Background color from `utils.generateBgColor`.
+
+###### size
+
+[`WalletAvatarSize`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarsize--docs)
+
+The avatar size.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### fallbackContent?
+
+> `optional` **fallbackContent?**: (`params`) => `string`
+
+Returns the classes of the fallback content.
+
+##### Parameters
+
+###### params
+
+The avatar state.
+
+###### address
+
+`string`
+
+The wallet address.
+
+###### size
+
+[`WalletAvatarSize`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarsize--docs)
+
+The avatar size.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### image?
+
+> `optional` **image?**: (`params`) => `string`
+
+Returns the classes of the image.
+
+##### Parameters
+
+###### params
+
+The avatar state.
+
+###### hasError
+
+`boolean`
+
+Whether the avatar image failed to load.
+
+###### isLoading
+
+`boolean`
+
+Whether the image is loading.
+
+###### size
+
+[`WalletAvatarSize`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarsize--docs)
+
+The avatar size.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingOverlay?
+
+> `optional` **loadingOverlay?**: (`params`) => `string`
+
+Returns the classes of the loading overlay.
+
+##### Parameters
+
+###### params
+
+The avatar state.
+
+###### disableAnimation
+
+`boolean`
+
+The `disableAnimation` prop.
+
+###### isLoading
+
+`boolean`
+
+Whether the image is loading.
+
+###### showLoading
+
+`boolean`
+
+The `showLoading` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L72)
+
+Custom components
+
+#### AvatarImage?
+
+> `optional` **AvatarImage?**: `ComponentType`\<[`WalletAvatarImageProps`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarimageprops--docs)\>
+
+Custom avatar image component
+
+#### FallbackContent?
+
+> `optional` **FallbackContent?**: `ComponentType`\<[`WalletAvatarFallbackContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarfallbackcontentprops--docs)\>
+
+Custom fallback content component for extreme error cases
+
+#### LoadingOverlay?
+
+> `optional` **LoadingOverlay?**: `ComponentType`\<[`WalletAvatarLoadingOverlayProps`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarloadingoverlayprops--docs)\>
+
+Custom loading overlay component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"div"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L68)
+
+Override container element props
+
+***
+
+### imageProps?
+
+> `optional` **imageProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"img"`\>\>
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L70)
+
+Override image element props
+
+***
+
+### utils?
+
+> `optional` **utils?**: `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:123](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L123)
+
+Custom utilities
+
+#### formatAddress?
+
+> `optional` **formatAddress?**: (`address`, `labels`) => `string`
+
+Returns the address shown in the accessible label and the fallback content. By default `0x1234...abcd`, or the
+`unknownWallet` label without an address.
+
+##### Parameters
+
+###### address
+
+`string`
+
+The wallet address.
+
+###### labels
+
+`Record`\<`string`, `string`\>
+
+The labels of Nova Connect.
+
+##### Returns
+
+`string`
+
+The formatted address.
+
+#### generateBgColor?
+
+> `optional` **generateBgColor?**: (`address`) => `string`
+
+Returns the background color of the container. By default the first six hexadecimal digits of a `0x` address,
+or a color derived from the address for other networks (`#6B7280` without an address).
+
+##### Parameters
+
+###### address
+
+`string`
+
+The wallet address.
+
+##### Returns
+
+`string`
+
+A CSS color.
+
+#### generateBlockie?
+
+> `optional` **generateBlockie?**: (`address`) => `string` \| `null`
+
+Returns the image shown without an avatar or when the avatar fails. By default a blockie
+(`ethereum-blockies-base64`) seeded with the address, for addresses of any network.
+
+##### Parameters
+
+###### address
+
+`string`
+
+The wallet address.
+
+##### Returns
+
+`string` \| `null`
+
+An image URL (a data URL by default), or `null`.

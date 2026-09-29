@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectButton" />
+
+# ConnectButton
+
+> `const` **ConnectButton**: `NamedExoticComponent`\<[`ConnectButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectbuttonprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:294](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L294)
+
+The main button of Nova Connect. Without a connected wallet it shows the connect prompt
+([WaitForConnectionContent](?path=/docs/packages-nova-connect-components-variables-waitforconnectioncontent--docs)) and opens the connect modal; with one it shows the connected wallet
+([ConnectedContent](?path=/docs/packages-nova-connect-components-variables-connectedcontent--docs): avatar, name, balance with `withBalance`, the status of the latest transaction from
+`transactionPool`) and opens the connected modal. With `withChain`, a [ChainSelector](?path=/docs/packages-nova-connect-components-functions-chainselector--docs) is shown next to it.
+The options (`withBalance`, `withChain`, `appChains`, `solanaRPCUrls`) come from `NovaConnectProvider`, so the button
+must be rendered inside it.
+
+Props: [ConnectButtonProps](?path=/docs/packages-nova-connect-components-type-aliases-connectbuttonprops--docs).
+
+## Example
+
+```tsx
+import { ConnectButton } from '@tuwaio/nova-connect/components';
+
+export const Button = (
+  <ConnectButton
+    customization={{
+      classNames: {
+        button: ({ buttonData }) => (buttonData.isConnected ? 'custom-connected' : 'custom-disconnected'),
+      },
+    }}
+  />
+);
+```

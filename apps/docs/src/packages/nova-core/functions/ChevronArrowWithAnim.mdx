@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/ChevronArrowWithAnim" />
+
+# ChevronArrowWithAnim()
+
+> **ChevronArrowWithAnim**(`props`): `Element`
+
+Defined in: [components/ChevronArrowWithAnim.tsx:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ChevronArrowWithAnim.tsx#L15)
+
+A chevron that points up when `isOpen` is `true` and down otherwise, animated with `framer-motion` when it flips.
+Nova uses it in dropdown triggers such as the chain selector.
+
+## Parameters
+
+### props
+
+The chevron props.
+
+#### className?
+
+`string`
+
+Classes merged with the default size and color (`--tuwa-text-secondary`).
+
+#### isOpen?
+
+`boolean`
+
+Whether the related list is open.
+
+#### strokeWidth?
+
+`number`
+
+Stroke width of the SVG path. Defaults to `2`.
+
+## Returns
+
+`Element`
+
+The SVG element.

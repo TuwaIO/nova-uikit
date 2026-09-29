@@ -1,66 +1,38 @@
-// Export types only, not implementations
+/**
+ * The Solana watcher of Satellite Connect and the Solana types, imported from `@tuwaio/nova-connect/solana`. Import this
+ * entry point in an app with Solana wallets; the root entry point never imports the Solana packages. Importing it:
+ *
+ * - registers the Solana chain helpers of `@tuwaio/orbit-solana` for the chain lists of Nova Connect (without it, the
+ *   lists have only the clusters of `solanaRPCUrls`);
+ * - types `solanaRPCUrls` of `NovaConnectProvider` with the cluster monikers of `@tuwaio/orbit-solana`;
+ * - adds `SolanaConnection` and `ConnectorSolana` from `@tuwaio/satellite-solana` to `AllConnections` and
+ *   `AllConnectors` of `@tuwaio/satellite-react`.
+ *
+ * @module solana
+ */
+
 export type { SolanaClusterMoniker } from '@tuwaio/orbit-solana';
 
-// Import types from satellite-react/solana
 import { OrbitAdapter } from '@tuwaio/orbit-core';
+import type { SolanaClusterMoniker } from '@tuwaio/orbit-solana';
 import { SolanaConnectorsWatcher } from '@tuwaio/satellite-react/solana';
 import { ConnectorSolana, SolanaConnection } from '@tuwaio/satellite-solana';
 
-// Re-export the types
+import { registerChainAdapter } from '../utils/adapters/registry';
+import { solanaChainAdapter } from './chainAdapter';
+
 export type { ConnectorSolana, SolanaConnection };
 
-// Re-export the component
 export { SolanaConnectorsWatcher };
 
-// Dynamic exports that will be loaded at runtime
-export async function getSolanaExports() {
-  try {
-    // Use a more indirect approach to prevent bundlers from resolving imports at build time
-    // This creates a function that will be called at runtime
-    const importSolanaModule = new Function(
-      'return import("@tuwaio/satellite-react/solana").catch(error => { console.warn("Failed to load Solana exports:", error); return null; })',
-    );
+registerChainAdapter(OrbitAdapter.SOLANA, solanaChainAdapter);
 
-    const satelliteReactSolana = await importSolanaModule();
-
-    if (!satelliteReactSolana) {
-      return {
-        available: false,
-        error: 'Failed to load Solana exports',
-      };
-    }
-
-    // Instead of trying to modify exports directly, we'll return the actual component
-    // implementation and let the consumer handle the assignment
-    const actualSolanaConnectorsWatcher = satelliteReactSolana.SolanaConnectorsWatcher;
-
-    return {
-      ...satelliteReactSolana,
-      available: true,
-      SolanaConnectorsWatcher: actualSolanaConnectorsWatcher,
-    };
-  } catch (error) {
-    console.warn('Failed to load Solana exports:', error);
-    return {
-      available: false,
-      error: error instanceof Error ? error.message : 'Unknown error loading Solana exports',
-    };
-  }
-}
-
-// Extend the main interface with Solana-specific config
-// This will override the default `any` type with specific SolanaClusterMoniker typing
+// Types `solanaRPCUrls` of the root entry point
 // eslint-disable-next-line
 // @ts-ignore - Need for declaration merging
 declare module '@tuwaio/nova-connect' {
-  interface AllChainConfigs {
-    /**
-     * Solana RPC URLs configuration - enhanced from default any type
-     * @override Replaces default `any` with specific SolanaClusterMoniker typing when @tuwaio/orbit-solana is available
-     */
-    // eslint-disable-next-line
-    // @ts-ignore - Need for declaration merging
-    solanaRPCUrls?: Partial<Record<SolanaClusterMoniker, string>>;
+  export interface NovaConnectChainConfigTypes {
+    solanaRPCUrls: Partial<Record<SolanaClusterMoniker, string>>;
   }
 }
 

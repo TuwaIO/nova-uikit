@@ -1,0 +1,76 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/ToastTransactionProps" />
+
+# ToastTransactionProps\<T\>
+
+> **ToastTransactionProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"` \| `"connectedWalletAddress"`\>
+
+Defined in: [components/ToastTransaction.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L107)
+
+Props of [ToastTransaction](?path=/docs/packages-nova-transactions-transactions-functions-toasttransaction--docs).
+
+## Type Declaration
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the toast body.
+
+### closeToast?
+
+> `optional` **closeToast?**: `ToastContentProps`\[`"closeToast"`\]
+
+Accepted because `react-toastify` passes it to toast content; not used by the component.
+
+### customization?
+
+> `optional` **customization?**: [`ToastTransactionCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toasttransactioncustomization--docs)\<`T`\>
+
+Class names and replacement components for the parts of the toast.
+
+### icon?
+
+> `optional` **icon?**: `ReactNode`
+
+Icon shown on the left. Defaults to the icon of the transaction's network.
+
+### openTxInfoModal?
+
+> `optional` **openTxInfoModal?**: (`txKey?`) => `void`
+
+Opens the transaction history modal. The "open transaction" button is shown only when it is set and the connected
+wallet sent the transaction.
+
+#### Parameters
+
+##### txKey?
+
+`string`
+
+Key of the transaction to open.
+
+#### Returns
+
+`void`
+
+### toastProps?
+
+> `optional` **toastProps?**: `ToastContainerProps`
+
+Accepted for compatibility; not used by the component.
+
+### tx
+
+> **tx**: `T`
+
+The transaction to show.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectCardInfoLinkProps" />
+
+# ConnectCardInfoLinkProps
+
+> **ConnectCardInfoLinkProps** = `object` & `React.RefAttributes`\<`HTMLAnchorElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L275)
+
+Props for a custom info link (rendered when the `infoLink` prop is set).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.infoLink`, or the `learnMore` and `aboutWallets` labels with the title
+
+### cardData
+
+> **cardData**: [`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card
+
+### children
+
+> **children**: `React.ReactNode`
+
+The information icon
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.infoLink` or the defaults
+
+### href?
+
+> `optional` **href?**: `string`
+
+The `infoLink` prop
+
+### onClick?
+
+> `optional` **onClick?**: (`e`) => `void`
+
+Stops the click from reaching the card and calls `handlers.onInfoClick`.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`
+
+The click event.
+
+#### Returns
+
+`void`
+
+### rel?
+
+> `optional` **rel?**: `string`
+
+`noopener noreferrer`
+
+### target?
+
+> `optional` **target?**: `string`
+
+`_blank`

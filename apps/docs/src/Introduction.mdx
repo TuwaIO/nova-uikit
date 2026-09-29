@@ -1,383 +1,101 @@
-# Introduction to Nova UI Kit
+import { Meta } from '@storybook/addon-docs/blocks';
 
-<img
-  src="https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/repos/nova_uikit.png"
-  alt="Nova UI Kit"
-  width="450"
-  style={{
-    borderRadius: '12px',
-    textAlign: 'center',
-    marginBottom: '24px',
-    marginTop: '24px',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    display: 'block',
-  }}
-/>
+<Meta title="Introduction" />
 
-**A comprehensive design system and component library for building modern, robust, and beautiful Web3 applications.**
+# Introduction
 
-Welcome to the Storybook for **Nova UI Kit**, developed by **TUWA**. Nova UI Kit is the complete **View Layer** for multi-chain React dApps in the TUWA ecosystem. It is built directly on top of **[Orbit Utils](https://github.com/TuwaIO/orbit)** (L1/L2), **[Satellite Connect](https://github.com/TuwaIO/satellite-connect)** (L3/L4), and **[Pulsar Engine](https://github.com/TuwaIO/pulsar-core)** (L3/L4), abstracting away the complexity of wallet connections and transaction tracking into beautiful, accessible React components.
+<p align="center">
+  <img
+    src="https://cdn.jsdelivr.net/gh/TuwaIO/workflows@main/preview/repos/nova_uikit.png"
+    alt="Nova UI Kit"
+    width="450"
+    style={{ borderRadius: '12px', margin: '24px auto', display: 'block' }}
+  />
+</p>
 
-Nova UI Kit resides at the top of the integration stack, representing **UI Core (L6)** and **UI Components (L7)** of the TUWA Ecosystem.
+**Nova UI Kit** is the user interface project of TUWA Stage 4: React components for wallet connections and transactions on EVM and Solana. It renders the state of Satellite Connect (connect button, connect and connected modals, chain selector) and of Pulsar (transaction toasts, tracking modal, history), and signs users in with SIWX. The wallet and transaction state stays in those libraries; Nova keeps only UI state and ships compiled styles that you theme with CSS variables.
+
+This Storybook is the documentation of Nova UI Kit: the **Packages** section documents every package and export, **Theming** describes the theme variables, and the other sections show the components with their customization options.
 
 ---
 
-## Why Nova UI Kit?
+## 🏛️ Where Nova UI Kit Fits in TUWA
 
-Building decentralized applications (dApps) requires managing complex visual states: wallet selections, active connection balances, network switching alerts, and background transaction finality indicators.
+TUWA is built in stages. Each stage builds on the ones below it:
 
-Nova UI Kit solves this by:
+| Stage                          | Projects                                                                                                                                     | Role                                                     |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| **1 — Core Auth & Primitives** | [SIWX](https://siwx.docs.tuwa.io/), [Orbit Utils](https://orbit.docs.tuwa.io/)                                                               | CAIP-122 authentication and multi-chain primitives       |
+| **2 — State & Connection**     | [Satellite Connect](https://satellite.docs.tuwa.io/), [Pulsar](https://pulsar.docs.tuwa.io/)                                                 | Wallet connection state machine and transaction tracking |
+| **3 — Backend & Sync**         | [Quasar Cloud](https://sdk.docs.tuwa.io/quasar-cloud/overview) or self-hosted [Quasar Community](https://github.com/TuwaIO/quasar-community) | Transaction indexing and cross-device sync               |
+| **4 — User Interface**         | **Nova UI Kit**                                                                                                                              | React design system and components                       |
+| **5 — SDK Integration Layer**  | [TUWA SDK](https://sdk.docs.tuwa.io/)                                                                                                        | One dependency that re-exports the stages above          |
 
-1. **Unifying Styling Tokens (L6):** `@tuwaio/nova-core` provides consistent theming variables, font properties, and dialog overlays.
-2. **Providing Ready-made Components (L7):** `@tuwaio/nova-connect` handles wallet connection flows, while `@tuwaio/nova-transactions` visualizes transaction lifecycles.
-3. **Decoupled Architecture:** Components auto-react to headless state changes from Satellite and Pulsar stores, eliminating duplicate local state tracking.
-4. **Ensuring Accessibility:** Dialog and selection components are built on Radix UI primitives with full ARIA keyboard navigation compliance.
-
----
-
-## ✨ Key Features
-
-- **Unified Multi-Chain UI:** Single component library compatible with both EVM (injected wallets, WalletConnect) and Solana (Phantom, Solflare) standard providers.
-- **Modern React Framework:** Built strictly using React 19+, TypeScript 6.0+, and Tailwind CSS v4.
-- **Dynamic Theming:** Control design primitives globally through `--tuwa-*` CSS custom properties.
-- **Decoupled Logic:** Zero hardcoded business logic. Visual components react directly to headless stores.
-- **Accessible by Default:** Focus-trapping modals, aria attributes, and keyboard controls.
-- **Internationalization:** Custom localization engine for text label overrides.
+Nova Connect renders the store of Satellite Connect and signs users in with SIWX, Nova Transactions renders the store of Pulsar (which can sync with Quasar), and both use Orbit Utils for chain helpers. Nova Transactions is optional: Nova Connect shows the transaction history only when you give it a Pulsar store.
 
 ---
 
-<table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '16px', marginBottom: '16px' }}>
-  <thead>
-    <tr style={{ borderBottom: '2px solid var(--tuwa-border-primary)', textAlign: 'left' }}>
-      <th style={{ padding: '12px', fontWeight: 'bold' }}>Package</th>
-      <th style={{ padding: '12px', fontWeight: 'bold' }}>Layer</th>
-      <th style={{ padding: '12px', fontWeight: 'bold' }}>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style={{ borderBottom: '1px solid var(--tuwa-border-secondary)' }}>
-      <td style={{ padding: '12px' }}>
-        <strong>
-          <code>@tuwaio/nova-core</code>
-        </strong>
-      </td>
-      <td style={{ padding: '12px' }}>
-        <strong>UI Core (L6)</strong>
-      </td>
-      <td style={{ padding: '12px' }}>
-        Shared styling primitives, CSS variables, utility hooks, and core dialog overlays.
-      </td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid var(--tuwa-border-secondary)' }}>
-      <td style={{ padding: '12px' }}>
-        <strong>
-          <code>@tuwaio/nova-connect</code>
-        </strong>
-      </td>
-      <td style={{ padding: '12px' }}>
-        <strong>UI Components (L7)</strong>
-      </td>
-      <td style={{ padding: '12px' }}>Multi-chain wallet selection buttons, dialog modals, and watchers.</td>
-    </tr>
-    <tr style={{ borderBottom: '1px solid var(--tuwa-border-secondary)' }}>
-      <td style={{ padding: '12px' }}>
-        <strong>
-          <code>@tuwaio/nova-transactions</code>
-        </strong>
-      </td>
-      <td style={{ padding: '12px' }}>
-        <strong>UI Components (L7)</strong>
-      </td>
-      <td style={{ padding: '12px' }}>Transaction tracking toasts, progress overlays, and ledger widgets.</td>
-    </tr>
-  </tbody>
-</table>
+## 🧭 Principles
+
+1. **State lives outside the UI:** the wallets are in Satellite Connect, the transactions in Pulsar and the session in SIWX. Nova components only read that state and call its actions, so a custom UI can use the same stores next to Nova.
+2. **One kit, many chains:** EVM and Solana wallets appear in the same connect modal, and the connected modal, the chain selector and the transaction views work for both.
+3. **Themeable and replaceable:** every color, border and radius is a `--tuwa-*` CSS variable; most components take a `customization` prop with class name functions and replacement components for their parts, and every label can be overridden.
+4. **Compiled styles, no conflicts:** each package ships its own stylesheet with prefixed Tailwind CSS v4 classes (`novacore:`, `novacon:`, `novatx:`), so it works with or without Tailwind CSS in your app.
+5. **Accessible:** dialogs are built on Radix UI with focus management and keyboard support; buttons and lists carry ARIA labels.
+6. **Transparent side effects:** the package pages list what is saved to `localStorage` and which hosts are contacted.
 
 ---
 
-## Getting Started
+## 🔄 How the UI Works
 
-Follow these steps to set up Nova UI Kit in a multi-chain React or Next.js application.
-
-### Step 1: Install Dependencies
-
-Install the core TUWA integration modules along with their required peer dependencies:
-
-```bash
-# 1. TUWA Ecosystem Packages
-pnpm add @tuwaio/orbit-core @tuwaio/orbit-evm @tuwaio/orbit-solana \
-         @tuwaio/satellite-core @tuwaio/satellite-evm @tuwaio/satellite-solana @tuwaio/satellite-react \
-         @tuwaio/pulsar-core @tuwaio/pulsar-evm @tuwaio/pulsar-solana @tuwaio/pulsar-react \
-         @tuwaio/nova-core @tuwaio/nova-connect @tuwaio/nova-transactions
-
-# 2. State & Utilities
-pnpm add zustand immer dayjs clsx tailwind-merge
-
-# 3. Web3 Primitives
-pnpm add viem wagmi @wagmi/core @tanstack/react-query @solana/kit @wallet-standard/react
-
-# 4. Layout & Animations
-pnpm add framer-motion @emotion/is-prop-valid \
-         @radix-ui/react-dialog @radix-ui/react-select \
-         @heroicons/react @web3icons/react @web3icons/common \
-         ethereum-blockies-base64 react-toastify
+```
+Satellite Connect store (wallets)          Pulsar store (transactions)
+  │ activeConnection, connections             │ transactionsPool, initialTx
+  │ connectionError, switchNetworkError       │ executeTxAction
+  ▼                                           ▼
+NovaConnectProvider                         NovaTransactionsProvider
+  │ ConnectButton, connect modal,             │ progress toasts, tracking modal,
+  │ connected modal, chain selector,          │ transaction history, error toast
+  │ error toasts, SIWX watcher                │
+  ▼                                           ▼
+user action (pick a wallet, switch chain,   user action (speed up, cancel, retry,
+sign in, disconnect)                        open history)
+  │                                           │
+  └──► store action (connect, switchNetwork,  └──► adapter action (speedUpTxAction,
+       disconnect) — the store changes and         cancelTxAction, retryTxAction) — the
+       the components re-render                    store changes and the components re-render
 ```
 
-### Step 2: Configure CSS with Tailwind v4
+---
 
-Import Nova's CSS variables and primitives inside your main application stylesheet:
+## 🧩 Packages
+
+| Package                                                                              | Layer | Provides                                                                                 |
+| ------------------------------------------------------------------------------------ | ----- | ---------------------------------------------------------------------------------------- |
+| [`@tuwaio/nova-core`](?path=/docs/packages-nova-core-overview--docs)                 | L6    | Theme variables and styles, dialog, network and wallet icons, hooks and helpers          |
+| [`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)           | L7    | Connect button, connect and connected modals, chain selector, error toasts, SIWX watcher |
+| [`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) | L7    | Transaction toasts, tracking modal, transaction history and their parts                  |
+
+Each package page shows the package README, with the peer dependencies of every entry point, followed by a reference of every export generated from the TypeScript source.
+
+---
+
+## 💾 Installation
+
+Install the packages and their peer dependencies as listed on the package pages: [`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs) lists everything a wallet connection UI needs, [`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) the additions for transactions. Then import the stylesheets once in your app:
 
 ```css
-/* src/styles/app.css */
-
-/* 1. Import Nova Core Design Tokens (L6 - REQUIRED) */
 @import '@tuwaio/nova-core/dist/index.css';
-
-/* 2. Import Nova Component Layouts (L7) */
 @import '@tuwaio/nova-connect/dist/index.css';
 @import '@tuwaio/nova-transactions/dist/index.css';
-
-/* 3. Import Tailwind CSS */
-@import 'tailwindcss';
-```
-
-### Step 3: Setup Web3 and Chain Parameters
-
-Define your supported EVM chains, RPC nodes, and Wagmi configs:
-
-```tsx
-// src/config/appConfig.ts
-import { createConfig } from '@wagmi/core';
-import { injected } from '@wagmi/connectors';
-import { mainnet, sepolia } from 'viem/chains';
-import type { Chain } from 'viem/chains';
-import { createDefaultTransports } from '@tuwaio/satellite-evm';
-
-export const appEVMChains = [mainnet, sepolia] as readonly [Chain, ...Chain[]];
-
-export const solanaRPCUrls = {
-  devnet: 'https://api.devnet.solana.com',
-};
-
-export const wagmiConfig = createConfig({
-  connectors: [injected()],
-  transports: createDefaultTransports(appEVMChains),
-  chains: appEVMChains,
-  ssr: true,
-});
-```
-
-### Step 4: Create the Transaction Store (Pulsar)
-
-Configure the persistent background transaction tracking engine with EVM and Solana adapters:
-
-```tsx
-// src/hooks/usePulsarStore.ts
-'use client';
-
-import { createBoundedUseStore, createPulsarStore, Transaction } from '@tuwaio/pulsar-core';
-import { pulsarEvmAdapter } from '@tuwaio/pulsar-evm';
-import { pulsarSolanaAdapter } from '@tuwaio/pulsar-solana';
-import { wagmiConfig, appEVMChains, solanaRPCUrls } from '@/config/appConfig';
-
-const storageName = 'transactions-tracking-storage';
-
-export enum TxType {
-  swap = 'swap',
-}
-
-type SwapTx = Transaction & {
-  type: TxType.swap;
-  payload: { fromToken: string; toToken: string; amount: string };
-};
-
-export type TransactionUnion = SwapTx;
-
-export const usePulsarStore = createBoundedUseStore(
-  createPulsarStore<TransactionUnion>({
-    name: storageName,
-    adapter: [pulsarEvmAdapter(wagmiConfig, appEVMChains), pulsarSolanaAdapter({ rpcUrls: solanaRPCUrls })],
-    maxTransactions: 50, // FIFO Policy to prevent storage bloat
-  }),
-);
-```
-
-### Step 5: Configure Global Providers
-
-Wrap your React tree. The providers must be layered to allow visual elements (Nova) to resolve states from logical engines (Satellite, Pulsar):
-
-```tsx
-// src/providers/Web3Providers.tsx
-'use client';
-
-import { ReactNode } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider } from 'wagmi';
-import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
-import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
-import { SatelliteConnectProvider, useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
-import { EVMConnectorsWatcher } from '@tuwaio/nova-connect/evm';
-import { SolanaConnectorsWatcher } from '@tuwaio/nova-connect/solana';
-import { NovaConnectProvider } from '@tuwaio/nova-connect';
-import { NovaTransactionsProvider } from '@tuwaio/nova-transactions/providers';
-import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import { useInitializeTransactionsPool } from '@tuwaio/pulsar-react';
-
-import { wagmiConfig, appEVMChains, solanaRPCUrls } from '@/config/appConfig';
-import { usePulsarStore } from '@/hooks/usePulsarStore';
-
-const queryClient = new QueryClient();
-
-// Connects headless Pulsar state to Nova Transactions UI
-function NovaTransactionsWrapper() {
-  const getAdapter = usePulsarStore((state) => state.getAdapter);
-  const initialTx = usePulsarStore((state) => state.initialTx);
-  const closeTxTrackedModal = usePulsarStore((state) => state.closeTxTrackedModal);
-  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
-  const executeTxAction = usePulsarStore((state) => state.executeTxAction);
-  const initializeTransactionsPool = usePulsarStore((state) => state.initializeTransactionsPool);
-
-  const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
-
-  // Restart tracking on client reload if there are pending transactions
-  useInitializeTransactionsPool({ initializeTransactionsPool });
-
-  return (
-    <NovaTransactionsProvider
-      transactionsPool={transactionsPool}
-      initialTx={initialTx}
-      closeTxTrackedModal={closeTxTrackedModal}
-      executeTxAction={executeTxAction}
-      connectedWalletAddress={activeConnection?.isConnected ? activeConnection.address : undefined}
-      connectedAdapterType={getAdapterFromConnectorType(activeConnection?.connectorType ?? 'evm:')}
-      adapter={getAdapter()}
-    />
-  );
-}
-
-export function Web3Providers({ children }: { children: ReactNode }) {
-  return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <SatelliteConnectProvider
-          adapter={[satelliteEVMAdapter(wagmiConfig, appEVMChains), satelliteSolanaAdapter({ rpcUrls: solanaRPCUrls })]}
-          autoConnect={true}
-        >
-          {/* Synchronize raw connector events with the store */}
-          <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
-          <SolanaConnectorsWatcher />
-
-          <NovaConnectProvider
-            appChains={appEVMChains}
-            solanaRPCUrls={solanaRPCUrls}
-            withBalance
-            withChain
-            withImpersonated
-          >
-            <NovaTransactionsWrapper />
-            {children}
-          </NovaConnectProvider>
-        </SatelliteConnectProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
-}
-```
-
-### Step 6: Dispatching Tracked Actions in Components
-
-Trigger Web3 transactions using `executeTxAction`. The overlay modals and toast progress feeds will launch automatically:
-
-```tsx
-// src/components/SwapWidget.tsx
-import { sepolia } from 'viem/chains';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { ConnectButton } from '@tuwaio/nova-connect/components';
-import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
-import { TxActionButton } from '@tuwaio/nova-transactions/components';
-import { usePulsarStore, TxType } from '@/hooks/usePulsarStore';
-
-export function SwapWidget() {
-  const executeTxAction = usePulsarStore((state) => state.executeTxAction);
-  const transactionsPool = usePulsarStore((state) => state.transactionsPool);
-  const getLastTxKey = usePulsarStore((state) => state.getLastTxKey);
-
-  const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
-
-  const triggerSwap = async () => {
-    // 1. Define the logic closure returning a transaction hash (0x...)
-    const writeSwap = async () => {
-      // Contract write execution logic
-      return '0x...';
-    };
-
-    // 2. Invoke the lifecycle monitor
-    await executeTxAction({
-      actionFunction: writeSwap,
-      onSuccess: (tx) => console.log('Swap completed successfully!', tx.hash),
-      params: {
-        type: TxType.swap,
-        adapter: OrbitAdapter.EVM,
-        desiredChainID: sepolia.id, // Switches network if active wallet is on wrong chain
-        title: 'Swap ETH',
-        description: 'Swapping 1 ETH for USDT',
-        payload: { fromToken: 'ETH', toToken: 'USDT', amount: '1' },
-        withTrackedModal: true, // Opens the Nova modal automatically
-      },
-    });
-  };
-
-  return (
-    <div className="flex flex-col items-center gap-4 p-8 border border-[var(--tuwa-border-primary)] rounded-[var(--tuwa-rounded-corners)]">
-      <ConnectButton />
-      <TxActionButton
-        action={triggerSwap}
-        getLastTxKey={getLastTxKey}
-        transactionsPool={transactionsPool}
-        walletAddress={activeConnection?.isConnected ? activeConnection.address : undefined}
-        className="px-6 py-2 bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)] font-medium"
-      >
-        Execute Swap
-      </TxActionButton>
-    </div>
-  );
-}
 ```
 
 ---
 
-## Theme & Customization
+## 📚 Next Steps
 
-All colors, borders, and rounded sizes are customizable globally by overwriting CSS Custom Properties in your main stylesheet:
-
-```css
-/* src/styles/app.css */
-:root {
-  --tuwa-text-accent: #6366f1; /* Indigo-500 */
-  --tuwa-text-on-accent: #ffffff;
-  --tuwa-bg-primary: #ffffff;
-  --tuwa-bg-secondary: #f9fafb;
-  --tuwa-rounded-corners: 6px;
-}
-
-/* Dark mode overrides (automatically toggled on .dark class) */
-.dark {
-  --tuwa-bg-primary: #0f172a;
-  --tuwa-bg-secondary: #1e293b;
-  --tuwa-text-primary: #f1f5f9;
-  --tuwa-border-primary: #334155;
-}
-```
-
-Refer to the **[Theming & Customization Guide](./Theming)** to explore deep component customization props and the shared styles pattern.
-
----
-
-## Links & Ecosystem Resources
-
-- **GitHub Repository:** [https://github.com/TuwaIO/nova-uikit](https://github.com/TuwaIO/nova-uikit)
-- **Live Stories sandbox:** [https://stories.tuwa.io/](https://stories.tuwa.io/)
-- **Core Primitives:** [`@tuwaio/nova-core` API Reference](./apiReference/README)
-- **Report Issues:** [https://github.com/TuwaIO/nova-uikit/issues](https://github.com/TuwaIO/nova-uikit/issues)
-- **Contribution Policy:** [workflows/CONTRIBUTING.md](https://github.com/TuwaIO/workflows/blob/main/CONTRIBUTING.md)
+- Set up the providers with the examples of **[`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)** and **[`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs)**, and browse the **Packages** section for the reference of every export.
+- Adapt the look with the **[Theming](?path=/docs/theming--docs)** page and try the customization options in the component stories.
+- Build a full-stack app with Satellite Connect, SIWX, Pulsar and Quasar: see the **[TUWA SDK documentation](https://sdk.docs.tuwa.io/full-stack)**.
+- Read the **[Multi-Chain Authentication guide](https://docs.tuwa.io/guides/multi-chain-auth-siwx-caip122)** for SIWX sign-in across EVM and Solana, and find more guides at **[docs.tuwa.io/guides](https://docs.tuwa.io/guides)**.
+- Read the source on **[GitHub](https://github.com/TuwaIO/nova-uikit)**.

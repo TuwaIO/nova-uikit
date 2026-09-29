@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/TrackingTxModal" />
+
+# TrackingTxModal()
+
+> **TrackingTxModal**\<`T`\>(`props`): `Element` \| `null`
+
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:175](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L175)
+
+A modal that follows the latest submitted transaction step by step: it shows `initialTx` of the Pulsar store while
+the transaction is being submitted, then the transaction of the pool that `initialTx.lastTxKey` points to. It is
+open while `initialTx.withTrackedModal` is set and the transaction is not yet in the pool, and then while the
+transaction's `isTrackedModalOpen` is `true`. It shows the status, the lifecycle steps, the network, time and hashes,
+and the error, and offers speed-up and cancel (pending, unconfirmed EVM transactions sent with MetaMask, when the
+adapter has `speedUpTxAction` and `cancelTxAction`) and retry (after a failure, while `initialTx` has its
+`actionFunction`, through the adapter's `retryTxAction`). `NovaTransactionsProvider` renders it.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`TrackingTxModalProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-trackingtxmodalprops--docs)\<`T`\>
+
+See [TrackingTxModalProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-trackingtxmodalprops--docs).
+
+## Returns
+
+`Element` \| `null`
+
+The modal, or `null` when there is no transaction to show.

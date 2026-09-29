@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectCardContainerProps" />
+
+# ConnectCardContainerProps
+
+> **ConnectCardContainerProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L171)
+
+Props for a custom card container (a `button` by default).
+
+## Type Declaration
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+ID of the subtitle, when there is one
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.card`, or the connect label with the title, subtitle and number of networks
+
+### cardData
+
+> **cardData**: [`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card
+
+### children
+
+> **children**: `React.ReactNode`
+
+The card content, info link, recent badge and chevron
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.container`, or the defaults with the `className` prop
+
+### onClick?
+
+> `optional` **onClick?**: () => `void`
+
+Runs `handlers.onClick` or the `onClick` prop
+
+#### Returns
+
+`void`
+
+### type?
+
+> `optional` **type?**: `"button"`
+
+`button`

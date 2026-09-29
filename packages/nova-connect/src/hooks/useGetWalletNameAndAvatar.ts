@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
 
+/**
+ * Result of {@link useGetWalletNameAndAvatar}.
+ */
 export interface WalletNameAndAvatarData {
   /** The resolved name from the Name Service (e.g., ENS, like "alice.eth"), or null if not found. */
   ensName: string | null;
@@ -19,7 +22,10 @@ export interface WalletNameAndAvatarData {
   retry: () => void;
 }
 
-interface UseGetWalletNameAndAvatarOptions {
+/**
+ * Options of {@link useGetWalletNameAndAvatar}.
+ */
+export interface UseGetWalletNameAndAvatarOptions {
   /** Number of characters to show on each side when abbreviating (default: 12) */
   abbreviateSymbols?: number;
   /** Maximum length before abbreviation is applied (default: 30) */
@@ -31,39 +37,28 @@ interface UseGetWalletNameAndAvatarOptions {
 }
 
 /**
- * A custom hook to fetch the Name Service (e.g., ENS) name and avatar
- * for the currently active wallet.
+ * Resolves the name (ENS on EVM, SNS on Solana) and its avatar for the active wallet with `getName` and `getAvatar`
+ * of its Satellite adapter, which send requests to the name service. It resolves again when the address or the
+ * adapter changes, and cancels the previous lookup. Without a name it returns the shortened address.
  *
- * This hook automatically detects the active wallet and its corresponding
- * adapter via the `useSatelliteConnectStore` and attempts to resolve the
- * wallet address to a human-readable name and avatar.
- *
- * @param options Configuration options for the hook
- * @returns An object containing the resolved name, avatar, loading state, and utility functions
+ * @param options - See {@link UseGetWalletNameAndAvatarOptions}.
+ * @returns See {@link WalletNameAndAvatarData}.
  *
  * @example
- * ```typescript
- * import { useGetWalletNameAndAvatar } from './useGetWalletNameAndAvatar';
+ * ```tsx
+ * import { useGetWalletNameAndAvatar } from '@tuwaio/nova-connect/hooks';
  *
- * function DisplayWalletInfo() {
- *   const { ensName, ensAvatar, isLoading, ensNameAbbreviated, error, retry } = useGetWalletNameAndAvatar({
- *     abbreviateSymbols: 8,
- *     maxNameLength: 25
- *   });
+ * export function WalletInfo() {
+ *   const { ensAvatar, ensNameAbbreviated, isLoading, error, retry } = useGetWalletNameAndAvatar({});
  *
- *   if (isLoading) {
- *     return <div>Resolving name...</div>;
- *   }
- *
- *   if (error) {
- *     return <div>Error: {error} <button onClick={retry}>Retry</button></div>;
- *   }
+ *   if (isLoading) return <p>Resolving name...</p>;
+ *   if (error) return <button onClick={retry}>Retry</button>;
  *
  *   return (
- *     <div className="wallet-info">
- *       {ensAvatar && <img src={ensAvatar} alt="Wallet Avatar" />}
- *       <p title={ensName || ''}>{ensNameAbbreviated || 'No Name Found'}</p>
- *     </div>
+ *     <p>
+ *       {ensAvatar && <img src={ensAvatar} alt="" width={24} height={24} />}
+ *       {ensNameAbbreviated}
+ *     </p>
  *   );
  * }
  * ```

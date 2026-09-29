@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/providers/Type Aliases/NovaTransactionsErrorContextValue" />
+
+# NovaTransactionsErrorContextValue
+
+> **NovaTransactionsErrorContextValue** = `object`
+
+Defined in: [providers/NovaTransactionsErrorContext.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L48)
+
+The shape of the value stored in `NovaTransactionsErrorContext`.
+The context is intentionally minimal — the toast firing logic lives in the hook.
+
+## Properties
+
+### customization?
+
+> `optional` **customization?**: [`ToastValidationErrorCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-toastvalidationerrorcustomization--docs)
+
+Defined in: [providers/NovaTransactionsErrorContext.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L53)
+
+Optional customization for the `ToastValidationError` component body.
+Forwarded from `NovaTransactionsProvider`'s `customization.validationErrorToast` prop.
+
+***
+
+### enabled
+
+> **enabled**: `boolean`
+
+Defined in: [providers/NovaTransactionsErrorContext.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L59)
+
+Whether the validation error toast feature is enabled.
+Mirrors `NovaTransactionsProvider`'s `features.validationErrorToast` prop.
+
+#### Default Value
+
+`true`

@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/TransactionsHistory" />
+
+# TransactionsHistory()
+
+> **TransactionsHistory**\<`T`\>(`props`): `Element`
+
+Defined in: [components/TransactionsHistory.tsx:223](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsHistory.tsx#L223)
+
+The transactions of the connected wallet (`selectAllTransactionsByActiveWallet` from `@tuwaio/pulsar-core`), newest
+first, with a placeholder when no wallet is connected or there are no transactions. Selecting an item opens
+[TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs) (when `canViewDetails` is `true`; `initialTxKey` opens one directly). With `pagination`,
+it
+calls `pagination.fetchNextPage(connectedWalletAddress)` when the end of the list becomes visible (an
+`IntersectionObserver`) and shows a short error indicator when loading a page fails.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`TransactionsHistoryProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistoryprops--docs)\<`T`\>
+
+See [TransactionsHistoryProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistoryprops--docs).
+
+## Returns
+
+`Element`
+
+The list, or the details of the selected transaction.

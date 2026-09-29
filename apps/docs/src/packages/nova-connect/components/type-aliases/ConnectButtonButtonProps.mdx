@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectButtonButtonProps" />
+
+# ConnectButtonButtonProps
+
+> **ConnectButtonButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L68)
+
+Props of the button element (`customization.components.Button`).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state).
+
+### aria-pressed?
+
+> `optional` **aria-pressed?**: `boolean`
+
+Whether a wallet is connected.
+
+### buttonData
+
+> **buttonData**: [`ConnectButtonData`](?path=/docs/packages-nova-connect-components-interfaces-connectbuttondata--docs)
+
+State of the button (connection, options, labels).
+
+### children
+
+> **children**: `React.ReactNode`
+
+The content: the connected wallet, or the connect prompt.
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `customization.classNames.button`, or the default ones.
+
+### disabled?
+
+> `optional` **disabled?**: `boolean`
+
+Whether the button is disabled.
+
+### onClick
+
+> **onClick**: () => `void`
+
+Opens the connect modal, or the connected modal when a wallet is connected.
+
+#### Returns
+
+`void`
+
+### onKeyDown
+
+> **onKeyDown**: (`event`) => `void`
+
+Runs `onClick` on Enter or Space.
+
+#### Parameters
+
+##### event
+
+`React.KeyboardEvent`
+
+The keyboard event.
+
+#### Returns
+
+`void`

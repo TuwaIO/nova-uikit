@@ -8,6 +8,7 @@ import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 
 import { useLabels } from '../providers';
 
+/** Props of {@link HashLink}. */
 export type HashLinkProps = {
   /** The full hash string to display and copy (e.g., a transaction hash or wallet address). */
   hash: string;
@@ -34,6 +35,12 @@ export type HashLinkProps = {
   };
 };
 
+/**
+ * A shortened hash with a copy button, linked to `explorerUrl` (opened in a new tab) when it is set.
+ *
+ * @param props - See {@link HashLinkProps}.
+ * @returns The hash element.
+ */
 export function HashLink({ label, hash, explorerUrl, variant = 'default', className, classNames }: HashLinkProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();

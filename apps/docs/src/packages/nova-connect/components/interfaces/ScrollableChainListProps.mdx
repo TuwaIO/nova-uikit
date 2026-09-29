@@ -1,0 +1,129 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ScrollableChainListProps" />
+
+# ScrollableChainListProps
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:238](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L238)
+
+Props for the [ScrollableChainList](?path=/docs/packages-nova-connect-components-variables-scrollablechainlist--docs) component.
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:261](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L261)
+
+ARIA label for the wrapper (default: the `chainListContainer` label)
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:240](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L240)
+
+List of chain identifiers to render
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ScrollableChainListCustomization`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:259](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L259)
+
+Customization options
+
+***
+
+### error?
+
+> `optional` **error?**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:265](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L265)
+
+Shows this error instead of the list (default: `null`)
+
+***
+
+### getChainData
+
+> **getChainData**: (`chain`) => [`ScrollableChainListChainData`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistchaindata--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:255](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L255)
+
+Formats a chain of `chainsList` for the connector.
+
+#### Parameters
+
+##### chain
+
+`string` \| `number`
+
+A chain of `chainsList`.
+
+#### Returns
+
+[`ScrollableChainListChainData`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistchaindata--docs)
+
+The chain data.
+
+***
+
+### handleValueChange
+
+> **handleValueChange**: (`newChainId`) => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:248](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L248)
+
+Selects a chain.
+
+#### Parameters
+
+##### newChainId
+
+`string`
+
+The formatted chain ID, as a string.
+
+#### Returns
+
+`void`
+
+***
+
+### isLoading?
+
+> `optional` **isLoading?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:263](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L263)
+
+Shows the loading message instead of the list (default: `false`)
+
+***
+
+### onClose
+
+> **onClose**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:257](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L257)
+
+Closes the list after a selection
+
+#### Returns
+
+`void`
+
+***
+
+### selectValue
+
+> **selectValue**: `string`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:242](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L242)
+
+The formatted chain ID of the active connection, as a string (marks the active item)

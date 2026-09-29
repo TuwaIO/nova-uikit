@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useHasNovaConnectContext" />
+
+# useHasNovaConnectContext()
+
+> **useHasNovaConnectContext**(): `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:258](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L258)
+
+Checks whether the component is inside `NovaConnectProvider`.
+
+## Returns
+
+`boolean`
+
+`true` inside the provider.
+
+## Example
+
+```tsx
+import { useHasNovaConnectContext } from '@tuwaio/nova-connect/hooks';
+
+export function ProviderCheck() {
+  const hasContext = useHasNovaConnectContext();
+
+  return <p>{hasContext ? 'Nova Connect is ready' : 'NovaConnectProvider not found'}</p>;
+}
+```

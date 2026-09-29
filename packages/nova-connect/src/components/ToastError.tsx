@@ -10,28 +10,45 @@ import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCall
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
 // --- Types for Customization ---
-type CustomIconProps = {
+/** Props of the copy icon of {@link ToastError} (`customization.components.Icon`). */
+export type ToastErrorIconProps = {
+  /** Whether the error was just copied. */
   isCopied: boolean;
+  /** Classes from `customization.classNames.icon`. */
   className?: string;
+  /** Always `true`: the button has its own label. */
   'aria-hidden'?: boolean;
 };
 
-type CustomTitleProps = {
+/** Props of the title of {@link ToastError} (`customization.components.Title`). */
+export type ToastErrorTitleProps = {
+  /** The title. */
   title: string;
+  /** `id` of the title element, referenced by `aria-labelledby` of the toast. */
   titleId: string;
+  /** Classes from `customization.classNames.title`. */
   className?: string;
 };
 
-type CustomDescriptionProps = {
+/** Props of the description of {@link ToastError} (`customization.components.Description`). */
+export type ToastErrorDescriptionProps = {
+  /** The error; the default description shows the string or its `message`. */
   rawError: string | TuwaErrorState;
+  /** `id` of the description element, referenced by `aria-describedby` of the toast. */
   descriptionId: string;
+  /** Classes from `customization.classNames.description`. */
   className?: string;
 };
 
-type CustomButtonContentProps = {
+/** Props of the content of the copy button of {@link ToastError} (`customization.components.ButtonContent`). */
+export type ToastErrorButtonContentProps = {
+  /** The rendered copy icon. */
   icon: ReactNode;
+  /** Whether the error was just copied. */
   isCopied: boolean;
+  /** The label of the button before copying. */
   copyLabel: string;
+  /** The label of the button after copying. */
   copiedLabel: string;
 };
 
@@ -46,35 +63,78 @@ export type ToastErrorCustomization = {
   /** Custom components */
   components?: {
     /** Custom icon component */
-    Icon?: ComponentType<CustomIconProps>;
+    Icon?: ComponentType<ToastErrorIconProps>;
     /** Custom title component */
-    Title?: ComponentType<CustomTitleProps>;
+    Title?: ComponentType<ToastErrorTitleProps>;
     /** Custom description component */
-    Description?: ComponentType<CustomDescriptionProps>;
+    Description?: ComponentType<ToastErrorDescriptionProps>;
     /** Custom button content component */
-    ButtonContent?: ComponentType<CustomButtonContentProps>;
+    ButtonContent?: ComponentType<ToastErrorButtonContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the toast body, instead of the default ones.
+     *
+     * @param params - The toast content.
+     * @param params.hasTitle - Whether the title is not empty.
+     * @param params.hasError - Whether there is an error to show.
+     * @returns The classes.
+     */
     container?: (params: { hasTitle: boolean; hasError: boolean }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title.
+     *
+     * @param params - The toast content.
+     * @param params.title - The title.
+     * @returns The classes.
+     */
     title?: (params: { title: string }) => string;
-    /** Function to generate description classes */
+    /**
+     * Returns the classes of the description.
+     *
+     * @param params - The toast content.
+     * @param params.rawError - The error.
+     * @returns The classes.
+     */
     description?: (params: { rawError: string | TuwaErrorState }) => string;
-    /** Function to generate button classes */
+    /**
+     * Returns the classes of the copy button, instead of the default ones.
+     *
+     * @param params - The button state.
+     * @param params.isCopied - Whether the error was just copied.
+     * @param params.disabled - Whether there is nothing to copy.
+     * @returns The classes.
+     */
     button?: (params: { isCopied: boolean; disabled: boolean }) => string;
-    /** Function to generate icon classes */
+    /**
+     * Returns the classes of the copy icon.
+     *
+     * @param params - The button state.
+     * @param params.isCopied - Whether the error was just copied.
+     * @returns The classes.
+     */
     icon?: (params: { isCopied: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom click handler wrapper */
+    /**
+     * Wraps the click handler of the copy button: call `originalHandler(event)` to copy the error.
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The click event.
+     */
     onClick?: (
       originalHandler: (event: React.MouseEvent<HTMLButtonElement>) => void,
       event: React.MouseEvent<HTMLButtonElement>,
     ) => void;
-    /** Custom keydown handler wrapper */
+    /**
+     * Wraps the key handler of the copy button: call `originalHandler(event)` to run the default behavior (Enter and
+     * Space copy the error).
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The keyboard event.
+     */
     onKeyDown?: (
       originalHandler: (event: React.KeyboardEvent<HTMLButtonElement>) => void,
       event: React.KeyboardEvent<HTMLButtonElement>,
@@ -82,6 +142,7 @@ export type ToastErrorCustomization = {
   };
 };
 
+/** Props of {@link ToastError}. The other props are passed to the container `<div>`. */
 export interface ToastErrorProps extends Omit<ComponentPropsWithoutRef<'div'>, 'role' | 'aria-live' | 'style'> {
   /** Error title to display */
   title: string;
@@ -91,14 +152,18 @@ export interface ToastErrorProps extends Omit<ComponentPropsWithoutRef<'div'>, '
   className?: string;
   /** Custom ARIA label for the error container */
   'aria-label'?: string;
-  /** Callback fired when copy operation completes */
+  /**
+   * Called after the copy button tried to copy the error.
+   *
+   * @param success - Whether the error was copied.
+   */
   onCopyComplete?: (success: boolean) => void;
   /** Customization options */
   customization?: ToastErrorCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultIcon = ({ isCopied, className, ...props }: CustomIconProps) => {
+const DefaultIcon = ({ isCopied, className, ...props }: ToastErrorIconProps) => {
   return (
     <DocumentDuplicateIcon
       className={cn(
@@ -111,7 +176,7 @@ const DefaultIcon = ({ isCopied, className, ...props }: CustomIconProps) => {
   );
 };
 
-const DefaultTitle = ({ title, titleId, className }: CustomTitleProps) => {
+const DefaultTitle = ({ title, titleId, className }: ToastErrorTitleProps) => {
   return (
     <p
       id={titleId}
@@ -128,7 +193,7 @@ const DefaultTitle = ({ title, titleId, className }: CustomTitleProps) => {
   );
 };
 
-const DefaultDescription = ({ rawError, descriptionId, className }: CustomDescriptionProps) => {
+const DefaultDescription = ({ rawError, descriptionId, className }: ToastErrorDescriptionProps) => {
   const displayMessage = typeof rawError === 'string' ? rawError : rawError.message;
   return (
     <p
@@ -144,7 +209,7 @@ const DefaultDescription = ({ rawError, descriptionId, className }: CustomDescri
   );
 };
 
-const DefaultButtonContent = ({ icon, isCopied, copyLabel, copiedLabel }: CustomButtonContentProps) => {
+const DefaultButtonContent = ({ icon, isCopied, copyLabel, copiedLabel }: ToastErrorButtonContentProps) => {
   return (
     <>
       {icon}
@@ -174,8 +239,12 @@ const defaultKeyDownHandler = (
 let idCounter = 0;
 
 /**
- * A highly customizable error toast component with copy functionality and extensive styling options.
- * Provides comprehensive customization for appearance, behavior, and event handling while maintaining accessibility.
+ * The content of an error toast: the title, the error message and a button that copies the error (the string, or the
+ * `raw` value of a `TuwaErrorState` as JSON) to the clipboard. The container is an `alert` with
+ * `aria-live="assertive"`.
+ * `ErrorsProvider` (from `@tuwaio/nova-connect`) uses it.
+ *
+ * Props: {@link ToastErrorProps}; the ref is forwarded to the container.
  */
 export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
   ({ title, rawError, className, 'aria-label': ariaLabel, onCopyComplete, customization, ...props }, ref) => {

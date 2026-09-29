@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingLoadingPlaceholderProps" />
+
+# ConnectingLoadingPlaceholderProps
+
+> **ConnectingLoadingPlaceholderProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:187](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L187)
+
+Props for a custom loading placeholder (shown while `selectedAdapter`, `activeConnector` or the matching wallet is
+missing).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.loading` or the `loading` label
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.loadingPlaceholder` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`status`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

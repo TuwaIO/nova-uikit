@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `ToastTransaction` component, which serves as the main body for a transaction notification toast.
+ * @file This file contains the `ToastTransaction` component, which serves as the main body for a transaction
+ * notification toast.
  */
 
 import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
@@ -13,17 +14,40 @@ import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
 
-type CustomActionButtonProps = { onClick: () => void; children: ReactNode; className?: string };
+/** Props of an action button of {@link ToastTransaction} (speed up, cancel, open transaction). */
+export type ToastTransactionActionButtonProps = {
+  /** Runs the action. */
+  onClick: () => void;
+  /** The button label. */
+  children: ReactNode;
+  /** Classes from `customization.classNames`. */
+  className?: string;
+};
 
+/**
+ * Class names and replacement components for the parts of {@link ToastTransaction}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type ToastTransactionCustomization<T extends Transaction> = {
-  /** Custom components */
+  /** Components that replace the default parts. */
   components?: {
+    /** The title and the description. */
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
+    /** The hashes of the transaction. */
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
+    /** The status badge. */
     StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
-    TxInfoButton?: ComponentType<CustomActionButtonProps>;
-    SpeedUpButton?: ComponentType<CustomActionButtonProps>;
-    CancelButton?: ComponentType<CustomActionButtonProps>;
+    /** The button that opens the transaction in the history modal. */
+    TxInfoButton?: ComponentType<ToastTransactionActionButtonProps>;
+    /** The speed-up button. */
+    SpeedUpButton?: ComponentType<ToastTransactionActionButtonProps>;
+    /** The cancel button. */
+    CancelButton?: ComponentType<ToastTransactionActionButtonProps>;
+    /**
+     * The badge with the number of confirmations, shown when it is above 0. It also receives `required` (the required
+     * confirmations) and `isSuccess`.
+     */
     ConfirmationsBadge?: ComponentType<{ count: number | string; className?: string }>;
   };
   /** Granular classNames for all sub-elements */
@@ -75,17 +99,34 @@ export type ToastTransactionCustomization<T extends Transaction> = {
   };
 };
 
+/**
+ * Props of {@link ToastTransaction}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type ToastTransactionProps<T extends Transaction> = {
+  /** The transaction to show. */
   tx: T;
+  /**
+   * Opens the transaction history modal. The "open transaction" button is shown only when it is set and the connected
+   * wallet sent the transaction.
+   *
+   * @param txKey - Key of the transaction to open.
+   */
   openTxInfoModal?: (txKey?: string) => void;
+  /** Icon shown on the left. Defaults to the icon of the transaction's network. */
   icon?: ReactNode;
+  /** Classes of the toast body. */
   className?: string;
+  /** Class names and replacement components for the parts of the toast. */
   customization?: ToastTransactionCustomization<T>;
+  /** Accepted because `react-toastify` passes it to toast content; not used by the component. */
   closeToast?: ToastContentProps['closeToast'];
+  /** Accepted for compatibility; not used by the component. */
   toastProps?: ToastContainerProps;
 } & Pick<NovaTransactionsProviderProps<T>, 'adapter' | 'connectedWalletAddress'>;
 
-const DefaultSpeedUpButton = ({ onClick, children, className }: CustomActionButtonProps) => (
+const DefaultSpeedUpButton = ({ onClick, children, className }: ToastTransactionActionButtonProps) => (
   <button
     onClick={onClick}
     type="button"
@@ -98,7 +139,7 @@ const DefaultSpeedUpButton = ({ onClick, children, className }: CustomActionButt
   </button>
 );
 
-const DefaultCancelButton = ({ onClick, children, className }: CustomActionButtonProps) => (
+const DefaultCancelButton = ({ onClick, children, className }: ToastTransactionActionButtonProps) => (
   <button
     onClick={onClick}
     type="button"
@@ -111,7 +152,7 @@ const DefaultCancelButton = ({ onClick, children, className }: CustomActionButto
   </button>
 );
 
-const DefaultTxInfoButton = ({ onClick, children, className }: CustomActionButtonProps) => {
+const DefaultTxInfoButton = ({ onClick, children, className }: ToastTransactionActionButtonProps) => {
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
@@ -149,6 +190,18 @@ const DefaultConfirmationsBadge = ({
   </div>
 );
 
+/**
+ * The body of a transaction toast: the network icon, the title and description (colored by status), the hashes with
+ * explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent
+ * with
+ * MetaMask by the connected wallet, it offers speed-up and cancel (when the adapter has `speedUpTxAction` and
+ * `cancelTxAction`); otherwise, for transactions of the connected wallet, a button that opens the transaction in the
+ * history modal. `NovaTransactionsProvider` shows one for every tracked transaction.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link ToastTransactionProps}.
+ * @returns The toast body.
+ */
 export function ToastTransaction<T extends Transaction>({
   openTxInfoModal,
   tx,

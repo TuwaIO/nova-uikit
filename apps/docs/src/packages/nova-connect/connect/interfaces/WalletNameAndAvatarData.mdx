@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/WalletNameAndAvatarData" />
+
+# WalletNameAndAvatarData
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L10)
+
+Result of [useGetWalletNameAndAvatar](?path=/docs/packages-nova-connect-connect-functions-usegetwalletnameandavatar--docs).
+
+## Properties
+
+### ensAvatar
+
+> **ensAvatar**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L14)
+
+The URL of the avatar associated with the name, or null if not found.
+
+***
+
+### ensName
+
+> **ensName**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L12)
+
+The resolved name from the Name Service (e.g., ENS, like "alice.eth"), or null if not found.
+
+***
+
+### ensNameAbbreviated
+
+> **ensNameAbbreviated**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L18)
+
+A truncated version of the name for display, or the abbreviated address if no name.
+
+***
+
+### error
+
+> **error**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L20)
+
+Error message if the name resolution failed.
+
+***
+
+### isLoading
+
+> **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L16)
+
+True while the name service data is being fetched.
+
+***
+
+### retry
+
+> **retry**: () => `void`
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L22)
+
+Function to retry the name resolution manually.
+
+#### Returns
+
+`void`

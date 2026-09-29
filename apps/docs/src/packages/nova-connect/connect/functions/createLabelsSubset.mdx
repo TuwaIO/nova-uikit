@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/createLabelsSubset" />
+
+# createLabelsSubset()
+
+> **createLabelsSubset**\<`K`\>(`labels`, `keys`): `Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), `K`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:213](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L213)
+
+Returns the given labels of a labels object (usable outside React components).
+
+## Type Parameters
+
+### K
+
+`K` *extends* keyof [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+## Parameters
+
+### labels
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The labels.
+
+### keys
+
+`K`[]
+
+The label keys.
+
+## Returns
+
+`Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), `K`\>
+
+An object with the requested labels.
+
+## Example
+
+```ts
+import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+import { createLabelsSubset } from '@tuwaio/nova-connect/hooks';
+
+const actionLabels = createLabelsSubset(defaultLabels, ['connect', 'disconnect', 'tryAgain']);
+```

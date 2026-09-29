@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ValidationConfig" />
+
+# ValidationConfig
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L27)
+
+Validation settings of [ImpersonateForm](?path=/docs/packages-nova-connect-components-variables-impersonateform--docs) (`config.validation`).
+
+## Properties
+
+### customValidator?
+
+> `optional` **customValidator?**: (`address`) => `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L40)
+
+Runs before the built-in checks.
+
+#### Parameters
+
+##### address
+
+`string`
+
+The text in the field.
+
+#### Returns
+
+`string` \| `null`
+
+An error message, or `null` to continue with the built-in checks.
+
+***
+
+### debounceDelay
+
+> **debounceDelay**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L29)
+
+Delay after the last keystroke before the value is validated, in milliseconds (default: `500`)
+
+***
+
+### validateOnBlur
+
+> **validateOnBlur**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L31)
+
+Whether to validate when the field loses focus (default: `true`)
+
+***
+
+### validateOnChange
+
+> **validateOnChange**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L33)
+
+Whether to validate while typing (default: `true`)

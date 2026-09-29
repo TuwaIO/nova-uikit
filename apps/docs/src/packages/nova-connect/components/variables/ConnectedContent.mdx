@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedContent" />
+
+# ConnectedContent
+
+> `const` **ConnectedContent**: `ForwardRefExoticComponent`\<[`ConnectedContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedcontentprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:288](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L288)
+
+The content of the connect button while a wallet is connected: the native balance with three decimals (with
+`withBalance`, from the `sm` breakpoint), the avatar and the ENS or SNS name (or shortened address) of the active
+wallet. While a transaction
+of the wallet in `transactionPool` is pending it shows a loading animation; when a pending transaction finishes it
+shows the result (succeeded, failed, replaced) for `customization.config.statusResetTimeout` milliseconds. The status
+is kept in `connectedButtonStatus` of `NovaConnectProvider`.
+
+Props: [ConnectedContentProps](?path=/docs/packages-nova-connect-components-interfaces-connectedcontentprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { ConnectedContent } from '@tuwaio/nova-connect/components';
+import type { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+
+export function WalletContent({ transactionPool }: { transactionPool: TransactionPool<Transaction> }) {
+  return (
+    <ConnectedContent
+      transactionPool={transactionPool}
+      withBalance
+      customization={{
+        classNames: { balanceContainer: () => 'custom-balance' },
+        handlers: { onBalanceClick: (balance) => console.log('Balance clicked:', balance) },
+        config: { statusResetTimeout: 3000 },
+      }}
+    />
+  );
+}
+```

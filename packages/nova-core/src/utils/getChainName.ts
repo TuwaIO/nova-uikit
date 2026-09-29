@@ -41,22 +41,24 @@ function capitalize(str: string): string {
  * For string IDs with environment suffixes (like "solana:devnet"),
  * the suffix is appended to the name if it's a known dev/test environment.
  *
+ * The networks are looked up in the metadata of `@web3icons/common`.
+ *
  * @param chainId - Chain identifier (number for EVM, string for non-EVM)
- * @returns Chain information object with name, id, and original chainId
+ * @returns The network name, id and icon file path, and the original `chainId`; `'Unknown'`/`'unknown'` when the
+ * network is not listed.
  *
  * @example
  * ```ts
- * // EVM network
- * getChainName(1)
- * // → { name: "Ethereum", id: "ethereum", chainId: 1 }
+ * import { getChainName } from '@tuwaio/nova-core';
  *
- * // Solana devnet
- * getChainName("solana:devnet")
- * // → { name: "Solana Devnet", id: "solana", chainId: "solana:devnet" }
+ * getChainName(1);
+ * // → { name: 'Ethereum', id: 'ethereum', filePath: 'ethereum', chainId: 1 }
  *
- * // Unknown network
- * getChainName(999999)
- * // → { name: "Unknown", id: "unknown", chainId: 999999 }
+ * getChainName('solana:devnet');
+ * // → { name: 'Solana Devnet', id: 'solana', filePath: 'solana', chainId: 'solana:devnet' }
+ *
+ * getChainName(999999);
+ * // → { name: 'Unknown', id: 'unknown', filePath: 'unknown', chainId: 999999 }
  * ```
  */
 export function getChainName(chainId: number | string): ChainInfo {

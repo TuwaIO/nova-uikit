@@ -1,0 +1,198 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/AboutWalletsSlideProps" />
+
+# AboutWalletsSlideProps
+
+> **AboutWalletsSlideProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:172](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L172)
+
+Props for a custom slide. The default one animates the slide with Framer Motion and renders the image and content
+sections.
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:196](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L196)
+
+Classes from `classNames.slide`
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: [`AboutWalletsClassNames`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsclassnames--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:208](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L208)
+
+ClassNames for nested customization
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:210](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L210)
+
+Custom components
+
+#### ContentSection?
+
+> `optional` **ContentSection?**: `ComponentType`\<[`AboutWalletsContentSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletscontentsectionprops--docs)\>
+
+`components.ContentSection`
+
+#### ImageSection?
+
+> `optional` **ImageSection?**: `ComponentType`\<[`AboutWalletsImageSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsimagesectionprops--docs)\>
+
+`components.ImageSection`
+
+***
+
+### direction
+
+> **direction**: [`AboutWalletsSlideDirection`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsslidedirection--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:180](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L180)
+
+Direction of the change that showed this slide
+
+***
+
+### imageLoadedStates
+
+> **imageLoadedStates**: `Record`\<`number`, `boolean`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:182](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L182)
+
+Whether the image of each slide (by index) has loaded or failed
+
+***
+
+### imageTransition?
+
+> `optional` **imageTransition?**: `Transition`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L206)
+
+`animation.imageTransition` or the default transition
+
+***
+
+### imageVariants?
+
+> `optional` **imageVariants?**: `Variants`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:204](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L204)
+
+`variants.image` or the default variants
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:198](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L198)
+
+The Nova Connect labels
+
+***
+
+### onImageError
+
+> **onImageError**: (`slideIndex`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:194](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L194)
+
+Logs a warning, marks the image of a slide as loaded and calls `handlers.onImageError`.
+
+#### Parameters
+
+##### slideIndex
+
+`number`
+
+Index of the slide.
+
+#### Returns
+
+`void`
+
+***
+
+### onImageLoad
+
+> **onImageLoad**: (`slideIndex`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:188](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L188)
+
+Marks the image of a slide as loaded and calls `handlers.onImageLoad`.
+
+#### Parameters
+
+##### slideIndex
+
+`number`
+
+Index of the slide.
+
+#### Returns
+
+`void`
+
+***
+
+### slide
+
+> **slide**: [`AboutWalletsSlideConfig`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletsslideconfig--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:174](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L174)
+
+The slide
+
+***
+
+### slideIndex
+
+> **slideIndex**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:176](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L176)
+
+Index of the slide
+
+***
+
+### slideTransition?
+
+> `optional` **slideTransition?**: `Transition`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:202](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L202)
+
+`animation.slideTransition` or the default spring
+
+***
+
+### slideVariants?
+
+> `optional` **slideVariants?**: `Variants`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:200](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L200)
+
+`variants.slide` or the default variants
+
+***
+
+### totalSlides
+
+> **totalSlides**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:178](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L178)
+
+Number of slides

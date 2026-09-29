@@ -11,15 +11,35 @@ const NetworkIconLazy = lazy(() =>
   })),
 );
 
-interface NetworkIconProps {
+/**
+ * Props of {@link NetworkIcon}.
+ */
+export interface NetworkIconProps {
+  /**
+   * The network: an EVM chain ID (`1`), or a string whose part before `:` is a network id of `@web3icons/common`
+   * (`'solana:devnet'`, `'base'`).
+   */
   chainId: number | string;
+  /** Icon style of `@web3icons/react`. Defaults to `'background'`. */
   variant?: 'background' | 'branded' | 'mono';
+  /** Classes merged with the default classes (full size of the parent, rounded). */
   className?: string;
 }
 
 /** CSS variable for testnet icon styling */
 const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
 
+/**
+ * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand
+ * (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
+ * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
+ * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet are recolored with `--tuwa-testnet-icons`.
+ *
+ * Side effect: a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common` does not list.
+ *
+ * @param props - See {@link NetworkIconProps}.
+ * @returns The icon element.
+ */
 export function NetworkIcon({ chainId, variant = 'background', className }: NetworkIconProps) {
   const chainInfo = getChainName(chainId);
   const isStringId = typeof chainId === 'string';

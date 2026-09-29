@@ -1,0 +1,317 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/DisclaimerCustomization" />
+
+# DisclaimerCustomization
+
+> **DisclaimerCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L146)
+
+Customization options of [Disclaimer](?path=/docs/packages-nova-connect-components-variables-disclaimer--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L169)
+
+Custom class name generators
+
+#### actions?
+
+> `optional` **actions?**: () => `string`
+
+Returns the classes of the actions section, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### additionalContent?
+
+> `optional` **additionalContent?**: () => `string`
+
+Returns the classes of the additional content wrapper, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### button?
+
+> `optional` **button?**: (`params`) => `string`
+
+Returns the classes of a button, instead of `standardButtonClasses` of `@tuwaio/nova-core`.
+
+##### Parameters
+
+###### params
+
+The button.
+
+###### isLink
+
+`boolean`
+
+Whether the action is a URL.
+
+###### isPrimary
+
+`boolean`
+
+Whether this is the "Learn more" button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones (the `className` prop is still added).
+
+##### Parameters
+
+###### params
+
+The layout.
+
+###### compact
+
+`boolean`
+
+The `compact` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### contentSection?
+
+> `optional` **contentSection?**: (`params`) => `string`
+
+Returns the classes of the content section, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The layout.
+
+###### compact
+
+`boolean`
+
+The `compact` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### description?
+
+> `optional` **description?**: () => `string`
+
+Returns the classes of the description, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### status?
+
+> `optional` **status?**: () => `string`
+
+Returns the classes of the screen reader summary, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### title?
+
+> `optional` **title?**: (`params`) => `string`
+
+Returns the classes of the title, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The layout.
+
+###### compact
+
+`boolean`
+
+The `compact` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L148)
+
+Custom components
+
+#### ActionButton?
+
+> `optional` **ActionButton?**: `ComponentType`\<[`DisclaimerButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimerbuttonprops--docs)\>
+
+Custom action button
+
+#### Actions?
+
+> `optional` **Actions?**: `ComponentType`\<[`DisclaimerActionsProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimeractionsprops--docs)\>
+
+Custom actions section
+
+#### AdditionalContent?
+
+> `optional` **AdditionalContent?**: `ComponentType`\<[`DisclaimerAdditionalContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimeradditionalcontentprops--docs)\>
+
+Custom additional content wrapper
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`DisclaimerContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimercontainerprops--docs)\>
+
+Custom container wrapper
+
+#### ContentSection?
+
+> `optional` **ContentSection?**: `ComponentType`\<[`DisclaimerContentSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimercontentsectionprops--docs)\>
+
+Custom content section
+
+#### Description?
+
+> `optional` **Description?**: `ComponentType`\<[`DisclaimerDescriptionProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimerdescriptionprops--docs)\>
+
+Custom description component
+
+#### LinkButton?
+
+> `optional` **LinkButton?**: `ComponentType`\<[`DisclaimerButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimerbuttonprops--docs)\>
+
+Custom link button
+
+#### Status?
+
+> `optional` **Status?**: `ComponentType`\<[`DisclaimerStatusProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimerstatusprops--docs)\>
+
+Custom status component
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`DisclaimerTitleProps`](?path=/docs/packages-nova-connect-components-type-aliases-disclaimertitleprops--docs)\>
+
+Custom title component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:236](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L236)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.actions?
+
+> `optional` **actions?**: `string`
+
+ARIA label of the actions section (default: the `disclaimerActions` label)
+
+##### ariaLabels.additionalContent?
+
+> `optional` **additionalContent?**: `string`
+
+ARIA label of the additional content (default: the `disclaimerAdditionalInformation` label)
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the container (before the `aria-label` prop)
+
+#### buttonLabels?
+
+> `optional` **buttonLabels?**: `object`
+
+Custom button labels
+
+##### buttonLabels.learnMore?
+
+> `optional` **learnMore?**: `string`
+
+Text of the primary button (default: the `learnMore` label)
+
+##### buttonLabels.listAction?
+
+> `optional` **listAction?**: `string`
+
+Text of the list button (default: the `listOfNetworks` label)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:229](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L229)
+
+Custom event handlers
+
+#### onMount?
+
+> `optional` **onMount?**: () => `void`
+
+Called after mount
+
+##### Returns
+
+`void`
+
+#### onUnmount?
+
+> `optional` **onUnmount?**: () => `void`
+
+Called on unmount
+
+##### Returns
+
+`void`

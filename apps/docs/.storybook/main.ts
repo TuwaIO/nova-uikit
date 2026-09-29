@@ -1,8 +1,17 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: ['@storybook/addon-docs', '@storybook/addon-onboarding', '@storybook/addon-themes'],
+  addons: [
+    {
+      // GitHub Flavored Markdown (tables) in MDX pages, including the package READMEs of the Packages section
+      name: '@storybook/addon-docs',
+      options: { mdxPluginOptions: { mdxCompileOptions: { remarkPlugins: [remarkGfm] } } },
+    },
+    '@storybook/addon-onboarding',
+    '@storybook/addon-themes',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},

@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/NovaConnectLabelsProvider" />
+
+# NovaConnectLabelsProvider()
+
+> **NovaConnectLabelsProvider**(`props`): `Element`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectLabelsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectLabelsProvider.tsx#L44)
+
+Provides labels to the Nova Connect components below it. `NovaConnectProvider` already renders it with the `labels`
+prop merged into the defaults, so use it directly only to give a part of the tree other texts. In development it
+warns about missing basic labels.
+
+## Parameters
+
+### props
+
+[`NovaConnectLabelsProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectlabelsproviderprops--docs)
+
+See [NovaConnectLabelsProviderProps](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectlabelsproviderprops--docs).
+
+## Returns
+
+`Element`
+
+The labels context provider.
+
+## Example
+
+```tsx
+import { NovaConnectLabelsProvider } from '@tuwaio/nova-connect';
+import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+import type { ReactNode } from 'react';
+
+export function CustomTexts({ children }: { children: ReactNode }) {
+  return (
+    <NovaConnectLabelsProvider labels={{ ...defaultLabels, connectWallet: 'Link wallet' }}>
+      {children}
+    </NovaConnectLabelsProvider>
+  );
+}
+```

@@ -18,7 +18,8 @@ export default defineConfig([
     sourcemap: false,
     minify: true,
     clean: true,
-    dts: true,
+    // Types of `process.env.NODE_ENV` (the root entry imports no package that references the Node.js types)
+    dts: { compilerOptions: { types: ['node'] } },
     splitting: true,
     external: [...Object.keys(pkg.peerDependencies || {}), ...Object.keys(pkg.devDependencies || {})],
   },

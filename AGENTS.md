@@ -1,87 +1,105 @@
-# 🤖 Agent Context: Nova UI Kit
+# 🤖 Agent Context: Nova UI Kit (`@tuwaio/nova-*`)
 
 ## 1. Project Philosophy & Goal
 
-- **What is this?** A monorepo for **Nova UI Kit** — the official, high-performance design system and component library for the TUWA ecosystem. It provides the visual View Layer that represents the state managed by `satellite` (wallet connection) and `pulsar` (transaction tracking).
-- **Role in TUWA:** The Visual Interface. It connects purely logical, headless libraries to beautiful, interactive React components.
-- **Philosophy:** "Pure Web3", Headless-First, Framework Agnostic (React implementation), Strict Separation of Concerns (UI vs. Logic).
+- **What is this?** A monorepo for **Nova UI Kit** — React components for wallet connections and transactions on EVM and Solana. It renders the state of Satellite Connect (connect button, connect and connected modals, chain selector, error toasts) and of Pulsar (transaction toasts, tracking modal, history), and signs users in with SIWX.
+- **Role in TUWA:** Stage 4 ("User Interface"). `nova-core` is the L6 package, `nova-connect` and `nova-transactions` are L7 packages (TUWA-wide layer numbers, as in the hub). Nova builds on Orbit Utils and SIWX (Stage 1) and on Satellite Connect and Pulsar (Stage 2); the TUWA SDK (Stage 5) re-exports it. Nova must never depend on the SDK.
+- **Philosophy:** Headless state, UI only. The wallet state lives in Satellite Connect, the transaction state in Pulsar and the session in SIWX; Nova keeps only UI state (open modals, selected screen) and must not implement their logic. Every component can be restyled (`--tuwa-*` CSS variables, `className`, `customization` props) and relabeled (`labels`). Side effects (`localStorage`, network requests, wallet prompts) must be explicit and documented.
 
 ## 2. Tech Stack (Verified)
 
-- **Core:** TypeScript v6.0+, Node.js (v20-24), pnpm v11+ (Workspace).
-- **Framework:** React v19+.
-- **Styling:** Tailwind CSS v4, Framer Motion v12.
-- **State Management:** Zustand v5.x.
-- **Web3 (EVM):** `viem` v2.x, `@wagmi/core` v3.x.
-- **Web3 (Solana):** `@solana/kit` v8.x, `@wallet-standard/react`, `@wallet-standard/base`, `@tuwaio/orbit-solana`.
-- **Icons:** `@web3icons/react` v4+.
-- **Build/Monorepo:**
-  - `tsup`: Bundler for `packages/*` (ESM/CJS/DTS).
-  - `vite`: Bundler for Storybook (`apps/docs`).
-  - `pnpm` Workspaces: Dependency management.
-  - `semantic-release`: Automated versioning.
+- **Core:** TypeScript 6.0.3 (pinned exactly in the root, `apps/docs` and every `packages/*` `package.json`), pnpm 12 (`packageManager`, workspace).
+- **React:** `react` (peer `>=19.2.3`; `useEffectEvent` is available). No wagmi React hooks: Nova reads the Satellite Connect store.
+- **UI libraries:** `framer-motion`, `@radix-ui/react-dialog` (in `nova-core`), `@radix-ui/react-select`, `react-toastify`, `@heroicons/react`, `@web3icons/react` and `@web3icons/common` (in `nova-core`), `ethereum-blockies-base64`, `clsx` + `tailwind-merge` (`cn`), `dayjs` (in `nova-transactions`).
+- **Styling:** Tailwind CSS v4, compiled per package with PostCSS into `dist/index.css`, with a class prefix per package: `novacore:`, `novacon:`, `novatx:`. The `--tuwa-*` theme variables are defined in `nova-core` (`:root` and `.dark`).
+- **TUWA peers:** `nova-connect` — `@tuwaio/nova-core`, `@tuwaio/nova-transactions`, `@tuwaio/satellite-core`, `@tuwaio/satellite-react`, `@tuwaio/siwx-react`, `@tuwaio/pulsar-core`, `@tuwaio/orbit-core`, and for `/evm` and `/solana` the optional chain packages of Satellite Connect and Orbit (`viem` for the `Chain` type); `nova-transactions` — `@tuwaio/pulsar-core`, `@tuwaio/orbit-core`.
+- **Testing:** `vitest` v5 (run per package via `pnpm test`). There is no DOM library: tests call components and hooks as functions with the React hooks mocked (`vi.mock('react')`). `packages/nova-connect/src/testing/hookHarness.ts` renders a component repeatedly with persistent state, refs, memos, effects (with dependencies and cleanups) and `useEffectEvent`, and unmounts it.
+- **Docs:** Storybook 10.6 (`@storybook/react-vite`) in `apps/docs` (`stories.tuwa.io`); TypeDoc 0.28 + `typedoc-plugin-markdown` 4 generate the Packages section as MDX pages (config: root `typedoc.json`, `packages/nova-connect/typedoc.json`, `packages/nova-transactions/typedoc.json`, local plugins in `apps/docs/typedoc/`).
+- **Build/Monorepo:** `tsup` (ESM/CJS/DTS) and `postcss` for `packages/*`; `release-please` (stable releases of `packages/*` from `main`) and `semantic-release` (`alpha.release.config.js`, prereleases).
 
 ## 3. Architecture & Directory Structure
-
-The project is a **pnpm workspace** clearly separating core styling, connection logic, and transaction visualization.
 
 ```
 nova-uikit/
 ├── apps/
-│   └── docs/                   # Storybook Instance (React + Vite)
-│       └── .storybook/         # Storybook configuration
+│   └── docs/                          # Storybook (React + Vite), stories.tuwa.io
+│       ├── .storybook/                # main.ts, preview.tsx (themes, sidebar order), manager.jsx
+│       ├── src/                       # Introduction.mdx, Theming.mdx, components/ (stories), utils/ (providers, mocks)
+│       │   └── packages/              # GENERATED by `pnpm docs:gen` — never edit by hand
+│       └── typedoc/                   # TypeDoc plugins and the Packages overview text
 ├── packages/
-│   ├── nova-core/              # UI Core (L6). Styling primitives & Utils.
-│   │   ├── src/styles/         # CSS Variables & Tailwind setup
-│   │   ├── src/hooks/          # Shared hooks (useTheme, etc.)
-│   │   └── src/utils/          # Helper functions (cn, formatters)
-│   ├── nova-connect/           # UI Components (L7). Wallet Connection Components.
-│   │   ├── src/satellite/      # Integration with @tuwaio/satellite-core
-│   │   ├── src/evm/            # EVM-specific connectors (Wagmi/Viem)
-│   │   ├── src/solana/         # Solana-specific connectors (Orbit / Solana Kit)
-│   │   ├── src/components/     # UI Components (ConnectButton, Modal)
-│   │   └── src/providers/      # NovaConnectProvider logic
-│   └── nova-transactions/      # UI Components (L7). Transaction Status Components.
-│       ├── src/components/     # Toasts, Modals, Feed lists
-│       └── src/providers/      # TransactionProvider
-├── package.json                # Root scripts & dependencies
-└── pnpm-workspace.yaml         # Workspace definition
+│   ├── nova-core/                     # L6: theme variables, dialog, icons, hooks, helpers. No Web3 logic.
+│   │   └── src/                       # components/, hooks/, utils/, styles/ (variables.css, fonts.css)
+│   ├── nova-connect/                  # L7: wallet connection UI
+│   │   └── src/                       # providers/, components/, hooks/, i18n/, watchers/, utils/, satellite/, evm/, solana/
+│   └── nova-transactions/             # L7: transaction UI
+│       └── src/                       # components/, providers/, i18n/
+├── typedoc.json                       # Reference generation ("packages" strategy)
+└── package.json                       # Root scripts
 ```
 
 ### Module Breakdown
 
-- **`nova-core` (UI Core - L6)**: The bedrock. Contains the Tailwind configuration, shared CSS variables, and utility functions like `cn` (classnames). Zero Web3 logic.
-- **`nova-connect` (UI Components - L7)**: The bridge to wallets. Consumes `@tuwaio/satellite-*` packages to provide UI for wallet selection, connection status, and account management.
-- **`nova-transactions` (UI Components - L7)**: The feedback loop. Consumes `@tuwaio/pulsar-core` to visualize transaction lifecycles (pending -> success/fail) via toasts and history lists.
+- **`nova-core`**: `dist/index.css` (the `--tuwa-*` variables, the embedded Geist Mono font, `novacore:` utilities); `Dialog*` (Radix UI + `framer-motion`); `NetworkIcon`/`WalletIcon` (`@web3icons/react` loaded on demand, missing icons fetched from `raw.githubusercontent.com` by `GithubFallbackIcon` and cached in memory, `SvgToImg` to avoid duplicate SVG ids); `useCopyToClipboard` (`copy` resolves `{ copied: true }` or `{ copied: false, error }`), `useMediaQuery`, `cn`, `deepMerge`, `getChainName`, `textCenterEllipsis`.
+- **`nova-connect`** (entry points `.`, `./components`, `./hooks`, `./i18n`, `./satellite`, `./evm`, `./solana`): `NovaConnectProvider` (UI state in `NovaConnectProviderContext`/`useNovaConnect`; renders the connect and connected modals only when `appChains` or `solanaRPCUrls` is set, the error toasts of `connectionError`/`switchNetworkError`, and `NovaSiwxWatcher` when `siwx` is set); `ConnectButton` and the modal components; `NovaSiwxWatcher` (signs in once per address with `@tuwaio/siwx-react`, disconnects on rejection, clears the session and calls `destroyer` on disconnect, but keeps a restored session while `isAutoConnectFinished` of the Satellite store is `false`); `useNovaSiwx`; `defaultLabels`/`ukrainianLabels`. Reads `orbit-core:recentlyConnectedConnectorsListHelpers` and writes `satellite-connect:impersonatedAddress` through `@tuwaio/orbit-core`. `/satellite` re-exports `@tuwaio/satellite-react`; `/evm` and `/solana` re-export its watchers and augment `AllConnections`/`AllConnectors`. The root entry imports no EVM or Solana package: importing `/evm` or `/solana` registers the chain adapter of the network (`utils/adapters/registry.ts`, a map shared on `globalThis` between the entry point bundles) and augments `NovaConnectChainConfigTypes`, which types `appChains` and `solanaRPCUrls`; without them the chain lists fall back to the ids of `appChains` and the clusters of `solanaRPCUrls`. The connected modal loads `@tuwaio/nova-transactions` (a required peer) with a dynamic import.
+- **`nova-transactions`** (entry points `.`, `./providers`): `NovaTransactionsProvider` (toasts, tracking modal, history modal and pre-submission error toast behind feature flags, for the values of a Pulsar store); the components (`ToastTransaction`, `TrackingTxModal`, `TransactionsInfoModal`, `TransactionsHistory`, `TransactionKey`, `HashLink`…); `defaultLabels`, `NovaTransactionsLabelsProvider`/`useLabels`. Speed-up and cancel only for pending, unconfirmed `ethereum`-tracker transactions sent with MetaMask when the adapter has `speedUpTxAction`/`cancelTxAction`; retry through `retryTxAction` while `initialTx` (with its `actionFunction`) is in the store.
+
+### Documentation Model
+
+- Storybook has an **Introduction** and **Theming** page (hand-written MDX), the component stories, and a **Packages** section (generated). Links to the TUWA guides (`docs.tuwa.io/guides`) and the SDK are in the Introduction.
+- Each package page is the package `README.md` followed by the generated list of exports; every export has its own page generated from its JSDoc. Titles: `Packages/Overview`, `Packages/<package>/Overview`, `Packages/<package>[/<module>]/<Kind>/<Name>`; IDs are `sanitize(title)--docs` (`storybook/internal/csf`), so a page is linked as `https://stories.tuwa.io/?path=/docs/<id>`, for example `packages-nova-connect-overview--docs`. `apps/docs/typedoc/storybookRoutes.mjs` sets the titles and rewrites the links; the sidebar order is `storySort` in `.storybook/preview.tsx`.
+- **No duplicates:** a package README has a short usage example; the full-stack integration with Satellite Connect, SIWX, Pulsar and a server lives in the TUWA SDK docs (`sdk.docs.tuwa.io/full-stack`); the Introduction links to pages and repeats no setup code.
+- `nova-connect` and `nova-transactions` name their modules with `@module` tags in the entry files (`connect`, `components`, `hooks`, `i18n`, `satellite`, `evm`, `solana`; `transactions`, `providers`). Never name a module `index`.
+- `typedoc.json` maps the `@tuwaio/nova-*` imports to their sources (`compilerOptions.paths`). `@tuwaio/orbit-*`, `satellite-*`, `pulsar-*` and `siwx-*` stay external. `excludeExternals` and `hideExternalMembers.mjs` hide members inherited from external types (such as the HTML props of `HTMLMotionProps`).
+- This layout is shared with the other TUWA documentation sites (Orbit Utils, SIWX, Pulsar, Satellite Connect, SDK). Keep it consistent.
 
 ## 4. Coding Standards (STRICT)
 
-- **Language:** English ONLY (Code, Comments, Commits).
-- **Style:** Functional programming preferred. React Functional Components.
-- **Types:** Strict TypeScript. **NO `any`**. Usage of `ts-expect-error` must be justified.
-- **Styling:** Utility-first via Tailwind CSS. No custom CSS files unless absolutely necessary (use `nova-core/src/styles` for globals).
-- **Comments:** JSDoc required for **all** exported components and hooks.
-  - Must explain _props_, _returns_, and _side effects_.
-- **Naming:**
-  - Files: `camelCase.ts` (hooks/utils), `PascalCase.tsx` (components).
-  - Components/Types: `PascalCase`.
-  - Functions/Variables: `camelCase`.
+- **Language:** English ONLY (Code, Comments, Commits, Docs).
+- **Style:** Functional React components. Utility-first styling with the prefixed Tailwind classes of the package; no `style={{...}}` for styling; theme values through `--tuwa-*` variables.
+- **Types:** Strict TypeScript. **NO new `any`**. Usage of `ts-expect-error` must be justified (the module augmentation in `nova-connect/src/{evm,solana}/index.ts` uses `@ts-ignore`, because the package name resolves for TypeDoc and consumers but not in the package build).
+- **Customization API:** the props of a replaceable part are exported with the component name as prefix (`ConnectCardContainerProps` for `customization.components.Container` of `ConnectCard`, `<Component><Part>SlotProps` when the name is taken). Renaming them is a breaking change.
+- **Comments:** JSDoc required for **all** exported components, hooks, functions, types and constants in `packages/*/src`.
+  - Must explain _inputs_ (`@param`, props), _outputs_ (`@returns`), _errors_ (`@throws`) and _side effects_ (`localStorage` keys, network requests, wallet prompts, toasts, timers, subscriptions).
+  - JSDoc is published verbatim as the reference page of the export. Keep it accurate and complete, including the fields of type literals and the parameters of callback properties.
+  - Use only standard TSDoc tags (no `@name`, `@fileoverview`, `@description`, `@optional`, `@typedef`/`@property`; use `@file` for file headers); `@param` names must match the real parameters (for destructured objects, `@param params` first, then `params.<field>`, and no comments on the fields of the inline type). For components with destructured props, `@param props`.
+  - Use `{@link X}` only for symbols exported by the same package. For other packages, write the name as code with its package.
+  - Barrel files (`index.ts`) have no comments, except the `@module` comment of the entry points. Mark exports that are not part of the public API with `@internal`.
+- **Package READMEs** (`packages/*/README.md`) are both the npm page and the Packages page:
+  - Use **absolute URLs** for all links, including the LICENSE link. Relative link targets are copied into the generated docs (`_media/`).
+  - The README is included in an MDX page: outside code blocks, no raw `{…}` and no unclosed HTML tags.
+  - Do **not** hand-write lists of exports or API signatures; the generated reference lists them.
+  - Document what is saved to `localStorage` (🗄️ Browser Storage) and which hosts are contacted (🌐 External Services).
+  - Every code example must compile against the current source.
+- **Naming:** Files `camelCase.ts` (hooks, utils), `PascalCase.tsx` (components); Components/Types `PascalCase`; Functions/Variables `camelCase`.
 
 ## 5. Key Workflows
 
-- **Build:** `pnpm build` (Builds all packages via `tsup`).
-- **Storybook:** `pnpm storybook` (Runs the dev environment. Note: `pnpm dev` is NOT configured in root).
-- **Lint:** `pnpm lint` (ESLint).
-- **Format:** `pnpm format` (Prettier).
+- **Build:** `pnpm build` (all packages via `tsup` + `postcss`). The tests and the Storybook of the L7 packages import the built `nova-core`: rebuild it after changing it.
+- **Test:** `pnpm test` (Runs `vitest run` across all packages).
+- **Lint/Format:** `pnpm lint` (ESLint) / `pnpm format` (Prettier; `pnpm-lock.yaml` and the generated folder are ignored).
+- **Docs reference:** `pnpm docs:gen` (TypeDoc → `apps/docs/src/packages`; also runs in the pre-commit hook and before `pnpm storybook`).
+- **Storybook:** `pnpm storybook` (port 6006), `pnpm --filter @tuwaio/storybook build-storybook`.
 - **Clean:** `pnpm clean` (Nukes `node_modules` and `dist` dirs).
 
 ## 6. AI Agent Behavior (Mandatory)
 
-- **Post-Work Routine:** After generating or modifying code, you **MUST** run `pnpm lint --fix` (and `pnpm format`) to ensure code quality.
-- **Dependency Rule:** Never install new packages without explicit user permission.
+- **Post-Work Routine:** After generating or modifying code, you **MUST** run `pnpm lint --fix` and `pnpm format`. `eslint --fix` can break code next to an `// eslint-disable-next-line` comment when a line gets longer (the Prettier fix is applied only in part): run `pnpm build` afterwards.
+- **Docs Routine:** After changing exports, JSDoc or a package README, run `pnpm docs:gen` and check that it reports no warnings. Never edit files under `apps/docs/src/packages` directly. Check `build-storybook` after changing the generation.
+- **Dependency Rule:** Never install new packages without explicit user permission. A package declares as peers only what it imports (including types in its `.d.ts`); check the built `dist` after changing imports.
 - **Hallucination Check:**
-  - Do **NOT** import `ethers.js` (We use `viem`).
-  - Do **NOT** import `gill` (Eradicated; we use `@solana/kit` and `@tuwaio/orbit-solana`).
-  - Do **NOT** import legacy `@solana/web3.js` methods.
-  - Do **NOT** implement business logic in `nova-*` packages (Logic belongs in `satellite-*` or `pulsar-*`).
-  - Do **NOT** use `style={{...}}` for styling (Use Tailwind classes).
+  - Do **NOT** import `ethers.js` (We use `viem`), `gill` or legacy `@solana/web3.js` classes.
+  - Do **NOT** implement wallet, transaction or session logic in `nova-*` packages (it belongs in `satellite-*`, `pulsar-*` and `siwx-*`).
+  - Do **NOT** use `new Function` or `eval` (CSP `unsafe-eval`); import modules statically or with `import()`.
+  - Do **NOT** create Satellite adapters or other props objects inline in a render: define them outside components or memoize them.
+  - Do **NOT** read callback props inside effects directly: use `useEffectEvent` so the effect does not re-run on every render. Do **NOT** use props objects as effect dependencies.
+  - Do **NOT** treat a missing `activeConnection` as a disconnect before `isAutoConnectFinished` of the Satellite store is `true`.
+  - Do **NOT** treat the SIWX state of the UI as proof of identity: servers verify sessions with `@tuwaio/siwx-server`.
+  - Do **NOT** document passing `siwx` both to `NovaConnectProvider` and to the Satellite watchers: the watchers would disconnect the wallet on an account change instead of `NovaSiwxWatcher` asking the new account to sign in.
+  - Do **NOT** import EVM or Solana packages (`viem`, `@wagmi/core`, `@solana/kit`, `@tuwaio/*-evm`, `@tuwaio/*-solana`) outside `nova-connect/src/evm` and `nova-connect/src/solana`: an app with one network must neither install nor bundle the other. Network logic goes through the chain adapter registry.
+  - Do **NOT** hard-code texts that users or screen readers get: add a label to `NovaConnectLabels` (`en.ts` and `ua.ts`, or the labels of `nova-transactions`) and fill its `{placeholders}` with `formatLabel`.
+  - Do **NOT** add or keep customization options that the component does not apply; the JSDoc of an option says what it changes.
+  - Do **NOT** listen for keyboard shortcuts on `window`: handle them on the element of the component, so the shortcuts of the browser (such as Ctrl/Cmd+D) keep working.
+  - Do **NOT** show RPC URLs in the UI or in logs: they may contain API keys.
+  - Do **NOT** build links with template strings around optional adapter results (`` `${adapter.getExplorerUrl(...)}` `` gives `"undefined"`); hide the link when the adapter returns no URL.
+  - Do **NOT** use `typedoc-plugin-react` (it files functions under `components/` and breaks reference links).

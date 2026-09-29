@@ -1,6 +1,6 @@
 /**
- * Resolves a CSS variable to its computed value.
- * Returns the original value if it's not a CSS variable.
+ * Resolves a CSS variable to its computed value on `document.documentElement`.
+ * Returns the original value if it's not a CSS variable. Call it in the browser: it reads `getComputedStyle`.
  *
  * @param value - Color value, potentially a CSS variable like `var(--my-color)`
  * @returns Resolved color value (e.g., `#ff0000`) or original if not a variable
@@ -22,12 +22,12 @@ export function resolveCssVariable(value: string): string {
 
 /**
  * Modifies the fill attribute of the first `<path>` element in an SVG string.
- * Uses DOMParser for safe XML manipulation.
- * Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values.
+ * Uses DOMParser for safe XML manipulation, so call it in the browser.
+ * Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values with {@link resolveCssVariable}.
  *
  * @param svgString - The original SVG markup
  * @param fillColor - The color to apply (supports CSS variables)
- * @returns Modified SVG string
+ * @returns Modified SVG string, or the original string (with a console warning) when it cannot be parsed
  */
 export function applyFirstPathFill(svgString: string, fillColor: string): string {
   const resolvedColor = resolveCssVariable(fillColor);
@@ -55,8 +55,8 @@ export function applyFirstPathFill(svgString: string, fillColor: string): string
  * Encodes an SVG string to a base64 data URL.
  *
  * @param svgString - The SVG markup
- * @param firstPathFill - Optional fill color to apply to the first path
- * @returns Base64-encoded data URL
+ * @param firstPathFill - Optional fill color to apply to the first path, with {@link applyFirstPathFill} (browser only)
+ * @returns Base64-encoded data URL (`data:image/svg+xml;base64,…`)
  */
 export function svgToBase64(svgString: string, firstPathFill?: string): string {
   let processedSvg = svgString;
@@ -80,14 +80,10 @@ export function svgToBase64(svgString: string, firstPathFill?: string): string {
  *
  * @example
  * ```ts
- * formatIconNameForGithub("Wallet Connect")
- * // → "wallet-connect.svg"
+ * import { formatIconNameForGithub } from '@tuwaio/nova-core';
  *
- * formatIconNameForGithub("MetaMask")
- * // → "metamask.svg"
- *
- * formatIconNameForGithub("coinbase")
- * // → "coinbase.svg"
+ * formatIconNameForGithub('Wallet Connect'); // → 'wallet-connect.svg'
+ * formatIconNameForGithub('MetaMask'); // → 'metamask.svg'
  * ```
  */
 export const formatIconNameForGithub = (name: string): string => `${name.replace(/\s+/g, '-').toLowerCase()}.svg`;

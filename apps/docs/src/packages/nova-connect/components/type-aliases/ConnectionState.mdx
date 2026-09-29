@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionState" />
+
+# ConnectionState
+
+> **ConnectionState** = `"connecting"` \| `"success"` \| `"error"`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L22)
+
+State of a wallet connection: `error` when the Satellite store has a `connectionError` (or `customErrorMessage` is
+set), `success` when `isConnected` is `true`, otherwise `connecting`.

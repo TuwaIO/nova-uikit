@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedModalTxHistory" />
+
+# ConnectedModalTxHistory
+
+> `const` **ConnectedModalTxHistory**: `ForwardRefExoticComponent`\<[`ConnectedModalTxHistoryProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodaltxhistoryprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx:676](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalTxHistory.tsx#L676)
+
+The transaction history screen of the connected modal: the `TransactionsHistory` of `@tuwaio/nova-transactions`
+for the active address (loaded with a dynamic import, without the details view). Shows a loading state while the
+package loads, an error state when it cannot be loaded, a "Pulsar adapter required" state without
+`transactionPool` and `pulsarAdapter`, and a message without a connected wallet.
+
+Props: [ConnectedModalTxHistoryProps](?path=/docs/packages-nova-connect-components-interfaces-connectedmodaltxhistoryprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { ConnectedModalTxHistory } from '@tuwaio/nova-connect/components';
+import type { NovaConnectProviderProps } from '@tuwaio/nova-connect/hooks';
+
+type HistoryProps = Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter'>;
+
+export function History({ transactionPool, pulsarAdapter }: HistoryProps) {
+  return (
+    <ConnectedModalTxHistory
+      transactionPool={transactionPool}
+      pulsarAdapter={pulsarAdapter}
+      customization={{
+        classNames: { loadingContainer: () => 'bg-blue-100' },
+        handlers: {
+          onPackageLoadingFailure: (packageName, error) => console.error(packageName, error),
+        },
+      }}
+    />
+  );
+}
+```

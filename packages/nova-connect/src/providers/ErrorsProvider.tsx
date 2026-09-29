@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `ErrorsProvider` component, a customizable error toast provider with full styling control.
+ * @file This file contains the `ErrorsProvider` component, a customizable error toast provider with full styling
+ * control.
  */
 
 import { ToastCloseButton, ToastCloseButtonProps } from '@tuwaio/nova-core';
@@ -12,15 +13,26 @@ import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../satellite';
 
 // --- Types for Customization ---
-type CustomToastErrorProps = {
+/** Props of the toast content of {@link ErrorsProvider} (`customization.components.ToastError`). */
+export type ErrorsProviderToastErrorProps = {
+  /** The toast title (from `errorTitle`, by default the label of the error type). */
   title: string;
+  /** The error: `connectionError` or `switchNetworkError` of the Satellite Connect store. */
   rawError: string | TuwaErrorState;
+  /**
+   * Called after the error was copied (or not).
+   *
+   * @param success - Whether the error was copied.
+   */
   onCopyComplete?: (success: boolean) => void;
+  /** `'wallet'` for `connectionError`, `'switch'` for `switchNetworkError`. */
   errorType: 'wallet' | 'switch' | null;
+  /** Whether a wallet is connected. */
   isConnected: boolean;
 };
 
-type CustomContainerProps = ComponentPropsWithoutRef<typeof ToastContainer>;
+/** Props of the toast container of {@link ErrorsProvider}: the props of `ToastContainer` from `react-toastify`. */
+export type ErrorsProviderContainerProps = ComponentPropsWithoutRef<typeof ToastContainer>;
 
 /**
  * Customization options for ErrorsProvider component
@@ -31,9 +43,9 @@ export type ErrorsProviderCustomization = {
   /** Custom components */
   components?: {
     /** Custom ToastError component */
-    ToastError?: ComponentType<CustomToastErrorProps>;
+    ToastError?: ComponentType<ErrorsProviderToastErrorProps>;
     /** Custom ToastContainer component */
-    Container?: ComponentType<CustomContainerProps>;
+    Container?: ComponentType<ErrorsProviderContainerProps>;
   };
   /** Default ToastError customization (only used with default ToastError component) */
   toastErrorCustomization?: ToastErrorCustomization;
@@ -41,12 +53,29 @@ export type ErrorsProviderCustomization = {
   toastCloseButton?: Omit<ToastCloseButtonProps, 'closeToast'>;
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the toasts, instead of the default ones.
+     *
+     * @param params - The error state.
+     * @param params.hasErrors - Whether the store has a connection or network switch error.
+     * @param params.errorType - `'wallet'`, `'switch'`, or `null` without error.
+     * @returns The classes.
+     */
     container?: (params: { hasErrors: boolean; errorType: 'wallet' | 'switch' | null }) => string;
   };
   /** Custom toast options generators */
   toastOptions?: {
-    /** Function to generate toast options */
+    /**
+     * Returns options of `toast.error` of `react-toastify`, merged over the default ones (`containerId`, `toastId`,
+     * `onClose`).
+     *
+     * @param params - The error to show.
+     * @param params.title - The toast title.
+     * @param params.rawError - The error.
+     * @param params.errorType - `'wallet'` or `'switch'`.
+     * @param params.isConnected - Whether a wallet is connected.
+     * @returns The toast options.
+     */
     error?: (params: {
       title: string;
       rawError: string | TuwaErrorState;
@@ -56,7 +85,16 @@ export type ErrorsProviderCustomization = {
   };
   /** Custom logic handlers */
   handlers?: {
-    /** Custom error display logic */
+    /**
+     * Wraps the display of an error toast: call `originalHandler(title, rawError, errorKey)` to show it.
+     *
+     * @param originalHandler - Shows the toast (once per `errorKey`), after dismissing the previous one.
+     * @param params - The error to show.
+     * @param params.title - The toast title.
+     * @param params.rawError - The error.
+     * @param params.errorKey - Key of the error (from `errorHash`), used to show it only once.
+     * @param params.errorType - `'wallet'` or `'switch'`.
+     */
     showError?: (
       originalHandler: (title: string, rawError: string | TuwaErrorState, errorKey: string) => void,
       params: {
@@ -66,24 +104,52 @@ export type ErrorsProviderCustomization = {
         errorType: 'wallet' | 'switch' | null;
       },
     ) => void;
-    /** Custom error dismissal logic */
+    /**
+     * Wraps the dismissal of the error toasts: call `originalHandler()` to dismiss them.
+     *
+     * @param originalHandler - Dismisses the toasts of the container.
+     */
     dismissError?: (originalHandler: () => void) => void;
-    /** Custom copy complete handler */
+    /**
+     * Called after the copy button of a toast tried to copy the error. By default, logs the copied message in
+     * development.
+     *
+     * @param success - Whether the error was copied.
+     * @param rawError - The error.
+     * @param errorType - `'wallet'` or `'switch'`.
+     */
     onCopyComplete?: (
       success: boolean,
       rawError: string | TuwaErrorState,
       errorType: 'wallet' | 'switch' | null,
     ) => void;
   };
-  /** Custom error title generator - does NOT customize labels, just allows title modification */
+  /**
+   * Returns the toast title. It does not change the labels, only the title of this toast.
+   *
+   * @param defaultTitle - The label of the error type (`connectionError`, `errorWhenChainSwitching` or
+   * `somethingWentWrong`).
+   * @param params - The error.
+   * @param params.errorType - `'wallet'`, `'switch'`, or `null`.
+   * @returns The title.
+   */
   errorTitle?: (defaultTitle: string, params: { errorType: 'wallet' | 'switch' | null }) => string;
-  /** Custom error hash generator for deduplication */
+  /**
+   * Returns the key used to show an error only once.
+   *
+   * @param defaultHash - The error type and the first 50 characters of the message, or `null` without error.
+   * @param params - The error.
+   * @param params.primaryError - The error of the store (`connectionError` first).
+   * @param params.errorType - `'wallet'`, `'switch'`, or `null`.
+   * @returns The key, or `null` to show nothing.
+   */
   errorHash?: (
     defaultHash: string | null,
     params: { primaryError: TuwaErrorState | null; errorType: 'wallet' | 'switch' | null },
   ) => string | null;
 };
 
+/** Props of {@link ErrorsProvider}. */
 export interface ErrorsProviderProps {
   /** Custom container ID for toast notifications */
   containerId?: string;
@@ -107,13 +173,13 @@ const DefaultToastError = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isConnected,
   ...props
-}: CustomToastErrorProps & { customization?: ToastErrorCustomization }) => {
+}: ErrorsProviderToastErrorProps & { customization?: ToastErrorCustomization }) => {
   return (
     <ToastError title={title} rawError={rawError} onCopyComplete={onCopyComplete} customization={props.customization} />
   );
 };
 
-const DefaultContainer = (props: CustomContainerProps) => {
+const DefaultContainer = (props: ErrorsProviderContainerProps) => {
   const labels = useNovaConnectLabels();
   return <ToastContainer {...props} role="alert" aria-live="assertive" aria-label={labels.somethingWentWrong} />;
 };
@@ -142,8 +208,13 @@ const defaultErrorTitleGenerator = (defaultTitle: string) => defaultTitle;
 const defaultErrorHashGenerator = (defaultHash: string | null) => defaultHash;
 
 /**
- * A highly customizable error toast provider with extensive styling options and component replacement capabilities.
- * Provides comprehensive customization for appearance, behavior, and error handling logic while maintaining accessibility.
+ * Shows the connection and network switch errors of the Satellite Connect store (`connectionError`,
+ * `switchNetworkError`) as `react-toastify` toasts ({@link ToastError}) in its own `ToastContainer` (id
+ * `nova-connect-errors`, top center, closed after 7 seconds by default). Each error is shown once; the toasts are
+ * dismissed when a wallet connects without error. `NovaConnectProvider` renders it.
+ *
+ * @param props - See {@link ErrorsProviderProps}.
+ * @returns The toast container.
  */
 export function ErrorsProvider({
   containerId = 'nova-connect-errors',

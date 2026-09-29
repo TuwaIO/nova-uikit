@@ -1,0 +1,181 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectorsBlockProps" />
+
+# ConnectorsBlockProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:302](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L302)
+
+Props for the [ConnectorsBlock](?path=/docs/packages-nova-connect-components-variables-connectorsblock--docs) component. The props picked from `ConnectorsSelectionsProps` work as there.
+
+## Extends
+
+- `Pick`\<[`ConnectorsSelectionsProps`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsprops--docs), `"setIsOpen"` \| `"setIsConnected"` \| `"onClick"` \| `"appChains"` \| `"solanaRPCUrls"`\>
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+[`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs).[`appChains`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs#appchains)
+
+***
+
+### connectors
+
+> **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:309](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L309)
+
+Array of grouped wallet connectors to display
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectorsBlockCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsblockcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:317](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L317)
+
+Customization options
+
+***
+
+### isOnlyOneNetwork?
+
+> `optional` **isOnlyOneNetwork?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:315](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L315)
+
+Whether only one network is available; hides the network icons of the cards (default: `false`)
+
+***
+
+### isTitleBold?
+
+> `optional` **isTitleBold?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:313](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L313)
+
+Whether to render the title in bold accent color (default: `false`)
+
+***
+
+### onClick
+
+> **onClick**: (`connector`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:364](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L364)
+
+Called when a wallet card is clicked, before a single-network wallet connects (the connect modal shows the
+connection screen or the network choice).
+
+#### Parameters
+
+##### connector
+
+[`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)
+
+The clicked wallet.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+`Pick.onClick`
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:307](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L307)
+
+Currently selected network adapter
+
+***
+
+### setIsConnected
+
+> **setIsConnected**: (`value`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:370](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L370)
+
+Sets the "just connected" state of the modal: `true` after the wallet connects, `false` 500 ms later.
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+The state.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+`Pick.setIsConnected`
+
+***
+
+### setIsOpen
+
+> **setIsOpen**: (`value`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:376](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L376)
+
+Opens or closes the modal (closes it 400 ms after the wallet connects).
+
+#### Parameters
+
+##### value
+
+`boolean`
+
+Whether the modal is open.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+`Pick.setIsOpen`
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+[`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs).[`solanaRPCUrls`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs#solanarpcurls)
+
+***
+
+### title
+
+> **title**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:311](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L311)
+
+Title text for the connector group

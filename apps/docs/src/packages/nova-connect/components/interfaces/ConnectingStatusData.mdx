@@ -1,0 +1,91 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectingStatusData" />
+
+# ConnectingStatusData
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L28)
+
+Status of the connection shown by [Connecting](?path=/docs/packages-nova-connect-components-variables-connecting--docs), passed to its custom components, class name generators and
+handlers.
+
+## Properties
+
+### activeConnector
+
+> **activeConnector**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L39)
+
+The `activeConnector` prop
+
+***
+
+### currentConnector
+
+> **currentConnector**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs) \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L43)
+
+The wallet of `connectors` whose formatted name contains `activeConnector`
+
+***
+
+### errorMessage
+
+> **errorMessage**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L37)
+
+Text under the heading in the `error` state (`customErrorMessage` with `showDetailedError`, or the
+`cannotConnectWallet` label), otherwise `null`
+
+***
+
+### message
+
+> **message**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L32)
+
+The heading: `customErrorMessage` or the `connectionError` label, `connectedSuccessfully`, or `connectingTo`
+
+***
+
+### rawError
+
+> **rawError**: `unknown`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L47)
+
+`connectionError` of the Satellite store
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L41)
+
+The `selectedAdapter` prop
+
+***
+
+### showDetailedError
+
+> **showDetailedError**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L45)
+
+The `showDetailedError` prop
+
+***
+
+### state
+
+> **state**: [`ConnectionState`](?path=/docs/packages-nova-connect-components-type-aliases-connectionstate--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L30)
+
+Connection state

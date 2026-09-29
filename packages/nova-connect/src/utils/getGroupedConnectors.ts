@@ -2,15 +2,30 @@ import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 
 import { Connector } from '../satellite';
 
+/**
+ * A wallet with its connectors on each network, returned by {@link getGroupedConnectors}.
+ */
 export interface GroupedConnector {
+  /** Name of the first connector of the wallet */
   name: string;
+  /** Icon of the first connector that has one (a data URL or URL) */
   icon?: string;
+  /** Adapters on which the wallet has a connector */
   adapters: OrbitAdapter[];
-  connectors: (Connector & { adapter: OrbitAdapter })[];
+  /** The connectors of the wallet, each with its adapter */
+  connectors: (Connector & {
+    /** Adapter of the connector */
+    adapter: OrbitAdapter;
+  })[];
 }
 
-interface GetGroupedConnectorsParams {
+/**
+ * Parameters of {@link getGroupedConnectors}.
+ */
+export interface GetGroupedConnectorsParams {
+  /** Connectors by adapter, as `getConnectors()` of the Satellite store returns them */
   connectors: Partial<Record<OrbitAdapter, Connector[]>>;
+  /** Names of connectors to leave out, compared after `formatConnectorName` (default: `['injected']`) */
   excludeConnectors?: string[];
 }
 
@@ -32,7 +47,7 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
     return null;
   }
 
-  const connectorObj = connector as Record<string, Connector>;
+  const connectorObj = connector as Record<string, unknown>;
 
   if (!connectorObj.name || typeof connectorObj.name !== 'string') {
     return null;
@@ -66,8 +81,11 @@ function processConnector(connector: unknown, adapter: OrbitAdapter): ProcessedC
 }
 
 /**
- * Groups wallet connectors by their formatted names across different adapters.
- * Filters out specified excluded connectors (like 'injected' wallets).
+ * Groups connectors of all adapters by wallet: connectors whose names give the same `formatConnectorName` (from
+ * `@tuwaio/orbit-core`) belong to one wallet. Connectors without a name are skipped.
+ *
+ * @param params - See {@link GetGroupedConnectorsParams} (default: no connectors).
+ * @returns The wallets sorted by name (case-insensitive).
  */
 export function getGroupedConnectors(
   { connectors, excludeConnectors = ['injected'] }: GetGroupedConnectorsParams = { connectors: {} },
@@ -141,7 +159,10 @@ export function getGroupedConnectors(
 }
 
 /**
- * Quick helper to check if connectors are available
+ * Checks whether any adapter has at least one connector.
+ *
+ * @param connectors - Connectors by adapter.
+ * @returns `true` when one of the arrays is not empty.
  */
 export function hasAvailableConnectors(connectors: Partial<Record<OrbitAdapter, Connector[]>>): boolean {
   return Object.values(connectors).some(

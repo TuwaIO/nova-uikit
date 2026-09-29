@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getWalletChains" />
+
+# getWalletChains()
+
+> **getWalletChains**(`connection`): `ChainIdentifierArray` \| `undefined`
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L116)
+
+Reads `connectedWallet.chains` of a connection (the Wallet Standard wallet of a Solana connection).
+
+## Parameters
+
+### connection
+
+`unknown`
+
+A connection, or any other value.
+
+## Returns
+
+`ChainIdentifierArray` \| `undefined`
+
+The chains, or `undefined` when the value has no such array.
+
+## Example
+
+```ts
+import { getWalletChains } from '@tuwaio/nova-connect';
+
+getWalletChains({ connectedWallet: { chains: ['solana:mainnet', 'solana:devnet'] } });
+// ['solana:mainnet', 'solana:devnet']
+getWalletChains({}); // undefined
+```

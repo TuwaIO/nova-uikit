@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectionsContent" />
+
+# ConnectionsContent
+
+> `const` **ConnectionsContent**: `React.FC`\<[`ConnectionsContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectionscontentprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:1175](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L1175)
+
+The "Connections" screen of the connected modal: the active wallet (with copy, explorer and disconnect), the other
+connected wallets (click one to make it active), the recently connected wallets and a button that opens the connect
+modal.
+
+The recent wallets come from `localStorage` (`orbit-core:recentlyConnectedConnectorsListHelpers`, through
+`recentlyConnectedConnectorsListHelpers` of `@tuwaio/orbit-core`), without the connected ones. Removing one writes
+that key. Connecting one calls `connect` of the Satellite store with the first chain of its network in
+`appChains` or `solanaRPCUrls` of `NovaConnectProvider` (Ethereum Mainnet or Solana Mainnet without them); for the
+impersonated wallet it first saves the address to `satellite-connect:impersonatedAddress`. The explorer link opens
+in a new tab. Without wallets it shows the empty state, or nothing when `config.showEmptyState` is `false`.
+
+Keyboard shortcuts (`config.enableKeyboardShortcuts`) work while the focus is inside the screen.
+
+Props: [ConnectionsContentProps](?path=/docs/packages-nova-connect-components-interfaces-connectionscontentprops--docs).

@@ -1,0 +1,121 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionsContentContainerProps" />
+
+# ConnectionsContentContainerProps
+
+> **ConnectionsContentContainerProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L36)
+
+Props for a custom container.
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L50)
+
+`labels.containerAriaLabel` or the `walletConnectionsManager` label (not set in the empty state)
+
+***
+
+### children
+
+> **children**: `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L40)
+
+The sections and the add wallet button, or the empty state message
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L38)
+
+Classes from `classNames.container` or the defaults (with `classNames.emptyState` in the empty state)
+
+***
+
+### connectionsCount?
+
+> `optional` **connectionsCount?**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L44)
+
+Number of connected wallets
+
+***
+
+### data-testid?
+
+> `optional` **data-testid?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L52)
+
+`config.testIds.container`
+
+***
+
+### isEmpty?
+
+> `optional` **isEmpty?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L42)
+
+Whether there are no connections and no recent wallets
+
+***
+
+### onKeyDown?
+
+> `optional` **onKeyDown?**: (`event`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L54)
+
+Keyboard shortcuts (see `config.enableKeyboardShortcuts`); pass it to the container element
+
+#### Parameters
+
+##### event
+
+`React.KeyboardEvent`\<`HTMLDivElement`\>
+
+#### Returns
+
+`void`
+
+***
+
+### recentCount?
+
+> `optional` **recentCount?**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L46)
+
+Number of recent wallets shown
+
+***
+
+### ref?
+
+> `optional` **ref?**: `React.Ref`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L56)
+
+Pass it to the container element: `config.autoFocus` focuses its first interactive element
+
+***
+
+### role?
+
+> `optional` **role?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L48)
+
+`region` (not set in the empty state)

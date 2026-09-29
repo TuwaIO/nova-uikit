@@ -1,0 +1,719 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectModalCustomization" />
+
+# ConnectModalCustomization
+
+> **ConnectModalCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:261](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L261)
+
+Customization options of [ConnectModal](?path=/docs/packages-nova-connect-components-variables-connectmodal--docs).
+
+## Properties
+
+### childComponents?
+
+> `optional` **childComponents?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:484](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L484)
+
+Child component customizations
+
+#### aboutWallets?
+
+> `optional` **aboutWallets?**: [`AboutWalletsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-aboutwalletscustomization--docs)
+
+AboutWallets customization
+
+#### connecting?
+
+> `optional` **connecting?**: [`ConnectingCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectingcustomization--docs)
+
+Connecting customization
+
+#### connectorsSelections?
+
+> `optional` **connectorsSelections?**: [`ConnectorsSelectionsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionscustomization--docs)
+
+ConnectorsSelections customization
+
+#### getWallet?
+
+> `optional` **getWallet?**: [`GetWalletCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-getwalletcustomization--docs)
+
+GetWallet customization
+
+#### impersonateForm?
+
+> `optional` **impersonateForm?**: [`ImpersonateFormCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-impersonateformcustomization--docs)
+
+ImpersonateForm customization
+
+#### legalDisclaimer?
+
+> `optional` **legalDisclaimer?**: [`LegalDisclaimerCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-legaldisclaimercustomization--docs)
+
+LegalDisclaimer customization
+
+#### networkSelections?
+
+> `optional` **networkSelections?**: [`NetworkSelectionsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-networkselectionscustomization--docs)
+
+NetworkSelections customization
+
+#### networkTabs?
+
+> `optional` **networkTabs?**: [`NetworkTabsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-networktabscustomization--docs)
+
+NetworkTabs customization
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:294](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L294)
+
+Custom class name generators
+
+#### actionButton?
+
+> `optional` **actionButton?**: (`params`) => `string`
+
+Returns classes of the action button, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal and the button.
+
+###### buttonConfig
+
+[`BottomButtonConfig`](?path=/docs/packages-nova-connect-components-interfaces-bottombuttonconfig--docs)
+
+The action button.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### actionDescription?
+
+> `optional` **actionDescription?**: (`params`) => `string`
+
+Returns classes of the action description, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### backButton?
+
+> `optional` **backButton?**: (`params`) => `string`
+
+Returns classes of the back button, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### closeButton?
+
+> `optional` **closeButton?**: (`params`) => `string`
+
+Returns classes of the close button, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyConnectors?
+
+> `optional` **emptyConnectors?**: (`params`) => `string`
+
+Returns the classes of the empty state.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### footer?
+
+> `optional` **footer?**: (`params`) => `string`
+
+Returns classes of the footer, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### header?
+
+> `optional` **header?**: (`params`) => `string`
+
+Returns classes of the header, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### infoButton?
+
+> `optional` **infoButton?**: (`params`) => `string`
+
+Returns classes of the info button, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### mainContent?
+
+> `optional` **mainContent?**: (`params`) => `string`
+
+Returns classes of the main content, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### modalContainer?
+
+> `optional` **modalContainer?**: (`params`) => `string`
+
+Returns classes of the modal container, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### title?
+
+> `optional` **title?**: (`params`) => `string`
+
+Returns classes of the title, added to the default ones.
+
+##### Parameters
+
+###### params
+
+The modal.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:263](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L263)
+
+Custom components
+
+#### ActionButton?
+
+> `optional` **ActionButton?**: `ComponentType`\<[`ConnectModalActionButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalactionbuttonprops--docs)\>
+
+Custom action button
+
+#### ActionDescription?
+
+> `optional` **ActionDescription?**: `ComponentType`\<[`ConnectModalActionDescriptionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalactiondescriptionprops--docs)\>
+
+Custom action description
+
+#### BackButton?
+
+> `optional` **BackButton?**: `ComponentType`\<[`ConnectModalBackButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalbackbuttonprops--docs)\>
+
+Custom back button
+
+#### CloseButton?
+
+> `optional` **CloseButton?**: `ComponentType`\<[`ConnectModalCloseButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalclosebuttonprops--docs)\>
+
+Custom close button
+
+#### Dialog?
+
+> `optional` **Dialog?**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* [`Dialog`](?path=/docs/packages-nova-core-variables-dialog--docs)\>\>
+
+Custom dialog (default: `Dialog` from `@tuwaio/nova-core`)
+
+#### DialogContent?
+
+> `optional` **DialogContent?**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* [`DialogContent`](?path=/docs/packages-nova-core-variables-dialogcontent--docs)\>\>
+
+Custom dialog content (default: `DialogContent` from `@tuwaio/nova-core`)
+
+#### EmptyState?
+
+> `optional` **EmptyState?**: `ComponentType`\<[`ConnectModalEmptyProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalemptyprops--docs)\>
+
+Custom empty state
+
+#### Footer?
+
+> `optional` **Footer?**: `ComponentType`\<[`ConnectModalFooterProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalfooterprops--docs)\>
+
+Custom footer
+
+#### InfoButton?
+
+> `optional` **InfoButton?**: `ComponentType`\<[`ConnectModalInfoButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalinfobuttonprops--docs)\>
+
+Custom info button
+
+#### MainContent?
+
+> `optional` **MainContent?**: `ComponentType`\<[`ConnectModalMainContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalmaincontentprops--docs)\>
+
+Custom main content wrapper
+
+#### ModalContainer?
+
+> `optional` **ModalContainer?**: `ComponentType`\<[`ConnectModalContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalcontainerprops--docs)\>
+
+Custom modal container
+
+#### ModalHeader?
+
+> `optional` **ModalHeader?**: `ComponentType`\<[`ConnectModalHeaderProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalheaderprops--docs)\>
+
+Custom modal header
+
+#### MotionDiv?
+
+> `optional` **MotionDiv?**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
+
+Custom layout animation wrapper (default: `motion.div`)
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`ConnectModalTitleProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodaltitleprops--docs)\>
+
+Custom title
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:450](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L450)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation?**: `object`
+
+Animation configuration
+
+##### animation.disabled?
+
+> `optional` **disabled?**: `boolean`
+
+Sets the duration of the layout transition to `0`
+
+##### animation.layoutDuration?
+
+> `optional` **layoutDuration?**: `number`
+
+Duration of the layout transition between screens, in seconds (default: `0.0001`)
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.backButton?
+
+> `optional` **backButton?**: (`modalData`) => `string`
+
+Returns the ARIA label of the back button (default: the `backToPreviousStep` label).
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.closeButton?
+
+> `optional` **closeButton?**: (`modalData`) => `string`
+
+Returns the ARIA label of the close button (default: the `closeModal` label).
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`string`
+
+The label.
+
+##### ariaLabels.infoButton?
+
+> `optional` **infoButton?**: (`modalData`) => `string`
+
+Returns the ARIA label of the info button (default: the `learnMore` and `aboutWallets` labels).
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`string`
+
+The label.
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L386)
+
+Custom event handlers
+
+#### onActionClick?
+
+> `optional` **onActionClick?**: `object`
+
+Replace the action button of the footer on each screen
+
+##### onActionClick.about?
+
+> `optional` **about?**: (`modalData`) => `void`
+
+Replaces "Learn more" of the "About wallets" screen, which opens the wallet guide of the selected (or first)
+network in a new tab by default.
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`void`
+
+##### onActionClick.connecting?
+
+> `optional` **connecting?**: (`modalData`) => `Promise`\<`void`\>
+
+Replaces "Try again", shown after a connection error, which connects the selected wallet again by default.
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`Promise`\<`void`\>
+
+Resolves when the action finishes.
+
+##### onActionClick.connectors?
+
+> `optional` **connectors?**: (`modalData`) => `void`
+
+Replaces "I don't have a wallet" of the connectors screen, which shows the "Get a wallet" screen by default.
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`void`
+
+##### onActionClick.getWallet?
+
+> `optional` **getWallet?**: (`modalData`) => `void`
+
+Replaces the button of the "Get a wallet" screen, which opens the wallet list of the selected (or first)
+network in a new tab by default (`ethereum.org` or `solana.com`, from `getNetworkData` of
+`@tuwaio/orbit-core`).
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`void`
+
+##### onActionClick.impersonate?
+
+> `optional` **impersonate?**: (`modalData`) => `Promise`\<`void`\>
+
+Replaces "Connect" of the impersonation form. By default it checks the address, saves it to `localStorage`
+(`satellite-connect:impersonatedAddress`, through `impersonatedHelpers` of `@tuwaio/orbit-core`) and connects
+the impersonated connector.
+
+###### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### Returns
+
+`Promise`\<`void`\>
+
+Resolves when the action finishes.
+
+#### onBack?
+
+> `optional` **onBack?**: (`modalData`, `originalHandler`) => `void`
+
+Wraps the back button: call `originalHandler()` to go back to the connectors screen.
+
+##### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+###### originalHandler
+
+() => `void`
+
+Shows the connectors screen.
+
+##### Returns
+
+`void`
+
+#### onInfoClick?
+
+> `optional` **onInfoClick?**: (`modalData`) => `void`
+
+Replaces the info button, which shows the "About wallets" screen by default.
+
+##### Parameters
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`void`
+
+#### onOpenChange?
+
+> `optional` **onOpenChange?**: (`open`, `modalData`) => `void`
+
+Replaces the open state change of the dialog (close button, Escape, click outside). The modal stays open until
+the handler calls `setIsConnectModalOpen(open)` from `useNovaConnect`.
+
+##### Parameters
+
+###### open
+
+`boolean`
+
+The requested state.
+
+###### modalData
+
+[`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal.
+
+##### Returns
+
+`void`

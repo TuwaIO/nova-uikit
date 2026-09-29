@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaConnect" />
+
+# useNovaConnect()
+
+> **useNovaConnect**(): [`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:232](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L232)
+
+Returns the state of `NovaConnectProvider`: the modal states and their setters, the selected network and wallet,
+and the provider options.
+
+## Returns
+
+[`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs)
+
+The provider state.
+
+## Throws
+
+[NovaConnectProviderError](?path=/docs/packages-nova-connect-connect-classes-novaconnectprovidererror--docs) When used outside `NovaConnectProvider`.
+
+## Example
+
+```tsx
+import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+
+export function OpenWalletButton() {
+  const { setIsConnectModalOpen } = useNovaConnect();
+
+  return <button onClick={() => setIsConnectModalOpen(true)}>Connect Wallet</button>;
+}
+```

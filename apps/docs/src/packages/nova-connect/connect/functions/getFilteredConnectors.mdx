@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getFilteredConnectors" />
+
+# getFilteredConnectors()
+
+> **getFilteredConnectors**(`params`): [`GroupedConnector`](?path=/docs/packages-nova-connect-connect-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/utils/getFilteredConnectors.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getFilteredConnectors.ts#L50)
+
+Groups the connectors by wallet with [getGroupedConnectors](?path=/docs/packages-nova-connect-connect-functions-getgroupedconnectors--docs) (without the generic `injected` connector) and
+keeps the wallets of the selected adapter, with only the connectors of that adapter.
+
+## Parameters
+
+### params
+
+[`GetFilteredConnectorsParams`](?path=/docs/packages-nova-connect-connect-interfaces-getfilteredconnectorsparams--docs)
+
+See [GetFilteredConnectorsParams](?path=/docs/packages-nova-connect-connect-interfaces-getfilteredconnectorsparams--docs).
+
+## Returns
+
+[`GroupedConnector`](?path=/docs/packages-nova-connect-connect-interfaces-groupedconnector--docs)[]
+
+The wallets sorted by name (all of them when `selectedAdapter` is not set).

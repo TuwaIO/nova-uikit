@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectModalInfoButtonProps" />
+
+# ConnectModalInfoButtonProps
+
+> **ConnectModalInfoButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L133)
+
+Props for a custom info button (shown on the connectors screen).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.infoButton`, or the `learnMore` and `aboutWallets` labels
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.infoButton`
+
+### modalData
+
+> **modalData**: [`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal
+
+### onClick
+
+> **onClick**: () => `void`
+
+Runs `handlers.onInfoClick`, or shows the "About wallets" screen
+
+#### Returns
+
+`void`

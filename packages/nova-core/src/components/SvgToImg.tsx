@@ -6,8 +6,13 @@ import { SvgImg } from './SvgImg';
 /**
  * Props for the SvgToImg component.
  */
-interface SvgToImgProps extends Omit<ComponentProps<'img'>, 'ref' | 'src' | 'children'> {
-  /** Child SVG element to render while converting */
+export interface SvgToImgProps extends Omit<ComponentProps<'img'>, 'ref' | 'src' | 'children'> {
+  /**
+   * Renders the SVG. Pass `ref` to the `<svg>` element: when it mounts, its markup is converted to an image.
+   *
+   * @param ref - Callback ref for the `<svg>` element; it receives the element (or `null` when it unmounts).
+   * @returns The SVG to convert.
+   */
   children: (ref: (node: SVGSVGElement | null) => void) => ReactNode;
   /**
    * Unique identifier for the icon. When this changes, the cached image is reset.
@@ -31,14 +36,22 @@ interface SvgToImgProps extends Omit<ComponentProps<'img'>, 'ref' | 'src' | 'chi
  * Uses a render prop pattern to inject a callback ref that captures
  * the SVG immediately when it mounts.
  *
- * @param props - {@link SvgToImgProps}
- * @returns The converted image or the original children while loading
+ * @param props - See {@link SvgToImgProps}; the other props are passed to the `<img>` element.
+ * @returns The `<img>` with the converted SVG, or the output of `children` until the SVG has mounted.
  *
  * @example
  * ```tsx
- * <SvgToImg iconId={chainId} firstPathFill={TESTNET_FILL}>
- *   {(ref) => <NetworkIconLazy ref={ref} chainId={chainId} />}
- * </SvgToImg>
+ * import { SvgToImg } from '@tuwaio/nova-core';
+ *
+ * export const DotIcon = () => (
+ *   <SvgToImg iconId="dot" alt="Dot">
+ *     {(ref) => (
+ *       <svg ref={ref} viewBox="0 0 24 24">
+ *         <circle cx="12" cy="12" r="10" />
+ *       </svg>
+ *     )}
+ *   </SvgToImg>
+ * );
  * ```
  */
 export function SvgToImg({ children, iconId, alt, firstPathFill, ...props }: SvgToImgProps) {

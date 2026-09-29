@@ -4,65 +4,60 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSatelliteConnectStore } from '../satellite';
 
 /**
- * @interface NativeBalanceResult
- * Represents the native token balance returned by the adapter.
- * The value is already formatted for human readability.
- * @property {string} value The native token balance formatted to standard decimals (e.g., "1.5").
- * @property {string} symbol The symbol of the native token (e.g., "ETH").
+ * A native balance returned by `getBalance` of a Satellite adapter.
  */
 export interface NativeBalanceResult {
+  /** The balance formatted with the decimals of the token (for example `1.5`) */
   value: string;
+  /** The token symbol (for example `ETH`) */
   symbol: string;
 }
 
-// Type for the balance state within the hook (the fetched data or null).
-type NativeBalanceState = NativeBalanceResult | null;
+/**
+ * The balance of {@link useWalletNativeBalance}, or `null` when it is not known.
+ */
+export type UseWalletNativeBalanceState = NativeBalanceResult | null;
 
 // Type for the local cache: "walletAddress-chainId" -> { value, symbol }.
 type BalanceCache = Record<string, NativeBalanceResult>;
 
 /**
- * @interface NativeBalanceData
- * The object returned by the useWalletNativeBalance hook.
- * @property {NativeBalanceState} balance The native token balance and symbol, or null.
- * @property {boolean} isLoading True while the balance is being fetched for the current wallet/chain combination.
- * @property {() => void} refetch Function to manually trigger a balance refresh.
+ * Result of {@link useWalletNativeBalance}.
  */
-interface NativeBalanceData {
-  balance: NativeBalanceState;
+export interface UseWalletNativeBalanceData {
+  /** The balance, or `null` without a wallet, without `getBalance` or before it resolves */
+  balance: UseWalletNativeBalanceState;
+  /** Whether the balance is being requested */
   isLoading: boolean;
+  /** Requests the balance again (a failed refresh clears the kept balance) */
   refetch: () => void;
 }
 
 /**
- * Custom hook to fetch the native token balance for the currently connected wallet
- * on the active chain. It includes a local cache layer to prevent redundant network calls
- * when switching between components or on re-renders for the same wallet/chain.
+ * Returns the native balance of the active wallet on its chain, from `getBalance` of its Satellite adapter (an RPC
+ * request). Each balance is kept in memory for the address and chain while the component is mounted, so switching
+ * back does not request it again; `refetch` requests it again.
  *
- * @returns {NativeBalanceData} An object containing the balance data and loading state.
+ * @returns See {@link UseWalletNativeBalanceData}.
  *
  * @example
- * ```typescript
- * import { useWalletNativeBalance } from './useWalletNativeBalance';
+ * ```tsx
+ * import { useWalletNativeBalance } from '@tuwaio/nova-connect/hooks';
  *
- * function NativeTokenDisplay() {
+ * export function NativeBalance() {
  *   const { balance, isLoading, refetch } = useWalletNativeBalance();
  *
- *   if (isLoading) {
- *     return <p>Loading balance...</p>;
- *   }
+ *   if (isLoading) return <p>Loading balance...</p>;
  *
- *   // Display the formatted balance and symbol
  *   return (
- *     <div>
- *       <p>Balance: {balance ? `${balance.value} ${balance.symbol}` : '0.00'}</p>
- *       <button onClick={refetch}>Refresh</button>
- *     </div>
+ *     <p>
+ *       {balance ? `${balance.value} ${balance.symbol}` : 'n/a'} <button onClick={refetch}>Refresh</button>
+ *     </p>
  *   );
  * }
  * ```
  */
-export function useWalletNativeBalance(): NativeBalanceData {
+export function useWalletNativeBalance(): UseWalletNativeBalanceData {
   // --- 1. STATE & CACHE SETUP ---
 
   // Local cache storage. Keys combine wallet address and chain ID.
@@ -196,7 +191,7 @@ export function useWalletNativeBalance(): NativeBalanceData {
 
   // The definitive balance is always derived from the cache based on the current key.
   // The definitive balance is always derived from the cache based on the current key.
-  const balance: NativeBalanceState = cacheKey ? balanceCache[cacheKey] || null : null;
+  const balance: UseWalletNativeBalanceState = cacheKey ? balanceCache[cacheKey] || null : null;
 
   // Return the fetched balance data and the loading status.
   return {

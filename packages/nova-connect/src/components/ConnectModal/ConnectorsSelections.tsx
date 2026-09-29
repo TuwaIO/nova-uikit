@@ -4,10 +4,11 @@
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
-import { detectSafeApp, formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorName, isInSecureIframe, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { WalletIcon } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
@@ -18,7 +19,7 @@ import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
 // --- Types ---
 
 /**
- * Connector selections data for customization context
+ * State of {@link ConnectorsSelections}, passed to its custom components, class name generators and handlers.
  */
 export interface ConnectorsSelectionsData {
   /** Currently selected network adapter */
@@ -27,17 +28,21 @@ export interface ConnectorsSelectionsData {
   connectors: GroupedConnector[];
   /** Whether only one network is available */
   isOnlyOneNetwork: boolean;
-  /** Whether device is touch-enabled */
+  /** Whether the device has a touch screen */
   isTouch: boolean;
-  /** Whether impersonated wallet is available */
+  /** Whether `connectors` has the impersonated wallet */
   hasImpersonatedConnector: boolean;
-  /** Whether impersonated section should be shown */
+  /** Whether the impersonated wallet is available and `withImpersonated` of `NovaConnectProvider` is set */
   showImpersonated: boolean;
-  /** Filtered connector groups */
+  /** The wallets by group */
   connectorGroups: {
+    /** Wallets that are not popular, impersonated or in a custom group (Safe only inside Safe{Wallet}) */
     installed: GroupedConnector[];
+    /** Wallets of `popularConnectors` of `NovaConnectProvider`, in that order */
     popular: GroupedConnector[];
+    /** The impersonated wallet */
     impersonated?: GroupedConnector;
+    /** Wallets of each group of `customConnectorGroups` of `NovaConnectProvider`, by group title */
     [key: string]: GroupedConnector[] | GroupedConnector | undefined;
   };
   /** Current labels from i18n */
@@ -45,136 +50,266 @@ export interface ConnectorsSelectionsData {
 }
 
 /**
- * Impersonate section data
+ * The impersonated wallet section of {@link ConnectorsSelections}.
  */
 export interface ImpersonateSectionData {
   /** The impersonated wallet connector */
   connector: GroupedConnector;
-  /** Whether device is touch-enabled */
+  /** Whether the device has a touch screen */
   isTouch: boolean;
   /** Current labels from i18n */
   labels: ReturnType<typeof useNovaConnectLabels>;
-  /** Section data for context */
+  /** State of the wallet list */
   sectionsData: ConnectorsSelectionsData;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container.
+ */
+export type ConnectorsSelectionsContainerProps = {
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** The content wrapper and, on touch devices, the disclaimer */
   children: React.ReactNode;
+  /** `region` */
   role?: string;
+  /** `config.ariaLabels.container` or the `connectWallet` label */
   'aria-label'?: string;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ContentWrapperProps = {
-  className?: string;
-  children: React.ReactNode;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ConnectorsAreaProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ImpersonateSectionProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  impersonateData: ImpersonateSectionData;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ImpersonateTitleProps = {
-  className?: string;
-  children: React.ReactNode;
-  impersonateData: ImpersonateSectionData;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLParagraphElement>;
-
-type EmptyStateProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-live'?: 'polite' | 'assertive' | 'off';
-  onClick?: () => void;
-  selectionsData: ConnectorsSelectionsData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type DisclaimerSectionProps = {
-  className?: string;
-  children: React.ReactNode;
+  /** State of the wallet list */
   selectionsData: ConnectorsSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * Customization options for ConnectorsSelections component
+ * Props for a custom content wrapper (the wallet groups and the impersonation section).
+ */
+export type ConnectorsSelectionsContentWrapperProps = {
+  /** Classes from `classNames.contentWrapper`, or the `config.layout` content classes */
+  className?: string;
+  /** The connectors area and the impersonation section */
+  children: React.ReactNode;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom connectors area (the scrollable wallet groups).
+ */
+export type ConnectorsSelectionsConnectorsAreaProps = {
+  /** Classes from `classNames.connectorsArea`, or the defaults with the `config.layout` connectors classes */
+  className?: string;
+  /** The installed, custom and popular wallet groups */
+  children: React.ReactNode;
+  /** `region` */
+  role?: string;
+  /** `config.ariaLabels.connectorsArea` or the `availableWalletConnectors` label */
+  'aria-label'?: string;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom impersonation section.
+ */
+export type ConnectorsSelectionsImpersonateSectionProps = {
+  /** Classes from `classNames.impersonateSection` or the defaults */
+  className?: string;
+  /** The title and the impersonated wallet card */
+  children: React.ReactNode;
+  /** `region` */
+  role?: string;
+  /** `config.ariaLabels.impersonateSection` or the `impersonate` label */
+  'aria-label'?: string;
+  /** The impersonation section */
+  impersonateData: ImpersonateSectionData;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom title of the impersonation section (visible on touch devices only by default).
+ */
+export type ConnectorsSelectionsImpersonateTitleProps = {
+  /** Classes from `classNames.impersonateTitle` or the defaults */
+  className?: string;
+  /** The `impersonate` label */
+  children: React.ReactNode;
+  /** The impersonation section */
+  impersonateData: ImpersonateSectionData;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLParagraphElement>;
+
+/**
+ * Props for a custom empty state (shown when the selected network has no wallets).
+ */
+export type ConnectorsSelectionsEmptyStateProps = {
+  /** Classes from `classNames.emptyState` or the defaults */
+  className?: string;
+  /** A warning icon, the `noConnectorsFound` title and the `noConnectorsDescription` text */
+  children: React.ReactNode;
+  /** `alert` */
+  role?: string;
+  /** `polite` */
+  'aria-live'?: 'polite' | 'assertive' | 'off';
+  /** Calls `handlers.onEmptyStateAction`, when set */
+  onClick?: () => void;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom wrapper of the wallet disclaimer (touch devices).
+ */
+export type ConnectorsSelectionsDisclaimerSectionProps = {
+  /** Classes from `classNames.disclaimerSection` (none by default) */
+  className?: string;
+  /** The `Disclaimer` */
+  children: React.ReactNode;
+  /** State of the wallet list */
+  selectionsData: ConnectorsSelectionsData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link ConnectorsSelections}.
  */
 export type ConnectorsSelectionsCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<ConnectorsSelectionsContainerProps>;
     /** Custom content wrapper */
-    ContentWrapper?: ComponentType<ContentWrapperProps>;
+    ContentWrapper?: ComponentType<ConnectorsSelectionsContentWrapperProps>;
     /** Custom connectors area wrapper */
-    ConnectorsArea?: ComponentType<ConnectorsAreaProps>;
+    ConnectorsArea?: ComponentType<ConnectorsSelectionsConnectorsAreaProps>;
     /** Custom impersonate section */
-    ImpersonateSection?: ComponentType<ImpersonateSectionProps>;
+    ImpersonateSection?: ComponentType<ConnectorsSelectionsImpersonateSectionProps>;
     /** Custom impersonate title */
-    ImpersonateTitle?: ComponentType<ImpersonateTitleProps>;
+    ImpersonateTitle?: ComponentType<ConnectorsSelectionsImpersonateTitleProps>;
     /** Custom empty state */
-    EmptyState?: ComponentType<EmptyStateProps>;
+    EmptyState?: ComponentType<ConnectorsSelectionsEmptyStateProps>;
     /** Custom disclaimer section wrapper */
-    DisclaimerSection?: ComponentType<DisclaimerSectionProps>;
+    DisclaimerSection?: ComponentType<ConnectorsSelectionsDisclaimerSectionProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     container?: (params: { selectionsData: ConnectorsSelectionsData }) => string;
-    /** Function to generate content wrapper classes */
+    /**
+     * Returns the classes of the content wrapper, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     contentWrapper?: (params: { selectionsData: ConnectorsSelectionsData }) => string;
-    /** Function to generate connectors area classes */
+    /**
+     * Returns the classes of the connectors area, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     connectorsArea?: (params: { selectionsData: ConnectorsSelectionsData }) => string;
-    /** Function to generate impersonate section classes */
+    /**
+     * Returns the classes of the impersonation section, instead of the default ones.
+     *
+     * @param params - The impersonation section.
+     * @param params.impersonateData - The impersonation section.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     impersonateSection?: (params: {
       impersonateData: ImpersonateSectionData;
       selectionsData: ConnectorsSelectionsData;
     }) => string;
-    /** Function to generate impersonate title classes */
+    /**
+     * Returns the classes of the impersonation title, instead of the default ones.
+     *
+     * @param params - The impersonation section.
+     * @param params.impersonateData - The impersonation section.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     impersonateTitle?: (params: {
       impersonateData: ImpersonateSectionData;
       selectionsData: ConnectorsSelectionsData;
     }) => string;
-    /** Function to generate empty state classes */
+    /**
+     * Returns the classes of the empty state, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     emptyState?: (params: { selectionsData: ConnectorsSelectionsData }) => string;
-    /** Function to generate disclaimer section classes */
+    /**
+     * Returns the classes of the disclaimer wrapper, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the wallet list.
+     * @returns The classes.
+     */
     disclaimerSection?: (params: { selectionsData: ConnectorsSelectionsData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom impersonate click handler */
+    /**
+     * Wraps the click on the impersonated wallet card: call `originalHandler()` to run the `onClick` prop with it.
+     *
+     * @param impersonateData - The impersonation section.
+     * @param selectionsData - State of the wallet list.
+     * @param originalHandler - Runs the `onClick` prop with the impersonated wallet.
+     */
     onImpersonateClick?: (
       impersonateData: ImpersonateSectionData,
       selectionsData: ConnectorsSelectionsData,
       originalHandler: () => void,
     ) => void;
-    /** Custom empty state action handler */
+    /**
+     * Called when the empty state is clicked.
+     *
+     * @param selectionsData - State of the wallet list.
+     */
     onEmptyStateAction?: (selectionsData: ConnectorsSelectionsData) => void;
-    /** Custom disclaimer learn more action handler */
+    /**
+     * Wraps "Learn more" of the wallet disclaimer: call `originalHandler()` to show the "About wallets" screen.
+     *
+     * @param selectionsData - State of the wallet list.
+     * @param originalHandler - Shows the "About wallets" screen.
+     */
     onDisclaimerLearnMore?: (selectionsData: ConnectorsSelectionsData, originalHandler: () => void) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /**
+       * Returns the ARIA label of the container (default: the `connectWallet` label).
+       *
+       * @param selectionsData - State of the wallet list.
+       * @returns The label.
+       */
       container?: (selectionsData: ConnectorsSelectionsData) => string;
+      /**
+       * Returns the ARIA label of the connectors area (default: the `availableWalletConnectors` label).
+       *
+       * @param selectionsData - State of the wallet list.
+       * @returns The label.
+       */
       connectorsArea?: (selectionsData: ConnectorsSelectionsData) => string;
+      /**
+       * Returns the ARIA label of the impersonation section (default: the `impersonate` label).
+       *
+       * @param impersonateData - The impersonation section.
+       * @returns The label.
+       */
       impersonateSection?: (impersonateData: ImpersonateSectionData) => string;
     };
     /** Layout configuration */
@@ -190,11 +325,11 @@ export type ConnectorsSelectionsCustomization = {
     };
     /** Show/hide features */
     features?: {
-      /** Whether to show empty state */
+      /** Whether to show the empty state; `false` renders nothing (default: `true`) */
       showEmptyState?: boolean;
-      /** Whether to show disclaimer on touch devices */
+      /** Whether to show the wallet disclaimer on touch devices (default: `true`) */
       showDisclaimer?: boolean;
-      /** Whether to show impersonate section */
+      /** Whether to show the impersonation section when it is available (default: `true`) */
       showImpersonate?: boolean;
     };
   };
@@ -202,7 +337,7 @@ export type ConnectorsSelectionsCustomization = {
   connectorsBlock?: {
     /** Customization for installed connectors block */
     installed?: ConnectorsBlockCustomization;
-    /** Customization for popular connectors block */
+    /** Customization for the popular connectors block and the blocks of custom groups */
     popular?: ConnectorsBlockCustomization;
   };
   /** ConnectCard customization for impersonate card */
@@ -212,20 +347,38 @@ export type ConnectorsSelectionsCustomization = {
 };
 
 /**
- * Props for the ConnectorsSelections component
+ * Props for the {@link ConnectorsSelections} component. `appChains` and `solanaRPCUrls` choose the chain a wallet
+ * connects to.
  */
 export interface ConnectorsSelectionsProps extends InitialChains {
   /** Currently selected network adapter */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Array of grouped wallet connectors */
+  /** Wallets of the selected network (all wallets without one) */
   connectors: GroupedConnector[];
-  /** Click handler for connector selection */
+  /**
+   * Called when a wallet card is clicked, before a single-network wallet connects (the connect modal shows the
+   * connection screen or the network choice).
+   *
+   * @param connector - The clicked wallet.
+   */
   onClick: (connector: GroupedConnector) => void;
-  /** Function to set connection status */
+  /**
+   * Sets the "just connected" state of the modal: `true` after the wallet connects, `false` 500 ms later.
+   *
+   * @param value - The state.
+   */
   setIsConnected: (value: boolean) => void;
-  /** Function to control modal open state */
+  /**
+   * Opens or closes the modal (closes it 400 ms after the wallet connects).
+   *
+   * @param value - Whether the modal is open.
+   */
   setIsOpen: (value: boolean) => void;
-  /** Function to set modal content type */
+  /**
+   * Changes the screen of the connect modal (the disclaimer uses it to show "About wallets").
+   *
+   * @param contentType - The screen.
+   */
   setContentType: (contentType: ConnectContentType) => void;
   /** Whether only one network is available */
   isOnlyOneNetwork?: boolean;
@@ -234,18 +387,20 @@ export interface ConnectorsSelectionsProps extends InitialChains {
 }
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { selectionsData: _selectionsData, ...restProps } = props;
-  return (
-    <div ref={ref} className={className} {...restProps}>
-      {children}
-    </div>
-  );
-});
+const DefaultContainer = forwardRef<HTMLDivElement, ConnectorsSelectionsContainerProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { selectionsData: _selectionsData, ...restProps } = props;
+    return (
+      <div ref={ref} className={className} {...restProps}>
+        {children}
+      </div>
+    );
+  },
+);
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultContentWrapper = forwardRef<HTMLDivElement, ContentWrapperProps>(
+const DefaultContentWrapper = forwardRef<HTMLDivElement, ConnectorsSelectionsContentWrapperProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { selectionsData: _selectionsData, ...restProps } = props;
@@ -258,7 +413,7 @@ const DefaultContentWrapper = forwardRef<HTMLDivElement, ContentWrapperProps>(
 );
 DefaultContentWrapper.displayName = 'DefaultContentWrapper';
 
-const DefaultConnectorsArea = forwardRef<HTMLDivElement, ConnectorsAreaProps>(
+const DefaultConnectorsArea = forwardRef<HTMLDivElement, ConnectorsSelectionsConnectorsAreaProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { selectionsData: _selectionsData, ...restProps } = props;
@@ -271,7 +426,7 @@ const DefaultConnectorsArea = forwardRef<HTMLDivElement, ConnectorsAreaProps>(
 );
 DefaultConnectorsArea.displayName = 'DefaultConnectorsArea';
 
-const DefaultImpersonateSection = forwardRef<HTMLDivElement, ImpersonateSectionProps>(
+const DefaultImpersonateSection = forwardRef<HTMLDivElement, ConnectorsSelectionsImpersonateSectionProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { impersonateData: _impersonateData, selectionsData: _selectionsData, ...restProps } = props;
@@ -284,7 +439,7 @@ const DefaultImpersonateSection = forwardRef<HTMLDivElement, ImpersonateSectionP
 );
 DefaultImpersonateSection.displayName = 'DefaultImpersonateSection';
 
-const DefaultImpersonateTitle = forwardRef<HTMLParagraphElement, ImpersonateTitleProps>(
+const DefaultImpersonateTitle = forwardRef<HTMLParagraphElement, ConnectorsSelectionsImpersonateTitleProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { impersonateData: _impersonateData, selectionsData: _selectionsData, ...restProps } = props;
@@ -297,18 +452,20 @@ const DefaultImpersonateTitle = forwardRef<HTMLParagraphElement, ImpersonateTitl
 );
 DefaultImpersonateTitle.displayName = 'DefaultImpersonateTitle';
 
-const DefaultEmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { selectionsData: _selectionsData, onClick, ...restProps } = props;
-  return (
-    <div ref={ref} className={className} {...restProps} onClick={onClick}>
-      {children}
-    </div>
-  );
-});
+const DefaultEmptyState = forwardRef<HTMLDivElement, ConnectorsSelectionsEmptyStateProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { selectionsData: _selectionsData, onClick, ...restProps } = props;
+    return (
+      <div ref={ref} className={className} {...restProps} onClick={onClick}>
+        {children}
+      </div>
+    );
+  },
+);
 DefaultEmptyState.displayName = 'DefaultEmptyState';
 
-const DefaultDisclaimerSection = forwardRef<HTMLDivElement, DisclaimerSectionProps>(
+const DefaultDisclaimerSection = forwardRef<HTMLDivElement, ConnectorsSelectionsDisclaimerSectionProps>(
   ({ children, className, ...props }, ref) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { selectionsData: _selectionsData, ...restProps } = props;
@@ -336,103 +493,48 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
 }
 
 /**
- * ConnectorsSelections component - Main wallet selection interface with categorized connectors
+ * The wallet list of the connect modal: installed wallets, the groups of `customConnectorGroups`, popular wallets
+ * (`popularConnectors` of `NovaConnectProvider`, by default WalletConnect, Porto, Coinbase and Gemini) and, with
+ * `withImpersonated`, the impersonated wallet. On touch devices the list scrolls horizontally and a wallet disclaimer
+ * is shown. Clicking a wallet that works on one network (or on the selected one) connects it through `connect` of the
+ * Satellite store.
  *
- * This component provides the primary wallet selection interface with:
- * - Categorized wallet sections (Installed, Popular, Impersonate)
- * - Responsive layout adapting to touch/mouse interfaces
- * - Safe App environment detection and filtering
- * - Empty state handling for missing connectors
- * - Educational content integration for touch devices
- * - Full accessibility support with semantic structure
- * - Complete customization of all child components and styling
+ * The Safe connector is listed only inside Safe{Wallet}, detected as in `initializeAutoConnect` of the Satellite store:
+ * in an HTTPS iframe, on mount the component calls `getSafeConnectorChainId` of the EVM adapter (the Safe connector of
+ * wagmi answers only inside a parent window with an allowed origin).
  *
- * Wallet categorization:
- * - Installed: Detected browser extension wallets (excluding popular ones)
- * - Popular: Coinbase Wallet and WalletConnect for broader compatibility
- * - Impersonate: Development/testing wallet for address simulation
- * - Safe App filtering: Conditional Safe Wallet display based on environment
+ * Props: {@link ConnectorsSelectionsProps}; the ref is forwarded to the container.
  *
- * Layout features:
- * - Touch devices: Horizontal scrolling with educational disclaimer
- * - Mouse devices: Vertical scrolling with fixed height container
- * - Responsive grid adapting to screen size and device capabilities
- * - Custom scrollbar styling with NovaCustomScroll class
- * - Customizable layout parameters and responsive behavior
- *
- * Empty state handling:
- * - Clear error messaging when no connectors found
- * - Contextual help text explaining the issue
- * - Visual indicators with warning icons
- * - Proper error state accessibility
- * - Customizable empty state content and styling
- *
- * Accessibility features:
- * - Semantic HTML structure with proper headings
- * - ARIA labels for screen readers
- * - Role-based navigation support
- * - Focus management for keyboard users
- * - Error states with descriptive messaging
- * - Customizable ARIA labels and descriptions
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectorsSelections
- *   selectedAdapter={OrbitAdapter.EVM}
- *   connectors={availableConnectors}
- *   onClick={(connector) => handleWalletSelection(connector)}
- *   setIsConnected={setConnectionStatus}
- *   setIsOpen={setModalOpen}
- *   waitForPredict={() => checkConnectionState()}
- *   setContentType={setModalContent}
- *   withImpersonated={true}
- *   isOnlyOneNetwork={false}
- *   appChains={chainConfiguration}
- *   solanaRPCUrls={solanaConfig}
- *   store={walletStore}
- * />
- * ```
+ * import { getFilteredConnectors } from '@tuwaio/nova-connect';
+ * import { ConnectorsSelections } from '@tuwaio/nova-connect/components';
+ * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+ * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
+ * import { mainnet } from 'viem/chains';
  *
- * @example With full customization including disclaimer
- * ```tsx
- * <ConnectorsSelections
- *   selectedAdapter={undefined}
- *   connectors={allConnectors}
- *   onClick={(connector) => initiateConnection(connector)}
- *   setIsConnected={updateConnectionState}
- *   setIsOpen={toggleModal}
- *   waitForPredict={predictConnection}
- *   setContentType={changeContent}
- *   withImpersonated={false}
- *   isOnlyOneNetwork={true}
- *   customization={{
- *     components: {
- *       Container: CustomSelectionsContainer,
- *       EmptyState: CustomEmptyStateComponent
- *     },
- *     classNames: {
- *       connectorsArea: ({ selectionsData }) =>
- *         selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack',
- *     },
- *     handlers: {
- *       onDisclaimerLearnMore: (selectionsData, originalHandler) => {
- *         analytics.track('disclaimer_learn_more_clicked');
- *         originalHandler();
- *       }
- *     },
- *     disclaimer: {
- *       classNames: {
- *         container: ({ compact }) => 'custom-disclaimer-container',
- *         title: ({ compact }) => 'custom-disclaimer-title'
- *       },
- *       config: {
- *         buttonLabels: {
- *           learnMore: 'Read More'
- *         }
- *       }
- *     }
- *   }}
- * />
+ * export function EvmWallets() {
+ *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const { setIsConnected, setIsConnectModalOpen, setConnectModalContentType } = useNovaConnect();
+ *
+ *   return (
+ *     <ConnectorsSelections
+ *       selectedAdapter={OrbitAdapter.EVM}
+ *       connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+ *       onClick={(connector) => console.log('selected', connector.name)}
+ *       setIsConnected={setIsConnected}
+ *       setIsOpen={setIsConnectModalOpen}
+ *       setContentType={setConnectModalContentType}
+ *       appChains={[mainnet]}
+ *       customization={{
+ *         classNames: {
+ *           connectorsArea: ({ selectionsData }) => (selectionsData.isTouch ? 'horizontal-scroll' : 'vertical-stack'),
+ *         },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectorsSelections = memo(
@@ -479,17 +581,25 @@ export const ConnectorsSelections = memo(
        */
       const [isSafeVisible, setIsSafeVisible] = useState(false);
 
+      const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
+
       useEffect(() => {
+        const evmAdapter = getAdapter(OrbitAdapter.EVM);
+        if (!isInSecureIframe || evmAdapter?.key !== OrbitAdapter.EVM || !evmAdapter.getSafeConnectorChainId) return;
+
         let isMounted = true;
-        detectSafeApp().then((isSafe) => {
-          if (isMounted) {
-            setIsSafeVisible(isSafe);
-          }
-        });
+        evmAdapter
+          .getSafeConnectorChainId()
+          .then((chainId) => {
+            if (isMounted) setIsSafeVisible(chainId !== undefined);
+          })
+          .catch(() => {
+            // Outside Safe{Wallet} the Safe connector has no provider
+          });
         return () => {
           isMounted = false;
         };
-      }, []);
+      }, [getAdapter]);
 
       /**
        * Memoized connector filtering
@@ -742,7 +852,7 @@ export const ConnectorsSelections = memo(
 
       const containerAriaLabel = customConfig?.ariaLabels?.container?.(selectionsData) ?? labels.connectWallet;
       const connectorsAreaAriaLabel =
-        customConfig?.ariaLabels?.connectorsArea?.(selectionsData) ?? 'Available wallet connectors';
+        customConfig?.ariaLabels?.connectorsArea?.(selectionsData) ?? labels.availableWalletConnectors;
       const impersonateAriaLabel =
         (impersonateData && customConfig?.ariaLabels?.impersonateSection?.(impersonateData)) ?? labels.impersonate;
 

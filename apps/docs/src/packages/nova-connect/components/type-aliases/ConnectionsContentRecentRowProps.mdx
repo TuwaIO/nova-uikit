@@ -1,0 +1,173 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionsContentRecentRowProps" />
+
+# ConnectionsContentRecentRowProps
+
+> **ConnectionsContentRecentRowProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:195](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L195)
+
+Props for a custom row of a recently connected wallet.
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L199)
+
+The last address of the wallet, shortened to `0x1234…abcd`
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:215](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L215)
+
+Granular classNames for sub-elements
+
+#### actionsContainer?
+
+> `optional` **actionsContainer?**: `string`
+
+From `classNames.recentRowActionsContainer`
+
+#### connectButton?
+
+> `optional` **connectButton?**: `string`
+
+From `classNames.recentRowConnectButton`
+
+#### connectorName?
+
+> `optional` **connectorName?**: `string`
+
+From `classNames.recentRowConnectorName`
+
+#### connectSpinner?
+
+> `optional` **connectSpinner?**: `string`
+
+From `classNames.recentRowConnectSpinner`
+
+#### container?
+
+> `optional` **container?**: `string`
+
+From `classNames.recentRowContainer`
+
+#### content?
+
+> `optional` **content?**: `string`
+
+From `classNames.recentRowContent`
+
+#### iconBadge?
+
+> `optional` **iconBadge?**: `string`
+
+From `classNames.connectorIconBadge`
+
+#### iconWrapper?
+
+> `optional` **iconWrapper?**: `string`
+
+From `classNames.connectorIconWrapper`
+
+#### removeButton?
+
+> `optional` **removeButton?**: `string`
+
+From `classNames.recentRowRemoveButton`
+
+#### removeIcon?
+
+> `optional` **removeIcon?**: `string`
+
+From `classNames.recentRowRemoveIcon`
+
+#### walletName?
+
+> `optional` **walletName?**: `string`
+
+From `classNames.recentRowWalletName`
+
+***
+
+### connectorType
+
+> **connectorType**: `ConnectorType`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:197](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L197)
+
+Connector type of the wallet
+
+***
+
+### icon?
+
+> `optional` **icon?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:211](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L211)
+
+Wallet icon saved in the recent list
+
+***
+
+### isConnecting?
+
+> `optional` **isConnecting?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:213](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L213)
+
+Whether this wallet is being connected
+
+***
+
+### onConnect?
+
+> `optional` **onConnect?**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L203)
+
+Connects the wallet again; `undefined` when the store has no connector for it
+
+#### Returns
+
+`void`
+
+***
+
+### onRemove
+
+> **onRemove**: (`e`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:209](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L209)
+
+Removes the wallet from the recent list.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`
+
+The click event (propagation is stopped).
+
+#### Returns
+
+`void`
+
+***
+
+### timestamp
+
+> **timestamp**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L201)
+
+When the wallet was disconnected (`disconnectedTimestamp` of the recent list)

@@ -1,6 +1,5 @@
 /**
  * @file Highly customizable scrollable chain list with comprehensive styling and behavior control.
- * @module ScrollableChainList
  */
 
 import {
@@ -22,125 +21,203 @@ import { ChainListRenderer, ChainListRendererCustomization } from './ChainListRe
 // === TYPES AND INTERFACES ===
 
 /**
- * Chain data structure returned by getChainData function
+ * Chain data returned by the `getChainData` prop of {@link ScrollableChainList}.
  */
-interface ChainData {
+export interface ScrollableChainListChainData {
+  /** The chain ID formatted for the connector (the value passed to `handleValueChange`) */
   formattedChainId: string | number;
+  /** The chain ID as given in the chain list */
   chain: string | number;
 }
 
 /**
- * Scroll button state context
+ * Scroll state of the list, passed to the scroll handlers.
  */
-interface ScrollButtonContext {
+export interface ScrollableChainListScrollButtonContext {
+  /** Whether the "scroll to top" button is shown */
   showTopButton: boolean;
+  /** Whether the "scroll to bottom" button is shown */
   showBottomButton: boolean;
+  /** Whether the list scrolled during the last 150 ms */
   isScrolling: boolean;
+  /** `scrollTop` of the scroll container */
   scrollTop: number;
+  /** `scrollHeight` of the scroll container */
   scrollHeight: number;
+  /** `clientHeight` of the scroll container */
   clientHeight: number;
 }
 
 /**
- * Props for custom scroll container component
+ * Props for a custom scroll container component.
  */
-interface CustomScrollContainerProps {
+export interface ScrollableChainListScrollContainerProps {
+  /** The chain list */
   children: ReactNode;
+  /** Ref to attach to the scrollable element (used to track the scroll position) */
   ref: React.RefObject<HTMLDivElement | null>;
+  /**
+   * Scrolls by a page on PageUp and PageDown.
+   *
+   * @param event - The keyboard event.
+   */
   onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** `listbox` */
   role: string;
+  /** The `selectChain` label */
   'aria-label': string;
+  /** `0` */
   tabIndex: number;
 }
 
 /**
- * Props for custom wrapper component
+ * Props for a custom wrapper component.
  */
-interface CustomWrapperProps {
+export interface ScrollableChainListWrapperProps {
+  /** The scroll buttons and the scroll container */
   children: ReactNode;
+  /** Classes from `classNames.wrapper` or the defaults */
   className?: string;
+  /** `region` */
   role: string;
+  /** The `aria-label` prop or the `chainListContainer` label */
   'aria-label': string;
 }
 
 /**
- * Props for custom button animations wrapper
+ * Props for a custom wrapper of a scroll button. The default one renders nothing when the button is hidden and fades
+ * it in and out.
  */
-interface CustomButtonAnimationWrapperProps {
+export interface ScrollableChainListButtonAnimationWrapperProps {
+  /** The button in its wrapper `div` */
   children: ReactNode;
+  /** Whether the button should be shown */
   isVisible: boolean;
+  /** Which button this is */
   position: 'top' | 'bottom';
+  /** Key for `AnimatePresence` (`top-button` or `bottom-button`) */
   animationKey: string;
 }
 
 /**
- * Animation configuration for scroll buttons
+ * Framer Motion props of the scroll buttons. When set, each button wrapper is also wrapped in a `motion.div` with
+ * these props.
  */
-interface ScrollButtonAnimationConfig {
+export interface ScrollableChainListScrollButtonAnimationConfig {
+  /** Initial state (`initial` of Framer Motion) */
   initial?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Target state (`animate` of Framer Motion) */
   animate?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Exit state (`exit` of Framer Motion) */
   exit?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Transition settings */
   transition?: Transition<AnyResolvedKeyframe>;
 }
 
 /**
- * Comprehensive customization options for ScrollableChainList
+ * Customization options of {@link ScrollableChainList}.
  */
 export interface ScrollableChainListCustomization {
   /** Custom components */
   components?: {
     /** Custom scroll container component */
-    ScrollContainer?: ComponentType<CustomScrollContainerProps>;
+    ScrollContainer?: ComponentType<ScrollableChainListScrollContainerProps>;
     /** Custom wrapper component */
-    Wrapper?: ComponentType<CustomWrapperProps>;
+    Wrapper?: ComponentType<ScrollableChainListWrapperProps>;
     /** Custom button animation wrapper */
-    ButtonAnimationWrapper?: ComponentType<CustomButtonAnimationWrapperProps>;
+    ButtonAnimationWrapper?: ComponentType<ScrollableChainListButtonAnimationWrapperProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Wrapper classes */
+    /**
+     * Returns the classes of the wrapper, instead of the default ones. An empty string keeps the defaults.
+     *
+     * @param params - The list state.
+     * @param params.itemCount - Number of chains.
+     * @param params.hasScrollableContent - Whether the list is taller than the container.
+     * @returns The classes.
+     */
     wrapper?: (params: { itemCount: number; hasScrollableContent: boolean }) => string;
-    /** Scroll container classes */
+    /**
+     * Returns the classes of the scroll container, instead of the default ones. An empty string keeps the defaults.
+     *
+     * @param params - The list state.
+     * @param params.itemCount - Number of chains.
+     * @param params.hasScrollableContent - Whether the list is taller than the container.
+     * @param params.showTopButton - Whether the "scroll to top" button is shown.
+     * @param params.showBottomButton - Whether the "scroll to bottom" button is shown.
+     * @returns The classes.
+     */
     container?: (params: {
       itemCount: number;
       hasScrollableContent: boolean;
       showTopButton: boolean;
       showBottomButton: boolean;
     }) => string;
-    /** Button animation wrapper classes */
+    /**
+     * Returns the classes of the `div` around a scroll button, instead of the default ones. An empty string keeps the
+     * defaults.
+     *
+     * @param params - The button state.
+     * @param params.position - Which button this is.
+     * @param params.isVisible - Whether the button is shown.
+     * @returns The classes.
+     */
     buttonWrapper?: (params: { position: 'top' | 'bottom'; isVisible: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom scroll handler wrapper */
-    onScroll?: (originalHandler: () => void, event: Event, context: ScrollButtonContext) => void;
-    /** Custom key handler wrapper for container */
+    /**
+     * Called after the visibility of the scroll buttons is updated (on mount, scroll and resize). Not called while
+     * `buttons.hideWhenContentFits` hides the buttons.
+     *
+     * @param originalHandler - Does nothing.
+     * @param event - A new `scroll` event (not the original one).
+     * @param context - The scroll state.
+     */
+    onScroll?: (originalHandler: () => void, event: Event, context: ScrollableChainListScrollButtonContext) => void;
+    /**
+     * Wraps the key handler of the scroll container: call `originalHandler(event)` to scroll by a page on PageUp and
+     * PageDown.
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The keyboard event.
+     * @param context - The list.
+     * @param context.scrollContainer - The scroll container element.
+     */
     onKeyDown?: (
       originalHandler: (event: React.KeyboardEvent<HTMLDivElement>) => void,
       event: React.KeyboardEvent<HTMLDivElement>,
       context: { scrollContainer: HTMLDivElement | null },
     ) => void;
-    /** Custom top button click handler wrapper */
-    onTopButtonClick?: (originalHandler: () => void, context: ScrollButtonContext) => void;
-    /** Custom bottom button click handler wrapper */
-    onBottomButtonClick?: (originalHandler: () => void, context: ScrollButtonContext) => void;
+    /**
+     * Wraps the click on the "scroll to top" button: call `originalHandler()` to scroll to the top.
+     *
+     * @param originalHandler - Scrolls to the top.
+     * @param context - The scroll state.
+     */
+    onTopButtonClick?: (originalHandler: () => void, context: ScrollableChainListScrollButtonContext) => void;
+    /**
+     * Wraps the click on the "scroll to bottom" button: call `originalHandler()` to scroll to the bottom.
+     *
+     * @param originalHandler - Scrolls to the bottom.
+     * @param context - The scroll state.
+     */
+    onBottomButtonClick?: (originalHandler: () => void, context: ScrollableChainListScrollButtonContext) => void;
   };
   /** Animation configuration */
   animations?: {
     /** Button animation */
-    scrollButtons?: ScrollButtonAnimationConfig;
+    scrollButtons?: ScrollableChainListScrollButtonAnimationConfig;
   };
   /** Scroll behavior configuration */
   scrollBehavior?: {
-    /** Scroll behavior type */
+    /** Scroll behavior of the scroll buttons and PageUp/PageDown (default: `'smooth'`) */
     behavior?: ScrollBehavior;
-    /** Page scroll percentage (0-1) */
+    /** Share of the container height scrolled by PageUp/PageDown, from 0 to 1 (default: `0.8`) */
     pageScrollPercentage?: number;
-    /** Scroll update throttle in ms */
-    updateThrottle?: number;
-    /** Enable auto-scroll to active item */
-    autoScrollToActive?: boolean;
   };
   /** Button customization */
   buttons?: {
@@ -148,7 +225,7 @@ export interface ScrollableChainListCustomization {
     topButton?: ToTopButtonCustomization;
     /** Bottom button customization */
     bottomButton?: ToBottomButtonCustomization;
-    /** Hide buttons when content fits */
+    /** Hide both buttons while the list fits in the container */
     hideWhenContentFits?: boolean;
   };
   /** Chain list renderer customization */
@@ -156,26 +233,35 @@ export interface ScrollableChainListCustomization {
 }
 
 /**
- * Props for the ScrollableChainList component
+ * Props for the {@link ScrollableChainList} component.
  */
 export interface ScrollableChainListProps {
   /** List of chain identifiers to render */
   chainsList: (string | number)[];
-  /** Currently selected chain value */
+  /** The formatted chain ID of the active connection, as a string (marks the active item) */
   selectValue: string;
-  /** Handler for chain selection changes */
+  /**
+   * Selects a chain.
+   *
+   * @param newChainId - The formatted chain ID, as a string.
+   */
   handleValueChange: (newChainId: string) => void;
-  /** Function to get formatted chain data */
-  getChainData: (chain: string | number) => ChainData;
-  /** Handler called when list should close */
+  /**
+   * Formats a chain of `chainsList` for the connector.
+   *
+   * @param chain - A chain of `chainsList`.
+   * @returns The chain data.
+   */
+  getChainData: (chain: string | number) => ScrollableChainListChainData;
+  /** Closes the list after a selection */
   onClose: () => void;
-  /** Comprehensive customization options */
+  /** Customization options */
   customization?: ScrollableChainListCustomization;
-  /** ARIA label for the wrapper */
+  /** ARIA label for the wrapper (default: the `chainListContainer` label) */
   'aria-label'?: string;
-  /** Loading state */
+  /** Shows the loading message instead of the list (default: `false`) */
   isLoading?: boolean;
-  /** Error state */
+  /** Shows this error instead of the list (default: `null`) */
   error?: string | null;
 }
 
@@ -184,9 +270,9 @@ export interface ScrollableChainListProps {
 /**
  * Default scroll container component
  */
-const DefaultScrollContainer: React.FC<CustomScrollContainerProps> = React.forwardRef<
+const DefaultScrollContainer: React.FC<ScrollableChainListScrollContainerProps> = React.forwardRef<
   HTMLDivElement,
-  CustomScrollContainerProps
+  ScrollableChainListScrollContainerProps
 >(({ children, className, onKeyDown, ...props }, ref) => (
   <div ref={ref} className={className} onKeyDown={onKeyDown} {...props}>
     {children}
@@ -198,7 +284,7 @@ DefaultScrollContainer.displayName = 'DefaultScrollContainer';
 /**
  * Default wrapper component
  */
-const DefaultWrapper: React.FC<CustomWrapperProps> = ({ children, className, ...props }) => (
+const DefaultWrapper: React.FC<ScrollableChainListWrapperProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
@@ -207,7 +293,7 @@ const DefaultWrapper: React.FC<CustomWrapperProps> = ({ children, className, ...
 /**
  * Default button animation wrapper
  */
-const DefaultButtonAnimationWrapper: React.FC<CustomButtonAnimationWrapperProps> = ({
+const DefaultButtonAnimationWrapper: React.FC<ScrollableChainListButtonAnimationWrapperProps> = ({
   children,
   isVisible,
   animationKey,
@@ -230,7 +316,11 @@ const DefaultButtonAnimationWrapper: React.FC<CustomButtonAnimationWrapperProps>
 // === MAIN COMPONENT ===
 
 /**
- * Highly customizable scrollable chain list with comprehensive styling and behavior control.
+ * Renders the mobile chain list of {@link ChainSelector}: a scroll container with {@link ChainListRenderer} and
+ * "scroll to top/bottom" buttons that appear when the list can be scrolled. Uses a `ResizeObserver` and a scroll
+ * listener on the container, removed on unmount.
+ *
+ * Props: {@link ScrollableChainListProps}.
  */
 export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
   chainsList,
@@ -249,7 +339,7 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
   const [showBottomButton, setShowBottomButton] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [hasScrollableContent, setHasScrollableContent] = useState(false);
-  const [scrollContext, setScrollContext] = useState<ScrollButtonContext>({
+  const [scrollContext, setScrollContext] = useState<ScrollableChainListScrollButtonContext>({
     showTopButton: false,
     showBottomButton: false,
     isScrolling: false,

@@ -1,23 +1,24 @@
 /**
- * @fileoverview Headless SIWX auto-authentication watcher for NovaConnect.
+ * @file Headless SIWX auto-authentication watcher for NovaConnect.
  * Monitors active wallet connections and automatically triggers SIWX signing prompts.
  */
 
 import type { MinimalSatelliteConnection, SatelliteSiwxFieldOptions, UseSiwxSignInOptions } from '@tuwaio/siwx-react';
 import { getSatelliteSiwxFields, useSiwx, useSiwxSessionStore } from '@tuwaio/siwx-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
 
 /**
- * Props for NovaSiwxWatcher component.
+ * Props of {@link NovaSiwxWatcher} (the `siwx` prop of `NovaConnectProvider`): the sign-in callbacks and the SIWX
+ * message fields of `getSatelliteSiwxFields` from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
  */
 export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
-  /** Enables or disables automatic SIWX authentication prompt (defaults to true) */
+  /** Whether to ask connected wallets to sign in (default: `true`) */
   enabled?: boolean;
-  /** Optional function to fetch challenge nonce from backend */
+  /** Fetches the nonce of the SIWX message from your backend */
   getNonce?: () => Promise<string>;
-  /** Optional backend verification callback function */
+  /** Verifies the signed message on your backend (required for the sign-in) */
   verifier?: UseSiwxSignInOptions['verifier'];
   /**
    * Optional callback triggered when the wallet disconnects or when `signOut` is called.
@@ -31,9 +32,19 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
 }
 
 /**
- * Headless React component rendered inside `NovaConnectProvider`.
- * Automatically prompts the user for SIWX authentication whenever a new wallet connects.
- * Uses a `lastPromptedAddress` ref lock to prevent infinite retry loops on prompt rejection.
+ * Signs the connected wallet in with SIWX. `NovaConnectProvider` renders it with its `siwx` prop, so apps do not
+ * render it themselves. It renders nothing.
+ *
+ * - When a wallet connects (or the account changes), it asks the wallet to sign a SIWX message once per address
+ *   (`signIn` of `useSiwx` from `@tuwaio/siwx-react`: a wallet prompt, then `getNonce` and `verifier` requests to your
+ *   backend). A rejected or failed sign-in disconnects that wallet (if it is still the active one) and calls
+ *   `onError`. Without `verifier` it logs a warning and does not sign in.
+ * - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until
+ *   Satellite Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by
+ *   `@tuwaio/siwx-react` is kept.
+ *
+ * @param props - See {@link NovaSiwxWatcherProps}.
+ * @returns `null`.
  */
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const {
@@ -54,6 +65,8 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
   const disconnect = useSatelliteConnectStore((s) => s.disconnect);
+  // `undefined` with `@tuwaio/satellite-core` before 0.6.1, which has no such flag
+  const isAutoConnectFinished = useSatelliteConnectStore((s) => s.isAutoConnectFinished);
   const { signIn } = useSiwx();
   const session = useSiwxSessionStore((s) => s.session);
   const status = useSiwxSessionStore((s) => s.status);
@@ -62,36 +75,37 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const lastPromptedAddress = useRef<string | null>(null);
   const isSigningLock = useRef<boolean>(false);
 
+  // Callbacks and message fields are read through Effect Events: the `siwx` prop is often a new object on every render,
+  // which must not re-run the effects
+  const destroySession = useEffectEvent(() => {
+    resetSession();
+    if (destroyer) {
+      destroyer().catch((err) => {
+        console.warn('[NovaSiwxWatcher] Failed to execute session destroyer:', err);
+      });
+    }
+  });
+
   useEffect(() => {
     if (!activeConnection?.isConnected || !activeConnection?.address) {
       lastPromptedAddress.current = null;
+      // After a page load, `@tuwaio/siwx-react` restores the saved session before Satellite reconnects the wallet:
+      // keep the session until auto-connect has finished
+      if (isAutoConnectFinished === false) return;
       if (status === 'authenticated' || session) {
-        resetSession();
-        if (destroyer) {
-          destroyer().catch((err) => {
-            console.warn('[NovaSiwxWatcher] Failed to execute session destroyer:', err);
-          });
-        }
+        destroySession();
       }
     }
-  }, [activeConnection?.isConnected, activeConnection?.address, status, session, resetSession, destroyer]);
+  }, [activeConnection?.isConnected, activeConnection?.address, isAutoConnectFinished, status, session]);
 
-  useEffect(() => {
-    if (!enabled || !activeConnection?.isConnected || !activeConnection?.address || !activeConnection?.chainId) {
-      return;
-    }
+  // Reads the active connection of the latest render, after an asynchronous sign-in
+  const isActiveConnection = useEffectEvent(
+    (connectorType: string, address: string) =>
+      activeConnection?.connectorType === connectorType && activeConnection.address === address,
+  );
 
-    if (!activeConnection.signMessage) {
-      return;
-    }
-
-    if (isSigningLock.current) {
-      return;
-    }
-
-    if (status === 'building' || status === 'signing' || status === 'verifying') {
-      return;
-    }
+  const signInActiveConnection = useEffectEvent(() => {
+    if (!activeConnection?.isConnected || !activeConnection.address || !activeConnection.signMessage) return;
 
     try {
       const minimalConnection: MinimalSatelliteConnection = {
@@ -130,15 +144,15 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         return;
       }
 
+      const { connectorType, address } = activeConnection;
       const handleFailure = (err: unknown) => {
         const errMessage = err instanceof Error ? err.message : String(err);
         console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
 
-        // Ensure we only disconnect if this connection is STILL the active connection
-        const currentActiveConnectionId = activeConnection.address;
-
-        if (activeConnection.connectorType && currentActiveConnectionId === activeConnection.address) {
-          disconnect(activeConnection.connectorType);
+        // Disconnect the wallet that was asked to sign in only while it is still the active one (the user may have
+        // switched the account or the wallet during the prompt)
+        if (connectorType && isActiveConnection(connectorType, address)) {
+          disconnect(connectorType);
         }
         resetSession();
         onError?.(errMessage);
@@ -161,30 +175,35 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     } catch (err) {
       console.warn('[NovaSiwxWatcher] Failed to build SIWX fields:', err);
     }
+  });
+
+  useEffect(() => {
+    if (!enabled || !activeConnection?.isConnected || !activeConnection?.address || !activeConnection?.chainId) {
+      return;
+    }
+
+    if (!activeConnection.signMessage) {
+      return;
+    }
+
+    if (isSigningLock.current) {
+      return;
+    }
+
+    if (status === 'building' || status === 'signing' || status === 'verifying') {
+      return;
+    }
+
+    signInActiveConnection();
   }, [
     activeConnection?.isConnected,
     activeConnection?.address,
     activeConnection?.chainId,
     activeConnection?.signMessage,
     activeConnection?.connectorType,
-    disconnect,
     enabled,
     status,
     session?.address,
-    getNonce,
-    verifier,
-    domain,
-    uri,
-    statement,
-    expirationTime,
-    expirationSeconds,
-    notBefore,
-    requestId,
-    resources,
-    signIn,
-    resetSession,
-    onSuccess,
-    onError,
   ]);
 
   return null;

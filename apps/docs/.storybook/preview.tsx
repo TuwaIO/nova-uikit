@@ -177,7 +177,23 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Introduction', 'Theming', 'ConnectButton', 'Nova Core', 'Nova Transactions', 'API_Reference'],
+        order: [
+          'Introduction',
+          'Theming',
+          'ConnectButton',
+          'Nova Core',
+          'Nova Transactions',
+          'Packages',
+          [
+            'Overview',
+            'nova-core',
+            ['Overview', '*'],
+            'nova-connect',
+            ['Overview', 'connect', ['Overview', '*'], '*', ['Overview', '*']],
+            'nova-transactions',
+            ['Overview', 'transactions', ['Overview', '*'], '*', ['Overview', '*']],
+          ],
+        ],
       },
     },
     controls: {

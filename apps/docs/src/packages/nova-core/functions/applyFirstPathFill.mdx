@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/applyFirstPathFill" />
+
+# applyFirstPathFill()
+
+> **applyFirstPathFill**(`svgString`, `fillColor`): `string`
+
+Defined in: [utils/svgUtils.ts:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/svgUtils.ts#L32)
+
+Modifies the fill attribute of the first `<path>` element in an SVG string.
+Uses DOMParser for safe XML manipulation, so call it in the browser.
+Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values with [resolveCssVariable](?path=/docs/packages-nova-core-functions-resolvecssvariable--docs).
+
+## Parameters
+
+### svgString
+
+`string`
+
+The original SVG markup
+
+### fillColor
+
+`string`
+
+The color to apply (supports CSS variables)
+
+## Returns
+
+`string`
+
+Modified SVG string, or the original string (with a console warning) when it cannot be parsed

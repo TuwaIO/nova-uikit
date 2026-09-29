@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/UseNovaSiwxOptions" />
+
+# UseNovaSiwxOptions
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L15)
+
+Options of [useNovaSiwx](?path=/docs/packages-nova-connect-connect-functions-usenovasiwx--docs): the verifier, the destroyer and the SIWX message fields of `getSatelliteSiwxFields`
+from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
+
+## Extends
+
+- `SatelliteSiwxFieldOptions`
+
+## Properties
+
+### destroyer?
+
+> `optional` **destroyer?**: () => `Promise`\<`void`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L19)
+
+Called by `signOut` after the session is cleared, for example to call a `/logout` endpoint of your backend
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### verifier?
+
+> `optional` **verifier?**: `UseSiwxSignInOptions`\[`"verifier"`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L17)
+
+Sends the signed message to your backend for verification (required unless passed to `signIn`)

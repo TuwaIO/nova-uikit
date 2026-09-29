@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TxInfoBlockCustomization" />
+
+# TxInfoBlockCustomization\<T\>
+
+> **TxInfoBlockCustomization**\<`T`\> = `object`
+
+Defined in: [components/TrackingTxModal/TxInfoBlock.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L41)
+
+Class names and replacement parts for [TxInfoBlock](?path=/docs/packages-nova-transactions-transactions-functions-txinfoblock--docs).
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/TrackingTxModal/TxInfoBlock.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L50)
+
+Granular classNames for sub-elements
+
+#### container?
+
+> `optional` **container?**: `string`
+
+Classes for the container
+
+#### hashLink?
+
+> `optional` **hashLink?**: [`HashLinkProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-hashlinkprops--docs)\[`"classNames"`\]
+
+ClassNames for the hash link (Tx Hash row)
+
+#### originalHashLink?
+
+> `optional` **originalHashLink?**: [`HashLinkProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-hashlinkprops--docs)\[`"classNames"`\]
+
+ClassNames for original hash link in replaced transactions (falls back to hashLink)
+
+#### row?
+
+> `optional` **row?**: `string`
+
+Classes for info row
+
+#### rowLabel?
+
+> `optional` **rowLabel?**: `string`
+
+Classes for row label
+
+#### rowValue?
+
+> `optional` **rowValue?**: `string`
+
+Classes for row value
+
+#### separator?
+
+> `optional` **separator?**: `string`
+
+Classes for the transaction key section separator
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [components/TrackingTxModal/TxInfoBlock.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L43)
+
+Components that replace the default parts.
+
+#### InfoRow?
+
+> `optional` **InfoRow?**: `ComponentType`\<[`TxInfoBlockInfoRowProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-txinfoblockinforowprops--docs)\>
+
+A row with a label and a value (network, start time, slot…).
+
+#### transactionKey?
+
+> `optional` **transactionKey?**: [`TransactionKeyProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionkeyprops--docs)\<`T`\>\[`"renderHashLink"`\]
+
+Renders each hash of the transaction key section (`renderHashLink` of `TransactionKey`).

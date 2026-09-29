@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/svgToBase64" />
+
+# svgToBase64()
+
+> **svgToBase64**(`svgString`, `firstPathFill?`): `string`
+
+Defined in: [utils/svgUtils.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/svgUtils.ts#L61)
+
+Encodes an SVG string to a base64 data URL.
+
+## Parameters
+
+### svgString
+
+`string`
+
+The SVG markup
+
+### firstPathFill?
+
+`string`
+
+Optional fill color to apply to the first path, with [applyFirstPathFill](?path=/docs/packages-nova-core-functions-applyfirstpathfill--docs) (browser only)
+
+## Returns
+
+`string`
+
+Base64-encoded data URL (`data:image/svg+xml;base64,…`)

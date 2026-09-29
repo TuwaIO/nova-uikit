@@ -4,156 +4,283 @@
 
 import { cn } from '@tuwaio/nova-core';
 import { isAddress, normalizeError, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  ComponentType,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Types ---
 
 /**
- * Validation configuration
+ * Validation settings of {@link ImpersonateForm} (`config.validation`).
  */
 export interface ValidationConfig {
-  /** Debounce delay in milliseconds */
+  /** Delay after the last keystroke before the value is validated, in milliseconds (default: `500`) */
   debounceDelay: number;
-  /** Whether to validate on blur */
+  /** Whether to validate when the field loses focus (default: `true`) */
   validateOnBlur: boolean;
-  /** Whether to validate on change */
+  /** Whether to validate while typing (default: `true`) */
   validateOnChange: boolean;
-  /** Custom validation function */
+  /**
+   * Runs before the built-in checks.
+   *
+   * @param address - The text in the field.
+   * @returns An error message, or `null` to continue with the built-in checks.
+   */
   customValidator?: (address: string) => string | null;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container.
+ */
+export type ImpersonatedFormContainerProps = {
+  /** Classes from `classNames.container`, or the defaults with the `className` prop */
   className?: string;
+  /** The label, the field, the resolution status and the error */
   children: React.ReactNode;
 } & React.RefAttributes<HTMLDivElement>;
 
-type LabelProps = {
+/**
+ * Props for a custom label.
+ */
+export type ImpersonatedFormLabelProps = {
+  /** Classes from `classNames.label` or the defaults */
   className?: string;
+  /** The `enterWalletAddressOrAddressName` label */
   children: React.ReactNode;
+  /** `impersonated-address` */
   htmlFor?: string;
 } & React.RefAttributes<HTMLLabelElement>;
 
-type InputProps = {
+/**
+ * Props for a custom address field.
+ */
+export type ImpersonatedFormInputProps = {
+  /** Classes from `classNames.input` or the defaults */
   className?: string;
+  /** `impersonated-address` */
   id?: string;
+  /** `text` */
   type?: string;
+  /** The text in the field */
   value: string;
+  /**
+   * Updates the text and validates it after `debounceDelay`.
+   *
+   * @param event - The change event.
+   */
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Validates the text at once (with `validateOnBlur`) */
   onBlur: () => void;
+  /**
+   * Replaces the text with the trimmed pasted text and validates it at once.
+   *
+   * @param event - The paste event.
+   */
   onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void;
+  /** `config.input.placeholder`, or the `walletAddressPlaceholder` label with a hint about ENS or SNS names */
   placeholder?: string;
+  /** ID of the error message, while there is an error */
   'aria-describedby'?: string;
+  /** Whether there is an error */
   'aria-invalid'?: 'true' | 'false';
+  /** `config.input.autoComplete` or `off` */
   autoComplete?: string;
+  /** `config.input.spellCheck` or `false` */
   spellCheck?: boolean;
+  /** Whether the Satellite store has a `connectionError` */
   hasError: boolean;
 } & React.RefAttributes<HTMLInputElement>;
 
-type ErrorMessageProps = {
+/**
+ * Props for a custom error message.
+ */
+export type ImpersonatedFormErrorMessageProps = {
+  /** Classes from `classNames.errorMessage` or the defaults */
   className?: string;
+  /** Message of `connectionError` of the Satellite store */
   children: React.ReactNode;
+  /** `address-error` */
   id?: string;
+  /** `alert` */
   role?: string;
+  /** `polite` */
   'aria-live'?: 'polite' | 'assertive';
 } & React.RefAttributes<HTMLParagraphElement>;
 
-type ResolvingStatusProps = {
+/**
+ * Props for a custom status of the name resolution (the default one shows `Resolving ENS name...` while resolving).
+ */
+export type ImpersonatedFormResolvingStatusProps = {
+  /** Whether a name is being resolved */
   isResolving: boolean;
+  /** `ENS` for `.eth` names, `SNS` for `.sol` names, otherwise empty */
   domainType: 'ENS' | 'SNS' | '';
-  className?: string;
-};
-
-type ResolvedAddressProps = {
-  resolvedAddress: string;
+  /** Classes from `classNames.resolvingStatus`, added to the defaults */
   className?: string;
 };
 
 /**
- * Customization options for ImpersonateForm component
+ * Props for a custom display of the resolved address (the default one shows `Resolved to: <address>`).
+ */
+export type ImpersonatedFormResolvedAddressProps = {
+  /** The address of the name */
+  resolvedAddress: string;
+  /** Classes from `classNames.resolvedAddress`, added to the defaults */
+  className?: string;
+};
+
+/**
+ * Customization options of {@link ImpersonateForm}.
  */
 export type ImpersonateFormCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<ImpersonatedFormContainerProps>;
     /** Custom label component */
-    Label?: ComponentType<LabelProps>;
+    Label?: ComponentType<ImpersonatedFormLabelProps>;
     /** Custom input component */
-    Input?: ComponentType<InputProps>;
+    Input?: ComponentType<ImpersonatedFormInputProps>;
     /** Custom error message component */
-    ErrorMessage?: ComponentType<ErrorMessageProps>;
+    ErrorMessage?: ComponentType<ImpersonatedFormErrorMessageProps>;
     /** Custom resolving status component */
-    ResolvingStatus?: ComponentType<ResolvingStatusProps>;
+    ResolvingStatus?: ComponentType<ImpersonatedFormResolvingStatusProps>;
     /** Custom resolved address display component */
-    ResolvedAddress?: ComponentType<ResolvedAddressProps>;
+    ResolvedAddress?: ComponentType<ImpersonatedFormResolvedAddressProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @returns The classes.
+     */
     container?: () => string;
-    /** Function to generate label classes */
+    /**
+     * Returns the classes of the label, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     label?: () => string;
-    /** Function to generate input classes */
+    /**
+     * Returns the classes of the field, instead of the default ones.
+     *
+     * @param params - The field state.
+     * @param params.hasError - Whether the Satellite store has a `connectionError`.
+     * @param params.hasInteracted - Whether the user has typed, pasted or left the field.
+     * @returns The classes.
+     */
     input?: (params: { hasError: boolean; hasInteracted: boolean }) => string;
-    /** Function to generate error message classes */
+    /**
+     * Returns the classes of the error message, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     errorMessage?: () => string;
-    /** Function to generate resolving status classes */
+    /**
+     * Returns the classes of the resolution status, added to the default ones.
+     *
+     * @returns The classes.
+     */
     resolvingStatus?: () => string;
-    /** Function to generate resolved address classes */
+    /**
+     * Returns the classes of the resolved address, added to the default ones.
+     *
+     * @returns The classes.
+     */
     resolvedAddress?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for input change (called after default logic) */
+    /**
+     * Called after the text changes.
+     *
+     * @param displayValue - The text in the field.
+     * @param resolvedAddress - The address of the last resolved ENS or SNS name, or `null`.
+     */
     onInputChange?: (displayValue: string, resolvedAddress: string | null) => void;
-    /** Custom handler for input blur (called after default logic) */
+    /**
+     * Called after the blur validation (only with `validateOnBlur`).
+     *
+     * @param displayValue - The text in the field.
+     * @param resolvedAddress - The address of the last resolved ENS or SNS name, or `null`.
+     */
     onInputBlur?: (displayValue: string, resolvedAddress: string | null) => void;
-    /** Custom handler for paste events */
+    /**
+     * Called after a non-empty paste.
+     *
+     * @param displayValue - The text in the field.
+     * @param resolvedAddress - The address of the last resolved ENS or SNS name, or `null`.
+     */
     onInputPaste?: (displayValue: string, resolvedAddress: string | null) => void;
-    /** Custom handler for validation start */
+    /**
+     * Called when a validation starts.
+     *
+     * @param value - The validated text.
+     */
     onValidationStart?: (value: string) => void;
-    /** Custom handler for validation complete */
+    /**
+     * Called when a validation ends.
+     *
+     * @param value - The validated text.
+     * @param error - The error message, or `null` when the value is valid.
+     */
     onValidationComplete?: (value: string, error: string | null) => void;
-    /** Custom handler for resolved address */
+    /**
+     * Called when an ENS or SNS name resolves.
+     *
+     * @param originalValue - The name.
+     * @param resolvedAddress - Its address.
+     */
     onAddressResolved?: (originalValue: string, resolvedAddress: string) => void;
-    /** Custom handler for component mount */
+    /** Called after mount */
     onMount?: () => void;
-    /** Custom handler for component unmount */
+    /** Called on unmount */
     onUnmount?: () => void;
   };
   /** Configuration options */
   config?: {
     /** Custom validation configuration */
     validation?: Partial<ValidationConfig>;
-    /** Custom ARIA labels */
-    ariaLabels?: {
-      input?: string;
-      errorRegion?: string;
-    };
     /** Custom input attributes */
     input?: {
+      /** Placeholder of the field */
       placeholder?: string;
+      /** `autoComplete` of the field (default: `off`) */
       autoComplete?: string;
+      /** `spellCheck` of the field (default: `false`) */
       spellCheck?: boolean;
     };
   };
 };
 
 /**
- * Props for the ImpersonateForm component
+ * Props for the {@link ImpersonateForm} component.
  */
 export interface ImpersonateFormProps {
-  /** Currently selected adapter **/
+  /** Network of the address; its Satellite adapter resolves names (default: EVM) */
   selectedAdapter?: OrbitAdapter;
-  /** Current impersonated wallet address value */
+  /** Initial text of the field; a new value before the user types is validated at once */
   impersonatedAddress: string;
-  /** Callback to update the impersonated address */
+  /**
+   * Receives a valid address: the typed address, or the address of a resolved ENS or SNS name.
+   *
+   * @param value - The address.
+   */
   setImpersonatedAddress: (value: string) => void;
-  /** Custom CSS classes for styling the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
   /** Customization options */
   customization?: ImpersonateFormCustomization;
@@ -169,27 +296,29 @@ const defaultValidationConfig: ValidationConfig = {
 };
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(({ children, className }, ref) => (
+const DefaultContainer = forwardRef<HTMLDivElement, ImpersonatedFormContainerProps>(({ children, className }, ref) => (
   <div ref={ref} className={className}>
     {children}
   </div>
 ));
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultLabel = forwardRef<HTMLLabelElement, LabelProps>(({ children, className, ...props }, ref) => (
-  <label ref={ref} className={className} {...props}>
-    {children}
-  </label>
-));
+const DefaultLabel = forwardRef<HTMLLabelElement, ImpersonatedFormLabelProps>(
+  ({ children, className, ...props }, ref) => (
+    <label ref={ref} className={className} {...props}>
+      {children}
+    </label>
+  ),
+);
 DefaultLabel.displayName = 'DefaultLabel';
 
-// eslint-disable-next-line
-const DefaultInput = forwardRef<HTMLInputElement, InputProps>(({ className, hasError: _, ...props }, ref) => (
-  <input ref={ref} className={className} {...props} />
-));
+const DefaultInput = forwardRef<HTMLInputElement, ImpersonatedFormInputProps>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ className, hasError: _, ...props }, ref) => <input ref={ref} className={className} {...props} />,
+);
 DefaultInput.displayName = 'DefaultInput';
 
-const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
+const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ImpersonatedFormErrorMessageProps>(
   ({ children, className, ...props }, ref) => (
     <p ref={ref} className={className} {...props}>
       {children}
@@ -198,20 +327,26 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 );
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
-const DefaultResolvingStatus: React.FC<ResolvingStatusProps> = ({ isResolving, domainType, className }) => {
+const DefaultResolvingStatus: React.FC<ImpersonatedFormResolvingStatusProps> = ({
+  isResolving,
+  domainType,
+  className,
+}) => {
+  const labels = useNovaConnectLabels();
   if (!isResolving) return null;
 
   return (
     <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-blue-500', className)}>
-      Resolving {domainType} name...
+      {formatLabel(labels.resolvingName, { service: domainType })}
     </p>
   );
 };
 
-const DefaultResolvedAddress: React.FC<ResolvedAddressProps> = ({ resolvedAddress, className }) => {
+const DefaultResolvedAddress: React.FC<ImpersonatedFormResolvedAddressProps> = ({ resolvedAddress, className }) => {
+  const labels = useNovaConnectLabels();
   return (
     <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-green-600', className)}>
-      Resolved to: {resolvedAddress}
+      {formatLabel(labels.resolvedTo, { address: resolvedAddress })}
     </p>
   );
 };
@@ -238,7 +373,34 @@ function isDomainName(value: string): boolean {
 }
 
 /**
- * Form component for entering wallet address to impersonate with comprehensive customization
+ * The address field of the impersonation screen. It checks the text (not empty, an address or a name, no wallet
+ * connected) and shows the error. ENS (`.eth`, EVM) and SNS (`.sol`, Solana) names are resolved with `getAddress` of
+ * the Satellite adapter, which sends a network request.
+ *
+ * Validation errors are stored as `connectionError` of the Satellite store (so the connect modal can block the
+ * "Connect" button), and the error is reset on unmount.
+ *
+ * Props: {@link ImpersonateFormProps}; the ref is forwarded to the container.
+ *
+ * @example
+ * ```tsx
+ * import { ImpersonateForm } from '@tuwaio/nova-connect/components';
+ * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
+ *
+ * export function ImpersonateField() {
+ *   const { impersonatedAddress, setImpersonatedAddress } = useNovaConnect();
+ *
+ *   return (
+ *     <ImpersonateForm
+ *       selectedAdapter={OrbitAdapter.EVM}
+ *       impersonatedAddress={impersonatedAddress}
+ *       setImpersonatedAddress={setImpersonatedAddress}
+ *       customization={{ config: { validation: { debounceDelay: 300 } } }}
+ *     />
+ *   );
+ * }
+ * ```
  */
 export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
   ({ impersonatedAddress, setImpersonatedAddress, className, customization, selectedAdapter }, ref) => {
@@ -605,26 +767,27 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
       if (supportsNameResolution) {
         if (selectedAdapter === OrbitAdapter.EVM) {
-          return `${labels.walletAddressPlaceholder} or ENS name (.eth)`;
+          return formatLabel(labels.walletAddressOrEnsPlaceholder, { address: labels.walletAddressPlaceholder });
         }
         if (selectedAdapter === OrbitAdapter.SOLANA) {
-          return `${labels.walletAddressPlaceholder} or SNS name (.sol)`;
+          return formatLabel(labels.walletAddressOrSnsPlaceholder, { address: labels.walletAddressPlaceholder });
         }
       }
 
       return labels.walletAddressPlaceholder;
     })();
 
-    // Cleanup effect
+    // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the effect
+    const onMount = useEffectEvent(() => customHandlers?.onMount?.());
+    const onUnmount = useEffectEvent(() => {
+      clearValidationTimeout();
+      resetConnectionError();
+      customHandlers?.onUnmount?.();
+    });
     useEffect(() => {
-      customHandlers?.onMount?.();
-
-      return () => {
-        clearValidationTimeout();
-        resetConnectionError();
-        customHandlers?.onUnmount?.();
-      };
-    }, [clearValidationTimeout, resetConnectionError, customHandlers]);
+      onMount();
+      return () => onUnmount();
+    }, []);
 
     // Input configuration
     const inputId = 'impersonated-address';

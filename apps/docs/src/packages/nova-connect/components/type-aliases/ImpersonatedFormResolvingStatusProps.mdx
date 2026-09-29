@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ImpersonatedFormResolvingStatusProps" />
+
+# ImpersonatedFormResolvingStatusProps
+
+> **ImpersonatedFormResolvingStatusProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L125)
+
+Props for a custom status of the name resolution (the default one shows `Resolving ENS name...` while resolving).
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L131)
+
+Classes from `classNames.resolvingStatus`, added to the defaults
+
+***
+
+### domainType
+
+> **domainType**: `"ENS"` \| `"SNS"` \| `""`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:129](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L129)
+
+`ENS` for `.eth` names, `SNS` for `.sol` names, otherwise empty
+
+***
+
+### isResolving
+
+> **isResolving**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L127)
+
+Whether a name is being resolved

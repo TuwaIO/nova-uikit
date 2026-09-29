@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectedModalFooter" />
+
+# ConnectedModalFooter
+
+> `const` **ConnectedModalFooter**: `ForwardRefExoticComponent`\<[`ConnectedModalFooterProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalfooterprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:366](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L366)
+
+The footer of the connected modal: a button that disconnects all wallets (`disconnect` of the Satellite store) and
+closes the modal, and a link to the active address on the block explorer of its chain (opens in a new tab; a
+disabled button when the chain has no explorer). Renders nothing without an active connection.
+
+Props: [ConnectedModalFooterProps](?path=/docs/packages-nova-connect-components-interfaces-connectedmodalfooterprops--docs); the ref is forwarded to the `footer` element.
+
+## Example
+
+```tsx
+import { ConnectedModalFooter } from '@tuwaio/nova-connect/components';
+import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+
+export function Footer() {
+  const { setIsConnectedModalOpen } = useNovaConnect();
+
+  return (
+    <ConnectedModalFooter
+      setIsOpen={setIsConnectedModalOpen}
+      customization={{
+        classNames: {
+          explorerLink: ({ isValidUrl }) => (isValidUrl ? 'explorer-active' : 'explorer-disabled'),
+        },
+        handlers: {
+          onBeforeDisconnect: () => window.confirm('Disconnect all wallets?'),
+        },
+      }}
+    />
+  );
+}
+```

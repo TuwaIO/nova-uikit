@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/WaitForConnectionContent" />
+
+# WaitForConnectionContent
+
+> `const` **WaitForConnectionContent**: `ForwardRefExoticComponent`\<`Omit`\<[`WaitForConnectionContentProps`](?path=/docs/packages-nova-connect-components-interfaces-waitforconnectioncontentprops--docs), `"ref"`\> & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx:291](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/WaitForConnectionContent.tsx#L291)
+
+The content of the connect button while no wallet is connected: an animated wallet icon and the `connectWallet`
+label (or `customization.config.customText`). By default it renders nothing while a wallet is connected
+(`hideWhenConnected`). Animations can be turned off with `customization.config.disableAnimation` or `reduceMotion`.
+
+Props: [WaitForConnectionContentProps](?path=/docs/packages-nova-connect-components-interfaces-waitforconnectioncontentprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { WaitForConnectionContent } from '@tuwaio/nova-connect/components';
+
+export const Prompt = (
+  <WaitForConnectionContent
+    customization={{
+      classNames: { text: () => 'text-blue-500' },
+      animation: { path: { duration: 1.2, delay: 0.3 } },
+      config: { customText: 'Please connect your wallet' },
+    }}
+  />
+);
+```

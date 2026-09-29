@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsBlockContainerProps" />
+
+# ConnectorsBlockContainerProps
+
+> **ConnectorsBlockContainerProps** = `object` & `React.RefAttributes`\<`HTMLElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:71](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L71)
+
+Props for a custom container (a `section` by default).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.container` or the `connectorsSection` label with the title
+
+### aria-labelledby?
+
+> `optional` **aria-labelledby?**: `string`
+
+ID of the title (not set in the empty state without a title)
+
+### blockData
+
+> **blockData**: [`ConnectorsBlockData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockdata--docs)
+
+State of the group
+
+### children
+
+> **children**: `React.ReactNode`
+
+The title and the wallet list, or the empty state
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.container` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`group`

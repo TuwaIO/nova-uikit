@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectorsSelectionsConnectorsAreaProps" />
+
+# ConnectorsSelectionsConnectorsAreaProps
+
+> **ConnectorsSelectionsConnectorsAreaProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L98)
+
+Props for a custom connectors area (the scrollable wallet groups).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.connectorsArea` or the `availableWalletConnectors` label
+
+### children
+
+> **children**: `React.ReactNode`
+
+The installed, custom and popular wallet groups
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.connectorsArea`, or the defaults with the `config.layout` connectors classes
+
+### role?
+
+> `optional` **role?**: `string`
+
+`region`
+
+### selectionsData
+
+> **selectionsData**: [`ConnectorsSelectionsData`](?path=/docs/packages-nova-connect-components-interfaces-connectorsselectionsdata--docs)
+
+State of the wallet list

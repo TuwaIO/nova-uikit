@@ -1,0 +1,350 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ScrollableChainListCustomization" />
+
+# ScrollableChainListCustomization
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:122](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L122)
+
+Customization options of [ScrollableChainList](?path=/docs/packages-nova-connect-components-variables-scrollablechainlist--docs).
+
+## Properties
+
+### animations?
+
+> `optional` **animations?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:211](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L211)
+
+Animation configuration
+
+#### scrollButtons?
+
+> `optional` **scrollButtons?**: [`ScrollableChainListScrollButtonAnimationConfig`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistscrollbuttonanimationconfig--docs)
+
+Button animation
+
+***
+
+### buttons?
+
+> `optional` **buttons?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:223](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L223)
+
+Button customization
+
+#### bottomButton?
+
+> `optional` **bottomButton?**: [`ToBottomButtonCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-tobottombuttoncustomization--docs)
+
+Bottom button customization
+
+#### hideWhenContentFits?
+
+> `optional` **hideWhenContentFits?**: `boolean`
+
+Hide both buttons while the list fits in the container
+
+#### topButton?
+
+> `optional` **topButton?**: [`ToTopButtonCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-totopbuttoncustomization--docs)
+
+Top button customization
+
+***
+
+### chainListRenderer?
+
+> `optional` **chainListRenderer?**: [`ChainListRendererCustomization`](?path=/docs/packages-nova-connect-components-interfaces-chainlistrenderercustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:232](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L232)
+
+Chain list renderer customization
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L133)
+
+Custom class name generators
+
+#### buttonWrapper?
+
+> `optional` **buttonWrapper?**: (`params`) => `string`
+
+Returns the classes of the `div` around a scroll button, instead of the default ones. An empty string keeps the
+defaults.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### isVisible
+
+`boolean`
+
+Whether the button is shown.
+
+###### position
+
+`"bottom"` \| `"top"`
+
+Which button this is.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the scroll container, instead of the default ones. An empty string keeps the defaults.
+
+##### Parameters
+
+###### params
+
+The list state.
+
+###### hasScrollableContent
+
+`boolean`
+
+Whether the list is taller than the container.
+
+###### itemCount
+
+`number`
+
+Number of chains.
+
+###### showBottomButton
+
+`boolean`
+
+Whether the "scroll to bottom" button is shown.
+
+###### showTopButton
+
+`boolean`
+
+Whether the "scroll to top" button is shown.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### wrapper?
+
+> `optional` **wrapper?**: (`params`) => `string`
+
+Returns the classes of the wrapper, instead of the default ones. An empty string keeps the defaults.
+
+##### Parameters
+
+###### params
+
+The list state.
+
+###### hasScrollableContent
+
+`boolean`
+
+Whether the list is taller than the container.
+
+###### itemCount
+
+`number`
+
+Number of chains.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L124)
+
+Custom components
+
+#### ButtonAnimationWrapper?
+
+> `optional` **ButtonAnimationWrapper?**: `ComponentType`\<[`ScrollableChainListButtonAnimationWrapperProps`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistbuttonanimationwrapperprops--docs)\>
+
+Custom button animation wrapper
+
+#### ScrollContainer?
+
+> `optional` **ScrollContainer?**: `ComponentType`\<[`ScrollableChainListScrollContainerProps`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistscrollcontainerprops--docs)\>
+
+Custom scroll container component
+
+#### Wrapper?
+
+> `optional` **Wrapper?**: `ComponentType`\<[`ScrollableChainListWrapperProps`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistwrapperprops--docs)\>
+
+Custom wrapper component
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L171)
+
+Custom event handlers
+
+#### onBottomButtonClick?
+
+> `optional` **onBottomButtonClick?**: (`originalHandler`, `context`) => `void`
+
+Wraps the click on the "scroll to bottom" button: call `originalHandler()` to scroll to the bottom.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Scrolls to the bottom.
+
+###### context
+
+[`ScrollableChainListScrollButtonContext`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistscrollbuttoncontext--docs)
+
+The scroll state.
+
+##### Returns
+
+`void`
+
+#### onKeyDown?
+
+> `optional` **onKeyDown?**: (`originalHandler`, `event`, `context`) => `void`
+
+Wraps the key handler of the scroll container: call `originalHandler(event)` to scroll by a page on PageUp and
+PageDown.
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`KeyboardEvent`\<`HTMLDivElement`\>
+
+The keyboard event.
+
+###### context
+
+The list.
+
+###### scrollContainer
+
+`HTMLDivElement` \| `null`
+
+The scroll container element.
+
+##### Returns
+
+`void`
+
+#### onScroll?
+
+> `optional` **onScroll?**: (`originalHandler`, `event`, `context`) => `void`
+
+Called after the visibility of the scroll buttons is updated (on mount, scroll and resize). Not called while
+`buttons.hideWhenContentFits` hides the buttons.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Does nothing.
+
+###### event
+
+`Event`
+
+A new `scroll` event (not the original one).
+
+###### context
+
+[`ScrollableChainListScrollButtonContext`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistscrollbuttoncontext--docs)
+
+The scroll state.
+
+##### Returns
+
+`void`
+
+#### onTopButtonClick?
+
+> `optional` **onTopButtonClick?**: (`originalHandler`, `context`) => `void`
+
+Wraps the click on the "scroll to top" button: call `originalHandler()` to scroll to the top.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Scrolls to the top.
+
+###### context
+
+[`ScrollableChainListScrollButtonContext`](?path=/docs/packages-nova-connect-components-interfaces-scrollablechainlistscrollbuttoncontext--docs)
+
+The scroll state.
+
+##### Returns
+
+`void`
+
+***
+
+### scrollBehavior?
+
+> `optional` **scrollBehavior?**: `object`
+
+Defined in: [packages/nova-connect/src/components/Chains/ScrollableChainList.tsx:216](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/Chains/ScrollableChainList.tsx#L216)
+
+Scroll behavior configuration
+
+#### behavior?
+
+> `optional` **behavior?**: `ScrollBehavior`
+
+Scroll behavior of the scroll buttons and PageUp/PageDown (default: `'smooth'`)
+
+#### pageScrollPercentage?
+
+> `optional` **pageScrollPercentage?**: `number`
+
+Share of the container height scrolled by PageUp/PageDown, from 0 to 1 (default: `0.8`)

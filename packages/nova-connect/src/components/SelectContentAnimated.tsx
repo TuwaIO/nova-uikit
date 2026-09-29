@@ -1,6 +1,5 @@
 /**
  * @file Animated select content component with comprehensive customization capabilities.
- * @module SelectContentAnimated
  */
 
 import * as Select from '@radix-ui/react-select';
@@ -13,24 +12,25 @@ import { ToBottomButton, ToBottomButtonCustomization } from './ToBottomButton';
 import { ToTopButton, ToTopButtonCustomization } from './ToTopButton';
 
 /**
- * Props for the SelectContentAnimated component
+ * Props for the {@link SelectContentAnimated} component: the props of `Select.Content` of `@radix-ui/react-select`
+ * (`position` defaults to `popper`; `style` overrides the `maxHeight` style) and these options.
  */
 export interface SelectContentAnimatedProps extends ComponentPropsWithoutRef<typeof Select.Content> {
-  /** Custom CSS classes to apply to the select content container (added to defaults) */
+  /** Classes added to the default classes of `Select.Content` */
   className?: string;
-  /** Custom CSS classes to apply to the animated inner content (added to defaults) */
+  /** Classes added to the default classes of the animated panel around the items */
   contentClassName?: string;
-  /** Custom CSS classes to apply to the viewport (added to defaults) */
+  /** Classes of `Select.Viewport` */
   viewportClassName?: string;
-  /** ARIA label for the select content */
+  /** ARIA label of the list (default: the `chainListContainer` label) */
   'aria-label'?: string;
-  /** Whether the select content should have reduced motion for accessibility */
+  /** Uses a plain fade instead of the scale and slide animation (default: `false`) */
   reduceMotion?: boolean;
-  /** Maximum height for the content in pixels */
+  /** Maximum height in pixels (default: `300`) */
   maxHeight?: number;
-  /** Custom animation duration in seconds */
+  /** Duration of the open and close animation in seconds (default: `0.2`) */
   animationDuration?: number;
-  /** Whether to show scroll buttons */
+  /** Whether to render the scroll buttons of Radix Select (default: `true`) */
   showScrollButtons?: boolean;
   /** Custom props for the ToTopButton */
   topButtonProps?: Omit<ComponentPropsWithoutRef<typeof ToTopButton>, 'ref'>;
@@ -43,59 +43,26 @@ export interface SelectContentAnimatedProps extends ComponentPropsWithoutRef<typ
 }
 
 /**
- * Animated select content component with smooth enter/exit animations.
+ * The dropdown of a Radix Select (`@radix-ui/react-select`) with a Framer Motion open and close animation, a maximum
+ * height and the Nova scroll buttons. It renders `Select.Portal` and `Select.Content`, so use it inside
+ * `Select.Root`. `ChainSelector` uses it for the desktop chain list.
  *
- * This component provides animated dropdown content for select components
- * with accessibility support and extensive customization capabilities.
+ * Props: {@link SelectContentAnimatedProps}; the ref is forwarded to `Select.Content`.
  *
- * Features:
- * - Smooth enter/exit animations with Framer Motion
- * - Accessibility-first design with ARIA support
- * - Fully customizable scroll buttons with ToTopButton/ToBottomButton
- * - Reduced motion support for accessibility
- * - Customizable max height and animation duration
- * - Full control over styling via className props (additive, not replacement)
- * - Separate styling for container, content, and viewport
- * - Custom button props and customization options
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <Select.Root>
- *   <Select.Trigger>Select an option</Select.Trigger>
- *   <SelectContentAnimated>
- *     <Select.Item value="option1">Option 1</Select.Item>
- *     <Select.Item value="option2">Option 2</Select.Item>
- *   </SelectContentAnimated>
- * </Select.Root>
- * ```
+ * import * as Select from '@radix-ui/react-select';
+ * import { SelectContentAnimated } from '@tuwaio/nova-connect/components';
  *
- * @example With full customization
- * ```tsx
- * <SelectContentAnimated
- *   className="novacon:shadow-2xl novacon:border-2"
- *   contentClassName="novacon:p-4 novacon:bg-gradient-to-b"
- *   viewportClassName="novacon:scrollbar-thin"
- *   maxHeight={400}
- *   animationDuration={0.3}
- *   reduceMotion={false}
- *   showScrollButtons={true}
- *   topButtonProps={{
- *     className: "novacon:bg-blue-500",
- *     onClick: () => console.log("Top button clicked"),
- *   }}
- *   topButtonCustomization={{
- *     classNames: {
- *       button: () => "novacon:bg-red-500 novacon:hover:bg-red-600",
- *     },
- *   }}
- *   bottomButtonCustomization={{
- *     components: {
- *       Icon: ({ className }) => <div className={className}>⬇️</div>,
- *     },
- *   }}
- * >
- *   <Select.Item value="item1">Item 1</Select.Item>
- * </SelectContentAnimated>
+ * export const OptionSelect = (
+ *   <Select.Root>
+ *     <Select.Trigger>Select an option</Select.Trigger>
+ *     <SelectContentAnimated maxHeight={400} animationDuration={0.3} contentClassName="novacon:p-2">
+ *       <Select.Item value="option1">Option 1</Select.Item>
+ *       <Select.Item value="option2">Option 2</Select.Item>
+ *     </SelectContentAnimated>
+ *   </Select.Root>
+ * );
  * ```
  */
 export const SelectContentAnimated = forwardRef<

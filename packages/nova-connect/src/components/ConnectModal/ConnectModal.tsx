@@ -3,7 +3,6 @@ import {
   CloseIcon,
   cn,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -47,7 +46,7 @@ import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSele
 import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
 
 /**
- * Interface for grouped wallet connectors
+ * A wallet with its connectors on each network (the connectors of the Satellite store grouped by wallet name).
  */
 export interface GroupedConnector {
   /** Name of the wallet connector */
@@ -57,28 +56,31 @@ export interface GroupedConnector {
   /** Array of supported network adapters */
   adapters: OrbitAdapter[];
   /** Array of connectors with their associated adapters */
-  connectors: (Connector & { adapter: OrbitAdapter })[];
+  connectors: (Connector & {
+    /** Adapter of the connector */
+    adapter: OrbitAdapter;
+  })[];
 }
 
 /**
- * Connect modal data for customization context
+ * State of the {@link ConnectModal}, passed to its custom components, class name generators and handlers.
  */
 export interface ConnectModalData {
   /** Current content type being displayed */
   contentType: ConnectContentType;
-  /** Selected network adapter */
+  /** Selected network adapter (`undefined` shows the connectors of all networks) */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Active connector name */
+  /** The selected wallet, as `formatConnectorName` of `@tuwaio/orbit-core` returns it */
   activeConnector: string | undefined;
-  /** Impersonated address */
+  /** Address typed in the impersonation form */
   impersonatedAddress: string;
-  /** Whether connection is established */
+  /** Whether the wallet has just connected (`true` for 500 ms before the modal closes) */
   isConnected: boolean;
   /** Whether modal is open */
   isOpen: boolean;
-  /** Connection error if any */
+  /** `connectionError` of the Satellite store, or `null` */
   error: Error | TuwaErrorState | null | undefined;
-  /** Available connectors */
+  /** Connectors of the Satellite store by adapter (`getConnectors()`; `undefined` while the modal is closed) */
   connectors: Record<string, Connector[]>;
   /** Filtered connectors for current adapter */
   filteredConnectors: GroupedConnector[];
@@ -87,173 +89,360 @@ export interface ConnectModalData {
 }
 
 /**
- * Bottom button configuration
+ * The action button in the footer of the {@link ConnectModal}, which depends on the content type.
  */
 export interface BottomButtonConfig {
   /** Button title text */
   title: string;
   /** Button click handler */
   onClick: () => void | Promise<void>;
-  /** Whether button is disabled */
+  /** Whether button is disabled (not set by the modal) */
   disabled?: boolean;
-  /** Loading state */
+  /** Shows `Loading...` and disables the button (not set by the modal) */
   loading?: boolean;
 }
 
 // --- Component Props Types ---
-type ModalContainerProps = {
+/**
+ * Props for a custom container of the modal content.
+ */
+export type ConnectModalContainerProps = {
+  /** Classes from `classNames.modalContainer` */
   className?: string;
+  /** The header, main content and footer */
   children: React.ReactNode;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ModalHeaderProps = {
-  className?: string;
-  children: React.ReactNode;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type InfoButtonProps = {
-  className?: string;
-  onClick: () => void;
-  'aria-label'?: string;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLButtonElement>;
-
-type TitleProps = {
-  className?: string;
-  children: React.ReactNode;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type CloseButtonProps = {
-  className?: string;
-  onClick: () => void;
-  'aria-label'?: string;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLButtonElement>;
-
-type MainContentProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  id?: string;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type FooterProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type BackButtonProps = {
-  className?: string;
-  onClick: () => void;
-  'aria-label'?: string;
-  children: React.ReactNode;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLButtonElement>;
-
-type ActionButtonProps = {
-  className?: string;
-  onClick: () => void | Promise<void>;
-  'aria-describedby'?: string;
-  children: React.ReactNode;
-  disabled?: boolean;
-  loading?: boolean;
-  modalData: ConnectModalData;
-  buttonConfig: BottomButtonConfig;
-} & React.RefAttributes<HTMLButtonElement>;
-
-type ActionDescriptionProps = {
-  id?: string;
-  className?: string;
-  children: React.ReactNode;
-  modalData: ConnectModalData;
-} & React.RefAttributes<HTMLSpanElement>;
-
-type ModalEmptyProps = {
-  className?: string;
-  children: React.ReactNode;
+  /** State of the modal */
   modalData: ConnectModalData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * Customization options for ConnectModal component
+ * Props for a custom modal header.
+ */
+export type ConnectModalHeaderProps = {
+  /** Classes from `classNames.header` */
+  className?: string;
+  /** The title and the close button */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom info button (shown on the connectors screen).
+ */
+export type ConnectModalInfoButtonProps = {
+  /** Classes from `classNames.infoButton` */
+  className?: string;
+  /** Runs `handlers.onInfoClick`, or shows the "About wallets" screen */
+  onClick: () => void;
+  /** From `config.ariaLabels.infoButton`, or the `learnMore` and `aboutWallets` labels */
+  'aria-label'?: string;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLButtonElement>;
+
+/**
+ * Props for a custom modal title.
+ */
+export type ConnectModalTitleProps = {
+  /** Classes from `classNames.title` */
+  className?: string;
+  /** The info button (connectors screen) and the title of the current screen */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom close button.
+ */
+export type ConnectModalCloseButtonProps = {
+  /** Classes from `classNames.closeButton` */
+  className?: string;
+  /** Closes the modal (through `handlers.onOpenChange` when set) */
+  onClick: () => void;
+  /** From `config.ariaLabels.closeButton`, or the `closeModal` label */
+  'aria-label'?: string;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLButtonElement>;
+
+/**
+ * Props for a custom main content wrapper (a `main` element by default).
+ */
+export type ConnectModalMainContentProps = {
+  /** Classes from `classNames.mainContent` */
+  className?: string;
+  /** The content of the current screen */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom footer.
+ */
+export type ConnectModalFooterProps = {
+  /** Classes from `classNames.footer` */
+  className?: string;
+  /** The back button and the action button */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom back button (shown on every screen except the connectors one).
+ */
+export type ConnectModalBackButtonProps = {
+  /** Classes from `classNames.backButton` */
+  className?: string;
+  /** Runs `handlers.onBack`, or goes back to the connectors screen */
+  onClick: () => void;
+  /** From `config.ariaLabels.backButton`, or the `backToPreviousStep` label */
+  'aria-label'?: string;
+  /** The `back` label */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLButtonElement>;
+
+/**
+ * Props for a custom action button of the footer.
+ */
+export type ConnectModalActionButtonProps = {
+  /** Classes from `classNames.actionButton` */
+  className?: string;
+  /** `buttonConfig.onClick` */
+  onClick: () => void | Promise<void>;
+  /** ID of the action description */
+  'aria-describedby'?: string;
+  /** `buttonConfig.title` */
+  children: React.ReactNode;
+  /** `buttonConfig.disabled` */
+  disabled?: boolean;
+  /** `buttonConfig.loading` */
+  loading?: boolean;
+  /** State of the modal */
+  modalData: ConnectModalData;
+  /** The button */
+  buttonConfig: BottomButtonConfig;
+} & React.RefAttributes<HTMLButtonElement>;
+
+/**
+ * Props for a custom description of the action button (visually hidden by default).
+ */
+export type ConnectModalActionDescriptionProps = {
+  /** `bottom-action-description` */
+  id?: string;
+  /** Classes from `classNames.actionDescription` */
+  className?: string;
+  /** What the action button does, in English */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLSpanElement>;
+
+/**
+ * Props for a custom empty state (shown when the store returns no connectors).
+ */
+export type ConnectModalEmptyProps = {
+  /** Classes from `classNames.emptyConnectors` */
+  className?: string;
+  /** The `noConnectorsAvailable` label */
+  children: React.ReactNode;
+  /** State of the modal */
+  modalData: ConnectModalData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link ConnectModal}.
  */
 export type ConnectModalCustomization = {
   /** Custom components */
   components?: {
     /** Custom modal container */
-    ModalContainer?: ComponentType<ModalContainerProps>;
+    ModalContainer?: ComponentType<ConnectModalContainerProps>;
     /** Custom modal header */
-    ModalHeader?: ComponentType<ModalHeaderProps>;
+    ModalHeader?: ComponentType<ConnectModalHeaderProps>;
     /** Custom info button */
-    InfoButton?: ComponentType<InfoButtonProps>;
+    InfoButton?: ComponentType<ConnectModalInfoButtonProps>;
     /** Custom title */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<ConnectModalTitleProps>;
     /** Custom close button */
-    CloseButton?: ComponentType<CloseButtonProps>;
+    CloseButton?: ComponentType<ConnectModalCloseButtonProps>;
     /** Custom main content wrapper */
-    MainContent?: ComponentType<MainContentProps>;
+    MainContent?: ComponentType<ConnectModalMainContentProps>;
     /** Custom footer */
-    Footer?: ComponentType<FooterProps>;
+    Footer?: ComponentType<ConnectModalFooterProps>;
     /** Custom back button */
-    BackButton?: ComponentType<BackButtonProps>;
+    BackButton?: ComponentType<ConnectModalBackButtonProps>;
     /** Custom action button */
-    ActionButton?: ComponentType<ActionButtonProps>;
+    ActionButton?: ComponentType<ConnectModalActionButtonProps>;
     /** Custom action description */
-    ActionDescription?: ComponentType<ActionDescriptionProps>;
-    /** Custom dialog */
+    ActionDescription?: ComponentType<ConnectModalActionDescriptionProps>;
+    /** Custom dialog (default: `Dialog` from `@tuwaio/nova-core`) */
     Dialog?: ComponentType<ComponentPropsWithoutRef<typeof Dialog>>;
-    /** Custom dialog content */
+    /** Custom dialog content (default: `DialogContent` from `@tuwaio/nova-core`) */
     DialogContent?: ComponentType<ComponentPropsWithoutRef<typeof DialogContent>>;
-    /** Custom motion wrapper */
+    /** Custom layout animation wrapper (default: `motion.div`) */
     MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
     /** Custom empty state */
-    EmptyState?: ComponentType<ModalEmptyProps>;
+    EmptyState?: ComponentType<ConnectModalEmptyProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate modal container classes */
+    /**
+     * Returns classes of the modal container, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     modalContainer?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate header classes */
+    /**
+     * Returns classes of the header, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     header?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate info button classes */
+    /**
+     * Returns classes of the info button, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     infoButton?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns classes of the title, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     title?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate close button classes */
+    /**
+     * Returns classes of the close button, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     closeButton?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate main content classes */
+    /**
+     * Returns classes of the main content, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     mainContent?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate footer classes */
+    /**
+     * Returns classes of the footer, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     footer?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate back button classes */
+    /**
+     * Returns classes of the back button, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     backButton?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate action button classes */
+    /**
+     * Returns classes of the action button, added to the default ones.
+     *
+     * @param params - The modal and the button.
+     * @param params.modalData - State of the modal.
+     * @param params.buttonConfig - The action button.
+     * @returns The classes.
+     */
     actionButton?: (params: { modalData: ConnectModalData; buttonConfig: BottomButtonConfig }) => string;
-    /** Function to generate action description classes */
+    /**
+     * Returns classes of the action description, added to the default ones.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     actionDescription?: (params: { modalData: ConnectModalData }) => string;
-    /** Function to generate action description classes */
+    /**
+     * Returns the classes of the empty state.
+     *
+     * @param params - The modal.
+     * @param params.modalData - State of the modal.
+     * @returns The classes.
+     */
     emptyConnectors?: (params: { modalData: ConnectModalData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom modal open/close handler */
+    /**
+     * Replaces the open state change of the dialog (close button, Escape, click outside). The modal stays open until
+     * the handler calls `setIsConnectModalOpen(open)` from `useNovaConnect`.
+     *
+     * @param open - The requested state.
+     * @param modalData - State of the modal.
+     */
     onOpenChange?: (open: boolean, modalData: ConnectModalData) => void;
-    /** Custom back navigation handler */
+    /**
+     * Wraps the back button: call `originalHandler()` to go back to the connectors screen.
+     *
+     * @param modalData - State of the modal.
+     * @param originalHandler - Shows the connectors screen.
+     */
     onBack?: (modalData: ConnectModalData, originalHandler: () => void) => void;
-    /** Custom info button click handler */
+    /**
+     * Replaces the info button, which shows the "About wallets" screen by default.
+     *
+     * @param modalData - State of the modal.
+     */
     onInfoClick?: (modalData: ConnectModalData) => void;
-    /** Custom action button handlers for different content types */
+    /** Replace the action button of the footer on each screen */
     onActionClick?: {
+      /**
+       * Replaces "I don't have a wallet" of the connectors screen, which shows the "Get a wallet" screen by default.
+       *
+       * @param modalData - State of the modal.
+       */
       connectors?: (modalData: ConnectModalData) => void;
+      /**
+       * Replaces the button of the "Get a wallet" screen, which opens the wallet list of the selected (or first)
+       * network in a new tab by default (`ethereum.org` or `solana.com`, from `getNetworkData` of
+       * `@tuwaio/orbit-core`).
+       *
+       * @param modalData - State of the modal.
+       */
       getWallet?: (modalData: ConnectModalData) => void;
+      /**
+       * Replaces "Learn more" of the "About wallets" screen, which opens the wallet guide of the selected (or first)
+       * network in a new tab by default.
+       *
+       * @param modalData - State of the modal.
+       */
       about?: (modalData: ConnectModalData) => void;
+      /**
+       * Replaces "Connect" of the impersonation form. By default it checks the address, saves it to `localStorage`
+       * (`satellite-connect:impersonatedAddress`, through `impersonatedHelpers` of `@tuwaio/orbit-core`) and connects
+       * the impersonated connector.
+       *
+       * @param modalData - State of the modal.
+       * @returns Resolves when the action finishes.
+       */
       impersonate?: (modalData: ConnectModalData) => Promise<void>;
+      /**
+       * Replaces "Try again", shown after a connection error, which connects the selected wallet again by default.
+       *
+       * @param modalData - State of the modal.
+       * @returns Resolves when the action finishes.
+       */
       connecting?: (modalData: ConnectModalData) => Promise<void>;
     };
   };
@@ -261,17 +450,33 @@ export type ConnectModalCustomization = {
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
-      modal?: (modalData: ConnectModalData) => string;
+      /**
+       * Returns the ARIA label of the info button (default: the `learnMore` and `aboutWallets` labels).
+       *
+       * @param modalData - State of the modal.
+       * @returns The label.
+       */
       infoButton?: (modalData: ConnectModalData) => string;
+      /**
+       * Returns the ARIA label of the close button (default: the `closeModal` label).
+       *
+       * @param modalData - State of the modal.
+       * @returns The label.
+       */
       closeButton?: (modalData: ConnectModalData) => string;
+      /**
+       * Returns the ARIA label of the back button (default: the `backToPreviousStep` label).
+       *
+       * @param modalData - State of the modal.
+       * @returns The label.
+       */
       backButton?: (modalData: ConnectModalData) => string;
-      mainContent?: (modalData: ConnectModalData) => string;
     };
     /** Animation configuration */
     animation?: {
-      /** Layout transition duration */
+      /** Duration of the layout transition between screens, in seconds (default: `0.0001`) */
       layoutDuration?: number;
-      /** Disable animations */
+      /** Sets the duration of the layout transition to `0` */
       disabled?: boolean;
     };
   };
@@ -330,7 +535,7 @@ function getConnectorName(
 }
 
 // --- Default Sub-Components ---
-const DefaultModalContainer = forwardRef<HTMLDivElement, ModalContainerProps>(
+const DefaultModalContainer = forwardRef<HTMLDivElement, ConnectModalContainerProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <div
@@ -344,7 +549,7 @@ const DefaultModalContainer = forwardRef<HTMLDivElement, ModalContainerProps>(
 );
 DefaultModalContainer.displayName = 'DefaultModalContainer';
 
-const DefaultModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
+const DefaultModalHeader = forwardRef<HTMLDivElement, ConnectModalHeaderProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <div ref={ref} {...props}>
@@ -354,7 +559,7 @@ const DefaultModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
 );
 DefaultModalHeader.displayName = 'DefaultModalHeader';
 
-const DefaultInfoButton = forwardRef<HTMLButtonElement, InfoButtonProps>(
+const DefaultInfoButton = forwardRef<HTMLButtonElement, ConnectModalInfoButtonProps>(
   // eslint-disable-next-line
   ({ className, onClick, modalData, ...props }, ref) => (
     <button
@@ -373,7 +578,7 @@ const DefaultInfoButton = forwardRef<HTMLButtonElement, InfoButtonProps>(
 );
 DefaultInfoButton.displayName = 'DefaultInfoButton';
 
-const DefaultTitle = forwardRef<HTMLDivElement, TitleProps>(
+const DefaultTitle = forwardRef<HTMLDivElement, ConnectModalTitleProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <DialogTitle ref={ref} className={cn('novacon:flex novacon:items-center', className)} {...props}>
@@ -383,28 +588,27 @@ const DefaultTitle = forwardRef<HTMLDivElement, TitleProps>(
 );
 DefaultTitle.displayName = 'DefaultTitle';
 
-const DefaultCloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
+const DefaultCloseButton = forwardRef<HTMLButtonElement, ConnectModalCloseButtonProps>(
   // eslint-disable-next-line
   ({ className, onClick, modalData, ...props }, ref) => (
-    <DialogClose asChild>
-      <button
-        ref={ref}
-        type="button"
-        onClick={onClick}
-        className={cn(
-          'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1 novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
-          className,
-        )}
-        {...props}
-      >
-        <CloseIcon aria-hidden="true" />
-      </button>
-    </DialogClose>
+    // Not wrapped in `DialogClose`: it would call `onOpenChange` a second time
+    <button
+      ref={ref}
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1 novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
+        className,
+      )}
+      {...props}
+    >
+      <CloseIcon aria-hidden="true" />
+    </button>
   ),
 );
 DefaultCloseButton.displayName = 'DefaultCloseButton';
 
-const DefaultMainContent = forwardRef<HTMLDivElement, MainContentProps>(
+const DefaultMainContent = forwardRef<HTMLDivElement, ConnectModalMainContentProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <main
@@ -420,7 +624,7 @@ const DefaultMainContent = forwardRef<HTMLDivElement, MainContentProps>(
 );
 DefaultMainContent.displayName = 'DefaultMainContent';
 
-const DefaultFooter = forwardRef<HTMLDivElement, FooterProps>(
+const DefaultFooter = forwardRef<HTMLDivElement, ConnectModalFooterProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <footer
@@ -438,7 +642,7 @@ const DefaultFooter = forwardRef<HTMLDivElement, FooterProps>(
 );
 DefaultFooter.displayName = 'DefaultFooter';
 
-const DefaultBackButton = forwardRef<HTMLButtonElement, BackButtonProps>(
+const DefaultBackButton = forwardRef<HTMLButtonElement, ConnectModalBackButtonProps>(
   // eslint-disable-next-line
   ({ className, onClick, children, modalData, ...props }, ref) => (
     <button ref={ref} type="button" onClick={onClick} className={cn(standardButtonClasses, className)} {...props}>
@@ -448,7 +652,7 @@ const DefaultBackButton = forwardRef<HTMLButtonElement, BackButtonProps>(
 );
 DefaultBackButton.displayName = 'DefaultBackButton';
 
-const DefaultActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(
+const DefaultActionButton = forwardRef<HTMLButtonElement, ConnectModalActionButtonProps>(
   // eslint-disable-next-line
   ({ className, onClick, children, disabled, loading, buttonConfig, modalData, ...props }, ref) => (
     <button
@@ -465,7 +669,7 @@ const DefaultActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(
 );
 DefaultActionButton.displayName = 'DefaultActionButton';
 
-const DefaultActionDescription = forwardRef<HTMLSpanElement, ActionDescriptionProps>(
+const DefaultActionDescription = forwardRef<HTMLSpanElement, ConnectModalActionDescriptionProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
     <span ref={ref} className={cn('novacon:sr-only', className)} {...props}>
@@ -475,19 +679,21 @@ const DefaultActionDescription = forwardRef<HTMLSpanElement, ActionDescriptionPr
 );
 DefaultActionDescription.displayName = 'DefaultActionDescription';
 
-const DefaultEmptyState = forwardRef<HTMLDivElement, ModalEmptyProps>(({ children, className, ...props }, ref) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { modalData: _modalData, ...restProps } = props;
-  return (
-    <div ref={ref} className={className} {...restProps}>
-      {children}
-    </div>
-  );
-});
+const DefaultEmptyState = forwardRef<HTMLDivElement, ConnectModalEmptyProps>(
+  ({ children, className, ...props }, ref) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { modalData: _modalData, ...restProps } = props;
+    return (
+      <div ref={ref} className={className} {...restProps}>
+        {children}
+      </div>
+    );
+  },
+);
 DefaultEmptyState.displayName = 'DefaultEmptyState';
 
 /**
- * Props for the ConnectModal component
+ * Props for the {@link ConnectModal} component. `appChains` and `solanaRPCUrls` choose the chain a wallet connects to.
  */
 export interface ConnectModalProps extends InitialChains {
   /** Customization options */
@@ -495,69 +701,34 @@ export interface ConnectModalProps extends InitialChains {
 }
 
 /**
- * ConnectModal component - Main modal dialog for wallet connection workflow
+ * The connect modal: wallet list with network tabs, network choice for multi-network wallets, connection progress
+ * with retry, "About wallets", "Get a wallet" and the impersonation form. Open it with `setIsConnectModalOpen(true)`
+ * from `useNovaConnect`; `NovaConnectProvider` renders it when `appChains` or `solanaRPCUrls` is set.
  *
- * This component provides a comprehensive wallet connection interface with:
- * - Multi-step connection flow with different content types
- * - Network selection and adapter filtering
- * - Support for regular wallets and impersonated wallets
- * - Educational content about wallets and networks
- * - Error handling and retry mechanisms
- * - Full accessibility support with ARIA labels
- * - Keyboard navigation and screen reader compatibility
+ * Opening the modal resets it to the wallet list. A wallet connects through `connect` of the Satellite store to the
+ * first chain of `appChains` (EVM) or the first cluster of `solanaRPCUrls` (Solana), and the modal closes 400 ms after
+ * the wallet reports the connection (it waits up to 10 seconds). Texts come from the Nova Connect labels, except a
+ * few English accessibility texts.
  *
- * Modal content types:
- * - 'connectors': Main wallet selection screen with network tabs
- * - 'network': Network selection for multi-network wallets
- * - 'connecting': Connection progress and status display
- * - 'about': Educational content about wallets
- * - 'getWallet': Onboarding flow for users without wallets
- * - 'impersonate': Form for wallet address impersonation
- *
- * Visual features:
- * - Responsive design adapting to different screen sizes
- * - Smooth transitions between different content states
- * - Loading states and progress indicators
- * - Clear navigation with back/forward buttons
- * - Contextual action buttons in footer
- *
- * Accessibility features:
- * - Proper ARIA labels and roles for screen readers
- * - Keyboard navigation support with focus management
- * - Semantic HTML structure for better navigation
- * - Screen reader announcements for state changes
- * - High contrast compatible styling
- *
- * @param appChains - Configuration for supported blockchain networks
- * @param solanaRPCUrls - RPC URLs configuration for Solana network
- * @param store - Wallet store instance
- * @param withImpersonated - Whether to show impersonated wallet option
- * @param customization - Customization options for the component
- * @returns JSX element representing the connection modal dialog
+ * Props: {@link ConnectModalProps}.
  *
  * @example
  * ```tsx
- * <ConnectModal
- *   appChains={{
- *     [OrbitAdapter.EVM]: [1, 137, 56], // Ethereum, Polygon, BSC
- *     [OrbitAdapter.SOLANA]: ['devnet', 'mainnet-beta']
- *   }}
- *   solanaRPCUrls={{
- *     'mainnet-beta': 'https://api.mainnet-beta.solana.com',
- *     'devnet': 'https://api.devnet.solana.com'
- *   }}
- *   store={walletStore}
- *   withImpersonated
- *   customization={{
- *     classNames: {
- *       title: ({ modalData }) =>
- *         modalData.contentType === 'about' ? 'custom-about-title' : ''
- *     }
- *   }}
- * />
- * ```
+ * import { ConnectModal } from '@tuwaio/nova-connect/components';
+ * import { mainnet, polygon } from 'viem/chains';
  *
- * @public
+ * export const Modal = (
+ *   <ConnectModal
+ *     appChains={[mainnet, polygon]}
+ *     solanaRPCUrls={{ devnet: 'https://api.devnet.solana.com' }}
+ *     customization={{
+ *       classNames: {
+ *         title: ({ modalData }) => (modalData.contentType === 'about' ? 'custom-about-title' : ''),
+ *       },
+ *     }}
+ *   />
+ * );
+ * ```
  */
 export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls, customization = {} }) => {
   const {
@@ -825,7 +996,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
           </>
         ) : (
           <CustomEmptyState className={classNames.emptyConnectors?.({ modalData })} modalData={modalData}>
-            No connectors available
+            {labels.noConnectorsAvailable}
           </CustomEmptyState>
         );
       case 'about':
@@ -970,17 +1141,17 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const getActionDescription = useCallback(() => {
     switch (connectModalContentType) {
       case 'getWallet':
-        return 'Opens external wallet selection page';
+        return labels.opensWalletSelectionPage;
       case 'about':
-        return 'Opens external documentation';
+        return labels.opensDocumentation;
       case 'impersonate':
-        return 'Connects with impersonated wallet address';
+        return labels.connectsImpersonatedWallet;
       case 'connecting':
-        return 'Retries wallet connection';
+        return labels.retriesConnection;
       default:
         return '';
     }
-  }, [connectModalContentType]);
+  }, [connectModalContentType, labels]);
 
   return (
     <CustomDialog open={isConnectModalOpen} onOpenChange={handleOpenChange}>
@@ -1027,7 +1198,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
                   <BackButton
                     className={classNames.backButton?.({ modalData })}
                     onClick={handleBack}
-                    aria-label={config.ariaLabels?.backButton?.(modalData) || `${labels.back} to previous step`}
+                    aria-label={config.ariaLabels?.backButton?.(modalData) || labels.backToPreviousStep}
                     modalData={modalData}
                   >
                     {labels.back}

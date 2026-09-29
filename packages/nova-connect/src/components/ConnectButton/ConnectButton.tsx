@@ -28,34 +28,63 @@ export interface ConnectButtonData {
 }
 
 // --- Component Props Types ---
-type NavigationProps = {
+/**
+ * Props of the outer element of {@link ConnectButton} (`customization.components.Navigation`, a `<nav>` by default).
+ */
+export type ConnectButtonNavigationProps = {
+  /** Classes from `customization.classNames.navigation`. */
   className?: string;
+  /** The container with the chain selector and the button. */
   children: React.ReactNode;
+  /** Accessible label (`customization.config.ariaLabels.navigation`, or the `walletControls` label). */
   'aria-label'?: string;
+  /** ARIA role. */
   role?: string;
+  /** State of the button (connection, options, labels). */
   buttonData: ConnectButtonData;
 } & React.RefAttributes<HTMLElement>;
 
-type ContainerProps = {
+/** Props of the container of the chain selector and the button (`customization.components.Container`). */
+export type ConnectButtonContainerProps = {
+  /** Classes from `customization.classNames.container`. */
   className?: string;
+  /** The chain selector and the button. */
   children: React.ReactNode;
+  /** State of the button (connection, options, labels). */
   buttonData: ConnectButtonData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type ButtonContainerProps = {
+/** Props of the wrapper of the button (`customization.components.ButtonContainer`). */
+export type ConnectButtonButtonContainerProps = {
+  /** Classes from `customization.classNames.buttonContainer`. */
   className?: string;
+  /** The button. */
   children: React.ReactNode;
+  /** State of the button (connection, options, labels). */
   buttonData: ConnectButtonData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type ButtonProps = {
+/** Props of the button element (`customization.components.Button`). */
+export type ConnectButtonButtonProps = {
+  /** Classes from `customization.classNames.button`, or the default ones. */
   className?: string;
+  /** The content: the connected wallet, or the connect prompt. */
   children: React.ReactNode;
+  /** Opens the connect modal, or the connected modal when a wallet is connected. */
   onClick: () => void;
+  /**
+   * Runs `onClick` on Enter or Space.
+   *
+   * @param event - The keyboard event.
+   */
   onKeyDown: (event: React.KeyboardEvent) => void;
+  /** Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state). */
   'aria-label'?: string;
+  /** Whether a wallet is connected. */
   'aria-pressed'?: boolean;
+  /** Whether the button is disabled. */
   disabled?: boolean;
+  /** State of the button (connection, options, labels). */
   buttonData: ConnectButtonData;
 } & React.RefAttributes<HTMLButtonElement>;
 
@@ -66,32 +95,67 @@ export type ConnectButtonCustomization = {
   /** Custom components */
   components?: {
     /** Custom navigation wrapper */
-    Navigation?: ComponentType<NavigationProps>;
+    Navigation?: ComponentType<ConnectButtonNavigationProps>;
     /** Custom container div */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<ConnectButtonContainerProps>;
     /** Custom button container with motion */
-    ButtonContainer?: ComponentType<ButtonContainerProps>;
+    ButtonContainer?: ComponentType<ConnectButtonButtonContainerProps>;
     /** Custom button element */
-    Button?: ComponentType<ButtonProps>;
+    Button?: ComponentType<ConnectButtonButtonProps>;
     /** Custom motion div */
     MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate navigation classes */
+    /**
+     * Returns the classes of the outer element.
+     *
+     * @param params - The button state.
+     * @param params.buttonData - State of the button.
+     * @returns The classes.
+     */
     navigation?: (params: { buttonData: ConnectButtonData }) => string;
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container of the chain selector and the button.
+     *
+     * @param params - The button state.
+     * @param params.buttonData - State of the button.
+     * @returns The classes.
+     */
     container?: (params: { buttonData: ConnectButtonData }) => string;
-    /** Function to generate button container classes */
+    /**
+     * Returns the classes of the wrapper of the button.
+     *
+     * @param params - The button state.
+     * @param params.buttonData - State of the button.
+     * @returns The classes.
+     */
     buttonContainer?: (params: { buttonData: ConnectButtonData }) => string;
-    /** Function to generate button classes */
+    /**
+     * Returns the classes of the button, instead of the default ones and `className`.
+     *
+     * @param params - The button state.
+     * @param params.buttonData - State of the button.
+     * @returns The classes.
+     */
     button?: (params: { buttonData: ConnectButtonData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom button click handler */
+    /**
+     * Wraps the click handler: call `originalHandler()` to open the connect or connected modal.
+     *
+     * @param buttonData - State of the button.
+     * @param originalHandler - The default handler.
+     */
     onButtonClick?: (buttonData: ConnectButtonData, originalHandler: () => void) => void;
-    /** Custom key down handler */
+    /**
+     * Wraps the key handler: call `originalHandler(event)` to run the default behavior (Enter and Space click).
+     *
+     * @param event - The keyboard event.
+     * @param buttonData - State of the button.
+     * @param originalHandler - The default handler.
+     */
     onKeyDown?: (
       event: React.KeyboardEvent,
       buttonData: ConnectButtonData,
@@ -102,7 +166,19 @@ export type ConnectButtonCustomization = {
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /**
+       * Returns the accessible label of the outer element.
+       *
+       * @param buttonData - State of the button.
+       * @returns The label.
+       */
       navigation?: (buttonData: ConnectButtonData) => string;
+      /**
+       * Returns the accessible label of the button.
+       *
+       * @param buttonData - State of the button.
+       * @returns The label.
+       */
       button?: (buttonData: ConnectButtonData) => string;
     };
     /** Animation configuration */
@@ -127,7 +203,7 @@ export type ConnectButtonCustomization = {
 };
 
 // --- Default Sub-Components ---
-const DefaultNavigation = forwardRef<HTMLElement, NavigationProps>(
+const DefaultNavigation = forwardRef<HTMLElement, ConnectButtonNavigationProps>(
   ({ className, children, buttonData, ...props }, ref) => (
     <nav ref={ref} role="navigation" aria-label={buttonData.labels.walletControls} className={className} {...props}>
       {children}
@@ -136,7 +212,7 @@ const DefaultNavigation = forwardRef<HTMLElement, NavigationProps>(
 );
 DefaultNavigation.displayName = 'DefaultNavigation';
 
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(
+const DefaultContainer = forwardRef<HTMLDivElement, ConnectButtonContainerProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ className, children, buttonData, ...props }, ref) => (
     <div
@@ -150,7 +226,7 @@ const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(
 );
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultButtonContainer = forwardRef<HTMLDivElement, ButtonContainerProps>(
+const DefaultButtonContainer = forwardRef<HTMLDivElement, ConnectButtonButtonContainerProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ className, children, buttonData, ...props }, ref) => (
     <div ref={ref} className={cn('novacon:relative', className)} {...props}>
@@ -160,7 +236,7 @@ const DefaultButtonContainer = forwardRef<HTMLDivElement, ButtonContainerProps>(
 );
 DefaultButtonContainer.displayName = 'DefaultButtonContainer';
 
-const DefaultButton = forwardRef<HTMLButtonElement, ButtonProps>(
+const DefaultButton = forwardRef<HTMLButtonElement, ConnectButtonButtonProps>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ className, children, onClick, onKeyDown, buttonData, disabled, ...props }, ref) => (
     <button
@@ -191,49 +267,29 @@ export type ConnectButtonProps = Pick<NovaConnectProviderProps, 'transactionPool
 };
 
 /**
- * ConnectButton component - Main wallet connection button with full customization
+ * The main button of Nova Connect. Without a connected wallet it shows the connect prompt
+ * ({@link WaitForConnectionContent}) and opens the connect modal; with one it shows the connected wallet
+ * ({@link ConnectedContent}: avatar, name, balance with `withBalance`, the status of the latest transaction from
+ * `transactionPool`) and opens the connected modal. With `withChain`, a {@link ChainSelector} is shown next to it.
+ * The options (`withBalance`, `withChain`, `appChains`, `solanaRPCUrls`) come from `NovaConnectProvider`, so the button
+ * must be rendered inside it.
  *
- * This component provides a comprehensive wallet connection interface with:
- * - Connect/disconnect wallet functionality
- * - Balance display when connected
- * - Chain selector for multi-network support
- * - Transaction pool integration
- * - Impersonated wallet support
- * - Full accessibility features
- * - Comprehensive customization system
- *
- * Features:
- * - Responsive design with smooth animations
- * - Keyboard navigation support
- * - Screen reader compatibility
- * - Proper ARIA labels and roles
- * - Loading states and error handling
- * - Memoized performance optimizations
- *
- * Accessibility:
- * - Semantic HTML structure with proper roles
- * - ARIA labels for screen readers
- * - Keyboard navigation with Enter and Space
- * - Focus management and visual indicators
- * - High contrast compatible styling
- *
- * @param className - Additional CSS classes for the button
- * @param customization - Customization options
- * @returns JSX element representing the connection button
+ * Props: {@link ConnectButtonProps}.
  *
  * @example
  * ```tsx
- * <ConnectButton
- *   customization={{
- *     classNames: {
- *       button: ({ buttonData }) =>
- *         buttonData.isConnected ? 'custom-connected-style' : 'custom-disconnected-style'
- *     }
- *   }}
- * />
- * ```
+ * import { ConnectButton } from '@tuwaio/nova-connect/components';
  *
- * @public
+ * export const Button = (
+ *   <ConnectButton
+ *     customization={{
+ *       classNames: {
+ *         button: ({ buttonData }) => (buttonData.isConnected ? 'custom-connected' : 'custom-disconnected'),
+ *       },
+ *     }}
+ *   />
+ * );
+ * ```
  */
 export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionPool, customization = {} }) => {
   const labels = useNovaConnectLabels();

@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ToastErrorProps" />
+
+# ToastErrorProps
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L146)
+
+Props of [ToastError](?path=/docs/packages-nova-connect-components-variables-toasterror--docs). The other props are passed to the container `<div>`.
+
+## Extends
+
+- `Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"role"` \| `"aria-live"` \| `"style"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L154)
+
+Custom ARIA label for the error container
+
+#### Overrides
+
+`Omit.aria-label`
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L152)
+
+Custom CSS classes for the container
+
+#### Overrides
+
+`Omit.className`
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ToastErrorCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-toasterrorcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:162](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L162)
+
+Customization options
+
+***
+
+### onCopyComplete?
+
+> `optional` **onCopyComplete?**: (`success`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L160)
+
+Called after the copy button tried to copy the error.
+
+#### Parameters
+
+##### success
+
+`boolean`
+
+Whether the error was copied.
+
+#### Returns
+
+`void`
+
+***
+
+### rawError
+
+> **rawError**: `string` \| `TuwaErrorState`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L150)
+
+Raw error message or state to display and copy
+
+***
+
+### title
+
+> **title**: `string`
+
+Defined in: [packages/nova-connect/src/components/ToastError.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToastError.tsx#L148)
+
+Error title to display
+
+#### Overrides
+
+`Omit.title`

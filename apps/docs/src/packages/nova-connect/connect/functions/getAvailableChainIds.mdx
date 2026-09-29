@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getAvailableChainIds" />
+
+# getAvailableChainIds()
+
+> **getAvailableChainIds**(`params`): (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/utils/getConnectedChainId.ts:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getConnectedChainId.ts#L93)
+
+Returns the chains of the app for a network.
+
+## Parameters
+
+### params
+
+`object` & [`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs)
+
+The network and the chains of the app.
+
+## Returns
+
+(`string` \| `number`)[]
+
+The IDs of `appChains` (EVM) or the cluster monikers of `solanaRPCUrls` (Solana); the default chain of the
+network (Ethereum Mainnet, Solana Mainnet) when the list is empty.

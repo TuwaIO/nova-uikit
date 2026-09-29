@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/AboutWallets" />
+
+# AboutWallets
+
+> `const` **AboutWallets**: `ForwardRefExoticComponent`\<[`AboutWalletsProps`](?path=/docs/packages-nova-connect-components-interfaces-aboutwalletsprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx:767](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/AboutWallets.tsx#L767)
+
+The "About wallets" carousel of the connect modal: slides explaining wallets, with Framer Motion transitions,
+indicators, swipes, keyboard navigation and auto-play (paused after the user changes the slide, resumed after
+`animation.resumeDelay`). The built-in slide images are base64 modules of the package, loaded with a dynamic import
+(no external host). Texts come from the Nova Connect labels.
+
+Props: [AboutWalletsProps](?path=/docs/packages-nova-connect-components-interfaces-aboutwalletsprops--docs); the ref is forwarded to the carousel section.
+
+## Example
+
+```tsx
+import { AboutWallets } from '@tuwaio/nova-connect/components';
+
+export const Carousel = (
+  <AboutWallets
+    customization={{
+      classNames: {
+        title: ({ slideIndex }) => (slideIndex === 0 ? 'text-blue-500' : 'text-green-500'),
+        indicator: ({ isActive }) => (isActive ? 'bg-blue-500 w-8' : 'bg-gray-300'),
+      },
+      config: { disableAutoPlay: true },
+    }}
+  />
+);
+```

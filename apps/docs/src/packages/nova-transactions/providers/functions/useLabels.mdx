@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/providers/Functions/useLabels" />
+
+# useLabels()
+
+> **useLabels**(): [`NovaTransactionsLabels`](?path=/docs/packages-nova-transactions-transactions-type-aliases-novatransactionslabels--docs)
+
+Defined in: [providers/NovaTransactionsLabelsProvider.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsLabelsProvider.tsx#L48)
+
+A custom hook to easily access the i18n labels from any component
+within the `NovaTransactionsLabelsProvider` tree.
+
+## Returns
+
+[`NovaTransactionsLabels`](?path=/docs/packages-nova-transactions-transactions-type-aliases-novatransactionslabels--docs)
+
+The complete object of UI labels.
+
+## Example
+
+```ts
+const MyComponent = () => {
+const labels = useLabels();
+return <h1>{labels.walletModal.title}</h1>;
+}
+```

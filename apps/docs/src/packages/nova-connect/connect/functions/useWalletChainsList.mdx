@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useWalletChainsList" />
+
+# useWalletChainsList()
+
+> **useWalletChainsList**(`props`): `object`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletChainsList.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletChainsList.ts#L39)
+
+Returns the chains of the app for the network of the active connection (see `getChainsListByConnectorType`): the EVM
+chain IDs of `appChains`, or the Solana clusters of `solanaRPCUrls` that the connected wallet supports. Without a
+connection, the EVM chains.
+
+## Parameters
+
+### props
+
+[`UseWalletChainsListProps`](?path=/docs/packages-nova-connect-connect-interfaces-usewalletchainslistprops--docs)
+
+See [UseWalletChainsListProps](?path=/docs/packages-nova-connect-connect-interfaces-usewalletchainslistprops--docs).
+
+## Returns
+
+`chainsList`, recomputed when the connection or the chain configuration changes.
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Chain IDs (EVM) or cluster monikers (Solana)
+
+## Example
+
+```tsx
+import { useWalletChainsList } from '@tuwaio/nova-connect/hooks';
+import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { mainnet, polygon } from 'viem/chains';
+
+const appChains = [mainnet, polygon] as const;
+
+export function ChainCount() {
+  const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+  const { chainsList } = useWalletChainsList({ activeConnection, appChains });
+  return <span>{chainsList.length} chains</span>;
+}
+```

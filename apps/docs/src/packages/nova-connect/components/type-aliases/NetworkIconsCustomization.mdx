@@ -1,0 +1,134 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/NetworkIconsCustomization" />
+
+# NetworkIconsCustomization
+
+> **NetworkIconsCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:113](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L113)
+
+Customization of the network icons of a [ConnectCard](?path=/docs/packages-nova-connect-components-variables-connectcard--docs) (shown when the connector supports more than one
+network).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L124)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The card.
+
+###### cardData
+
+[`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### networkIcon?
+
+> `optional` **networkIcon?**: (`params`) => `string`
+
+Returns the classes of a network icon, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The network.
+
+###### cardData
+
+[`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card.
+
+###### networkData
+
+[`ConnectCardNetworkData`](?path=/docs/packages-nova-connect-components-interfaces-connectcardnetworkdata--docs)
+
+The network.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### overflowIndicator?
+
+> `optional` **overflowIndicator?**: (`params`) => `string`
+
+Returns the classes of the overflow indicator, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The indicator.
+
+###### cardData
+
+[`ConnectCardData`](?path=/docs/packages-nova-connect-components-interfaces-connectcarddata--docs)
+
+Data of the card.
+
+###### overflowCount
+
+`number`
+
+Number of networks beyond the first three.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectCard.tsx#L115)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ConnectCardNetworkIconsContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectcardnetworkiconscontainerprops--docs)\>
+
+Custom container wrapper
+
+#### NetworkIcon?
+
+> `optional` **NetworkIcon?**: `ComponentType`\<[`ConnectCardNetworkIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectcardnetworkiconprops--docs)\>
+
+Custom network icon
+
+#### OverflowIndicator?
+
+> `optional` **OverflowIndicator?**: `ComponentType`\<[`ConnectCardNetworkOverflowProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectcardnetworkoverflowprops--docs)\>
+
+Custom overflow indicator

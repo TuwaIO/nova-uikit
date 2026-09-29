@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/Disclaimer" />
+
+# Disclaimer
+
+> `const` **Disclaimer**: `ForwardRefExoticComponent`\<[`DisclaimerProps`](?path=/docs/packages-nova-connect-components-interfaces-disclaimerprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx:416](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Disclaimer.tsx#L416)
+
+An explanation box of the connect modal ("What is a wallet?", "What is a network?"): a title, a description,
+optional extra content, a "Learn more" button and an optional second button. A URL action opens in a new tab, a
+function action runs on click.
+
+Props: [DisclaimerProps](?path=/docs/packages-nova-connect-components-interfaces-disclaimerprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { Disclaimer } from '@tuwaio/nova-connect/components';
+
+export const WalletDisclaimer = (
+  <Disclaimer
+    title="What is a wallet?"
+    description="Wallets let you send, receive and hold digital assets."
+    learnMoreAction={() => console.log('show the about screen')}
+    listAction="https://ethereum.org/wallets/find-wallet/"
+    compact
+    customization={{
+      classNames: {
+        container: ({ compact }) => (compact ? 'custom-compact' : 'custom-full'),
+      },
+    }}
+  />
+);
+```

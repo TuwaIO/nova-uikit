@@ -1,0 +1,16 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/providers/Variables/NovaTransactionsErrorContext" />
+
+# NovaTransactionsErrorContext
+
+> `const` **NovaTransactionsErrorContext**: `Context`\<[`NovaTransactionsErrorContextValue`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionserrorcontextvalue--docs)\>
+
+Defined in: [providers/NovaTransactionsErrorContext.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L72)
+
+Internal context that forwards `customization` and the `enabled` flag from
+`NovaTransactionsProvider` to any descendant component.
+
+The default value keeps `enabled: true` and uses no customization, so
+components rendered **outside** a `NovaTransactionsProvider` receive a
+fully-functional hook with default styling.

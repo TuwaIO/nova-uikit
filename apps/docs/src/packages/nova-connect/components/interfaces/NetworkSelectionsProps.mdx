@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/NetworkSelectionsProps" />
+
+# NetworkSelectionsProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:366](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L366)
+
+Props for the [NetworkSelections](?path=/docs/packages-nova-connect-components-variables-networkselections--docs) component.
+
+## Properties
+
+### activeConnector
+
+> **activeConnector**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:368](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L368)
+
+The selected wallet, as `formatConnectorName` of `@tuwaio/orbit-core` returns it
+
+***
+
+### connectors
+
+> **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:370](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L370)
+
+Array of grouped wallet connectors with their supported networks
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`NetworkSelectionsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-networkselectionscustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:380](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L380)
+
+Customization options
+
+***
+
+### onClick
+
+> **onClick**: (`adapter`, `connectorType`) => `Promise`\<`void`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:378](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L378)
+
+Connects the wallet on the selected network.
+
+#### Parameters
+
+##### adapter
+
+`OrbitAdapter`
+
+The selected network.
+
+##### connectorType
+
+`ConnectorType`
+
+Connector type of the wallet on that network (for example `evm:metamask`).
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Resolves when the connection attempt finishes.

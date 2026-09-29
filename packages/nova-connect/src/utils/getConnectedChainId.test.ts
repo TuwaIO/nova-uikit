@@ -19,7 +19,7 @@ describe('getConnectChainId & getAvailableChainIds', () => {
     it('falls back to EVM default 1 if appChains is empty', () => {
       const result = getConnectChainId({
         selectedAdapter: OrbitAdapter.EVM,
-        appChains: [],
+        appChains: [] as unknown as Parameters<typeof getConnectChainId>[0]['appChains'],
       });
       expect(result).toBe(1);
     });
@@ -62,7 +62,7 @@ describe('getConnectChainId & getAvailableChainIds', () => {
     it('returns default [1] when appChains is empty', () => {
       const available = getAvailableChainIds({
         selectedAdapter: OrbitAdapter.EVM,
-        appChains: [],
+        appChains: [] as unknown as Parameters<typeof getAvailableChainIds>[0]['appChains'],
       });
       expect(available).toEqual([1]);
     });

@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaConnectLabels" />
+
+# useNovaConnectLabels()
+
+> **useNovaConnectLabels**(): [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L28)
+
+Returns the Nova Connect labels: the ones of the nearest labels provider (`NovaConnectProvider` provides the
+`labels` prop merged into the defaults), or the English defaults.
+
+## Returns
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+All labels.
+
+## Example
+
+```tsx
+import { useNovaConnectLabels } from '@tuwaio/nova-connect/hooks';
+
+export function Title() {
+  const labels = useNovaConnectLabels();
+
+  return <h2>{labels.connectWallet}</h2>;
+}
+```

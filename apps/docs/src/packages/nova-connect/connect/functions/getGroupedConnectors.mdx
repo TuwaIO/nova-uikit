@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getGroupedConnectors" />
+
+# getGroupedConnectors()
+
+> **getGroupedConnectors**(`params?`): [`GroupedConnector`](?path=/docs/packages-nova-connect-connect-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:90](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L90)
+
+Groups connectors of all adapters by wallet: connectors whose names give the same `formatConnectorName` (from
+`@tuwaio/orbit-core`) belong to one wallet. Connectors without a name are skipped.
+
+## Parameters
+
+### params?
+
+[`GetGroupedConnectorsParams`](?path=/docs/packages-nova-connect-connect-interfaces-getgroupedconnectorsparams--docs) = `...`
+
+See [GetGroupedConnectorsParams](?path=/docs/packages-nova-connect-connect-interfaces-getgroupedconnectorsparams--docs) (default: no connectors).
+
+## Returns
+
+[`GroupedConnector`](?path=/docs/packages-nova-connect-connect-interfaces-groupedconnector--docs)[]
+
+The wallets sorted by name (case-insensitive).

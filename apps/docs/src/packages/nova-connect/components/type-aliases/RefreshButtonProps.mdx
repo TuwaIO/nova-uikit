@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/RefreshButtonProps" />
+
+# RefreshButtonProps
+
+> **RefreshButtonProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L51)
+
+Props for a custom refresh button of `BalanceDisplay` (rendered when `onRefetch` is set).
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L61)
+
+Classes from `classNames.refreshButton`
+
+***
+
+### isLoading
+
+> **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L53)
+
+The `isLoading` prop
+
+***
+
+### labels
+
+> **labels**: `Required`\<[`BalanceDisplayLabels`](?path=/docs/packages-nova-connect-components-type-aliases-balancedisplaylabels--docs)\>
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:59](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L59)
+
+The labels, with the defaults applied
+
+***
+
+### onRefetch
+
+> **onRefetch**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L57)
+
+Calls the `onRefetch` prop
+
+#### Returns
+
+`void`
+
+***
+
+### showSuccess
+
+> **showSuccess**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L55)
+
+Whether a refresh has just finished (for `config.successDuration`)

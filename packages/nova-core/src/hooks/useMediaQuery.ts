@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 
 /**
  * A custom hook to detect if a media query matches the current screen dimensions.
- * Handles SSR gracefully.
- * @param {string} query - The media query string (e.g., '(max-width: 767px)').
- * @returns {boolean} Whether the query matches or not.
+ * Returns `false` on the server. In the browser it checks the query again on every `resize` event of `window`
+ * (a listener that is removed on unmount).
+ *
+ * @param query - The media query string (e.g., '(max-width: 767px)').
+ * @returns Whether the query matches.
  */
 export function useMediaQuery(query: string): boolean {
   const getMatches = (q: string): boolean => {

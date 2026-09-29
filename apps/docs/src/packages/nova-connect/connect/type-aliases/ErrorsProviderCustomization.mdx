@@ -1,0 +1,336 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Type Aliases/ErrorsProviderCustomization" />
+
+# ErrorsProviderCustomization
+
+> **ErrorsProviderCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L40)
+
+Customization options for ErrorsProvider component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L55)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the toasts, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The error state.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'`, `'switch'`, or `null` without error.
+
+###### hasErrors
+
+`boolean`
+
+Whether the store has a connection or network switch error.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L44)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ErrorsProviderContainerProps`](?path=/docs/packages-nova-connect-connect-type-aliases-errorsprovidercontainerprops--docs)\>
+
+Custom ToastContainer component
+
+#### ToastError?
+
+> `optional` **ToastError?**: `ComponentType`\<[`ErrorsProviderToastErrorProps`](?path=/docs/packages-nova-connect-connect-type-aliases-errorsprovidertoasterrorprops--docs)\>
+
+Custom ToastError component
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* `ToastContainer`\>\>
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L42)
+
+Override ToastContainer element props
+
+***
+
+### errorHash?
+
+> `optional` **errorHash?**: (`defaultHash`, `params`) => `string` \| `null`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L146)
+
+Returns the key used to show an error only once.
+
+#### Parameters
+
+##### defaultHash
+
+`string` \| `null`
+
+The error type and the first 50 characters of the message, or `null` without error.
+
+##### params
+
+The error.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'`, `'switch'`, or `null`.
+
+###### primaryError
+
+`TuwaErrorState` \| `null`
+
+The error of the store (`connectionError` first).
+
+#### Returns
+
+`string` \| `null`
+
+The key, or `null` to show nothing.
+
+***
+
+### errorTitle?
+
+> `optional` **errorTitle?**: (`defaultTitle`, `params`) => `string`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L136)
+
+Returns the toast title. It does not change the labels, only the title of this toast.
+
+#### Parameters
+
+##### defaultTitle
+
+`string`
+
+The label of the error type (`connectionError`, `errorWhenChainSwitching` or
+`somethingWentWrong`).
+
+##### params
+
+The error.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'`, `'switch'`, or `null`.
+
+#### Returns
+
+`string`
+
+The title.
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L87)
+
+Custom logic handlers
+
+#### dismissError?
+
+> `optional` **dismissError?**: (`originalHandler`) => `void`
+
+Wraps the dismissal of the error toasts: call `originalHandler()` to dismiss them.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Dismisses the toasts of the container.
+
+##### Returns
+
+`void`
+
+#### onCopyComplete?
+
+> `optional` **onCopyComplete?**: (`success`, `rawError`, `errorType`) => `void`
+
+Called after the copy button of a toast tried to copy the error. By default, logs the copied message in
+development.
+
+##### Parameters
+
+###### success
+
+`boolean`
+
+Whether the error was copied.
+
+###### rawError
+
+`string` \| `TuwaErrorState`
+
+The error.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'` or `'switch'`.
+
+##### Returns
+
+`void`
+
+#### showError?
+
+> `optional` **showError?**: (`originalHandler`, `params`) => `void`
+
+Wraps the display of an error toast: call `originalHandler(title, rawError, errorKey)` to show it.
+
+##### Parameters
+
+###### originalHandler
+
+(`title`, `rawError`, `errorKey`) => `void`
+
+Shows the toast (once per `errorKey`), after dismissing the previous one.
+
+###### params
+
+The error to show.
+
+###### errorKey
+
+`string`
+
+Key of the error (from `errorHash`), used to show it only once.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'` or `'switch'`.
+
+###### rawError
+
+`string` \| `TuwaErrorState`
+
+The error.
+
+###### title
+
+`string`
+
+The toast title.
+
+##### Returns
+
+`void`
+
+***
+
+### toastCloseButton?
+
+> `optional` **toastCloseButton?**: `Omit`\<[`ToastCloseButtonProps`](?path=/docs/packages-nova-core-type-aliases-toastclosebuttonprops--docs), `"closeToast"`\>
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L53)
+
+Customization for toast close button
+
+***
+
+### toastErrorCustomization?
+
+> `optional` **toastErrorCustomization?**: [`ToastErrorCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-toasterrorcustomization--docs)
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L51)
+
+Default ToastError customization (only used with default ToastError component)
+
+***
+
+### toastOptions?
+
+> `optional` **toastOptions?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L67)
+
+Custom toast options generators
+
+#### error?
+
+> `optional` **error?**: (`params`) => `Partial`\<`Parameters`\<*typeof* `toast.error`\>\[`1`\]\>
+
+Returns options of `toast.error` of `react-toastify`, merged over the default ones (`containerId`, `toastId`,
+`onClose`).
+
+##### Parameters
+
+###### params
+
+The error to show.
+
+###### errorType
+
+`"wallet"` \| `"switch"` \| `null`
+
+`'wallet'` or `'switch'`.
+
+###### isConnected
+
+`boolean`
+
+Whether a wallet is connected.
+
+###### rawError
+
+`string` \| `TuwaErrorState`
+
+The error.
+
+###### title
+
+`string`
+
+The toast title.
+
+##### Returns
+
+`Partial`\<`Parameters`\<*typeof* `toast.error`\>\[`1`\]\>
+
+The toast options.

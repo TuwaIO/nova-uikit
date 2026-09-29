@@ -1,0 +1,181 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectionsContentActiveRowProps" />
+
+# ConnectionsContentActiveRowProps
+
+> **ConnectionsContentActiveRowProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L94)
+
+Props for a custom row of the active wallet. The component also passes `isActive: true`.
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L98)
+
+The address shortened to `0x1234…abcd`
+
+***
+
+### chainId?
+
+> `optional` **chainId?**: `number` \| `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L102)
+
+Chain of the connection
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L116)
+
+Granular classNames for sub-elements
+
+#### actionsContainer?
+
+> `optional` **actionsContainer?**: `string`
+
+From `classNames.activeRowActionsContainer`
+
+#### badge?
+
+> `optional` **badge?**: `string`
+
+From `classNames.activeRowBadge`
+
+#### connectorName?
+
+> `optional` **connectorName?**: `string`
+
+From `classNames.activeRowConnectorName`
+
+#### container?
+
+> `optional` **container?**: `string`
+
+From `classNames.activeRowContainer`
+
+#### content?
+
+> `optional` **content?**: `string`
+
+From `classNames.activeRowContent`
+
+#### copyButton?
+
+> `optional` **copyButton?**: `string`
+
+From `classNames.activeRowCopyButton`
+
+#### copyIcon?
+
+> `optional` **copyIcon?**: `string`
+
+From `classNames.activeRowCopyIcon`
+
+#### disconnectButton?
+
+> `optional` **disconnectButton?**: `string`
+
+From `classNames.activeRowDisconnectButton`
+
+#### explorerButton?
+
+> `optional` **explorerButton?**: `string`
+
+From `classNames.activeRowExplorerButton`
+
+#### explorerIcon?
+
+> `optional` **explorerIcon?**: `string`
+
+From `classNames.activeRowExplorerIcon`
+
+#### iconBadge?
+
+> `optional` **iconBadge?**: `string`
+
+From `classNames.connectorIconBadge`
+
+#### iconWrapper?
+
+> `optional` **iconWrapper?**: `string`
+
+From `classNames.connectorIconWrapper`
+
+#### walletName?
+
+> `optional` **walletName?**: `string`
+
+From `classNames.activeRowWalletName`
+
+***
+
+### connectorType
+
+> **connectorType**: `ConnectorType`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:96](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L96)
+
+Connector type of the wallet
+
+***
+
+### explorerLink?
+
+> `optional` **explorerLink?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L110)
+
+Explorer page of the address, `undefined` when the chain has no explorer
+
+***
+
+### fullAddress?
+
+> `optional` **fullAddress?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L100)
+
+The full address, copied by the copy button
+
+***
+
+### icon?
+
+> `optional` **icon?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L112)
+
+Wallet icon of the connection
+
+***
+
+### onDisconnect
+
+> **onDisconnect**: (`e`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx:108](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectionsContent.tsx#L108)
+
+Disconnects the wallet.
+
+#### Parameters
+
+##### e
+
+`React.MouseEvent`
+
+The click event (propagation is stopped).
+
+#### Returns
+
+`void`

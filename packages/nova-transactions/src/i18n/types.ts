@@ -10,6 +10,7 @@
 export type NovaTransactionsLabels = {
   /** Labels for the main wallet information modal. */
   transactionsModal: {
+    /** Labels of the transaction history. */
     history: {
       /** The title for the transaction history section. */
       title: string;
@@ -59,9 +60,14 @@ export type NovaTransactionsLabels = {
     replaced: string;
     /** Default label for a standard transaction hash. */
     default: string;
-    /** Special label for the most recent blockhash. This is used for the "Recent Blockhash" field in the transaction details modal. */
+    /**
+     * Special label for the most recent blockhash. This is used for the "Recent Blockhash" field in the transaction
+     * details modal.
+     */
     recentBlockhash: string;
-    /** Special label for the Solana signature. This is used for the "Signature" field in the transaction details modal. */
+    /**
+     * Special label for the Solana signature. This is used for the "Signature" field in the transaction details modal.
+     */
     solana: string;
   };
   /** Labels for the transaction information block. */
@@ -213,15 +219,17 @@ export type NovaTransactionsLabels = {
     errorContext: string;
     /** Label for the Full Payload. */
     fullPayload: string;
-    /** Label for the RPC URL. */
-    rpcUrl: string;
     /** Label for the Replaced Hash. */
     replacedHash: string;
     /** Labels for the sync status indicator. */
     syncStatus: {
+      /** Badge shown while the transaction is not yet saved on the server (`syncStatus: 'pending-sync'`). */
       pending: string;
+      /** Tooltip of the `pending` badge. */
       pendingTooltip: string;
+      /** Badge shown when the transaction is saved on the server (`syncStatus: 'synced'`). */
       synced: string;
+      /** Tooltip of the `synced` badge. */
       syncedTooltip: string;
     };
   };

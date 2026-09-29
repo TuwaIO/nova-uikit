@@ -8,7 +8,8 @@ import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
+import { formatLabel } from '../../i18n/formatLabel';
+import { WalletIcon } from '../WalletIcon';
 
 // --- Default Motion Variants ---
 const DEFAULT_BUTTON_ANIMATION_VARIANTS: Variants = {
@@ -19,48 +20,85 @@ const DEFAULT_BUTTON_ANIMATION_VARIANTS: Variants = {
 };
 
 // --- Types for Customization ---
-type CustomWalletIconContainerProps = {
+/**
+ * Props for a custom wallet icon container (rendered when `walletName` is set).
+ */
+export type IconButtonWalletIconContainerProps = {
+  /** The `walletName` prop */
   walletName?: string;
+  /** The `walletIcon` prop */
   walletIcon?: string;
+  /** The `loading` prop */
   showLoading: boolean;
+  /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** Classes from `classNames.walletIconContainer`, added to the defaults */
   className?: string;
 };
 
-type CustomChainIconContainerProps = {
+/**
+ * Props for a custom chain icon container (rendered when `walletChainId` is set).
+ */
+export type IconButtonChainIconContainerProps = {
+  /** Chain ID for `NetworkIcon` (a string chain ID becomes `solana:<chainId>`, or `config.chainIdFormatter` output) */
   chainId: string | number;
+  /** The `walletChainId` prop */
   walletChainId?: string | number;
+  /** Classes from `classNames.chainIconContainer`, added to the defaults */
   className?: string;
 };
 
-type CustomChevronContainerProps = {
+/**
+ * Props for a custom chevron container (rendered when the button is clickable).
+ */
+export type IconButtonChevronContainerProps = {
+  /** The `isOpen` prop */
   isOpen: boolean;
+  /** Classes from `classNames.chevronContainer`, added to the defaults */
   className?: string;
 };
 
-type CustomLoadingOverlayProps = {
+/**
+ * Props for a custom loading overlay (the default one shows a spinner while `loading` is `true`).
+ */
+export type IconButtonLoadingOverlayProps = {
+  /** The `loading` prop */
   loading: boolean;
+  /** Classes from `classNames.loadingOverlay`, added to the defaults */
   className?: string;
 };
 
-type CustomButtonContentProps = {
+/**
+ * Props for a custom button content (the default one renders the four elements in order).
+ */
+export type IconButtonContentProps = {
+  /** The wallet icon container, or `null` */
   walletIconContainer: ReactNode;
+  /** The chain icon container, or `null` */
   chainIconContainer: ReactNode;
+  /** The chevron container, or `null` */
   chevronContainer: ReactNode;
+  /** The loading overlay, or `null` when `config.showLoadingOverlay` is `false` */
   loadingOverlay: ReactNode;
+  /** Whether the wallet icon is shown */
   hasWalletIcon: boolean;
+  /** Whether the chain icon is shown */
   hasChainIcon: boolean;
+  /** Whether the chevron is shown */
   hasChevron: boolean;
+  /** The `loading` prop */
   loading: boolean;
+  /** The `disabled` prop */
   disabled: boolean;
+  /** Whether the button is clickable (`onClick` set, `items` above 1, not disabled or loading) */
   isClickable: boolean;
 };
 
 /**
- * Customization options for IconButton component
+ * Customization options of {@link IconButton}.
  */
 export type IconButtonCustomization = {
-  /** Override button element props */
+  /** Props of the button element, applied last (they override the generated ones) */
   buttonProps?: Partial<
     Omit<
       ComponentPropsWithoutRef<'button'>,
@@ -81,47 +119,73 @@ export type IconButtonCustomization = {
   /** Custom components */
   components?: {
     /** Custom wallet icon container component */
-    WalletIconContainer?: ComponentType<CustomWalletIconContainerProps>;
+    WalletIconContainer?: ComponentType<IconButtonWalletIconContainerProps>;
     /** Custom chain icon container component */
-    ChainIconContainer?: ComponentType<CustomChainIconContainerProps>;
+    ChainIconContainer?: ComponentType<IconButtonChainIconContainerProps>;
     /** Custom chevron container component */
-    ChevronContainer?: ComponentType<CustomChevronContainerProps>;
+    ChevronContainer?: ComponentType<IconButtonChevronContainerProps>;
     /** Custom loading overlay component */
-    LoadingOverlay?: ComponentType<CustomLoadingOverlayProps>;
+    LoadingOverlay?: ComponentType<IconButtonLoadingOverlayProps>;
     /** Custom button content wrapper component */
-    ButtonContent?: ComponentType<CustomButtonContentProps>;
+    ButtonContent?: ComponentType<IconButtonContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate button classes */
+    /**
+     * Returns the classes of the button, instead of the default ones and the `className` prop.
+     *
+     * @param params - The button state.
+     * @param params.isClickable - Whether the button is clickable.
+     * @param params.disabled - The `disabled` prop.
+     * @param params.loading - The `loading` prop.
+     * @param params.hasMultipleIcons - Whether more than one of the wallet icon, chain icon and chevron is shown.
+     * @returns The classes.
+     */
     button?: (params: {
       isClickable: boolean;
       disabled: boolean;
       loading: boolean;
       hasMultipleIcons: boolean;
     }) => string;
-    /** Function to generate wallet icon container classes */
+    /**
+     * Returns classes added to the wallet icon container.
+     *
+     * @param params - The icon state.
+     * @param params.showLoading - The `loading` prop.
+     * @param params.hasWalletIcon - Always `true` (the container is rendered only with a wallet icon).
+     * @returns The classes.
+     */
     walletIconContainer?: (params: { showLoading: boolean; hasWalletIcon: boolean }) => string;
-    /** Function to generate chain icon container classes */
+    /**
+     * Returns classes added to the chain icon container.
+     *
+     * @param params - The icon state.
+     * @param params.hasChainIcon - Always `true` (the container is rendered only with a chain icon).
+     * @returns The classes.
+     */
     chainIconContainer?: (params: { hasChainIcon: boolean }) => string;
-    /** Function to generate chevron container classes */
+    /**
+     * Returns classes added to the chevron container.
+     *
+     * @param params - The chevron state.
+     * @param params.isOpen - The `isOpen` prop.
+     * @param params.isClickable - Always `true` (the chevron is rendered only on a clickable button).
+     * @returns The classes.
+     */
     chevronContainer?: (params: { isOpen: boolean; isClickable: boolean }) => string;
-    /** Function to generate loading overlay classes */
+    /**
+     * Returns classes added to the loading overlay.
+     *
+     * @param params - The loading state.
+     * @param params.loading - The `loading` prop.
+     * @returns The classes.
+     */
     loadingOverlay?: (params: { loading: boolean }) => string;
-    /** Function to generate loading spinner classes */
-    loadingSpinner?: () => string;
-  };
-  /** Customization options for child components */
-  childCustomizations?: {
-    /** WalletIcon customization */
-    walletIcon?: WalletIconCustomization;
   };
   /** Custom animation variants */
   variants?: {
-    /** Button animation variants */
+    /** Button variants `idle`, `hover`, `tap` and `loading` */
     button?: Variants;
-    /** Chevron animation variants */
-    chevron?: Variants;
   };
   /** Custom animation configuration */
   animation?: {
@@ -134,30 +198,49 @@ export type IconButtonCustomization = {
       /** Animation delay in seconds */
       delay?: number;
     };
-    /** Chevron animation configuration */
-    chevron?: {
-      /** Animation duration in seconds */
-      duration?: number;
-      /** Animation easing curve */
-      ease?: Easing | Easing[];
-      /** Animation delay in seconds */
-      delay?: number;
-    };
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for button click */
+    /**
+     * Wraps the click of a clickable button: call `originalHandler()` to run the `onClick` prop.
+     *
+     * @param originalHandler - Runs the `onClick` prop.
+     * @param event - The click event.
+     */
     onClick?: (originalHandler: () => void, event: React.MouseEvent<HTMLButtonElement>) => void;
-    /** Custom handler for button hover */
+    /**
+     * Called when the pointer enters or leaves the button.
+     *
+     * @param isHovering - `true` on enter, `false` on leave.
+     * @param event - The mouse event.
+     */
     onHover?: (isHovering: boolean, event: React.MouseEvent<HTMLButtonElement>) => void;
-    /** Custom handler for button focus */
+    /**
+     * Called when the button gets focus.
+     *
+     * @param event - The focus event.
+     */
     onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void;
-    /** Custom handler for button blur */
+    /**
+     * Called when the button loses focus.
+     *
+     * @param event - The focus event.
+     */
     onBlur?: (event: React.FocusEvent<HTMLButtonElement>) => void;
   };
   /** Custom aria labels and accessibility */
   accessibility?: {
-    /** Custom aria-label generator */
+    /**
+     * Returns the ARIA label, before the `aria-label` prop (default: a description such as `MetaMask wallet, button`).
+     *
+     * @param params - The button state.
+     * @param params.walletName - The `walletName` prop.
+     * @param params.walletChainId - The `walletChainId` prop.
+     * @param params.isClickable - Whether the button is clickable.
+     * @param params.loading - The `loading` prop.
+     * @param params.disabled - The `disabled` prop.
+     * @returns The label.
+     */
     ariaLabel?: (params: {
       walletName?: string;
       walletChainId?: string | number;
@@ -165,7 +248,17 @@ export type IconButtonCustomization = {
       loading: boolean;
       disabled: boolean;
     }) => string;
-    /** Custom tooltip generator */
+    /**
+     * Returns the `title`, before the `title` prop (default: an English description of the button).
+     *
+     * @param params - The button state.
+     * @param params.walletName - The `walletName` prop.
+     * @param params.walletChainId - The `walletChainId` prop.
+     * @param params.isClickable - Whether the button is clickable.
+     * @param params.loading - The `loading` prop.
+     * @param params.disabled - The `disabled` prop.
+     * @returns The tooltip.
+     */
     tooltip?: (params: {
       walletName?: string;
       walletChainId?: string | number;
@@ -173,57 +266,62 @@ export type IconButtonCustomization = {
       loading: boolean;
       disabled: boolean;
     }) => string;
-    /** Custom role attribute */
+    /** `role` of the button (default: `button`) */
     role?: string;
-    /** Custom aria-describedby */
+    /** `aria-describedby` of the button */
     ariaDescribedBy?: string;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
+    /** Renders a plain button without Framer Motion (default: `false`) */
     disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
+    /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
-    /** Custom chain ID formatting */
+    /**
+     * Formats `walletChainId` for the network icon, instead of the default (a string becomes `solana:<chainId>`).
+     *
+     * @param chainId - The `walletChainId` prop.
+     * @returns The chain ID for `NetworkIcon` of `@tuwaio/nova-core`.
+     */
     chainIdFormatter?: (chainId: string | number) => string | number;
-    /** Whether to show wallet icon */
+    /** Whether to show the wallet icon when `walletName` is set (default: `true`) */
     showWalletIcon?: boolean;
-    /** Whether to show chain icon */
+    /** Whether to show the chain icon when `walletChainId` is set (default: `true`) */
     showChainIcon?: boolean;
-    /** Whether to show chevron */
+    /** Whether to show the chevron on a clickable button (default: `true`) */
     showChevron?: boolean;
-    /** Whether to show loading overlay */
+    /** Whether to render the loading overlay (default: `true`) */
     showLoadingOverlay?: boolean;
-    /** Custom button test id */
+    /** `data-testid` of the button (default: `icon-button`) */
     buttonTestId?: string;
   };
 };
 
 /**
- * Props for the IconButton component
+ * Props for the {@link IconButton} component.
  */
 export interface IconButtonProps {
   /** Custom icon URL for the wallet */
   walletIcon?: string;
-  /** Name of the wallet */
+  /** Name of the wallet (shows the wallet icon) */
   walletName?: string;
-  /** Chain ID for the network icon */
+  /** Chain ID for the network icon: an EVM chain ID, or a Solana cluster moniker such as `devnet` */
   walletChainId?: string | number;
-  /** Number of available items/options (shows chevron if > 1) */
+  /** Number of available options; the button is clickable and shows a chevron only above 1 (default: `0`) */
   items?: number;
-  /** Click handler for the button */
+  /** Click handler, called only when the button is clickable */
   onClick?: () => void;
-  /** Additional CSS classes for styling */
+  /** Classes added to the default button classes (ignored when `classNames.button` is set) */
   className?: string;
-  /** Whether the button is currently disabled */
+  /** Whether the button is currently disabled (default: `false`) */
   disabled?: boolean;
-  /** Whether to show loading state */
+  /** Shows the loading overlay and disables the button (default: `false`) */
   loading?: boolean;
-  /** Custom aria-label for accessibility */
+  /** ARIA label of the button (default: an English description) */
   'aria-label'?: string;
   /** Custom tooltip text */
   title?: string;
-  /** Whether chevron should show as open */
+  /** Whether chevron should show as open (default: `false`) */
   isOpen?: boolean;
   /** Custom button id */
   id?: string;
@@ -232,7 +330,7 @@ export interface IconButtonProps {
 }
 
 // --- Default Sub-Components ---
-const DefaultWalletIconContainer: React.FC<CustomWalletIconContainerProps> = ({
+const DefaultWalletIconContainer: React.FC<IconButtonWalletIconContainerProps> = ({
   walletName,
   walletIcon,
   showLoading,
@@ -253,15 +351,23 @@ const DefaultWalletIconContainer: React.FC<CustomWalletIconContainerProps> = ({
   );
 };
 
-const DefaultChainIconContainer: React.FC<CustomChainIconContainerProps> = ({ chainId, walletChainId, className }) => {
+const DefaultChainIconContainer: React.FC<IconButtonChainIconContainerProps> = ({
+  chainId,
+  walletChainId,
+  className,
+}) => {
+  const labels = useNovaConnectLabels();
   return (
-    <div className={cn('novacon:flex-shrink-0 novacon:leading-[0]', className)} title={`Network: ${walletChainId}`}>
+    <div
+      className={cn('novacon:flex-shrink-0 novacon:leading-[0]', className)}
+      title={formatLabel(labels.networkWithId, { chainId: walletChainId ?? '' })}
+    >
       <NetworkIcon chainId={chainId} className="novacon:w-6 novacon:h-6" />
     </div>
   );
 };
 
-const DefaultChevronContainer: React.FC<CustomChevronContainerProps> = ({ isOpen, className }) => {
+const DefaultChevronContainer: React.FC<IconButtonChevronContainerProps> = ({ isOpen, className }) => {
   return (
     <div className={cn('novacon:flex-shrink-0 novacon:leading-[0]', className)}>
       <ChevronArrowWithAnim isOpen={isOpen} className="novacon:w-4 novacon:h-4" aria-hidden="true" />
@@ -269,7 +375,7 @@ const DefaultChevronContainer: React.FC<CustomChevronContainerProps> = ({ isOpen
   );
 };
 
-const DefaultLoadingOverlay: React.FC<CustomLoadingOverlayProps> = ({ loading, className }) => {
+const DefaultLoadingOverlay: React.FC<IconButtonLoadingOverlayProps> = ({ loading, className }) => {
   if (!loading) return null;
 
   return (
@@ -285,7 +391,7 @@ const DefaultLoadingOverlay: React.FC<CustomLoadingOverlayProps> = ({ loading, c
   );
 };
 
-const DefaultButtonContent: React.FC<CustomButtonContentProps> = ({
+const DefaultButtonContent: React.FC<IconButtonContentProps> = ({
   walletIconContainer,
   chainIconContainer,
   chevronContainer,
@@ -302,66 +408,28 @@ const DefaultButtonContent: React.FC<CustomButtonContentProps> = ({
 };
 
 /**
- * Multi-purpose icon button component for wallets and chains with comprehensive customization.
+ * A round button with a wallet icon and/or a network icon, used by the connected modal to open the connections and
+ * network screens. It is clickable, with a chevron, only when `onClick` is set and `items` is above 1.
  *
- * This component provides a unified interface for displaying wallet and chain information:
- * - Displays wallet icon with fallback to Web3Icon
- * - Shows chain/network icon when chain ID is provided
- * - Conditional chevron arrow for dropdown indicators
- * - Full WCAG accessibility support with proper ARIA labels
- * - Loading and disabled states with visual feedback
- * - Hover, active, and focus animations
- * - Comprehensive customization for all UI elements and behaviors
- * - Responsive design with consistent sizing
- * - Custom event handlers for enhanced interactivity
- * - Animation customization with reduced motion support
- * - Performance-optimized with memoized calculations
+ * Props: {@link IconButtonProps}; the ref is forwarded to the button.
  *
- * The button automatically becomes interactive when onClick is provided and items > 1.
- * It supports both EVM chain IDs (numbers) and Solana network identifiers (strings).
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <IconButton
- *   walletName="MetaMask"
- *   walletIcon="https://example.com/metamask-icon.png"
- * />
- * ```
+ * import { IconButton } from '@tuwaio/nova-connect/components';
  *
- * @example Interactive chain selector with customization
- * ```tsx
- * <IconButton
- *   walletName="Phantom"
- *   walletChainId="mainnet-beta"
- *   items={3}
- *   onClick={handleChainSelect}
- *   isOpen={isDropdownOpen}
- *   customization={{
- *     classNames: {
- *       button: ({ isClickable }) =>
- *         `custom-button ${isClickable ? 'clickable' : 'static'}`,
- *       chevronContainer: ({ isOpen }) =>
- *         `custom-chevron ${isOpen ? 'open' : 'closed'}`,
- *     },
- *     handlers: {
- *       onClick: (originalHandler, event) => {
- *         console.log("Button clicked");
- *         originalHandler();
+ * export const NetworkButton = (
+ *   <IconButton
+ *     walletChainId="devnet"
+ *     items={3}
+ *     onClick={() => console.log('open the network list')}
+ *     customization={{
+ *       classNames: {
+ *         chevronContainer: ({ isOpen }) => (isOpen ? 'chevron-open' : 'chevron-closed'),
  *       },
- *       onHover: (isHovering) => {
- *         setTooltipVisible(isHovering);
- *       },
- *     },
- *     animation: {
- *       button: { duration: 0.3, ease: "easeOut" },
- *       chevron: { duration: 0.2 },
- *     },
- *     config: {
- *       showLoadingOverlay: true,
- *       reduceMotion: false,
- *     },
- *   }}
- * />
+ *       animation: { button: { duration: 0.3, ease: 'easeOut' } },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButtonProps>(
@@ -456,13 +524,13 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
 
       const parts: string[] = [];
 
-      if (walletName) parts.push(`${walletName} wallet`);
-      if (walletChainId) parts.push('network selector');
-      if (isClickable) parts.push('button');
-      if (loading) parts.push('loading');
-      if (disabled) parts.push('disabled');
+      if (walletName) parts.push(formatLabel(labels.walletWithName, { name: walletName }));
+      if (walletChainId) parts.push(labels.networkSelector);
+      if (isClickable) parts.push(labels.buttonRole);
+      if (loading) parts.push(labels.loadingState);
+      if (disabled) parts.push(labels.disabledState);
 
-      return parts.join(', ') || 'Wallet controls';
+      return parts.join(', ') || labels.walletControls;
     })();
 
     /**
@@ -481,10 +549,12 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
       }
 
       if (title) return title;
-      if (loading) return 'Loading...';
-      if (disabled) return 'Button is disabled';
-      if (isClickable) return `Click to select ${walletName ? walletName + ' ' : ''}options`;
-      return walletName ? `${walletName} wallet` : 'Wallet information';
+      if (loading) return `${labels.loading}...`;
+      if (disabled) return labels.buttonDisabled;
+      if (isClickable) {
+        return walletName ? formatLabel(labels.selectWalletOptions, { name: walletName }) : labels.selectOptions;
+      }
+      return walletName ? formatLabel(labels.walletWithName, { name: walletName }) : labels.walletInformation;
     })();
 
     /**

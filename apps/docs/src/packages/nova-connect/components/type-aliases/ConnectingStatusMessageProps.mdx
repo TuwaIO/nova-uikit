@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingStatusMessageProps" />
+
+# ConnectingStatusMessageProps
+
+> **ConnectingStatusMessageProps** = `object` & `React.RefAttributes`\<`HTMLHeadingElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:140](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L140)
+
+Props for a custom heading.
+
+## Type Declaration
+
+### aria-level?
+
+> `optional` **aria-level?**: `number`
+
+`2`
+
+### children
+
+> **children**: `React.ReactNode`
+
+`statusData.message`
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.statusMessage` or the defaults (the color follows the state)
+
+### id?
+
+> `optional` **id?**: `string`
+
+`connecting-message`
+
+### role?
+
+> `optional` **role?**: `string`
+
+`heading`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

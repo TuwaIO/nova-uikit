@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Type Aliases/ButtonTxStatus" />
+
+# ButtonTxStatus
+
+> **ButtonTxStatus** = `"idle"` \| `"loading"` \| `"succeed"` \| `"failed"` \| `"replaced"`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L14)
+
+Status of the latest transaction of the active wallet, shown by the connect button: `loading` while it is pending,
+then `succeed`, `failed` or `replaced`, and `idle` otherwise.

@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/NetworkTabsTabButtonProps" />
+
+# NetworkTabsTabButtonProps
+
+> **NetworkTabsTabButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L87)
+
+Props for a custom tab button.
+
+## Type Declaration
+
+### aria-controls?
+
+> `optional` **aria-controls?**: `string`
+
+`network-panel-<adapter or all>`
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`tabPrefix` and the `networkTab` label with the name, followed by `selectedSuffix` for the selected tab
+
+### aria-selected?
+
+> `optional` **aria-selected?**: `boolean`
+
+Whether the tab is selected
+
+### children
+
+> **children**: `React.ReactNode`
+
+The icon and the name
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.tabButton` or the defaults
+
+### onClick
+
+> **onClick**: () => `void`
+
+Selects the tab (`onSelect`, then `handlers.onTabSelect`)
+
+#### Returns
+
+`void`
+
+### onFocus?
+
+> `optional` **onFocus?**: () => `void`
+
+Calls `handlers.onTabFocus`
+
+#### Returns
+
+`void`
+
+### onMouseEnter?
+
+> `optional` **onMouseEnter?**: () => `void`
+
+Calls `handlers.onTabHover`
+
+#### Returns
+
+`void`
+
+### role?
+
+> `optional` **role?**: `string`
+
+`tab`
+
+### tabData
+
+> **tabData**: [`NetworkTabData`](?path=/docs/packages-nova-connect-components-interfaces-networktabdata--docs)
+
+The tab
+
+### title?
+
+> `optional` **title?**: `string`
+
+The display name
+
+### type?
+
+> `optional` **type?**: `"button"`
+
+`button`

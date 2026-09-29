@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/TransactionKey" />
+
+# TransactionKey()
+
+> **TransactionKey**\<`T`\>(`props`): `Element` \| `null`
+
+Defined in: [components/TransactionKey.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionKey.tsx#L51)
+
+The identifiers of a transaction: the key of its tracker when it differs from the on-chain hash (Safe transaction
+hash, Gelato task ID, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
+transaction, the original and the replacing hash. Hashes link to the explorer URL of the adapter's
+`getExplorerTxUrl` when there is one.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
+## Parameters
+
+### props
+
+[`TransactionKeyProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionkeyprops--docs)\<`T`\>
+
+See [TransactionKeyProps](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionkeyprops--docs).
+
+## Returns
+
+`Element` \| `null`
+
+The identifiers, or `null` when no adapter matches the transaction.

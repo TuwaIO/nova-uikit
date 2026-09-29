@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getConnectChainId" />
+
+# getConnectChainId()
+
+> **getConnectChainId**(`params`): `string` \| `number`
+
+Defined in: [packages/nova-connect/src/utils/getConnectedChainId.ts:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getConnectedChainId.ts#L30)
+
+Gets the appropriate chain ID for connecting based on the selected adapter.
+Returns the first available chain for the adapter, or a sensible default.
+
+## Parameters
+
+### params
+
+`object` & [`AllChainConfigs`](?path=/docs/packages-nova-connect-connect-interfaces-allchainconfigs--docs)
+
+Configuration object
+
+## Returns
+
+`string` \| `number`
+
+Chain ID (number for EVM/Starknet, string for Solana)

@@ -1,0 +1,166 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ToTopButtonCustomization" />
+
+# ToTopButtonCustomization
+
+> **ToTopButtonCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ToTopButton.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToTopButton.tsx#L35)
+
+Customization options for ToTopButton component
+
+## Properties
+
+### buttonProps?
+
+> `optional` **buttonProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"button"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ToTopButton.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToTopButton.tsx#L37)
+
+Override button element props
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToTopButton.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToTopButton.tsx#L46)
+
+Custom class name generators
+
+#### button?
+
+> `optional` **button?**: (`params`) => `string`
+
+Returns the classes of the button, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### disabled
+
+`boolean`
+
+Whether the button is disabled.
+
+###### hasOnClick
+
+`boolean`
+
+Whether an `onClick` prop is set.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### icon?
+
+> `optional` **icon?**: (`params`) => `string`
+
+Returns the classes of the icon, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### disabled
+
+`boolean`
+
+Whether the button is disabled.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToTopButton.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToTopButton.tsx#L39)
+
+Custom components
+
+#### Content?
+
+> `optional` **Content?**: `ComponentType`\<[`ToTopButtonContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-totopbuttoncontentprops--docs)\>
+
+Custom button content component (wraps the icon)
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`ToTopButtonIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-totopbuttoniconprops--docs)\>
+
+Custom icon component
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ToTopButton.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ToTopButton.tsx#L66)
+
+Custom event handlers
+
+#### onClick?
+
+> `optional` **onClick?**: (`originalHandler`, `event`) => `void`
+
+Wraps the click handler: call `originalHandler(event)` to run the default behavior (`onClick`).
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+The click event.
+
+##### Returns
+
+`void`
+
+#### onKeyDown?
+
+> `optional` **onKeyDown?**: (`originalHandler`, `event`) => `void`
+
+Wraps the key handler: call `originalHandler(event)` to run the default behavior (Enter and Space call
+`onClick`).
+
+##### Parameters
+
+###### originalHandler
+
+(`event`) => `void`
+
+The default handler.
+
+###### event
+
+`React.KeyboardEvent`\<`HTMLButtonElement`\>
+
+The keyboard event.
+
+##### Returns
+
+`void`

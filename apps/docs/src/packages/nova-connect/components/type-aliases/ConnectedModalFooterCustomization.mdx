@@ -1,0 +1,292 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalFooterCustomization" />
+
+# ConnectedModalFooterCustomization
+
+> **ConnectedModalFooterCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L88)
+
+Customization options of [ConnectedModalFooter](?path=/docs/packages-nova-connect-components-variables-connectedmodalfooter--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L101)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the footer, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The footer state.
+
+###### isValidExplorerUrl
+
+`boolean`
+
+Whether the chain has an explorer.
+
+###### walletAddress
+
+`string`
+
+The active address.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### disconnectButton?
+
+> `optional` **disconnectButton?**: () => `string`
+
+Returns classes added to the disconnect button.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### explorerLink?
+
+> `optional` **explorerLink?**: (`params`) => `string`
+
+Returns classes added to the explorer link.
+
+##### Parameters
+
+###### params
+
+The link state.
+
+###### disabled?
+
+`boolean`
+
+Whether the link is disabled (no explorer).
+
+###### isValidUrl
+
+`boolean`
+
+Whether the chain has an explorer.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L92)
+
+Custom components
+
+#### DisconnectButton?
+
+> `optional` **DisconnectButton?**: `ComponentType`\<[`ConnectedModalFooterDisconnectButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalfooterdisconnectbuttonprops--docs)\>
+
+Custom disconnect button component
+
+#### ExplorerLink?
+
+> `optional` **ExplorerLink?**: `ComponentType`\<[`ConnectedModalFooterExplorerLinkProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalfooterexplorerlinkprops--docs)\>
+
+Custom explorer link component
+
+#### FooterContent?
+
+> `optional` **FooterContent?**: `ComponentType`\<[`ConnectedModalFooterContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalfootercontentprops--docs)\>
+
+Custom footer content component (wraps everything)
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:164](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L164)
+
+Configuration options
+
+#### closeModalAfterDisconnect?
+
+> `optional` **closeModalAfterDisconnect?**: `boolean`
+
+Whether to close modal after disconnect (default: `true`)
+
+#### disconnectButtonTestId?
+
+> `optional` **disconnectButtonTestId?**: `string`
+
+`data-testid` of the disconnect button (default: `disconnect-button`)
+
+#### explorerLinkTestId?
+
+> `optional` **explorerLinkTestId?**: `string`
+
+`data-testid` of the explorer link (default: `explorer-link`)
+
+#### explorerUrlFallback?
+
+> `optional` **explorerUrlFallback?**: `string`
+
+`href` passed to the explorer link when the chain has no explorer; the link is disabled then (default: `#`)
+
+#### showDisconnectButton?
+
+> `optional` **showDisconnectButton?**: `boolean`
+
+Whether to show disconnect button (default: `true`)
+
+#### showExplorerLink?
+
+> `optional` **showExplorerLink?**: `boolean`
+
+Whether to show explorer link (default: `true`)
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`ComponentPropsWithoutRef`\<`"footer"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:90](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L90)
+
+Props of the `footer` element (the component props, `className`, `role` and `aria-label` take precedence)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L128)
+
+Custom event handlers
+
+#### onAfterDisconnect?
+
+> `optional` **onAfterDisconnect?**: () => `void`
+
+Called right after the disconnect starts (it does not wait for the wallets)
+
+##### Returns
+
+`void`
+
+#### onBeforeDisconnect?
+
+> `optional` **onBeforeDisconnect?**: () => `boolean` \| `Promise`\<`boolean`\>
+
+Called before the disconnect. Return `false` to cancel.
+
+##### Returns
+
+`boolean` \| `Promise`\<`boolean`\>
+
+Whether to disconnect.
+
+#### onDisconnectClick?
+
+> `optional` **onDisconnectClick?**: (`originalHandler`, `event`) => `void`
+
+Wraps the disconnect: call `originalHandler()` to disconnect all wallets (`disconnect` of the Satellite store)
+and close the modal.
+
+##### Parameters
+
+###### originalHandler
+
+() => `void`
+
+Disconnects and closes the modal.
+
+###### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+The click event.
+
+##### Returns
+
+`void`
+
+#### onExplorerClick?
+
+> `optional` **onExplorerClick?**: (`explorerUrl`, `walletAddress`, `event`) => `void`
+
+Called when the explorer link is clicked; the link still opens in a new tab.
+
+##### Parameters
+
+###### explorerUrl
+
+`string`
+
+The explorer page.
+
+###### walletAddress
+
+`string`
+
+The active address.
+
+###### event
+
+`React.MouseEvent`\<`HTMLAnchorElement`\>
+
+The click event.
+
+##### Returns
+
+`void`
+
+***
+
+### labels?
+
+> `optional` **labels?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L155)
+
+Custom text and aria labels
+
+#### disconnectText?
+
+> `optional` **disconnectText?**: `string`
+
+Text of the disconnect button with one connected wallet (default: the `disconnect` label)
+
+#### explorerText?
+
+> `optional` **explorerText?**: `string`
+
+Text of the explorer link (default: the `viewOnExplorer` label)
+
+#### footerAriaLabel?
+
+> `optional` **footerAriaLabel?**: `string`
+
+ARIA label of the footer, after the `aria-label` prop (default: the `walletControls` label)

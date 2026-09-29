@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/GetChainsListByConnectorTypeParams" />
+
+# GetChainsListByConnectorTypeParams
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:9](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L9)
+
+Parameters of [getChainsListByConnectorType](?path=/docs/packages-nova-connect-connect-functions-getchainslistbyconnectortype--docs).
+
+## Extends
+
+- [`InitialChains`](?path=/docs/packages-nova-connect-connect-type-aliases-initialchains--docs)
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
+
+### chains?
+
+> `optional` **chains?**: `ChainIdentifierArray`
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L13)
+
+Solana only: keeps the clusters of these chain identifiers (for example `solana:devnet`)
+
+***
+
+### connectorType
+
+> **connectorType**: `` `evm:${string}` `` \| `` `solana:${string}` `` \| `` `starknet:${string}` ``
+
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L11)
+
+Connector type whose network is used, for example `evm:metamask`
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`

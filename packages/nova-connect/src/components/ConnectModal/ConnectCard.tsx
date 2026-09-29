@@ -9,97 +9,144 @@ import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { RecentBadge, RecentBadgeCustomization } from './RecentBadge';
 
 // --- Types ---
 
 /**
- * Network data for display
+ * A network shown on a {@link ConnectCard}.
  */
-interface NetworkData {
+export interface ConnectCardNetworkData {
   /** Network adapter */
   adapter: OrbitAdapter;
-  /** Chain ID for icon display */
+  /** Chain ID of the network icon (from `getNetworkData` of `@tuwaio/orbit-core`) */
   chainId?: number | string;
-  /** Network display name */
+  /** Chain name in the network icons; the adapter (for example `'evm'`) in `ConnectCardData.visibleNetworks` */
   name?: string;
-  /** Network index in list */
+  /** Position of the network in the list */
   index: number;
 }
 
 /**
- * Connect card data
+ * Data of a {@link ConnectCard}, passed to its custom components, class name generators and handlers.
  */
 export interface ConnectCardData {
-  /** Primary title/name */
+  /** The `title` prop */
   title: string;
-  /** Optional subtitle */
+  /** The `subtitle` prop */
   subtitle?: string;
-  /** Whether card is recent */
+  /** The `isRecent` prop */
   isRecent: boolean;
-  /** Whether touch device */
+  /** Whether the device has a touch screen (`isTouchDevice` from `@tuwaio/nova-core`): the card is a square tile */
   isTouch: boolean;
-  /** Info link URL */
+  /** The `infoLink` prop */
   infoLink?: string;
-  /** Network adapters */
+  /** The `adapters` prop */
   adapters?: OrbitAdapter[];
-  /** Whether only one network */
+  /** The `isOnlyOneNetwork` prop */
   isOnlyOneNetwork?: boolean;
-  /** Network count for overflow */
+  /** Number of adapters */
   networkCount: number;
-  /** Visible networks */
-  visibleNetworks: NetworkData[];
-  /** Overflow count */
+  /** The first three adapters */
+  visibleNetworks: ConnectCardNetworkData[];
+  /** Number of adapters beyond the first three */
   overflowCount: number;
 }
 
-// --- Network Icons Component Props ---
-type NetworkIconsContainerProps = {
+/**
+ * Props for a custom container of the network icons.
+ */
+export type ConnectCardNetworkIconsContainerProps = {
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** The network icons and the overflow indicator */
   children: React.ReactNode;
+  /** `group` */
   role?: string;
+  /** The `listOfNetworks` label */
   'aria-label'?: string;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type NetworkIconProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  networkData: NetworkData;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type NetworkOverflowProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  overflowCount: number;
+  /** Data of the card */
   cardData: ConnectCardData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * NetworkIcons customization options
+ * Props for a custom network icon.
+ */
+export type ConnectCardNetworkIconProps = {
+  /** Classes from `classNames.networkIcon` or the defaults */
+  className?: string;
+  /** The `NetworkIcon` of the chain */
+  children: React.ReactNode;
+  /** `img` */
+  role?: string;
+  /** `Network <chain ID or adapter>` */
+  'aria-label'?: string;
+  /** The network */
+  networkData: ConnectCardNetworkData;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom indicator of the networks beyond the first three.
+ */
+export type ConnectCardNetworkOverflowProps = {
+  /** Classes from `classNames.overflowIndicator` or the defaults */
+  className?: string;
+  /** `+<overflowCount>` */
+  children: React.ReactNode;
+  /** `img` */
+  role?: string;
+  /** `<overflowCount> additional networks` */
+  'aria-label'?: string;
+  /** Number of networks beyond the first three */
+  overflowCount: number;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization of the network icons of a {@link ConnectCard} (shown when the connector supports more than one
+ * network).
  */
 export type NetworkIconsCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<NetworkIconsContainerProps>;
+    Container?: ComponentType<ConnectCardNetworkIconsContainerProps>;
     /** Custom network icon */
-    NetworkIcon?: ComponentType<NetworkIconProps>;
+    NetworkIcon?: ComponentType<ConnectCardNetworkIconProps>;
     /** Custom overflow indicator */
-    OverflowIndicator?: ComponentType<NetworkOverflowProps>;
+    OverflowIndicator?: ComponentType<ConnectCardNetworkOverflowProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     container?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate network icon classes */
-    networkIcon?: (params: { networkData: NetworkData; cardData: ConnectCardData }) => string;
-    /** Function to generate overflow indicator classes */
+    /**
+     * Returns the classes of a network icon, instead of the default ones.
+     *
+     * @param params - The network.
+     * @param params.networkData - The network.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
+    networkIcon?: (params: { networkData: ConnectCardNetworkData; cardData: ConnectCardData }) => string;
+    /**
+     * Returns the classes of the overflow indicator, instead of the default ones.
+     *
+     * @param params - The indicator.
+     * @param params.overflowCount - Number of networks beyond the first three.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     overflowIndicator?: (params: { overflowCount: number; cardData: ConnectCardData }) => string;
   };
 };
@@ -118,157 +165,324 @@ interface NetworkIconsProps {
   customization?: NetworkIconsCustomization;
 }
 
-// --- Connect Card Component Props ---
-type CardContainerProps = {
+/**
+ * Props for a custom card container (a `button` by default).
+ */
+export type ConnectCardContainerProps = {
+  /** Classes from `classNames.container`, or the defaults with the `className` prop */
   className?: string;
+  /** The card content, info link, recent badge and chevron */
   children: React.ReactNode;
+  /** `button` */
   type?: 'button';
+  /** Runs `handlers.onClick` or the `onClick` prop */
   onClick?: () => void;
+  /** From `config.ariaLabels.card`, or the connect label with the title, subtitle and number of networks */
   'aria-label'?: string;
+  /** ID of the subtitle, when there is one */
   'aria-describedby'?: string;
+  /** Data of the card */
   cardData: ConnectCardData;
 } & React.RefAttributes<HTMLButtonElement>;
 
-type CardContentProps = {
+/**
+ * Props for a custom card content (icon and text).
+ */
+export type ConnectCardContentProps = {
+  /** Classes from `classNames.content` or the defaults */
   className?: string;
+  /** The icon container and the text container */
   children: React.ReactNode;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type IconContainerProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type IconWrapperProps = {
-  className?: string;
-  children: React.ReactNode;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type TextContainerProps = {
-  className?: string;
-  children: React.ReactNode;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type TitleProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-level'?: number;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLSpanElement>;
-
-type SubtitleProps = {
-  className?: string;
-  children: React.ReactNode;
-  id?: string;
-  role?: string;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLSpanElement>;
-
-type InfoLinkProps = {
-  className?: string;
-  children: React.ReactNode;
-  onClick?: (e: React.MouseEvent) => void;
-  href?: string;
-  target?: string;
-  rel?: string;
-  'aria-label'?: string;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLAnchorElement>;
-
-type RecentBadgeWrapperProps = {
-  className?: string;
-  children: React.ReactNode;
-  'aria-label'?: string;
-  cardData: ConnectCardData;
-} & React.RefAttributes<HTMLDivElement>;
-
-type ChevronProps = {
-  className?: string;
-  children: React.ReactNode;
-  'aria-hidden'?: boolean;
+  /** Data of the card */
   cardData: ConnectCardData;
 } & React.RefAttributes<HTMLDivElement>;
 
 /**
- * ConnectCard customization options
+ * Props for a custom icon container (the wallet icon and the network icons).
+ */
+export type ConnectCardIconContainerProps = {
+  /** Classes from `classNames.iconContainer` or the defaults */
+  className?: string;
+  /** The icon wrapper and the network icons */
+  children: React.ReactNode;
+  /** `img` */
+  role?: string;
+  /** From `config.ariaLabels.icon`, or the title with the `walletIcon` label */
+  'aria-label'?: string;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom wrapper of the wallet icon.
+ */
+export type ConnectCardIconWrapperProps = {
+  /** Classes from `classNames.iconWrapper` or the defaults */
+  className?: string;
+  /** The `icon` prop */
+  children: React.ReactNode;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom text container (title and subtitle).
+ */
+export type ConnectCardTextContainerProps = {
+  /** Classes from `classNames.textContainer` or the defaults */
+  className?: string;
+  /** The title and the subtitle */
+  children: React.ReactNode;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom title.
+ */
+export type ConnectCardTitleProps = {
+  /** Classes from `classNames.title` or the defaults */
+  className?: string;
+  /** The `title` prop */
+  children: React.ReactNode;
+  /** `heading` */
+  role?: string;
+  /** `3` */
+  'aria-level'?: number;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLSpanElement>;
+
+/**
+ * Props for a custom subtitle (rendered when the `subtitle` prop is set).
+ */
+export type ConnectCardSubtitleProps = {
+  /** Classes from `classNames.subtitle` or the defaults */
+  className?: string;
+  /** The `subtitle` prop */
+  children: React.ReactNode;
+  /** `<title>-subtitle`, referenced by `aria-describedby` of the card */
+  id?: string;
+  /** `text` */
+  role?: string;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLSpanElement>;
+
+/**
+ * Props for a custom info link (rendered when the `infoLink` prop is set).
+ */
+export type ConnectCardInfoLinkProps = {
+  /** Classes from `classNames.infoLink` or the defaults */
+  className?: string;
+  /** The information icon */
+  children: React.ReactNode;
+  /**
+   * Stops the click from reaching the card and calls `handlers.onInfoClick`.
+   *
+   * @param e - The click event.
+   */
+  onClick?: (e: React.MouseEvent) => void;
+  /** The `infoLink` prop */
+  href?: string;
+  /** `_blank` */
+  target?: string;
+  /** `noopener noreferrer` */
+  rel?: string;
+  /** From `config.ariaLabels.infoLink`, or the `learnMore` and `aboutWallets` labels with the title */
+  'aria-label'?: string;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLAnchorElement>;
+
+/**
+ * Props for a custom wrapper of the recent badge (rendered when the `isRecent` prop is `true`).
+ */
+export type ConnectCardRecentBadgeWrapperProps = {
+  /** Classes from `classNames.recentBadgeWrapper` or the defaults */
+  className?: string;
+  /** The `RecentBadge` */
+  children: React.ReactNode;
+  /** From `config.ariaLabels.recentBadge`, or the title with the `recent` label */
+  'aria-label'?: string;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Props for a custom chevron (rendered on devices without a touch screen).
+ */
+export type ConnectCardChevronProps = {
+  /** Classes from `classNames.chevron` or the defaults */
+  className?: string;
+  /** The chevron icon */
+  children: React.ReactNode;
+  /** `true` */
+  'aria-hidden'?: boolean;
+  /** Data of the card */
+  cardData: ConnectCardData;
+} & React.RefAttributes<HTMLDivElement>;
+
+/**
+ * Customization options of {@link ConnectCard}.
  */
 export type ConnectCardCustomization = {
   /** Custom components */
   components?: {
     /** Custom card container */
-    Container?: ComponentType<CardContainerProps>;
+    Container?: ComponentType<ConnectCardContainerProps>;
     /** Custom card content */
-    Content?: ComponentType<CardContentProps>;
+    Content?: ComponentType<ConnectCardContentProps>;
     /** Custom icon container */
-    IconContainer?: ComponentType<IconContainerProps>;
+    IconContainer?: ComponentType<ConnectCardIconContainerProps>;
     /** Custom icon wrapper */
-    IconWrapper?: ComponentType<IconWrapperProps>;
+    IconWrapper?: ComponentType<ConnectCardIconWrapperProps>;
     /** Custom text container */
-    TextContainer?: ComponentType<TextContainerProps>;
+    TextContainer?: ComponentType<ConnectCardTextContainerProps>;
     /** Custom title */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<ConnectCardTitleProps>;
     /** Custom subtitle */
-    Subtitle?: ComponentType<SubtitleProps>;
+    Subtitle?: ComponentType<ConnectCardSubtitleProps>;
     /** Custom info link */
-    InfoLink?: ComponentType<InfoLinkProps>;
+    InfoLink?: ComponentType<ConnectCardInfoLinkProps>;
     /** Custom recent badge wrapper */
-    RecentBadgeWrapper?: ComponentType<RecentBadgeWrapperProps>;
+    RecentBadgeWrapper?: ComponentType<ConnectCardRecentBadgeWrapperProps>;
     /** Custom chevron */
-    Chevron?: ComponentType<ChevronProps>;
+    Chevron?: ComponentType<ConnectCardChevronProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the card container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     container?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate content classes */
+    /**
+     * Returns the classes of the card content, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     content?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate icon container classes */
+    /**
+     * Returns the classes of the icon container, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     iconContainer?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate icon wrapper classes */
+    /**
+     * Returns the classes of the icon wrapper, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     iconWrapper?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate text container classes */
+    /**
+     * Returns the classes of the text container, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     textContainer?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     title?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate subtitle classes */
+    /**
+     * Returns the classes of the subtitle, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     subtitle?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate info link classes */
+    /**
+     * Returns the classes of the info link, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     infoLink?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate recent badge wrapper classes */
+    /**
+     * Returns the classes of the recent badge wrapper, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     recentBadgeWrapper?: (params: { cardData: ConnectCardData }) => string;
-    /** Function to generate chevron classes */
+    /**
+     * Returns the classes of the chevron, instead of the default ones.
+     *
+     * @param params - The card.
+     * @param params.cardData - Data of the card.
+     * @returns The classes.
+     */
     chevron?: (params: { cardData: ConnectCardData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom click handler */
+    /**
+     * Wraps the click on the card: call `originalHandler()` to run the `onClick` prop.
+     *
+     * @param cardData - Data of the card.
+     * @param originalHandler - The `onClick` prop.
+     */
     onClick?: (cardData: ConnectCardData, originalHandler: () => void) => void;
-    /** Custom info link click handler */
+    /**
+     * Called when the info link is clicked, before the browser opens it in a new tab (call `event.preventDefault()`
+     * to keep it closed). The click does not reach the card.
+     *
+     * @param cardData - Data of the card.
+     * @param event - The click event.
+     */
     onInfoClick?: (cardData: ConnectCardData, event: React.MouseEvent) => void;
-    /** Custom hover handler */
-    onHover?: (cardData: ConnectCardData, isHovering: boolean) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /**
+       * Returns the ARIA label of the card.
+       *
+       * @param cardData - Data of the card.
+       * @returns The label.
+       */
       card?: (cardData: ConnectCardData) => string;
+      /**
+       * Returns the ARIA label of the icon container.
+       *
+       * @param cardData - Data of the card.
+       * @returns The label.
+       */
       icon?: (cardData: ConnectCardData) => string;
+      /**
+       * Returns the ARIA label of the info link.
+       *
+       * @param cardData - Data of the card.
+       * @returns The label.
+       */
       infoLink?: (cardData: ConnectCardData) => string;
+      /**
+       * Returns the ARIA label of the recent badge wrapper.
+       *
+       * @param cardData - Data of the card.
+       * @returns The label.
+       */
       recentBadge?: (cardData: ConnectCardData) => string;
-    };
-    /** Custom animation settings */
-    animation?: {
-      hoverScale?: string;
-      transitionDuration?: string;
-      chevronTransform?: string;
     };
   };
   /** NetworkIcons customization */
@@ -278,9 +492,9 @@ export type ConnectCardCustomization = {
 };
 
 /**
- * Props for the ConnectCard component
+ * Props for the {@link ConnectCard} component.
  */
-interface ConnectCardProps {
+export interface ConnectCardProps {
   /** Click handler for the connect card */
   onClick: () => void;
   /** Icon element to display for the wallet/connector */
@@ -297,14 +511,14 @@ interface ConnectCardProps {
   adapters?: OrbitAdapter[];
   /** Whether only one network is available */
   isOnlyOneNetwork?: boolean;
-  /** Custom CSS classes for styling the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
   /** Customization options */
   customization?: ConnectCardCustomization;
 }
 
 // --- Default NetworkIcons Sub-Components ---
-const DefaultNetworkIconsContainer = forwardRef<HTMLDivElement, NetworkIconsContainerProps>(
+const DefaultNetworkIconsContainer = forwardRef<HTMLDivElement, ConnectCardNetworkIconsContainerProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -314,7 +528,7 @@ const DefaultNetworkIconsContainer = forwardRef<HTMLDivElement, NetworkIconsCont
 );
 DefaultNetworkIconsContainer.displayName = 'DefaultNetworkIconsContainer';
 
-const DefaultNetworkIcon = forwardRef<HTMLDivElement, NetworkIconProps>(
+const DefaultNetworkIcon = forwardRef<HTMLDivElement, ConnectCardNetworkIconProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, networkData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -324,7 +538,7 @@ const DefaultNetworkIcon = forwardRef<HTMLDivElement, NetworkIconProps>(
 );
 DefaultNetworkIcon.displayName = 'DefaultNetworkIcon';
 
-const DefaultNetworkOverflow = forwardRef<HTMLDivElement, NetworkOverflowProps>(
+const DefaultNetworkOverflow = forwardRef<HTMLDivElement, ConnectCardNetworkOverflowProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -335,37 +549,8 @@ const DefaultNetworkOverflow = forwardRef<HTMLDivElement, NetworkOverflowProps>(
 DefaultNetworkOverflow.displayName = 'DefaultNetworkOverflow';
 
 /**
- * NetworkIcons component - Displays network chain icons for supported networks with full customization
- *
- * Shows up to 3 network icons with an overflow indicator for additional networks.
+ * Displays up to 3 network icons with an overflow indicator for additional networks.
  * Hidden when only one network is available or no adapters are provided.
- * Supports complete customization of all child components and styling.
- *
- * @example Basic usage
- * ```tsx
- * <NetworkIcons
- *   adapters={[ethereum, polygon]}
- *   isOnlyOneNetwork={false}
- *   cardData={cardData}
- * />
- * ```
- *
- * @example With customization
- * ```tsx
- * <NetworkIcons
- *   adapters={networkAdapters}
- *   isOnlyOneNetwork={false}
- *   cardData={cardData}
- *   customization={{
- *     components: {
- *       NetworkIcon: CustomNetworkIcon
- *     },
- *     classNames: {
- *       container: ({ cardData }) => `custom-networks ${cardData.isTouch ? 'touch' : 'mouse'}`
- *     }
- *   }}
- * />
- * ```
  */
 const NetworkIcons = memo(
   forwardRef<HTMLDivElement, NetworkIconsProps>(({ adapters, isOnlyOneNetwork, cardData, customization }, ref) => {
@@ -386,7 +571,7 @@ const NetworkIcons = memo(
      */
     const visibleNetworksData =
       adapters && adapters.length
-        ? adapters.slice(0, 3).map((adapter, index): NetworkData => ({
+        ? adapters.slice(0, 3).map((adapter, index): ConnectCardNetworkData => ({
             adapter,
             chainId: getNetworkData(adapter)?.chain?.chainId,
             name: getNetworkData(adapter)?.chain?.name,
@@ -426,7 +611,7 @@ const NetworkIcons = memo(
               )
             }
             role="img"
-            aria-label={`Network ${networkData.chainId || networkData.adapter}`}
+            aria-label={formatLabel(labels.networkIcon, { name: networkData.chainId || networkData.adapter })}
             networkData={networkData}
             cardData={cardData}
           >
@@ -442,7 +627,7 @@ const NetworkIcons = memo(
               )
             }
             role="img"
-            aria-label={`${overflowCount} additional networks`}
+            aria-label={formatLabel(labels.additionalNetworks, { count: overflowCount })}
             overflowCount={overflowCount}
             cardData={cardData}
           >
@@ -456,7 +641,7 @@ const NetworkIcons = memo(
 NetworkIcons.displayName = 'NetworkIcons';
 
 // --- Default ConnectCard Sub-Components ---
-const DefaultCardContainer = forwardRef<HTMLButtonElement, CardContainerProps>(
+const DefaultCardContainer = forwardRef<HTMLButtonElement, ConnectCardContainerProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <button ref={ref} className={className} {...props}>
@@ -466,7 +651,7 @@ const DefaultCardContainer = forwardRef<HTMLButtonElement, CardContainerProps>(
 );
 DefaultCardContainer.displayName = 'DefaultCardContainer';
 
-const DefaultCardContent = forwardRef<HTMLDivElement, CardContentProps>(
+const DefaultCardContent = forwardRef<HTMLDivElement, ConnectCardContentProps>(
   // eslint-disable-next-line
   ({ children, className, cardData }, ref) => (
     <div ref={ref} className={className}>
@@ -476,7 +661,7 @@ const DefaultCardContent = forwardRef<HTMLDivElement, CardContentProps>(
 );
 DefaultCardContent.displayName = 'DefaultCardContent';
 
-const DefaultIconContainer = forwardRef<HTMLDivElement, IconContainerProps>(
+const DefaultIconContainer = forwardRef<HTMLDivElement, ConnectCardIconContainerProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -486,7 +671,7 @@ const DefaultIconContainer = forwardRef<HTMLDivElement, IconContainerProps>(
 );
 DefaultIconContainer.displayName = 'DefaultIconContainer';
 
-const DefaultIconWrapper = forwardRef<HTMLDivElement, IconWrapperProps>(
+const DefaultIconWrapper = forwardRef<HTMLDivElement, ConnectCardIconWrapperProps>(
   // eslint-disable-next-line
   ({ children, className, cardData }, ref) => (
     <div ref={ref} className={className}>
@@ -496,7 +681,7 @@ const DefaultIconWrapper = forwardRef<HTMLDivElement, IconWrapperProps>(
 );
 DefaultIconWrapper.displayName = 'DefaultIconWrapper';
 
-const DefaultTextContainer = forwardRef<HTMLDivElement, TextContainerProps>(
+const DefaultTextContainer = forwardRef<HTMLDivElement, ConnectCardTextContainerProps>(
   // eslint-disable-next-line
   ({ children, className, cardData }, ref) => (
     <div ref={ref} className={className}>
@@ -506,7 +691,7 @@ const DefaultTextContainer = forwardRef<HTMLDivElement, TextContainerProps>(
 );
 DefaultTextContainer.displayName = 'DefaultTextContainer';
 
-const DefaultTitle = forwardRef<HTMLSpanElement, TitleProps>(
+const DefaultTitle = forwardRef<HTMLSpanElement, ConnectCardTitleProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <span ref={ref} className={className} {...props}>
@@ -516,7 +701,7 @@ const DefaultTitle = forwardRef<HTMLSpanElement, TitleProps>(
 );
 DefaultTitle.displayName = 'DefaultTitle';
 
-const DefaultSubtitle = forwardRef<HTMLSpanElement, SubtitleProps>(
+const DefaultSubtitle = forwardRef<HTMLSpanElement, ConnectCardSubtitleProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <span ref={ref} className={className} {...props}>
@@ -526,7 +711,7 @@ const DefaultSubtitle = forwardRef<HTMLSpanElement, SubtitleProps>(
 );
 DefaultSubtitle.displayName = 'DefaultSubtitle';
 
-const DefaultInfoLink = forwardRef<HTMLAnchorElement, InfoLinkProps>(
+const DefaultInfoLink = forwardRef<HTMLAnchorElement, ConnectCardInfoLinkProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <a ref={ref} className={className} {...props}>
@@ -536,7 +721,7 @@ const DefaultInfoLink = forwardRef<HTMLAnchorElement, InfoLinkProps>(
 );
 DefaultInfoLink.displayName = 'DefaultInfoLink';
 
-const DefaultRecentBadgeWrapper = forwardRef<HTMLDivElement, RecentBadgeWrapperProps>(
+const DefaultRecentBadgeWrapper = forwardRef<HTMLDivElement, ConnectCardRecentBadgeWrapperProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -546,7 +731,7 @@ const DefaultRecentBadgeWrapper = forwardRef<HTMLDivElement, RecentBadgeWrapperP
 );
 DefaultRecentBadgeWrapper.displayName = 'DefaultRecentBadgeWrapper';
 
-const DefaultChevron = forwardRef<HTMLDivElement, ChevronProps>(
+const DefaultChevron = forwardRef<HTMLDivElement, ConnectCardChevronProps>(
   // eslint-disable-next-line
   ({ children, className, cardData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -557,54 +742,39 @@ const DefaultChevron = forwardRef<HTMLDivElement, ChevronProps>(
 DefaultChevron.displayName = 'DefaultChevron';
 
 /**
- * ConnectCard component - Interactive card for wallet connection options with comprehensive customization
+ * A clickable card of a wallet connector: icon, title, optional subtitle, network icons (when the connector supports
+ * more than one network), a "Recent" badge, an info link and a chevron. On touch devices it is a square tile without
+ * the chevron.
  *
- * This component provides a clickable card interface for wallet connectors with:
- * - Responsive design adapting to touch/mouse interfaces
- * - Network icons overlay showing supported networks
- * - Recent usage indicator badge
- * - Information link with external documentation
- * - Hover animations and visual feedback
- * - Full accessibility support with ARIA labels
- * - Keyboard navigation support
- * - Complete customization of all child components and styling
+ * Props: {@link ConnectCardProps}; the ref is forwarded to the card container.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectCard
- *   onClick={() => connect('metamask')}
- *   title="MetaMask"
- *   subtitle="Browser Extension"
- *   icon={<MetaMaskIcon />}
- *   adapters={[evm]}
- *   isRecent={true}
- *   infoLink="https://metamask.io/learn"
- * />
- * ```
+ * import { ConnectCard } from '@tuwaio/nova-connect/components';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
  *
- * @example With full customization
- * ```tsx
- * <ConnectCard
- *   onClick={() => connect('walletconnect')}
- *   title="WalletConnect"
- *   icon={<WalletConnectIcon />}
- *   adapters={[ethereum, polygon]}
- *   customization={{
- *     components: {
- *       Container: CustomCardContainer,
- *       Title: CustomTitle
- *     },
- *     classNames: {
- *       container: ({ cardData }) => cardData.isTouch ? 'touch-card' : 'desktop-card'
- *     },
- *     handlers: {
- *       onClick: (cardData, originalHandler) => {
- *         analytics.track('card_clicked', { title: cardData.title });
- *         originalHandler();
- *       }
- *     }
- *   }}
- * />
+ * export const Card = (
+ *   <ConnectCard
+ *     onClick={() => console.log('connect')}
+ *     title="MetaMask"
+ *     subtitle="Browser Extension"
+ *     icon={<img src="/metamask.svg" alt="" />}
+ *     adapters={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
+ *     isRecent
+ *     infoLink="https://metamask.io"
+ *     customization={{
+ *       classNames: {
+ *         container: ({ cardData }) => (cardData.isTouch ? 'touch-card' : 'desktop-card'),
+ *       },
+ *       handlers: {
+ *         onClick: (cardData, originalHandler) => {
+ *           console.log('card clicked', cardData.title);
+ *           originalHandler();
+ *         },
+ *       },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const ConnectCard = memo(
@@ -657,7 +827,7 @@ export const ConnectCard = memo(
       const networkStats = (() => {
         const networkCount = adapters?.length || 0;
         const visibleNetworks =
-          adapters?.slice(0, 3).map((adapter, index): NetworkData => ({
+          adapters?.slice(0, 3).map((adapter, index): ConnectCardNetworkData => ({
             adapter,
             chainId: getNetworkData(adapter)?.chain?.chainId,
             name: String(adapter),

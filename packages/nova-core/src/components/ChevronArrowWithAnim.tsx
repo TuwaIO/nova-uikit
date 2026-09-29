@@ -2,6 +2,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { cn } from '../utils';
 
+/**
+ * A chevron that points up when `isOpen` is `true` and down otherwise, animated with `framer-motion` when it flips.
+ * Nova uses it in dropdown triggers such as the chain selector.
+ *
+ * @param props - The chevron props.
+ * @param props.className - Classes merged with the default size and color (`--tuwa-text-secondary`).
+ * @param props.strokeWidth - Stroke width of the SVG path. Defaults to `2`.
+ * @param props.isOpen - Whether the related list is open.
+ * @returns The SVG element.
+ */
 export function ChevronArrowWithAnim({
   className,
   strokeWidth,

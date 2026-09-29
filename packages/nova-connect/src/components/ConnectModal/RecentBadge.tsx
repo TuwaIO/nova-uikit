@@ -4,17 +4,19 @@
 
 import { cn, isTouchDevice } from '@tuwaio/nova-core';
 import { motion } from 'framer-motion';
-import React, { ComponentType, forwardRef, memo } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
+
+import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
 // --- Types ---
 
 /**
- * Animation configuration for the gradient border effect
+ * Animation of the gradient border of {@link RecentBadge} (`config.animation`).
  */
 export interface BadgeAnimationConfig {
-  /** Animation duration in seconds */
+  /** Animation duration in seconds (default: `4`) */
   duration: number;
-  /** Animation easing function - using valid framer-motion easing values */
+  /** Framer Motion easing (default: `linear`) */
   ease:
     | 'linear'
     | 'easeIn'
@@ -27,90 +29,128 @@ export interface BadgeAnimationConfig {
     | 'backOut'
     | 'backInOut'
     | 'anticipate';
-  /** Whether animation should repeat infinitely */
+  /** Whether animation should repeat infinitely (default: `true`) */
   repeat: boolean;
-  /** Initial background position */
+  /** Initial `background-position-x` (default: `100%`) */
   initialPosition: string;
-  /** Final background position */
+  /** Final `background-position-x` (default: `-100%`) */
   finalPosition: string;
 }
 
 /**
- * Gradient configuration for the border effect
+ * Gradient of the border of {@link RecentBadge} (`config.gradient`).
  */
 export interface BadgeGradientConfig {
-  /** Direction of the gradient (e.g., '90deg', '45deg') */
+  /** Direction of the gradient (default: `90deg`) */
   direction: string;
-  /** Color stops for the gradient */
+  /** Color stops for the gradient (default: a light stripe with `--tuwa-text-secondary` at 20%) */
   stops: Array<{
     /** Position percentage (0-100) */
     position: number;
     /** Color value (CSS color, CSS variable, or rgba) */
     color: string;
   }>;
-  /** Background size for animation effect */
+  /** `background-size` of the gradient (default: `200% 100%`) */
   backgroundSize: string;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container (a `span` by default).
+ */
+export type RecentBadgeContainerProps = {
+  /** Classes from `classNames.container`, or the defaults with the `className` prop */
   className?: string;
+  /** The gradient, the background overlay and the content */
   children: React.ReactNode;
+  /** `status` */
   role?: string;
+  /** `config.ariaLabels.container`, the `aria-label` prop, the text of `children` or the `recent` label */
   'aria-label'?: string;
 } & React.RefAttributes<HTMLSpanElement>;
 
-type AnimatedGradientProps = {
+/**
+ * Props for a custom gradient border (a `motion.span` moving its background by default).
+ */
+export type RecentBadgeAnimatedGradientProps = {
+  /** Classes from `classNames.animatedGradient` or the defaults */
   className?: string;
+  /** The `animated` prop */
   animated: boolean;
+  /** The animation, with `config.animation` applied */
   animationConfig: BadgeAnimationConfig;
+  /** The gradient, with `config.gradient` applied */
   gradientConfig: BadgeGradientConfig;
 };
 
-type BackgroundOverlayProps = {
+/**
+ * Props for a custom background overlay (covers the gradient except a 1px border).
+ */
+export type RecentBadgeBackgroundOverlayProps = {
+  /** Classes from `classNames.backgroundOverlay` or the defaults */
   className?: string;
 };
 
-type ContentProps = {
+/**
+ * Props for a custom content wrapper.
+ */
+export type RecentBadgeContentProps = {
+  /** Classes from `classNames.content` or the defaults */
   className?: string;
+  /** The `children` prop */
   children: React.ReactNode;
 };
 
 /**
- * Customization options for RecentBadge component
+ * Customization options of {@link RecentBadge}.
  */
 export type RecentBadgeCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<RecentBadgeContainerProps>;
     /** Custom animated gradient component */
-    AnimatedGradient?: ComponentType<AnimatedGradientProps>;
+    AnimatedGradient?: ComponentType<RecentBadgeAnimatedGradientProps>;
     /** Custom background overlay */
-    BackgroundOverlay?: ComponentType<BackgroundOverlayProps>;
+    BackgroundOverlay?: ComponentType<RecentBadgeBackgroundOverlayProps>;
     /** Custom content wrapper */
-    Content?: ComponentType<ContentProps>;
+    Content?: ComponentType<RecentBadgeContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The badge state.
+     * @param params.isTouch - Whether the device has a touch screen (smaller badge by default).
+     * @param params.animated - The `animated` prop.
+     * @returns The classes.
+     */
     container?: (params: { isTouch: boolean; animated: boolean }) => string;
-    /** Function to generate animated gradient classes */
+    /**
+     * Returns the classes of the gradient border, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     animatedGradient?: () => string;
-    /** Function to generate background overlay classes */
+    /**
+     * Returns the classes of the background overlay, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     backgroundOverlay?: () => string;
-    /** Function to generate content classes */
+    /**
+     * Returns the classes of the content, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     content?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for animation start */
-    onAnimationStart?: () => void;
-    /** Custom handler for animation complete */
-    onAnimationComplete?: () => void;
-    /** Custom handler for component mount */
+    /** Called after mount */
     onMount?: () => void;
-    /** Custom handler for component unmount */
+    /** Called on unmount */
     onUnmount?: () => void;
   };
   /** Configuration options */
@@ -121,24 +161,25 @@ export type RecentBadgeCustomization = {
     gradient?: Partial<BadgeGradientConfig>;
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the badge (before the `aria-label` prop) */
       container?: string;
     };
-    /** Touch device detection override */
+    /** Whether to use the touch device size, instead of `isTouchDevice` of `@tuwaio/nova-core` */
     touchDevice?: boolean;
   };
 };
 
 /**
- * Props for the RecentBadge component
+ * Props for the {@link RecentBadge} component.
  */
 export interface RecentBadgeProps {
-  /** Custom CSS classes for styling the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Content to display inside the badge */
+  /** Content to display inside the badge (default: the `recent` label) */
   children?: React.ReactNode;
-  /** Whether the gradient animation should be enabled */
+  /** Whether the gradient border moves (default: `true`) */
   animated?: boolean;
-  /** Custom ARIA label for accessibility */
+  /** ARIA label of the badge (default: the text of `children`) */
   'aria-label'?: string;
   /** Customization options */
   customization?: RecentBadgeCustomization;
@@ -169,14 +210,16 @@ const defaultGradientConfig: BadgeGradientConfig = {
 };
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLSpanElement, ContainerProps>(({ children, className, ...props }, ref) => (
-  <span ref={ref} className={className} {...props}>
-    {children}
-  </span>
-));
+const DefaultContainer = forwardRef<HTMLSpanElement, RecentBadgeContainerProps>(
+  ({ children, className, ...props }, ref) => (
+    <span ref={ref} className={className} {...props}>
+      {children}
+    </span>
+  ),
+);
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultAnimatedGradient: React.FC<AnimatedGradientProps> = ({
+const DefaultAnimatedGradient: React.FC<RecentBadgeAnimatedGradientProps> = ({
   className,
   animated,
   animationConfig,
@@ -211,86 +254,51 @@ const DefaultAnimatedGradient: React.FC<AnimatedGradientProps> = ({
   );
 };
 
-const DefaultBackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ className }) => <span className={className} />;
+const DefaultBackgroundOverlay: React.FC<RecentBadgeBackgroundOverlayProps> = ({ className }) => (
+  <span className={className} />
+);
 
-const DefaultContent: React.FC<ContentProps> = ({ children, className }) => (
+const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className }) => (
   <span className={className}>{children}</span>
 );
 
 /**
- * Badge component with animated gradient border effect and comprehensive customization
+ * The "Recent" badge of a wallet card: a small label with a gradient border that moves with Framer Motion. It is
+ * smaller on touch devices.
  *
- * This component provides a visually appealing badge with:
- * - Animated gradient border effect with customizable timing and colors
- * - Touch-device responsive sizing for optimal mobile experience
- * - Full accessibility support with proper ARIA labeling
- * - Performance optimizations with memoized calculations
- * - Customizable animations and gradient configurations
- * - Full customization of all child components
- * - Proper semantic HTML structure
+ * Props: {@link RecentBadgeProps}; the ref is forwarded to the container.
  *
- * Visual features:
- * - Smooth animated gradient border effect
- * - Touch-responsive sizing (smaller on touch devices)
- * - Customizable gradient colors and direction
- * - Configurable animation timing and easing
- * - Proper z-index layering for visual effects
- *
- * Accessibility features:
- * - Proper ARIA role and labels
- * - Screen reader friendly content structure
- * - Semantic HTML with appropriate roles
- * - Motion reduction respect (can be controlled via customization)
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <RecentBadge>Recent</RecentBadge>
- * ```
+ * import { RecentBadge } from '@tuwaio/nova-connect/components';
  *
- * @example With custom animation
- * ```tsx
- * <RecentBadge
- *   animated={false}
- *   customization={{
- *     config: {
- *       animation: {
- *         duration: 2,
- *         ease: 'easeInOut'
- *       }
- *     }
- *   }}
- * >
- *   Custom
- * </RecentBadge>
- * ```
- *
- * @example With full customization
- * ```tsx
- * <RecentBadge
- *   customization={{
- *     components: {
- *       AnimatedGradient: CustomGradient,
- *       Content: CustomContent
- *     },
- *     config: {
- *       gradient: {
- *         direction: '45deg',
- *         stops: [
- *           { position: 0, color: 'transparent' },
- *           { position: 50, color: 'rgba(59, 130, 246, 0.8)' },
- *           { position: 100, color: 'transparent' }
- *         ]
- *       }
- *     }
- *   }}
- * >
- *   Premium
- * </RecentBadge>
+ * export const Badge = (
+ *   <RecentBadge
+ *     customization={{
+ *       config: {
+ *         animation: { duration: 2, ease: 'easeInOut' },
+ *         gradient: {
+ *           direction: '45deg',
+ *           stops: [
+ *             { position: 0, color: 'transparent' },
+ *             { position: 50, color: 'rgba(59, 130, 246, 0.8)' },
+ *             { position: 100, color: 'transparent' },
+ *           ],
+ *         },
+ *       },
+ *     }}
+ *   >
+ *     Last used
+ *   </RecentBadge>
+ * );
  * ```
  */
 export const RecentBadge = memo(
   forwardRef<HTMLSpanElement, RecentBadgeProps>(
-    ({ className, children = 'Recent', animated = true, 'aria-label': ariaLabel, customization }, ref) => {
+    ({ className, children: childrenProp, animated = true, 'aria-label': ariaLabel, customization }, ref) => {
+      const labels = useNovaConnectLabels();
+      const children = childrenProp ?? labels.recent;
+
       // Extract customization options
       const {
         Container: CustomContainer = DefaultContainer,
@@ -393,15 +401,16 @@ export const RecentBadge = memo(
         if (customConfig?.ariaLabels?.container) return customConfig.ariaLabels.container;
         if (ariaLabel) return ariaLabel;
         if (typeof children === 'string') return children;
-        return 'Recent';
+        return labels.recent;
       })();
 
-      // Handle mount/unmount effects
-      React.useEffect(() => {
-        customHandlers?.onMount?.();
-        return () => customHandlers?.onUnmount?.();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [customHandlers?.onMount, customHandlers?.onUnmount]);
+      // The handlers are read through Effect Events, so new handler functions on every render do not re-run the effect
+      const onMount = useEffectEvent(() => customHandlers?.onMount?.());
+      const onUnmount = useEffectEvent(() => customHandlers?.onUnmount?.());
+      useEffect(() => {
+        onMount();
+        return () => onUnmount();
+      }, []);
 
       return (
         <CustomContainer ref={ref} className={containerClasses} role="status" aria-label={finalAriaLabel}>

@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectModalProps" />
+
+# ConnectModalProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:698](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L698)
+
+Props for the [ConnectModal](?path=/docs/packages-nova-connect-components-variables-connectmodal--docs) component. `appChains` and `solanaRPCUrls` choose the chain a wallet connects to.
+
+## Extends
+
+- [`InitialChains`](?path=/docs/packages-nova-connect-connect-type-aliases-initialchains--docs)
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+`InitialChains.appChains`
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:700](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L700)
+
+Customization options
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+`InitialChains.solanaRPCUrls`

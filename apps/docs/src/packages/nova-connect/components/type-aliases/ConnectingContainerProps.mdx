@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingContainerProps" />
+
+# ConnectingContainerProps
+
+> **ConnectingContainerProps** = `object` & `React.RefAttributes`\<`HTMLElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L54)
+
+Props for a custom container (a `section` by default).
+
+## Type Declaration
+
+### aria-atomic?
+
+> `optional` **aria-atomic?**: `boolean`
+
+`true`
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.container`, or the `connectionStatus` label with the heading
+
+### aria-live?
+
+> `optional` **aria-live?**: `"polite"` \| `"assertive"` \| `"off"`
+
+`polite`
+
+### children
+
+> **children**: `React.ReactNode`
+
+The status container, messages and screen reader texts
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.container`, or the defaults with the `className` prop
+
+### role?
+
+> `optional` **role?**: `string`
+
+`status`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

@@ -83,7 +83,12 @@ export function getConnectChainId({
 }
 
 /**
- * Helper to get all available chain IDs for an adapter
+ * Returns the chains of the app for a network.
+ *
+ * @param params - The network and the chains of the app.
+ * @param params.selectedAdapter - The network.
+ * @returns The IDs of `appChains` (EVM) or the cluster monikers of `solanaRPCUrls` (Solana); the default chain of the
+ * network (Ethereum Mainnet, Solana Mainnet) when the list is empty.
  */
 export function getAvailableChainIds({
   selectedAdapter,

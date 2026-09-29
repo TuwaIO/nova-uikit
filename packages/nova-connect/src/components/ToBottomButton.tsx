@@ -1,5 +1,6 @@
 /**
- * @file This file contains the `ToBottomButton` component, a customizable scroll-to-bottom button with full styling control.
+ * @file This file contains the `ToBottomButton` component, a customizable scroll-to-bottom button with full styling
+ * control.
  */
 
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
@@ -9,15 +10,23 @@ import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCall
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
 // --- Types for Customization ---
-type CustomIconProps = {
+/** Props of the icon of {@link ToBottomButton} (`customization.components.Icon`). */
+export type ToBottomButtonIconProps = {
+  /** Whether the button is disabled. */
   disabled: boolean;
+  /** Classes from `customization.classNames.icon`. */
   className?: string;
+  /** Always `true`: the button has its own label. */
   'aria-hidden'?: boolean;
 };
 
-type CustomContentProps = {
+/** Props of the content of {@link ToBottomButton} (`customization.components.Content`), which wraps the icon. */
+export type ToBottomButtonContentProps = {
+  /** The rendered icon. */
   icon: ReactNode;
+  /** Whether the button is disabled. */
   disabled: boolean;
+  /** Accessible label of the button. */
   ariaLabel?: string;
 };
 
@@ -30,25 +39,49 @@ export type ToBottomButtonCustomization = {
   /** Custom components */
   components?: {
     /** Custom icon component */
-    Icon?: ComponentType<CustomIconProps>;
+    Icon?: ComponentType<ToBottomButtonIconProps>;
     /** Custom button content component (wraps the icon) */
-    Content?: ComponentType<CustomContentProps>;
+    Content?: ComponentType<ToBottomButtonContentProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate button classes */
+    /**
+     * Returns the classes of the button, instead of the default ones.
+     *
+     * @param params - The button state.
+     * @param params.disabled - Whether the button is disabled.
+     * @param params.hasOnClick - Whether an `onClick` prop is set.
+     * @returns The classes.
+     */
     button?: (params: { disabled: boolean; hasOnClick: boolean }) => string;
-    /** Function to generate icon classes */
+    /**
+     * Returns the classes of the icon, instead of the default ones.
+     *
+     * @param params - The button state.
+     * @param params.disabled - Whether the button is disabled.
+     * @returns The classes.
+     */
     icon?: (params: { disabled: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom click handler wrapper */
+    /**
+     * Wraps the click handler: call `originalHandler(event)` to run the default behavior (`onClick`).
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The click event.
+     */
     onClick?: (
       originalHandler: (event: React.MouseEvent<HTMLButtonElement>) => void,
       event: React.MouseEvent<HTMLButtonElement>,
     ) => void;
-    /** Custom keydown handler wrapper */
+    /**
+     * Wraps the key handler: call `originalHandler(event)` to run the default behavior (Enter and Space call
+     * `onClick`).
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The keyboard event.
+     */
     onKeyDown?: (
       originalHandler: (event: React.KeyboardEvent<HTMLButtonElement>) => void,
       event: React.KeyboardEvent<HTMLButtonElement>,
@@ -56,6 +89,7 @@ export type ToBottomButtonCustomization = {
   };
 };
 
+/** Props of {@link ToBottomButton}. The other props are passed to the `<button>` element. */
 export interface ToBottomButtonProps extends Omit<
   ComponentPropsWithoutRef<'button'>,
   'type' | 'onClick' | 'onKeyDown' | 'style'
@@ -64,7 +98,11 @@ export interface ToBottomButtonProps extends Omit<
   className?: string;
   /** Custom aria-label for the button */
   'aria-label'?: string;
-  /** Callback fired when button is clicked */
+  /**
+   * Called when the button is clicked, or activated with Enter or Space.
+   *
+   * @param event - The click event (a synthetic mouse event for the keyboard).
+   */
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** Whether the button is disabled */
   disabled?: boolean;
@@ -73,7 +111,7 @@ export interface ToBottomButtonProps extends Omit<
 }
 
 // --- Default Sub-Components ---
-const DefaultIcon = ({ disabled, className, ...props }: CustomIconProps) => {
+const DefaultIcon = ({ disabled, className, ...props }: ToBottomButtonIconProps) => {
   return (
     <ChevronDownIcon
       className={cn(
@@ -88,7 +126,7 @@ const DefaultIcon = ({ disabled, className, ...props }: CustomIconProps) => {
   );
 };
 
-const DefaultContent = ({ icon }: CustomContentProps) => {
+const DefaultContent = ({ icon }: ToBottomButtonContentProps) => {
   return <>{icon}</>;
 };
 
@@ -108,8 +146,11 @@ const defaultKeyDownHandler = (
 };
 
 /**
- * A highly customizable scroll-to-bottom button component with extensive styling options and accessibility features.
- * Provides comprehensive customization for appearance, behavior, and event handling while maintaining keyboard navigation support.
+ * A full-width button with a chevron pointing down, which the scrollable lists of Nova Connect (such as the chain list)
+ * show to scroll to the bottom. The scrolling is done by `onClick`; the button calls it on click and on Enter or Space.
+ * Its label defaults to the `scrollToBottom` label (overridable with `aria-label`).
+ *
+ * Props: {@link ToBottomButtonProps}; the ref is forwarded to the button.
  */
 export const ToBottomButton = forwardRef<HTMLButtonElement, ToBottomButtonProps>(
   ({ className, 'aria-label': ariaLabel, onClick, disabled = false, customization, ...props }, ref) => {

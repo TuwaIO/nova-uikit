@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/ErrorsProvider" />
+
+# ErrorsProvider()
+
+> **ErrorsProvider**(`props`): `Element`
+
+Defined in: [packages/nova-connect/src/providers/ErrorsProvider.tsx:219](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/ErrorsProvider.tsx#L219)
+
+Shows the connection and network switch errors of the Satellite Connect store (`connectionError`,
+`switchNetworkError`) as `react-toastify` toasts ([ToastError](?path=/docs/packages-nova-connect-components-variables-toasterror--docs)) in its own `ToastContainer` (id
+`nova-connect-errors`, top center, closed after 7 seconds by default). Each error is shown once; the toasts are
+dismissed when a wallet connects without error. `NovaConnectProvider` renders it.
+
+## Parameters
+
+### props
+
+[`ErrorsProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-errorsproviderprops--docs)
+
+See [ErrorsProviderProps](?path=/docs/packages-nova-connect-connect-interfaces-errorsproviderprops--docs).
+
+## Returns
+
+`Element`
+
+The toast container.

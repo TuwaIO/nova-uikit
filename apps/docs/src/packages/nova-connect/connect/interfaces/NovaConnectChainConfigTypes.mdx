@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/NovaConnectChainConfigTypes" />
+
+# NovaConnectChainConfigTypes
+
+Defined in: [packages/nova-connect/src/types.ts:8](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L8)
+
+Chain configuration types of the networks the app imports. Importing `@tuwaio/nova-connect/evm` adds `appChains`
+(the viem chains of your wagmi config, `readonly [Chain, ...Chain[]]`); importing `@tuwaio/nova-connect/solana` adds
+`solanaRPCUrls` (`Partial<Record<SolanaClusterMoniker, string>>` from `@tuwaio/orbit-solana`). Read the resulting
+types through [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs) and [NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+## Properties
+
+### appChains
+
+> **appChains**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/evm/index.ts:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/evm/index.ts#L34)
+
+***
+
+### solanaRPCUrls
+
+> **solanaRPCUrls**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/solana/index.ts:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/solana/index.ts#L35)

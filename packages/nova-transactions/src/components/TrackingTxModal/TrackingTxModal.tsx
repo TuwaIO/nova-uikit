@@ -1,10 +1,11 @@
 /**
- * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single transaction.
+ * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single
+ * transaction.
  */
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
-import { MotionProps } from 'framer-motion';
+import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
@@ -24,29 +25,61 @@ import {
 import { StatusAwareText } from '../StatusAwareText';
 
 // --- Prop Types for Customization ---
-type CustomHeaderProps = { onClose: () => void; title: ReactNode };
-type CustomFooterProps = {
+/** Props of the header of {@link TrackingTxModal} (`customization.components.Header`). */
+export type TrackingTxModalHeaderProps = {
+  /** Closes the modal. */
   onClose: () => void;
+  /** The title: the transaction title, or its type, colored by status. */
+  title: ReactNode;
+};
+/** Props of the footer of {@link TrackingTxModal} (`customization.components.Footer`). */
+export type TrackingTxModalFooterProps = {
+  /** Closes the modal. */
+  onClose: () => void;
+  /** Opens the transaction history modal. */
   onOpenAllTransactions: () => void;
+  /** Retries the failed submission; set only when retry is possible. */
   onRetry?: () => void;
+  /** Speeds up the pending transaction; set only when it can be replaced. */
   onSpeedUp?: () => void;
+  /** Cancels the pending transaction; set only when it can be replaced. */
   onCancel?: () => void;
+  /** Whether the transaction is being submitted or is pending. */
   isProcessing?: boolean;
+  /** Whether the submission or the transaction failed. */
   isFailed?: boolean;
+  /** Whether the pending transaction can be sped up or canceled. */
   canReplace?: boolean;
+  /** Address of the connected wallet. */
   connectedWalletAddress?: string;
 };
 
+/**
+ * Props, class names and replacement components for the parts of {@link TrackingTxModal}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TrackingTxModalCustomization<T extends Transaction> = {
+  /** Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`). */
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
+  /**
+   * `framer-motion` props of the content container inside the dialog panel (for example `initial`, `animate` and
+   * `transition`). The panel itself animates with `modalAnimation` of `modalProps`.
+   */
   motionProps?: MotionProps;
-  /** Custom components to override default elements */
+  /** Components that replace the default parts. */
   components?: {
-    Header?: ComponentType<CustomHeaderProps>;
-    Footer?: ComponentType<CustomFooterProps>;
+    /** The header with the title and the close button. */
+    Header?: ComponentType<TrackingTxModalHeaderProps>;
+    /** The footer with the action buttons. */
+    Footer?: ComponentType<TrackingTxModalFooterProps>;
+    /** The large status icon. */
     StatusVisual?: ComponentType<TxStatusVisualProps>;
+    /** The steps of the transaction lifecycle. */
     ProgressIndicator?: ComponentType<TxProgressIndicatorProps>;
+    /** The block with the network, time and hashes of the transaction. */
     InfoBlock?: ComponentType<TxInfoBlockProps<T>>;
+    /** The error message block. */
     ErrorBlock?: ComponentType<TxErrorBlockProps>;
   };
   /** Granular classNames for all sub-elements */
@@ -103,16 +136,42 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   };
 };
 
+/**
+ * Props of {@link TrackingTxModal}. The Pulsar values come from `NovaTransactionsProvider`.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TrackingTxModalProps<T extends Transaction> = Pick<
   NovaTransactionsProviderProps<T>,
   'executeTxAction' | 'initialTx' | 'transactionsPool' | 'adapter' | 'connectedWalletAddress'
 > & {
+  /**
+   * Closes the modal.
+   *
+   * @param txKey - Key of the shown transaction, when it is in the pool.
+   */
   onClose: (txKey?: string) => void;
+  /** Opens the transaction history modal. */
   onOpenAllTransactions: () => void;
+  /** Classes of the modal content. */
   className?: string;
+  /** Props, class names and replacement components for the parts of the modal. */
   customization?: TrackingTxModalCustomization<T>;
 };
 
+/**
+ * A modal that follows the latest submitted transaction step by step: it shows `initialTx` of the Pulsar store while
+ * the transaction is being submitted, then the transaction of the pool that `initialTx.lastTxKey` points to. It is
+ * open while `initialTx.withTrackedModal` is set and the transaction is not yet in the pool, and then while the
+ * transaction's `isTrackedModalOpen` is `true`. It shows the status, the lifecycle steps, the network, time and hashes,
+ * and the error, and offers speed-up and cancel (pending, unconfirmed EVM transactions sent with MetaMask, when the
+ * adapter has `speedUpTxAction` and `cancelTxAction`) and retry (after a failure, while `initialTx` has its
+ * `actionFunction`, through the adapter's `retryTxAction`). `NovaTransactionsProvider` renders it.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TrackingTxModalProps}.
+ * @returns The modal, or `null` when there is no transaction to show.
+ */
 export function TrackingTxModal<T extends Transaction>({
   adapter,
   onClose,
@@ -160,12 +219,8 @@ export function TrackingTxModal<T extends Transaction>({
       title: txToDisplay.title,
       description: txToDisplay.description,
       payload: txToDisplay.payload,
-      rpcUrl:
-        'rpcUrl' in txToDisplay
-          ? txToDisplay?.rpcUrl
-          : 'desiredChainID' in txToDisplay
-            ? (txToDisplay.desiredChainID as string)
-            : (txToDisplay.chainId as string).split(':')[1],
+      // Only a custom RPC URL of the submission: the adapters derive the default one from `desiredChainID`
+      rpcUrl: 'rpcUrl' in txToDisplay ? txToDisplay.rpcUrl : undefined,
       withTrackedModal: 'withTrackedModal' in txToDisplay ? txToDisplay.withTrackedModal : false,
     };
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
@@ -195,10 +250,11 @@ export function TrackingTxModal<T extends Transaction>({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose(activeTx?.txKey)}>
       <DialogContent
-        className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
         {...customization?.modalProps}
+        className={cn('novatx:w-full novatx:sm:max-w-md', customization?.modalProps?.className)}
       >
-        <div
+        <motion.div
+          {...customization?.motionProps}
           className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}
         >
           {CustomHeader ? (
@@ -291,7 +347,7 @@ export function TrackingTxModal<T extends Transaction>({
               classNames={classNames}
             />
           )}
-        </div>
+        </motion.div>
       </DialogContent>
     </Dialog>
   );
@@ -315,7 +371,7 @@ const DefaultHeader = ({
   onClose,
   title,
   classNames,
-}: CustomHeaderProps & { classNames?: TrackingModalClassNames }) => {
+}: TrackingTxModalHeaderProps & { classNames?: TrackingModalClassNames }) => {
   const { actions } = useLabels();
   return (
     <DialogHeader className={classNames?.header}>
@@ -346,7 +402,7 @@ const MainActionButton = ({
   onOpenAllTransactions,
   classNames,
 }: Pick<
-  CustomFooterProps,
+  TrackingTxModalFooterProps,
   'isFailed' | 'onRetry' | 'isProcessing' | 'canReplace' | 'connectedWalletAddress' | 'onOpenAllTransactions'
 > & { classNames?: TrackingModalClassNames }) => {
   const { trackingModal } = useLabels();
@@ -393,7 +449,7 @@ const DefaultFooter = ({
   isFailed,
   connectedWalletAddress,
   classNames,
-}: CustomFooterProps & { classNames?: TrackingModalClassNames }) => {
+}: TrackingTxModalFooterProps & { classNames?: TrackingModalClassNames }) => {
   const { trackingModal, actions } = useLabels();
 
   return (

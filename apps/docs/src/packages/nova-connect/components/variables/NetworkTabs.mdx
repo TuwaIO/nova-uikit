@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/NetworkTabs" />
+
+# NetworkTabs
+
+> `const` **NetworkTabs**: `NamedExoticComponent`\<[`NetworkTabsProps`](?path=/docs/packages-nova-connect-components-interfaces-networktabsprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:480](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L480)
+
+The network tabs of the connect modal: an "All" tab and a tab for each network, with the network icon and the name
+of the selected tab, animated with Framer Motion. Renders nothing when there is only one network.
+
+Props: [NetworkTabsProps](?path=/docs/packages-nova-connect-components-interfaces-networktabsprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { NetworkTabs } from '@tuwaio/nova-connect/components';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { useState } from 'react';
+
+export function Tabs() {
+  const [adapter, setAdapter] = useState<OrbitAdapter | undefined>();
+
+  return (
+    <NetworkTabs
+      networks={[OrbitAdapter.EVM, OrbitAdapter.SOLANA]}
+      selectedAdapter={adapter}
+      onSelect={setAdapter}
+      customization={{
+        classNames: {
+          tabButton: ({ isSelected }) => (isSelected ? 'custom-selected' : 'custom-normal'),
+        },
+        config: { animation: { textDuration: 0.15 } },
+      }}
+    />
+  );
+}
+```

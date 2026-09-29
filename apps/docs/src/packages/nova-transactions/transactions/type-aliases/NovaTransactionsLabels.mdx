@@ -1,0 +1,665 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/NovaTransactionsLabels" />
+
+# NovaTransactionsLabels
+
+> **NovaTransactionsLabels** = `object`
+
+Defined in: [i18n/types.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L10)
+
+Represents the set of labels used for various UI elements and features in a Tuwa-based application.
+This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
+
+## Properties
+
+### actions
+
+> **actions**: `object`
+
+Defined in: [i18n/types.ts:138](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L138)
+
+Labels for common action buttons/links.
+
+#### cancel
+
+> **cancel**: `string`
+
+Text for a generic "Cancel" action.
+
+#### close
+
+> **close**: `string`
+
+Text for a generic "Close" action.
+
+#### copy
+
+> **copy**: `string`
+
+Text for a "Copy" action (e.g., copy address or hash).
+
+#### speedUp
+
+> **speedUp**: `string`
+
+Text for a generic "Speed up" action.
+
+#### viewOnExplorer
+
+> **viewOnExplorer**: `string`
+
+Text for a link to view the transaction on a block explorer.
+
+***
+
+### hashLabels
+
+> **hashLabels**: `object`
+
+Defined in: [i18n/types.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L50)
+
+Labels for different types of transaction hashes/keys.
+
+#### default
+
+> **default**: `string`
+
+Default label for a standard transaction hash.
+
+#### erc4337
+
+> **erc4337**: `string`
+
+Label for an ERC-4337 UserOperation Hash.
+
+#### gelato
+
+> **gelato**: `string`
+
+Label for a Gelato Task ID.
+
+#### original
+
+> **original**: `string`
+
+Label for the original transaction hash (before replacement).
+
+#### recentBlockhash
+
+> **recentBlockhash**: `string`
+
+Special label for the most recent blockhash. This is used for the "Recent Blockhash" field in the transaction
+details modal.
+
+#### replaced
+
+> **replaced**: `string`
+
+Label for the new transaction hash that replaced the original.
+
+#### safe
+
+> **safe**: `string`
+
+Label for a Safe Transaction Hash.
+
+#### solana
+
+> **solana**: `string`
+
+Special label for the Solana signature. This is used for the "Signature" field in the transaction details modal.
+
+***
+
+### statuses
+
+> **statuses**: `object`
+
+Defined in: [i18n/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L33)
+
+Standard labels for transaction statuses.
+
+#### confirmationsLabel
+
+> **confirmationsLabel**: `string`
+
+Text for a confirmation count label, e.g., "1 confirmation" or "10 confirmations"
+
+#### failed
+
+> **failed**: `string`
+
+Text for a failed transaction.
+
+#### pending
+
+> **pending**: `string`
+
+Text for a pending transaction.
+
+#### replaced
+
+> **replaced**: `string`
+
+Text for a replaced transaction (e.g., sped up).
+
+#### reverted
+
+> **reverted**: `string`
+
+Text for a reverted transaction.
+
+#### success
+
+> **success**: `string`
+
+Text for a successful transaction.
+
+#### unknown
+
+> **unknown**: `string`
+
+Text for an unknown or indeterminate status.
+
+***
+
+### toast
+
+> **toast**: `object`
+
+Defined in: [i18n/types.ts:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L28)
+
+Labels related to toast notifications.
+
+#### openTransaction
+
+> **openTransaction**: `string`
+
+Text for the button/link within a toast to open the wallet modal.
+
+***
+
+### trackedTxButton
+
+> **trackedTxButton**: `object`
+
+Defined in: [i18n/types.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L127)
+
+Labels for the main transaction action button.
+
+#### failed
+
+> **failed**: `string`
+
+Text shown on the button if the transaction fails to initialize.
+
+#### loading
+
+> **loading**: `string`
+
+Text shown on the button while the transaction is initializing.
+
+#### replaced
+
+> **replaced**: `string`
+
+Text shown on the button if the transaction replaced to initialize.
+
+#### succeed
+
+> **succeed**: `string`
+
+Text shown on the button after the transaction succeeds.
+
+***
+
+### trackingModal
+
+> **trackingModal**: `object`
+
+Defined in: [i18n/types.ts:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L105)
+
+Labels for the detailed transaction tracking modal.
+
+#### allTransactions
+
+> **allTransactions**: `string`
+
+Label for the button to open the main wallet info modal.
+
+#### close
+
+> **close**: `string`
+
+Label for the close button.
+
+#### processing
+
+> **processing**: `string`
+
+Text indicating that the transaction is being processed.
+
+#### progressIndicator
+
+> **progressIndicator**: `object`
+
+Labels for the step-by-step progress indicator.
+
+##### progressIndicator.created
+
+> **created**: `string`
+
+Label for the "transaction created" step.
+
+##### progressIndicator.processing
+
+> **processing**: `string`
+
+Label for the "processing" step.
+
+##### progressIndicator.succeed
+
+> **succeed**: `string`
+
+Label for the "succeed" or final step.
+
+#### retry
+
+> **retry**: `string`
+
+Label for a button to retry a transaction.
+
+#### title
+
+> **title**: `string`
+
+The main title of the tracking modal.
+
+***
+
+### transactionDetails
+
+> **transactionDetails**: `object`
+
+Defined in: [i18n/types.ts:151](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L151)
+
+Labels for the detailed transaction view.
+
+#### actualFee
+
+> **actualFee**: `string`
+
+Label for the Actual Fee.
+
+#### adapter
+
+> **adapter**: `string`
+
+Label for the adapter type.
+
+#### confirmations
+
+> **confirmations**: `string`
+
+Label for the confirmations count.
+
+#### connector
+
+> **connector**: `string`
+
+Label for the connector type.
+
+#### context
+
+> **context**: `string`
+
+Label for the context block.
+
+#### contextTitle
+
+> **contextTitle**: `string`
+
+Label for the Context section title.
+
+#### contractAddress
+
+> **contractAddress**: `string`
+
+Label for the Contract Address.
+
+#### descriptionContext
+
+> **descriptionContext**: `string`
+
+Label for the Description Context.
+
+#### errorContext
+
+> **errorContext**: `string`
+
+Label for the Error Context.
+
+#### executionData
+
+> **executionData**: `string`
+
+Label for the execution data section.
+
+#### fee
+
+> **fee**: `string`
+
+Label for the Fee.
+
+#### finishedAt
+
+> **finishedAt**: `string`
+
+Label for the completion time.
+
+#### from
+
+> **from**: `string`
+
+Label for the origin address.
+
+#### fullPayload
+
+> **fullPayload**: `string`
+
+Label for the Full Payload.
+
+#### hash
+
+> **hash**: `string`
+
+Label for the transaction hash.
+
+#### inputData
+
+> **inputData**: `string`
+
+Label for the raw input data.
+
+#### instructions
+
+> **instructions**: `string`
+
+Label for the Instructions.
+
+#### maxFee
+
+> **maxFee**: `string`
+
+Label for the max fee per gas.
+
+#### maxPriorityFee
+
+> **maxPriorityFee**: `string`
+
+Label for the max priority fee per gas.
+
+#### metadata
+
+> **metadata**: `string`
+
+Label for the metadata section.
+
+#### network
+
+> **network**: `string`
+
+Label for the network name.
+
+#### nonce
+
+> **nonce**: `string`
+
+Label for the nonce.
+
+#### payload
+
+> **payload**: `string`
+
+Label for the payload data section.
+
+#### recentBlockhash
+
+> **recentBlockhash**: `string`
+
+Label for the Recent Blockhash.
+
+#### replacedHash
+
+> **replacedHash**: `string`
+
+Label for the Replaced Hash.
+
+#### slot
+
+> **slot**: `string`
+
+Label for the Slot.
+
+#### solanaTitle
+
+> **solanaTitle**: `string`
+
+Label for the Solana section title.
+
+#### starknetTitle
+
+> **starknetTitle**: `string`
+
+Label for the Starknet section title.
+
+#### submittedAt
+
+> **submittedAt**: `string`
+
+Label for the submission time.
+
+#### subtitle
+
+> **subtitle**: `string`
+
+Subtitle for the detailed view.
+
+#### syncStatus
+
+> **syncStatus**: `object`
+
+Labels for the sync status indicator.
+
+##### syncStatus.pending
+
+> **pending**: `string`
+
+Badge shown while the transaction is not yet saved on the server (`syncStatus: 'pending-sync'`).
+
+##### syncStatus.pendingTooltip
+
+> **pendingTooltip**: `string`
+
+Tooltip of the `pending` badge.
+
+##### syncStatus.synced
+
+> **synced**: `string`
+
+Badge shown when the transaction is saved on the server (`syncStatus: 'synced'`).
+
+##### syncStatus.syncedTooltip
+
+> **syncedTooltip**: `string`
+
+Tooltip of the `synced` badge.
+
+#### title
+
+> **title**: `string`
+
+Main title for the detailed view.
+
+#### titleContext
+
+> **titleContext**: `string`
+
+Label for the Title Context.
+
+#### to
+
+> **to**: `string`
+
+Label for the recipient address.
+
+#### tracker
+
+> **tracker**: `string`
+
+Label for the tracker name.
+
+#### txKey
+
+> **txKey**: `string`
+
+Label for the internal transaction key.
+
+#### value
+
+> **value**: `string`
+
+Label for the raw value.
+
+***
+
+### transactionsModal
+
+> **transactionsModal**: `object`
+
+Defined in: [i18n/types.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L12)
+
+Labels for the main wallet information modal.
+
+#### history
+
+> **history**: `object`
+
+Labels of the transaction history.
+
+##### history.connectWalletMessage
+
+> **connectWalletMessage**: `string`
+
+The message displayed when the user needs to connect a wallet.
+
+##### history.connectWalletTitle
+
+> **connectWalletTitle**: `string`
+
+The title displayed when the user needs to connect a wallet to see history.
+
+##### history.noTransactionsMessage
+
+> **noTransactionsMessage**: `string`
+
+The message displayed when there are no transactions to show.
+
+##### history.noTransactionsTitle
+
+> **noTransactionsTitle**: `string`
+
+The title displayed when the connected wallet has no transaction history.
+
+##### history.title
+
+> **title**: `string`
+
+The title for the transaction history section.
+
+***
+
+### txError
+
+> **txError**: `object`
+
+Defined in: [i18n/types.ts:83](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L83)
+
+Labels for the transaction error block.
+
+#### copied
+
+> **copied**: `string`
+
+Confirmation text shown after copying an error message.
+
+#### title
+
+> **title**: `string`
+
+The title for the error details section.
+
+***
+
+### txInfo
+
+> **txInfo**: `object`
+
+Defined in: [i18n/types.ts:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L74)
+
+Labels for the transaction information block.
+
+#### network
+
+> **network**: `string`
+
+Label for the network name.
+
+#### slot
+
+> **slot**: `string`
+
+Slot number for the transaction. This is used for the "Slot" field in the transaction details modal.
+
+#### started
+
+> **started**: `string`
+
+Label indicating when the transaction was started.
+
+***
+
+### validationError
+
+> **validationError**: `object`
+
+Defined in: [i18n/types.ts:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L94)
+
+Labels for the pre-submission validation error toast.
+This toast fires when `executeTxAction` throws before the transaction
+is added to the pool (e.g., validation failure, `beforeTxProcess` rejection).
+
+#### copied
+
+> **copied**: `string`
+
+Label for the copy-error button after a successful copy.
+
+#### copy
+
+> **copy**: `string`
+
+Label for the copy-error button before it is clicked.
+
+#### field
+
+> **field**: `string`
+
+Prefix label for the field that caused the validation failure, e.g. "Field: title".
+
+#### title
+
+> **title**: `string`
+
+The main title shown in the toast header.

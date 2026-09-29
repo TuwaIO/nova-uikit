@@ -1,0 +1,89 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/ConnectingProps" />
+
+# ConnectingProps
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:366](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L366)
+
+Props for the [Connecting](?path=/docs/packages-nova-connect-components-variables-connecting--docs) component.
+
+## Properties
+
+### activeConnector
+
+> **activeConnector**: `string` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:370](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L370)
+
+The wallet being connected, as `formatConnectorName` of `@tuwaio/orbit-core` returns it (for example `metamask`)
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:382](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L382)
+
+Classes added to the default container classes (ignored when `classNames.container` is set)
+
+***
+
+### connectors
+
+> **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:374](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L374)
+
+Wallets with their connectors (the icon comes from the wallet matching `activeConnector`)
+
+***
+
+### customErrorMessage?
+
+> `optional` **customErrorMessage?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:378](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L378)
+
+Shows the `error` state with this heading
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`ConnectingCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectingcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:384](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L384)
+
+Customization options
+
+***
+
+### isConnected
+
+> **isConnected**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:376](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L376)
+
+Whether the wallet connection is successfully established
+
+***
+
+### selectedAdapter
+
+> **selectedAdapter**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:372](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L372)
+
+Selected orbit adapter for the connection
+
+***
+
+### showDetailedError?
+
+> `optional` **showDetailedError?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:380](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L380)
+
+Shows `customErrorMessage` under the heading and the store error as JSON (default: `false`)

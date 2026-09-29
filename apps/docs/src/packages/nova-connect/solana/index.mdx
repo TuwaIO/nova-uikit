@@ -1,0 +1,14 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/solana/Overview" />
+
+# solana
+
+The Solana watcher of Satellite Connect and the Solana types, imported from `@tuwaio/nova-connect/solana`. Import this
+entry point in an app with Solana wallets; the root entry point never imports the Solana packages. Importing it:
+
+- registers the Solana chain helpers of `@tuwaio/orbit-solana` for the chain lists of Nova Connect (without it, the
+  lists have only the clusters of `solanaRPCUrls`);
+- types `solanaRPCUrls` of `NovaConnectProvider` with the cluster monikers of `@tuwaio/orbit-solana`;
+- adds `SolanaConnection` and `ConnectorSolana` from `@tuwaio/satellite-solana` to `AllConnections` and
+  `AllConnectors` of `@tuwaio/satellite-react`.

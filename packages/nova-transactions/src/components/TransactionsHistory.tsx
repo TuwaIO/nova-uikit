@@ -11,11 +11,21 @@ import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
-type CustomPlaceholderProps = { title: string; message: string; className?: string };
+/** Props of the placeholder of {@link TransactionsHistory} (no wallet connected, or no transactions). */
+export type TransactionsHistoryPlaceholderProps = {
+  /** The placeholder title. */
+  title: string;
+  /** The placeholder message. */
+  message: string;
+  /** Classes of the placeholder. */
+  className?: string;
+};
 
 /** Props exposed to a custom Loader component */
 export type TransactionsHistoryLoaderProps = {
+  /** Classes from `customization.classNames.loaderContainer`. */
   className?: string;
+  /** Classes from `customization.classNames.loaderIcon`. */
   iconClassName?: string;
 };
 
@@ -87,7 +97,7 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
   /** Custom components */
   components?: {
     /** Custom placeholder component */
-    Placeholder?: ComponentType<CustomPlaceholderProps>;
+    Placeholder?: ComponentType<TransactionsHistoryPlaceholderProps>;
     /** Custom history item component */
     HistoryItem?: ComponentType<TransactionHistoryItemProps<T>>;
     /** Custom loader component rendered at the bottom during pagination loading */
@@ -97,11 +107,18 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
   detailsCustomization?: TransactionDetailsCustomization;
 };
 
+/**
+ * Props of {@link TransactionsHistory}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionsHistoryProps<T extends Transaction> = Pick<
   NovaTransactionsProviderProps<T>,
   'adapter' | 'transactionsPool' | 'connectedWalletAddress'
 > & {
+  /** Classes of the list. */
   className?: string;
+  /** Class names and replacement components for the parts of the list and of the details view. */
   customization?: TransactionsHistoryCustomization<T>;
   /** Pagination state for infinite scroll. Uses TxInMemoryPagination from @tuwaio/pulsar-core. */
   pagination?: TxInMemoryPagination;
@@ -168,7 +185,7 @@ function HistoryPlaceholder({
   message,
   className,
   classNames,
-}: CustomPlaceholderProps & { classNames?: { title?: string; message?: string } }) {
+}: TransactionsHistoryPlaceholderProps & { classNames?: { title?: string; message?: string } }) {
   return (
     <div
       className={cn(
@@ -191,6 +208,18 @@ function HistoryPlaceholder({
   );
 }
 
+/**
+ * The transactions of the connected wallet (`selectAllTransactionsByActiveWallet` from `@tuwaio/pulsar-core`), newest
+ * first, with a placeholder when no wallet is connected or there are no transactions. Selecting an item opens
+ * {@link TransactionDetails} (when `canViewDetails` is `true`; `initialTxKey` opens one directly). With `pagination`,
+ * it
+ * calls `pagination.fetchNextPage(connectedWalletAddress)` when the end of the list becomes visible (an
+ * `IntersectionObserver`) and shows a short error indicator when loading a page fails.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionsHistoryProps}.
+ * @returns The list, or the details of the selected transaction.
+ */
 export function TransactionsHistory<T extends Transaction>({
   adapter,
   connectedWalletAddress,

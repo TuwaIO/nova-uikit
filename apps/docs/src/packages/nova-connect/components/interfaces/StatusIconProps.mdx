@@ -1,0 +1,81 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/StatusIconProps" />
+
+# StatusIconProps
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L160)
+
+Props of [StatusIcon](?path=/docs/packages-nova-connect-components-variables-statusicon--docs). The other props are passed to the `framer-motion` container.
+
+## Extends
+
+- `Omit`\<`HTMLMotionProps`\<`"div"`\>, `"children"` \| `"initial"` \| `"animate"` \| `"exit"` \| `"variants"` \| `"transition"` \| `"style"`\>
+
+## Properties
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L171)
+
+Custom aria-label for accessibility
+
+#### Overrides
+
+`Omit.aria-label`
+
+***
+
+### children
+
+> **children**: `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L169)
+
+Path data (`d`) of the icon, as a string; other children are ignored.
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L173)
+
+Custom CSS classes for the container
+
+#### Overrides
+
+`Omit.className`
+
+***
+
+### colorVar
+
+> **colorVar**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:167](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L167)
+
+Color name: the icon uses `--tuwa-<colorVar>-text` (for example `success`, `error`).
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`StatusIconCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-statusiconcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:175](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L175)
+
+Customization options
+
+***
+
+### txStatus
+
+> **txStatus**: `"replaced"` \| `"succeed"` \| `"failed"`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:165](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L165)
+
+Transaction status type

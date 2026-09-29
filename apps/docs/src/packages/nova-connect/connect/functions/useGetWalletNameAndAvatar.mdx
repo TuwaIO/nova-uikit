@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useGetWalletNameAndAvatar" />
+
+# useGetWalletNameAndAvatar()
+
+> **useGetWalletNameAndAvatar**(`options`): [`WalletNameAndAvatarData`](?path=/docs/packages-nova-connect-connect-interfaces-walletnameandavatardata--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L66)
+
+Resolves the name (ENS on EVM, SNS on Solana) and its avatar for the active wallet with `getName` and `getAvatar`
+of its Satellite adapter, which send requests to the name service. It resolves again when the address or the
+adapter changes, and cancels the previous lookup. Without a name it returns the shortened address.
+
+## Parameters
+
+### options
+
+[`UseGetWalletNameAndAvatarOptions`](?path=/docs/packages-nova-connect-connect-interfaces-usegetwalletnameandavataroptions--docs)
+
+See [UseGetWalletNameAndAvatarOptions](?path=/docs/packages-nova-connect-connect-interfaces-usegetwalletnameandavataroptions--docs).
+
+## Returns
+
+[`WalletNameAndAvatarData`](?path=/docs/packages-nova-connect-connect-interfaces-walletnameandavatardata--docs)
+
+See [WalletNameAndAvatarData](?path=/docs/packages-nova-connect-connect-interfaces-walletnameandavatardata--docs).
+
+## Example
+
+```tsx
+import { useGetWalletNameAndAvatar } from '@tuwaio/nova-connect/hooks';
+
+export function WalletInfo() {
+  const { ensAvatar, ensNameAbbreviated, isLoading, error, retry } = useGetWalletNameAndAvatar({});
+
+  if (isLoading) return <p>Resolving name...</p>;
+  if (error) return <button onClick={retry}>Retry</button>;
+
+  return (
+    <p>
+      {ensAvatar && <img src={ensAvatar} alt="" width={24} height={24} />}
+      {ensNameAbbreviated}
+    </p>
+  );
+}
+```

@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/StarsBackground" />
+
+# StarsBackground()
+
+> **StarsBackground**(`props`): `Element`
+
+Defined in: [components/StarsBackground.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StarsBackground.tsx#L13)
+
+An animated background of twinkling stars, drawn as SVG circles with CSS animations. It fills its positioned parent
+(`absolute`, `inset-0`); the stars are placed at random over the window size after mount, so nothing is rendered on
+the server. Nova Connect uses it in the "about wallets" and "get a wallet" screens of the connect modal.
+
+## Parameters
+
+### props
+
+The background props.
+
+#### starsCount?
+
+`number`
+
+Number of stars. Defaults to `200`.
+
+## Returns
+
+`Element`
+
+The background element.

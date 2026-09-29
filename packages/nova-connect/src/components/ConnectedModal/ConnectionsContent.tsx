@@ -20,442 +20,659 @@ import {
   recentlyConnectedConnectorsListHelpers,
   setChainId,
 } from '@tuwaio/orbit-core';
-import {
-  ComponentPropsWithoutRef,
-  ComponentType,
-  forwardRef,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
-import { InitialChains } from '../../types';
+import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon } from '../WalletIcon';
 
 // --- Types for Customization ---
 
-type CustomContainerProps = {
+/**
+ * Props for a custom container.
+ */
+export type ConnectionsContentContainerProps = {
+  /** Classes from `classNames.container` or the defaults (with `classNames.emptyState` in the empty state) */
   className?: string;
+  /** The sections and the add wallet button, or the empty state message */
   children: ReactNode;
+  /** Whether there are no connections and no recent wallets */
   isEmpty?: boolean;
+  /** Number of connected wallets */
   connectionsCount?: number;
+  /** Number of recent wallets shown */
   recentCount?: number;
+  /** `region` (not set in the empty state) */
   role?: string;
+  /** `labels.containerAriaLabel` or the `walletConnectionsManager` label (not set in the empty state) */
   'aria-label'?: string;
+  /** `config.testIds.container` */
   'data-testid'?: string;
+  /** Keyboard shortcuts (see `config.enableKeyboardShortcuts`); pass it to the container element */
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  /** Pass it to the container element: `config.autoFocus` focuses its first interactive element */
+  ref?: React.Ref<HTMLDivElement>;
 };
 
-type CustomSectionHeaderProps = {
-  title: string;
-  count?: number;
-  className?: string;
-  'aria-level'?: number;
-};
-
-type CustomActiveSectionProps = {
-  className?: string;
+/**
+ * Props for a custom section of the connected wallets.
+ */
+export type ConnectionsContentActiveSectionProps = {
+  /** The row of the active wallet and the rows of the other connected wallets */
   children: ReactNode;
+  /** Number of connected wallets */
   count: number;
-  labels?: Record<string, string>;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.activeSectionTitle` */
     title?: string;
+    /** From `classNames.activeSectionWrapper` */
     wrapper?: string;
   };
 };
 
-type CustomRecentSectionProps = {
-  className?: string;
+/**
+ * Props for a custom section of the recent wallets.
+ */
+export type ConnectionsContentRecentSectionProps = {
+  /** The rows of the recent wallets */
   children: ReactNode;
-  count?: number;
-  labels?: Record<string, string>;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.recentSectionTitle` */
     title?: string;
+    /** From `classNames.recentSectionList` */
     list?: string;
   };
 };
 
-type CustomActiveRowProps = {
+/**
+ * Props for a custom row of the active wallet. The component also passes `isActive: true`.
+ */
+export type ConnectionsContentActiveRowProps = {
+  /** Connector type of the wallet */
   connectorType: ConnectorType;
+  /** The address shortened to `0x1234…abcd` */
   address: string;
+  /** The full address, copied by the copy button */
   fullAddress?: string;
+  /** Chain of the connection */
   chainId?: number | string;
+  /**
+   * Disconnects the wallet.
+   *
+   * @param e - The click event (propagation is stopped).
+   */
   onDisconnect: (e: React.MouseEvent) => void;
-  className?: string;
+  /** Explorer page of the address, `undefined` when the chain has no explorer */
   explorerLink?: string;
+  /** Wallet icon of the connection */
   icon?: string;
-  labels?: Record<string, string>;
-  isCopied?: boolean;
-  onCopy?: () => void;
-  onExplorer?: () => void;
+  /** The ENS or SNS name of the address, shortened, when it has one */
   displayName?: string;
   /** Granular classNames for sub-elements */
   classNames?: {
+    /** From `classNames.activeRowContainer` */
     container?: string;
+    /** From `classNames.activeRowBadge` */
     badge?: string;
+    /** From `classNames.activeRowContent` */
     content?: string;
+    /** From `classNames.activeRowWalletName` */
     walletName?: string;
+    /** From `classNames.activeRowConnectorName` */
     connectorName?: string;
+    /** From `classNames.activeRowActionsContainer` */
     actionsContainer?: string;
+    /** From `classNames.activeRowCopyButton` */
     copyButton?: string;
+    /** From `classNames.activeRowCopyIcon` */
     copyIcon?: string;
+    /** From `classNames.activeRowExplorerButton` */
     explorerButton?: string;
+    /** From `classNames.activeRowExplorerIcon` */
     explorerIcon?: string;
+    /** From `classNames.activeRowDisconnectButton` */
     disconnectButton?: string;
+    /** From `classNames.connectorIconWrapper` */
     iconWrapper?: string;
+    /** From `classNames.connectorIconBadge` */
     iconBadge?: string;
-  };
-};
-
-type CustomConnectedRowProps = {
-  connectorType: ConnectorType;
-  address: string;
-  chainId?: number | string;
-  onSwitch: () => void;
-  onDisconnect: (e: React.MouseEvent) => void;
-  className?: string;
-  icon?: string;
-  labels?: Record<string, string>;
-  isHovered?: boolean;
-  /** Granular classNames for sub-elements */
-  classNames?: {
-    container?: string;
-    switchIndicator?: string;
-    switchIcon?: string;
-    content?: string;
-    walletName?: string;
-    connectorName?: string;
-    disconnectButton?: string;
-    disconnectIcon?: string;
-    iconWrapper?: string;
-    iconBadge?: string;
-  };
-};
-
-type CustomRecentRowProps = {
-  connectorType: ConnectorType;
-  address: string;
-  timestamp: number;
-  onConnect?: () => void;
-  onRemove: (e: React.MouseEvent) => void;
-  className?: string;
-  icon?: string;
-  isConnecting?: boolean;
-  labels?: Record<string, string>;
-  /** Granular classNames for sub-elements */
-  classNames?: {
-    container?: string;
-    content?: string;
-    walletName?: string;
-    connectorName?: string;
-    actionsContainer?: string;
-    connectButton?: string;
-    connectSpinner?: string;
-    removeButton?: string;
-    removeIcon?: string;
-    iconWrapper?: string;
-    iconBadge?: string;
-  };
-};
-
-type CustomActionButtonProps = {
-  onClick: (e: React.MouseEvent) => void;
-  label: string;
-  icon?: ReactNode;
-  disabled?: boolean;
-  loading?: boolean;
-  className?: string;
-  'aria-label'?: string;
-  'aria-describedby'?: string;
-  variant?: 'primary' | 'secondary' | 'danger';
-};
-
-type CustomAddWalletButtonProps = {
-  onClick: () => void;
-  label: string;
-  className?: string;
-  disabled?: boolean;
-};
-
-type CustomEmptyStateProps = {
-  message: string;
-  className?: string;
-  /** Granular classNames for sub-elements */
-  classNames?: {
-    container?: string;
-    message?: string;
   };
 };
 
 /**
- * Customization options for ConnectionsContent component
+ * Props for a custom row of another connected wallet (click it to make it active). The component also passes
+ * `isActive: false`.
+ */
+export type ConnectionsContentConnectedRowProps = {
+  /** Connector type of the wallet */
+  connectorType: ConnectorType;
+  /** The address shortened to `0x1234…abcd` */
+  address: string;
+  /** Chain of the connection */
+  chainId?: number | string;
+  /** Makes this connection active (`switchConnection` of the Satellite store) */
+  onSwitch: () => void;
+  /**
+   * Disconnects the wallet.
+   *
+   * @param e - The click event.
+   */
+  onDisconnect: (e: React.MouseEvent) => void;
+  /** Wallet icon of the connection */
+  icon?: string;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    /** From `classNames.connectedRowContainer` */
+    container?: string;
+    /** From `classNames.connectedRowSwitchIndicator` */
+    switchIndicator?: string;
+    /** From `classNames.connectedRowSwitchIcon` */
+    switchIcon?: string;
+    /** From `classNames.connectedRowContent` */
+    content?: string;
+    /** From `classNames.connectedRowWalletName` */
+    walletName?: string;
+    /** From `classNames.connectedRowConnectorName` */
+    connectorName?: string;
+    /** From `classNames.connectedRowDisconnectButton` */
+    disconnectButton?: string;
+    /** From `classNames.connectedRowDisconnectIcon` */
+    disconnectIcon?: string;
+    /** From `classNames.connectorIconWrapper` */
+    iconWrapper?: string;
+    /** From `classNames.connectorIconBadge` */
+    iconBadge?: string;
+  };
+};
+
+/**
+ * Props for a custom row of a recently connected wallet.
+ */
+export type ConnectionsContentRecentRowProps = {
+  /** Connector type of the wallet */
+  connectorType: ConnectorType;
+  /** The last address of the wallet, shortened to `0x1234…abcd` */
+  address: string;
+  /** When the wallet was disconnected (`disconnectedTimestamp` of the recent list) */
+  timestamp: number;
+  /** Connects the wallet again; `undefined` when the store has no connector for it */
+  onConnect?: () => void;
+  /**
+   * Removes the wallet from the recent list.
+   *
+   * @param e - The click event (propagation is stopped).
+   */
+  onRemove: (e: React.MouseEvent) => void;
+  /** Wallet icon saved in the recent list */
+  icon?: string;
+  /** Whether this wallet is being connected */
+  isConnecting?: boolean;
+  /** Granular classNames for sub-elements */
+  classNames?: {
+    /** From `classNames.recentRowContainer` */
+    container?: string;
+    /** From `classNames.recentRowContent` */
+    content?: string;
+    /** From `classNames.recentRowWalletName` */
+    walletName?: string;
+    /** From `classNames.recentRowConnectorName` */
+    connectorName?: string;
+    /** From `classNames.recentRowActionsContainer` */
+    actionsContainer?: string;
+    /** From `classNames.recentRowConnectButton` */
+    connectButton?: string;
+    /** From `classNames.recentRowConnectSpinner` */
+    connectSpinner?: string;
+    /** From `classNames.recentRowRemoveButton` */
+    removeButton?: string;
+    /** From `classNames.recentRowRemoveIcon` */
+    removeIcon?: string;
+    /** From `classNames.connectorIconWrapper` */
+    iconWrapper?: string;
+    /** From `classNames.connectorIconBadge` */
+    iconBadge?: string;
+  };
+};
+
+/**
+ * Customization options of {@link ConnectionsContent}.
  */
 export type ConnectionsContentCustomization = {
-  /** Override container element props */
-  containerProps?: Partial<ComponentPropsWithoutRef<'div'>>;
   /** Custom components */
   components?: {
-    /** Custom container component */
-    Container?: ComponentType<CustomContainerProps>;
-    /** Custom section header component */
-    SectionHeader?: ComponentType<CustomSectionHeaderProps>;
+    /** Custom container component (forward `ref` and `onKeyDown` to the container element) */
+    Container?: ComponentType<ConnectionsContentContainerProps>;
     /** Custom active connectors section */
-    ActiveConnectorsSection?: ComponentType<CustomActiveSectionProps>;
+    ActiveConnectorsSection?: ComponentType<ConnectionsContentActiveSectionProps>;
     /** Custom recently connected section */
-    RecentlyConnectedSection?: ComponentType<CustomRecentSectionProps>;
+    RecentlyConnectedSection?: ComponentType<ConnectionsContentRecentSectionProps>;
     /** Custom active connector row */
-    ActiveConnectorRow?: ComponentType<CustomActiveRowProps>;
+    ActiveConnectorRow?: ComponentType<ConnectionsContentActiveRowProps>;
     /** Custom connected connector row */
-    ConnectedConnectorRow?: ComponentType<CustomConnectedRowProps>;
+    ConnectedConnectorRow?: ComponentType<ConnectionsContentConnectedRowProps>;
     /** Custom recently connected row */
-    RecentlyConnectedRow?: ComponentType<CustomRecentRowProps>;
-    /** Custom action button */
-    ActionButton?: ComponentType<CustomActionButtonProps>;
-    /** Custom add wallet button */
-    AddWalletButton?: ComponentType<CustomAddWalletButtonProps>;
-    /** Custom empty state */
-    EmptyState?: ComponentType<CustomEmptyStateProps>;
+    RecentlyConnectedRow?: ComponentType<ConnectionsContentRecentRowProps>;
   };
   /** Custom class name generators */
   classNames?: {
     // ─────────────────────────────────────────────────────────────────────
     // Container & Sections
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate container classes */
-    container?: (params: { isEmpty: boolean; connectionsCount: number; recentCount: number }) => string;
-    /** Function to generate empty state classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop (not in the empty
+     * state).
+     *
+     * @param params - The lists.
+     * @param params.connectionsCount - Number of connected wallets.
+     * @param params.recentCount - Number of recent wallets shown.
+     * @returns The classes.
+     */
+    container?: (params: { connectionsCount: number; recentCount: number }) => string;
+    /**
+     * Returns classes added to the container in the empty state.
+     *
+     * @returns The classes.
+     */
     emptyState?: () => string;
-    /** Function to generate empty state message classes */
+    /**
+     * Returns classes added to the empty state message.
+     *
+     * @returns The classes.
+     */
     emptyStateMessage?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Active Connectors Section
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate active section wrapper classes */
-    activeSection?: (params: { count: number }) => string;
-    /** Function to generate active section title classes */
+    /**
+     * Returns classes added to the title of the connected wallets section.
+     *
+     * @returns The classes.
+     */
     activeSectionTitle?: () => string;
-    /** Function to generate active section content wrapper classes */
+    /**
+     * Returns classes added to the box of the connected wallets.
+     *
+     * @returns The classes.
+     */
     activeSectionWrapper?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Recent Section
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate recent section wrapper classes */
-    recentSection?: (params: { count: number }) => string;
-    /** Function to generate recent section title classes */
+    /**
+     * Returns classes added to the title of the recent wallets section.
+     *
+     * @returns The classes.
+     */
     recentSectionTitle?: () => string;
-    /** Function to generate recent section list container classes */
+    /**
+     * Returns classes added to the scrollable list of recent wallets.
+     *
+     * @returns The classes.
+     */
     recentSectionList?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Active Connector Row (Primary/Active connection)
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate active row container classes */
+    /**
+     * Returns classes added to the row of the active wallet.
+     *
+     * @param params - The row.
+     * @param params.connectorType - Connector type of the wallet.
+     * @param params.hasExplorer - Whether the chain of the connection has a block explorer.
+     * @returns The classes.
+     */
     activeRowContainer?: (params: { connectorType: ConnectorType; hasExplorer: boolean }) => string;
-    /** Function to generate active badge classes */
+    /**
+     * Returns classes added to the "Active" badge.
+     *
+     * @returns The classes.
+     */
     activeRowBadge?: () => string;
-    /** Function to generate active row content wrapper classes */
+    /**
+     * Returns classes added to the icon and texts of the active row.
+     *
+     * @returns The classes.
+     */
     activeRowContent?: () => string;
-    /** Function to generate wallet name/address classes */
+    /**
+     * Returns classes added to the name or address of the active wallet.
+     *
+     * @returns The classes.
+     */
     activeRowWalletName?: () => string;
-    /** Function to generate connector name classes */
+    /**
+     * Returns classes added to the connector name of the active wallet.
+     *
+     * @returns The classes.
+     */
     activeRowConnectorName?: () => string;
-    /** Function to generate actions container classes */
+    /**
+     * Returns classes added to the copy and explorer buttons container.
+     *
+     * @returns The classes.
+     */
     activeRowActionsContainer?: () => string;
-    /** Function to generate copy button classes */
-    activeRowCopyButton?: (params: { isCopied: boolean }) => string;
-    /** Function to generate copy icon classes */
+    /**
+     * Returns classes added to the copy button.
+     *
+     * @returns The classes.
+     */
+    activeRowCopyButton?: () => string;
+    /**
+     * Returns classes added to the copy icon.
+     *
+     * @returns The classes.
+     */
     activeRowCopyIcon?: () => string;
-    /** Function to generate explorer button classes */
+    /**
+     * Returns classes added to the explorer button.
+     *
+     * @returns The classes.
+     */
     activeRowExplorerButton?: () => string;
-    /** Function to generate explorer icon classes */
+    /**
+     * Returns classes added to the explorer icon.
+     *
+     * @returns The classes.
+     */
     activeRowExplorerIcon?: () => string;
-    /** Function to generate disconnect button classes */
+    /**
+     * Returns classes added to the disconnect button of the active row.
+     *
+     * @returns The classes.
+     */
     activeRowDisconnectButton?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Connected Connector Row (Secondary connections)
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate connected row container classes */
+    /**
+     * Returns classes added to the row of another connected wallet.
+     *
+     * @param params - The row.
+     * @param params.connectorType - Connector type of the wallet.
+     * @returns The classes.
+     */
     connectedRowContainer?: (params: { connectorType: ConnectorType }) => string;
-    /** Function to generate switch indicator classes */
+    /**
+     * Returns classes added to the switch indicator (shown on hover).
+     *
+     * @returns The classes.
+     */
     connectedRowSwitchIndicator?: () => string;
-    /** Function to generate switch icon classes */
+    /**
+     * Returns classes added to the switch icon.
+     *
+     * @returns The classes.
+     */
     connectedRowSwitchIcon?: () => string;
-    /** Function to generate content wrapper classes */
+    /**
+     * Returns classes added to the icon and texts of the row.
+     *
+     * @returns The classes.
+     */
     connectedRowContent?: () => string;
-    /** Function to generate wallet address classes */
+    /**
+     * Returns classes added to the address of the wallet.
+     *
+     * @returns The classes.
+     */
     connectedRowWalletName?: () => string;
-    /** Function to generate connector name classes */
+    /**
+     * Returns classes added to the connector name of the wallet.
+     *
+     * @returns The classes.
+     */
     connectedRowConnectorName?: () => string;
-    /** Function to generate disconnect button classes */
+    /**
+     * Returns classes added to the disconnect button of the row.
+     *
+     * @returns The classes.
+     */
     connectedRowDisconnectButton?: () => string;
-    /** Function to generate disconnect icon classes */
+    /**
+     * Returns classes added to the disconnect icon of the row.
+     *
+     * @returns The classes.
+     */
     connectedRowDisconnectIcon?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Recently Connected Row
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate recent row container classes */
+    /**
+     * Returns classes added to the row of a recent wallet.
+     *
+     * @param params - The row.
+     * @param params.connectorType - Connector type of the wallet.
+     * @param params.isConnecting - Whether this wallet is being connected.
+     * @returns The classes.
+     */
     recentRowContainer?: (params: { connectorType: ConnectorType; isConnecting: boolean }) => string;
-    /** Function to generate recent row content wrapper classes */
+    /**
+     * Returns classes added to the icon and texts of the row.
+     *
+     * @returns The classes.
+     */
     recentRowContent?: () => string;
-    /** Function to generate wallet address classes */
+    /**
+     * Returns classes added to the address of the wallet.
+     *
+     * @returns The classes.
+     */
     recentRowWalletName?: () => string;
-    /** Function to generate connector name classes */
+    /**
+     * Returns classes added to the connector name of the wallet.
+     *
+     * @returns The classes.
+     */
     recentRowConnectorName?: () => string;
-    /** Function to generate actions wrapper classes */
+    /**
+     * Returns classes added to the buttons container.
+     *
+     * @returns The classes.
+     */
     recentRowActionsContainer?: () => string;
-    /** Function to generate connect button classes */
+    /**
+     * Returns classes added to the connect button.
+     *
+     * @param params - The row.
+     * @param params.isConnecting - Whether this wallet is being connected.
+     * @returns The classes.
+     */
     recentRowConnectButton?: (params: { isConnecting: boolean }) => string;
-    /** Function to generate connect button spinner classes */
+    /**
+     * Returns classes added to the spinner of the connect button.
+     *
+     * @returns The classes.
+     */
     recentRowConnectSpinner?: () => string;
-    /** Function to generate remove button classes */
+    /**
+     * Returns classes added to the remove button.
+     *
+     * @param params - The row.
+     * @param params.isConnecting - Whether this wallet is being connected.
+     * @returns The classes.
+     */
     recentRowRemoveButton?: (params: { isConnecting: boolean }) => string;
-    /** Function to generate remove icon classes */
+    /**
+     * Returns classes added to the remove icon.
+     *
+     * @returns The classes.
+     */
     recentRowRemoveIcon?: () => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Connector Icon
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate connector icon wrapper classes */
+    /**
+     * Returns classes added to the wallet icon of a row.
+     *
+     * @param params - The icon.
+     * @param params.size - Icon size in pixels (`40` in the active row, `32` in the others).
+     * @returns The classes.
+     */
     connectorIconWrapper?: (params: { size: number }) => string;
-    /** Function to generate network badge wrapper classes */
+    /**
+     * Returns classes added to the network badge of the wallet icon.
+     *
+     * @param params - The badge.
+     * @param params.badgeSize - Badge size in pixels (`20` in the active row, `16` in the others).
+     * @returns The classes.
+     */
     connectorIconBadge?: (params: { badgeSize: number }) => string;
 
     // ─────────────────────────────────────────────────────────────────────
     // Add Wallet Button
     // ─────────────────────────────────────────────────────────────────────
-    /** Function to generate add wallet button classes */
-    addWalletButton?: (params: { disabled?: boolean }) => string;
+    /**
+     * Returns classes added to the "Connect new wallet" button.
+     *
+     * @returns The classes.
+     */
+    addWalletButton?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler before switching connection */
+    /**
+     * Called before a connected wallet becomes active. Return `false` to cancel.
+     *
+     * @param connectorType - The wallet to switch to.
+     * @returns Whether to switch.
+     */
     onBeforeSwitch?: (connectorType: ConnectorType) => boolean | Promise<boolean>;
-    /** Custom handler after switching connection */
+    /**
+     * Called after `switchConnection` of the Satellite store resolves.
+     *
+     * @param connectorType - The wallet that became active.
+     */
     onAfterSwitch?: (connectorType: ConnectorType) => void;
-    /** Custom handler when switch fails */
+    /**
+     * Called when switching throws (the error is also logged).
+     *
+     * @param connectorType - The wallet.
+     * @param error - The error.
+     */
     onSwitchError?: (connectorType: ConnectorType, error: Error) => void;
-    /** Custom handler before disconnect */
+    /**
+     * Called before a wallet is disconnected. Return `false` to cancel.
+     *
+     * @param connectorType - The wallet to disconnect.
+     * @returns Whether to disconnect.
+     */
     onBeforeDisconnect?: (connectorType: ConnectorType) => boolean | Promise<boolean>;
-    /** Custom handler after disconnect */
+    /**
+     * Called right after `disconnect` of the Satellite store is called (without waiting for it).
+     *
+     * @param connectorType - The disconnected wallet.
+     */
     onAfterDisconnect?: (connectorType: ConnectorType) => void;
-    /** Custom handler when disconnect fails */
+    /**
+     * Called when the disconnect call throws synchronously (the error is also logged).
+     *
+     * @param connectorType - The wallet.
+     * @param error - The error.
+     */
     onDisconnectError?: (connectorType: ConnectorType, error: Error) => void;
-    /** Custom handler before connecting recent */
+    /**
+     * Called before a recent wallet is connected again. Return `false` to cancel.
+     *
+     * @param connectorType - The wallet to connect.
+     * @returns Whether to connect.
+     */
     onBeforeConnect?: (connectorType: ConnectorType) => boolean | Promise<boolean>;
-    /** Custom handler after connecting recent */
+    /**
+     * Called after `connect` of the Satellite store resolves (the store keeps connection errors in `connectionError`).
+     *
+     * @param connectorType - The wallet.
+     */
     onAfterConnect?: (connectorType: ConnectorType) => void;
-    /** Custom handler when connect fails */
+    /**
+     * Called when connecting throws (the error is also logged).
+     *
+     * @param connectorType - The wallet.
+     * @param error - The error.
+     */
     onConnectError?: (connectorType: ConnectorType, error: Error) => void;
-    /** Custom handler before removing recent */
-    onBeforeRemove?: (connectorType: ConnectorType) => boolean | Promise<boolean>;
-    /** Custom handler after removing recent */
-    onAfterRemove?: (connectorType: ConnectorType) => void;
-    /** Custom handler for copy address */
-    onCopyAddress?: (address: string, connectorType: ConnectorType) => void;
-    /** Custom handler for explorer click */
-    onExplorerClick?: (url: string, address: string, connectorType: ConnectorType) => void;
-    /** Custom handler for add wallet click */
-    onAddWalletClick?: () => void;
   };
   /** Custom text and ARIA labels */
   labels?: {
-    /** Custom empty state message */
+    /** Message of the empty state (default: the `noConnectionsFound` label) */
     emptyStateMessage?: string;
-    /** Custom active section title */
-    activeSectionTitle?: string;
-    /** Custom recent section title */
-    recentSectionTitle?: string;
-    /** Custom disconnect button label */
-    disconnectLabel?: string;
-    /** Custom switch button label */
-    switchLabel?: string;
-    /** Custom connect button label */
-    connectLabel?: string;
-    /** Custom remove button label */
-    removeLabel?: string;
-    /** Custom copy button label */
-    copyLabel?: string;
-    /** Custom copied success label */
-    copiedLabel?: string;
-    /** Custom explorer button label */
-    explorerLabel?: string;
-    /** Custom add wallet button label */
-    addWalletLabel?: string;
-    /** Custom ARIA label for container */
+    /** ARIA label of the container (default: the `walletConnectionsManager` label) */
     containerAriaLabel?: string;
-    /** Custom ARIA label for active section */
-    activeSectionAriaLabel?: string;
-    /** Custom ARIA label for recent section */
-    recentSectionAriaLabel?: string;
-    /** Custom ARIA description for switch action */
-    switchAriaDescription?: string;
-    /** Custom ARIA description for disconnect action */
-    disconnectAriaDescription?: string;
-    /** Custom ARIA description for connect action */
-    connectAriaDescription?: string;
-    /** Custom ARIA description for remove action */
-    removeAriaDescription?: string;
-    /** Custom ARIA live region announcement for switch */
+    /**
+     * Returns the screen reader announcement after a switch (default: the `switchedToWallet` label).
+     *
+     * @param walletName - The wallet name.
+     * @returns The announcement.
+     */
     switchAnnouncement?: (walletName: string) => string;
-    /** Custom ARIA live region announcement for disconnect */
+    /**
+     * Returns the screen reader announcement after a disconnect (default: the `disconnectedWallet` label).
+     *
+     * @param walletName - The wallet name.
+     * @returns The announcement.
+     */
     disconnectAnnouncement?: (walletName: string) => string;
-    /** Custom ARIA live region announcement for connect */
+    /**
+     * Returns the screen reader announcement after a recent wallet connects (default: the `connectedWallet` label).
+     *
+     * @param walletName - The wallet name.
+     * @returns The announcement.
+     */
     connectAnnouncement?: (walletName: string) => string;
   };
   /** Configuration options */
   config?: {
-    /** Whether to disable animations */
-    disableAnimation?: boolean;
-    /** Whether to reduce motion for accessibility */
-    reduceMotion?: boolean;
-    /** Whether to show empty state */
+    /** Whether to show the empty state; `false` renders nothing without wallets (default: `true`) */
     showEmptyState?: boolean;
-    /** Whether to show add wallet button */
+    /** Whether to show the "Connect new wallet" button, which opens the connect modal (default: `true`) */
     showAddWalletButton?: boolean;
-    /** Whether to show recently connected section */
+    /** Whether to show the recent wallets (default: `true`) */
     showRecentSection?: boolean;
-    /** Whether to enable keyboard shortcuts */
+    /**
+     * Whether keyboard shortcuts work while the focus is inside the screen: Ctrl or Cmd with ArrowDown or ArrowUp
+     * switches to the next or previous connection, Ctrl or Cmd with Backspace disconnects the active wallet (default:
+     * `true`)
+     */
     enableKeyboardShortcuts?: boolean;
-    /** Custom keyboard shortcuts map */
+    /** Keys used with Ctrl or Cmd (`KeyboardEvent.key` values) */
     keyboardShortcuts?: {
-      /** Key for switching to next connection */
+      /** Key for switching to next connection (default: `ArrowDown`) */
       nextConnection?: string;
-      /** Key for switching to previous connection */
+      /** Key for switching to previous connection (default: `ArrowUp`) */
       prevConnection?: string;
-      /** Key for disconnecting active wallet */
+      /** Key for disconnecting active wallet (default: `Backspace`) */
       disconnect?: string;
     };
-    /** Maximum recent connections to show */
+    /** Maximum recent connections to show (default: `10`) */
     maxRecentConnections?: number;
-    /** Whether to auto-focus first interactive element */
+    /** Whether to focus the first interactive element on mount (default: `false`) */
     autoFocus?: boolean;
     /** Custom test IDs */
     testIds?: {
+      /** `data-testid` of the container */
       container?: string;
-      activeSection?: string;
-      recentSection?: string;
-      addWalletButton?: string;
     };
   };
 };
 
+/**
+ * Props for the {@link ConnectionsContent} component.
+ */
 export interface ConnectionsContentProps {
-  /** Additional CSS classes */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
   /** Customization options */
   customization?: ConnectionsContentCustomization;
-  /** App chains configuration for explorer links */
-  appChains?: InitialChains['appChains'];
 }
 
 interface ConnectorRowProps {
@@ -472,7 +689,7 @@ interface ConnectorRowProps {
   /** Optional display name (e.g. ENS name) to show instead of address */
   displayName?: string;
   /** Granular classNames for sub-elements - union of active and connected row classNames */
-  classNames?: CustomActiveRowProps['classNames'] & CustomConnectedRowProps['classNames'];
+  classNames?: ConnectionsContentActiveRowProps['classNames'] & ConnectionsContentConnectedRowProps['classNames'];
 }
 
 interface RecentlyConnectedRowProps {
@@ -485,7 +702,7 @@ interface RecentlyConnectedRowProps {
   icon?: string;
   isConnecting?: boolean;
   /** Granular classNames for sub-elements */
-  classNames?: CustomRecentRowProps['classNames'];
+  classNames?: ConnectionsContentRecentRowProps['classNames'];
 }
 
 // --- Helper Functions ---
@@ -558,7 +775,7 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
 
 // --- Default Components ---
 
-const DefaultContainer = forwardRef<HTMLDivElement, CustomContainerProps>(
+const DefaultContainer = forwardRef<HTMLDivElement, ConnectionsContentContainerProps>(
   (
     {
       className,
@@ -583,11 +800,11 @@ const DefaultContainer = forwardRef<HTMLDivElement, CustomContainerProps>(
 );
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, CustomActiveSectionProps>(
-  ({ className, children, count, classNames, ...props }, ref) => {
+const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, ConnectionsContentActiveSectionProps>(
+  ({ children, count, classNames }, ref) => {
     const labels = useNovaConnectLabels();
     return (
-      <div ref={ref} className={className} {...props}>
+      <div ref={ref}>
         <h3
           className={cn(
             'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
@@ -610,11 +827,11 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, CustomActiveSe
 );
 DefaultActiveConnectorsSection.displayName = 'DefaultActiveConnectorsSection';
 
-const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, CustomRecentSectionProps>(
-  ({ className, children, classNames, ...props }, ref) => {
+const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, ConnectionsContentRecentSectionProps>(
+  ({ children, classNames }, ref) => {
     const labels = useNovaConnectLabels();
     return (
-      <div ref={ref} className={className} {...props}>
+      <div ref={ref}>
         <h3
           className={cn(
             'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
@@ -728,10 +945,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                   'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:font-mono novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                   classNames?.copyButton,
                 )}
-                title="Copy Address"
+                title={labels.copyAddress}
               >
                 <DocumentDuplicateIcon className={cn('novacon:h-3 novacon:w-3', classNames?.copyIcon)} />
-                {isCopied ? labels.copied : 'Copy'}
+                {isCopied ? labels.copied : labels.copy}
               </button>
               {explorerLink && (
                 <button
@@ -740,10 +957,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                     'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:font-mono novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                     classNames?.explorerButton,
                   )}
-                  title="View on Explorer"
+                  title={labels.viewOnExplorer}
                 >
                   <ArrowTopRightOnSquareIcon className={cn('novacon:h-3 novacon:w-3', classNames?.explorerIcon)} />
-                  Explorer
+                  {labels.explorer}
                 </button>
               )}
             </div>
@@ -922,7 +1139,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
               classNames?.removeButton,
             )}
-            aria-label={`${labels.close} ${connectorType}`}
+            aria-label={formatLabel(labels.removeFromRecent, { name: getFormattedConnectorName(connectorType) })}
           >
             <TrashIcon className={cn('novacon:h-4 novacon:w-4', classNames?.removeIcon)} />
           </button>
@@ -933,12 +1150,31 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
 );
 DefaultRecentlyConnectedRow.displayName = 'DefaultRecentlyConnectedRow';
 
+const DEFAULT_KEYBOARD_SHORTCUTS = {
+  nextConnection: 'ArrowDown',
+  prevConnection: 'ArrowUp',
+  disconnect: 'Backspace',
+};
+
 /**
- * ConnectionsContent displays all connected wallets and allows switching between them.
+ * The "Connections" screen of the connected modal: the active wallet (with copy, explorer and disconnect), the other
+ * connected wallets (click one to make it active), the recently connected wallets and a button that opens the connect
+ * modal.
+ *
+ * The recent wallets come from `localStorage` (`orbit-core:recentlyConnectedConnectorsListHelpers`, through
+ * `recentlyConnectedConnectorsListHelpers` of `@tuwaio/orbit-core`), without the connected ones. Removing one writes
+ * that key. Connecting one calls `connect` of the Satellite store with the first chain of its network in
+ * `appChains` or `solanaRPCUrls` of `NovaConnectProvider` (Ethereum Mainnet or Solana Mainnet without them); for the
+ * impersonated wallet it first saves the address to `satellite-connect:impersonatedAddress`. The explorer link opens
+ * in a new tab. Without wallets it shows the empty state, or nothing when `config.showEmptyState` is `false`.
+ *
+ * Keyboard shortcuts (`config.enableKeyboardShortcuts`) work while the focus is inside the screen.
+ *
+ * Props: {@link ConnectionsContentProps}.
  */
 export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ className, customization }) => {
   const labels = useNovaConnectLabels();
-  const { setIsConnectModalOpen } = useNovaConnect();
+  const { setIsConnectModalOpen, appChains, solanaRPCUrls } = useNovaConnect();
   const connections = useSatelliteConnectStore((store) => store.connections);
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const switchConnection = useSatelliteConnectStore((store) => store.switchConnection);
@@ -971,16 +1207,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
     testIds,
   } = customization?.config ?? {};
 
-  // Merge custom labels with defaults
-  const finalLabels = {
-    ...labels,
-    ...(customization?.labels && {
-      emptyState: customization.labels.emptyStateMessage ?? 'No connections found',
-      containerAriaLabel: customization.labels.containerAriaLabel ?? 'Wallet connections manager',
-      activeSectionAriaLabel: customization.labels.activeSectionAriaLabel ?? 'Active wallet connections',
-      recentSectionAriaLabel: customization.labels.recentSectionAriaLabel ?? 'Recently connected wallets',
-    }),
-  };
+  const emptyStateMessage = customization?.labels?.emptyStateMessage ?? labels.noConnectionsFound;
+  const containerAriaLabel = customization?.labels?.containerAriaLabel ?? labels.walletConnectionsManager;
 
   // Ref for container element for focus management
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1055,7 +1283,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         // Announce to screen readers
         const walletName = getFormattedConnectorName(connectorType);
         const announcement =
-          customization?.labels?.switchAnnouncement?.(walletName) ?? `Switched to ${walletName} wallet`;
+          customization?.labels?.switchAnnouncement?.(walletName) ??
+          formatLabel(labels.switchedToWallet, { name: walletName });
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -1070,14 +1299,14 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         }
       }
     },
-    [switchConnection, customization],
+    [switchConnection, customization, labels],
   );
 
   /**
    * Handle disconnecting a specific wallet with custom handlers and announcements
    */
   const handleDisconnect = useCallback(
-    async (connectorType: ConnectorType | undefined, event: React.MouseEvent) => {
+    async (connectorType: ConnectorType | undefined, event: React.SyntheticEvent) => {
       event.stopPropagation();
       if (!connectorType) return;
 
@@ -1093,7 +1322,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         // Announce to screen readers
         const walletName = getFormattedConnectorName(connectorType);
         const announcement =
-          customization?.labels?.disconnectAnnouncement?.(walletName) ?? `Disconnected ${walletName} wallet`;
+          customization?.labels?.disconnectAnnouncement?.(walletName) ??
+          formatLabel(labels.disconnectedWallet, { name: walletName });
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -1108,7 +1338,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         }
       }
     },
-    [disconnect, customization],
+    [disconnect, customization, labels],
   );
 
   /**
@@ -1127,9 +1357,12 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           }
         }
 
-        const adapter = getAdapterFromConnectorType(connectorType);
-        const networkIcon = getNetworkData(adapter)?.chain;
-        const chainId = networkIcon?.chainId || 1;
+        // The first chain of the app for the network of the wallet, as in the connect modal
+        const chainId = getConnectChainId({
+          selectedAdapter: getAdapterFromConnectorType(connectorType),
+          appChains,
+          solanaRPCUrls,
+        });
         const walletName = getFormattedConnectorName(connectorType);
         if (walletName === 'Impersonatedwallet') {
           impersonatedHelpers.setImpersonated(address.trim());
@@ -1140,7 +1373,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
         // Announce to screen readers
         const announcement =
-          customization?.labels?.connectAnnouncement?.(walletName) ?? `Connected ${walletName} wallet`;
+          customization?.labels?.connectAnnouncement?.(walletName) ??
+          formatLabel(labels.connectedWallet, { name: walletName });
         setAnnouncement(announcement);
         setTimeout(() => setAnnouncement(''), 3000);
 
@@ -1157,7 +1391,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         setConnectingRecent(null);
       }
     },
-    [connect, customization],
+    [connect, customization, labels, appChains, solanaRPCUrls],
   );
 
   /**
@@ -1173,57 +1407,51 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   );
 
   /**
-   * Keyboard navigation support
-   * Must be after all handlers are defined
+   * Keyboard shortcuts, on the container: they work only while the focus is inside the screen
    */
-  useEffect(() => {
-    if (!enableKeyboardShortcuts) return;
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!enableKeyboardShortcuts || !(event.ctrlKey || event.metaKey)) return;
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const { key, ctrlKey, metaKey } = event;
-      const modKey = ctrlKey || metaKey;
+    const shortcuts = { ...DEFAULT_KEYBOARD_SHORTCUTS, ...customization?.config?.keyboardShortcuts };
+    const currentIndex = connectionsList.findIndex((c) => c.connectorType === activeConnection?.connectorType);
 
-      // Get custom shortcuts or use defaults
-      const shortcuts = customization?.config?.keyboardShortcuts ?? {
-        nextConnection: 'ArrowDown',
-        prevConnection: 'ArrowUp',
-        disconnect: 'd',
-      };
-
-      // Navigate to next connection (Ctrl/Cmd + ArrowDown or custom)
-      if (modKey && key === shortcuts.nextConnection) {
-        event.preventDefault();
-        const currentIndex = connectionsList.findIndex((c) => c.connectorType === activeConnection?.connectorType);
-        if (currentIndex < connectionsList.length - 1) {
-          handleSwitch(connectionsList[currentIndex + 1].connectorType);
-        }
-        return;
+    // Next connection (Ctrl/Cmd + ArrowDown by default)
+    if (event.key === shortcuts.nextConnection) {
+      event.preventDefault();
+      if (currentIndex < connectionsList.length - 1) {
+        void handleSwitch(connectionsList[currentIndex + 1].connectorType);
       }
+      return;
+    }
 
-      // Navigate to previous connection (Ctrl/Cmd + ArrowUp or custom)
-      if (modKey && key === shortcuts.prevConnection) {
-        event.preventDefault();
-        const currentIndex = connectionsList.findIndex((c) => c.connectorType === activeConnection?.connectorType);
-        if (currentIndex > 0) {
-          handleSwitch(connectionsList[currentIndex - 1].connectorType);
-        }
-        return;
+    // Previous connection (Ctrl/Cmd + ArrowUp by default)
+    if (event.key === shortcuts.prevConnection) {
+      event.preventDefault();
+      if (currentIndex > 0) {
+        void handleSwitch(connectionsList[currentIndex - 1].connectorType);
       }
+      return;
+    }
 
-      // Disconnect active wallet (Ctrl/Cmd + D or custom)
-      if (modKey && key === shortcuts.disconnect && activeConnection) {
-        event.preventDefault();
-        const syntheticEvent = new MouseEvent('click') as unknown as React.MouseEvent;
-        handleDisconnect(activeConnection.connectorType, syntheticEvent);
-        return;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [enableKeyboardShortcuts, connectionsList, activeConnection, customization, handleSwitch, handleDisconnect]);
+    // Disconnect the active wallet (Ctrl/Cmd + Backspace by default)
+    if (event.key === shortcuts.disconnect && activeConnection) {
+      event.preventDefault();
+      void handleDisconnect(activeConnection.connectorType, event);
+    }
+  };
 
   const allConnectors = getConnectors();
+
+  // `undefined` when the chain of the active connection has no block explorer
+  const activeExplorerLink = (() => {
+    if (!activeConnection?.connectorType) return undefined;
+    try {
+      const adapter = getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
+      return adapter?.getExplorerUrl?.(`/address/${activeConnection.address}`, setChainId(activeConnection.chainId));
+    } catch {
+      return undefined;
+    }
+  })();
 
   if (connectionsList.length === 0 && recentListState.length === 0) {
     if (!showEmptyState) return null;
@@ -1243,7 +1471,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           className={cn('novacon:text-[var(--tuwa-text-secondary)]', customization?.classNames?.emptyStateMessage?.())}
           role="status"
         >
-          {finalLabels.emptyState}
+          {emptyStateMessage}
         </p>
       </Container>
     );
@@ -1253,7 +1481,6 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
     <Container
       className={
         customization?.classNames?.container?.({
-          isEmpty: false,
           connectionsCount: connectionsList.length,
           recentCount: recentListState.length,
         }) ?? cn('novacon:flex novacon:flex-col novacon:gap-6 novacon:p-4', className)
@@ -1262,8 +1489,10 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       connectionsCount={connectionsList.length}
       recentCount={recentListState.length}
       role="region"
-      aria-label={finalLabels.containerAriaLabel}
+      aria-label={containerAriaLabel}
       data-testid={testIds?.container}
+      onKeyDown={handleKeyDown}
+      ref={containerRef}
     >
       {/* ARIA Live Region for announcements */}
       <div role="status" aria-live="polite" aria-atomic="true" className="novacon:sr-only">
@@ -1288,29 +1517,19 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               chainId={activeConnection.chainId}
               isActive={true}
               onDisconnect={(e) => handleDisconnect(activeConnection.connectorType, e)}
-              explorerLink={(() => {
-                try {
-                  const adapter = getAdapter(getAdapterFromConnectorType(activeConnection.connectorType));
-                  return adapter?.getExplorerUrl?.(
-                    `/address/${activeConnection.address}`,
-                    setChainId(activeConnection.chainId),
-                  );
-                } catch {
-                  return undefined;
-                }
-              })()}
+              explorerLink={activeExplorerLink}
               icon={activeConnection.icon}
               classNames={{
                 container: customization?.classNames?.activeRowContainer?.({
                   connectorType: activeConnection.connectorType,
-                  hasExplorer: true,
+                  hasExplorer: Boolean(activeExplorerLink),
                 }),
                 badge: customization?.classNames?.activeRowBadge?.(),
                 content: customization?.classNames?.activeRowContent?.(),
                 walletName: customization?.classNames?.activeRowWalletName?.(),
                 connectorName: customization?.classNames?.activeRowConnectorName?.(),
                 actionsContainer: customization?.classNames?.activeRowActionsContainer?.(),
-                copyButton: customization?.classNames?.activeRowCopyButton?.({ isCopied: false }),
+                copyButton: customization?.classNames?.activeRowCopyButton?.(),
                 copyIcon: customization?.classNames?.activeRowCopyIcon?.(),
                 explorerButton: customization?.classNames?.activeRowExplorerButton?.(),
                 explorerIcon: customization?.classNames?.activeRowExplorerIcon?.(),
@@ -1417,7 +1636,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           }}
           className={cn(
             'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
-            customization?.classNames?.addWalletButton?.({}),
+            customization?.classNames?.addWalletButton?.(),
           )}
         >
           + {labels.connectNewWallet}

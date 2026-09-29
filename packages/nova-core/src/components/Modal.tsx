@@ -4,9 +4,15 @@ import * as React from 'react';
 
 import { cn, isTouchDevice } from '../utils';
 
+/**
+ * The dialog root (`Root` of `@radix-ui/react-dialog`): holds the open state (`open`, `defaultOpen`, `onOpenChange`).
+ */
 const Dialog = DialogPrimitive.Root;
+/** The element that opens the dialog (`Trigger` of `@radix-ui/react-dialog`). */
 const DialogTrigger = DialogPrimitive.Trigger;
+/** Renders its children in `document.body` (`Portal` of `@radix-ui/react-dialog`). {@link DialogContent} uses it. */
 const DialogPortal = DialogPrimitive.Portal;
+/** An element that closes the dialog (`Close` of `@radix-ui/react-dialog`). */
 const DialogClose = DialogPrimitive.Close;
 
 const defaultModalAnimation: Variants = {
@@ -39,6 +45,19 @@ const defaultModalBackdropAnimation: Variants = {
   exit: { opacity: 0 },
 };
 
+/**
+ * The dimmed, blurred backdrop behind the dialog, faded in and out with `framer-motion`. {@link DialogContent} renders
+ * it.
+ *
+ * Side effect: while it is mounted, the `NovaModalOpen` class is set on `document.body`; the stylesheet of this package
+ * uses it to stop the page from scrolling.
+ *
+ * @param props - The overlay props.
+ * @param props.className - Classes added to the backdrop element.
+ * @param props.backdropAnimation - `framer-motion` variants (`initial`, `animate`, `exit`) of the backdrop; a fade by
+ * default.
+ * @returns The backdrop.
+ */
 const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: Variants; className?: string }) => {
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -72,6 +91,12 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
 };
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * The dialog panel (`Content` of `@radix-ui/react-dialog`), rendered in a portal above {@link DialogOverlay}. It takes
+ * the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
+ * the panel scales in at the center of the screen, or slides up from the bottom on touch devices (`isTouchDevice`); its
+ * content scrolls when it is taller than the viewport. Use it inside {@link Dialog}.
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
@@ -137,6 +162,12 @@ const DialogContent = React.forwardRef<
 });
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+/**
+ * A sticky header row of the dialog, with a bottom border.
+ *
+ * @param props - Props of the `<div>` element; `className` is merged with the default classes.
+ * @returns The header element.
+ */
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     aria-describedby="tuwa:modal-header"
@@ -150,6 +181,12 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogHeader.displayName = 'DialogHeader';
 
+/**
+ * A footer row of the dialog: stacked on small screens, aligned to the end on wider ones.
+ *
+ * @param props - Props of the `<div>` element; `className` is merged with the default classes.
+ * @returns The footer element.
+ */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     aria-describedby="tuwa:modal-footer"
@@ -162,6 +199,7 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogFooter.displayName = 'DialogFooter';
 
+/** The dialog title (`Title` of `@radix-ui/react-dialog`), styled with the Nova theme. */
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -178,6 +216,7 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
+/** The dialog description (`Description` of `@radix-ui/react-dialog`), styled with the Nova theme. */
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>

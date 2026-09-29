@@ -1,0 +1,97 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/WalletAvatarImageProps" />
+
+# WalletAvatarImageProps
+
+> **WalletAvatarImageProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L26)
+
+Props of the image of [WalletAvatar](?path=/docs/packages-nova-connect-components-variables-walletavatar--docs) (`customization.components.AvatarImage`).
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L40)
+
+The wallet address.
+
+***
+
+### ensAvatar?
+
+> `optional` **ensAvatar?**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L42)
+
+The `ensAvatar` prop.
+
+***
+
+### isLoading
+
+> **isLoading**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L30)
+
+Whether the image is loading.
+
+***
+
+### onError
+
+> **onError**: (`event`) => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L38)
+
+Call when the image fails to load; the avatar then shows the blockie.
+
+#### Parameters
+
+##### event
+
+`React.SyntheticEvent`\<`HTMLImageElement`, `Event`\>
+
+The error event of the image.
+
+#### Returns
+
+`void`
+
+***
+
+### onLoad
+
+> **onLoad**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L32)
+
+Call when the image has loaded.
+
+#### Returns
+
+`void`
+
+***
+
+### size
+
+> **size**: [`WalletAvatarSize`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarsize--docs)
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L44)
+
+The avatar size.
+
+***
+
+### src
+
+> **src**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L28)
+
+Image URL: the avatar, or the blockie of the address.

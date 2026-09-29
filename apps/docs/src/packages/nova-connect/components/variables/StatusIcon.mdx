@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/StatusIcon" />
+
+# StatusIcon
+
+> `const` **StatusIcon**: `ForwardRefExoticComponent`\<`Omit`\<[`StatusIconProps`](?path=/docs/packages-nova-connect-components-interfaces-statusiconprops--docs), `"ref"`\> & `RefAttributes`\<`HTMLDivElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx:269](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/StatusIcon.tsx#L269)
+
+An animated status icon: an SVG path, drawn with `framer-motion`, in a circle colored with the
+`--tuwa-<colorVar>-text` variable. The connect button shows it after a transaction of the connected wallet succeeded,
+failed or was replaced. Pass the path data as children. Animations can be turned off with
+`customization.config.disableAnimation` or `reduceMotion`.
+
+Props: [StatusIconProps](?path=/docs/packages-nova-connect-components-interfaces-statusiconprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { StatusIcon } from '@tuwaio/nova-connect/components';
+
+export const SucceedIcon = (
+  <StatusIcon txStatus="succeed" colorVar="success">
+    m4.5 12.75 6 6 9-13.5
+  </StatusIcon>
+);
+
+export const FailedIcon = (
+  <StatusIcon
+    txStatus="failed"
+    colorVar="error"
+    customization={{
+      classNames: { container: ({ txStatus }) => `custom-status-${txStatus}` },
+      animation: { path: { duration: 1, delay: 0.2 } },
+      svg: { strokeWidth: 3, strokeLinecap: 'square' },
+    }}
+  >
+    M6 18 18 6M6 6l12 12
+  </StatusIcon>
+);
+```

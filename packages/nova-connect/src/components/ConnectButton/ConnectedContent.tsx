@@ -1,5 +1,6 @@
 /**
- * @file ConnectedContent component displays wallet connection status with transaction monitoring and comprehensive customization options.
+ * @file ConnectedContent component displays wallet connection status with transaction monitoring and comprehensive
+ * customization options.
  */
 
 import { ChevronArrowWithAnim, cn } from '@tuwaio/nova-core';
@@ -27,34 +28,55 @@ import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
-type StatusDisplayData = {
+/** What {@link ConnectedContent} shows for the current button status. */
+export type ConnectedContentStatusDisplayData = {
+  /** The wallet name (ENS or SNS name, or the shortened address), or the status label of a finished transaction. */
   displayName: ReactNode;
+  /** The wallet avatar, or the status icon of a finished transaction. */
   avatarIcon: ReactNode;
+  /** Accessible label of the status. */
   ariaLabel: string;
 };
 
-type CustomBalanceContainerProps = {
+/** Props of the balance of {@link ConnectedContent} (`customization.components.BalanceContainer`). */
+export type ConnectedContentBalanceContainerProps = {
+  /** Native balance of the active wallet with three decimals, without the symbol (`'0.000'` when unknown). */
   formattedBalance: string;
+  /** The labels of Nova Connect. */
   labels: Record<string, string>;
+  /** Classes from `customization.classNames.balanceContainer`. */
   className?: string;
+  /** Accessible label of the balance. */
   'aria-label'?: string;
 };
 
-type CustomMainContentProps = {
-  statusDisplay: StatusDisplayData;
+/** Props of the main content of {@link ConnectedContent} (`customization.components.MainContent`): avatar and name. */
+export type ConnectedContentMainContentProps = {
+  /** What to show for the current status. */
+  statusDisplay: ConnectedContentStatusDisplayData;
+  /** The status of the latest transaction of the wallet. */
   connectedButtonStatus: ButtonTxStatus;
+  /** Whether the connected modal is open. */
   isConnectedModalOpen: boolean;
+  /** Whether the balance is shown. */
   withBalance: boolean;
+  /** The labels of Nova Connect. */
   labels: Record<string, string>;
+  /** Classes from `customization.classNames.mainContent`. */
   className?: string;
 };
 
-type CustomLoadingAnimationProps = {
+/** Props of the animation shown while a transaction is pending (`customization.components.LoadingAnimation`). */
+export type ConnectedContentLoadingAnimationProps = {
+  /** The status of the latest transaction of the wallet. */
   connectedButtonStatus: ButtonTxStatus;
+  /** Classes from `customization.classNames.loadingAnimation`. */
   className?: string;
 };
 
-type CustomBalanceDividerProps = {
+/** Props of the divider between the balance and the wallet (`customization.components.BalanceDivider`). */
+export type ConnectedContentBalanceDividerProps = {
+  /** Classes from `customization.classNames.balanceDivider`. */
   className?: string;
 };
 
@@ -67,25 +89,50 @@ export type ConnectedContentCustomization = {
   /** Custom components */
   components?: {
     /** Custom balance container component */
-    BalanceContainer?: ComponentType<CustomBalanceContainerProps>;
+    BalanceContainer?: ComponentType<ConnectedContentBalanceContainerProps>;
     /** Custom main content wrapper component */
-    MainContent?: ComponentType<CustomMainContentProps>;
+    MainContent?: ComponentType<ConnectedContentMainContentProps>;
     /** Custom loading animation component */
-    LoadingAnimation?: ComponentType<CustomLoadingAnimationProps>;
+    LoadingAnimation?: ComponentType<ConnectedContentLoadingAnimationProps>;
     /** Custom balance divider component */
-    BalanceDivider?: ComponentType<CustomBalanceDividerProps>;
+    BalanceDivider?: ComponentType<ConnectedContentBalanceDividerProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container.
+     *
+     * @param params - The content state.
+     * @param params.connectedButtonStatus - The status of the latest transaction of the wallet.
+     * @param params.withBalance - Whether the balance is shown.
+     * @returns The classes.
+     */
     container?: (params: { connectedButtonStatus: ButtonTxStatus; withBalance: boolean }) => string;
-    /** Function to generate balance container classes */
+    /**
+     * Returns the classes of the balance.
+     *
+     * @param params - The content state.
+     * @param params.formattedBalance - The shown balance.
+     * @returns The classes.
+     */
     balanceContainer?: (params: { formattedBalance: string }) => string;
     /** Function to generate balance divider classes */
     balanceDivider?: () => string;
-    /** Function to generate main content classes */
+    /**
+     * Returns the classes of the main content.
+     *
+     * @param params - The content state.
+     * @param params.withBalance - Whether the balance is shown.
+     * @returns The classes.
+     */
     mainContent?: (params: { withBalance: boolean }) => string;
-    /** Function to generate loading animation classes */
+    /**
+     * Returns the classes of the loading animation.
+     *
+     * @param params - The content state.
+     * @param params.connectedButtonStatus - The status of the latest transaction of the wallet.
+     * @returns The classes.
+     */
     loadingAnimation?: (params: { connectedButtonStatus: ButtonTxStatus }) => string;
   };
   /** Customization options for child components */
@@ -104,12 +151,17 @@ export type ConnectedContentCustomization = {
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for balance click events */
+    /**
+     * Called when the balance is clicked.
+     *
+     * @param formattedBalance - The shown balance.
+     * @param event - The click event.
+     */
     onBalanceClick?: (formattedBalance: string, event: React.MouseEvent<HTMLDivElement>) => void;
   };
   /** Configuration options */
   config?: {
-    /** Custom timeout for auto-reset status (in milliseconds) */
+    /** How long the result of a finished transaction is shown, in milliseconds. Defaults to `2000`. */
     statusResetTimeout?: number;
     /** Whether to show loading animation */
     showLoadingAnimation?: boolean;
@@ -118,6 +170,7 @@ export type ConnectedContentCustomization = {
   };
 };
 
+/** Props of {@link ConnectedContent}. The other props are passed to the container `<div>`. */
 export interface ConnectedContentProps extends Pick<NovaConnectProviderProps, 'transactionPool' | 'withBalance'> {
   /** Custom CSS classes for the container */
   className?: string;
@@ -128,7 +181,12 @@ export interface ConnectedContentProps extends Pick<NovaConnectProviderProps, 't
 }
 
 // --- Default Sub-Components ---
-const DefaultBalanceContainer = ({ formattedBalance, labels, className, ...props }: CustomBalanceContainerProps) => {
+const DefaultBalanceContainer = ({
+  formattedBalance,
+  labels,
+  className,
+  ...props
+}: ConnectedContentBalanceContainerProps) => {
   return (
     <div
       className={cn(
@@ -151,7 +209,7 @@ const DefaultMainContent = ({
   isConnectedModalOpen,
   withBalance,
   className,
-}: CustomMainContentProps) => {
+}: ConnectedContentMainContentProps) => {
   return (
     <div
       className={cn(
@@ -171,7 +229,7 @@ const DefaultMainContent = ({
   );
 };
 
-const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: CustomLoadingAnimationProps) => {
+const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: ConnectedContentLoadingAnimationProps) => {
   if (connectedButtonStatus !== 'loading') return null;
 
   return (
@@ -185,7 +243,7 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: CustomLoa
   );
 };
 
-const DefaultBalanceDivider = ({ className }: CustomBalanceDividerProps) => {
+const DefaultBalanceDivider = ({ className }: ConnectedContentBalanceDividerProps) => {
   return (
     <div
       className={cn(
@@ -198,74 +256,33 @@ const DefaultBalanceDivider = ({ className }: CustomBalanceDividerProps) => {
 };
 
 /**
- * ConnectedContent displays the wallet connection status with transaction monitoring capabilities.
- * Provides comprehensive customization for all visual elements, event handlers, and child components.
+ * The content of the connect button while a wallet is connected: the native balance with three decimals (with
+ * `withBalance`, from the `sm` breakpoint), the avatar and the ENS or SNS name (or shortened address) of the active
+ * wallet. While a transaction
+ * of the wallet in `transactionPool` is pending it shows a loading animation; when a pending transaction finishes it
+ * shows the result (succeeded, failed, replaced) for `customization.config.statusResetTimeout` milliseconds. The status
+ * is kept in `connectedButtonStatus` of `NovaConnectProvider`.
  *
- * Features:
- * - Real-time transaction status monitoring with visual feedback
- * - Comprehensive customization for all UI elements and behaviors
- * - Full accessibility support with ARIA labels and roles
- * - Responsive design with mobile-first approach
- * - Status-based styling and animations
- * - Balance display with optional divider
- * - Loading animation for pending transactions
- * - Customizable child components (WalletAvatar, StatusIcon)
- * - Event handler customization for enhanced interactivity
- * - Auto-reset functionality for transaction status
+ * Props: {@link ConnectedContentProps}; the ref is forwarded to the container.
  *
- * @example Basic usage
+ * @example
  * ```tsx
- * <ConnectedContent
- *   transactionPool={transactionPool}
- *   withBalance={true}
- *   store={walletStore}
- * />
- * ```
+ * import { ConnectedContent } from '@tuwaio/nova-connect/components';
+ * import type { Transaction, TransactionPool } from '@tuwaio/pulsar-core';
  *
- * @example With full customization
- * ```tsx
- * <ConnectedContent
- *   transactionPool={transactionPool}
- *   withBalance={true}
- *   store={walletStore}
- *   customization={{
- *     classNames: {
- *       container: ({ connectedButtonStatus }) =>
- *         `custom-container ${connectedButtonStatus === 'loading' ? 'loading' : ''}`,
- *       balanceContainer: () => "custom-balance bg-blue-500",
- *     },
- *     components: {
- *       LoadingAnimation: ({ className }) =>
- *         <div className={cn("custom-spinner", className)} />,
- *     },
- *     handlers: {
- *       onBalanceClick: (balance, event) => console.log("Balance clicked:", balance),
- *     },
- *     config: {
- *       statusResetTimeout: 3000,
- *       showLoadingAnimation: true,
- *     },
- *     childCustomizations: {
- *       walletAvatar: {
- *         classNames: {
- *           container: () => "custom-avatar-border",
- *         },
- *       },
- *       statusIcon: {
- *         succeed: {
- *           classNames: {
- *             container: () => "custom-success-icon",
- *           },
- *         },
- *         failed: {
- *           classNames: {
- *             container: () => "custom-error-icon",
- *           },
- *         },
- *       },
- *     },
- *   }}
- * />
+ * export function WalletContent({ transactionPool }: { transactionPool: TransactionPool<Transaction> }) {
+ *   return (
+ *     <ConnectedContent
+ *       transactionPool={transactionPool}
+ *       withBalance
+ *       customization={{
+ *         classNames: { balanceContainer: () => 'custom-balance' },
+ *         handlers: { onBalanceClick: (balance) => console.log('Balance clicked:', balance) },
+ *         config: { statusResetTimeout: 3000 },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps>(

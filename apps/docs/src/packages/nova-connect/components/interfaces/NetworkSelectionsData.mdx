@@ -1,0 +1,59 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/NetworkSelectionsData" />
+
+# NetworkSelectionsData
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L43)
+
+State of [NetworkSelections](?path=/docs/packages-nova-connect-components-variables-networkselections--docs), passed to its custom components, class name generators and handlers.
+
+## Properties
+
+### activeConnector?
+
+> `optional` **activeConnector?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L45)
+
+The `activeConnector` prop
+
+***
+
+### connectors
+
+> **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L47)
+
+The `connectors` prop
+
+***
+
+### isError
+
+> **isError**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L51)
+
+Whether `connectors` has no wallet matching `activeConnector` (the error is shown)
+
+***
+
+### isTouch
+
+> **isTouch**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L49)
+
+Whether the device has a touch screen (the list scrolls horizontally)
+
+***
+
+### networks
+
+> **networks**: [`NetworkSelectionsNetworkData`](?path=/docs/packages-nova-connect-components-interfaces-networkselectionsnetworkdata--docs)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkSelections.tsx#L53)
+
+The networks of the active wallet

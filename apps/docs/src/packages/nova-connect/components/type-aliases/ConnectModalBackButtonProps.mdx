@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectModalBackButtonProps" />
+
+# ConnectModalBackButtonProps
+
+> **ConnectModalBackButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:197](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L197)
+
+Props for a custom back button (shown on every screen except the connectors one).
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.backButton`, or the `backToPreviousStep` label
+
+### children
+
+> **children**: `React.ReactNode`
+
+The `back` label
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.backButton`
+
+### modalData
+
+> **modalData**: [`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal
+
+### onClick
+
+> **onClick**: () => `void`
+
+Runs `handlers.onBack`, or goes back to the connectors screen
+
+#### Returns
+
+`void`

@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectModalCloseButtonProps" />
+
+# ConnectModalCloseButtonProps
+
+> **ConnectModalCloseButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L159)
+
+Props for a custom close button.
+
+## Type Declaration
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+From `config.ariaLabels.closeButton`, or the `closeModal` label
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.closeButton`
+
+### modalData
+
+> **modalData**: [`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal
+
+### onClick
+
+> **onClick**: () => `void`
+
+Closes the modal (through `handlers.onOpenChange` when set)
+
+#### Returns
+
+`void`

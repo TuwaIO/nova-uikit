@@ -237,18 +237,24 @@ const DefaultCopyContent = ({ icon, isCopied, copyLabel, copiedLabel }: ToastVal
  * - Scrollable monospace message body
  * - One-click copy-to-clipboard with feedback
  *
+ * `useNovaTransactionsError` (from `@tuwaio/nova-transactions/providers`) shows it for you; render it yourself only for a
+ * custom toast.
+ *
+ * @param props - See {@link ToastValidationErrorProps}.
+ * @returns The toast body.
+ *
  * @example
  * ```tsx
- * toast(
- *   (props) => (
- *     <ToastValidationError
- *       {...props}
- *       message={error.message}
- *       fieldName={(error as PulsarTransactionValidationError).field}
- *     />
- *   ),
- *   { containerId: 'nova-validation-errors', type: 'error' }
- * );
+ * import { ToastValidationError } from '@tuwaio/nova-transactions';
+ * import { VALIDATION_ERROR_CONTAINER_ID } from '@tuwaio/nova-transactions/providers';
+ * import { toast } from 'react-toastify';
+ *
+ * export function showValidationError(error: Error & { field?: string }) {
+ *   toast(() => <ToastValidationError message={error.message} fieldName={error.field} />, {
+ *     containerId: VALIDATION_ERROR_CONTAINER_ID,
+ *     type: 'error',
+ *   });
+ * }
  * ```
  */
 export function ToastValidationError({

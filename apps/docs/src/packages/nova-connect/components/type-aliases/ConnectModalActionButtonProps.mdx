@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectModalActionButtonProps" />
+
+# ConnectModalActionButtonProps
+
+> **ConnectModalActionButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:213](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L213)
+
+Props for a custom action button of the footer.
+
+## Type Declaration
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+ID of the action description
+
+### buttonConfig
+
+> **buttonConfig**: [`BottomButtonConfig`](?path=/docs/packages-nova-connect-components-interfaces-bottombuttonconfig--docs)
+
+The button
+
+### children
+
+> **children**: `React.ReactNode`
+
+`buttonConfig.title`
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.actionButton`
+
+### disabled?
+
+> `optional` **disabled?**: `boolean`
+
+`buttonConfig.disabled`
+
+### loading?
+
+> `optional` **loading?**: `boolean`
+
+`buttonConfig.loading`
+
+### modalData
+
+> **modalData**: [`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
+
+State of the modal
+
+### onClick
+
+> **onClick**: () => `void` \| `Promise`\<`void`\>
+
+`buttonConfig.onClick`
+
+#### Returns
+
+`void` \| `Promise`\<`void`\>

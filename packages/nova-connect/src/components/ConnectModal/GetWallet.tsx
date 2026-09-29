@@ -4,17 +4,18 @@
 
 import { cn, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { ComponentType, forwardRef } from 'react';
+import React, { ComponentType, forwardRef, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 
 /**
- * Configuration for wallet icons in the animation
+ * A floating wallet icon of {@link GetWallet}.
  */
 export interface WalletIconConfig {
-  /** Wallet key for Web3Icon component */
+  /** Wallet name for `WalletIcon` of `@tuwaio/nova-core` (for example `metamask`) */
   walletKey: string;
   /** Position configuration using predefined position classes */
   position: {
@@ -33,12 +34,16 @@ export interface WalletIconConfig {
   size: {
     /** Width and height classes for mobile */
     mobile: {
+      /** Width class (for example `novacon:w-20`) */
       width: string;
+      /** Height class */
       height: string;
     };
     /** Width and height classes for desktop */
     desktop: {
+      /** Width class with a breakpoint (for example `novacon:md:w-24`) */
       width: string;
+      /** Height class with a breakpoint */
       height: string;
     };
   };
@@ -50,179 +55,296 @@ export interface WalletIconConfig {
     delay: number;
     /** Whether to reverse animation direction */
     reverse?: boolean;
-    /** Animation easing function */
+    /** CSS easing of the float animation (default: `config.animation.defaultEase` or `ease-in-out`) */
     ease?: string;
   };
-  /** ARIA label for the wallet icon */
+  /** Wallet name in the default ARIA label of the icon (default: the wallet key) */
+  name?: string;
+  /** ARIA label of the icon (default: `name` followed by the `walletIcon` label) */
   ariaLabel?: string;
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container (a `section` by default).
+ */
+export type GetWalletContainerProps = {
+  /** Classes from `classNames.container`, or the defaults with the `className` prop */
   className?: string;
+  /** The animation section and the content section */
   children: React.ReactNode;
+  /** `region` */
   role?: string;
+  /** `config.ariaLabels.container`, the `aria-label` prop or the `startExploringWeb3` label */
   'aria-label'?: string;
+  /** The `data-testid` prop */
   'data-testid'?: string;
 } & React.RefAttributes<HTMLElement>;
 
-type AnimationSectionProps = {
+/**
+ * Props for a custom animation section (the area with the floating icons).
+ */
+export type GetWalletAnimationSectionProps = {
+  /** Classes from `classNames.animationSection` or the defaults */
   className?: string;
+  /** The stars background, the gradient overlay and the animation wrapper */
   children: React.ReactNode;
+  /** `banner` */
   role?: string;
+  /** `config.ariaLabels.animationSection` or the `walletIconsAnimation` label */
   'aria-label'?: string;
 };
 
-type StarsBackgroundProps = {
+/**
+ * Props for a custom stars background.
+ */
+export type GetWalletStarsBackgroundProps = {
+  /** Classes from `classNames.starsBackground` */
   className?: string;
+  /** The `showStarsBackground` prop */
   show: boolean;
+  /** `true` */
   'aria-hidden'?: boolean;
 };
 
-type GradientOverlayProps = {
+/**
+ * Props for a custom gradient overlay.
+ */
+export type GetWalletGradientOverlayProps = {
+  /** Classes from `classNames.gradientOverlay` or the defaults */
   className?: string;
+  /** `true` */
   'aria-hidden'?: boolean;
 };
 
-type AnimationWrapperProps = {
+/**
+ * Props for a custom wrapper of the wallet icons (the default one scales them in with Framer Motion).
+ */
+export type GetWalletAnimationWrapperProps = {
+  /** Classes from `classNames.animationWrapper` or the defaults */
   className?: string;
+  /** The wallet icons and a screen reader text */
   children: React.ReactNode;
+  /** `group` */
   role?: string;
+  /** `config.ariaLabels.animationWrapper` or the `popularWalletIcons` label */
   'aria-label'?: string;
+  /** The `enableAnimations` prop */
   enableAnimations: boolean;
+  /** Delay of the entrance animation in milliseconds (`0`) */
   animationDelay?: number;
+  /** Duration of the entrance animation in milliseconds (`500`) */
   animationDuration?: number;
 };
 
-type WalletIconProps = {
+/**
+ * Props for a custom wallet icon.
+ */
+export type GetWalletIconProps = {
+  /** The icon, with the `config.animation` multipliers applied */
   config: WalletIconConfig;
+  /** The `enableAnimations` prop */
   enableAnimations: boolean;
+  /** Classes from `classNames.walletIcon` */
   className?: string;
 };
 
-type ContentSectionProps = {
+/**
+ * Props for a custom content section (title and description).
+ */
+export type GetWalletContentSectionProps = {
+  /** Classes from `classNames.contentSection` or the defaults */
   className?: string;
+  /** The title, the description and a screen reader text */
   children: React.ReactNode;
+  /** `main` */
   role?: string;
 };
 
-type TitleProps = {
+/**
+ * Props for a custom title.
+ */
+export type GetWalletTitleProps = {
+  /** Classes from `classNames.title` or the defaults */
   className?: string;
+  /** The `startExploringWeb3` label */
   children: React.ReactNode;
+  /** `heading` */
   role?: string;
+  /** `2` */
   'aria-level'?: number;
 };
 
-type DescriptionProps = {
+/**
+ * Props for a custom description.
+ */
+export type GetWalletDescriptionProps = {
+  /** Classes from `classNames.description` or the defaults */
   className?: string;
+  /** The `walletKeyToDigitalWorld` label */
   children: React.ReactNode;
+  /** `text` */
   role?: string;
 };
 
-type ScreenReaderProps = {
+/**
+ * Props for a custom screen reader text (visually hidden by default).
+ */
+export type GetWalletScreenReaderProps = {
+  /** Classes from `classNames.screenReader` or `novacon:sr-only` */
   className?: string;
+  /** An English description of the section */
   children: React.ReactNode;
 };
 
 /**
- * Customization options for GetWallet component
+ * Customization options of {@link GetWallet}.
  */
 export type GetWalletCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<GetWalletContainerProps>;
     /** Custom animation section */
-    AnimationSection?: ComponentType<AnimationSectionProps>;
+    AnimationSection?: ComponentType<GetWalletAnimationSectionProps>;
     /** Custom stars background */
-    StarsBackground?: ComponentType<StarsBackgroundProps>;
+    StarsBackground?: ComponentType<GetWalletStarsBackgroundProps>;
     /** Custom gradient overlay */
-    GradientOverlay?: ComponentType<GradientOverlayProps>;
+    GradientOverlay?: ComponentType<GetWalletGradientOverlayProps>;
     /** Custom animation wrapper */
-    AnimationWrapper?: ComponentType<AnimationWrapperProps>;
+    AnimationWrapper?: ComponentType<GetWalletAnimationWrapperProps>;
     /** Custom wallet icon display */
-    WalletIcon?: ComponentType<WalletIconProps>;
+    WalletIcon?: ComponentType<GetWalletIconProps>;
     /** Custom content section */
-    ContentSection?: ComponentType<ContentSectionProps>;
+    ContentSection?: ComponentType<GetWalletContentSectionProps>;
     /** Custom title component */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<GetWalletTitleProps>;
     /** Custom description component */
-    Description?: ComponentType<DescriptionProps>;
+    Description?: ComponentType<GetWalletDescriptionProps>;
     /** Custom screen reader component */
-    ScreenReader?: ComponentType<ScreenReaderProps>;
+    ScreenReader?: ComponentType<GetWalletScreenReaderProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones and the `className` prop.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     container?: (params: { compact: boolean }) => string;
-    /** Function to generate animation section classes */
+    /**
+     * Returns the classes of the animation section, instead of the default ones.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     animationSection?: (params: { compact: boolean }) => string;
-    /** Function to generate stars background classes */
+    /**
+     * Returns the classes of the stars background (none by default).
+     *
+     * @returns The classes.
+     */
     starsBackground?: () => string;
-    /** Function to generate gradient overlay classes */
+    /**
+     * Returns the classes of the gradient overlay, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     gradientOverlay?: () => string;
-    /** Function to generate animation wrapper classes */
+    /**
+     * Returns the classes of the wrapper of the wallet icons, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     animationWrapper?: () => string;
-    /** Function to generate wallet icon classes */
+    /**
+     * Returns classes added to a wallet icon.
+     *
+     * @param params - The icon.
+     * @param params.config - The icon configuration.
+     * @param params.enableAnimations - The `enableAnimations` prop.
+     * @returns The classes.
+     */
     walletIcon?: (params: { config: WalletIconConfig; enableAnimations: boolean }) => string;
-    /** Function to generate content section classes */
+    /**
+     * Returns the classes of the content section, instead of the default ones.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     contentSection?: (params: { compact: boolean }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title, instead of the default ones.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     title?: (params: { compact: boolean }) => string;
-    /** Function to generate description classes */
+    /**
+     * Returns the classes of the description, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     description?: () => string;
-    /** Function to generate screen reader classes */
+    /**
+     * Returns the classes of the screen reader texts, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     screenReader?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for component mount */
+    /** Called after mount */
     onMount?: () => void;
-    /** Custom handler for component unmount */
+    /** Called on unmount */
     onUnmount?: () => void;
-    /** Custom handler for animation start */
-    onAnimationStart?: () => void;
-    /** Custom handler for animation complete */
-    onAnimationComplete?: () => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the container (before the `aria-label` prop) */
       container?: string;
+      /** ARIA label of the animation section (default: the `walletIconsAnimation` label) */
       animationSection?: string;
+      /** ARIA label of the icons wrapper (default: the `popularWalletIcons` label) */
       animationWrapper?: string;
-      contentSection?: string;
     };
     /** Animation configuration overrides */
     animation?: {
-      /** Global animation duration multiplier */
+      /** Multiplies the float duration of every icon (default: `1`) */
       durationMultiplier?: number;
-      /** Global animation delay multiplier */
+      /** Multiplies the float delay of every icon (default: `1`) */
       delayMultiplier?: number;
-      /** Default easing function */
+      /** CSS easing for icons without `animation.ease` (default: `ease-in-out`) */
       defaultEase?: string;
     };
   };
 };
 
 /**
- * Props for the GetWallet component
+ * Props for the {@link GetWallet} component.
  */
 export interface GetWalletProps {
-  /** Custom CSS classes for styling the container */
+  /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
-  /** Optional custom ARIA label for enhanced accessibility */
+  /** ARIA label of the container (default: the `startExploringWeb3` label) */
   'aria-label'?: string;
   /** Custom test ID for testing purposes */
   'data-testid'?: string;
-  /** Whether to show the component in compact mode */
+  /** Uses a lower animation section and smaller texts (default: `false`) */
   compact?: boolean;
-  /** Whether animations should be enabled */
+  /** Whether the icons scale in and float (default: `true`) */
   enableAnimations?: boolean;
   /** Custom wallet icons to display instead of defaults */
   customWalletIcons?: WalletIconConfig[];
-  /** Whether to show the background stars animation */
+  /** Whether to show the background stars animation (default: `true`) */
   showStarsBackground?: boolean;
   /** Customization options */
   customization?: GetWalletCustomization;
@@ -247,7 +369,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
       delay: 200,
       ease: 'ease-in-out',
     },
-    ariaLabel: 'MetaMask wallet icon',
+    name: 'MetaMask',
   },
   {
     walletKey: 'coinbase',
@@ -265,7 +387,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
       reverse: true,
       ease: 'ease-out',
     },
-    ariaLabel: 'Coinbase Wallet icon',
+    name: 'Coinbase Wallet',
   },
   {
     walletKey: 'trust',
@@ -283,7 +405,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
       delay: 4000,
       ease: 'ease-in-out',
     },
-    ariaLabel: 'Trust Wallet icon',
+    name: 'Trust Wallet',
   },
   {
     walletKey: 'rabby',
@@ -301,7 +423,7 @@ const defaultWalletIcons: WalletIconConfig[] = [
       reverse: true,
       ease: 'ease-in',
     },
-    ariaLabel: 'Rabby Wallet icon',
+    name: 'Rabby Wallet',
   },
   {
     walletKey: 'phantom',
@@ -318,25 +440,25 @@ const defaultWalletIcons: WalletIconConfig[] = [
       delay: 500,
       ease: 'ease-out',
     },
-    ariaLabel: 'Phantom Wallet icon',
+    name: 'Phantom',
   },
 ];
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLElement, ContainerProps>(({ children, className, ...props }, ref) => (
+const DefaultContainer = forwardRef<HTMLElement, GetWalletContainerProps>(({ children, className, ...props }, ref) => (
   <section ref={ref} className={className} {...props}>
     {children}
   </section>
 ));
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultAnimationSection: React.FC<AnimationSectionProps> = ({ children, className, ...props }) => (
+const DefaultAnimationSection: React.FC<GetWalletAnimationSectionProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
-const DefaultStarsBackground: React.FC<StarsBackgroundProps> = ({ className, show, ...props }) => (
+const DefaultStarsBackground: React.FC<GetWalletStarsBackgroundProps> = ({ className, show, ...props }) => (
   <>
     {show && (
       <div className={className} {...props}>
@@ -346,11 +468,11 @@ const DefaultStarsBackground: React.FC<StarsBackgroundProps> = ({ className, sho
   </>
 );
 
-const DefaultGradientOverlay: React.FC<GradientOverlayProps> = ({ className, ...props }) => (
+const DefaultGradientOverlay: React.FC<GetWalletGradientOverlayProps> = ({ className, ...props }) => (
   <div className={className} {...props} />
 );
 
-const DefaultAnimationWrapper: React.FC<AnimationWrapperProps> = ({
+const DefaultAnimationWrapper: React.FC<GetWalletAnimationWrapperProps> = ({
   children,
   className,
   enableAnimations,
@@ -385,8 +507,9 @@ const DefaultAnimationWrapper: React.FC<AnimationWrapperProps> = ({
   );
 };
 
-const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations, className }) => {
-  const { walletKey, position, size, animation, ariaLabel } = config;
+const DefaultWalletIcon: React.FC<GetWalletIconProps> = ({ config, enableAnimations, className }) => {
+  const labels = useNovaConnectLabels();
+  const { walletKey, position, size, animation, name, ariaLabel } = config;
 
   const positionClasses = (() => {
     const classes = ['novacon:absolute'];
@@ -432,7 +555,7 @@ const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations
       className={cn(positionClasses, sizeClasses, animationClasses, className)}
       style={{ ...animationStyle }}
       role="img"
-      aria-label={ariaLabel || `${walletKey} wallet icon`}
+      aria-label={ariaLabel || `${name ?? walletKey} ${labels.walletIcon}`}
       data-testid={`wallet-icon-${walletKey}`}
     >
       <WalletIcon walletName={walletKey} />
@@ -440,75 +563,49 @@ const DefaultWalletIcon: React.FC<WalletIconProps> = ({ config, enableAnimations
   );
 };
 
-const DefaultContentSection: React.FC<ContentSectionProps> = ({ children, className, ...props }) => (
+const DefaultContentSection: React.FC<GetWalletContentSectionProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
-const DefaultTitle: React.FC<TitleProps> = ({ children, className, ...props }) => (
+const DefaultTitle: React.FC<GetWalletTitleProps> = ({ children, className, ...props }) => (
   <h2 className={className} {...props}>
     {children}
   </h2>
 );
 
-const DefaultDescription: React.FC<DescriptionProps> = ({ children, className, ...props }) => (
+const DefaultDescription: React.FC<GetWalletDescriptionProps> = ({ children, className, ...props }) => (
   <p className={className} {...props}>
     {children}
   </p>
 );
 
-const DefaultScreenReader: React.FC<ScreenReaderProps> = ({ children, className }) => (
+const DefaultScreenReader: React.FC<GetWalletScreenReaderProps> = ({ children, className }) => (
   <div className={className}>{children}</div>
 );
 
 /**
- * Educational wallet introduction component with animated icons and comprehensive customization
+ * The "Get a wallet" screen of the connect modal: floating icons of popular wallets (MetaMask, Coinbase, Trust, Rabby,
+ * Phantom by default) over a stars background, a title and a description from the Nova Connect labels.
  *
- * This component provides an engaging introduction to Web3 wallets featuring:
- * - Animated floating wallet icons with individual staggered animations and delays
- * - Educational content explaining Web3 wallet importance
- * - Responsive design with mobile-first approach
- * - Full accessibility support with proper ARIA labeling
- * - Internationalization support for all text content
- * - Performance optimizations with memoized calculations
- * - Customizable animations and icon configurations
- * - Semantic HTML structure for screen readers
- * - Proper focus management and keyboard navigation
- * - Full customization of all child components
+ * Props: {@link GetWalletProps}; the ref is forwarded to the container.
  *
- * Animation features:
- * - Individual animation delays for each wallet icon using CSS custom properties
- * - Customizable duration, easing, and direction per icon
- * - Staggered floating animations for visual appeal
- * - Motion reduction respect (prefers-reduced-motion)
- * - Smooth entrance animations with framer-motion
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <GetWallet />
- * ```
+ * import { GetWallet } from '@tuwaio/nova-connect/components';
  *
- * @example With customization
- * ```tsx
- * <GetWallet
- *   compact
- *   customization={{
- *     classNames: {
- *       container: ({ compact }) => compact ? 'custom-compact' : 'custom-full',
- *       title: () => 'custom-title-styling'
- *     },
- *     components: {
- *       WalletIcon: CustomWalletIcon
- *     },
- *     config: {
- *       animation: {
- *         durationMultiplier: 1.5,
- *         delayMultiplier: 0.8
- *       }
- *     }
- *   }}
- * />
+ * export const Intro = (
+ *   <GetWallet
+ *     compact
+ *     customization={{
+ *       classNames: {
+ *         container: ({ compact }) => (compact ? 'custom-compact' : 'custom-full'),
+ *       },
+ *       config: { animation: { durationMultiplier: 1.5, delayMultiplier: 0.8 } },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
@@ -658,11 +755,13 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
      */
     const screenReaderClasses = customization?.classNames?.screenReader?.() ?? 'novacon:sr-only';
 
-    // Handle mount/unmount effects
-    React.useEffect(() => {
-      customHandlers?.onMount?.();
-      return () => customHandlers?.onUnmount?.();
-    }, [customHandlers]);
+    // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the effect
+    const onMount = useEffectEvent(() => customHandlers?.onMount?.());
+    const onUnmount = useEffectEvent(() => customHandlers?.onUnmount?.());
+    useEffect(() => {
+      onMount();
+      return () => onUnmount();
+    }, []);
 
     return (
       <CustomContainer
@@ -676,7 +775,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
         <CustomAnimationSection
           className={animationSectionClasses}
           role="banner"
-          aria-label={customConfig?.ariaLabels?.animationSection ?? 'Wallet icons animation'}
+          aria-label={customConfig?.ariaLabels?.animationSection ?? labels.walletIconsAnimation}
         >
           {/* Stars Background */}
           <CustomStarsBackground className={starsBackgroundClasses} show={showStarsBackground} aria-hidden />
@@ -688,7 +787,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
           <CustomAnimationWrapper
             className={animationWrapperClasses}
             role="group"
-            aria-label={customConfig?.ariaLabels?.animationWrapper ?? `${labels.popular} wallet icons`}
+            aria-label={customConfig?.ariaLabels?.animationWrapper ?? labels.popularWalletIcons}
             enableAnimations={enableAnimations}
             animationDelay={0}
             animationDuration={500}
@@ -704,8 +803,9 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
 
             {/* Screen reader content for animated icons */}
             <CustomScreenReader className={screenReaderClasses}>
-              {labels.popular} wallets including {walletIcons.map((icon) => icon.walletKey).join(', ')} are displayed
-              with floating animations to illustrate wallet variety.
+              {formatLabel(labels.walletIconsDescription, {
+                wallets: walletIcons.map((icon) => icon.name ?? icon.walletKey).join(', '),
+              })}
             </CustomScreenReader>
           </CustomAnimationWrapper>
         </CustomAnimationSection>
@@ -723,10 +823,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
           </CustomDescription>
 
           {/* Screen reader summary */}
-          <CustomScreenReader className={screenReaderClasses}>
-            Introduction to Web3 wallets. This section explains the importance of wallets for digital asset management
-            and Web3 exploration. Various popular wallet options are visually represented above.
-          </CustomScreenReader>
+          <CustomScreenReader className={screenReaderClasses}>{labels.getWalletSummary}</CustomScreenReader>
         </CustomContentSection>
       </CustomContainer>
     );

@@ -1,0 +1,139 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalMainContentAvatarSectionProps" />
+
+# ConnectedModalMainContentAvatarSectionProps
+
+> **ConnectedModalMainContentAvatarSectionProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L87)
+
+Props for a custom avatar section: the wallet avatar with the wallet and network buttons.
+
+## Properties
+
+### activeConnection
+
+> **activeConnection**: `BaseConnector`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:89](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L89)
+
+The active connection
+
+***
+
+### chainsList
+
+> **chainsList**: (`string` \| `number`)[]
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L97)
+
+Chains the wallet can switch to
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L105)
+
+Classes from `classNames.avatarSection`
+
+***
+
+### connectorsCount
+
+> **connectorsCount**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L95)
+
+Number of connectors of all networks in the Satellite store
+
+***
+
+### ensAvatar
+
+> **ensAvatar**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L91)
+
+The ENS or SNS avatar URL, or `null`
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L99)
+
+The Nova Connect labels
+
+***
+
+### onSwitchNetwork
+
+> **onSwitchNetwork**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L103)
+
+Runs `handlers.onSwitchNetwork`, or shows the network screen
+
+#### Returns
+
+`void`
+
+***
+
+### onSwitchWallet
+
+> **onSwitchWallet**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L101)
+
+Runs `handlers.onSwitchWallet`, or shows the connections screen
+
+#### Returns
+
+`void`
+
+***
+
+### switchNetworkButtonProps?
+
+> `optional` **switchNetworkButtonProps?**: `Partial`\<[`IconButtonProps`](?path=/docs/packages-nova-connect-components-interfaces-iconbuttonprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:109](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L109)
+
+Customization for switch network IconButton
+
+***
+
+### switchWalletButtonProps?
+
+> `optional` **switchWalletButtonProps?**: `Partial`\<[`IconButtonProps`](?path=/docs/packages-nova-connect-components-interfaces-iconbuttonprops--docs)\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L107)
+
+Customization for switch wallet IconButton
+
+***
+
+### walletAvatarCustomization?
+
+> `optional` **walletAvatarCustomization?**: [`WalletAvatarCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L111)
+
+Customization for WalletAvatar component
+
+***
+
+### walletName
+
+> **walletName**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L93)
+
+The wallet part of the connector type (for example `metamask`), or the `unknownWallet` label

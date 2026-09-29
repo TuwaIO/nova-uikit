@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaSiwx" />
+
+# useNovaSiwx()
+
+> **useNovaSiwx**(`options?`): `object`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L50)
+
+Signs the active wallet in and out with SIWX on demand (for a "Sign in" button; `NovaConnectProvider` with `siwx`
+does it automatically on connect).
+
+- `signIn(connection?, verifier?)` builds the SIWX message for the active connection (or `connection`), asks the
+  wallet to sign it and sends it to `verifier` (the argument, or `options.verifier`), through `signIn` of `useSiwx`
+  from `@tuwaio/siwx-react`. It rejects without a connection, without `signMessage` or without a verifier.
+- `signOut()` clears the SIWX session and then calls `options.destroyer` (a failure is logged).
+
+## Parameters
+
+### options?
+
+[`UseNovaSiwxOptions`](?path=/docs/packages-nova-connect-connect-interfaces-usenovasiwxoptions--docs)
+
+See [UseNovaSiwxOptions](?path=/docs/packages-nova-connect-connect-interfaces-usenovasiwxoptions--docs).
+
+## Returns
+
+`object`
+
+The `signIn` and `signOut` actions.
+
+### signIn
+
+> **signIn**: (`overrideConnection?`, `customVerifier?`) => `Promise`\<`void`\> = `handleSignIn`
+
+#### Parameters
+
+##### overrideConnection?
+
+`Connector`\<`Connection`\>
+
+##### customVerifier?
+
+(`payload`) => `Promise`\<`SiwxClientSession` \| `null`\>
+
+#### Returns
+
+`Promise`\<`void`\>
+
+### signOut
+
+> **signOut**: () => `Promise`\<`void`\>
+
+#### Returns
+
+`Promise`\<`void`\>
+
+## Example
+
+```tsx
+import { useNovaSiwx, type UseNovaSiwxOptions } from '@tuwaio/nova-connect/hooks';
+
+export function SignInButtons({ verifier }: Pick<UseNovaSiwxOptions, 'verifier'>) {
+  const { signIn, signOut } = useNovaSiwx({ verifier, statement: 'Sign in to the app.' });
+
+  return (
+    <>
+      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signOut()}>Sign out</button>
+    </>
+  );
+}
+```

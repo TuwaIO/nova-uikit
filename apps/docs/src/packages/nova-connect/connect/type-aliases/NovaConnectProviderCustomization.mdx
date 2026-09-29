@@ -1,0 +1,235 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Type Aliases/NovaConnectProviderCustomization" />
+
+# NovaConnectProviderCustomization
+
+> **NovaConnectProviderCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L84)
+
+Comprehensive customization options for NovaConnectProvider
+
+## Properties
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L86)
+
+Custom components
+
+#### ErrorsProvider?
+
+> `optional` **ErrorsProvider?**: `ComponentType`\<[`NovaConnectProviderErrorsProviderProps`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectprovidererrorsproviderprops--docs)\>
+
+Custom errors provider component
+
+#### LabelsProvider?
+
+> `optional` **LabelsProvider?**: `ComponentType`\<[`NovaConnectProviderLabelsProviderProps`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectproviderlabelsproviderprops--docs)\>
+
+Custom labels provider component
+
+***
+
+### contextValue?
+
+> `optional` **contextValue?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L117)
+
+Custom context value transformation
+
+#### transform?
+
+> `optional` **transform?**: (`defaultValue`, `context`) => [`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs)
+
+Transforms the value of the context before it is provided.
+
+##### Parameters
+
+###### defaultValue
+
+[`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs)
+
+The state of the provider.
+
+###### context
+
+[`NovaConnectProviderCustomizationContext`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectprovidercustomizationcontext--docs)
+
+State of the provider for customization.
+
+##### Returns
+
+[`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs)
+
+The context value.
+
+***
+
+### errors?
+
+> `optional` **errors?**: [`ErrorsProviderCustomization`](?path=/docs/packages-nova-connect-connect-type-aliases-errorsprovidercustomization--docs)
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L115)
+
+ErrorsProvider customization - passed through to ErrorsProvider
+
+***
+
+### labels?
+
+> `optional` **labels?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L93)
+
+Labels customization and merging strategy
+
+#### merge?
+
+> `optional` **merge?**: (`defaultLabels`, `userLabels`) => [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+Merges the `labels` prop into the defaults, instead of a deep merge.
+
+##### Parameters
+
+###### defaultLabels
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The English defaults.
+
+###### userLabels
+
+`Partial`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\>
+
+The `labels` prop (an empty object without it).
+
+##### Returns
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The merged labels.
+
+#### transform?
+
+> `optional` **transform?**: (`mergedLabels`, `context`) => [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+Transforms the merged labels before they are provided.
+
+##### Parameters
+
+###### mergedLabels
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The merged labels.
+
+###### context
+
+[`NovaConnectProviderCustomizationContext`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectprovidercustomizationcontext--docs)
+
+State of the provider.
+
+##### Returns
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The final labels.
+
+***
+
+### modals?
+
+> `optional` **modals?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L160)
+
+Modal customizations
+
+#### connectedModal?
+
+> `optional` **connectedModal?**: [`ConnectedModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalcustomization--docs)
+
+ConnectedModal customization
+
+#### connectModal?
+
+> `optional` **connectModal?**: [`ConnectModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectmodalcustomization--docs)
+
+ConnectModal customization
+
+***
+
+### rendering?
+
+> `optional` **rendering?**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L131)
+
+Custom rendering logic
+
+#### providerTree?
+
+> `optional` **providerTree?**: (`defaultTree`, `components`, `context`) => `ReactNode`
+
+Returns the rendered tree, instead of the default one. Keep the elements inside the context provider (the
+default tree and `MainContent` include it).
+
+##### Parameters
+
+###### defaultTree
+
+`ReactNode`
+
+The default tree: the context provider with the SIWX watcher, the errors provider, the
+labels provider with the app, and the two modals.
+
+###### components
+
+The parts of the tree.
+
+###### ConnectedModal
+
+`ReactNode`
+
+The connected modal (an empty fragment without chains).
+
+###### ConnectModal
+
+`ReactNode`
+
+The connect modal (an empty fragment without chains).
+
+###### ErrorsProvider
+
+`ReactNode`
+
+The errors provider element.
+
+###### LabelsProvider
+
+`ReactNode`
+
+The labels provider element with the app.
+
+###### MainContent
+
+`ReactNode`
+
+The same tree as `defaultTree`.
+
+###### context
+
+[`NovaConnectProviderCustomizationContext`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectprovidercustomizationcontext--docs)
+
+State of the provider.
+
+##### Returns
+
+`ReactNode`
+
+The tree to render.

@@ -1,6 +1,5 @@
 /**
  * @file ChainSelector component - A highly customizable chain selector with support for desktop and mobile devices.
- * @module ChainSelector
  */
 
 import * as Select from '@radix-ui/react-select';
@@ -29,7 +28,7 @@ import { ScrollableChainList, ScrollableChainListCustomization } from './Scrolla
 /**
  * Context for the chain selection trigger button.
  */
-type ChainTriggerButtonContext = {
+export type ChainSelectorTriggerButtonContext = {
   /** The currently formatted chain ID */
   currentFormattedChainId: string | number;
   /** Value for the Select component */
@@ -45,7 +44,7 @@ type ChainTriggerButtonContext = {
 /**
  * Props for a custom trigger icon component.
  */
-type CustomTriggerIconProps = {
+export type ChainSelectorTriggerIconProps = {
   /** Chain ID */
   chainId: string | number;
   /** CSS class */
@@ -57,7 +56,7 @@ type CustomTriggerIconProps = {
 /**
  * Props for a custom trigger content component.
  */
-type CustomTriggerContentProps = {
+export type ChainSelectorTriggerContentProps = {
   /** Chain icon */
   icon: ReactNode;
   /** Chain name */
@@ -73,7 +72,7 @@ type CustomTriggerContentProps = {
 /**
  * Props for a custom trigger arrow component.
  */
-type CustomTriggerArrowProps = {
+export type ChainSelectorTriggerArrowProps = {
   /** Whether the list is open */
   isOpen: boolean;
   /** CSS class */
@@ -85,7 +84,7 @@ type CustomTriggerArrowProps = {
 /**
  * Props for a custom display for a single chain (when no selector is needed).
  */
-type CustomSingleChainDisplayProps = {
+export type ChainSelectorSingleChainDisplayProps = {
   /** Chain ID */
   chainId: string | number;
   /** Chain name */
@@ -99,7 +98,7 @@ type CustomSingleChainDisplayProps = {
 /**
  * Props for a custom desktop selector wrapper.
  */
-type CustomDesktopSelectorProps = {
+export type ChainSelectorDesktopSelectorProps = {
   /** Child elements */
   children: ReactNode;
   /** CSS class */
@@ -111,7 +110,7 @@ type CustomDesktopSelectorProps = {
 /**
  * Props for a custom mobile selector wrapper.
  */
-type CustomMobileSelectorProps = {
+export type ChainSelectorMobileSelectorProps = {
   /** Child elements */
   children: ReactNode;
   /** CSS class */
@@ -123,7 +122,7 @@ type CustomMobileSelectorProps = {
 /**
  * Props for a custom close button component.
  */
-type CustomCloseButtonProps = {
+export type ChainSelectorCloseButtonProps = {
   /** Close handler */
   onClose: () => void;
   /** CSS class */
@@ -137,7 +136,7 @@ type CustomCloseButtonProps = {
 /**
  * Props for a custom dialog header component.
  */
-type CustomDialogHeaderProps = {
+export type ChainSelectorDialogHeaderProps = {
   /** Title text */
   title: string;
   /** Close handler */
@@ -147,7 +146,7 @@ type CustomDialogHeaderProps = {
   /** Close button customization */
   closeButton?: {
     /** Close button component */
-    Component?: ComponentType<CustomCloseButtonProps>;
+    Component?: ComponentType<ChainSelectorCloseButtonProps>;
     /** Close button props */
     props?: Partial<ComponentPropsWithoutRef<'button'>>;
     /** Close button classes */
@@ -156,11 +155,6 @@ type CustomDialogHeaderProps = {
     iconClassName?: string;
   };
 };
-
-/**
- * Animation easing parameters for framer-motion.
- */
-type AnimationEasing = [number, number, number, number] | string;
 
 /**
  * Customization options for the ChainTriggerButton.
@@ -173,53 +167,80 @@ export type ChainTriggerButtonCustomization = {
   /** Custom component overrides */
   components?: {
     /** Custom chain icon component */
-    Icon?: ComponentType<CustomTriggerIconProps>;
+    Icon?: ComponentType<ChainSelectorTriggerIconProps>;
     /** Custom trigger content wrapper */
-    Content?: ComponentType<CustomTriggerContentProps>;
+    Content?: ComponentType<ChainSelectorTriggerContentProps>;
     /** Custom arrow/chevron component */
-    Arrow?: ComponentType<CustomTriggerArrowProps>;
+    Arrow?: ComponentType<ChainSelectorTriggerArrowProps>;
   };
   /** Custom CSS class generators */
   classNames?: {
-    /** Function to generate wrapper classes */
+    /**
+     * Returns the classes of the wrapper `div`, instead of the default ones.
+     *
+     * @param params - The trigger state.
+     * @param params.isMobile - Whether this is the mobile trigger.
+     * @param params.isOpen - Whether the chain list is open.
+     * @returns The classes.
+     */
     wrapper?: (params: { isMobile: boolean; isOpen: boolean }) => string;
-    /** Function to generate button/trigger classes */
+    /**
+     * Returns the classes of the trigger button, instead of the default ones.
+     *
+     * @param params - The trigger state.
+     * @param params.isMobile - Whether this is the mobile trigger.
+     * @param params.isOpen - Whether the chain list is open.
+     * @param params.hasMultipleChains - Whether more than one chain is available (always `true`: with one chain,
+     * `ChainSelector` renders no trigger).
+     * @returns The classes.
+     */
     button?: (params: { isMobile: boolean; isOpen: boolean; hasMultipleChains: boolean }) => string;
-    /** Function to generate inner content classes */
+    /**
+     * Returns the classes of the content inside the button, instead of the default ones.
+     *
+     * @param params - The trigger state.
+     * @param params.isMobile - Whether this is the mobile trigger.
+     * @param params.isOpen - Whether the chain list is open.
+     * @returns The classes.
+     */
     innerContent?: (params: { isMobile: boolean; isOpen: boolean }) => string;
-    /** Function to generate icon wrapper classes */
-    iconWrapper?: (params: { isMobile: boolean }) => string;
-    /** Function to generate chain name classes */
-    chainName?: (params: { isMobile: boolean; isVisible: boolean }) => string;
-    /** Function to generate arrow wrapper classes */
+    /**
+     * Returns the classes of the arrow wrapper (empty by default).
+     *
+     * @param params - The trigger state.
+     * @param params.isMobile - Whether this is the mobile trigger.
+     * @returns The classes.
+     */
     arrowWrapper?: (params: { isMobile: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Wrapper for the click handler */
+    /**
+     * Wraps the click handler of the mobile trigger: call `originalHandler()` to open the chain dialog. The desktop
+     * trigger opens its list through Radix Select.
+     *
+     * @param originalHandler - Opens the chain list.
+     * @param event - The click event.
+     * @param context - State of the trigger.
+     */
     onClick?: (
       originalHandler: () => void,
       event: React.MouseEvent<HTMLButtonElement>,
-      context: ChainTriggerButtonContext,
+      context: ChainSelectorTriggerButtonContext,
     ) => void;
-    /** Wrapper for the key down handler */
+    /**
+     * Wraps the key handler: call `originalHandler(event)` to toggle the list on Enter and Space and to close it on
+     * Escape.
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The keyboard event.
+     * @param context - State of the trigger.
+     */
     onKeyDown?: (
       originalHandler: (event: React.KeyboardEvent) => void,
       event: React.KeyboardEvent,
-      context: ChainTriggerButtonContext,
+      context: ChainSelectorTriggerButtonContext,
     ) => void;
-  };
-  /** Animation settings */
-  animations?: {
-    /** Layout animation settings */
-    layout?: {
-      duration?: number;
-      ease?: AnimationEasing;
-    };
-    /** Inner content animation settings */
-    innerContent?: {
-      duration?: number;
-    };
   };
 };
 
@@ -230,42 +251,70 @@ export type ChainSelectorCustomization = {
   /** Custom component overrides */
   components?: {
     /** Custom component for displaying a single chain */
-    SingleChainDisplay?: ComponentType<CustomSingleChainDisplayProps>;
+    SingleChainDisplay?: ComponentType<ChainSelectorSingleChainDisplayProps>;
     /** Custom wrapper for the desktop selector */
-    DesktopSelector?: ComponentType<CustomDesktopSelectorProps>;
+    DesktopSelector?: ComponentType<ChainSelectorDesktopSelectorProps>;
     /** Custom wrapper for the mobile selector */
-    MobileSelector?: ComponentType<CustomMobileSelectorProps>;
+    MobileSelector?: ComponentType<ChainSelectorMobileSelectorProps>;
     /** Custom dialog header component */
-    DialogHeader?: ComponentType<CustomDialogHeaderProps>;
+    DialogHeader?: ComponentType<ChainSelectorDialogHeaderProps>;
   };
   /** Custom CSS class generators */
   classNames?: {
-    /** Classes for the main container */
-    container?: (params: { hasMultipleChains: boolean; isLoading: boolean }) => string;
-    /** Classes for the desktop wrapper */
+    /**
+     * Returns the classes of the container, instead of the `className` prop.
+     *
+     * @param params - The selector state.
+     * @param params.hasMultipleChains - Whether more than one chain is available.
+     * @returns The classes.
+     */
+    container?: (params: { hasMultipleChains: boolean }) => string;
+    /**
+     * Returns the classes of the desktop wrapper, instead of the default ones (hidden below the `sm` breakpoint).
+     *
+     * @param params - The selector state.
+     * @param params.chainCount - Number of available chains.
+     * @returns The classes.
+     */
     desktopWrapper?: (params: { chainCount: number }) => string;
-    /** Classes for the mobile wrapper */
+    /**
+     * Returns the classes of the mobile wrapper, instead of the default ones (hidden from the `sm` breakpoint).
+     *
+     * @param params - The selector state.
+     * @param params.chainCount - Number of available chains.
+     * @returns The classes.
+     */
     mobileWrapper?: (params: { chainCount: number }) => string;
-    /** Classes for the loading state */
-    loadingState?: () => string;
     /** Classes for the single chain display */
     singleChainDisplay?: () => string;
-    /** Classes for the dialog content */
+    /**
+     * Returns the classes of the mobile dialog content, instead of the default ones.
+     *
+     * @param params - The selector state.
+     * @param params.chainCount - Number of available chains.
+     * @returns The classes.
+     */
     dialogContent?: (params: { chainCount: number }) => string;
     /** Classes for the dialog inner container */
     dialogInnerContainer?: () => string;
     /** Classes for the dialog header */
     dialogHeader?: () => string;
-    /** Classes for the dialog header title */
-    dialogHeaderTitle?: () => string;
-    /** Classes for the dialog header close button wrapper */
-    dialogHeaderCloseButtonWrapper?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Wrapper for the chain change handler */
+    /**
+     * Wraps the chain change: call `originalHandler(newChainId)` to run `switchNetwork` of the Satellite store (the
+     * wallet may ask to confirm).
+     *
+     * @param originalHandler - Switches the network of the active connection.
+     * @param newChainId - The selected chain ID (formatted as the connector expects).
+     */
     onChainChange?: (originalHandler: (newChainId: string) => void, newChainId: string) => void;
-    /** Wrapper for the dialog close handler */
+    /**
+     * Wraps the close button of the mobile dialog: call `originalHandler()` to close the dialog.
+     *
+     * @param originalHandler - Closes the dialog.
+     */
     onDialogClose?: (originalHandler: () => void) => void;
   };
   /** Dialog header customization */
@@ -315,14 +364,14 @@ interface ChainTriggerButtonProps {
 /**
  * Default trigger icon.
  */
-const DefaultTriggerIcon = ({ chainId, className, ...props }: CustomTriggerIconProps) => {
+const DefaultTriggerIcon = ({ chainId, className, ...props }: ChainSelectorTriggerIconProps) => {
   return <NetworkIcon chainId={chainId} className={className} {...props} />;
 };
 
 /**
  * Default trigger content.
  */
-const DefaultTriggerContent = ({ icon, chainName, isMobile }: CustomTriggerContentProps) => {
+const DefaultTriggerContent = ({ icon, chainName, isMobile }: ChainSelectorTriggerContentProps) => {
   return (
     <div className="novacon:flex novacon:items-center novacon:sm:space-x-2 novacon:[&_svg]:w-6 novacon:[&_svg]:h-6">
       <div aria-hidden="true">{icon}</div>
@@ -342,7 +391,7 @@ const DefaultTriggerContent = ({ icon, chainName, isMobile }: CustomTriggerConte
 /**
  * Default trigger arrow.
  */
-const DefaultTriggerArrow = ({ isOpen, className, ...props }: CustomTriggerArrowProps) => {
+const DefaultTriggerArrow = ({ isOpen, className, ...props }: ChainSelectorTriggerArrowProps) => {
   return <ChevronArrowWithAnim isOpen={isOpen} className={className} {...props} />;
 };
 
@@ -354,7 +403,7 @@ const DefaultSingleChainDisplay = ({
   chainName,
   className,
   'aria-label': ariaLabel,
-}: CustomSingleChainDisplayProps) => {
+}: ChainSelectorSingleChainDisplayProps) => {
   return (
     <div className={className} role="img" aria-label={ariaLabel}>
       <NetworkIcon chainId={chainId ?? ''} />
@@ -366,7 +415,11 @@ const DefaultSingleChainDisplay = ({
 /**
  * Default desktop selector wrapper.
  */
-const DefaultDesktopSelector = ({ children, className, 'aria-label': ariaLabel }: CustomDesktopSelectorProps) => {
+const DefaultDesktopSelector = ({
+  children,
+  className,
+  'aria-label': ariaLabel,
+}: ChainSelectorDesktopSelectorProps) => {
   return (
     <div className={className} role="region" aria-label={ariaLabel}>
       {children}
@@ -377,7 +430,7 @@ const DefaultDesktopSelector = ({ children, className, 'aria-label': ariaLabel }
 /**
  * Default mobile selector wrapper.
  */
-const DefaultMobileSelector = ({ children, className, 'aria-label': ariaLabel }: CustomMobileSelectorProps) => {
+const DefaultMobileSelector = ({ children, className, 'aria-label': ariaLabel }: ChainSelectorMobileSelectorProps) => {
   return (
     <div className={className} role="region" aria-label={ariaLabel}>
       {children}
@@ -388,7 +441,7 @@ const DefaultMobileSelector = ({ children, className, 'aria-label': ariaLabel }:
 /**
  * Default close button component.
  */
-const DefaultCloseButton = ({ onClose, className, 'aria-label': ariaLabel, icon }: CustomCloseButtonProps) => {
+const DefaultCloseButton = ({ onClose, className, 'aria-label': ariaLabel, icon }: ChainSelectorCloseButtonProps) => {
   return (
     <button type="button" aria-label={ariaLabel} className={className} onClick={onClose}>
       {icon}
@@ -399,7 +452,7 @@ const DefaultCloseButton = ({ onClose, className, 'aria-label': ariaLabel, icon 
 /**
  * Default dialog header component.
  */
-const DefaultDialogHeader = ({ title, onClose, className, closeButton }: CustomDialogHeaderProps) => {
+const DefaultDialogHeader = ({ title, onClose, className, closeButton }: ChainSelectorDialogHeaderProps) => {
   const labels = useNovaConnectLabels();
 
   const {
@@ -443,7 +496,7 @@ const defaultClickHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _event: React.MouseEvent<HTMLButtonElement>,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _context: ChainTriggerButtonContext,
+  _context: ChainSelectorTriggerButtonContext,
 ) => {
   originalHandler();
 };
@@ -452,7 +505,7 @@ const defaultKeyDownHandler = (
   originalHandler: (event: React.KeyboardEvent) => void,
   event: React.KeyboardEvent,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _context: ChainTriggerButtonContext,
+  _context: ChainSelectorTriggerButtonContext,
 ) => {
   originalHandler(event);
 };
@@ -490,7 +543,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      const context: ChainTriggerButtonContext = {
+      const context: ChainSelectorTriggerButtonContext = {
         currentFormattedChainId,
         selectValue: String(currentFormattedChainId),
         isChainsListOpen,
@@ -516,7 +569,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      const context: ChainTriggerButtonContext = {
+      const context: ChainSelectorTriggerButtonContext = {
         currentFormattedChainId,
         selectValue: String(currentFormattedChainId),
         isChainsListOpen,
@@ -670,7 +723,6 @@ export function ChainSelector({
   const containerClasses = customization?.classNames?.container
     ? customization.classNames.container({
         hasMultipleChains: chainsList.length > 1,
-        isLoading: false,
       })
     : className;
 

@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/NetworkTabData" />
+
+# NetworkTabData
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L29)
+
+A tab of [NetworkTabs](?path=/docs/packages-nova-connect-components-variables-networktabs--docs).
+
+## Properties
+
+### index
+
+> **index**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L44)
+
+Tab index
+
+***
+
+### isSelected
+
+> **isSelected**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L42)
+
+Whether this tab is selected
+
+***
+
+### network
+
+> **network**: `OrbitAdapter` \| `undefined`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L31)
+
+Network adapter (undefined for "All")
+
+***
+
+### networkInfo
+
+> **networkInfo**: \{ `chainId`: `string` \| `number`; `name`: `string`; \} \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/NetworkTabs.tsx#L35)
+
+Default chain of the network (`chain` of `getNetworkData` from `@tuwaio/orbit-core`), `null` for "All"
+
+#### Union Members
+
+##### Type Literal
+
+\{ `chainId`: `string` \| `number`; `name`: `string`; \}
+
+##### chainId
+
+> **chainId**: `string` \| `number`
+
+Chain ID of the network icon
+
+##### name
+
+> **name**: `string`
+
+Chain name
+
+***
+
+`null`

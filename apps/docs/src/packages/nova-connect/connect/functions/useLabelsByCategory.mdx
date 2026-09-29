@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useLabelsByCategory" />
+
+# useLabelsByCategory()
+
+> **useLabelsByCategory**\<`T`\>(`category`): `Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), [`LabelCategory`](?path=/docs/packages-nova-connect-connect-type-aliases-labelcategory--docs)\[`T`\]\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L137)
+
+Returns the labels of a category of [LabelCategory](?path=/docs/packages-nova-connect-connect-type-aliases-labelcategory--docs).
+
+## Type Parameters
+
+### T
+
+`T` *extends* keyof [`LabelCategory`](?path=/docs/packages-nova-connect-connect-type-aliases-labelcategory--docs)
+
+## Parameters
+
+### category
+
+`T`
+
+The category.
+
+## Returns
+
+`Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), [`LabelCategory`](?path=/docs/packages-nova-connect-connect-type-aliases-labelcategory--docs)\[`T`\]\>
+
+An object with the labels of the category.
+
+## Example
+
+```tsx
+import { useLabelsByCategory } from '@tuwaio/nova-connect/hooks';
+
+export function StateText() {
+  const { loading } = useLabelsByCategory('states');
+
+  return <span>{loading}</span>;
+}
+```

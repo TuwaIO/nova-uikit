@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/getLabelWithFallback" />
+
+# getLabelWithFallback()
+
+> **getLabelWithFallback**(`labels`, `key`, `fallback?`): `string`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:186](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L186)
+
+Returns a label, or a fallback when it is blank: the `fallback` argument, the English default, then the key.
+
+## Parameters
+
+### labels
+
+[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The labels.
+
+### key
+
+keyof [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+The label key.
+
+### fallback?
+
+`string`
+
+Text used when the label is blank.
+
+## Returns
+
+`string`
+
+The text.
+
+## Example
+
+```ts
+import { defaultLabels } from '@tuwaio/nova-connect/i18n';
+import { getLabelWithFallback } from '@tuwaio/nova-connect/hooks';
+
+getLabelWithFallback({ ...defaultLabels, connectWallet: '' }, 'connectWallet', 'Connect'); // 'Connect'
+```

@@ -1,0 +1,267 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/BalanceDisplayCustomization" />
+
+# BalanceDisplayCustomization
+
+> **BalanceDisplayCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L99)
+
+Customization options for BalanceDisplay component
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:130](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L130)
+
+Custom class name generators
+
+#### balanceIcon?
+
+> `optional` **balanceIcon?**: () => `string`
+
+Function to generate balance icon classes
+
+##### Returns
+
+`string`
+
+#### balanceSymbol?
+
+> `optional` **balanceSymbol?**: () => `string`
+
+Function to generate balance symbol classes
+
+##### Returns
+
+`string`
+
+#### balanceValue?
+
+> `optional` **balanceValue?**: () => `string`
+
+Function to generate balance value classes
+
+##### Returns
+
+`string`
+
+#### balanceValueWrapper?
+
+> `optional` **balanceValueWrapper?**: () => `string`
+
+Function to generate balance value wrapper classes
+
+##### Returns
+
+`string`
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container.
+
+##### Parameters
+
+###### params
+
+The balance state.
+
+###### hasBalance
+
+`boolean`
+
+Whether a balance is set.
+
+###### isLoading
+
+`boolean`
+
+The `isLoading` prop.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### emptyState?
+
+> `optional` **emptyState?**: () => `string`
+
+Function to generate empty state classes
+
+##### Returns
+
+`string`
+
+#### loadingState?
+
+> `optional` **loadingState?**: () => `string`
+
+Function to generate loading state classes
+
+##### Returns
+
+`string`
+
+#### refreshButton?
+
+> `optional` **refreshButton?**: (`params`) => `string`
+
+Returns the classes of the refresh button.
+
+##### Parameters
+
+###### params
+
+The button state.
+
+###### isLoading
+
+`boolean`
+
+The `isLoading` prop.
+
+###### showSuccess
+
+`boolean`
+
+Whether the success check is shown after a refresh.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### refreshIcon?
+
+> `optional` **refreshIcon?**: () => `string`
+
+Function to generate refresh icon classes
+
+##### Returns
+
+`string`
+
+#### successIcon?
+
+> `optional` **successIcon?**: () => `string`
+
+Function to generate success icon classes
+
+##### Returns
+
+`string`
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L119)
+
+Custom components
+
+#### BalanceValue?
+
+> `optional` **BalanceValue?**: `ComponentType`\<[`BalanceValueProps`](?path=/docs/packages-nova-connect-components-type-aliases-balancevalueprops--docs)\>
+
+Custom balance value component
+
+#### EmptyState?
+
+> `optional` **EmptyState?**: `ComponentType`\<[`EmptyStateProps`](?path=/docs/packages-nova-connect-components-type-aliases-emptystateprops--docs)\>
+
+Custom empty state component
+
+#### LoadingState?
+
+> `optional` **LoadingState?**: `ComponentType`\<[`LoadingStateProps`](?path=/docs/packages-nova-connect-components-type-aliases-loadingstateprops--docs)\>
+
+Custom loading state component
+
+#### RefreshButton?
+
+> `optional` **RefreshButton?**: `ComponentType`\<[`RefreshButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-refreshbuttonprops--docs)\>
+
+Custom refresh button component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:176](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L176)
+
+Configuration options
+
+#### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Whether to disable animations
+
+#### showIcon?
+
+> `optional` **showIcon?**: `boolean`
+
+Whether to show icon
+
+#### showRefreshButton?
+
+> `optional` **showRefreshButton?**: `boolean`
+
+Whether to show refresh button
+
+#### successDuration?
+
+> `optional` **successDuration?**: `number`
+
+Success indicator duration in ms
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L101)
+
+Override root container props
+
+***
+
+### variants?
+
+> `optional` **variants?**: `object`
+
+Defined in: [packages/nova-connect/src/components/BalanceDisplay.tsx:167](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/BalanceDisplay.tsx#L167)
+
+Custom animation variants
+
+#### loading?
+
+> `optional` **loading?**: `Variants`
+
+Loading state animation variants
+
+#### refresh?
+
+> `optional` **refresh?**: `Variants`
+
+Refresh icon animation variants
+
+#### success?
+
+> `optional` **success?**: `Variants`
+
+Success indicator animation variants

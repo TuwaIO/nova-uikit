@@ -1,0 +1,83 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalFooterDisconnectButtonProps" />
+
+# ConnectedModalFooterDisconnectButtonProps
+
+> **ConnectedModalFooterDisconnectButtonProps** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L24)
+
+Props for a custom disconnect button.
+
+## Properties
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L38)
+
+`disconnect-description`
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L34)
+
+Classes from `classNames.disconnectButton`, added to `standardButtonClasses` of `@tuwaio/nova-core`
+
+***
+
+### connectionsCount
+
+> **connectionsCount**: `number`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L40)
+
+Number of connected wallets (the default button says "Disconnect all" when there are several)
+
+***
+
+### data-testid?
+
+> `optional` **data-testid?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L36)
+
+`config.disconnectButtonTestId` or `disconnect-button`
+
+***
+
+### labels
+
+> **labels**: `Record`\<`string`, `string`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L32)
+
+The Nova Connect labels, with `labels.disconnectText` applied
+
+***
+
+### onClick
+
+> **onClick**: (`event`) => `void`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalFooter.tsx#L30)
+
+Disconnects all wallets (through the disconnect handlers) and closes the modal.
+
+#### Parameters
+
+##### event
+
+`React.MouseEvent`\<`HTMLButtonElement`\>
+
+The click event.
+
+#### Returns
+
+`void`

@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Variables/ConnectorsBlock" />
+
+# ConnectorsBlock
+
+> `const` **ConnectorsBlock**: `NamedExoticComponent`\<[`ConnectorsBlockProps`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:431](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L431)
+
+A titled group of wallet cards in the connect modal ("Installed", "Popular" or a custom group). The cards of the
+three most recently used wallets (read from `localStorage` key `orbit-core:recentlyConnectedConnectorsListHelpers`
+on mount) show a "Recent" badge.
+
+Clicking a wallet with several networks while no network is selected calls `onClick` (the modal shows the network
+choice). Otherwise it calls `onClick`, connects the wallet through `connect` of the Satellite store to the chain
+from `appChains` or `solanaRPCUrls`, waits up to 10 seconds for the connection and closes the modal 400 ms later.
+A second click while a connection is running is ignored.
+
+Props: [ConnectorsBlockProps](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockprops--docs); the ref is forwarded to the container.
+
+## Example
+
+```tsx
+import { getFilteredConnectors } from '@tuwaio/nova-connect';
+import { ConnectorsBlock } from '@tuwaio/nova-connect/components';
+import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
+import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { mainnet } from 'viem/chains';
+
+export function InstalledWallets() {
+  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+  const { setIsConnected, setIsConnectModalOpen } = useNovaConnect();
+
+  return (
+    <ConnectorsBlock
+      title="Installed"
+      isTitleBold
+      selectedAdapter={OrbitAdapter.EVM}
+      connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+      onClick={(connector) => console.log('selected', connector.name)}
+      setIsConnected={setIsConnected}
+      setIsOpen={setIsConnectModalOpen}
+      appChains={[mainnet]}
+      customization={{
+        classNames: {
+          connectorItem: ({ itemData }) => (itemData.isRecent ? 'recent-connector' : 'standard-connector'),
+        },
+      }}
+    />
+  );
+}
+```

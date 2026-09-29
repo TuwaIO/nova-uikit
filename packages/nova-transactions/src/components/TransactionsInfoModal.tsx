@@ -10,9 +10,19 @@ import { ComponentPropsWithoutRef, ComponentType } from 'react';
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { TransactionsHistory, TransactionsHistoryProps } from './TransactionsHistory';
 
-type CustomHeaderProps = { closeModal: () => void };
+/** Props of the header of {@link TransactionsInfoModal} (`customization.components.Header`). */
+export type TransactionsInfoModalHeaderProps = {
+  /** Closes the modal. */
+  closeModal: () => void;
+};
 
+/**
+ * Props, class names and replacement components for the parts of {@link TransactionsInfoModal}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionsInfoModalCustomization<T extends Transaction> = {
+  /** Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`). */
   modalProps?: Partial<ComponentPropsWithoutRef<typeof DialogContent>>;
   /** Granular classNames for modal elements */
   classNames?: {
@@ -27,19 +37,33 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
   };
   /** Customization for TransactionsHistory component */
   historyCustomization?: TransactionsHistoryProps<T>['customization'];
-  /** Custom components */
+  /** Components that replace the default parts. */
   components?: {
-    Header?: ComponentType<CustomHeaderProps>;
+    /** The header with the title and the close button. */
+    Header?: ComponentType<TransactionsInfoModalHeaderProps>;
+    /** The transaction list. */
     History?: ComponentType<TransactionsHistoryProps<T>>;
   };
 };
 
+/**
+ * Props of {@link TransactionsInfoModal}.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ */
 export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   NovaTransactionsProviderProps<T>,
   'adapter' | 'connectedAdapterType' | 'connectedWalletAddress' | 'transactionsPool'
 > & {
+  /** Whether the modal is open. */
   isOpen?: boolean;
+  /**
+   * Opens or closes the modal.
+   *
+   * @param value - `false` when the modal is closed.
+   */
   setIsOpen: (value: boolean) => void;
+  /** Props, class names and replacement components for the parts of the modal. */
   customization?: TransactionsInfoModalCustomization<T>;
   /** Pagination state for infinite scroll, forwarded to TransactionsHistory. */
   pagination?: TxInMemoryPagination;
@@ -57,7 +81,7 @@ const DefaultHeader = ({
   closeModal,
   title,
   classNames,
-}: CustomHeaderProps & { title: string; classNames?: DefaultHeaderClassNames }) => {
+}: TransactionsInfoModalHeaderProps & { title: string; classNames?: DefaultHeaderClassNames }) => {
   const { actions } = useLabels();
   return (
     <DialogHeader className={classNames?.header}>
@@ -80,6 +104,15 @@ const DefaultHeader = ({
   );
 };
 
+/**
+ * A modal with the transaction history of the connected wallet ({@link TransactionsHistory}).
+ * `NovaTransactionsProvider`
+ * opens it from the toasts and the tracking modal.
+ *
+ * @typeParam T - The transaction type of the Pulsar store.
+ * @param props - See {@link TransactionsInfoModalProps}.
+ * @returns The modal.
+ */
 export function TransactionsInfoModal<T extends Transaction>({
   isOpen,
   setIsOpen,

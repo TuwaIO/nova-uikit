@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TxInfoBlockProps" />
+
+# TxInfoBlockProps\<T\>
+
+> **TxInfoBlockProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\>
+
+Defined in: [components/TrackingTxModal/TxInfoBlock.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxInfoBlock.tsx#L73)
+
+Props of [TxInfoBlock](?path=/docs/packages-nova-transactions-transactions-functions-txinfoblock--docs).
+
+## Type Declaration
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the block.
+
+### customization?
+
+> `optional` **customization?**: [`TxInfoBlockCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-txinfoblockcustomization--docs)\<`T`\>
+
+Class names and replacement parts for the block.
+
+### tx
+
+> **tx**: `T` \| `InitialTransaction`
+
+The transaction object to display, which can be a full transaction or an initial one.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

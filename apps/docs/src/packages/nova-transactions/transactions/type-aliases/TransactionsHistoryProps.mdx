@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionsHistoryProps" />
+
+# TransactionsHistoryProps\<T\>
+
+> **TransactionsHistoryProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"` \| `"transactionsPool"` \| `"connectedWalletAddress"`\> & `object`
+
+Defined in: [components/TransactionsHistory.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsHistory.tsx#L115)
+
+Props of [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs).
+
+## Type Declaration
+
+### canViewDetails?
+
+> `optional` **canViewDetails?**: `boolean`
+
+Whether transaction details can be viewed by clicking on history items. Defaults to true.
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the list.
+
+### customization?
+
+> `optional` **customization?**: [`TransactionsHistoryCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistorycustomization--docs)\<`T`\>
+
+Class names and replacement components for the parts of the list and of the details view.
+
+### initialTxKey?
+
+> `optional` **initialTxKey?**: `string` \| `null`
+
+Optional transaction key to open directly in detail view
+
+### pagination?
+
+> `optional` **pagination?**: `TxInMemoryPagination`
+
+Pagination state for infinite scroll. Uses TxInMemoryPagination from @tuwaio/pulsar-core.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

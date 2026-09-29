@@ -1,0 +1,176 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionHistoryItemCustomization" />
+
+# TransactionHistoryItemCustomization\<T\>
+
+> **TransactionHistoryItemCustomization**\<`T`\> = `object`
+
+Defined in: [components/TransactionHistoryItem.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L39)
+
+Customization options for TransactionHistoryItem component.
+Allows styling of all sub-elements including icon, text, badge, and hash link.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/TransactionHistoryItem.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L56)
+
+Custom class name generators for all sub-elements
+
+#### container?
+
+> `optional` **container?**: `string`
+
+Classes for the item container
+
+#### contentWrapper?
+
+> `optional` **contentWrapper?**: `string`
+
+Classes for the content wrapper
+
+#### description?
+
+> `optional` **description?**: `string`
+
+Classes for the description
+
+#### hashCopyButton?
+
+> `optional` **hashCopyButton?**: `string`
+
+Classes for default copy button
+
+#### hashLabel?
+
+> `optional` **hashLabel?**: `string`
+
+Classes for default hash link label
+
+#### hashLink?
+
+> `optional` **hashLink?**: `string`
+
+Classes for default hash link
+
+#### icon?
+
+> `optional` **icon?**: `string`
+
+Classes for the icon itself
+
+#### iconWrapper?
+
+> `optional` **iconWrapper?**: `string`
+
+Classes for the icon wrapper
+
+#### originalHashCopyButton?
+
+> `optional` **originalHashCopyButton?**: `string`
+
+Classes for original hash copy button (replaced transactions)
+
+#### originalHashLabel?
+
+> `optional` **originalHashLabel?**: `string`
+
+Classes for original hash link label (replaced transactions)
+
+#### originalHashLink?
+
+> `optional` **originalHashLink?**: `string`
+
+Classes for original hash link (replaced transactions)
+
+#### statusBadge?
+
+> `optional` **statusBadge?**: `string`
+
+Classes for the status badge container
+
+#### statusBadgeIcon?
+
+> `optional` **statusBadgeIcon?**: `string`
+
+Classes for the status badge icon
+
+#### statusBadgeLabel?
+
+> `optional` **statusBadgeLabel?**: `string`
+
+Classes for the status badge label
+
+#### timestamp?
+
+> `optional` **timestamp?**: `string`
+
+Classes for the timestamp
+
+#### title?
+
+> `optional` **title?**: `string`
+
+Classes for the title
+
+#### txKeyContainer?
+
+> `optional` **txKeyContainer?**: `string`
+
+Classes for the transaction key container
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [components/TransactionHistoryItem.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionHistoryItem.tsx#L41)
+
+Components that replace the default parts.
+
+#### Description?
+
+> `optional` **Description?**: `ComponentType`\<[`StatusAwareTextProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-statusawaretextprops--docs)\>
+
+The description.
+
+#### Icon?
+
+> `optional` **Icon?**: `ComponentType`\<[`TransactionHistoryItemIconProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionhistoryitemiconprops--docs)\>
+
+The network icon.
+
+#### StatusBadge?
+
+> `optional` **StatusBadge?**: `ComponentType`\<[`TransactionStatusBadgeProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionstatusbadgeprops--docs)\<`T`\>\>
+
+The status badge.
+
+#### Timestamp?
+
+> `optional` **Timestamp?**: `ComponentType`\<[`TransactionHistoryItemTimestampProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionhistoryitemtimestampprops--docs)\>
+
+The relative submission time ("5 minutes ago").
+
+#### Title?
+
+> `optional` **Title?**: `ComponentType`\<[`StatusAwareTextProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-statusawaretextprops--docs)\>
+
+The title (the transaction title, or its type).
+
+#### TransactionKey?
+
+> `optional` **TransactionKey?**: `ComponentType`\<[`TransactionKeyProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionkeyprops--docs)\<`T`\>\>
+
+The hashes of the transaction.

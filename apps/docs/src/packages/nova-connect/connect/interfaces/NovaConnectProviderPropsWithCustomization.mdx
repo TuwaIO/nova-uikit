@@ -1,0 +1,222 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/NovaConnectProviderPropsWithCustomization" />
+
+# NovaConnectProviderPropsWithCustomization
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L171)
+
+Props for the [NovaConnectProvider](?path=/docs/packages-nova-connect-connect-functions-novaconnectprovider--docs) component: `NovaConnectProviderProps` with `customization`.
+
+## Extends
+
+- [`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs)
+
+## Properties
+
+### appChains?
+
+> `optional` **appChains?**: readonly \[`Chain`, `Chain`\]
+
+Defined in: [packages/nova-connect/src/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L33)
+
+EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectAppChains](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectappchains--docs).
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`appChains`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#appchains)
+
+***
+
+### children
+
+> **children**: `ReactNode`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L68)
+
+The app
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`children`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#children)
+
+***
+
+### customConnectorGroups?
+
+> `optional` **customConnectorGroups?**: `Record`\<`string`, `string`[]\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L54)
+
+Extra wallet groups of the wallet list: group title → wallet names, in order
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`customConnectorGroups`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#customconnectorgroups)
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`NovaConnectProviderCustomization`](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectprovidercustomization--docs)
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L173)
+
+Comprehensive customization options for the provider and its sub-components
+
+***
+
+### labels?
+
+> `optional` **labels?**: `Partial`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L70)
+
+Texts to override, merged over the English defaults
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`labels`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#labels)
+
+***
+
+### legal?
+
+> `optional` **legal?**: [`LegalConfig`](?path=/docs/packages-nova-connect-connect-interfaces-legalconfig--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L56)
+
+Legal configuration for Terms of Service and Privacy Policy links
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`legal`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#legal)
+
+***
+
+### pagination?
+
+> `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
+
+Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
+Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`pagination`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#pagination)
+
+***
+
+### popularConnectors?
+
+> `optional` **popularConnectors?**: `string`[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L52)
+
+Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini)
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`popularConnectors`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#popularconnectors)
+
+***
+
+### pulsarAdapter?
+
+> `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L44)
+
+Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
+
+#### Inherited from
+
+`NovaConnectProviderPropsWithCustomization`.[`pulsarAdapter`](#pulsaradapter)
+
+***
+
+### siwx?
+
+> `optional` **siwx?**: [`NovaSiwxWatcherProps`](?path=/docs/packages-nova-connect-connect-interfaces-novasiwxwatcherprops--docs)
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L61)
+
+SIWX sign-in of the connected wallet (see `NovaSiwxWatcher`). Without it, Nova Connect does not sign in and does
+not touch the SIWX session.
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`siwx`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#siwx)
+
+***
+
+### solanaRPCUrls?
+
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+
+Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+
+Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+[NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`solanaRPCUrls`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#solanarpcurls)
+
+***
+
+### transactionPool?
+
+> `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+
+Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`transactionPool`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#transactionpool)
+
+***
+
+### withBalance?
+
+> `optional` **withBalance?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L46)
+
+Whether the connect button shows the native balance
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`withBalance`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#withbalance)
+
+***
+
+### withChain?
+
+> `optional` **withChain?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+
+Whether the connect button shows a chain selector
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`withChain`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#withchain)
+
+***
+
+### withImpersonated?
+
+> `optional` **withImpersonated?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
+
+Whether the wallet list offers the impersonated wallet (a read-only address, for development)
+
+#### Inherited from
+
+[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs).[`withImpersonated`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs#withimpersonated)

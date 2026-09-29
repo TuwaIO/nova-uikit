@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingSpinnerProps" />
+
+# ConnectingSpinnerProps
+
+> **ConnectingSpinnerProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L86)
+
+Props for a custom spinner (shown in the `connecting` state).
+
+## Type Declaration
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+ID of the heading
+
+### aria-label?
+
+> `optional` **aria-label?**: `string`
+
+`config.ariaLabels.spinner` or the `connecting` label
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.spinner` or the defaults
+
+### role?
+
+> `optional` **role?**: `string`
+
+`progressbar`
+
+### statusData
+
+> **statusData**: [`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status

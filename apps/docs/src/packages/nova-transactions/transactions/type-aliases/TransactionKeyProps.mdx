@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Type Aliases/TransactionKeyProps" />
+
+# TransactionKeyProps\<T\>
+
+> **TransactionKeyProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\> & `object`
+
+Defined in: [components/TransactionKey.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionKey.tsx#L19)
+
+Props of [TransactionKey](?path=/docs/packages-nova-transactions-transactions-functions-transactionkey--docs).
+
+## Type Declaration
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes of the container.
+
+### confirmations?
+
+> `optional` **confirmations?**: `number`
+
+Number of confirmations, shown below the hashes when it is above 0.
+
+### hashLinkClassNames?
+
+> `optional` **hashLinkClassNames?**: [`HashLinkProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-hashlinkprops--docs)\[`"classNames"`\]
+
+ClassNames to pass to HashLink components (default and replaced hash)
+
+### originalHashLinkClassNames?
+
+> `optional` **originalHashLinkClassNames?**: [`HashLinkProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-hashlinkprops--docs)\[`"classNames"`\]
+
+ClassNames for original hash link in replaced transactions (falls back to hashLinkClassNames)
+
+### renderHashLink?
+
+> `optional` **renderHashLink?**: (`props`) => `ReactNode`
+
+Renders each hash instead of [HashLink](?path=/docs/packages-nova-transactions-transactions-functions-hashlink--docs).
+
+#### Parameters
+
+##### props
+
+[`HashLinkProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-hashlinkprops--docs)
+
+The props the default `HashLink` would receive.
+
+#### Returns
+
+`ReactNode`
+
+The rendered hash.
+
+### tx
+
+> **tx**: `T`
+
+The transaction.
+
+### variant?
+
+> `optional` **variant?**: `"toast"` \| `"history"`
+
+Layout: `'toast'` adds a top border and spacing. Defaults to `'toast'`.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.

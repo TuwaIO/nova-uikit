@@ -1,0 +1,119 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ImpersonatedFormInputProps" />
+
+# ImpersonatedFormInputProps
+
+> **ImpersonatedFormInputProps** = `object` & `React.RefAttributes`\<`HTMLInputElement`\>
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ImpersonatedForm.tsx#L69)
+
+Props for a custom address field.
+
+## Type Declaration
+
+### aria-describedby?
+
+> `optional` **aria-describedby?**: `string`
+
+ID of the error message, while there is an error
+
+### aria-invalid?
+
+> `optional` **aria-invalid?**: `"true"` \| `"false"`
+
+Whether there is an error
+
+### autoComplete?
+
+> `optional` **autoComplete?**: `string`
+
+`config.input.autoComplete` or `off`
+
+### className?
+
+> `optional` **className?**: `string`
+
+Classes from `classNames.input` or the defaults
+
+### hasError
+
+> **hasError**: `boolean`
+
+Whether the Satellite store has a `connectionError`
+
+### id?
+
+> `optional` **id?**: `string`
+
+`impersonated-address`
+
+### onBlur
+
+> **onBlur**: () => `void`
+
+Validates the text at once (with `validateOnBlur`)
+
+#### Returns
+
+`void`
+
+### onChange
+
+> **onChange**: (`event`) => `void`
+
+Updates the text and validates it after `debounceDelay`.
+
+#### Parameters
+
+##### event
+
+`React.ChangeEvent`\<`HTMLInputElement`\>
+
+The change event.
+
+#### Returns
+
+`void`
+
+### onPaste?
+
+> `optional` **onPaste?**: (`event`) => `void`
+
+Replaces the text with the trimmed pasted text and validates it at once.
+
+#### Parameters
+
+##### event
+
+`React.ClipboardEvent`\<`HTMLInputElement`\>
+
+The paste event.
+
+#### Returns
+
+`void`
+
+### placeholder?
+
+> `optional` **placeholder?**: `string`
+
+`config.input.placeholder`, or the `walletAddressPlaceholder` label with a hint about ENS or SNS names
+
+### spellCheck?
+
+> `optional` **spellCheck?**: `boolean`
+
+`config.input.spellCheck` or `false`
+
+### type?
+
+> `optional` **type?**: `string`
+
+`text`
+
+### value
+
+> **value**: `string`
+
+The text in the field

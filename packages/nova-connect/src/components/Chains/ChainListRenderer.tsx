@@ -1,6 +1,5 @@
 /**
  * @file Highly customizable chain list renderer with comprehensive styling and behavior control.
- * @module ChainListRenderer
  */
 
 import * as Select from '@radix-ui/react-select';
@@ -20,6 +19,7 @@ import React, {
   forwardRef,
   ReactNode,
   useCallback,
+  useRef,
 } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -27,117 +27,210 @@ import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 // === TYPES AND INTERFACES ===
 
 /**
- * Chain data structure returned by getChainData function
+ * Chain data returned by the `getChainData` prop of {@link ChainListRenderer}.
  */
-interface ChainData {
+export interface ChainListRendererChainData {
+  /** The chain ID formatted for the connector (the value passed to the selection handlers) */
   formattedChainId: string | number;
+  /** The chain ID as given in the chain list */
   chain: string | number;
 }
 
 /**
- * Props for custom chain icon component
+ * Props for a custom chain icon component.
  */
-interface CustomChainIconProps {
+export interface ChainListRendererChainIconProps {
+  /** The formatted chain ID */
   chainId: string | number;
+  /** Classes from `classNames.icon` */
   className?: string;
+  /** Always `true`: the chain name is rendered next to the icon */
   'aria-hidden'?: boolean;
 }
 
 /**
- * Props for custom chain content component
+ * Props for a custom chain content component (icon and name of an item).
  */
-interface CustomChainContentProps {
+export interface ChainListRendererChainContentProps {
+  /** The formatted chain ID */
   chainId: string | number;
+  /** Whether this is the chain of the active connection */
   isActive: boolean;
+  /** The rendered chain icon */
   icon: ReactNode;
+  /** The chain name element */
   children?: ReactNode;
 }
 
 /**
- * Props for custom active indicator wrapper component
+ * Props for a custom active indicator wrapper component.
  */
-interface CustomActiveIndicatorWrapperProps {
+export interface ChainListRendererActiveIndicatorWrapperProps {
+  /** Whether this is the chain of the active connection */
   isActive: boolean;
+  /** Whether this is the mobile list */
   isMobile: boolean;
+  /** The rendered active indicator */
   indicator: ReactNode;
+  /** The "Connected" label, shown by the default wrapper for the active chain of the mobile list */
   children?: ReactNode;
+  /** Classes from `classNames.activeIndicatorWrapper` */
   className?: string;
 }
 
 /**
- * Props for custom active indicator component
+ * Props for a custom active indicator component.
  */
-interface CustomActiveIndicatorProps {
+export interface ChainListRendererActiveIndicatorProps {
+  /** Whether this is the chain of the active connection */
   isActive: boolean;
+  /** Accessible label (`connected` label) */
   label: string;
+  /** Classes from `classNames.activeIndicator` */
   className?: string;
 }
 
 /**
- * Animation configuration for container
+ * Framer Motion props of the list container. When set, the container is rendered as `motion.div`.
  */
-interface ContainerAnimationConfig {
+export interface ChainListRendererContainerAnimationConfig {
+  /** Initial state (`initial` of Framer Motion) */
   initial?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Target state (`animate` of Framer Motion) */
   animate?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Exit state (`exit` of Framer Motion) */
   exit?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Transition settings */
   transition?: Transition<AnyResolvedKeyframe>;
 }
 
 /**
- * Animation configuration for items
+ * Framer Motion props of the items of the mobile list. When set, each item is rendered as `motion.div`.
  */
-interface ItemAnimationConfig {
+export interface ChainListRendererItemAnimationConfig {
+  /** Initial state (`initial` of Framer Motion) */
   initial?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Target state (`animate` of Framer Motion) */
   animate?: TargetAndTransition | VariantLabels | LegacyAnimationControls | undefined;
+  /** Transition settings */
   transition?: Transition<AnyResolvedKeyframe>;
 }
 
 /**
- * Comprehensive customization options for ChainListRenderer
+ * Customization options of {@link ChainListRenderer}.
  */
 export interface ChainListRendererCustomization {
   /** Custom components */
   components?: {
     /** Custom chain icon component */
-    ChainIcon?: ComponentType<CustomChainIconProps>;
+    ChainIcon?: ComponentType<ChainListRendererChainIconProps>;
     /** Custom chain content layout component */
-    ChainContent?: ComponentType<CustomChainContentProps>;
+    ChainContent?: ComponentType<ChainListRendererChainContentProps>;
     /** Custom active indicator wrapper component */
-    ActiveIndicatorWrapper?: ComponentType<CustomActiveIndicatorWrapperProps>;
+    ActiveIndicatorWrapper?: ComponentType<ChainListRendererActiveIndicatorWrapperProps>;
     /** Custom active indicator component */
-    ActiveIndicator?: ComponentType<CustomActiveIndicatorProps>;
+    ActiveIndicator?: ComponentType<ChainListRendererActiveIndicatorProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Container classes */
+    /**
+     * Returns classes added to the list container (before the `className` prop).
+     *
+     * @param params - The list state.
+     * @param params.isMobile - Whether this is the mobile list.
+     * @param params.itemCount - Number of chains.
+     * @returns The classes.
+     */
     container?: (params: { isMobile: boolean; itemCount: number }) => string;
-    /** Item classes */
+    /**
+     * Returns the classes of an item, instead of the default ones and `itemClassName`. An empty string keeps the
+     * defaults.
+     *
+     * @param params - The item state.
+     * @param params.isActive - Whether this is the chain of the active connection.
+     * @param params.isMobile - Whether this is the mobile list.
+     * @param params.chainId - The formatted chain ID.
+     * @returns The classes.
+     */
     item?: (params: { isActive: boolean; isMobile: boolean; chainId: string | number }) => string;
-    /** Content wrapper classes */
-    content?: (params: { isActive: boolean; isMobile: boolean }) => string;
-    /** Icon classes */
+    /**
+     * Returns the classes passed to the chain icon.
+     *
+     * @param params - The item state.
+     * @param params.isActive - Whether this is the chain of the active connection.
+     * @param params.chainId - The formatted chain ID.
+     * @returns The classes.
+     */
     icon?: (params: { isActive: boolean; chainId: string | number }) => string;
-    /** Chain name classes */
+    /**
+     * Returns classes added to the chain name.
+     *
+     * @param params - The item state.
+     * @param params.isActive - Whether this is the chain of the active connection.
+     * @param params.isMobile - Whether this is the mobile list.
+     * @returns The classes.
+     */
     chainName?: (params: { isActive: boolean; isMobile: boolean }) => string;
-    /** Active indicator wrapper classes */
+    /**
+     * Returns classes added to the active indicator wrapper.
+     *
+     * @param params - The item state.
+     * @param params.isActive - Whether this is the chain of the active connection.
+     * @param params.isMobile - Whether this is the mobile list.
+     * @returns The classes.
+     */
     activeIndicatorWrapper?: (params: { isActive: boolean; isMobile: boolean }) => string;
-    /** Active indicator classes */
+    /**
+     * Returns classes added to the active indicator.
+     *
+     * @param params - The list state.
+     * @param params.isMobile - Whether this is the mobile list.
+     * @returns The classes.
+     */
     activeIndicator?: (params: { isMobile: boolean }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom click handler wrapper */
+    /**
+     * Wraps the activation of an item with a pointer (a click or a tap): call `originalHandler()` to select the chain
+     * (through `onSelect`) and close the list.
+     *
+     * @param originalHandler - Selects the chain and closes the list.
+     * @param context - The item.
+     * @param context.chainId - The formatted chain ID.
+     * @param context.chainName - The chain name.
+     * @param context.isActive - Whether this is the chain of the active connection.
+     */
     onClick?: (
       originalHandler: () => void,
       context: { chainId: string | number; chainName: string; isActive: boolean },
     ) => void;
-    /** Custom keydown handler wrapper */
+    /**
+     * Wraps the key handler of an item: call `originalHandler(event)` to select the chain on Enter and Space (in the
+     * desktop list, Space within a second of typing a chain name continues the type-ahead search instead).
+     *
+     * @param originalHandler - The default handler.
+     * @param event - The keyboard event.
+     * @param context - The item.
+     * @param context.chainId - The formatted chain ID.
+     * @param context.chainName - The chain name.
+     * @param context.isActive - Whether this is the chain of the active connection.
+     */
     onKeyDown?: (
       originalHandler: (event: React.KeyboardEvent) => void,
       event: React.KeyboardEvent,
       context: { chainId: string | number; chainName: string; isActive: boolean },
     ) => void;
-    /** Chain selection handler wrapper */
+    /**
+     * Wraps the selection of a chain: call `originalHandler(chainId)` to run `handleValueChange`. The list closes after
+     * this handler returns.
+     *
+     * @param originalHandler - The `handleValueChange` prop.
+     * @param chainId - The formatted chain ID, as a string.
+     * @param context - The item.
+     * @param context.chainName - The chain name.
+     * @param context.isActive - Whether this is the chain of the active connection.
+     */
     onSelect?: (
       originalHandler: (chainId: string) => void,
       chainId: string,
@@ -147,50 +240,53 @@ export interface ChainListRendererCustomization {
   /** Animation configuration */
   animations?: {
     /** Container animation */
-    container?: ContainerAnimationConfig;
-    /** Item animation */
-    item?: ItemAnimationConfig;
+    container?: ChainListRendererContainerAnimationConfig;
+    /** Item animation (mobile list only) */
+    item?: ChainListRendererItemAnimationConfig;
   };
   /** Behavior configuration */
   behavior?: {
-    /** Auto-focus first item */
-    autoFocus?: boolean;
-    /** Enable animation on mount */
-    animateOnMount?: boolean;
-    /** Show loading states */
-    showLoading?: boolean;
-    /** Custom loading message */
+    /** Message shown while `isLoading` is `true` (default: the `loading` label followed by `...`) */
     loadingMessage?: string;
   };
 }
 
 /**
- * Props for the ChainListRenderer component
+ * Props for the {@link ChainListRenderer} component.
  */
 export interface ChainListRendererProps {
   /** List of chain identifiers to render */
   chainsList: (string | number)[];
-  /** Currently selected chain value */
+  /** The formatted chain ID of the active connection, as a string (marks the active item) */
   selectValue: string;
-  /** Handler for chain selection changes */
+  /**
+   * Selects a chain, through `handlers.onSelect` of the customization when set.
+   *
+   * @param newChainId - The formatted chain ID, as a string.
+   */
   handleValueChange: (newChainId: string) => void;
-  /** Function to get formatted chain data */
-  getChainData: (chain: string | number) => ChainData;
-  /** Handler called when list should close */
+  /**
+   * Formats a chain of `chainsList` for the connector.
+   *
+   * @param chain - A chain of `chainsList`.
+   * @returns The chain data.
+   */
+  getChainData: (chain: string | number) => ChainListRendererChainData;
+  /** Closes the list after a selection */
   onClose: () => void;
-  /** Whether this is being rendered on mobile */
+  /** Whether to render the mobile list (plain items) instead of Radix `Select.Item` elements (default: `false`) */
   isMobile?: boolean;
-  /** Custom CSS classes for container (added to defaults) */
+  /** Classes added to the container */
   className?: string;
-  /** Custom CSS classes for individual items (added to defaults) */
+  /** Classes added to the default classes of the items */
   itemClassName?: string;
-  /** Comprehensive customization options */
+  /** Customization options */
   customization?: ChainListRendererCustomization;
-  /** ARIA label for the list container */
+  /** ARIA label for the list container (default: the `selectChain` label) */
   'aria-label'?: string;
-  /** Loading state */
+  /** Shows the loading message instead of the list (default: `false`) */
   isLoading?: boolean;
-  /** Error state */
+  /** Shows this error instead of the list (default: `null`) */
   error?: string | null;
 }
 
@@ -199,14 +295,14 @@ export interface ChainListRendererProps {
 /**
  * Default chain icon component using NetworkIcon
  */
-const DefaultChainIcon: React.FC<CustomChainIconProps> = ({ chainId, className, ...props }) => (
+const DefaultChainIcon: React.FC<ChainListRendererChainIconProps> = ({ chainId, className, ...props }) => (
   <NetworkIcon chainId={chainId} className={className} {...props} />
 );
 
 /**
  * Default chain content component
  */
-const DefaultChainContent: React.FC<CustomChainContentProps> = ({ icon, children }) => (
+const DefaultChainContent: React.FC<ChainListRendererChainContentProps> = ({ icon, children }) => (
   <div className="novacon:flex novacon:items-center novacon:space-x-3">
     <div className="novacon:[&_svg]:w-6 novacon:[&_svg]:h-6 novacon:w-6 novacon:h-6" aria-hidden="true">
       {icon}
@@ -218,7 +314,7 @@ const DefaultChainContent: React.FC<CustomChainContentProps> = ({ icon, children
 /**
  * Default active indicator wrapper component
  */
-const DefaultActiveIndicatorWrapper: React.FC<CustomActiveIndicatorWrapperProps> = ({
+const DefaultActiveIndicatorWrapper: React.FC<ChainListRendererActiveIndicatorWrapperProps> = ({
   isActive,
   isMobile,
   indicator,
@@ -245,7 +341,7 @@ const DefaultActiveIndicatorWrapper: React.FC<CustomActiveIndicatorWrapperProps>
 /**
  * Default active indicator component
  */
-const DefaultActiveIndicator: React.FC<CustomActiveIndicatorProps> = ({ isActive, label, className }) => {
+const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = ({ isActive, label, className }) => {
   if (!isActive) return null;
 
   return (
@@ -263,13 +359,22 @@ const DefaultActiveIndicator: React.FC<CustomActiveIndicatorProps> = ({ isActive
   );
 };
 
+interface SelectItemBaseProps extends ComponentPropsWithoutRef<typeof Select.Item> {
+  /** Whether this is the chain of the active connection */
+  isActive: boolean;
+  /** Selects the chain and closes the list (the item handlers of the customization) */
+  onActivate: () => void;
+}
+
 /**
- * Enhanced SelectItem component for desktop use
+ * Item of the desktop list. The item selects through `onActivate` instead of Radix Select: it prevents the default of
+ * the events that select in Radix (`pointerup` of a mouse, `click` of other pointers), which skips the selection of
+ * Radix; `onKeyDown` does the same for Enter and Space.
  */
-const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, ComponentPropsWithoutRef<typeof Select.Item>>(
-  ({ children, className, ...props }, forwardedRef) => {
-    const labels = useNovaConnectLabels();
-    const isActive = props.value === props['aria-selected'];
+const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, SelectItemBaseProps>(
+  ({ children, className, isActive, onActivate, ...props }, forwardedRef) => {
+    // Same pointer tracking as Radix: a mouse selects on `pointerup`, other pointers on `click`
+    const pointerTypeRef = useRef('touch');
     return (
       <Select.Item
         ref={forwardedRef}
@@ -290,9 +395,24 @@ const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, ComponentProps
         aria-selected={isActive}
         tabIndex={0}
         {...props}
+        onPointerDown={(event) => {
+          pointerTypeRef.current = event.pointerType;
+        }}
+        onPointerMove={(event) => {
+          pointerTypeRef.current = event.pointerType;
+        }}
+        onPointerUp={(event) => {
+          if (pointerTypeRef.current !== 'mouse') return;
+          event.preventDefault();
+          onActivate();
+        }}
+        onClick={(event) => {
+          if (pointerTypeRef.current === 'mouse') return;
+          event.preventDefault();
+          onActivate();
+        }}
       >
         {children}
-        {isActive && <DefaultActiveIndicator isActive={true} label={labels.connected} className="novacon:ml-auto" />}
       </Select.Item>
     );
   },
@@ -302,7 +422,10 @@ SelectItemBase.displayName = 'SelectItemBase';
 // === MAIN COMPONENT ===
 
 /**
- * Highly customizable chain list renderer with comprehensive styling and behavior control.
+ * Renders the chain list of {@link ChainSelector}: Radix `Select.Item` elements on desktop, plain options in the
+ * mobile dialog. Shows the loading message, the error or the `noConnectorsFound` label instead of the list.
+ *
+ * Props: {@link ChainListRendererProps}.
  */
 export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
   chainsList,
@@ -365,16 +488,25 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
     [customization?.handlers?.onSelect, customization?.handlers?.onClick, handleValueChange, onClose],
   );
 
+  // Time of the last key of a type-ahead search of the desktop list (Radix Select resets the search after a second)
+  const typeaheadAtRef = useRef(0);
+
   const createKeyDownHandler = useCallback(
     (clickHandler: () => void, formattedChainId: string | number, chainName: string, isActive: boolean) => {
-      const originalHandler = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          clickHandler();
-        }
-      };
-
       return (event: React.KeyboardEvent) => {
+        const isTypingAhead = !isMobile && Date.now() - typeaheadAtRef.current < 1000;
+        const isPrintable = event.key.length === 1 && !event.ctrlKey && !event.altKey && !event.metaKey;
+        if (!isMobile && isPrintable && (event.key !== ' ' || isTypingAhead)) {
+          typeaheadAtRef.current = Date.now();
+        }
+
+        const originalHandler = (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || (e.key === ' ' && !isTypingAhead)) {
+            e.preventDefault();
+            clickHandler();
+          }
+        };
+
         if (customization?.handlers?.onKeyDown) {
           customization.handlers.onKeyDown(originalHandler, event, {
             chainId: formattedChainId,
@@ -384,10 +516,15 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
         } else {
           originalHandler(event);
         }
+
+        // The desktop list selects only through these handlers: skip the selection of Radix Select
+        if (!isMobile && (event.key === 'Enter' || (event.key === ' ' && !isTypingAhead))) {
+          event.preventDefault();
+        }
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customization?.handlers?.onKeyDown],
+    [customization?.handlers?.onKeyDown, isMobile],
   );
 
   // Handle loading state
@@ -524,10 +661,13 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
         key={chain}
         value={String(formattedChainId)}
         aria-label={ariaLabel}
-        onSelect={handleClick}
+        isActive={isActive}
+        onActivate={handleClick}
+        onKeyDown={handleKeyDown}
         className={itemClasses}
       >
         {contentElement}
+        {activeIndicatorWrapper}
       </SelectItemBase>
     );
   };

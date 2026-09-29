@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/useCopyToClipboard" />
+
+# useCopyToClipboard()
+
+> **useCopyToClipboard**(`timeout?`): [`UseCopyToClipboardResult`](?path=/docs/packages-nova-core-interfaces-usecopytoclipboardresult--docs)
+
+Defined in: [hooks/useCopyToClipboard.ts:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L57)
+
+Copies text to the clipboard and keeps a "copied" state for user feedback.
+
+## Parameters
+
+### timeout?
+
+`number` = `2000`
+
+How long `isCopied` (and `error` after a failure) stays set, in milliseconds (default: `2000`).
+
+## Returns
+
+[`UseCopyToClipboardResult`](?path=/docs/packages-nova-core-interfaces-usecopytoclipboardresult--docs)
+
+See [UseCopyToClipboardResult](?path=/docs/packages-nova-core-interfaces-usecopytoclipboardresult--docs).
+
+## Example
+
+```tsx
+import { useCopyToClipboard } from '@tuwaio/nova-core';
+
+export function CopyAddress({ address }: { address: string }) {
+  const { isCopied, copy } = useCopyToClipboard();
+
+  const handleClick = async () => {
+    const result = await copy(address);
+    if (!result.copied) console.warn(result.error.message);
+  };
+
+  return (
+    <button type="button" onClick={handleClick}>
+      {isCopied ? 'Copied!' : 'Copy address'}
+    </button>
+  );
+}
+```

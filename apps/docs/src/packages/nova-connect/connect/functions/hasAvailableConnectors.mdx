@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/hasAvailableConnectors" />
+
+# hasAvailableConnectors()
+
+> **hasAvailableConnectors**(`connectors`): `boolean`
+
+Defined in: [packages/nova-connect/src/utils/getGroupedConnectors.ts:167](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getGroupedConnectors.ts#L167)
+
+Checks whether any adapter has at least one connector.
+
+## Parameters
+
+### connectors
+
+`Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\>
+
+Connectors by adapter.
+
+## Returns
+
+`boolean`
+
+`true` when one of the arrays is not empty.

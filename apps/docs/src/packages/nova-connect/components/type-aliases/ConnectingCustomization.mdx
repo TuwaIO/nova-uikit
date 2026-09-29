@@ -1,0 +1,499 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectingCustomization" />
+
+# ConnectingCustomization
+
+> **ConnectingCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:201](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L201)
+
+Customization options of [Connecting](?path=/docs/packages-nova-connect-components-variables-connecting--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:226](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L226)
+
+Custom class name generators
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorDetails?
+
+> `optional` **errorDetails?**: (`params`) => `string`
+
+Returns the classes of the error details, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### errorMessage?
+
+> `optional` **errorMessage?**: (`params`) => `string`
+
+Returns the classes of the error message, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingPlaceholder?
+
+> `optional` **loadingPlaceholder?**: (`params`) => `string`
+
+Returns the classes of the loading placeholder, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### messageContainer?
+
+> `optional` **messageContainer?**: (`params`) => `string`
+
+Returns the classes of the message container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### spinner?
+
+> `optional` **spinner?**: (`params`) => `string`
+
+Returns the classes of the spinner, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### statusContainer?
+
+> `optional` **statusContainer?**: (`params`) => `string`
+
+Returns the classes of the status container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### statusIcon?
+
+> `optional` **statusIcon?**: (`params`) => `string`
+
+Returns the classes of the status icon, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### statusMessage?
+
+> `optional` **statusMessage?**: (`params`) => `string`
+
+Returns the classes of the heading, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### walletIconContainer?
+
+> `optional` **walletIconContainer?**: (`params`) => `string`
+
+Returns the classes of the wallet icon container, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The status.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L203)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`ConnectingContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingcontainerprops--docs)\>
+
+Custom container wrapper
+
+#### ErrorDetails?
+
+> `optional` **ErrorDetails?**: `ComponentType`\<[`ConnectingErrorDetailsProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingerrordetailsprops--docs)\>
+
+Custom error details
+
+#### ErrorMessage?
+
+> `optional` **ErrorMessage?**: `ComponentType`\<[`ConnectingErrorMessageProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingerrormessageprops--docs)\>
+
+Custom error message
+
+#### LoadingPlaceholder?
+
+> `optional` **LoadingPlaceholder?**: `ComponentType`\<[`ConnectingLoadingPlaceholderProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingloadingplaceholderprops--docs)\>
+
+Custom loading placeholder
+
+#### MessageContainer?
+
+> `optional` **MessageContainer?**: `ComponentType`\<[`ConnectingMessageContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingmessagecontainerprops--docs)\>
+
+Custom message container
+
+#### Spinner?
+
+> `optional` **Spinner?**: `ComponentType`\<[`ConnectingSpinnerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingspinnerprops--docs)\>
+
+Custom loading spinner
+
+#### StatusContainer?
+
+> `optional` **StatusContainer?**: `ComponentType`\<[`ConnectingStatusContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingstatuscontainerprops--docs)\>
+
+Custom status container
+
+#### StatusIcon?
+
+> `optional` **StatusIcon?**: `ComponentType`\<[`ConnectingStatusIconProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingstatusiconprops--docs)\>
+
+Custom status icon
+
+#### StatusMessage?
+
+> `optional` **StatusMessage?**: `ComponentType`\<[`ConnectingStatusMessageProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingstatusmessageprops--docs)\>
+
+Custom status message
+
+#### WalletIconContainer?
+
+> `optional` **WalletIconContainer?**: `ComponentType`\<[`ConnectingWalletIconContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectingwalleticoncontainerprops--docs)\>
+
+Custom wallet icon container
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:344](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L344)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the container (default: the `connectionStatus` label with the heading)
+
+##### ariaLabels.errorIcon?
+
+> `optional` **errorIcon?**: `string`
+
+ARIA label of the error icon (default: the `errorIcon` label)
+
+##### ariaLabels.loading?
+
+> `optional` **loading?**: `string`
+
+ARIA label of the loading placeholder (default: the `loading` label)
+
+##### ariaLabels.spinner?
+
+> `optional` **spinner?**: `string`
+
+ARIA label of the spinner (default: the `connecting` label)
+
+##### ariaLabels.successIcon?
+
+> `optional` **successIcon?**: `string`
+
+ARIA label of the success icon (default: the `successIcon` label)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:309](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L309)
+
+Custom event handlers
+
+#### onCleanup?
+
+> `optional` **onCleanup?**: (`statusData`) => `void`
+
+Called on unmount with the last connection status. Errors are logged.
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The last connection status.
+
+##### Returns
+
+`void`
+
+#### onConnectingStart?
+
+> `optional` **onConnectingStart?**: (`statusData`) => `void`
+
+Called when the state becomes `connecting`.
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`void`
+
+#### onError?
+
+> `optional` **onError?**: (`error`, `statusData`) => `void`
+
+Called when the state becomes `error`.
+
+##### Parameters
+
+###### error
+
+`unknown`
+
+`connectionError` of the Satellite store (`undefined` when only `customErrorMessage` is set).
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`void`
+
+#### onStateChange?
+
+> `optional` **onStateChange?**: (`state`, `statusData`) => `void`
+
+Called after the first render and whenever the state changes.
+
+##### Parameters
+
+###### state
+
+[`ConnectionState`](?path=/docs/packages-nova-connect-components-type-aliases-connectionstate--docs)
+
+The new state.
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`void`
+
+#### onSuccess?
+
+> `optional` **onSuccess?**: (`statusData`) => `void`
+
+Called when the state becomes `success`.
+
+##### Parameters
+
+###### statusData
+
+[`ConnectingStatusData`](?path=/docs/packages-nova-connect-components-interfaces-connectingstatusdata--docs)
+
+The connection status.
+
+##### Returns
+
+`void`
+
+***
+
+### walletIcon?
+
+> `optional` **walletIcon?**: [`WalletIconCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walleticoncustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:360](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L360)
+
+WalletIcon customization (for the wallet icon shown during connection)

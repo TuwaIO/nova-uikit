@@ -3,154 +3,258 @@
  */
 
 import { cn, standardButtonClasses } from '@tuwaio/nova-core';
-import React, { ComponentType, forwardRef, useCallback, useId } from 'react';
+import React, { ComponentType, forwardRef, useCallback, useEffect, useEffectEvent, useId } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 /**
- * Type definition for button actions
- * Can be either a URL string for external links or a callback function
+ * Action of a {@link Disclaimer} button: a URL opens in a new tab (rendered as a link), a function runs on click
+ * (rendered as a button).
  */
-type ButtonAction = string | (() => void);
+export type DisclaimerButtonAction = string | (() => void);
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container.
+ */
+export type DisclaimerContainerProps = {
+  /** Classes from `classNames.container` or the defaults, with the `className` prop */
   className?: string;
+  /** The content section, the actions and a screen reader summary */
   children: React.ReactNode;
+  /** `complementary` */
   role?: string;
+  /** `config.ariaLabels.container`, the `aria-label` prop, or the `disclaimerLabel` label with the title */
   'aria-label'?: string;
+  /** ID of the description */
   'aria-describedby'?: string;
+  /** The `data-testid` prop */
   'data-testid'?: string;
+  /** `polite` with `announceToScreenReader` */
   'aria-live'?: 'polite' | 'assertive' | 'off';
 } & React.RefAttributes<HTMLDivElement>;
 
-type ContentSectionProps = {
+/**
+ * Props for a custom content section (title, description and additional content).
+ */
+export type DisclaimerContentSectionProps = {
+  /** Classes from `classNames.contentSection` or the defaults */
   className?: string;
+  /** The title, the description and the additional content */
   children: React.ReactNode;
+  /** `group` */
   role?: string;
+  /** ID of the title */
   'aria-labelledby'?: string;
 };
 
-type TitleProps = {
+/**
+ * Props for a custom title.
+ */
+export type DisclaimerTitleProps = {
+  /** Unique ID of the title */
   id: string;
+  /** Classes from `classNames.title` or the defaults */
   className?: string;
+  /** The `title` prop */
   children: React.ReactNode;
+  /** `heading` */
   role?: string;
+  /** `3` */
   'aria-level'?: number;
 };
 
-type DescriptionProps = {
+/**
+ * Props for a custom description.
+ */
+export type DisclaimerDescriptionProps = {
+  /** Unique ID of the description */
   id: string;
+  /** Classes from `classNames.description` or the defaults */
   className?: string;
+  /** The `description` prop */
   children: React.ReactNode;
-  role?: string;
-};
-
-type AdditionalContentProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-};
-
-type ActionsProps = {
-  className?: string;
-  children: React.ReactNode;
-  role?: string;
-  'aria-label'?: string;
-};
-
-type ButtonProps = {
-  action: ButtonAction;
-  children: React.ReactNode;
-  'aria-label'?: string;
-  className?: string;
-  'data-testid'?: string;
-};
-
-type StatusProps = {
-  className?: string;
-  children?: React.ReactNode;
-  'aria-live'?: 'polite' | 'assertive' | 'off';
-  'aria-atomic'?: boolean;
+  /** `text` */
   role?: string;
 };
 
 /**
- * Customization options for Disclaimer component
+ * Props for a custom wrapper of the additional content (rendered when `children` is set).
+ */
+export type DisclaimerAdditionalContentProps = {
+  /** Classes from `classNames.additionalContent` or the defaults */
+  className?: string;
+  /** The `children` prop */
+  children: React.ReactNode;
+  /** `group` */
+  role?: string;
+  /** `config.ariaLabels.additionalContent` or the `disclaimerAdditionalInformation` label */
+  'aria-label'?: string;
+};
+
+/**
+ * Props for a custom actions section.
+ */
+export type DisclaimerActionsProps = {
+  /** Classes from `classNames.actions` or the defaults */
+  className?: string;
+  /** The "Learn more" button and the optional list button */
+  children: React.ReactNode;
+  /** `group` */
+  role?: string;
+  /** `config.ariaLabels.actions` or the `disclaimerActions` label */
+  'aria-label'?: string;
+};
+
+/**
+ * Props for a custom link button (URL actions) or action button (function actions).
+ */
+export type DisclaimerButtonProps = {
+  /** The action */
+  action: DisclaimerButtonAction;
+  /** The button text */
+  children: React.ReactNode;
+  /** The `actionAbout` label with the title (the "Learn more" button) or the `viewAction` label (the list button) */
+  'aria-label'?: string;
+  /** Classes from `classNames.button` or `standardButtonClasses` of `@tuwaio/nova-core` */
+  className?: string;
+  /** `<data-testid>-learn-more` or `<data-testid>-list-action` */
+  'data-testid'?: string;
+};
+
+/**
+ * Props for a custom screen reader summary (visually hidden by default).
+ */
+export type DisclaimerStatusProps = {
+  /** Classes from `classNames.status` or `novacon:sr-only` */
+  className?: string;
+  /** An English summary of the disclaimer (empty in the live region) */
+  children?: React.ReactNode;
+  /** `polite` in the live region rendered with `announceToScreenReader` */
+  'aria-live'?: 'polite' | 'assertive' | 'off';
+  /** `true` in the live region */
+  'aria-atomic'?: boolean;
+  /** `status` in the live region */
+  role?: string;
+};
+
+/**
+ * Customization options of {@link Disclaimer}.
  */
 export type DisclaimerCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<DisclaimerContainerProps>;
     /** Custom content section */
-    ContentSection?: ComponentType<ContentSectionProps>;
+    ContentSection?: ComponentType<DisclaimerContentSectionProps>;
     /** Custom title component */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<DisclaimerTitleProps>;
     /** Custom description component */
-    Description?: ComponentType<DescriptionProps>;
+    Description?: ComponentType<DisclaimerDescriptionProps>;
     /** Custom additional content wrapper */
-    AdditionalContent?: ComponentType<AdditionalContentProps>;
+    AdditionalContent?: ComponentType<DisclaimerAdditionalContentProps>;
     /** Custom actions section */
-    Actions?: ComponentType<ActionsProps>;
+    Actions?: ComponentType<DisclaimerActionsProps>;
     /** Custom link button */
-    LinkButton?: ComponentType<ButtonProps>;
+    LinkButton?: ComponentType<DisclaimerButtonProps>;
     /** Custom action button */
-    ActionButton?: ComponentType<ButtonProps>;
+    ActionButton?: ComponentType<DisclaimerButtonProps>;
     /** Custom status component */
-    Status?: ComponentType<StatusProps>;
+    Status?: ComponentType<DisclaimerStatusProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones (the `className` prop is still added).
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     container?: (params: { compact: boolean }) => string;
-    /** Function to generate content section classes */
+    /**
+     * Returns the classes of the content section, instead of the default ones.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     contentSection?: (params: { compact: boolean }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title, instead of the default ones.
+     *
+     * @param params - The layout.
+     * @param params.compact - The `compact` prop.
+     * @returns The classes.
+     */
     title?: (params: { compact: boolean }) => string;
-    /** Function to generate description classes */
+    /**
+     * Returns the classes of the description, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     description?: () => string;
-    /** Function to generate additional content classes */
+    /**
+     * Returns the classes of the additional content wrapper, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     additionalContent?: () => string;
-    /** Function to generate actions classes */
+    /**
+     * Returns the classes of the actions section, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     actions?: () => string;
-    /** Function to generate button classes */
+    /**
+     * Returns the classes of a button, instead of `standardButtonClasses` of `@tuwaio/nova-core`.
+     *
+     * @param params - The button.
+     * @param params.isLink - Whether the action is a URL.
+     * @param params.isPrimary - Whether this is the "Learn more" button.
+     * @returns The classes.
+     */
     button?: (params: { isLink: boolean; isPrimary: boolean }) => string;
-    /** Function to generate status classes */
+    /**
+     * Returns the classes of the screen reader summary, instead of the default ones.
+     *
+     * @returns The classes.
+     */
     status?: () => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom handler for primary button action */
-    onLearnMoreAction?: () => void;
-    /** Custom handler for secondary button action */
-    onListAction?: () => void;
-    /** Custom handler for component mount */
+    /** Called after mount */
     onMount?: () => void;
-    /** Custom handler for component unmount */
+    /** Called on unmount */
     onUnmount?: () => void;
   };
   /** Configuration options */
   config?: {
     /** Custom button labels */
     buttonLabels?: {
+      /** Text of the primary button (default: the `learnMore` label) */
       learnMore?: string;
+      /** Text of the list button (default: the `listOfNetworks` label) */
       listAction?: string;
     };
     /** Custom ARIA labels */
     ariaLabels?: {
+      /** ARIA label of the container (before the `aria-label` prop) */
       container?: string;
-      contentSection?: string;
+      /** ARIA label of the actions section (default: the `disclaimerActions` label) */
       actions?: string;
+      /** ARIA label of the additional content (default: the `disclaimerAdditionalInformation` label) */
       additionalContent?: string;
     };
   };
 };
 
 /**
- * Props for the Disclaimer component
+ * Props for the {@link Disclaimer} component.
  */
 export interface DisclaimerProps {
   /** Main title text for the disclaimer */
@@ -158,20 +262,20 @@ export interface DisclaimerProps {
   /** Descriptive text explaining the disclaimer content */
   description: string;
   /** Action for the primary "Learn More" button - can be URL or callback */
-  learnMoreAction: ButtonAction;
+  learnMoreAction: DisclaimerButtonAction;
   /** Optional action for the secondary "List of Networks" button */
-  listAction?: ButtonAction;
-  /** Custom CSS classes for styling the disclaimer container */
+  listAction?: DisclaimerButtonAction;
+  /** Classes added to the container classes */
   className?: string;
-  /** Optional custom ARIA label for enhanced accessibility */
+  /** ARIA label of the container (default: the title followed by `disclaimer`) */
   'aria-label'?: string;
-  /** Whether to show the disclaimer in compact mode */
+  /** Uses smaller gaps, padding and title (default: `false`) */
   compact?: boolean;
   /** Additional content to display below the description */
   children?: React.ReactNode;
   /** Custom test ID for testing purposes */
   'data-testid'?: string;
-  /** Whether the disclaimer should be announced to screen readers */
+  /** Makes the container a polite live region and adds an empty status region (default: `false`) */
   announceToScreenReader?: boolean;
   /** Customization options */
   customization?: DisclaimerCustomization;
@@ -182,47 +286,49 @@ export interface DisclaimerProps {
  * @param action - The action to check
  * @returns True if action is a string (URL), false if it's a function
  */
-const isLink = (action: ButtonAction): action is string => typeof action === 'string';
+const isLink = (action: DisclaimerButtonAction): action is string => typeof action === 'string';
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(({ children, className, ...props }, ref) => (
-  <div ref={ref} className={className} {...props}>
-    {children}
-  </div>
-));
+const DefaultContainer = forwardRef<HTMLDivElement, DisclaimerContainerProps>(
+  ({ children, className, ...props }, ref) => (
+    <div ref={ref} className={className} {...props}>
+      {children}
+    </div>
+  ),
+);
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultContentSection: React.FC<ContentSectionProps> = ({ children, className, ...props }) => (
+const DefaultContentSection: React.FC<DisclaimerContentSectionProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
-const DefaultTitle: React.FC<TitleProps> = ({ children, className, ...props }) => (
+const DefaultTitle: React.FC<DisclaimerTitleProps> = ({ children, className, ...props }) => (
   <h3 className={className} {...props}>
     {children}
   </h3>
 );
 
-const DefaultDescription: React.FC<DescriptionProps> = ({ children, className, ...props }) => (
+const DefaultDescription: React.FC<DisclaimerDescriptionProps> = ({ children, className, ...props }) => (
   <p className={className} {...props}>
     {children}
   </p>
 );
 
-const DefaultAdditionalContent: React.FC<AdditionalContentProps> = ({ children, className, ...props }) => (
+const DefaultAdditionalContent: React.FC<DisclaimerAdditionalContentProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
-const DefaultActions: React.FC<ActionsProps> = ({ children, className, ...props }) => (
+const DefaultActions: React.FC<DisclaimerActionsProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
-const DefaultLinkButton: React.FC<ButtonProps> = ({
+const DefaultLinkButton: React.FC<DisclaimerButtonProps> = ({
   action,
   children,
   'aria-label': ariaLabel,
@@ -249,12 +355,12 @@ const DefaultLinkButton: React.FC<ButtonProps> = ({
     >
       {children}
       {/* Screen reader indication for external link */}
-      <span className="novacon:sr-only"> (opens in new tab)</span>
+      <span className="novacon:sr-only"> {labels.opensInNewTab}</span>
     </a>
   );
 };
 
-const DefaultActionButton: React.FC<ButtonProps> = ({
+const DefaultActionButton: React.FC<DisclaimerButtonProps> = ({
   action,
   children,
   'aria-label': ariaLabel,
@@ -274,60 +380,37 @@ const DefaultActionButton: React.FC<ButtonProps> = ({
   );
 };
 
-const DefaultStatus: React.FC<StatusProps> = ({ children, className, ...props }) => (
+const DefaultStatus: React.FC<DisclaimerStatusProps> = ({ children, className, ...props }) => (
   <div className={className} {...props}>
     {children}
   </div>
 );
 
 /**
- * Educational disclaimer component with call-to-action buttons
+ * An explanation box of the connect modal ("What is a wallet?", "What is a network?"): a title, a description,
+ * optional extra content, a "Learn more" button and an optional second button. A URL action opens in a new tab, a
+ * function action runs on click.
  *
- * This component provides educational content with actionable buttons for:
- * - Informational disclaimers about wallets, networks, or other concepts
- * - Educational content with "Learn More" functionality
- * - Network information with optional "List of Networks" access
- * - Responsive layout with proper spacing and visual hierarchy
- * - Full WCAG accessibility compliance with screen reader support
- * - Keyboard navigation with proper focus management
- * - Semantic HTML structure with comprehensive ARIA labeling
- * - Internationalization support for button labels
- * - Support for both internal callbacks and external links
- * - Flexible content areas with optional children support
- * - Full customization of all child components
+ * Props: {@link DisclaimerProps}; the ref is forwarded to the container.
  *
- * The component automatically handles different action types:
- * - **String actions**: Rendered as external links with security attributes
- * - **Function actions**: Rendered as buttons with callback execution
- * - **Mixed actions**: Can combine both types for different buttons
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <Disclaimer
- *   title="What is a wallet?"
- *   description="Wallets are essential for managing your crypto..."
- *   learnMoreAction={() => setContentType('about')}
- *   listAction="https://example.com/networks"
- * />
- * ```
+ * import { Disclaimer } from '@tuwaio/nova-connect/components';
  *
- * @example With customization
- * ```tsx
- * <Disclaimer
- *   title="Network Information"
- *   description="Choose the right network for your transactions"
- *   learnMoreAction={handleLearnMore}
- *   compact
- *   customization={{
- *     classNames: {
- *       container: ({ compact }) => compact ? 'custom-compact' : 'custom-full',
- *       title: () => 'custom-title-styling'
- *     },
- *     components: {
- *       LinkButton: CustomLinkButton
- *     }
- *   }}
- * />
+ * export const WalletDisclaimer = (
+ *   <Disclaimer
+ *     title="What is a wallet?"
+ *     description="Wallets let you send, receive and hold digital assets."
+ *     learnMoreAction={() => console.log('show the about screen')}
+ *     listAction="https://ethereum.org/wallets/find-wallet/"
+ *     compact
+ *     customization={{
+ *       classNames: {
+ *         container: ({ compact }) => (compact ? 'custom-compact' : 'custom-full'),
+ *       },
+ *     }}
+ *   />
+ * );
  * ```
  */
 export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
@@ -433,7 +516,7 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
      * Handle rendering of action buttons with proper type checking
      */
     const renderActionButton = useCallback(
-      (action: ButtonAction, buttonText: string, ariaLabel: string, testId?: string, isPrimary = false) => {
+      (action: DisclaimerButtonAction, buttonText: string, ariaLabel: string, testId?: string, isPrimary = false) => {
         const isLinkAction = isLink(action);
         const buttonClasses = cn(
           customization?.classNames?.button?.({ isLink: isLinkAction, isPrimary }) ?? standardButtonClasses,
@@ -456,18 +539,20 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
       [customization, CustomLinkButton, CustomActionButton],
     );
 
-    // Handle mount/unmount effects
-    React.useEffect(() => {
-      customHandlers?.onMount?.();
-      return () => customHandlers?.onUnmount?.();
-    }, [customHandlers]);
+    // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the effect
+    const onMount = useEffectEvent(() => customHandlers?.onMount?.());
+    const onUnmount = useEffectEvent(() => customHandlers?.onUnmount?.());
+    useEffect(() => {
+      onMount();
+      return () => onUnmount();
+    }, []);
 
     return (
       <CustomContainer
         ref={ref}
         className={containerClasses}
         role="complementary"
-        aria-label={customConfig?.ariaLabels?.container ?? ariaLabel ?? `${title} disclaimer`}
+        aria-label={customConfig?.ariaLabels?.container ?? ariaLabel ?? formatLabel(labels.disclaimerLabel, { title })}
         aria-describedby={`${disclaimerId}-description`}
         data-testid={testId}
         {...(announceToScreenReader && { 'aria-live': 'polite' as const })}
@@ -495,7 +580,7 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
             <CustomAdditionalContent
               className={customization?.classNames?.additionalContent?.() ?? 'novacon:mt-1'}
               role="group"
-              aria-label={customConfig?.ariaLabels?.additionalContent ?? 'Additional disclaimer information'}
+              aria-label={customConfig?.ariaLabels?.additionalContent ?? labels.disclaimerAdditionalInformation}
             >
               {children}
             </CustomAdditionalContent>
@@ -506,13 +591,16 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
         <CustomActions
           className={customization?.classNames?.actions?.() ?? 'novacon:flex novacon:gap-3 novacon:justify-end'}
           role="group"
-          aria-label={customConfig?.ariaLabels?.actions ?? 'Disclaimer actions'}
+          aria-label={customConfig?.ariaLabels?.actions ?? labels.disclaimerActions}
         >
           {/* Primary Learn More Button */}
           {renderActionButton(
             learnMoreAction,
             customConfig?.buttonLabels?.learnMore ?? labels.learnMore,
-            `${customConfig?.buttonLabels?.learnMore ?? labels.learnMore} about ${title.toLowerCase()}`,
+            formatLabel(labels.actionAbout, {
+              action: customConfig?.buttonLabels?.learnMore ?? labels.learnMore,
+              topic: title.toLowerCase(),
+            }),
             buttonTestIds.learnMore,
             true,
           )}
@@ -522,7 +610,9 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
             renderActionButton(
               listAction,
               customConfig?.buttonLabels?.listAction ?? labels.listOfNetworks,
-              `View ${(customConfig?.buttonLabels?.listAction ?? labels.listOfNetworks).toLowerCase()}`,
+              formatLabel(labels.viewAction, {
+                action: (customConfig?.buttonLabels?.listAction ?? labels.listOfNetworks).toLowerCase(),
+              }),
               buttonTestIds.listAction,
               false,
             )}
@@ -530,9 +620,11 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
 
         {/* Screen reader summary */}
         <CustomStatus className={customization?.classNames?.status?.() ?? 'novacon:sr-only'}>
-          Disclaimer about {title.toLowerCase()}. {description}
-          {learnMoreAction && ` ${customConfig?.buttonLabels?.learnMore ?? labels.learnMore} action available.`}
-          {listAction && ` ${customConfig?.buttonLabels?.listAction ?? labels.listOfNetworks} action available.`}
+          {formatLabel(labels.disclaimerSummary, { topic: title.toLowerCase() })} {description}
+          {learnMoreAction &&
+            ` ${formatLabel(labels.actionAvailable, { action: customConfig?.buttonLabels?.learnMore ?? labels.learnMore })}`}
+          {listAction &&
+            ` ${formatLabel(labels.actionAvailable, { action: customConfig?.buttonLabels?.listAction ?? labels.listOfNetworks })}`}
         </CustomStatus>
 
         {/* Hidden live region for dynamic content updates */}

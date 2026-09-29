@@ -1,0 +1,112 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/WalletIconProps" />
+
+# WalletIconProps
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L97)
+
+Props of [WalletIcon](?path=/docs/packages-nova-connect-components-variables-walleticon--docs). The other props are passed to the container `<div>`.
+
+## Extends
+
+- `Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"role"`\>
+
+## Properties
+
+### altText?
+
+> `optional` **altText?**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:108](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L108)
+
+Accessible label of the icon. Defaults to the wallet name and the `walletIcon` label.
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`WalletIconCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walleticoncustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:118](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L118)
+
+Customization options
+
+***
+
+### icon?
+
+> `optional` **icon?**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L102)
+
+Icon of the wallet, usually the `icon` of the connector or connection (a data URL). Only `http://`, `https://`,
+`data:` and root-relative (`/`) URLs are used; otherwise the fallback icon is shown.
+
+***
+
+### lazy?
+
+> `optional` **lazy?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L116)
+
+Whether the image is loaded lazily (`loading="lazy"`). Defaults to `false`.
+
+***
+
+### name
+
+> **name**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:104](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L104)
+
+Name of the wallet, formatted with `formatConnectorName` from `@tuwaio/orbit-core` for the fallback icon.
+
+***
+
+### onImageError?
+
+> `optional` **onImageError?**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L114)
+
+Callback fired when image fails to load
+
+#### Returns
+
+`void`
+
+***
+
+### onImageLoad?
+
+> `optional` **onImageLoad?**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L112)
+
+Callback fired when image loads successfully
+
+#### Returns
+
+`void`
+
+***
+
+### showLoading?
+
+> `optional` **showLoading?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L110)
+
+Whether to show a pulsing placeholder while the image loads. Defaults to `false`.
+
+***
+
+### size?
+
+> `optional` **size?**: `number`
+
+Defined in: [packages/nova-connect/src/components/WalletIcon.tsx:106](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletIcon.tsx#L106)
+
+Size of the icon in pixels. Defaults to `32`.

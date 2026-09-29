@@ -1,0 +1,485 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/ConnectedModalMainContentCustomization" />
+
+# ConnectedModalMainContentCustomization
+
+> **ConnectedModalMainContentCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:166](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L166)
+
+Customization options of [ConnectedModalMainContent](?path=/docs/packages-nova-connect-components-variables-connectedmodalmaincontent--docs).
+
+## Properties
+
+### animation?
+
+> `optional` **animation?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:276](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L276)
+
+Custom animation configuration
+
+#### container?
+
+> `optional` **container?**: `object`
+
+Container animation configuration
+
+##### container.delay?
+
+> `optional` **delay?**: `number`
+
+Animation delay in seconds
+
+##### container.duration?
+
+> `optional` **duration?**: `number`
+
+Animation duration in seconds
+
+##### container.ease?
+
+> `optional` **ease?**: `Easing` \| `Easing`[]
+
+Animation easing curve
+
+##### container.staggerChildren?
+
+> `optional` **staggerChildren?**: `number`
+
+Children stagger delay
+
+***
+
+### childCustomizations?
+
+> `optional` **childCustomizations?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:312](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L312)
+
+Child component customizations
+
+#### nameAndBalance?
+
+> `optional` **nameAndBalance?**: [`ConnectedModalNameAndBalanceCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalnameandbalancecustomization--docs)
+
+Customization for ConnectedModalNameAndBalance component
+
+#### switchNetworkButton?
+
+> `optional` **switchNetworkButton?**: `Partial`\<[`IconButtonProps`](?path=/docs/packages-nova-connect-components-interfaces-iconbuttonprops--docs)\>
+
+Switch network button: only `className` (added) and `customization` are applied
+
+#### switchWalletButton?
+
+> `optional` **switchWalletButton?**: `Partial`\<[`IconButtonProps`](?path=/docs/packages-nova-connect-components-interfaces-iconbuttonprops--docs)\>
+
+Switch wallet button: only `className` (added) and `customization` are applied
+
+#### walletAvatar?
+
+> `optional` **walletAvatar?**: [`WalletAvatarCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarcustomization--docs)
+
+Customization for WalletAvatar component
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:199](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L199)
+
+Custom class name generators
+
+#### avatarSection?
+
+> `optional` **avatarSection?**: () => `string`
+
+Returns classes of the avatar section, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The content state.
+
+###### hasActiveWallet
+
+`boolean`
+
+Always `true` (nothing is rendered without a connected wallet).
+
+###### hasPendingTransactions
+
+`boolean`
+
+Whether one of them is pending.
+
+###### hasTransactions
+
+`boolean`
+
+Whether the wallet has transactions in `transactionPool`.
+
+###### isLoading
+
+`boolean`
+
+Whether the avatar, the balance or the transactions are loading.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### customContentContainer?
+
+> `optional` **customContentContainer?**: () => `string`
+
+Returns classes of the wrapper of `renderCustomContent`, the only classes of the wrapper.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### extraBalancesContainer?
+
+> `optional` **extraBalancesContainer?**: () => `string`
+
+Returns classes of the wrapper of `renderExtraBalances`, the only classes of the wrapper.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### infoSection?
+
+> `optional` **infoSection?**: () => `string`
+
+Returns classes of the info section, the only classes of the section.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### loadingIndicator?
+
+> `optional` **loadingIndicator?**: (`params`) => `string`
+
+Returns classes added to the loading indicator.
+
+##### Parameters
+
+###### params
+
+The loading state.
+
+###### isLoading
+
+`boolean`
+
+Whether something is loading.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### noTransactions?
+
+> `optional` **noTransactions?**: () => `string`
+
+Returns classes of the no-transactions indicator, added to the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### transactionsButton?
+
+> `optional` **transactionsButton?**: () => `string`
+
+Returns classes of the "View transactions" button, instead of `standardButtonClasses` of `@tuwaio/nova-core`.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### transactionsSection?
+
+> `optional` **transactionsSection?**: (`params`) => `string`
+
+Returns classes added to the transactions section.
+
+##### Parameters
+
+###### params
+
+The transactions.
+
+###### hasPendingTransactions
+
+`boolean`
+
+Whether one of them is pending.
+
+###### transactionsCount
+
+`number`
+
+Number of transactions of the wallet.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:186](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L186)
+
+Custom components
+
+#### AvatarSection?
+
+> `optional` **AvatarSection?**: `ComponentType`\<[`ConnectedModalMainContentAvatarSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontentavatarsectionprops--docs)\>
+
+Custom avatar section component
+
+#### InfoSection?
+
+> `optional` **InfoSection?**: `ComponentType`\<[`ConnectedModalMainContentInfoSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontentinfosectionprops--docs)\>
+
+Custom info section component
+
+#### LoadingIndicator?
+
+> `optional` **LoadingIndicator?**: `ComponentType`\<[`ConnectedModalMainContentLoadingIndicatorProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontentloadingindicatorprops--docs)\>
+
+Custom loading indicator component
+
+#### NoTransactionsIndicator?
+
+> `optional` **NoTransactionsIndicator?**: `ComponentType`\<[`ConnectedModalMainContentNoTransactionsIndicatorProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontentnotransactionsindicatorprops--docs)\>
+
+Custom no transactions indicator component
+
+#### TransactionsSection?
+
+> `optional` **TransactionsSection?**: `ComponentType`\<[`ConnectedModalMainContentTransactionsSectionProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalmaincontenttransactionssectionprops--docs)\>
+
+Custom transactions section component
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:323](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L323)
+
+Configuration options
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels for different states
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the container, after the `aria-label` prop (default: `walletConnected` label and wallet name)
+
+#### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Renders the container without Framer Motion (default: `false`)
+
+#### reduceMotion?
+
+> `optional` **reduceMotion?**: `boolean`
+
+Same as `disableAnimation` (default: `false`)
+
+#### showLoadingIndicators?
+
+> `optional` **showLoadingIndicators?**: `boolean`
+
+Whether to show the loading indicator (default: `true`)
+
+#### showPendingIndicators?
+
+> `optional` **showPendingIndicators?**: `boolean`
+
+Whether to show a spinner next to the transactions button while one is pending (default: `true`)
+
+***
+
+### containerProps?
+
+> `optional` **containerProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:168](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L168)
+
+Props of the container (the component props, `className`, `role` and `aria-label` take precedence)
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:290](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L290)
+
+Custom event handlers
+
+#### onLoadingStateChange?
+
+> `optional` **onLoadingStateChange?**: (`isLoading`) => `void`
+
+Called after mount and whenever the loading state changes.
+
+##### Parameters
+
+###### isLoading
+
+`boolean`
+
+Whether the avatar, the balance or the transactions are loading.
+
+##### Returns
+
+`void`
+
+#### onSwitchNetwork?
+
+> `optional` **onSwitchNetwork?**: () => `void`
+
+Replaces the network button, which shows the network screen by default
+
+##### Returns
+
+`void`
+
+#### onSwitchWallet?
+
+> `optional` **onSwitchWallet?**: () => `void`
+
+Replaces the wallet button, which shows the connections screen by default
+
+##### Returns
+
+`void`
+
+#### onTransactionsUpdate?
+
+> `optional` **onTransactionsUpdate?**: (`transactions`, `pendingCount`) => `void`
+
+Called after mount and whenever the transactions of the active address change.
+
+##### Parameters
+
+###### transactions
+
+`Transaction`[]
+
+Transactions of `transactionPool` sent from the active address.
+
+###### pendingCount
+
+`number`
+
+Number of pending ones.
+
+##### Returns
+
+`void`
+
+#### onViewTransactions?
+
+> `optional` **onViewTransactions?**: () => `void`
+
+Replaces the "View transactions" button, which shows the transaction history by default
+
+##### Returns
+
+`void`
+
+***
+
+### renderCustomContent?
+
+> `optional` **renderCustomContent?**: () => `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:341](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L341)
+
+Render slot for custom content (like Telegram bot button) - rendered after transactions button
+
+#### Returns
+
+`ReactNode`
+
+***
+
+### renderExtraBalances?
+
+> `optional` **renderExtraBalances?**: () => `ReactNode`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:339](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L339)
+
+Render slot for extra balances (tokens like USDC, ETH) - rendered after native balance
+
+#### Returns
+
+`ReactNode`
+
+***
+
+### variants?
+
+> `optional` **variants?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx:271](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModalMainContent.tsx#L271)
+
+Custom animation variants
+
+#### container?
+
+> `optional` **container?**: `Variants`
+
+Container animation variants (`initial`, `animate`, `exit`)

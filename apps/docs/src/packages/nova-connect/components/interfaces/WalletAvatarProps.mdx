@@ -1,0 +1,119 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/WalletAvatarProps" />
+
+# WalletAvatarProps
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:153](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L153)
+
+Props of [WalletAvatar](?path=/docs/packages-nova-connect-components-variables-walletavatar--docs). The other props are passed to the container `<div>`.
+
+## Extends
+
+- `Omit`\<`ComponentPropsWithoutRef`\<`"div"`\>, `"role"`\>
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L155)
+
+The user's wallet address, used for the blockie fallback and background color.
+
+***
+
+### altText?
+
+> `optional` **altText?**: `string`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L159)
+
+Custom alt text for the avatar image
+
+***
+
+### customization?
+
+> `optional` **customization?**: [`WalletAvatarCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarcustomization--docs)
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:175](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L175)
+
+Customization options
+
+***
+
+### disableAnimation?
+
+> `optional` **disableAnimation?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:173](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L173)
+
+Whether to disable the pulse animation
+
+***
+
+### ensAvatar?
+
+> `optional` **ensAvatar?**: `string` \| `null`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:157](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L157)
+
+An optional URL for the user's ENS avatar image.
+
+***
+
+### onImageError?
+
+> `optional` **onImageError?**: (`error`) => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L171)
+
+Called when the avatar image fails to load (the blockie is shown instead).
+
+#### Parameters
+
+##### error
+
+`Event`
+
+The error event of the image.
+
+#### Returns
+
+`void`
+
+***
+
+### onImageLoad?
+
+> `optional` **onImageLoad?**: () => `void`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:165](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L165)
+
+Callback fired when image loads successfully
+
+#### Returns
+
+`void`
+
+***
+
+### showLoading?
+
+> `optional` **showLoading?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:163](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L163)
+
+Whether to show loading animation
+
+***
+
+### size?
+
+> `optional` **size?**: [`WalletAvatarSize`](?path=/docs/packages-nova-connect-components-type-aliases-walletavatarsize--docs)
+
+Defined in: [packages/nova-connect/src/components/WalletAvatar.tsx:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/WalletAvatar.tsx#L161)
+
+Size of the avatar. Defaults to `'md'`.

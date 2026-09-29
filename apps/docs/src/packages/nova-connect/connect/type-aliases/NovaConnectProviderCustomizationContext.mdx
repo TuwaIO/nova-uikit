@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Type Aliases/NovaConnectProviderCustomizationContext" />
+
+# NovaConnectProviderCustomizationContext
+
+> **NovaConnectProviderCustomizationContext** = `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L49)
+
+Context data passed to custom provider components
+
+## Properties
+
+### activeConnection
+
+> **activeConnection**: `BaseConnector` \| `undefined`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L53)
+
+Active wallet instance
+
+***
+
+### connectionError
+
+> **connectionError**: `TuwaErrorState` \| `undefined`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L55)
+
+Current wallet connection error
+
+***
+
+### contentTypes
+
+> **contentTypes**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L68)
+
+Current content types for modals
+
+#### connectedModal
+
+> **connectedModal**: [`ConnectedContentType`](?path=/docs/packages-nova-connect-connect-type-aliases-connectedcontenttype--docs)
+
+Screen of the connected modal
+
+#### connectModal
+
+> **connectModal**: [`ConnectContentType`](?path=/docs/packages-nova-connect-connect-type-aliases-connectcontenttype--docs)
+
+Screen of the connect modal
+
+***
+
+### isConnected
+
+> **isConnected**: `boolean`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L51)
+
+Current wallet connection state
+
+***
+
+### modalStates
+
+> **modalStates**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L57)
+
+All modal and UI states
+
+#### isChainsListOpen
+
+> **isChainsListOpen**: `boolean`
+
+Whether the desktop chain list is open
+
+#### isChainsListOpenMobile
+
+> **isChainsListOpenMobile**: `boolean`
+
+Whether the mobile chain dialog is open
+
+#### isConnectedModalOpen
+
+> **isConnectedModalOpen**: `boolean`
+
+Whether the connected modal is open
+
+#### isConnectModalOpen
+
+> **isConnectModalOpen**: `boolean`
+
+Whether the connect modal is open
+
+***
+
+### statuses
+
+> **statuses**: `object`
+
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L75)
+
+Button and transaction statuses
+
+#### connectedButton
+
+> **connectedButton**: [`ButtonTxStatus`](?path=/docs/packages-nova-connect-connect-type-aliases-buttontxstatus--docs)
+
+Transaction status of the connect button

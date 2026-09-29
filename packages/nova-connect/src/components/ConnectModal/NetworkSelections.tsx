@@ -14,6 +14,7 @@ import {
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+import { formatLabel } from '../../i18n/formatLabel';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
 import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
@@ -21,182 +22,334 @@ import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
 // --- Types ---
 
 /**
- * Network data for display
+ * A network offered by {@link NetworkSelections}.
  */
-interface NetworkData {
+export interface NetworkSelectionsNetworkData {
   /** Network adapter */
   adapter: OrbitAdapter;
-  /** Chain ID for icon display */
+  /** Chain ID of the network icon (from `getNetworkData` of `@tuwaio/orbit-core`) */
   chainId?: number | string;
-  /** Network display name */
+  /** Network name (`Ethereum` when `getNetworkData` has no data for the adapter) */
   name: string;
-  /** Network info link URL */
+  /** Page about the network (`links.aboutNetwork` of `getNetworkData`), opened by the info link of the card */
   infoLink?: string;
-  /** Network index in list */
+  /** Position of the network in the list */
   index: number;
 }
 
 /**
- * Network selections data for customization context
+ * State of {@link NetworkSelections}, passed to its custom components, class name generators and handlers.
  */
 export interface NetworkSelectionsData {
-  /** Currently active connector name */
+  /** The `activeConnector` prop */
   activeConnector?: string;
-  /** Available grouped connectors */
+  /** The `connectors` prop */
   connectors: GroupedConnector[];
-  /** Whether device is touch-enabled */
+  /** Whether the device has a touch screen (the list scrolls horizontally) */
   isTouch: boolean;
-  /** Whether in error state */
+  /** Whether `connectors` has no wallet matching `activeConnector` (the error is shown) */
   isError: boolean;
-  /** Available networks */
-  networks: NetworkData[];
+  /** The networks of the active wallet */
+  networks: NetworkSelectionsNetworkData[];
 }
 
 // --- Component Props Types ---
-type ContainerProps = {
+/**
+ * Props for a custom container.
+ */
+export type NetworkSelectionsContainerProps = {
+  /** Classes from `classNames.container` or the defaults */
   className?: string;
+  /** The title, the network list and the disclaimer */
   children: React.ReactNode;
+  /** `region` */
   role?: string;
+  /** ID of the title */
   'aria-labelledby'?: string;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type TitleProps = {
+/**
+ * Props for a custom title.
+ */
+export type NetworkSelectionsTitleProps = {
+  /** Classes from `classNames.title` */
   className?: string;
+  /** The `selectAvailableNetwork` label */
   children: React.ReactNode;
+  /** `network-selection-title` */
   id?: string;
+  /** `heading` */
   role?: string;
+  /** `2` */
   'aria-level'?: number;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLHeadingElement>;
 
-type NetworkListProps = {
+/**
+ * Props for a custom network list.
+ */
+export type NetworkSelectionsNetworkListProps = {
+  /** Classes from `classNames.networkList` or the defaults (with the `config.scroll` classes) */
   className?: string;
+  /** The network items */
   children: React.ReactNode;
+  /** `list` */
   role?: string;
+  /** `config.ariaLabels.networkList` or the `availableNetworks` label */
   'aria-label'?: string;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type NetworkItemProps = {
+/**
+ * Props for a custom network item.
+ */
+export type NetworkSelectionsNetworkItemProps = {
+  /** Classes from `classNames.networkItem` or the defaults */
   className?: string;
+  /** The `ConnectCard` of the network */
   children: React.ReactNode;
+  /** `listitem` */
   role?: string;
-  networkData: NetworkData;
+  /** The network */
+  networkData: NetworkSelectionsNetworkData;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type NetworkIconProps = {
+/**
+ * Props for a custom wrapper of the network icon (the icon of the network card).
+ */
+export type NetworkSelectionsNetworkIconProps = {
+  /** Classes from `classNames.networkIcon` */
   className?: string;
+  /** The `NetworkIcon` of the chain */
   children: React.ReactNode;
+  /** `img` */
   role?: string;
+  /** `config.ariaLabels.networkIcon`, or the `networkNameIcon` label with the network name */
   'aria-label'?: string;
-  networkData: NetworkData;
+  /** The network */
+  networkData: NetworkSelectionsNetworkData;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type ErrorContainerProps = {
+/**
+ * Props for a custom error container (shown when no wallet matches `activeConnector`).
+ */
+export type NetworkSelectionsErrorContainerProps = {
+  /** Classes from `classNames.errorContainer` or the defaults */
   className?: string;
+  /** The error icon, title and message */
   children: React.ReactNode;
+  /** `alert` */
   role?: string;
+  /** `assertive` */
   'aria-live'?: 'polite' | 'assertive';
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type ErrorIconProps = {
+/**
+ * Props for a custom error icon wrapper.
+ */
+export type NetworkSelectionsErrorIconProps = {
+  /** Classes from `classNames.errorIcon` or the defaults */
   className?: string;
+  /** The warning icon */
   children: React.ReactNode;
+  /** `true` */
   'aria-hidden'?: boolean;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLDivElement>;
 
-type ErrorTitleProps = {
+/**
+ * Props for a custom error title.
+ */
+export type NetworkSelectionsErrorTitleProps = {
+  /** Classes from `classNames.errorTitle` or the defaults */
   className?: string;
+  /** The `somethingWentWrong` label */
   children: React.ReactNode;
+  /** `heading` */
   role?: string;
+  /** `2` */
   'aria-level'?: number;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLHeadingElement>;
 
-type ErrorMessageProps = {
+/**
+ * Props for a custom error message.
+ */
+export type NetworkSelectionsErrorMessageProps = {
+  /** Classes from `classNames.errorMessage` or the defaults */
   className?: string;
+  /** The `networkPickingError` label */
   children: React.ReactNode;
+  /** `text` */
   role?: string;
+  /** State of the network selection */
   selectionsData: NetworkSelectionsData;
 } & React.RefAttributes<HTMLParagraphElement>;
 
 /**
- * NetworkSelections customization options
+ * Customization options of {@link NetworkSelections}.
  */
 export type NetworkSelectionsCustomization = {
   /** Custom components */
   components?: {
     /** Custom container wrapper */
-    Container?: ComponentType<ContainerProps>;
+    Container?: ComponentType<NetworkSelectionsContainerProps>;
     /** Custom title */
-    Title?: ComponentType<TitleProps>;
+    Title?: ComponentType<NetworkSelectionsTitleProps>;
     /** Custom network list */
-    NetworkList?: ComponentType<NetworkListProps>;
+    NetworkList?: ComponentType<NetworkSelectionsNetworkListProps>;
     /** Custom network item wrapper */
-    NetworkItem?: ComponentType<NetworkItemProps>;
+    NetworkItem?: ComponentType<NetworkSelectionsNetworkItemProps>;
     /** Custom network icon wrapper */
-    NetworkIcon?: ComponentType<NetworkIconProps>;
+    NetworkIcon?: ComponentType<NetworkSelectionsNetworkIconProps>;
     /** Custom error container */
-    ErrorContainer?: ComponentType<ErrorContainerProps>;
+    ErrorContainer?: ComponentType<NetworkSelectionsErrorContainerProps>;
     /** Custom error icon wrapper */
-    ErrorIcon?: ComponentType<ErrorIconProps>;
+    ErrorIcon?: ComponentType<NetworkSelectionsErrorIconProps>;
     /** Custom error title */
-    ErrorTitle?: ComponentType<ErrorTitleProps>;
+    ErrorTitle?: ComponentType<NetworkSelectionsErrorTitleProps>;
     /** Custom error message */
-    ErrorMessage?: ComponentType<ErrorMessageProps>;
+    ErrorMessage?: ComponentType<NetworkSelectionsErrorMessageProps>;
   };
   /** Custom class name generators */
   classNames?: {
-    /** Function to generate container classes */
+    /**
+     * Returns the classes of the container, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     container?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate title classes */
+    /**
+     * Returns the classes of the title (none by default).
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     title?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate network list classes */
+    /**
+     * Returns the classes of the network list, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     networkList?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate network item classes */
-    networkItem?: (params: { networkData: NetworkData; selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate network icon classes */
-    networkIcon?: (params: { networkData: NetworkData; selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate error container classes */
+    /**
+     * Returns the classes of a network item, instead of the default ones.
+     *
+     * @param params - The network.
+     * @param params.networkData - The network.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
+    networkItem?: (params: {
+      networkData: NetworkSelectionsNetworkData;
+      selectionsData: NetworkSelectionsData;
+    }) => string;
+    /**
+     * Returns the classes of a network icon wrapper (none by default).
+     *
+     * @param params - The network.
+     * @param params.networkData - The network.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
+    networkIcon?: (params: {
+      networkData: NetworkSelectionsNetworkData;
+      selectionsData: NetworkSelectionsData;
+    }) => string;
+    /**
+     * Returns the classes of the error container, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     errorContainer?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate error icon classes */
+    /**
+     * Returns the classes of the error icon wrapper, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     errorIcon?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate error title classes */
+    /**
+     * Returns the classes of the error title, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     errorTitle?: (params: { selectionsData: NetworkSelectionsData }) => string;
-    /** Function to generate error message classes */
+    /**
+     * Returns the classes of the error message, instead of the default ones.
+     *
+     * @param params - The selection.
+     * @param params.selectionsData - State of the network selection.
+     * @returns The classes.
+     */
     errorMessage?: (params: { selectionsData: NetworkSelectionsData }) => string;
   };
   /** Custom event handlers */
   handlers?: {
-    /** Custom network click handler */
+    /**
+     * Wraps the click on a network: call `originalHandler(network)` to run the `onClick` prop with the connector type
+     * of the active wallet on that network.
+     *
+     * @param networkData - The clicked network.
+     * @param selectionsData - State of the network selection.
+     * @param originalHandler - Connects the active wallet on a network.
+     */
     onNetworkClick?: (
-      networkData: NetworkData,
+      networkData: NetworkSelectionsNetworkData,
       selectionsData: NetworkSelectionsData,
       originalHandler: (network: OrbitAdapter) => void,
     ) => void;
-    /** Custom error retry handler */
-    onErrorRetry?: (selectionsData: NetworkSelectionsData) => void;
   };
   /** Configuration options */
   config?: {
     /** Custom ARIA labels */
     ariaLabels?: {
-      container?: (selectionsData: NetworkSelectionsData) => string;
+      /**
+       * Returns the ARIA label of the network list (default: the `availableNetworks` label).
+       *
+       * @param selectionsData - State of the network selection.
+       * @returns The label.
+       */
       networkList?: (selectionsData: NetworkSelectionsData) => string;
-      networkIcon?: (networkData: NetworkData) => string;
-      errorContainer?: (selectionsData: NetworkSelectionsData) => string;
+      /**
+       * Returns the ARIA label of a network icon (default: the `networkNameIcon` label with the network name).
+       *
+       * @param networkData - The network.
+       * @returns The label.
+       */
+      networkIcon?: (networkData: NetworkSelectionsNetworkData) => string;
     };
-    /** Custom scroll behavior */
+    /** Classes of the default network list (ignored when `classNames.networkList` is set) */
     scroll?: {
-      touchMaxHeight?: string;
+      /** Height limit on devices without a touch screen (default: `novacon:max-h-[310px]`) */
       mouseMaxHeight?: string;
+      /** Gap between the cards */
       gap?: {
+        /** On touch devices (default: `novacon:gap-3`) */
         touch?: string;
+        /** On devices without a touch screen (default: `novacon:gap-2`) */
         mouse?: string;
       };
     };
@@ -208,21 +361,27 @@ export type NetworkSelectionsCustomization = {
 };
 
 /**
- * Props for the NetworkSelections component
+ * Props for the {@link NetworkSelections} component.
  */
-interface NetworkSelectionsProps {
-  /** Name of the currently active wallet connector */
+export interface NetworkSelectionsProps {
+  /** The selected wallet, as `formatConnectorName` of `@tuwaio/orbit-core` returns it */
   activeConnector: string | undefined;
   /** Array of grouped wallet connectors with their supported networks */
   connectors: GroupedConnector[];
-  /** Click handler for network selection */
+  /**
+   * Connects the wallet on the selected network.
+   *
+   * @param adapter - The selected network.
+   * @param connectorType - Connector type of the wallet on that network (for example `evm:metamask`).
+   * @returns Resolves when the connection attempt finishes.
+   */
   onClick: (adapter: OrbitAdapter, connectorType: ConnectorType) => Promise<void>;
   /** Customization options */
   customization?: NetworkSelectionsCustomization;
 }
 
 // --- Default Sub-Components ---
-const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(
+const DefaultContainer = forwardRef<HTMLDivElement, NetworkSelectionsContainerProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -232,7 +391,7 @@ const DefaultContainer = forwardRef<HTMLDivElement, ContainerProps>(
 );
 DefaultContainer.displayName = 'DefaultContainer';
 
-const DefaultTitle = forwardRef<HTMLHeadingElement, TitleProps>(
+const DefaultTitle = forwardRef<HTMLHeadingElement, NetworkSelectionsTitleProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <h2 ref={ref} className={className} {...props}>
@@ -242,7 +401,7 @@ const DefaultTitle = forwardRef<HTMLHeadingElement, TitleProps>(
 );
 DefaultTitle.displayName = 'DefaultTitle';
 
-const DefaultNetworkList = forwardRef<HTMLDivElement, NetworkListProps>(
+const DefaultNetworkList = forwardRef<HTMLDivElement, NetworkSelectionsNetworkListProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -252,7 +411,7 @@ const DefaultNetworkList = forwardRef<HTMLDivElement, NetworkListProps>(
 );
 DefaultNetworkList.displayName = 'DefaultNetworkList';
 
-const DefaultNetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
+const DefaultNetworkItem = forwardRef<HTMLDivElement, NetworkSelectionsNetworkItemProps>(
   // eslint-disable-next-line
   ({ children, className, networkData, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -262,7 +421,7 @@ const DefaultNetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 );
 DefaultNetworkItem.displayName = 'DefaultNetworkItem';
 
-const DefaultNetworkIcon = forwardRef<HTMLDivElement, NetworkIconProps>(
+const DefaultNetworkIcon = forwardRef<HTMLDivElement, NetworkSelectionsNetworkIconProps>(
   // eslint-disable-next-line
   ({ children, className, networkData, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -272,7 +431,7 @@ const DefaultNetworkIcon = forwardRef<HTMLDivElement, NetworkIconProps>(
 );
 DefaultNetworkIcon.displayName = 'DefaultNetworkIcon';
 
-const DefaultErrorContainer = forwardRef<HTMLDivElement, ErrorContainerProps>(
+const DefaultErrorContainer = forwardRef<HTMLDivElement, NetworkSelectionsErrorContainerProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -282,7 +441,7 @@ const DefaultErrorContainer = forwardRef<HTMLDivElement, ErrorContainerProps>(
 );
 DefaultErrorContainer.displayName = 'DefaultErrorContainer';
 
-const DefaultErrorIcon = forwardRef<HTMLDivElement, ErrorIconProps>(
+const DefaultErrorIcon = forwardRef<HTMLDivElement, NetworkSelectionsErrorIconProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
@@ -292,7 +451,7 @@ const DefaultErrorIcon = forwardRef<HTMLDivElement, ErrorIconProps>(
 );
 DefaultErrorIcon.displayName = 'DefaultErrorIcon';
 
-const DefaultErrorTitle = forwardRef<HTMLHeadingElement, ErrorTitleProps>(
+const DefaultErrorTitle = forwardRef<HTMLHeadingElement, NetworkSelectionsErrorTitleProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <h2 ref={ref} className={className} {...props}>
@@ -302,7 +461,7 @@ const DefaultErrorTitle = forwardRef<HTMLHeadingElement, ErrorTitleProps>(
 );
 DefaultErrorTitle.displayName = 'DefaultErrorTitle';
 
-const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
+const DefaultErrorMessage = forwardRef<HTMLParagraphElement, NetworkSelectionsErrorMessageProps>(
   // eslint-disable-next-line
   ({ children, className, selectionsData, ...props }, ref) => (
     <p ref={ref} className={className} {...props}>
@@ -313,76 +472,38 @@ const DefaultErrorMessage = forwardRef<HTMLParagraphElement, ErrorMessageProps>(
 DefaultErrorMessage.displayName = 'DefaultErrorMessage';
 
 /**
- * NetworkSelections component - Network/blockchain selection interface for multi-network wallets with full customization
+ * The network choice of the connect modal for a wallet that supports several networks: a card for each network of
+ * the active wallet (a horizontal list on touch devices) and a disclaimer about networks with links to
+ * `academy.binance.com` and `alchemy.com`. Shows an error when `connectors` has no wallet matching `activeConnector`.
  *
- * This component provides a network selection interface when a wallet supports multiple blockchains:
- * - Visual network cards with blockchain icons and names
- * - Responsive layout adapting to touch/mouse interfaces
- * - Error handling for invalid connector states
- * - Educational content about blockchain networks
- * - Full accessibility support with semantic structure
- * - External documentation links for each network
- * - Complete customization of all child components and styling
+ * Props: {@link NetworkSelectionsProps}; the ref is forwarded to the container.
  *
- * Use cases:
- * - Multi-network wallets (e.g., MetaMask supporting EVM chains)
- * - Cross-chain wallets supporting both EVM and Solana
- * - Network-specific connection requirements
- * - User education about blockchain differences
- *
- * Layout features:
- * - Touch devices: Horizontal scrolling layout for easy mobile navigation
- * - Mouse devices: Vertical layout with fixed height scrolling
- * - Network icons with Web3Icon integration for consistency
- * - External links for additional network information
- *
- * Error handling:
- * - Graceful fallback when active connector is not found
- * - Clear error messaging with actionable guidance
- * - Visual error indicators with warning icons
- * - Accessible error state announcements
- *
- * Accessibility features:
- * - Semantic heading structure for network selection
- * - Proper ARIA labels for error states and selections
- * - Screen reader friendly network descriptions
- * - Keyboard navigation support for all interactive elements
- * - Error announcements with live regions
- *
- * @example Basic usage
+ * @example
  * ```tsx
- * <NetworkSelections
- *   activeConnector="metamask"
- *   connectors={multiNetworkConnectors}
- *   onClick={async (adapter, connectorType) => {
- *     await connectToNetwork(adapter, connectorType);
- *   }}
- * />
- * ```
+ * import { getFilteredConnectors } from '@tuwaio/nova-connect';
+ * import { NetworkSelections } from '@tuwaio/nova-connect/components';
+ * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { OrbitAdapter } from '@tuwaio/orbit-core';
  *
- * @example With customization
- * ```tsx
- * <NetworkSelections
- *   activeConnector="phantom"
- *   connectors={crossChainConnectors}
- *   onClick={(adapter, type) => handleNetworkConnection(adapter, type)}
- *   customization={{
- *     components: {
- *       Container: CustomNetworkContainer,
- *       NetworkIcon: CustomNetworkIcon
- *     },
- *     classNames: {
- *       networkList: ({ selectionsData }) =>
- *         selectionsData.isTouch ? 'touch-network-list' : 'desktop-network-list'
- *     },
- *     handlers: {
- *       onNetworkClick: (networkData, selectionsData, originalHandler) => {
- *         analytics.track('network_selected', { network: networkData.name });
- *         originalHandler(networkData.adapter);
+ * export function MetaMaskNetworks() {
+ *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const connect = useSatelliteConnectStore((store) => store.connect);
+ *
+ *   return (
+ *     <NetworkSelections
+ *       activeConnector="metamask"
+ *       connectors={getFilteredConnectors({ connectors: getConnectors() })}
+ *       onClick={(adapter, connectorType) =>
+ *         connect({ connectorType, chainId: adapter === OrbitAdapter.EVM ? 1 : 'solana:devnet' })
  *       }
- *     }
- *   }}
- * />
+ *       customization={{
+ *         classNames: {
+ *           networkList: ({ selectionsData }) => (selectionsData.isTouch ? 'touch-list' : 'desktop-list'),
+ *         },
+ *       }}
+ *     />
+ *   );
+ * }
  * ```
  */
 export const NetworkSelections = memo(
@@ -415,7 +536,7 @@ export const NetworkSelections = memo(
      */
     const activeConnectors = connectors.find((connector) => formatConnectorName(connector.name) === activeConnector);
 
-    const networks: NetworkData[] = activeConnectors?.adapters
+    const networks: NetworkSelectionsNetworkData[] = activeConnectors?.adapters
       ? activeConnectors.adapters.map((adapter, index) => {
           const networkInfo = getNetworkData(adapter);
           return {
@@ -560,7 +681,7 @@ export const NetworkSelections = memo(
             cn('novacon:flex NovaCustomScroll', isTouch ? cssClasses.touchListClasses : cssClasses.mouseListClasses)
           }
           role="list"
-          aria-label={customConfig?.ariaLabels?.networkList?.(selectionsData) ?? 'Available networks'}
+          aria-label={customConfig?.ariaLabels?.networkList?.(selectionsData) ?? labels.availableNetworks}
           selectionsData={selectionsData}
         >
           {networks.map((networkData) => (
@@ -580,7 +701,8 @@ export const NetworkSelections = memo(
                     className={customization?.classNames?.networkIcon?.({ networkData, selectionsData })}
                     role="img"
                     aria-label={
-                      customConfig?.ariaLabels?.networkIcon?.(networkData) ?? `${networkData.name} network icon`
+                      customConfig?.ariaLabels?.networkIcon?.(networkData) ??
+                      formatLabel(labels.networkNameIcon, { name: networkData.name })
                     }
                     networkData={networkData}
                     selectionsData={selectionsData}

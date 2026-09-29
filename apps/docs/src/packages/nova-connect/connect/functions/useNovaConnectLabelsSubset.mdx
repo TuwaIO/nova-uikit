@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useNovaConnectLabelsSubset" />
+
+# useNovaConnectLabelsSubset()
+
+> **useNovaConnectLabelsSubset**\<`K`\>(`keys`): `Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), `K`\>
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnectLabels.ts:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnectLabels.ts#L73)
+
+Returns the given labels. It reads all labels, so it re-renders like [useNovaConnectLabels](?path=/docs/packages-nova-connect-connect-functions-usenovaconnectlabels--docs).
+
+## Type Parameters
+
+### K
+
+`K` *extends* keyof [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
+
+## Parameters
+
+### keys
+
+`K`[]
+
+The label keys.
+
+## Returns
+
+`Pick`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs), `K`\>
+
+An object with the requested labels.
+
+## Example
+
+```tsx
+import { useNovaConnectLabelsSubset } from '@tuwaio/nova-connect/hooks';
+
+export function Actions() {
+  const { connect, disconnect } = useNovaConnectLabelsSubset(['connect', 'disconnect']);
+
+  return (
+    <p>
+      {connect} / {disconnect}
+    </p>
+  );
+}
+```

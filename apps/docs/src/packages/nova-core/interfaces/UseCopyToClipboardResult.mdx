@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Interfaces/UseCopyToClipboardResult" />
+
+# UseCopyToClipboardResult
+
+Defined in: [hooks/useCopyToClipboard.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L16)
+
+Value returned by [useCopyToClipboard](?path=/docs/packages-nova-core-functions-usecopytoclipboard--docs).
+
+## Properties
+
+### copy
+
+> **copy**: (`text`) => `Promise`\<[`CopyToClipboardResult`](?path=/docs/packages-nova-core-type-aliases-copytoclipboardresult--docs)\>
+
+Defined in: [hooks/useCopyToClipboard.ts:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L26)
+
+Writes the text to the clipboard (`navigator.clipboard.writeText`). A failed write is logged with
+`console.error` and kept in `error` for `timeout` milliseconds.
+
+#### Parameters
+
+##### text
+
+`string`
+
+The text to copy.
+
+#### Returns
+
+`Promise`\<[`CopyToClipboardResult`](?path=/docs/packages-nova-core-type-aliases-copytoclipboardresult--docs)\>
+
+Whether the text was copied, with the error when it was not.
+
+***
+
+### error
+
+> **error**: `Error` \| `null`
+
+Defined in: [hooks/useCopyToClipboard.ts:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L28)
+
+The error of the last failed write, for `timeout` milliseconds
+
+***
+
+### isCopied
+
+> **isCopied**: `boolean`
+
+Defined in: [hooks/useCopyToClipboard.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L18)
+
+`true` for `timeout` milliseconds after a successful copy

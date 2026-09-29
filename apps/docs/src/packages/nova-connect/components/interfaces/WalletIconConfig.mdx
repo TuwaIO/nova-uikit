@@ -1,0 +1,159 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Interfaces/WalletIconConfig" />
+
+# WalletIconConfig
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L17)
+
+A floating wallet icon of [GetWallet](?path=/docs/packages-nova-connect-components-variables-getwallet--docs).
+
+## Properties
+
+### animation
+
+> **animation**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L51)
+
+Animation configuration
+
+#### delay
+
+> **delay**: `number`
+
+Animation delay in milliseconds
+
+#### duration
+
+> **duration**: `number`
+
+Animation duration in milliseconds
+
+#### ease?
+
+> `optional` **ease?**: `string`
+
+CSS easing of the float animation (default: `config.animation.defaultEase` or `ease-in-out`)
+
+#### reverse?
+
+> `optional` **reverse?**: `boolean`
+
+Whether to reverse animation direction
+
+***
+
+### ariaLabel?
+
+> `optional` **ariaLabel?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L64)
+
+ARIA label of the icon (default: `name` followed by the `walletIcon` label)
+
+***
+
+### name?
+
+> `optional` **name?**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L62)
+
+Wallet name in the default ARIA label of the icon (default: the wallet key)
+
+***
+
+### position
+
+> **position**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L21)
+
+Position configuration using predefined position classes
+
+#### bottom?
+
+> `optional` **bottom?**: `string`
+
+Bottom position class (e.g., 'bottom-[10%]', 'bottom-4')
+
+#### left?
+
+> `optional` **left?**: `string`
+
+Left position class (e.g., 'left-[5%]', 'left-4')
+
+#### right?
+
+> `optional` **right?**: `string`
+
+Right position class (e.g., 'right-[10%]', 'right-4')
+
+#### top?
+
+> `optional` **top?**: `string`
+
+Top position class (e.g., 'top-[5%]', 'top-4')
+
+#### transform?
+
+> `optional` **transform?**: `string`
+
+Transform classes for centering
+
+***
+
+### size
+
+> **size**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L34)
+
+Size configuration using predefined size classes
+
+#### desktop
+
+> **desktop**: `object`
+
+Width and height classes for desktop
+
+##### desktop.height
+
+> **height**: `string`
+
+Height class with a breakpoint
+
+##### desktop.width
+
+> **width**: `string`
+
+Width class with a breakpoint (for example `novacon:md:w-24`)
+
+#### mobile
+
+> **mobile**: `object`
+
+Width and height classes for mobile
+
+##### mobile.height
+
+> **height**: `string`
+
+Height class
+
+##### mobile.width
+
+> **width**: `string`
+
+Width class (for example `novacon:w-20`)
+
+***
+
+### walletKey
+
+> **walletKey**: `string`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/GetWallet.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/GetWallet.tsx#L19)
+
+Wallet name for `WalletIcon` of `@tuwaio/nova-core` (for example `metamask`)

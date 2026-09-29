@@ -1,0 +1,191 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/RecentBadgeCustomization" />
+
+# RecentBadgeCustomization
+
+> **RecentBadgeCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L107)
+
+Customization options of [RecentBadge](?path=/docs/packages-nova-connect-components-variables-recentbadge--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L120)
+
+Custom class name generators
+
+#### animatedGradient?
+
+> `optional` **animatedGradient?**: () => `string`
+
+Returns the classes of the gradient border, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### backgroundOverlay?
+
+> `optional` **backgroundOverlay?**: () => `string`
+
+Returns the classes of the background overlay, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: (`params`) => `string`
+
+Returns the classes of the container, instead of the default ones and the `className` prop.
+
+##### Parameters
+
+###### params
+
+The badge state.
+
+###### animated
+
+`boolean`
+
+The `animated` prop.
+
+###### isTouch
+
+`boolean`
+
+Whether the device has a touch screen (smaller badge by default).
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### content?
+
+> `optional` **content?**: () => `string`
+
+Returns the classes of the content, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:109](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L109)
+
+Custom components
+
+#### AnimatedGradient?
+
+> `optional` **AnimatedGradient?**: `ComponentType`\<[`RecentBadgeAnimatedGradientProps`](?path=/docs/packages-nova-connect-components-type-aliases-recentbadgeanimatedgradientprops--docs)\>
+
+Custom animated gradient component
+
+#### BackgroundOverlay?
+
+> `optional` **BackgroundOverlay?**: `ComponentType`\<[`RecentBadgeBackgroundOverlayProps`](?path=/docs/packages-nova-connect-components-type-aliases-recentbadgebackgroundoverlayprops--docs)\>
+
+Custom background overlay
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`RecentBadgeContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-recentbadgecontainerprops--docs)\>
+
+Custom container wrapper
+
+#### Content?
+
+> `optional` **Content?**: `ComponentType`\<[`RecentBadgeContentProps`](?path=/docs/packages-nova-connect-components-type-aliases-recentbadgecontentprops--docs)\>
+
+Custom content wrapper
+
+***
+
+### config?
+
+> `optional` **config?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:157](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L157)
+
+Configuration options
+
+#### animation?
+
+> `optional` **animation?**: `Partial`\<[`BadgeAnimationConfig`](?path=/docs/packages-nova-connect-components-interfaces-badgeanimationconfig--docs)\>
+
+Custom animation configuration
+
+#### ariaLabels?
+
+> `optional` **ariaLabels?**: `object`
+
+Custom ARIA labels
+
+##### ariaLabels.container?
+
+> `optional` **container?**: `string`
+
+ARIA label of the badge (before the `aria-label` prop)
+
+#### gradient?
+
+> `optional` **gradient?**: `Partial`\<[`BadgeGradientConfig`](?path=/docs/packages-nova-connect-components-interfaces-badgegradientconfig--docs)\>
+
+Custom gradient configuration
+
+#### touchDevice?
+
+> `optional` **touchDevice?**: `boolean`
+
+Whether to use the touch device size, instead of `isTouchDevice` of `@tuwaio/nova-core`
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RecentBadge.tsx#L150)
+
+Custom event handlers
+
+#### onMount?
+
+> `optional` **onMount?**: () => `void`
+
+Called after mount
+
+##### Returns
+
+`void`
+
+#### onUnmount?
+
+> `optional` **onUnmount?**: () => `void`
+
+Called on unmount
+
+##### Returns
+
+`void`

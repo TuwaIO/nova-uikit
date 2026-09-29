@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/GetFilteredConnectorsParams" />
+
+# GetFilteredConnectorsParams
+
+Defined in: [packages/nova-connect/src/utils/getFilteredConnectors.ts:9](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getFilteredConnectors.ts#L9)
+
+Parameters of [getFilteredConnectors](?path=/docs/packages-nova-connect-connect-functions-getfilteredconnectors--docs).
+
+## Properties
+
+### connectors
+
+> **connectors**: `Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\>
+
+Defined in: [packages/nova-connect/src/utils/getFilteredConnectors.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getFilteredConnectors.ts#L11)
+
+Connectors by adapter, as `getConnectors()` of the Satellite store returns them
+
+***
+
+### selectedAdapter?
+
+> `optional` **selectedAdapter?**: `OrbitAdapter`
+
+Defined in: [packages/nova-connect/src/utils/getFilteredConnectors.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getFilteredConnectors.ts#L13)
+
+Keeps only the wallets (and their connectors) of this adapter
