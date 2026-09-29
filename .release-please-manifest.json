@@ -1,5 +1,5 @@
 {
-  "packages/nova-connect": "0.6.0",
-  "packages/nova-core": "0.6.0",
-  "packages/nova-transactions": "0.6.0"
+  "packages/nova-connect": "0.7.0",
+  "packages/nova-core": "0.7.0",
+  "packages/nova-transactions": "0.7.0"
 }
