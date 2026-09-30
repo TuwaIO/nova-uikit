@@ -71,7 +71,7 @@ apps/docs/
     └── storybookRoutes.mjs         # Adds <Meta title> to every page and rewrites links to Storybook routes
 ```
 
-The **Introduction** explains what Nova UI Kit is, where it fits in TUWA, how the UI works with Satellite Connect and Pulsar, the packages and the installation, and links to the package pages instead of repeating code. Usage examples live in the package READMEs; the full-stack integration with SIWX and a server is documented in the [TUWA SDK docs](https://sdk.docs.tuwa.io/full-stack).
+The **Introduction** explains what Nova UI Kit is, where it fits in TUWA, how the UI works with Satellite Connect and Pulsar, the packages and the installation, and links to the package pages instead of repeating code. Usage examples live in the package READMEs; the full-stack integration with SIWX and a server is documented in the [Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react).
 
 ---
 
@@ -93,13 +93,13 @@ pnpm docs:gen   # run from the monorepo root; also runs in the pre-commit hook a
 
 ## 🔗 Quick Links
 
-| Resource                         | Link                                                               |
-| -------------------------------- | ------------------------------------------------------------------ |
-| **Live Storybook**               | [stories.tuwa.io](https://stories.tuwa.io/)                        |
-| **TUWA Guides**                  | [docs.tuwa.io/guides](https://docs.tuwa.io/guides)                 |
-| **TUWA SDK (full-stack guide)**  | [sdk.docs.tuwa.io/full-stack](https://sdk.docs.tuwa.io/full-stack) |
-| **Storybook Documentation**      | [storybook.js.org/docs](https://storybook.js.org/docs)             |
-| **TypeDoc Markdown Plugin Docs** | [typedoc-plugin-markdown.org](https://typedoc-plugin-markdown.org) |
+| Resource                         | Link                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------ |
+| **Live Storybook**               | [stories.tuwa.io](https://stories.tuwa.io/)                                          |
+| **TUWA Guides**                  | [docs.tuwa.io/guides](https://docs.tuwa.io/guides)                                   |
+| **Full-Stack React guide**       | [docs.tuwa.io/guides/full-stack-react](https://docs.tuwa.io/guides/full-stack-react) |
+| **Storybook Documentation**      | [storybook.js.org/docs](https://storybook.js.org/docs)                               |
+| **TypeDoc Markdown Plugin Docs** | [typedoc-plugin-markdown.org](https://typedoc-plugin-markdown.org)                   |
 
 ## 📄 License
 

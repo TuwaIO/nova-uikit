@@ -13,7 +13,7 @@
 
 ## 🏛️ Ecosystem Layer Architecture
 
-TUWA is built in stages. Nova UI Kit is **Stage 4 (User Interface)**, above [Orbit Utils](https://orbit.docs.tuwa.io/) and [SIWX](https://siwx.docs.tuwa.io/) (Stage 1), [Satellite Connect](https://satellite.docs.tuwa.io/) and [Pulsar](https://pulsar.docs.tuwa.io/) (Stage 2) and [Quasar](https://sdk.docs.tuwa.io/quasar-cloud/overview) (Stage 3). The [TUWA SDK](https://sdk.docs.tuwa.io/) (Stage 5) re-exports it.
+TUWA is built in stages. Nova UI Kit is **Stage 4 (User Interface)**, above [Orbit Utils](https://orbit.docs.tuwa.io/) and [SIWX](https://siwx.docs.tuwa.io/) (Stage 1), [Satellite Connect](https://satellite.docs.tuwa.io/) and [Pulsar](https://pulsar.docs.tuwa.io/) (Stage 2) and [Quasar](https://docs.tuwa.io/quasar) (Stage 3). The [TUWA SDK](https://sdk.docs.tuwa.io/) (Stage 5) re-exports it.
 
 Inside the monorepo, packages are split into two layers:
 
@@ -71,7 +71,7 @@ For `@tuwaio/nova-connect`, see its [installation section](https://github.com/Tu
 
 ## 🚀 Usage
 
-The provider setup with Satellite Connect and the `ConnectButton` is in the [`@tuwaio/nova-connect` README](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-connect#-usage), and the Pulsar setup in the [`@tuwaio/nova-transactions` README](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-transactions#-usage). A full app with both, SIWX and a server is in the **[TUWA SDK documentation](https://sdk.docs.tuwa.io/full-stack)**, and the theme variables are on the **[Theming](https://stories.tuwa.io/?path=/docs/theming--docs)** page.
+The provider setup with Satellite Connect and the `ConnectButton` is in the [`@tuwaio/nova-connect` README](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-connect#-usage), and the Pulsar setup in the [`@tuwaio/nova-transactions` README](https://github.com/TuwaIO/nova-uikit/tree/main/packages/nova-transactions#-usage). A full app with both, SIWX and a server is in the **[Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react)**, and the theme variables are on the **[Theming](https://stories.tuwa.io/?path=/docs/theming--docs)** page.
 
 ---
 

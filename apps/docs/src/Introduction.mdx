@@ -23,13 +23,13 @@ This Storybook is the documentation of Nova UI Kit: the **Packages** section doc
 
 TUWA is built in stages. Each stage builds on the ones below it:
 
-| Stage                          | Projects                                                                                                                                     | Role                                                     |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| **1 — Core Auth & Primitives** | [SIWX](https://siwx.docs.tuwa.io/), [Orbit Utils](https://orbit.docs.tuwa.io/)                                                               | CAIP-122 authentication and multi-chain primitives       |
-| **2 — State & Connection**     | [Satellite Connect](https://satellite.docs.tuwa.io/), [Pulsar](https://pulsar.docs.tuwa.io/)                                                 | Wallet connection state machine and transaction tracking |
-| **3 — Backend & Sync**         | [Quasar Cloud](https://sdk.docs.tuwa.io/quasar-cloud/overview) or self-hosted [Quasar Community](https://github.com/TuwaIO/quasar-community) | Transaction indexing and cross-device sync               |
-| **4 — User Interface**         | **Nova UI Kit**                                                                                                                              | React design system and components                       |
-| **5 — SDK Integration Layer**  | [TUWA SDK](https://sdk.docs.tuwa.io/)                                                                                                        | One dependency that re-exports the stages above          |
+| Stage                          | Projects                                                                                                                  | Role                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| **1 — Core Auth & Primitives** | [SIWX](https://siwx.docs.tuwa.io/), [Orbit Utils](https://orbit.docs.tuwa.io/)                                            | CAIP-122 authentication and multi-chain primitives       |
+| **2 — State & Connection**     | [Satellite Connect](https://satellite.docs.tuwa.io/), [Pulsar](https://pulsar.docs.tuwa.io/)                              | Wallet connection state machine and transaction tracking |
+| **3 — Backend & Sync**         | [Quasar Cloud](https://docs.tuwa.io/quasar) or self-hosted [Quasar Community](https://github.com/TuwaIO/quasar-community) | Transaction indexing and cross-device sync               |
+| **4 — User Interface**         | **Nova UI Kit**                                                                                                           | React design system and components                       |
+| **5 — SDK Integration Layer**  | [TUWA SDK](https://sdk.docs.tuwa.io/)                                                                                     | One dependency that re-exports the stages above          |
 
 Nova Connect renders the store of Satellite Connect and signs users in with SIWX, Nova Transactions renders the store of Pulsar (which can sync with Quasar), and both use Orbit Utils for chain helpers. Nova Transactions is optional: Nova Connect shows the transaction history only when you give it a Pulsar store.
 
@@ -96,6 +96,6 @@ Install the packages and their peer dependencies as listed on the package pages:
 
 - Set up the providers with the examples of **[`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)** and **[`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs)**, and browse the **Packages** section for the reference of every export.
 - Adapt the look with the **[Theming](?path=/docs/theming--docs)** page and try the customization options in the component stories.
-- Build a full-stack app with Satellite Connect, SIWX, Pulsar and Quasar: see the **[TUWA SDK documentation](https://sdk.docs.tuwa.io/full-stack)**.
+- Build a full-stack app with Satellite Connect, SIWX, Pulsar and Quasar: see the **[Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react)**.
 - Read the **[Multi-Chain Authentication guide](https://docs.tuwa.io/guides/multi-chain-auth-siwx-caip122)** for SIWX sign-in across EVM and Solana, and find more guides at **[docs.tuwa.io/guides](https://docs.tuwa.io/guides)**.
 - Read the source on **[GitHub](https://github.com/TuwaIO/nova-uikit)**.
