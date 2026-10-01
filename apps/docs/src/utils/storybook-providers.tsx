@@ -1,5 +1,4 @@
 import type { Meta, StoryContext } from '@storybook/react-vite';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NovaConnectProvider, NovaConnectProviderProps } from '@tuwaio/nova-connect';
 import { LegalConfig, NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
 import { ConnectButtonProps } from '@tuwaio/nova-connect/components';
@@ -29,7 +28,6 @@ import {
   polygonZkEvm,
   sepolia,
 } from 'viem/chains';
-import { WagmiProvider } from 'wagmi';
 
 import { connectedWalletTransactionsMock } from './connectedWalletTransactionsMock';
 
@@ -194,8 +192,6 @@ function SatelliteConnectProvidersInner({
   );
 }
 
-const queryClient = new QueryClient();
-
 export function StorybookProviders({
   children,
   withBalance,
@@ -206,25 +202,22 @@ export function StorybookProviders({
   legal,
   customization,
 }: SatelliteConnectProvidersProps) {
+  // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear
   return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false}>
-          {customization && <div className="custom-theme" style={{ display: 'none' }} />}
-          <SatelliteConnectProvidersInner
-            withBalance={withBalance}
-            withChain={withChain}
-            withImpersonated={withImpersonated}
-            customization={customization}
-            customConnectorGroups={customConnectorGroups}
-            popularConnectors={popularConnectors}
-            legal={legal}
-          >
-            {children}
-          </SatelliteConnectProvidersInner>
-        </SatelliteConnectProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false}>
+      {customization && <div className="custom-theme" style={{ display: 'none' }} />}
+      <SatelliteConnectProvidersInner
+        withBalance={withBalance}
+        withChain={withChain}
+        withImpersonated={withImpersonated}
+        customization={customization}
+        customConnectorGroups={customConnectorGroups}
+        popularConnectors={popularConnectors}
+        legal={legal}
+      >
+        {children}
+      </SatelliteConnectProvidersInner>
+    </SatelliteConnectProvider>
   );
 }
 

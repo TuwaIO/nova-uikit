@@ -114,6 +114,8 @@ export function Header() {
 }
 ```
 
+No `WagmiProvider` from `wagmi` is needed: Nova Connect calls `@wagmi/core` actions, and `EVMConnectorsWatcher` hydrates a wagmi config created with `ssr: true` (for Next.js), so the installed EIP-6963 wallets (MetaMask, Rabby…) appear in the connect modal.
+
 A full app with Nova Transactions, SIWX and a Pulsar store synced with a server is in the **[Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react)**. Every component, with its customization options, can be tried in [Storybook](https://stories.tuwa.io/?path=/docs/introduction--docs).
 
 ---

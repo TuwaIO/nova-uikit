@@ -17,7 +17,6 @@
     "@safe-global/safe-apps-sdk": "^9.1.0",
     "@solana/react": "^8.4.0",
     "@solana/webcrypto-ed25519-polyfill": "^8.4.0",
-    "@tanstack/react-query": "^5.104.0",
     "@tuwaio/nova-connect": "workspace:^",
     "@tuwaio/nova-core": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
@@ -46,7 +45,6 @@
     "immer": "^11.1.18",
     "next": "16.3.8",
     "viem": "^2.57.2",
-    "wagmi": "^3.7.7",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
