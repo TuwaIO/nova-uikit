@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.7.1...nova-core-v0.7.2) (2026-10-01)
+
+
+### Bug Fixes
+
+* updated packages ([d57bec3](https://github.com/TuwaIO/nova-uikit/commit/d57bec36e4b903d878ec5f7fc75d8972c5e48621))
+
 ## [0.7.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.7.0...nova-core-v0.7.1) (2026-09-29)
 
 
