@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.3](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.7.2...nova-connect-v0.7.3) (2026-10-01)
+
+
+### Bug Fixes
+
+* updated docs and optimization of storybooks ([ae07a06](https://github.com/TuwaIO/nova-uikit/commit/ae07a064b533f5efa9f65d9e1ffb9fb51e38784b))
+* updated packages ([d57bec3](https://github.com/TuwaIO/nova-uikit/commit/d57bec36e4b903d878ec5f7fc75d8972c5e48621))
+
 ## [0.7.2](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.7.1...nova-connect-v0.7.2) (2026-09-30)
 
 

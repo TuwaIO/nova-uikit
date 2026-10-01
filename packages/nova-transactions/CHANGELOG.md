@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.7.2...nova-transactions-v0.7.3) (2026-10-01)
+
+
+### Bug Fixes
+
+* updated packages ([d57bec3](https://github.com/TuwaIO/nova-uikit/commit/d57bec36e4b903d878ec5f7fc75d8972c5e48621))
+
 ## [0.7.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.7.1...nova-transactions-v0.7.2) (2026-09-30)
 
 
