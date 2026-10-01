@@ -29,8 +29,8 @@ minimumReleaseAgeExclude:
   - '@typescript-eslint/typescript-estree@8.64.0 || 8.71.0'
   - '@typescript-eslint/utils@8.64.0 || 8.71.0'
   - '@typescript-eslint/visitor-keys@8.64.0 || 8.71.0'
-  - '@web3icons/common@0.11.48 || 0.11.49'
-  - '@web3icons/react@4.1.19 || 4.1.20'
+  - '@web3icons/common@0.11.48 || 0.11.49 || 0.11.52'
+  - '@web3icons/react@4.1.19 || 4.1.20 || 4.1.23'
   - postcss@8.5.19 || 8.5.20 || 8.5.23
   - typescript-eslint@8.64.0 || 8.71.0
   - '@radix-ui/primitive@1.1.6'
@@ -60,16 +60,19 @@ minimumReleaseAgeExclude:
   - '@base-org/account@2.5.8'
   - '@types/node@26.2.0'
   - eslint@10.8.1
-  - '@next/env@16.3.1 || 16.3.7'
-  - '@next/swc-darwin-arm64@16.3.1 || 16.3.7'
-  - '@next/swc-darwin-x64@16.3.1 || 16.3.7'
-  - '@next/swc-linux-arm64-gnu@16.3.1 || 16.3.7'
-  - '@next/swc-linux-arm64-musl@16.3.1 || 16.3.7'
-  - '@next/swc-linux-x64-gnu@16.3.1 || 16.3.7'
-  - '@next/swc-linux-x64-musl@16.3.1 || 16.3.7'
-  - '@next/swc-win32-arm64-msvc@16.3.1 || 16.3.7'
-  - '@next/swc-win32-x64-msvc@16.3.1 || 16.3.7'
-  - next@16.3.1 || 16.3.7
+  - '@next/env@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-darwin-arm64@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-darwin-x64@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-linux-arm64-gnu@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-linux-arm64-musl@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-linux-x64-gnu@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-linux-x64-musl@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-win32-arm64-msvc@16.3.1 || 16.3.7 || 16.3.8'
+  - '@next/swc-win32-x64-msvc@16.3.1 || 16.3.7 || 16.3.8'
+  - next@16.3.1 || 16.3.7 || 16.3.8
   - '@solana/webcrypto-ed25519-polyfill@7.1.0'
   - framer-motion@13.4.6
   - motion-dom@13.4.5
+  - '@vitest/mocker@5.0.3'
+  - '@vitest/spy@5.0.3'
+  - vitest@5.0.3
