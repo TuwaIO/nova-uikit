@@ -133,11 +133,12 @@ export type NovaConnectProviderCustomization = {
      * Returns the rendered tree, instead of the default one. Keep the elements inside the context provider (the
      * default tree and `MainContent` include it).
      *
-     * @param defaultTree - The default tree: the context provider with the SIWX watcher, the errors provider, the
-     * labels provider with the app, and the two modals.
-     * @param components - The parts of the tree.
+     * @param defaultTree - The default tree: the context provider with the labels provider, which wraps the SIWX
+     * watcher, the errors provider, the app and the two modals.
+     * @param components - The parts of the tree. The SIWX watcher, `ErrorsProvider` and the modals read the labels:
+     * render them inside a labels provider (`MainContent` does).
      * @param components.ErrorsProvider - The errors provider element.
-     * @param components.LabelsProvider - The labels provider element with the app.
+     * @param components.LabelsProvider - The labels provider element with the app only.
      * @param components.MainContent - The same tree as `defaultTree`.
      * @param components.ConnectModal - The connect modal (an empty fragment without chains).
      * @param components.ConnectedModal - The connected modal (an empty fragment without chains).
@@ -419,26 +420,21 @@ export function NovaConnectProvider({
   // Without `siwx` the app does not use SIWX through Nova Connect: no watcher, no warnings about a missing verifier
   const siwxWatcherElement = siwx ? <NovaSiwxWatcher {...siwx} /> : null;
 
+  // The labels provider wraps the whole tree: the modals, the error toasts and the SIWX watcher read the labels too
   const mainContentElement = (
     <NovaConnectProviderContext.Provider value={contextValue}>
-      {siwxWatcherElement}
-      {errorsProviderElement}
-      {labelsProviderElement}
-      {connectModalElement}
-      {connectedModalElement}
+      <LabelsProvider labels={finalLabels}>
+        {siwxWatcherElement}
+        {errorsProviderElement}
+        {children}
+        {connectModalElement}
+        {connectedModalElement}
+      </LabelsProvider>
     </NovaConnectProviderContext.Provider>
   );
 
   // Create default provider tree with modals
-  const defaultProviderTree = (
-    <NovaConnectProviderContext.Provider value={contextValue}>
-      {siwxWatcherElement}
-      {errorsProviderElement}
-      {labelsProviderElement}
-      {connectModalElement}
-      {connectedModalElement}
-    </NovaConnectProviderContext.Provider>
-  );
+  const defaultProviderTree = mainContentElement;
 
   // Use custom provider tree renderer if provided
   const finalProviderTree = customProviderTreeRenderer(

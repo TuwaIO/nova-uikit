@@ -146,7 +146,7 @@ The final labels.
 
 > `optional` **modals?**: `object`
 
-Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:160](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L160)
+Defined in: [packages/nova-connect/src/providers/NovaConnectProvider.tsx:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/providers/NovaConnectProvider.tsx#L161)
 
 Modal customizations
 
@@ -185,12 +185,13 @@ default tree and `MainContent` include it).
 
 `ReactNode`
 
-The default tree: the context provider with the SIWX watcher, the errors provider, the
-labels provider with the app, and the two modals.
+The default tree: the context provider with the labels provider, which wraps the SIWX
+watcher, the errors provider, the app and the two modals.
 
 ###### components
 
-The parts of the tree.
+The parts of the tree. The SIWX watcher, `ErrorsProvider` and the modals read the labels:
+render them inside a labels provider (`MainContent` does).
 
 ###### ConnectedModal
 
@@ -214,7 +215,7 @@ The errors provider element.
 
 `ReactNode`
 
-The labels provider element with the app.
+The labels provider element with the app only.
 
 ###### MainContent
 
