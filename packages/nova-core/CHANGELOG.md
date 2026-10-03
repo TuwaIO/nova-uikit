@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.7.3...nova-core-v0.8.0) (2026-10-03)
+
+
+### Features
+
+* genesis-hash Solana chain IDs and framer-motion 14 ([8f62e88](https://github.com/TuwaIO/nova-uikit/commit/8f62e882d8482f340f4d2d60631344e4ed3fd529))
+
 ## [0.7.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.7.2...nova-core-v0.7.3) (2026-10-02)
 
 
