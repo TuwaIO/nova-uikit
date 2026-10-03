@@ -9,7 +9,10 @@ import { getChainAdapter } from './adapters/registry';
 export interface GetChainsListByConnectorTypeParams extends InitialChains {
   /** Connector type whose network is used, for example `evm:metamask` */
   connectorType: ConnectorType;
-  /** Solana only: keeps the clusters of these chain identifiers (for example `solana:devnet`) */
+  /**
+   * Solana only: keeps the clusters of these chain identifiers (Wallet Standard chains such as `solana:devnet`, or
+   * CAIP-2 chain IDs with the genesis hash)
+   */
   chains?: ChainIdentifierArray;
 }
 
@@ -99,7 +102,8 @@ export function isSolanaChainList(chains: (string | number)[]): boolean {
 }
 
 /**
- * Reads `connectedWallet.chains` of a connection (the Wallet Standard wallet of a Solana connection).
+ * Reads `connectedWallet.chains` of a connection (the Wallet Standard wallet of a Solana connection). Wallets name
+ * their clusters in the Wallet Standard form (`solana:devnet`), not with the genesis hash.
  *
  * @param connection - A connection, or any other value.
  * @returns The chains, or `undefined` when the value has no such array.

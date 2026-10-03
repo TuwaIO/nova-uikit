@@ -17,7 +17,8 @@ const NetworkIconLazy = lazy(() =>
 export interface NetworkIconProps {
   /**
    * The network: an EVM chain ID (`1`), or a string whose part before `:` is a network id of `@web3icons/common`
-   * (`'solana:devnet'`, `'base'`).
+   * (`'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1'`, `'solana:devnet'`, `'base'`). Solana devnet and testnet get the testnet
+   * color under their genesis-hash chain IDs and their names.
    */
   chainId: number | string;
   /** Icon style of `@web3icons/react`. Defaults to `'background'`. */

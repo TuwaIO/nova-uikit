@@ -4,7 +4,7 @@
  */
 
 import type { MinimalSatelliteConnection, SatelliteSiwxFieldOptions, UseSiwxSignInOptions } from '@tuwaio/siwx-react';
-import { getSatelliteSiwxFields, useSiwx, useSiwxSessionStore } from '@tuwaio/siwx-react';
+import { getSatelliteSiwxFields, isSessionMatchingConnection, useSiwx, useSiwxSessionStore } from '@tuwaio/siwx-react';
 import { useEffect, useEffectEvent, useRef } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
@@ -126,8 +126,9 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         resources,
       });
 
-      // If already authenticated for this exact CAIP-10 address, skip prompt
-      if (status === 'authenticated' && session?.address === fields.address) {
+      // If already authenticated for this account and chain, skip prompt (a Solana session signed for `solana:devnet`
+      // before the switch to genesis-hash chain IDs still matches)
+      if (status === 'authenticated' && isSessionMatchingConnection(session, minimalConnection)) {
         return;
       }
 

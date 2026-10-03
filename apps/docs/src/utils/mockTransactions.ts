@@ -1,4 +1,4 @@
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { EvmTransaction, InitialTransaction, SolanaTransaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { action } from 'storybook/actions';
@@ -15,7 +15,7 @@ export function createMockTx(adapterKey: OrbitAdapter, overrides: Record<string,
     tracker: isSolana ? TransactionTracker.Solana : TransactionTracker.Ethereum,
     txKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef',
     type: 'storybook-action',
-    chainId: isSolana ? 'solana:mainnet' : mainnet.id,
+    chainId: isSolana ? SOLANA_CHAIN_IDS.mainnet : mainnet.id,
     from: isSolana ? '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN' : '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     pending: true,
     localTimestamp: dayjs().subtract(5, 'minutes').unix(),

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TrackingTxModal } from '@tuwaio/nova-transactions';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   InitialTransaction,
@@ -80,7 +80,7 @@ const createMockSolanaTx = (overrides: Partial<SolanaTransaction> = {}): SolanaT
   connectorType: 'Phantom',
   status: undefined,
   localTimestamp: dayjs().unix(),
-  chainId: 'solana:devnet',
+  chainId: SOLANA_CHAIN_IDS.devnet,
   from: '0x0',
   type: 'Test Transaction',
   title: 'Solana Test',

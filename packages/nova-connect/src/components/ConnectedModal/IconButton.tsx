@@ -3,7 +3,7 @@
  */
 
 import { ChevronArrowWithAnim, cn, NetworkIcon } from '@tuwaio/nova-core';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorChainId, OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
@@ -40,7 +40,10 @@ export type IconButtonWalletIconContainerProps = {
  * Props for a custom chain icon container (rendered when `walletChainId` is set).
  */
 export type IconButtonChainIconContainerProps = {
-  /** Chain ID for `NetworkIcon` (a string chain ID becomes `solana:<chainId>`, or `config.chainIdFormatter` output) */
+  /**
+   * Chain ID for `NetworkIcon` (a string chain ID becomes its Solana CAIP-2 chain ID with the genesis hash from
+   * `formatConnectorChainId` of `@tuwaio/orbit-core`, or `config.chainIdFormatter` output)
+   */
   chainId: string | number;
   /** The `walletChainId` prop */
   walletChainId?: string | number;
@@ -278,7 +281,8 @@ export type IconButtonCustomization = {
     /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
     /**
-     * Formats `walletChainId` for the network icon, instead of the default (a string becomes `solana:<chainId>`).
+     * Formats `walletChainId` for the network icon, instead of the default (a string becomes its Solana CAIP-2 chain ID
+     * with the genesis hash, e.g. `devnet` → `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`).
      *
      * @param chainId - The `walletChainId` prop.
      * @returns The chain ID for `NetworkIcon` of `@tuwaio/nova-core`.
@@ -488,9 +492,9 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
         return chainIdFormatter(walletChainId);
       }
 
-      // If it's a string, assume it's a Solana network identifier
+      // A string is a Solana cluster: its CAIP-2 chain ID with the genesis hash (`devnet` → `solana:EtWTRABZ…`)
       if (typeof walletChainId === 'string') {
-        return `${OrbitAdapter.SOLANA}:${walletChainId}`;
+        return formatConnectorChainId(walletChainId, OrbitAdapter.SOLANA);
       }
 
       // If it's a number, use it directly as EVM chain ID

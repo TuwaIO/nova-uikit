@@ -57,7 +57,7 @@
     "@web3icons/react": ">=4",
     "@web3icons/common": ">=0.11",
     "clsx": "2.x.x",
-    "framer-motion": "12.x.x || 13.x.x",
+    "framer-motion": "12.x.x || 13.x.x || 14.x.x",
     "react": ">=19.2.3",
     "tailwind-merge": "3.x.x"
   },
@@ -70,7 +70,7 @@
     "@web3icons/common": "^0.11.52",
     "autoprefixer": "^10.6.1",
     "clsx": "^2.1.1",
-    "framer-motion": "13.5.1",
+    "framer-motion": "14.0.0",
     "postcss": "^8.5.28",
     "postcss-cli": "^12.0.0",
     "react": "^19.3.0",

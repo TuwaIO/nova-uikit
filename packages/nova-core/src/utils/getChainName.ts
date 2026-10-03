@@ -1,6 +1,6 @@
 import { networks } from '@web3icons/common/metadata';
 
-import { isSolanaDev } from './isSolanaDev';
+import { getSolanaDevCluster } from './solanaDevCluster';
 
 /**
  * Fallback string when a network name cannot be resolved.
@@ -36,10 +36,11 @@ function capitalize(str: string): string {
  *
  * Supports both EVM and non-EVM chain identifiers:
  * - **Numeric IDs (EVM):** e.g., `1` → "Ethereum", `137` → "Polygon"
- * - **String IDs (Non-EVM):** e.g., `"solana:devnet"` → "Solana Devnet"
+ * - **String IDs (Non-EVM):** e.g., `"solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1"` or `"solana:devnet"` → "Solana Devnet"
  *
- * For string IDs with environment suffixes (like "solana:devnet"),
- * the suffix is appended to the name if it's a known dev/test environment.
+ * For Solana dev and test clusters, given as the genesis-hash chain ID of CAIP-30 or as the cluster name
+ * (`solana:devnet`), the cluster is appended to the name. Mainnet (`solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`) is
+ * "Solana".
  *
  * The networks are looked up in the metadata of `@web3icons/common`.
  *
@@ -54,8 +55,8 @@ function capitalize(str: string): string {
  * getChainName(1);
  * // → { name: 'Ethereum', id: 'ethereum', filePath: 'ethereum', chainId: 1 }
  *
- * getChainName('solana:devnet');
- * // → { name: 'Solana Devnet', id: 'solana', filePath: 'solana', chainId: 'solana:devnet' }
+ * getChainName('solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1');
+ * // → { name: 'Solana Devnet', id: 'solana', filePath: 'solana', chainId: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' }
  *
  * getChainName(999999);
  * // → { name: 'Unknown', id: 'unknown', filePath: 'unknown', chainId: 999999 }
@@ -93,8 +94,9 @@ export function getChainName(chainId: number | string): ChainInfo {
     return unknownResult;
   }
 
-  // Append variant suffix for dev/test environments
-  const name = variant && isSolanaDev(chainId) ? `${network.name} ${capitalize(variant)}` : network.name;
+  // Append the cluster of dev/test environments, also for genesis-hash chain IDs ("solana:EtWTRABZ…" is devnet)
+  const devCluster = variant ? getSolanaDevCluster(chainId) : undefined;
+  const name = devCluster ? `${network.name} ${capitalize(devCluster)}` : network.name;
 
   return {
     name,

@@ -16,9 +16,10 @@ Props for a custom chain icon container (rendered when `walletChainId` is set).
 
 > **chainId**: `string` \| `number`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L44)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L47)
 
-Chain ID for `NetworkIcon` (a string chain ID becomes `solana:<chainId>`, or `config.chainIdFormatter` output)
+Chain ID for `NetworkIcon` (a string chain ID becomes its Solana CAIP-2 chain ID with the genesis hash from
+`formatConnectorChainId` of `@tuwaio/orbit-core`, or `config.chainIdFormatter` output)
 
 ***
 
@@ -26,7 +27,7 @@ Chain ID for `NetworkIcon` (a string chain ID becomes `solana:<chainId>`, or `co
 
 > `optional` **className?**: `string`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L48)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L51)
 
 Classes from `classNames.chainIconContainer`, added to the defaults
 
@@ -36,6 +37,6 @@ Classes from `classNames.chainIconContainer`, added to the defaults
 
 > `optional` **walletChainId?**: `string` \| `number`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L46)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L49)
 
 The `walletChainId` prop

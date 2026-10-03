@@ -19,6 +19,13 @@ describe('isSolanaDev utility', () => {
     expect(isSolanaDev('solana')).toBe(false);
   });
 
+  it('recognizes the genesis-hash chain IDs of devnet and testnet', () => {
+    expect(isSolanaDev('solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1')).toBe(true);
+    expect(isSolanaDev('solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z')).toBe(true);
+    expect(isSolanaDev('solana:4uhcVJyU9pJkvQyS88uRfhDSfZSm8DoR')).toBe(true);
+    expect(isSolanaDev('solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp')).toBe(false);
+  });
+
   it('returns false for numeric chain IDs', () => {
     expect(isSolanaDev(1)).toBe(false);
     expect(isSolanaDev(137)).toBe(false);

@@ -6,9 +6,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **getWalletChains**(`connection`): `ChainIdentifierArray` \| `undefined`
 
-Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L116)
+Defined in: [packages/nova-connect/src/utils/getChainsListByConnectorType.ts:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/getChainsListByConnectorType.ts#L120)
 
-Reads `connectedWallet.chains` of a connection (the Wallet Standard wallet of a Solana connection).
+Reads `connectedWallet.chains` of a connection (the Wallet Standard wallet of a Solana connection). Wallets name
+their clusters in the Wallet Standard form (`solana:devnet`), not with the genesis hash.
 
 ## Parameters
 

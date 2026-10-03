@@ -1,7 +1,7 @@
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxInfoBlock } from '@tuwaio/nova-transactions';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import { monad, monadTestnet } from 'viem/chains';
 
@@ -133,7 +133,7 @@ export const WithCustomization: Story = {
  */
 export const SolanaTransaction: Story = {
   args: {
-    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, chainId: 'solana:mainnet' }),
+    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, chainId: SOLANA_CHAIN_IDS.mainnet }),
     adapter: [mockSolanaAdapter],
   },
 };

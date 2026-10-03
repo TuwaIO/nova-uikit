@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NetworkIcon } from '@tuwaio/nova-core';
+import { SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 
 const meta: Meta<typeof NetworkIcon> = {
   title: 'Nova Core/Icons/NetworkIcon',
@@ -73,11 +74,12 @@ export const Unknown: Story = {
 };
 
 /**
- * Solana Devnet (Special visual logic for testnets).
+ * Solana Devnet under its CAIP-2 chain ID with the genesis hash (special visual logic for testnets). The cluster name
+ * `solana:devnet` gives the same icon.
  */
 export const SolanaDevnet: Story = {
   args: {
-    chainId: 'solana:devnet',
+    chainId: SOLANA_CHAIN_IDS.devnet,
     variant: 'background',
     className: 'w-10 h-10',
   },

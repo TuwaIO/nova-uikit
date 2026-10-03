@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **IconButtonCustomization** = `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L100)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L103)
 
 Customization options of [IconButton](?path=/docs/packages-nova-connect-components-variables-iconbutton--docs).
 
@@ -16,7 +16,7 @@ Customization options of [IconButton](?path=/docs/packages-nova-connect-componen
 
 > `optional` **accessibility?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:232](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L232)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:235](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L235)
 
 Custom aria labels and accessibility
 
@@ -134,7 +134,7 @@ The tooltip.
 
 > `optional` **animation?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:191](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L191)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:194](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L194)
 
 Custom animation configuration
 
@@ -168,7 +168,7 @@ Animation easing curve
 
 > `optional` **buttonProps?**: `Partial`\<`Omit`\<`ComponentPropsWithoutRef`\<`"button"`\>, `"popover"` \| `"onDrag"` \| `"onDragEnd"` \| `"onDragExit"` \| `"onDragStart"` \| `"onDragStartCapture"` \| `"onAnimationStart"` \| `"onAnimationEnd"` \| `"onAnimationStartCapture"` \| `"onAnimationEndCapture"` \| `"onAnimationIteration"` \| `"onAnimationIterationCapture"`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L102)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L105)
 
 Props of the button element, applied last (they override the generated ones)
 
@@ -178,7 +178,7 @@ Props of the button element, applied last (they override the generated ones)
 
 > `optional` **classNames?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L133)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:136](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L136)
 
 Custom class name generators
 
@@ -338,7 +338,7 @@ The classes.
 
 > `optional` **components?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L120)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:123](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L123)
 
 Custom components
 
@@ -378,7 +378,7 @@ Custom wallet icon container component
 
 > `optional` **config?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L275)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:278](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L278)
 
 Configuration options
 
@@ -392,7 +392,8 @@ Configuration options
 
 > `optional` **chainIdFormatter?**: (`chainId`) => `string` \| `number`
 
-Formats `walletChainId` for the network icon, instead of the default (a string becomes `solana:<chainId>`).
+Formats `walletChainId` for the network icon, instead of the default (a string becomes its Solana CAIP-2 chain ID
+with the genesis hash, e.g. `devnet` → `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`).
 
 ##### Parameters
 
@@ -450,7 +451,7 @@ Whether to show the wallet icon when `walletName` is set (default: `true`)
 
 > `optional` **handlers?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:203](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L203)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:206](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L206)
 
 Custom event handlers
 
@@ -544,7 +545,7 @@ The mouse event.
 
 > `optional` **variants?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:186](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L186)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/IconButton.tsx:189](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/IconButton.tsx#L189)
 
 Custom animation variants
 

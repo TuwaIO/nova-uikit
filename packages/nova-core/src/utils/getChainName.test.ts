@@ -44,6 +44,18 @@ describe('getChainName utility', () => {
     expect(info.chainId).toBe('solana:testnet');
   });
 
+  it('names Solana clusters given as genesis-hash chain IDs (CAIP-30)', () => {
+    expect(getChainName('solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp').name).toBe('Solana');
+    expect(getChainName('solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1').name).toBe('Solana Devnet');
+    expect(getChainName('solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z').name).toBe('Solana Testnet');
+    // Testnet before its genesis reset, still listed by WalletConnect
+    expect(getChainName('solana:4uhcVJyU9pJkvQyS88uRfhDSfZSm8DoR').name).toBe('Solana Testnet');
+
+    const devnet = getChainName('solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1');
+    expect(devnet.id).toBe('solana');
+    expect(devnet.chainId).toBe('solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1');
+  });
+
   it('returns Unknown for unrecognized string chain IDs', () => {
     const info = getChainName('unknown-chain-xyz');
     expect(info.name).toBe('Unknown');

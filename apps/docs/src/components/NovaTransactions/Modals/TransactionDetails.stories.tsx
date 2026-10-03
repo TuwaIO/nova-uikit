@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionDetails } from '@tuwaio/nova-transactions';
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   SolanaTransaction,
@@ -122,7 +122,7 @@ const mockSolanaPendingTx: SolanaTransaction = {
     status: undefined,
     syncStatus: 'pending-sync',
     type: 'SOL Transfer',
-    chainId: 'solana:mainnet',
+    chainId: SOLANA_CHAIN_IDS.mainnet,
   } as any),
   fee: 5000,
   slot: 284910294,
@@ -137,7 +137,7 @@ const mockSolanaSuccessTx: SolanaTransaction = {
     status: TransactionStatus.Success,
     syncStatus: 'synced',
     type: 'DEX Swap',
-    chainId: 'solana:mainnet',
+    chainId: SOLANA_CHAIN_IDS.mainnet,
   } as any),
   fee: 12000,
   slot: 284915830,

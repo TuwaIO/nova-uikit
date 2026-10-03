@@ -1,3 +1,4 @@
+import { SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 
 export function connectedWalletTransactionsMock(connectedWallet: string) {
@@ -21,7 +22,7 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       walletType: 'solana:metamask',
       from: 'AobnbeZ6QB2xdnPzBkaw2Stea5trqhamaoKyVMYenV3u',
       tracker: 'solana',
-      chainId: 'solana:devnet',
+      chainId: SOLANA_CHAIN_IDS.devnet,
       localTimestamp: 1763649492,
       txKey: '4ecrNTNBLwR4L2LNpFsrRCDLvj35aWqhNqdTnaYCmvxsEeLGXCNEYYcNu3evVF2okyNCLaM1BpWV9mnMDq4CaAze',
       pending: false,
@@ -73,7 +74,7 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       walletType: 'solana:metamask',
       from: connectedWallet,
       tracker: 'solana',
-      chainId: 'solana:devnet',
+      chainId: SOLANA_CHAIN_IDS.devnet,
       localTimestamp: 1763649586,
       txKey: '28en6B5ECdS3APe4JXf7FiFkQsGa9QAR5UkgY9CeYCGCQmt6s1HLf8EnDowoWEz5QYEs5M6VqsYVz4r1PPrx8tUS',
       pending: false,
@@ -194,7 +195,7 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       connectorType: 'solana:metamask',
       from: connectedWallet,
       tracker: 'solana',
-      chainId: 'solana:devnet',
+      chainId: SOLANA_CHAIN_IDS.devnet,
       localTimestamp: 1768740296,
       txKey: '54DP5G1Xozw4wwrzXPmSz6ULS32SYo1GkvRo7XY9aNLfd9eUxr9w84U6yDWatWRmeoRYfXuAbznzQaqnxSECH1zD',
       pending: false,

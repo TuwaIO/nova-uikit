@@ -6,12 +6,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **isSolanaDev**(`chainId`): `boolean`
 
-Defined in: [utils/isSolanaDev.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/isSolanaDev.ts#L10)
+Defined in: [utils/isSolanaDev.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/isSolanaDev.ts#L13)
 
 Determines if the current chain is a Solana development or test network.
 
-It strictly checks if the ID is a string containing 'solana' AND
-indicates a non-production environment ('devnet' or 'testnet').
+It checks that the ID is a Solana chain ID (or a string containing 'solana') that names a non-production cluster:
+the genesis-hash chain ID of devnet or testnet (CAIP-30, e.g. `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`), or
+'devnet' / 'testnet' in any letter case (e.g. `solana:devnet`).
 
 ## Parameters
 
@@ -19,7 +20,7 @@ indicates a non-production environment ('devnet' or 'testnet').
 
 `string` \| `number`
 
-The chain identifier (e.g., "solana:devnet", 1, "ethereum").
+The chain identifier (e.g., "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1", "solana:devnet", 1).
 
 ## Returns
 
