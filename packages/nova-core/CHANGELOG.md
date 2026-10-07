@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.8.0...nova-core-v0.8.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* read Solana clusters with @tuwaio/orbit-core; update dependencies ([cfb31b5](https://github.com/TuwaIO/nova-uikit/commit/cfb31b5e80fe9e9e1a07f53baaf150651275dfde))
+
 ## [0.8.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.7.3...nova-core-v0.8.0) (2026-10-03)
 
 
