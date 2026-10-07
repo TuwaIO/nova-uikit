@@ -53,7 +53,7 @@ Install the packages with their peer dependencies (the full lists, and why `@tuw
 
 ```bash
 # L6 Core
-pnpm add @tuwaio/nova-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
+pnpm add @tuwaio/nova-core @tuwaio/orbit-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
 
 # L7 Transactions (with a Pulsar store)
 pnpm add @tuwaio/nova-transactions @tuwaio/pulsar-core @tuwaio/orbit-core react-toastify @heroicons/react dayjs

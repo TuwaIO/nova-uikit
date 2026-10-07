@@ -3,7 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-core.svg)](https://www.npmjs.com/package/@tuwaio/nova-core)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-core.svg)](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/LICENSE)
 
-`@tuwaio/nova-core` is the core Layer 6 (L6) package of **Nova UI Kit**, the user interface project of TUWA Stage 4 ("User Interface"). It holds what the L7 packages [`@tuwaio/nova-connect`](https://stories.tuwa.io/?path=/docs/packages-nova-connect-overview--docs) and [`@tuwaio/nova-transactions`](https://stories.tuwa.io/?path=/docs/packages-nova-transactions-overview--docs) share: the `--tuwa-*` CSS variables of the theme, a dialog built on Radix UI, network and wallet icons, and small React hooks and helpers. It has no Web3 logic and no wallet or transaction state.
+`@tuwaio/nova-core` is the core Layer 6 (L6) package of **Nova UI Kit**, the user interface project of TUWA Stage 4 ("User Interface"). It holds what the L7 packages [`@tuwaio/nova-connect`](https://stories.tuwa.io/?path=/docs/packages-nova-connect-overview--docs) and [`@tuwaio/nova-transactions`](https://stories.tuwa.io/?path=/docs/packages-nova-transactions-overview--docs) share: the `--tuwa-*` CSS variables of the theme, a dialog built on Radix UI, network and wallet icons, and small React hooks and helpers. It has no Web3 logic and no wallet or transaction state; Solana cluster names come from `@tuwaio/orbit-core`, which has no dependencies of its own.
 
 ---
 
@@ -19,10 +19,10 @@
 ## 💾 Installation
 
 ```bash
-pnpm add @tuwaio/nova-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
+pnpm add @tuwaio/nova-core @tuwaio/orbit-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
 ```
 
-Peer dependencies: `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x).
+Peer dependencies: `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x).
 
 Import the stylesheet once, before the stylesheets of the other Nova packages:
 
