@@ -207,7 +207,7 @@ const preview: Preview = {
         stable: {
           background: '#10b981',
           color: '#ffffff',
-          description: 'Production ready',
+          description: 'Stable API',
         },
         beta: {
           background: '#f59e0b',

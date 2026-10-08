@@ -4,7 +4,7 @@
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
-  "description": "Layer 7 (L7) of the TUWA Ecosystem. React component library providing the visual UI for @tuwaio/pulsar-core transaction lifecycle tracking.",
+  "description": "L7 transactions package of Nova UI Kit (TUWA): toasts, a tracking modal with speed-up and cancel, and the transaction history for transactions tracked by Pulsar.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

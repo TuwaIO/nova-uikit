@@ -4,7 +4,7 @@
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
-  "description": "Layer 6 (L6) of the TUWA Ecosystem. Foundational package with styling primitives, CSS variables, base React components, and helper utilities.",
+  "description": "L6 core of Nova UI Kit (TUWA): the --tuwa-* theme variables, the dialog, network and wallet icons, and the hooks and helpers shared by the Nova components.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

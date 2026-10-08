@@ -4,7 +4,7 @@
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
-  "description": "Layer 7 (L7) of the TUWA Ecosystem. React components, hooks, and providers for wallet connection, blockchain interactions, and SIWX auto-authentication. Built on @tuwaio/satellite-react.",
+  "description": "L7 wallet connection package of Nova UI Kit (TUWA): connect button, connect and account modals, chain selector and SIWX sign-in for EVM and Solana wallets, with English and Ukrainian labels, built on @tuwaio/satellite-react.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
