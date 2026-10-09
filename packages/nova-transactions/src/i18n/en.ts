@@ -25,6 +25,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   },
   statuses: {
     pending: 'Pending',
+    confirmed: 'Confirmed',
     success: 'Success',
     failed: 'Failed',
     reverted: 'Reverted',

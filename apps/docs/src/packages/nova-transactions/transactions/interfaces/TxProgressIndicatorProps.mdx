@@ -14,9 +14,20 @@ Props of [TxProgressIndicator](?path=/docs/packages-nova-transactions-transactio
 
 > `optional` **className?**: `string`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:147](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L147)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L152)
 
 Classes of the indicator.
+
+***
+
+### isConfirmed?
+
+> `optional` **isConfirmed?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L144)
+
+Whether the transaction reached the `confirmed` commitment (Solana `confirmationStatus` `confirmed` or
+`finalized`): the processing step is completed and labeled as confirmed while the last step waits for the result.
 
 ***
 
@@ -24,7 +35,7 @@ Classes of the indicator.
 
 > `optional` **isFailed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L143)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L148)
 
 Whether the submission or the transaction failed.
 
@@ -44,7 +55,7 @@ Whether the transaction is being submitted or is pending.
 
 > `optional` **isReplaced?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:145](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L145)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L150)
 
 Whether the transaction was replaced (sped up or canceled).
 
@@ -54,7 +65,7 @@ Whether the transaction was replaced (sped up or canceled).
 
 > `optional` **isSucceed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L141)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L146)
 
 Whether the transaction succeeded.
 
@@ -64,7 +75,7 @@ Whether the transaction succeeded.
 
 > `optional` **stepClassNames?**: [`StepClassNames`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepclassnames--docs)
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:151](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L151)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L156)
 
 ClassNames for step customization
 
@@ -74,6 +85,6 @@ ClassNames for step customization
 
 > `optional` **StepComponent?**: `ComponentType`\<[`StepProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepprops--docs)\>
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:149](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L149)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L154)
 
 Component that renders each step.

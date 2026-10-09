@@ -17,7 +17,7 @@ This type defines structured labels for wallet modals, transaction statuses, toa
 
 > **actions**: `object`
 
-Defined in: [i18n/types.ts:138](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L138)
+Defined in: [i18n/types.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L143)
 
 Labels for common action buttons/links.
 
@@ -57,7 +57,7 @@ Text for a link to view the transaction on a block explorer.
 
 > **hashLabels**: `object`
 
-Defined in: [i18n/types.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L50)
+Defined in: [i18n/types.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L55)
 
 Labels for different types of transaction hashes/keys.
 
@@ -126,6 +126,13 @@ Standard labels for transaction statuses.
 
 Text for a confirmation count label, e.g., "1 confirmation" or "10 confirmations"
 
+#### confirmed
+
+> **confirmed**: `string`
+
+Text for a pending transaction that reached the `confirmed` commitment (Solana: voted on by a supermajority,
+usually within a second) and is waiting to be finalized.
+
 #### failed
 
 > **failed**: `string`
@@ -184,7 +191,7 @@ Text for the button/link within a toast to open the wallet modal.
 
 > **trackedTxButton**: `object`
 
-Defined in: [i18n/types.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L127)
+Defined in: [i18n/types.ts:132](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L132)
 
 Labels for the main transaction action button.
 
@@ -218,7 +225,7 @@ Text shown on the button after the transaction succeeds.
 
 > **trackingModal**: `object`
 
-Defined in: [i18n/types.ts:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L105)
+Defined in: [i18n/types.ts:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L110)
 
 Labels for the detailed transaction tracking modal.
 
@@ -282,7 +289,7 @@ The main title of the tracking modal.
 
 > **transactionDetails**: `object`
 
-Defined in: [i18n/types.ts:151](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L151)
+Defined in: [i18n/types.ts:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L156)
 
 Labels for the detailed transaction view.
 
@@ -584,7 +591,7 @@ The title for the transaction history section.
 
 > **txError**: `object`
 
-Defined in: [i18n/types.ts:83](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L83)
+Defined in: [i18n/types.ts:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L88)
 
 Labels for the transaction error block.
 
@@ -606,7 +613,7 @@ The title for the error details section.
 
 > **txInfo**: `object`
 
-Defined in: [i18n/types.ts:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L74)
+Defined in: [i18n/types.ts:79](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L79)
 
 Labels for the transaction information block.
 
@@ -634,7 +641,7 @@ Label indicating when the transaction was started.
 
 > **validationError**: `object`
 
-Defined in: [i18n/types.ts:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L94)
+Defined in: [i18n/types.ts:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L99)
 
 Labels for the pre-submission validation error toast.
 This toast fires when `executeTxAction` throws before the transaction

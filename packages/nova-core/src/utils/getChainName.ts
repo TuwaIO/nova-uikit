@@ -1,4 +1,4 @@
-import { networks } from '@web3icons/common/metadata';
+import { networks } from '@web3icons/common/metadata/networks';
 
 import { getSolanaDevCluster } from './solanaDevCluster';
 

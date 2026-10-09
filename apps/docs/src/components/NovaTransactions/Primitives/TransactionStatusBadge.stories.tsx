@@ -44,6 +44,16 @@ export const Pending: Story = {
 };
 
 /**
+ * The `Confirmed` state is shown for a pending Solana transaction that reached the `confirmed` commitment (about a second
+ * after sending) and is waiting to be finalized.
+ */
+export const Confirmed: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, status: undefined, confirmationStatus: 'confirmed' }),
+  },
+};
+
+/**
  * The `Success` state is shown for a successfully completed transaction.
  */
 export const Success: Story = {

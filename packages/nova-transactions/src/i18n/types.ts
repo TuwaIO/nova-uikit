@@ -33,6 +33,11 @@ export type NovaTransactionsLabels = {
   statuses: {
     /** Text for a pending transaction. */
     pending: string;
+    /**
+     * Text for a pending transaction that reached the `confirmed` commitment (Solana: voted on by a supermajority,
+     * usually within a second) and is waiting to be finalized.
+     */
+    confirmed: string;
     /** Text for a successful transaction. */
     success: string;
     /** Text for a failed transaction. */

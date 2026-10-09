@@ -6,14 +6,14 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **WalletIcon**(`props`): `Element`
 
-Defined in: [components/WalletIcon.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/WalletIcon.tsx#L84)
+Defined in: [components/WalletIcon.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/WalletIcon.tsx#L76)
 
 Renders a wallet icon based on the wallet name.
 
 It handles logic for:
 1. Rendering a custom SVG for 'impersonatedwallet' (Watch mode).
 2. Normalizing IDs for common wallets (e.g. 'walletconnect' -\> 'wallet-connect').
-3. Lazy loading other icons from @web3icons/react.
+3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`).
 
 ## Parameters
 

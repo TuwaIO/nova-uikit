@@ -1,19 +1,11 @@
-import { wallets } from '@web3icons/common/metadata';
-import { lazy, Suspense } from 'react';
+import { wallets } from '@web3icons/common/metadata/wallets';
+import { Suspense } from 'react';
 
 import { cn, formatIconNameForGithub } from '../utils';
 import { FallbackIcon } from './FallbackIcon';
 import { GithubFallbackIcon } from './GithubFallbackIcon';
 import { SvgToImg } from './SvgToImg';
-
-/**
- * Lazily loaded WalletIcon component from @web3icons/react.
- */
-const WalletIconLazy = lazy(() =>
-  import('@web3icons/react/dynamic').then((mod) => ({
-    default: mod.WalletIcon,
-  })),
-);
+import { Web3IconLazy } from './Web3IconLazy';
 
 /**
  * Props for the WalletIcon component.
@@ -42,11 +34,11 @@ const WALLET_ID_MAP: Record<string, string> = {
 };
 
 /**
- * Checks if a wallet exists in @web3icons/common metadata.
+ * Finds the icon file path of a wallet in the @web3icons/common metadata.
  * @param id - Normalized wallet ID (e.g., 'metamask', 'wallet-connect')
  */
-function hasWalletInMetadata(id: string): boolean {
-  return wallets.some((w) => w.id === id || w.name?.toLowerCase() === id);
+function findWalletIconPath(id: string): string | undefined {
+  return wallets.find((w) => w.id === id || w.name?.toLowerCase() === id)?.filePath;
 }
 
 /**
@@ -76,7 +68,7 @@ const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: R
  * It handles logic for:
  * 1. Rendering a custom SVG for 'impersonatedwallet' (Watch mode).
  * 2. Normalizing IDs for common wallets (e.g. 'walletconnect' -> 'wallet-connect').
- * 3. Lazy loading other icons from @web3icons/react.
+ * 3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`).
  *
  * @param props - {@link WalletIconProps}
  * @returns The wallet icon or a fallback UI.
@@ -98,15 +90,16 @@ export function WalletIcon({ walletName, variant = 'background', className }: Wa
   const libraryId = WALLET_ID_MAP[normalizedName] ?? normalizedName;
   const githubSrc = `wallets/${variant}/${formatIconNameForGithub(libraryId)}`;
 
-  // 3. If wallet not found in @web3icons/common metadata, skip WalletIconLazy entirely
-  if (!hasWalletInMetadata(libraryId)) {
+  // 3. If wallet not found in @web3icons/common metadata, skip the icon library entirely
+  const iconPath = findWalletIconPath(libraryId);
+  if (!iconPath) {
     return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} />;
   }
 
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
       <SvgToImg iconId={`${libraryId}-${variant}`} className={componentClassName}>
-        {(ref) => <WalletIconLazy ref={ref} id={libraryId} variant={variant} />}
+        {(ref) => <Web3IconLazy ref={ref} filePath={iconPath} variant={variant} />}
       </SvgToImg>
     </Suspense>
   );

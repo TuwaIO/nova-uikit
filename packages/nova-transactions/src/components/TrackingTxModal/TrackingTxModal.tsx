@@ -193,6 +193,10 @@ export function TrackingTxModal<T extends Transaction>({
   const isPending = activeTx?.pending ?? false;
 
   const isProcessing = isInitializing || isPending;
+  const isConfirmed =
+    !!activeTx &&
+    'confirmationStatus' in activeTx &&
+    (activeTx.confirmationStatus === 'confirmed' || activeTx.confirmationStatus === 'finalized');
   const isSucceed = txStatus === TransactionStatus.Success;
   const isFailed = activeTx?.isError || !!initialTx?.error;
   const isReplaced = txStatus === TransactionStatus.Replaced;
@@ -291,6 +295,7 @@ export function TrackingTxModal<T extends Transaction>({
             {CustomProgressIndicator ? (
               <CustomProgressIndicator
                 isProcessing={isProcessing}
+                isConfirmed={isConfirmed}
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}
@@ -298,6 +303,7 @@ export function TrackingTxModal<T extends Transaction>({
             ) : (
               <TxProgressIndicator
                 isProcessing={isProcessing}
+                isConfirmed={isConfirmed}
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}

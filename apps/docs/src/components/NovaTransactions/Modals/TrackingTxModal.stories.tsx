@@ -150,7 +150,7 @@ export const FullLifecycle: Story = {
 };
 
 /**
- * Full lifecycle of a Solana transaction.
+ * Full lifecycle of a Solana transaction: pending, confirmed (about a second after sending), then finalized.
  */
 export const SolanaLifecycle: Story = {
   render: (args) => {
@@ -171,10 +171,21 @@ export const SolanaLifecycle: Story = {
             pending: true,
           }),
         });
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, 1000));
+        // The Pulsar tracker reports the `confirmed` commitment about a second after sending...
         setTransactionsPool({
           [MOCK_DATA.txKey]: createMockSolanaTx({
-            confirmations: 32,
+            pending: true,
+            confirmations: 1,
+            confirmationStatus: 'confirmed',
+          }),
+        });
+        await new Promise((r) => setTimeout(r, 3000));
+        // ...and `Success` once the transaction is finalized.
+        setTransactionsPool({
+          [MOCK_DATA.txKey]: createMockSolanaTx({
+            confirmations: 'MAX',
+            confirmationStatus: 'finalized',
             pending: false,
             status: TransactionStatus.Success,
           }),

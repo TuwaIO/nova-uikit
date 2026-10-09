@@ -16,6 +16,12 @@ const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
     badgeClasses: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
     iconClasses: 'novatx:animate-spin novatx:text-[var(--tuwa-pending-icon)]',
   },
+  Confirmed: {
+    label: labels.confirmed,
+    Icon: CheckCircleIcon,
+    badgeClasses: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
+    iconClasses: 'novatx:text-[var(--tuwa-success-icon)]',
+  },
   [TransactionStatus.Success]: {
     label: labels.success,
     Icon: CheckCircleIcon,
@@ -58,8 +64,9 @@ export type TransactionStatusBadgeProps<T extends Transaction> = {
 };
 
 /**
- * A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), success, failed
- * or replaced, or a neutral badge when the status is not set.
+ * A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), confirmed (still
+ * pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar sets it about a second after
+ * sending), success, failed or replaced, or a neutral badge when the status is not set.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionStatusBadgeProps}.
@@ -77,7 +84,8 @@ export function TransactionStatusBadge<T extends Transaction>({
   const baseClasses =
     'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:rounded-full novatx:px-2 novatx:py-1 novatx:text-xs novatx:font-mono novatx:font-medium';
 
-  const statusKey = tx.pending ? 'Pending' : tx.status;
+  const isConfirmed = 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed';
+  const statusKey = tx.pending ? (isConfirmed ? 'Confirmed' : 'Pending') : tx.status;
   const config = statusKey ? statusConfig[statusKey as keyof typeof statusConfig] : null;
 
   if (!config) {

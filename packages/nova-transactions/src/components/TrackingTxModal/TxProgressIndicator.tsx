@@ -137,6 +137,11 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
 export interface TxProgressIndicatorProps {
   /** Whether the transaction is being submitted or is pending. */
   isProcessing?: boolean;
+  /**
+   * Whether the transaction reached the `confirmed` commitment (Solana `confirmationStatus` `confirmed` or
+   * `finalized`): the processing step is completed and labeled as confirmed while the last step waits for the result.
+   */
+  isConfirmed?: boolean;
   /** Whether the transaction succeeded. */
   isSucceed?: boolean;
   /** Whether the submission or the transaction failed. */
@@ -153,13 +158,15 @@ export interface TxProgressIndicatorProps {
 
 /**
  * Three steps of the transaction lifecycle, used by the tracking modal: "created" (always completed), "processing"
- * (active while processing, completed after) and a final step that shows success, failure or replacement.
+ * (active while processing, completed after, and labeled "confirmed" once the transaction is confirmed) and a final
+ * step that shows success, failure or replacement.
  *
  * @param props - See {@link TxProgressIndicatorProps}.
  * @returns The indicator.
  */
 export function TxProgressIndicator({
   isProcessing,
+  isConfirmed,
   isSucceed,
   isFailed,
   isReplaced,
@@ -172,7 +179,7 @@ export function TxProgressIndicator({
   const getStepStatus = (stepIndex: 1 | 2 | 3): StepStatus => {
     if (stepIndex === 1) return 'completed';
     if (stepIndex === 2) {
-      if (isSucceed || isFailed || isReplaced) return 'completed';
+      if (isSucceed || isFailed || isReplaced || isConfirmed) return 'completed';
       if (isProcessing) return 'active';
     }
     if (stepIndex === 3) {
@@ -186,7 +193,7 @@ export function TxProgressIndicator({
 
   const getStepLabel = (stepIndex: 1 | 2 | 3): string => {
     if (stepIndex === 1) return trackingModal.progressIndicator.created;
-    if (stepIndex === 2) return trackingModal.progressIndicator.processing;
+    if (stepIndex === 2) return isConfirmed ? statuses.confirmed : trackingModal.progressIndicator.processing;
     if (isFailed) return statuses.failed;
     if (isReplaced) return statuses.replaced;
     return trackingModal.progressIndicator.succeed;

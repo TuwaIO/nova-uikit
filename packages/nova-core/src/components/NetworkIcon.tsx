@@ -1,15 +1,11 @@
-import { lazy, Suspense } from 'react';
+import { networks } from '@web3icons/common/metadata/networks';
+import { Suspense } from 'react';
 
 import { cn, formatIconNameForGithub, getChainName, isSolanaDev } from '../utils';
 import { FallbackIcon } from './FallbackIcon';
 import { GithubFallbackIcon } from './GithubFallbackIcon';
 import { SvgToImg } from './SvgToImg';
-
-const NetworkIconLazy = lazy(() =>
-  import('@web3icons/react/dynamic').then((mod) => ({
-    default: mod.NetworkIcon,
-  })),
-);
+import { Web3IconLazy } from './Web3IconLazy';
 
 /**
  * Props of {@link NetworkIcon}.
@@ -31,8 +27,8 @@ export interface NetworkIconProps {
 const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
 
 /**
- * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand
- * (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
+ * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand one
+ * icon at a time (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
  * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
  * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet are recolored with `--tuwa-testnet-icons`.
  *
@@ -58,11 +54,12 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
   const iconId = typeof networkId === 'string' ? networkId : chainInfo.filePath;
   const githubSrc = `networks/${variant}/${formatIconNameForGithub(iconId)}`;
 
-  // If network not found in @web3icons/common metadata, skip NetworkIconLazy entirely
+  // If network not found in @web3icons/common metadata, skip the icon library entirely
   // This avoids the async flash from the dynamic component for icons we know don't exist
+  const iconPath = networks.find((network) => network.id === chainInfo.id)?.filePath;
   const isUnknownNetwork = chainInfo.name === 'Unknown';
 
-  if (isUnknownNetwork) {
+  if (isUnknownNetwork || !iconPath) {
     // For numeric chainId we can't resolve the icon name, show placeholder
     // For string chainId (e.g., "base"), try GitHub fallback as the name might match
     if (typeof chainId === 'number') {
@@ -74,13 +71,7 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
       <SvgToImg iconId={`${chainId}-${variant}`} className={componentClassName} firstPathFill={testnetFill}>
-        {(ref) =>
-          typeof networkId === 'string' ? (
-            <NetworkIconLazy ref={ref} id={networkId} variant={variant} />
-          ) : (
-            <NetworkIconLazy ref={ref} chainId={networkId} variant={variant} />
-          )
-        }
+        {(ref) => <Web3IconLazy ref={ref} filePath={iconPath} variant={variant} />}
       </SvgToImg>
     </Suspense>
   );
