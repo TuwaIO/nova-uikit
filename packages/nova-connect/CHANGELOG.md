@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.8.2...nova-connect-v0.9.0) (2026-10-09)
+
+
+### Features
+
+* show confirmed Solana transactions, load web3icons one icon at a time without the token list and update TUWA packages ([5d10e39](https://github.com/TuwaIO/nova-uikit/commit/5d10e39feca928ba47628a19721e98afc03648b2))
+
 ## [0.8.2](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.8.1...nova-connect-v0.8.2) (2026-10-08)
 
 
