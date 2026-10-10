@@ -79,7 +79,7 @@ nova-uikit/
 - **Test:** `pnpm test` (Runs `vitest run` across all packages).
 - **Lint/Format:** `pnpm lint` (ESLint) / `pnpm format` (Prettier; `pnpm-lock.yaml` and the generated folder are ignored).
 - **Docs reference:** `pnpm docs:gen` (TypeDoc → `apps/docs/src/packages`; also runs in the pre-commit hook and before `pnpm storybook`).
-- **Storybook:** `pnpm storybook` (port 6006), `pnpm --filter @tuwaio/storybook build-storybook`.
+- **Storybook:** `pnpm storybook` (port 6006), `pnpm --filter @tuwaio/storybook build-storybook`. The deploy builds the packages first (`apps/docs/vercel.json`): the Storybook imports their `dist/index.css`, and pnpm skips the root `postinstall` (`pnpm build`) when `node_modules` are up to date, as they are when Vercel restores its cache.
 - **Clean:** `pnpm clean` (Nukes `node_modules` and `dist` dirs).
 
 ## 6. AI Agent Behavior (Mandatory)
