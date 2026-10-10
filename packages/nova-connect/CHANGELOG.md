@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.9.0...nova-connect-v0.9.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* keep the wallet avatar after a transaction ([af9c91e](https://github.com/TuwaIO/nova-uikit/commit/af9c91e46b15c518f5b6d3f7ec68f355c5a8b762))
+
 ## [0.9.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.8.2...nova-connect-v0.9.0) (2026-10-09)
 
 
