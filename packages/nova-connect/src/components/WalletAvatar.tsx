@@ -5,7 +5,7 @@
 
 import { cn } from '@tuwaio/nova-core';
 import makeBlockie from 'ethereum-blockies-base64';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect, useState } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -326,14 +326,16 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
         ? `${labels.walletAvatar} ${formattedAddress}`
         : `${labels.ensAvatar} ${formattedAddress}`;
 
-    // Reset image source when ensAvatar changes
-    // This is a legitimate case of syncing derived state based on prop change
-    useEffect(() => {
-      // eslint-disable-next-line
+    // A new avatar URL loads again. Compared while rendering, not in an effect: an effect also runs on mount, after a
+    // cached image has already fired `load` (a remount after a transaction), and put the avatar back into its loading
+    // state for good
+    const [shownEnsAvatar, setShownEnsAvatar] = useState(ensAvatar);
+    if (ensAvatar !== shownEnsAvatar) {
+      setShownEnsAvatar(ensAvatar);
       setImageSrc(ensAvatar ?? null);
       setIsLoading(Boolean(ensAvatar));
       setHasError(false);
-    }, [ensAvatar]);
+    }
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {
