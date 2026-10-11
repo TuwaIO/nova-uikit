@@ -621,6 +621,15 @@ importers:
       '@radix-ui/react-dialog':
         specifier: ^1.2.0
         version: 1.2.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@solana-program/system':
+        specifier: ^0.15.0
+        version: 0.15.0(@solana/kit@8.4.0(typescript@6.0.3))
+      '@solana-program/token':
+        specifier: ^0.17.0
+        version: 0.17.0(@solana/kit@8.4.0(typescript@6.0.3))
+      '@solana/kit':
+        specifier: ^8.4.0
+        version: 8.4.0(typescript@6.0.3)
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
@@ -630,9 +639,15 @@ importers:
       '@tuwaio/nova-core':
         specifier: workspace:^
         version: link:../nova-core
+      '@tuwaio/nova-transactions':
+        specifier: workspace:^
+        version: link:../nova-transactions
       '@tuwaio/orbit-core':
         specifier: 0.5.1
         version: 0.5.1
+      '@tuwaio/orbit-solana':
+        specifier: 0.5.0
+        version: 0.5.0(@solana/kit@8.4.0(typescript@6.0.3))(@tuwaio/orbit-core@0.5.1)(@wallet-standard/app@1.1.1)(@wallet-standard/ui-core@1.0.1)(@wallet-standard/ui-registry@1.1.1)
       '@tuwaio/pulsar-core':
         specifier: 0.10.0
         version: 0.10.0(@tuwaio/orbit-core@0.5.1)(dayjs@1.11.23)(immer@11.1.21)(zustand@5.0.15(@types/react@19.3.0)(immer@11.1.21)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))
@@ -2573,6 +2588,16 @@ packages:
     resolution: {integrity: sha512-Go+LOEZmqmNlfr+Gjy5ZWAdY5HbYzk2RBewD9QinEU/bBSzpFfzqDRT55JjFRBGJUvMgf3C2vfXEGT4i8DSI4g==}
     peerDependencies:
       '@solana/kit': ^5.0
+
+  '@solana-program/system@0.15.0':
+    resolution: {integrity: sha512-xE08wZCyNRhOaO/XNRd9A3kSLfUrTe/BnmAHhql8uqc2eriNy2ZmnvaGRrs0m+kOSihvUbANzHljmJsTzGL5kg==}
+    peerDependencies:
+      '@solana/kit': ^8.3.0
+
+  '@solana-program/token@0.17.0':
+    resolution: {integrity: sha512-l7EhF3lCWXXdOllGI8qnbF4Pj7pCT/5zJTW2lPsNUQfa7G28pnFhSssHW2GCW7dzGttSHgPdJYdQRB5rvQoN9Q==}
+    peerDependencies:
+      '@solana/kit': ^8.3.0
 
   '@solana-program/token@0.9.0':
     resolution: {integrity: sha512-vnZxndd4ED4Fc56sw93cWZ2djEeeOFxtaPS8SPf5+a+JZjKA/EnKqzbE1y04FuMhIVrLERQ8uR8H2h72eZzlsA==}
@@ -9055,6 +9080,15 @@ snapshots:
     dependencies:
       '@solana/kit': 5.5.1(typescript@6.0.3)
     optional: true
+
+  '@solana-program/system@0.15.0(@solana/kit@8.4.0(typescript@6.0.3))':
+    dependencies:
+      '@solana/kit': 8.4.0(typescript@6.0.3)
+
+  '@solana-program/token@0.17.0(@solana/kit@8.4.0(typescript@6.0.3))':
+    dependencies:
+      '@solana-program/system': 0.15.0(@solana/kit@8.4.0(typescript@6.0.3))
+      '@solana/kit': 8.4.0(typescript@6.0.3)
 
   '@solana-program/token@0.9.0(@solana/kit@5.5.1(typescript@6.0.3))':
     dependencies:

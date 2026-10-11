@@ -132,6 +132,10 @@ export interface SimulationOptions {
   gasless?: boolean;
   /** The token keeps this fee on every transfer, in basis points. */
   transferFeeBps?: number;
+  /** Quasar refuses the price with this code (`payer_blocked`, `screening_unavailable`…). */
+  quoteError?: string;
+  /** The checkout read after the first one: the invoice that replaced a corrected one, opened from it. */
+  afterReplace?: CheckoutView;
 }
 
 /** The merchant's Solana wallet and the devnet USDC mint of the stories. */
@@ -151,11 +155,19 @@ export function simulatedCheckoutApi({
   logo = false,
   gasless = true,
   transferFeeBps = 0,
+  quoteError,
+  afterReplace,
 }: SimulationOptions = {}): CheckoutApi {
+  let reads = 0;
   let current: CheckoutView = { ...view, merchant: { ...view.merchant, logo } };
   const never = <T>() => new Promise<T>(() => undefined);
   const refuse = (code: string, status: number) => {
-    const message = code === 'checkout_not_found' ? 'No such checkout' : 'Service unavailable';
+    const message =
+      code === 'checkout_not_found'
+        ? 'No such checkout'
+        : code === 'payer_blocked'
+          ? 'This wallet cannot pay'
+          : 'Service unavailable';
     return Promise.reject(new QuasarSDKError(message, status, new Error(message), { code }));
   };
   return {
@@ -163,11 +175,14 @@ export function simulatedCheckoutApi({
       if (mode === 'loading') return never();
       if (mode === 'notFound') return refuse('checkout_not_found', 404);
       if (mode === 'failure') return refuse('request_failed', 503);
+      reads += 1;
+      if (afterReplace && reads > 1) current = afterReplace;
       return Promise.resolve(current);
     },
     // A price locked after a moment, for the next step: a transfer of the method's token to the merchant
     quote: async ({ methodId, payer }) => {
       await new Promise((resolve) => setTimeout(resolve, 800));
+      if (quoteError) return refuse(quoteError, quoteError === 'payer_blocked' ? 403 : 503);
       const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
       const expected = BigInt(EXPECTED[method.symbol] ?? '89540000');
       const send = expected + (expected * BigInt(transferFeeBps) + 9_999n) / 10_000n;
@@ -243,7 +258,12 @@ export function simulatedCheckoutApi({
       await new Promise((resolve) => setTimeout(resolve, 600));
       return { status: 'submitted' };
     },
-    permission: () => never(),
+    // The engine takes the ERC-7715 permission: automatic payments are on
+    permission: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      current = { ...current, autoCharge: { status: 'active', permission: null } };
+      return { permission: null };
+    },
     url: (route) => (route === 'logo' ? STORY_LOGO : `sim://checkout/${route}`),
   };
 }

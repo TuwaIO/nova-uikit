@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # PaymentsAdapter
 
-Defined in: [adapters/types.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L40)
+Defined in: [adapters/types.ts:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L45)
 
 What the checkout needs from a chain family to pay from the connected wallet. `@tuwaio/nova-payments/evm` and
 `@tuwaio/nova-payments/solana` make them; the checkout itself imports no chain library. Chains are CAIP-2 IDs, and
@@ -17,7 +17,7 @@ error, which the checkout reads with `walletErrorKind`).
 
 > `optional` **canSponsorCalls?**: (`params`) => `Promise`\<`boolean`\>
 
-Defined in: [adapters/types.ts:64](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L64)
+Defined in: [adapters/types.ts:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L69)
 
 Whether the wallet sends `wallet_sendCalls` with the `paymasterService` capability on the chain (EIP-5792,
 ERC-7677).
@@ -48,7 +48,7 @@ The chain and the account.
 
 > `optional` **estimateFee?**: (`params`) => `Promise`\<[`NativeFee`](?path=/docs/packages-nova-payments-payments-interfaces-nativefee--docs) \| `null`\>
 
-Defined in: [adapters/types.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L56)
+Defined in: [adapters/types.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L61)
 
 Estimates the network fee of the transfer, paid in the native coin.
 
@@ -74,11 +74,41 @@ The fee, or `null` when it cannot be estimated.
 
 ***
 
+### explorerUrl?
+
+> `optional` **explorerUrl?**: (`params`) => `string` \| `undefined`
+
+Defined in: [adapters/types.ts:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L112)
+
+The link of a transaction on a block explorer of its chain.
+
+#### Parameters
+
+##### params
+
+The chain and the transaction hash or signature.
+
+###### chainId
+
+`string`
+
+###### txKey
+
+`string`
+
+#### Returns
+
+`string` \| `undefined`
+
+The link, or `undefined` when the chain has no known explorer.
+
+***
+
 ### family
 
 > **family**: [`PaymentFamily`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentfamily--docs)
 
-Defined in: [adapters/types.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L42)
+Defined in: [adapters/types.ts:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L47)
 
 The chain family it pays on.
 
@@ -88,7 +118,7 @@ The chain family it pays on.
 
 > **getBalance**: (`params`) => `Promise`\<`bigint`\>
 
-Defined in: [adapters/types.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L49)
+Defined in: [adapters/types.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L54)
 
 Reads a balance from the network in the browser (no request to Quasar).
 
@@ -122,7 +152,7 @@ The balance, in base units.
 
 > `optional` **pulsarTransaction?**: (`params`) => `Transaction`
 
-Defined in: [adapters/types.ts:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L103)
+Defined in: [adapters/types.ts:130](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L130)
 
 Describes a sent payment as a pending transaction of `@tuwaio/pulsar-core`, so that the app's Pulsar store tracks
 it (and Nova Transactions shows its toast) once the checkout closes.
@@ -143,11 +173,41 @@ The pending transaction, for `injectExternalPendingTxs` of the Pulsar store.
 
 ***
 
+### requestPermission?
+
+> `optional` **requestPermission?**: (`params`) => `Promise`\<`Omit`\<`GrantPermissionParams`, `"payer"`\>\>
+
+Defined in: [adapters/types.ts:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L119)
+
+Asks the wallet for the ERC-7715 permission of a subscription's automatic payments, with the wallet's prompt.
+
+#### Parameters
+
+##### params
+
+The request of the checkout's auto-charge offer and the granting account.
+
+###### account
+
+`string`
+
+###### request
+
+`PermissionRequest`
+
+#### Returns
+
+`Promise`\<`Omit`\<`GrantPermissionParams`, `"payer"`\>\>
+
+What the wallet granted, for `grantPermission` of the checkout store (without the payer).
+
+***
+
 ### sendSponsoredCalls?
 
 > `optional` **sendSponsoredCalls?**: (`params`) => `Promise`\<`string`\>
 
-Defined in: [adapters/types.ts:104](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L104)
+Defined in: [adapters/types.ts:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L131)
 
 #### Parameters
 
@@ -183,7 +243,7 @@ Defined in: [adapters/types.ts:104](https://github.com/TuwaIO/nova-uikit/blob/ma
 
 > **sendTransfer**: (`params`) => `Promise`\<`string`\>
 
-Defined in: [adapters/types.ts:77](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L77)
+Defined in: [adapters/types.ts:83](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L83)
 
 Sends the transfer the quote describes, with the wallet's prompt.
 
@@ -191,11 +251,16 @@ Sends the transfer the quote describes, with the wallet's prompt.
 
 ##### params
 
-The quote's instructions and the sender.
+The quote's instructions, the sender, and the Satellite Connect connection of the wallet (the
+  Solana adapter signs with its Wallet Standard account).
 
 ###### account
 
 `string`
+
+###### connection?
+
+`unknown`
 
 ###### instructions
 
@@ -213,7 +278,7 @@ The transaction hash (EVM) or signature (Solana).
 
 > `optional` **signTransferAuthorization?**: (`params`) => `Promise`\<`string`\>
 
-Defined in: [adapters/types.ts:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L84)
+Defined in: [adapters/types.ts:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L94)
 
 Signs the EIP-3009 authorization of a gasless quote (`eth_signTypedData_v4`), with the wallet's prompt.
 
@@ -243,7 +308,7 @@ The 65-byte signature.
 
 > `optional` **switchChain?**: (`chainId`) => `Promise`\<`void`\>
 
-Defined in: [adapters/types.ts:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L70)
+Defined in: [adapters/types.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L75)
 
 Asks the wallet to switch to the chain of the payment.
 

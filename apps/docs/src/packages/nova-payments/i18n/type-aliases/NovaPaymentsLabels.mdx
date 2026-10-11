@@ -13,11 +13,123 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 ## Properties
 
+### autoPay
+
+> **autoPay**: `object`
+
+Defined in: [i18n/types.ts:380](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L380)
+
+The automatic payments offer of a subscription (ERC-7715), after a paid period.
+
+#### allow
+
+> **allow**: `string`
+
+Above the limit: `{merchant}` (default: `You allow {merchant} to take`)
+
+#### approveIn
+
+> **approveIn**: `string`
+
+Heading while the wallet asks: `{wallet}` (default: `Approve in {wallet}`)
+
+#### cap
+
+> **cap**: `string`
+
+Second note: `{merchant}` (default: `{merchant} can't take more than this limit in a period.`)
+
+#### confirm
+
+> **confirm**: `string`
+
+Main button (default: `Allow automatic payments`)
+
+#### every
+
+> **every**: `string`
+
+The period: `{period}` (for example `30 days`) (default: `every {period}`)
+
+#### from
+
+> **from**: `string`
+
+Row of the paying wallet (default: `From`)
+
+#### invoices
+
+> **invoices**: `string`
+
+First note (default: `Each charge comes with an invoice and a receipt by email.`)
+
+#### limit
+
+> **limit**: `string`
+
+The limit: `{amount}` with its symbol (default: `up to {amount}`)
+
+#### skip
+
+> **skip**: `string`
+
+Declines (default: `Not now, I'll pay each invoice`)
+
+#### subtitle
+
+> **subtitle**: `string`
+
+Under it
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Pay next periods automatically?`)
+
+#### to
+
+> **to**: `string`
+
+Row of the account that takes the payments (default: `To`)
+
+#### turnOff
+
+> **turnOff**: `string`
+
+Third note
+
+#### unavailable
+
+> **unavailable**: `string`
+
+The wallet cannot grant it: `{wallet}` (default: `{wallet} can't allow automatic payments.`)
+
+#### validUntil
+
+> **validUntil**: `string`
+
+Row of the expiry (default: `Valid until`)
+
+#### validUntilValue
+
+> **validUntilValue**: `string`
+
+Its value: `{date}` (default: `{date}, or until you cancel`)
+
+#### walletNote
+
+> **walletNote**: `string`
+
+Under the buttons (default: `Your wallet shows this permission (ERC-7715) before you approve it.`)
+
+***
+
 ### buyer
 
 > **buyer**: `object`
 
-Defined in: [i18n/types.ts:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L102)
+Defined in: [i18n/types.ts:106](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L106)
 
 The buyer details step.
 
@@ -171,6 +283,100 @@ Retry buttons (default: `Try again`)
 
 ***
 
+### confirm
+
+> **confirm**: `object`
+
+Defined in: [i18n/types.ts:324](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L324)
+
+The confirm step: the transaction is on its way.
+
+#### amount
+
+> **amount**: `string`
+
+Row of the amount (default: `Amount`)
+
+#### canClose
+
+> **canClose**: `string`
+
+That the window may close
+
+#### confirmed
+
+> **confirmed**: `string`
+
+Second step once the network confirmed the transaction (default: `Confirmed`)
+
+#### confirming
+
+> **confirming**: `string`
+
+Second step while it runs (default: `Confirming`)
+
+#### copyHash
+
+> **copyHash**: `string`
+
+Accessible name of the copy button of the transaction (default: `Copy the transaction`)
+
+#### failed
+
+> **failed**: `string`
+
+Last step when the transaction failed (default: `Failed`)
+
+#### from
+
+> **from**: `string`
+
+Row of the sender (default: `From`)
+
+#### hint
+
+> **hint**: `string`
+
+Under the heading: `{network}` (default: `Usually under a minute on {network}.`)
+
+#### network
+
+> **network**: `string`
+
+Row of the network (default: `Network`)
+
+#### paid
+
+> **paid**: `string`
+
+Last step (default: `Paid`)
+
+#### sent
+
+> **sent**: `string`
+
+First step (default: `Sent`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Confirming your payment`)
+
+#### transaction
+
+> **transaction**: `string`
+
+Row of the transaction (default: `Transaction`)
+
+#### viewOnExplorer
+
+> **viewOnExplorer**: `string`
+
+Accessible name of the explorer link of the transaction (default: `View on the explorer`)
+
+***
+
 ### error
 
 > **error**: `object`
@@ -230,6 +436,52 @@ Under the list once the receipt is issued
 > **title**: `string`
 
 Title of the menu (default: `Language`)
+
+***
+
+### leave
+
+> **leave**: `object`
+
+Defined in: [i18n/types.ts:472](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L472)
+
+The question when the buyer closes the checkout before a transaction is sent.
+
+#### leave
+
+> **leave**: `string`
+
+Closes it (default: `Leave`)
+
+#### price
+
+> **price**: `string`
+
+About the locked price (default: `The locked price is released; you get a new one when you come back.`)
+
+#### stay
+
+> **stay**: `string`
+
+Keeps the checkout open (default: `Stay and pay`)
+
+#### text
+
+> **text**: `string`
+
+Its text: `{date}`
+
+#### textNoDate
+
+> **textNoDate**: `string`
+
+Its text without a deadline
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Leave the checkout?`)
 
 ***
 
@@ -307,6 +559,12 @@ A method whose gas the merchant may pay (default: `No gas fee`)
 
 No method takes the invoice
 
+#### payerNotExpected
+
+> **payerNotExpected**: `string`
+
+The seller named the paying wallet, and it is another one (`payer_not_expected`)
+
 #### payWith
 
 > **payWith**: `string`
@@ -336,6 +594,12 @@ Under "QR code" (default: `Phone wallet`)
 > **quoting**: `string`
 
 While the price is being locked (default: `Getting the price…`)
+
+#### rateLimited
+
+> **rateLimited**: `string`
+
+Too many tries (`rate_limited`) (default: `Too many tries. Wait a minute and try again.`)
 
 #### subtitle
 
@@ -375,11 +639,253 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 ***
 
+### outcome
+
+> **outcome**: `object`
+
+Defined in: [i18n/types.ts:417](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L417)
+
+The outcomes other than paid.
+
+#### blockedText
+
+> **blockedText**: `string`
+
+Its text: `{merchant}`
+
+#### blockedTitle
+
+> **blockedTitle**: `string`
+
+Heading when the wallet check refused the payer (default: `This wallet can't pay this invoice`)
+
+#### cancelledText
+
+> **cancelledText**: `string`
+
+Its text: `{merchant}` (default: `{merchant} cancelled it; nothing was charged.`)
+
+#### cancelledTitle
+
+> **cancelledTitle**: `string`
+
+Heading of a cancelled invoice (default: `This invoice was cancelled`)
+
+#### contact
+
+> **contact**: `string`
+
+Contacts the seller: `{merchant}` (default: `Contact {merchant}`)
+
+#### contactSubject
+
+> **contactSubject**: `string`
+
+Subject of the email to the seller: `{number}` (default: `Invoice {number}`)
+
+#### expiredNote
+
+> **expiredNote**: `string`
+
+Under it
+
+#### expiredText
+
+> **expiredText**: `string`
+
+Its text: `{date}`, `{merchant}`
+
+#### expiredTitle
+
+> **expiredTitle**: `string`
+
+Heading of an expired invoice (default: `This invoice has expired`)
+
+#### heldLate
+
+> **heldLate**: `string`
+
+Reason `late`: `{merchant}`
+
+#### heldNote
+
+> **heldNote**: `string`
+
+Under it (default: `The seller contacts you if anything is needed.`)
+
+#### heldOverpaid
+
+> **heldOverpaid**: `string`
+
+Reason `overpaid`: `{merchant}`
+
+#### heldScreening
+
+> **heldScreening**: `string`
+
+Reason `screening`: `{merchant}` (default: `{merchant} checks the payment before confirming the order.`)
+
+#### heldTitle
+
+> **heldTitle**: `string`
+
+Heading of a payment on review: `{merchant}` (default: `Payment received, {merchant} is checking it`)
+
+#### openReplacement
+
+> **openReplacement**: `string`
+
+Opens the new invoice: `{number}` (default: `Open {number}`)
+
+#### payRest
+
+> **payRest**: `string`
+
+Button that pays the rest (default: `Pay the rest`)
+
+#### refundedText
+
+> **refundedText**: `string`
+
+Its text: `{merchant}`, `{amount}`, `{currency}` (default: `{merchant} refunded this invoice: {amount} {currency}.`)
+
+#### refundedTitle
+
+> **refundedTitle**: `string`
+
+Heading of a refunded invoice (default: `Refunded`)
+
+#### replacedPaid
+
+> **replacedPaid**: `string`
+
+Under it (default: `Already paid? Your payment moved to the new invoice.`)
+
+#### replacedText
+
+> **replacedText**: `string`
+
+Its text: `{number}` of the new invoice (default: `{number} replaces it. This invoice can no longer be paid.`)
+
+#### replacedTitle
+
+> **replacedTitle**: `string`
+
+Heading of a corrected invoice: `{merchant}` (default: `{merchant} corrected this invoice`)
+
+#### underpaidNote
+
+> **underpaidNote**: `string`
+
+Until when: `{merchant}`, `{date}`
+
+#### underpaidRest
+
+> **underpaidRest**: `string`
+
+What is left: `{rest}`, `{network}` (default: `Send the rest, {rest}, from the same wallet on {network}.`)
+
+#### underpaidText
+
+> **underpaidText**: `string`
+
+What arrived: `{received}`, `{total}` (default: `{received} of {total} received.`)
+
+#### underpaidTitle
+
+> **underpaidTitle**: `string`
+
+Heading of an underpaid invoice (default: `Part of the payment arrived`)
+
+#### useAnotherWallet
+
+> **useAnotherWallet**: `string`
+
+Button that connects another wallet (default: `Use another wallet`)
+
+***
+
+### paid
+
+> **paid**: `object`
+
+Defined in: [i18n/types.ts:355](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L355)
+
+The paid outcome.
+
+#### autoPayActive
+
+> **autoPayActive**: `string`
+
+When automatic payments are on (default: `Automatic payments are on.`)
+
+#### autoPayOffer
+
+> **autoPayOffer**: `string`
+
+Button of the automatic payments offer of a subscription (default: `Pay the next periods automatically`)
+
+#### back
+
+> **back**: `string`
+
+Button back to the seller: `{merchant}` (default: `Back to {merchant}`)
+
+#### download
+
+> **download**: `string`
+
+Download link of the receipt (default: `Download`)
+
+#### receipt
+
+> **receipt**: `string`
+
+The receipt card (default: `Receipt`)
+
+#### receiptHint
+
+> **receiptHint**: `string`
+
+Under it (default: `PDF of the payment, also kept by the seller`)
+
+#### refunded
+
+> **refunded**: `string`
+
+A part refunded later: `{amount}`, `{currency}` (default: `Refunded {amount} {currency}`)
+
+#### returning
+
+> **returning**: `string`
+
+Auto-return countdown: `{merchant}`, `{seconds}` (default: `Returning to {merchant} in {seconds} s`)
+
+#### stay
+
+> **stay**: `string`
+
+Stops the auto-return (default: `Stay here`)
+
+#### summary
+
+> **summary**: `string`
+
+Under the amount: `{network}`, `{date}` (default: `on {network} · {date}`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Payment received`)
+
+***
+
 ### pay
 
 > **pay**: `object`
 
-Defined in: [i18n/types.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L143)
+Defined in: [i18n/types.ts:147](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L147)
 
 The pay step: the wallet, the locked price, the network fee and the main action.
 
@@ -719,7 +1225,7 @@ Above the amount (default: `You send`)
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:289](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L289)
+Defined in: [i18n/types.ts:293](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L293)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -865,7 +1371,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:320](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L320)
+Defined in: [i18n/types.ts:487](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L487)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -1013,7 +1519,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:256](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L256)
+Defined in: [i18n/types.ts:260](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L260)
 
 The window while the wallet asks the buyer.
 

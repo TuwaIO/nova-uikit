@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/autoPayTerms" />
+
+# autoPayTerms()
+
+> **autoPayTerms**(`offer`, `methods`): [`AutoPayTerms`](?path=/docs/packages-nova-payments-payments-interfaces-autopayterms--docs) \| `null`
+
+Defined in: [utils/outcome.ts:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L99)
+
+The terms of an ERC-7715 automatic payments offer: the periodic limit in the token of the method, the period, the
+expiry and the accounts.
+
+## Parameters
+
+### offer
+
+`AutoChargeOffer` \| `null`
+
+The view's `autoCharge`.
+
+### methods
+
+`CheckoutMethod`[]
+
+The view's methods (for the token of the offer).
+
+## Returns
+
+[`AutoPayTerms`](?path=/docs/packages-nova-payments-payments-interfaces-autopayterms--docs) \| `null`
+
+The terms, or `null` when the offer is not available or its method is unknown.

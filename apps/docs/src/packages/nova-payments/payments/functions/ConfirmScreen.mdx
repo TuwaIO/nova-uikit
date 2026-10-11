@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/ConfirmScreen" />
+
+# ConfirmScreen()
+
+> **ConfirmScreen**(): `Element`
+
+Defined in: [components/ConfirmScreen.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/ConfirmScreen.tsx#L19)
+
+The confirm step: the transaction is on its way and Quasar follows it until it is final. It reuses the status and
+progress of Nova Transactions (Sent → Confirming → Paid, in the language of the checkout) and shows the network, the
+amount, the transaction with its explorer link and the sender. The buyer may close the window: the payment keeps
+going.
+
+## Returns
+
+`Element`
+
+The confirm step.

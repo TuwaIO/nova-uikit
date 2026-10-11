@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/AutoPayTerms" />
+
+# AutoPayTerms
+
+Defined in: [utils/outcome.ts:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L74)
+
+The terms of an automatic payments offer, as the checkout shows them.
+
+## Properties
+
+### chainId
+
+> **chainId**: `string`
+
+Defined in: [utils/outcome.ts:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L76)
+
+The CAIP-2 chain of the charges.
+
+***
+
+### decimals
+
+> **decimals**: `number`
+
+Defined in: [utils/outcome.ts:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L82)
+
+Decimals of the token.
+
+***
+
+### expiresAt
+
+> **expiresAt**: `number` \| `null`
+
+Defined in: [utils/outcome.ts:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L88)
+
+When the permission ends, in milliseconds; `null` without an expiry rule.
+
+***
+
+### limit
+
+> **limit**: `string`
+
+Defined in: [utils/outcome.ts:80](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L80)
+
+The most it takes in a period, in base units of the token.
+
+***
+
+### periodSeconds
+
+> **periodSeconds**: `number`
+
+Defined in: [utils/outcome.ts:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L86)
+
+The length of a period, in seconds.
+
+***
+
+### symbol
+
+> **symbol**: `string`
+
+Defined in: [utils/outcome.ts:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L84)
+
+Symbol of the token.
+
+***
+
+### to
+
+> **to**: `string`
+
+Defined in: [utils/outcome.ts:78](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L78)
+
+The account that takes the payments (the merchant's collector).

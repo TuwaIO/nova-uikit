@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/underpaidRest" />
+
+# underpaidRest()
+
+> **underpaidRest**(`quote`, `amountPaid`): `string` \| `null`
+
+Defined in: [utils/outcome.ts:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L137)
+
+What an underpaid invoice still needs, in base units of the locked token.
+
+## Parameters
+
+### quote
+
+`Pick`\<`CheckoutQuote`, `"cryptoAmountExpected"`\> \| `null`
+
+The locked quote the payment was for.
+
+### amountPaid
+
+`string` \| `null`
+
+What arrived, in base units of that token.
+
+## Returns
+
+`string` \| `null`
+
+The rest, or `null` when it is unknown or nothing is left.

@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/needsLeaveConfirm" />
+
+# needsLeaveConfirm()
+
+> **needsLeaveConfirm**(`phase`): `boolean`
+
+Defined in: [utils/outcome.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L44)
+
+Whether closing the checkout asks first: only while nothing has been sent. Once a transaction is on its way, or the
+invoice is settled, the checkout closes without a question.
+
+## Parameters
+
+### phase
+
+`CheckoutPhase`
+
+Where the payment stands.
+
+## Returns
+
+`boolean`
+
+`true` to ask.

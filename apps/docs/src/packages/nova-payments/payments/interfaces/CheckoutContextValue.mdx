@@ -34,6 +34,26 @@ The adapter of `NovaPaymentsProvider`, if any.
 
 ***
 
+### autoPay
+
+> **autoPay**: `boolean`
+
+Defined in: [components/checkoutContext.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L72)
+
+The buyer opened the automatic payments offer after paying a subscription period.
+
+***
+
+### autoReturnSeconds
+
+> **autoReturnSeconds**: `number`
+
+Defined in: [components/checkoutContext.ts:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L88)
+
+Seconds before the paid outcome sends the buyer back to the seller; `0` for no automatic return.
+
+***
+
 ### backToMethods
 
 > **backToMethods**: () => `void`
@@ -136,6 +156,20 @@ Defined in: [components/checkoutContext.ts:25](https://github.com/TuwaIO/nova-ui
 
 ***
 
+### onContact?
+
+> `optional` **onContact?**: () => `void`
+
+Defined in: [components/checkoutContext.ts:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L86)
+
+Replaces the link of "Contact \<seller\>", when the app handles it.
+
+#### Returns
+
+`void`
+
+***
+
 ### onPaymentSent
 
 > **onPaymentSent**: (`payment`) => `void`
@@ -152,6 +186,28 @@ store when it closes before Quasar settled it.
 [`SentPayment`](?path=/docs/packages-nova-payments-payments-interfaces-sentpayment--docs)
 
 The transaction and what it pays.
+
+#### Returns
+
+`void`
+
+***
+
+### openInvoice
+
+> **openInvoice**: (`token`) => `void`
+
+Defined in: [components/checkoutContext.ts:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L84)
+
+Opens another invoice in this checkout: the one that replaced a corrected invoice.
+
+#### Parameters
+
+##### token
+
+`string`
+
+Its checkout token.
 
 #### Returns
 
@@ -186,6 +242,28 @@ How the buyer pays: from a wallet in this browser, or with a QR code on a phone.
 Defined in: [components/checkoutContext.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L19)
 
 The screen shown.
+
+***
+
+### setAutoPay
+
+> **setAutoPay**: (`autoPay`) => `void`
+
+Defined in: [components/checkoutContext.ts:78](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L78)
+
+Opens or closes the automatic payments offer.
+
+#### Parameters
+
+##### autoPay
+
+`boolean`
+
+Whether it shows.
+
+#### Returns
+
+`void`
 
 ***
 

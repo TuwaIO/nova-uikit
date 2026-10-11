@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/PaidScreen" />
+
+# PaidScreen()
+
+> **PaidScreen**(): `Element` \| `null`
+
+Defined in: [components/PaidScreen.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaidScreen.tsx#L25)
+
+The paid outcome: the amount, network, time and transaction, the steps done, a refund made later, the receipt to
+download, the automatic payments offer of a subscription, and the way back to the seller (`successUrl`) with a
+visible countdown and "Stay here" (WCAG 2.2.1).
+
+Side effects: navigates to the seller's `successUrl` when the countdown ends.
+
+## Returns
+
+`Element` \| `null`
+
+The paid outcome.
