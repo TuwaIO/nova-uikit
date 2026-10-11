@@ -23,6 +23,13 @@ describe('getWeb3IconKey', () => {
   });
 });
 
+describe('token icons', () => {
+  it('has the icons of the tokens payments use, by symbol, without the token list', () => {
+    const symbols = ['USDC', 'USDT', 'SOL', 'ETH', 'EURC', 'DAI', 'PYUSD'];
+    expect(symbols.filter((symbol) => !(getWeb3IconKey(`token:${symbol}`) in dynamicIconImports))).toEqual([]);
+  });
+});
+
 describe('loadWeb3Icon', () => {
   it('loads an icon component once and reuses it', async () => {
     const first = loadWeb3Icon('network:ethereum');

@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/CheckoutWallet" />
+
+# CheckoutWallet
+
+Defined in: [utils/methods.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L14)
+
+The wallet connected through Satellite Connect, as the checkout uses it.
+
+## Properties
+
+### address
+
+> **address**: `string`
+
+Defined in: [utils/methods.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L16)
+
+The account address.
+
+***
+
+### chainId
+
+> **chainId**: `string`
+
+Defined in: [utils/methods.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L18)
+
+CAIP-2 chain the wallet is on (Solana clusters as their genesis-hash ID).
+
+***
+
+### connectorType
+
+> **connectorType**: `string`
+
+Defined in: [utils/methods.ts:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L22)
+
+Connector type of Satellite Connect (`evm:metamask`).
+
+***
+
+### family
+
+> **family**: [`PaymentFamily`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentfamily--docs)
+
+Defined in: [utils/methods.ts:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L20)
+
+Its chain family.
+
+***
+
+### name
+
+> **name**: `string`
+
+Defined in: [utils/methods.ts:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L26)
+
+The wallet name to show.
+
+***
+
+### walletId
+
+> **walletId**: `string`
+
+Defined in: [utils/methods.ts:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L24)
+
+The wallet id for `WalletIcon` of `@tuwaio/nova-core` (`metamask`).

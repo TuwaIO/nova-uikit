@@ -629,6 +629,12 @@ importers:
       '@tuwaio/quasar-sdk':
         specifier: link:../../../sdk/packages/quasar-sdk
         version: link:../../../sdk/packages/quasar-sdk
+      '@tuwaio/satellite-core':
+        specifier: ^0.9.0
+        version: 0.9.0(@tuwaio/orbit-core@0.5.1)(immer@11.1.21)(zustand@5.0.15(@types/react@19.3.0)(immer@11.1.21)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))
+      '@tuwaio/satellite-react':
+        specifier: ^0.9.0
+        version: 0.9.0(23e63a5ab551fcd8be94fe043ac2edcd)
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0

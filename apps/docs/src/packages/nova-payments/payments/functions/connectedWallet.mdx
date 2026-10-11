@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/connectedWallet" />
+
+# connectedWallet()
+
+> **connectedWallet**(`connection`): [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
+
+Defined in: [utils/methods.ts:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L68)
+
+The connected wallet of Satellite Connect in CAIP identifiers.
+
+## Parameters
+
+### connection
+
+\{ `address`: `string`; `chainId`: `string` \| `number`; `connectorType`: `string`; \} \| `null` \| `undefined`
+
+The active connection of the Satellite store: `address`, `chainId` (an EVM number or a Solana
+cluster), `connectorType`.
+
+## Returns
+
+[`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
+
+The wallet, or `null` without a connection or with a chain the checkout cannot read.

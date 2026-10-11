@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/MethodScreen" />
+
+# MethodScreen()
+
+> **MethodScreen**(): `Element` \| `null`
+
+Defined in: [components/MethodScreen.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/MethodScreen.tsx#L111)
+
+The method step: the token first, then its network (left out when the token has one), then how to pay — from a
+wallet in this browser or with a QR code on a phone. The connected wallet's network comes first and is marked, the
+merchant's Popular methods next; a discount or markup of a method shows on it. "Continue" locks the price: for the
+connected wallet, or without a payer for a Solana Pay QR code.
+
+## Returns
+
+`Element` \| `null`
+
+The method step.

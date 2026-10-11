@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/priceAdjustment" />
+
+# priceAdjustment()
+
+> **priceAdjustment**(`method`): \{ `kind`: `"discount"` \| `"markup"`; `percent`: `string`; \} \| `null`
+
+Defined in: [utils/methods.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L127)
+
+The discount or markup of a method, as the token and network options show it.
+
+## Parameters
+
+### method
+
+`CheckoutMethod`
+
+The method.
+
+## Returns
+
+\{ `kind`: `"discount"` \| `"markup"`; `percent`: `string`; \} \| `null`
+
+`discount` or `markup` with the percent (`'1.5'`), or `null` for neither.

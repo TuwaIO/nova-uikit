@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/useConnectedWallet" />
+
+# useConnectedWallet()
+
+> **useConnectedWallet**(): [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
+
+Defined in: [hooks/useConnectedWallet.ts:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useConnectedWallet.ts#L23)
+
+The wallet connected through Satellite Connect (the active connection of `SatelliteConnectProvider` from
+`@tuwaio/satellite-react`), in CAIP identifiers; `null` without a connection or without the provider, in which case
+the checkout offers the QR code and the wallet connection only.
+
+## Returns
+
+[`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
+
+The wallet, or `null`.

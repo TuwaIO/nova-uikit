@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/buyerIssues" />
+
+# buyerIssues()
+
+> **buyerIssues**(`buyer`, `collect`, `company`): `Partial`\<`Record`\<keyof `Buyer`, [`BuyerIssue`](?path=/docs/packages-nova-payments-payments-type-aliases-buyerissue--docs)\>\>
+
+Defined in: [utils/buyer.ts:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/buyer.ts#L76)
+
+What is missing or invalid in the details, field by field.
+
+## Parameters
+
+### buyer
+
+`Partial`\<`Record`\<keyof `Buyer`, `string`\>\>
+
+The details as typed.
+
+### collect
+
+[`BuyerCollect`](?path=/docs/packages-nova-payments-payments-type-aliases-buyercollect--docs)
+
+What the checkout collects.
+
+### company
+
+`boolean`
+
+Whether the buyer wants a company invoice.
+
+## Returns
+
+`Partial`\<`Record`\<keyof `Buyer`, [`BuyerIssue`](?path=/docs/packages-nova-payments-payments-type-aliases-buyerissue--docs)\>\>
+
+The issue of each refused field; empty when the details can be sent.

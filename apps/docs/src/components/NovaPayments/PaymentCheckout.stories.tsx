@@ -4,15 +4,20 @@ import { useMemo, useState } from 'react';
 import { action } from 'storybook/actions';
 
 import { sampleCheckout, simulatedCheckoutApi, type SimulationOptions } from '../../utils/payments/simulatedCheckout';
+import { SimulatedWallet } from '../../utils/payments/simulatedWallet';
 
-type StoryProps = SimulationOptions & { display: 'modal' | 'inline' | 'page' };
+type StoryProps = SimulationOptions & {
+  display: 'modal' | 'inline' | 'page';
+  wallet?: { address: string; chainId: string | number; connectorType: string };
+  payUrl?: string;
+};
 
 /** A checkout on a simulated Quasar API: no network, the language the buyer picks is kept. */
-function SimulatedCheckout({ display, ...simulation }: StoryProps) {
+function SimulatedCheckout({ display, wallet, payUrl, ...simulation }: StoryProps) {
   const api = useMemo(() => simulatedCheckoutApi(simulation), [simulation]);
   const [open, setOpen] = useState(true);
   return (
-    <>
+    <SimulatedWallet connection={wallet}>
       {display === 'modal' && !open && (
         <button
           type="button"
@@ -36,8 +41,9 @@ function SimulatedCheckout({ display, ...simulation }: StoryProps) {
           setOpen(next);
         }}
         onClose={action('onClose')}
+        payUrl={payUrl}
       />
-    </>
+    </SimulatedWallet>
   );
 }
 
@@ -101,4 +107,19 @@ export const Failure: Story = { args: { mode: 'failure' } };
 /** Two minutes before the deadline: the countdown shows seconds and screen readers hear the time left. */
 export const DeadlineSoon: Story = {
   args: { view: sampleCheckout({}, { dueAt: new Date(Date.now() + 61_000).toISOString() }) },
+};
+
+/** A wallet is connected on Base Sepolia: its network comes first and is marked, the wallet shows under "Wallet". */
+export const ConnectedWallet: Story = {
+  args: {
+    wallet: { address: '0x1111111111111111111111111111111111111111', chainId: 84532, connectorType: 'evm:metamask' },
+  },
+};
+
+/** With the payment page of the invoice, an EVM method can also be paid with a QR code on a phone. */
+export const WithPayUrl: Story = { args: { payUrl: 'https://quasar.tuwa.io/pay/story' } };
+
+/** The merchant asks for the buyer's full details, and offers a company invoice. */
+export const BuyerDetails: Story = {
+  args: { view: sampleCheckout({ buyer: { collect: 'full', required: true, companyInvoice: true } }) },
 };

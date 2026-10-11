@@ -13,6 +13,130 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 ## Properties
 
+### buyer
+
+> **buyer**: `object`
+
+Defined in: [i18n/types.ts:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L100)
+
+The buyer details step.
+
+#### addressLine1
+
+> **addressLine1**: `string`
+
+First address line (default: `Address`)
+
+#### addressLine2
+
+> **addressLine2**: `string`
+
+Second address line (default: `Address, line 2`)
+
+#### chooseCountry
+
+> **chooseCountry**: `string`
+
+Placeholder of the country list (default: `Choose a country`)
+
+#### city
+
+> **city**: `string`
+
+City (default: `City`)
+
+#### companyInvoice
+
+> **companyInvoice**: `string`
+
+Checkbox for a company invoice (default: `I need an invoice for my company`)
+
+#### companyName
+
+> **companyName**: `string`
+
+Name field of a company (default: `Company`)
+
+#### continue
+
+> **continue**: `string`
+
+Main button (default: `Continue`)
+
+#### country
+
+> **country**: `string`
+
+Country (default: `Country`)
+
+#### email
+
+> **email**: `string`
+
+Email field (default: `Email`)
+
+#### invalidCountry
+
+> **invalidCountry**: `string`
+
+The country is not on the list (default: `Choose a country from the list`)
+
+#### invalidEmail
+
+> **invalidEmail**: `string`
+
+The email is not one (default: `Enter an email like name@example.com`)
+
+#### name
+
+> **name**: `string`
+
+Name field of a person (default: `Name`)
+
+#### optional
+
+> **optional**: `string`
+
+Marks an optional field (default: `optional`)
+
+#### postalCode
+
+> **postalCode**: `string`
+
+Postal code (default: `Postal code`)
+
+#### registrationNumber
+
+> **registrationNumber**: `string`
+
+Company registration number (default: `Company number`)
+
+#### required
+
+> **required**: `string`
+
+A required field is empty (default: `Required`)
+
+#### subtitle
+
+> **subtitle**: `string`
+
+Under the heading (default: `The seller needs them for the invoice and the receipt.`)
+
+#### taxId
+
+> **taxId**: `string`
+
+Tax ID (default: `VAT or tax ID`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Your details`)
+
+***
+
 ### common
 
 > **common**: `object`
@@ -109,6 +233,142 @@ Title of the menu (default: `Language`)
 
 ***
 
+### method
+
+> **method**: `object`
+
+Defined in: [i18n/types.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L55)
+
+The method step: the token, its network and how to pay.
+
+#### agreeBoth
+
+> **agreeBoth**: `string`
+
+Under the button with both policies; `{terms}`, `{refundPolicy}` are links (default: `By continuing you agree to the seller's {terms} and {refundPolicy}.`)
+
+#### agreeOne
+
+> **agreeOne**: `string`
+
+Under the button with one policy; `{link}` (default: `By continuing you agree to the seller's {link}.`)
+
+#### buyerPaysGas
+
+> **buyerPaysGas**: `string`
+
+A method whose gas the buyer pays (default: `You pay the network fee`)
+
+#### continue
+
+> **continue**: `string`
+
+Main button (default: `Continue`)
+
+#### discount
+
+> **discount**: `string`
+
+Discount of a method; `{percent}` (default: `−{percent}%`)
+
+#### markup
+
+> **markup**: `string`
+
+Markup of a method; `{percent}` (default: `+{percent}%`)
+
+#### network
+
+> **network**: `string`
+
+Name of the network group; `{symbol}` (default: `{symbol} network`)
+
+#### networks
+
+> **networks**: `string`
+
+Under a token with several networks; `{count}` (default: `{count} networks`)
+
+#### noGasFee
+
+> **noGasFee**: `string`
+
+A method whose gas the merchant may pay (default: `No gas fee`)
+
+#### noMethods
+
+> **noMethods**: `string`
+
+No method takes the invoice
+
+#### payWith
+
+> **payWith**: `string`
+
+Name of the payment way group (default: `Pay with`)
+
+#### popular
+
+> **popular**: `string`
+
+Badge of a method the merchant marks (default: `Popular`)
+
+#### qr
+
+> **qr**: `string`
+
+Pay by scanning a QR code (default: `QR code`)
+
+#### qrHint
+
+> **qrHint**: `string`
+
+Under "QR code" (default: `Phone wallet`)
+
+#### quoting
+
+> **quoting**: `string`
+
+While the price is being locked (default: `Getting the price…`)
+
+#### subtitle
+
+> **subtitle**: `string`
+
+Under the heading; `{minutes}` is how long a price holds (default: `The price locks for {minutes} minutes when you continue.`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Choose how to pay`)
+
+#### token
+
+> **token**: `string`
+
+Name of the token group (default: `Token`)
+
+#### wallet
+
+> **wallet**: `string`
+
+Pay from a wallet in this browser (default: `Wallet`)
+
+#### walletHint
+
+> **walletHint**: `string`
+
+Under "Wallet" without a connected wallet (default: `MetaMask, Rabby, Phantom…`)
+
+#### yourWallet
+
+> **yourWallet**: `string`
+
+Badge of the connected wallet's network (default: `Your wallet`)
+
+***
+
 ### steps
 
 > **steps**: `object`
@@ -165,7 +425,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L55)
+Defined in: [i18n/types.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L141)
 
 The order panel: the seller, the deadline, the lines and the total.
 

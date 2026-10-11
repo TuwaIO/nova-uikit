@@ -8,6 +8,7 @@ export * from './components/StarsBackground';
 export * from './components/SvgImg';
 export * from './components/SvgToImg';
 export * from './components/ToastCloseButton';
+export * from './components/TokenIcon';
 export * from './components/WalletIcon';
 export * from './hooks/useCopyToClipboard';
 export * from './hooks/useMediaQuery';

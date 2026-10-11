@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **checkoutScreen**(`state`, `choices?`): [`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs)
 
-Defined in: [utils/checkout.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L48)
+Defined in: [utils/checkout.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L50)
 
 The screen for the state of a checkout store.
 
@@ -14,7 +14,7 @@ The screen for the state of a checkout store.
 
 ### state
 
-The `phase` and `checkout` of the store.
+The `phase`, `checkout` and `quote` of the store.
 
 #### checkout
 
@@ -27,6 +27,13 @@ What the checkout token opens; `null` until loaded.
 `CheckoutPhase`
 
 Where the payment stands.
+
+#### quote?
+
+`CheckoutQuote` \| `null`
+
+The locked price; while the first one is being locked the method screen stays, with its button
+busy, so a refused payer or a failed request is shown where the buyer chose.
 
 ### choices?
 

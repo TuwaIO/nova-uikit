@@ -1,5 +1,5 @@
 import { QuasarSDKError } from '@tuwaio/quasar-sdk';
-import type { CheckoutApi, CheckoutView } from '@tuwaio/quasar-sdk/checkout';
+import type { CheckoutApi, CheckoutQuote, CheckoutView } from '@tuwaio/quasar-sdk/checkout';
 
 /** A logo for the stories: the letter A on the TUWA blue. */
 export const STORY_LOGO =
@@ -85,6 +85,8 @@ export function sampleCheckout(
         decimals: 6,
         gasless: 'auto',
         featured: true,
+        markupBps: 0,
+        discountBps: 0,
       },
       {
         id: 'ap_usdc_sol',
@@ -95,6 +97,8 @@ export function sampleCheckout(
         decimals: 6,
         gasless: 'off',
         featured: false,
+        markupBps: 0,
+        discountBps: 0,
       },
       {
         id: 'ap_sol',
@@ -105,8 +109,11 @@ export function sampleCheckout(
         decimals: 9,
         gasless: 'off',
         featured: false,
+        markupBps: 0,
+        discountBps: 200,
       },
     ],
+    quoteTtlSeconds: 900,
     quote: null,
     autoCharge: null,
     ...overrides,
@@ -145,8 +152,44 @@ export function simulatedCheckoutApi({
       if (mode === 'failure') return refuse('request_failed', 503);
       return Promise.resolve(current);
     },
-    quote: () => never(),
-    buyer: () => Promise.resolve(current),
+    // A price locked after a moment, for the next step
+    quote: async ({ methodId, payer }) => {
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
+      const quote = {
+        object: 'checkout_quote',
+        methodId: method.id,
+        payer: payer ?? null,
+        cryptoAmountExpected: '89540000',
+        amountToSend: '89540000',
+        transferFee: null,
+        decimals: method.decimals,
+        symbol: method.symbol,
+        lockedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + current.quoteTtlSeconds * 1000).toISOString(),
+        reference: null,
+        rates: [],
+        markupBps: method.markupBps,
+        discountBps: method.discountBps,
+        instructions: {
+          family: 'eip155',
+          chainId: 84532,
+          to: '0x2222222222222222222222222222222222222222',
+          token: '0x3',
+          amount: '89540000',
+          decimals: 6,
+          symbol: method.symbol,
+        },
+        gasless: null,
+      } as unknown as CheckoutQuote;
+      current = { ...current, quote };
+      return quote;
+    },
+    buyer: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      current = { ...current, buyer: { ...current.buyer, required: false } };
+      return current;
+    },
     locale: (locale) => {
       current = { ...current, invoice: { ...current.invoice, locale } };
       return Promise.resolve({ locale });
