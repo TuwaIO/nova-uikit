@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/NovaPaymentsProvider" />
+
+# NovaPaymentsProvider()
+
+> **NovaPaymentsProvider**(`props`): `Element`
+
+Defined in: [providers/NovaPaymentsProvider.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L60)
+
+Gives the checkouts below it the Quasar API and the labels. A checkout works without it, with Quasar Cloud and the
+built-in labels.
+
+## Parameters
+
+### props
+
+[`NovaPaymentsProviderProps`](?path=/docs/packages-nova-payments-payments-interfaces-novapaymentsproviderprops--docs)
+
+See [NovaPaymentsProviderProps](?path=/docs/packages-nova-payments-payments-interfaces-novapaymentsproviderprops--docs).
+
+## Returns
+
+`Element`
+
+The provider.
+
+## Example
+
+```tsx
+import { NovaPaymentsProvider, PaymentCheckout } from '@tuwaio/nova-payments';
+
+export function Checkout({ token }: { token: string }) {
+  return (
+    <NovaPaymentsProvider baseUrl="https://quasar.example.com" labels={{ steps: { pay: 'Payment' } }}>
+      <PaymentCheckout token={token} display="inline" />
+    </NovaPaymentsProvider>
+  );
+}
+```

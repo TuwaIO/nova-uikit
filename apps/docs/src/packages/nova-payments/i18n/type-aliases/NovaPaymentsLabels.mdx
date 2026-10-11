@@ -1,0 +1,308 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/i18n/Type Aliases/NovaPaymentsLabels" />
+
+# NovaPaymentsLabels
+
+> **NovaPaymentsLabels** = `object`
+
+Defined in: [i18n/types.ts:5](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L5)
+
+All texts of the Nova Payments checkout, screen readers' included. `{name}` placeholders are filled by the
+checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to override some of them in every language.
+
+## Properties
+
+### common
+
+> **common**: `object`
+
+Defined in: [i18n/types.ts:7](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L7)
+
+Shared texts.
+
+#### close
+
+> **close**: `string`
+
+Close buttons, and the accessible name of the close icon (default: `Close`)
+
+#### dialogTitle
+
+> **dialogTitle**: `string`
+
+Accessible title of the checkout dialog; `{merchant}` is the seller's name (default: `Pay {merchant}`)
+
+#### loading
+
+> **loading**: `string`
+
+While the checkout loads (default: `Loading the checkout…`)
+
+#### retry
+
+> **retry**: `string`
+
+Retry buttons (default: `Try again`)
+
+***
+
+### error
+
+> **error**: `object`
+
+Defined in: [i18n/types.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L18)
+
+The checkout cannot be opened.
+
+#### generic
+
+> **generic**: `string`
+
+Any other failure
+
+#### notFound
+
+> **notFound**: `string`
+
+The link is wrong or no longer works (`checkout_not_found`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `The checkout can't be opened`)
+
+***
+
+### language
+
+> **language**: `object`
+
+Defined in: [i18n/types.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L44)
+
+The language menu in the header.
+
+#### button
+
+> **button**: `string`
+
+Accessible name of the button; `{language}` is the current language (default: `Language: {language}`)
+
+#### note
+
+> **note**: `string`
+
+Under the list before payment (default: `Your invoice and receipt use this language too.`)
+
+#### noteAfterPaid
+
+> **noteAfterPaid**: `string`
+
+Under the list once the receipt is issued
+
+#### title
+
+> **title**: `string`
+
+Title of the menu (default: `Language`)
+
+***
+
+### steps
+
+> **steps**: `object`
+
+Defined in: [i18n/types.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L27)
+
+The stepper in the header.
+
+#### autoPay
+
+> **autoPay**: `string`
+
+Automatic payments of a subscription (default: `Auto-pay`)
+
+#### confirm
+
+> **confirm**: `string`
+
+Confirmation on the network (default: `Confirm`)
+
+#### details
+
+> **details**: `string`
+
+Buyer details (default: `Details`)
+
+#### label
+
+> **label**: `string`
+
+Accessible name of the stepper (default: `Payment steps`)
+
+#### method
+
+> **method**: `string`
+
+Payment method (default: `Method`)
+
+#### pay
+
+> **pay**: `string`
+
+Payment (default: `Pay`)
+
+#### progress
+
+> **progress**: `string`
+
+Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: `Step {current} of {total}: {name}`)
+
+***
+
+### summary
+
+> **summary**: `object`
+
+Defined in: [i18n/types.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L55)
+
+The order panel: the seller, the deadline, the lines and the total.
+
+#### compact
+
+> **compact**: `string`
+
+On a phone: the number of lines and the tax; `{count}`, `{tax}` (default: `{count} items · incl. VAT {tax}`)
+
+#### help
+
+> **help**: `string`
+
+Before the seller's support email (default: `Help`)
+
+#### invoice
+
+> **invoice**: `string`
+
+Label of the invoice number (default: `Invoice`)
+
+#### minutesLeft
+
+> **minutesLeft**: `string`
+
+Announced 10 and 5 minutes before the deadline; `{minutes}` (default: `{minutes} minutes left to pay`)
+
+#### oneMinuteLeft
+
+> **oneMinuteLeft**: `string`
+
+Announced a minute before the deadline (default: `1 minute left to pay`)
+
+#### payWithin
+
+> **payWithin**: `string`
+
+Above the countdown (default: `Pay within`)
+
+#### privacy
+
+> **privacy**: `string`
+
+Link to the merchant's privacy notice (default: `Privacy`)
+
+#### quantity
+
+> **quantity**: `string`
+
+Quantity and unit price of a line: `{quantity}`, `{price}` (default: `{quantity} × {price}`)
+
+#### refundPolicy
+
+> **refundPolicy**: `string`
+
+Link to the merchant's refund policy (default: `Refund policy`)
+
+#### registration
+
+> **registration**: `string`
+
+Company number of the seller (default: `Company number`)
+
+#### secured
+
+> **secured**: `string`
+
+Under the order (default: `Secured by Quasar`)
+
+#### sellerDetails
+
+> **sellerDetails**: `string`
+
+Button that shows the seller details (default: `Seller details`)
+
+#### sellerRole
+
+> **sellerRole**: `string`
+
+What Quasar is and is not; `{seller}` is the seller's name
+
+#### showOrder
+
+> **showOrder**: `string`
+
+On a phone: button that shows the order (default: `Details`)
+
+#### subtotal
+
+> **subtotal**: `string`
+
+Sum of the lines before tax (default: `Subtotal`)
+
+#### tax
+
+> **tax**: `string`
+
+Tax row when the lines have different rates (default: `VAT`)
+
+#### taxId
+
+> **taxId**: `string`
+
+Tax number of the seller (default: `VAT ID`)
+
+#### taxRate
+
+> **taxRate**: `string`
+
+Tax row; `{rate}` is the rate when all lines share one (default: `VAT {rate}%`)
+
+#### terms
+
+> **terms**: `string`
+
+Link to the merchant's terms (default: `Terms`)
+
+#### test
+
+> **test**: `string`
+
+Badge of a test invoice (default: `Test`)
+
+#### testHint
+
+> **testHint**: `string`
+
+Accessible description of the test badge
+
+#### total
+
+> **total**: `string`
+
+Total row (default: `Total`)
+
+#### until
+
+> **until**: `string`
+
+Under the countdown; `{date}` is the deadline (default: `until {date}`)

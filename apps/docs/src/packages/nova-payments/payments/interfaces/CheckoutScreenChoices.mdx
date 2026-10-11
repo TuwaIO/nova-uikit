@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/CheckoutScreenChoices" />
+
+# CheckoutScreenChoices
+
+Defined in: [utils/checkout.ts:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L31)
+
+Choices of the buyer that the checkout store does not hold.
+
+## Properties
+
+### autoPay?
+
+> `optional` **autoPay?**: `boolean`
+
+Defined in: [utils/checkout.ts:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L35)
+
+The buyer opened the automatic payments offer after paying the first period of a subscription.
+
+***
+
+### payWith?
+
+> `optional` **payWith?**: `"wallet"` \| `"qr"`
+
+Defined in: [utils/checkout.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L33)
+
+Pay from a wallet in this browser (default) or scan a QR code with a phone.

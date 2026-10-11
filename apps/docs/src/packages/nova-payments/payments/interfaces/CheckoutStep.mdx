@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/CheckoutStep" />
+
+# CheckoutStep
+
+Defined in: [utils/checkout.ts:71](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L71)
+
+A step of the stepper in the checkout header.
+
+## Properties
+
+### key
+
+> **key**: `"details"` \| `"method"` \| `"confirm"` \| `"pay"` \| `"autoPay"`
+
+Defined in: [utils/checkout.ts:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L73)
+
+`details` (buyer details), `method`, `pay`, `confirm`, `autoPay` (automatic payments of a subscription).
+
+***
+
+### state
+
+> **state**: `"current"` \| `"done"` \| `"upcoming"`
+
+Defined in: [utils/checkout.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L75)
+
+Before, at or after the current step.

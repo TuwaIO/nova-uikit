@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/CheckoutTokenGroup" />
+
+# CheckoutTokenGroup
+
+Defined in: [utils/checkout.ts:111](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L111)
+
+The methods of one token, as the method step shows it: the token first, then its network.
+
+## Properties
+
+### featured
+
+> **featured**: `boolean`
+
+Defined in: [utils/checkout.ts:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L117)
+
+The merchant marks one of its methods Popular.
+
+***
+
+### inWallet
+
+> **inWallet**: `boolean`
+
+Defined in: [utils/checkout.ts:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L119)
+
+One of its methods is on the network of the connected wallet.
+
+***
+
+### methods
+
+> **methods**: `CheckoutMethod`[]
+
+Defined in: [utils/checkout.ts:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L115)
+
+Its methods, one per network: the connected wallet's network first, then the Popular ones.
+
+***
+
+### symbol
+
+> **symbol**: `string`
+
+Defined in: [utils/checkout.ts:113](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L113)
+
+Token symbol.

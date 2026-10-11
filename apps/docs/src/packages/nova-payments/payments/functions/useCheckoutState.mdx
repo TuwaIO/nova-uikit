@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/useCheckoutState" />
+
+# useCheckoutState()
+
+> **useCheckoutState**\<`T`\>(`store`, `selector`): `T`
+
+Defined in: [hooks/useCheckoutStore.ts:78](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useCheckoutStore.ts#L78)
+
+Reads a checkout store and re-renders when the selected part changes (`useStore` of `zustand`).
+
+## Type Parameters
+
+### T
+
+`T`
+
+## Parameters
+
+### store
+
+`CheckoutStore`
+
+The store, from [useCheckoutStore](?path=/docs/packages-nova-payments-payments-functions-usecheckoutstore--docs).
+
+### selector
+
+(`state`) => `T`
+
+What to read.
+
+## Returns
+
+`T`
+
+The selected part of the state.
