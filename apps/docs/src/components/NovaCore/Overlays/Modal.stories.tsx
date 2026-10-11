@@ -33,7 +33,7 @@ type Story = StoryObj<typeof Dialog>;
 const buttonBaseStyles =
   'cursor-pointer px-4 py-2 rounded-[var(--tuwa-rounded-corners)] font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
 
-const primaryButtonStyles = `${buttonBaseStyles} bg-gradient-to-r from-[var(--tuwa-button-gradient-from)] to-[var(--tuwa-button-gradient-to)] text-[var(--tuwa-text-on-accent)] hover:from-[var(--tuwa-button-gradient-from-hover)] hover:to-[var(--tuwa-button-gradient-to-hover)] focus:ring-[var(--tuwa-button-gradient-from)]`;
+const primaryButtonStyles = `${buttonBaseStyles} bg-[var(--tuwa-button-primary-bg)] text-[var(--tuwa-text-on-accent)] hover:bg-[var(--tuwa-button-primary-bg-hover)] focus:ring-[var(--tuwa-button-primary-bg)]`;
 
 const secondaryButtonStyles = `${buttonBaseStyles} bg-[var(--tuwa-standart-button-bg)] text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-standart-button-hover)] focus:ring-[var(--tuwa-border-primary)]`;
 

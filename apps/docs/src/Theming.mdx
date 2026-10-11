@@ -109,6 +109,10 @@ Nova's theming system is built on three foundational principles:
   --tuwa-border-primary: theme('colors.gray.200');
   --tuwa-border-secondary: theme('colors.gray.100');
 
+  /* The main button: one solid color, read from the gradient start (a brand color set there still applies) */
+  --tuwa-button-primary-bg: var(--tuwa-button-gradient-from);
+  --tuwa-button-primary-bg-hover: var(--tuwa-button-gradient-from-hover);
+
   --tuwa-button-gradient-from: theme('colors.blue.600');
   --tuwa-button-gradient-to: theme('colors.purple.600');
 
@@ -160,10 +164,11 @@ Apply `.dark` class to your root element. All variables automatically switch:
   --tuwa-border-primary: theme('colors.gray.700');
   --tuwa-border-secondary: theme('colors.gray.800');
 
-  --tuwa-button-gradient-from: theme('colors.blue.500');
+  /* blue-600: white text on blue-500 is only 3.8:1 (WCAG AA needs 4.5) */
+  --tuwa-button-gradient-from: theme('colors.blue.600');
   --tuwa-button-gradient-to: theme('colors.purple.500');
 
-  --tuwa-button-gradient-from-hover: theme('colors.blue.600');
+  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
   --tuwa-button-gradient-to-hover: theme('colors.purple.600');
 
   --tuwa-standart-button-bg: theme('colors.gray.700');
@@ -172,6 +177,21 @@ Apply `.dark` class to your root element. All variables automatically switch:
   --tuwa-testnet-icons: #c4bfb8;
 }
 ```
+
+---
+
+## ♿ Contrast (WCAG 2.2 AA)
+
+The default tokens keep text at 4.5:1 or more in both themes (`nova-core` tests every pair): `--tuwa-text-primary` on
+every background, `--tuwa-text-secondary` and `--tuwa-text-accent` on `--tuwa-bg-primary` and `--tuwa-bg-secondary`,
+`--tuwa-text-on-accent` on the main button, and each status text on its own background. The main button stands out
+from the page at 3:1 or more. Two rules keep your own components readable:
+
+- Put secondary text on the primary or secondary background; on `--tuwa-bg-muted` use `--tuwa-text-primary`.
+- Keep `--tuwa-text-tertiary` for hints and decorations: it is below 4.5:1.
+
+When you change the tokens, check your pairs with `contrastRatio` from `@tuwaio/nova-core`. For text on a color picked
+at run time (a merchant's accent), `readableTextColor(background)` returns white or near-black, whichever reads better.
 
 ---
 

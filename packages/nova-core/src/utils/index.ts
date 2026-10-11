@@ -1,5 +1,6 @@
 export * from './classes';
 export * from './cn';
+export * from './contrast';
 export * from './deepMerge';
 export * from './getChainName';
 export * from './isSolanaDev';

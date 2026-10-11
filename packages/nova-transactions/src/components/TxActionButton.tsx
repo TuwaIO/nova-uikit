@@ -198,7 +198,7 @@ export function TxActionButton<T extends Transaction>({
 
   // Default state-specific classes
   const defaultStateClasses = {
-    idle: 'novatx:bg-[var(--tuwa-button-gradient-from)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
+    idle: 'novatx:bg-[var(--tuwa-button-primary-bg)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
     loading: 'novatx:bg-gray-400 novatx:text-white',
     replaced: 'novatx:bg-gray-500 novatx:text-white',
     succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',

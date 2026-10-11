@@ -419,7 +419,7 @@ const MainActionButton = ({
         type="button"
         onClick={onRetry}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-gradient-to-r novatx:from-[var(--tuwa-button-gradient-from)] novatx:to-[var(--tuwa-button-gradient-to)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-opacity novatx:hover:from-[var(--tuwa-button-gradient-from-hover)] novatx:hover:to-[var(--tuwa-button-gradient-to-hover)]',
+          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
           classNames?.retryButton,
         )}
       >

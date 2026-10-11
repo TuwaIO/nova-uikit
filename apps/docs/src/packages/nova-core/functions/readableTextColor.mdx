@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/readableTextColor" />
+
+# readableTextColor()
+
+> **readableTextColor**(`background`, `colors?`): `string`
+
+Defined in: [utils/contrast.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/contrast.ts#L60)
+
+The text color that reads better on a background: the light one unless the dark one has more contrast.
+
+## Parameters
+
+### background
+
+`string`
+
+A `#rgb` or `#rrggbb` color; anything else gets the light text.
+
+### colors?
+
+The two candidates.
+
+#### dark?
+
+`string`
+
+Dark text (default `#111827`, gray-900).
+
+#### light?
+
+`string`
+
+Light text (default `#ffffff`).
+
+## Returns
+
+`string`
+
+`colors.light` or `colors.dark`.

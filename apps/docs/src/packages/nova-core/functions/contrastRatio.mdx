@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/contrastRatio" />
+
+# contrastRatio()
+
+> **contrastRatio**(`foreground`, `background`): `number`
+
+Defined in: [utils/contrast.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/contrast.ts#L43)
+
+The WCAG 2 contrast ratio of two hex colors, from 1 to 21. Text needs 4.5 (AA), large text and the parts of
+controls 3.
+
+## Parameters
+
+### foreground
+
+`string`
+
+A `#rgb` or `#rrggbb` color.
+
+### background
+
+`string`
+
+A `#rgb` or `#rrggbb` color.
+
+## Returns
+
+`number`
+
+The ratio; `NaN` when either is not a hex color.

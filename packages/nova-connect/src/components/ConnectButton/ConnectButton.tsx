@@ -400,9 +400,9 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
             'novacon:border novacon:border-[var(--tuwa-border-primary)]',
           ]
         : [
-            'novacon:bg-[var(--tuwa-button-gradient-from)]',
+            'novacon:bg-[var(--tuwa-button-primary-bg)]',
             'novacon:text-[var(--tuwa-text-on-accent)]',
-            'novacon:hover:bg-[var(--tuwa-button-gradient-from-hover)]',
+            'novacon:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
             'novacon:focus:ring-[var(--tuwa-text-accent)]',
           ],
       className,

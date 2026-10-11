@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/parseHexColor" />
+
+# parseHexColor()
+
+> **parseHexColor**(`color`): \[`number`, `number`, `number`\] \| `null`
+
+Defined in: [utils/contrast.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/contrast.ts#L13)
+
+Reads a `#rgb` or `#rrggbb` color.
+
+## Parameters
+
+### color
+
+`string`
+
+The color.
+
+## Returns
+
+\[`number`, `number`, `number`\] \| `null`
+
+Its red, green and blue channels (0–255), or `null` when it is not a hex color.

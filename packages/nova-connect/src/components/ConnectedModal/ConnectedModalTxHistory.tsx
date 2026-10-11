@@ -554,7 +554,7 @@ function PulsarAdapterRequired({
     'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center novacon:gap-4 novacon:p-6';
   const iconContainerClasses =
     customization?.classNames?.pulsarRequiredIconContainer?.() ??
-    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-gradient-to-r novacon:from-[var(--tuwa-button-gradient-from)] novacon:to-[var(--tuwa-button-gradient-to)] novacon:text-[var(--tuwa-text-on-accent)]';
+    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-button-primary-bg)] novacon:text-[var(--tuwa-text-on-accent)]';
   const iconClasses = customization?.classNames?.pulsarRequiredIcon?.() ?? 'novacon:w-full novacon:h-full';
   const contentClasses = customization?.classNames?.pulsarRequiredContent?.() ?? 'novacon:space-y-2';
   const titleClasses =

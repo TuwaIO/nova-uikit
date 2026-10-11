@@ -45,6 +45,11 @@
   --tuwa-border-primary: theme('colors.gray.200');
   --tuwa-border-secondary: theme('colors.gray.100');
 
+  /* The main button is one solid color. It reads the gradient start, so a brand color set there before still applies;
+     the gradient end only tints decorations (StarsBackground). */
+  --tuwa-button-primary-bg: var(--tuwa-button-gradient-from);
+  --tuwa-button-primary-bg-hover: var(--tuwa-button-gradient-from-hover);
+
   --tuwa-button-gradient-from: theme('colors.blue.600');
   --tuwa-button-gradient-to: theme('colors.purple.600');
 
@@ -90,10 +95,11 @@
   --tuwa-border-primary: theme('colors.gray.700');
   --tuwa-border-secondary: theme('colors.gray.800');
 
-  --tuwa-button-gradient-from: theme('colors.blue.500');
+  /* blue-600: white text on blue-500 is only 3.8:1 (WCAG AA needs 4.5) */
+  --tuwa-button-gradient-from: theme('colors.blue.600');
   --tuwa-button-gradient-to: theme('colors.purple.500');
 
-  --tuwa-button-gradient-from-hover: theme('colors.blue.600');
+  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
   --tuwa-button-gradient-to-hover: theme('colors.purple.600');
 
   --tuwa-standart-button-bg: theme('colors.gray.700');

@@ -156,7 +156,7 @@ const DefaultTxInfoButton = ({ onClick, children, className }: ToastTransactionA
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
-    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-gradient-from)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-gradient-from-hover)] novatx:active:scale-95';
+    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)] novatx:active:scale-95';
 
   return (
     <button className={buttonClassName} onClick={onClick} type="button">
