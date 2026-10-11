@@ -659,6 +659,18 @@ Why the buyer sends more with a transfer fee
 
 Button after a declined request (default: `Try again`)
 
+#### txDescription
+
+> **txDescription**: `string`
+
+Its description: `{amount}` with its symbol, `{invoice}` the invoice number (default: `{amount} · {invoice}`)
+
+#### txTitle
+
+> **txTitle**: `string`
+
+Title of the payment in the app's transaction history and toasts: `{merchant}` (default: `Payment to {merchant}`)
+
 #### unsupported
 
 > **unsupported**: `string`
@@ -707,7 +719,7 @@ Above the amount (default: `You send`)
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:285](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L285)
+Defined in: [i18n/types.ts:289](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L289)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -853,7 +865,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:316](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L316)
+Defined in: [i18n/types.ts:320](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L320)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -1001,7 +1013,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:252](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L252)
+Defined in: [i18n/types.ts:256](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L256)
 
 The window while the wallet asks the buyer.
 

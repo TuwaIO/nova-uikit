@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaPaymentsSettings
 
-Defined in: [providers/novaPaymentsContext.ts:8](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L8)
+Defined in: [providers/novaPaymentsContext.ts:9](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L9)
 
 The settings `NovaPaymentsProvider` gives the checkouts below it.
 
@@ -14,7 +14,7 @@ The settings `NovaPaymentsProvider` gives the checkouts below it.
 
 > `optional` **adapters?**: [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs)[]
 
-Defined in: [providers/novaPaymentsContext.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L16)
+Defined in: [providers/novaPaymentsContext.ts:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L17)
 
 The chain families the checkouts pay from a connected wallet on.
 
@@ -24,7 +24,7 @@ The chain families the checkouts pay from a connected wallet on.
 
 > `optional` **baseUrl?**: `string`
 
-Defined in: [providers/novaPaymentsContext.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L10)
+Defined in: [providers/novaPaymentsContext.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L11)
 
 The Quasar API, if set.
 
@@ -34,7 +34,7 @@ The Quasar API, if set.
 
 > `optional` **customization?**: [`NovaPaymentsProviderCustomization`](?path=/docs/packages-nova-payments-payments-type-aliases-novapaymentsprovidercustomization--docs)
 
-Defined in: [providers/novaPaymentsContext.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L14)
+Defined in: [providers/novaPaymentsContext.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L15)
 
 Customization of the labels.
 
@@ -44,6 +44,16 @@ Customization of the labels.
 
 > `optional` **labels?**: [`NovaPaymentsLabelOverrides`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabeloverrides--docs)
 
-Defined in: [providers/novaPaymentsContext.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L12)
+Defined in: [providers/novaPaymentsContext.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L13)
 
 Texts to replace in every language.
+
+***
+
+### pulsar?
+
+> `optional` **pulsar?**: [`PaymentsPulsar`](?path=/docs/packages-nova-payments-payments-interfaces-paymentspulsar--docs)
+
+Defined in: [providers/novaPaymentsContext.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/novaPaymentsContext.ts#L19)
+
+The app's Pulsar store, which takes over the payments a checkout closed on.

@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # UsePaymentParams
 
-Defined in: [hooks/usePayment.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L14)
+Defined in: [hooks/usePayment.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L15)
 
 What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayment--docs) needs.
 
@@ -14,9 +14,31 @@ What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayme
 
 > **adapter**: [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs) \| `undefined`
 
-Defined in: [hooks/usePayment.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L16)
+Defined in: [hooks/usePayment.ts:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L17)
 
 The adapter of the quote's chain family; without it the wallet cannot pay.
+
+***
+
+### onSent?
+
+> `optional` **onSent?**: (`payment`) => `void`
+
+Defined in: [hooks/usePayment.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L33)
+
+Called with the payment the wallet sent (not a gasless signature, whose transaction Quasar sends).
+
+#### Parameters
+
+##### payment
+
+[`SentPayment`](?path=/docs/packages-nova-payments-payments-interfaces-sentpayment--docs)
+
+The transaction and what it pays.
+
+#### Returns
+
+`void`
 
 ***
 
@@ -24,7 +46,7 @@ The adapter of the quote's chain family; without it the wallet cannot pay.
 
 > **path**: [`PayPath`](?path=/docs/packages-nova-payments-payments-type-aliases-paypath--docs)
 
-Defined in: [hooks/usePayment.ts:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L24)
+Defined in: [hooks/usePayment.ts:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L25)
 
 How the wallet pays.
 
@@ -34,7 +56,7 @@ How the wallet pays.
 
 > **paymasterUrl**: `string` \| `null`
 
-Defined in: [hooks/usePayment.ts:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L26)
+Defined in: [hooks/usePayment.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L27)
 
 The checkout's ERC-7677 paymaster URL.
 
@@ -44,7 +66,7 @@ The checkout's ERC-7677 paymaster URL.
 
 > **quote**: `CheckoutQuote` \| `null`
 
-Defined in: [hooks/usePayment.ts:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L20)
+Defined in: [hooks/usePayment.ts:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L21)
 
 The locked quote.
 
@@ -54,7 +76,7 @@ The locked quote.
 
 > **store**: [`PayInvoiceParams`](?path=/docs/packages-nova-payments-payments-interfaces-payinvoiceparams--docs)\[`"store"`\]
 
-Defined in: [hooks/usePayment.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L18)
+Defined in: [hooks/usePayment.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L19)
 
 The checkout store.
 
@@ -64,6 +86,6 @@ The checkout store.
 
 > **wallet**: [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
 
-Defined in: [hooks/usePayment.ts:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L22)
+Defined in: [hooks/usePayment.ts:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L23)
 
 The wallet the quote is locked to.

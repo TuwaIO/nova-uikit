@@ -1,7 +1,14 @@
 import { NovaConnectProviderContext, type NovaConnectProviderType } from '@tuwaio/nova-connect/hooks';
-import { NovaPaymentsProvider, type PaymentsAdapter, PaymentWalletError } from '@tuwaio/nova-payments';
+import {
+  NovaPaymentsProvider,
+  type PaymentsAdapter,
+  type PaymentsPulsar,
+  PaymentWalletError,
+} from '@tuwaio/nova-payments';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import { SatelliteStoreContext } from '@tuwaio/satellite-react';
 import { type ReactNode, useMemo, useState } from 'react';
+import { action } from 'storybook/actions';
 import { createStore } from 'zustand/vanilla';
 
 /** A wallet connection as Satellite Connect keeps it. */
@@ -37,6 +44,11 @@ const CONNECT_AS: Record<'evm' | 'solana', SimulatedConnection> = {
 };
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** The app's Pulsar store in the stories: the actions panel shows the payments a closed checkout hands over. */
+const PULSAR: PaymentsPulsar = {
+  injectExternalPendingTxs: async (transactions) => action('pulsar.injectExternalPendingTxs')(transactions),
+};
 
 /**
  * Wallets for the stories, without an extension: the active connection of a Satellite store, a Nova Connect whose
@@ -77,13 +89,20 @@ export function SimulatedWallet({
         },
         sendTransfer: () => answer(`0x${'ab'.repeat(32)}`),
         signTransferAuthorization: () => answer(`0x${'cd'.repeat(65)}`),
-        sendSponsoredCalls: () => answer(`0x${'ef'.repeat(32)}`),
+        sendSponsoredCalls: async ({ onSent }) => {
+          const hash = await answer(`0x${'ef'.repeat(32)}`);
+          onSent?.();
+          return hash;
+        },
+        // The transaction the app's Pulsar store would track after the checkout closed
+        pulsarTransaction: (params) => ({ adapter: 'evm', ...params }) as unknown as Transaction,
       },
       {
         family: 'solana',
         getBalance: balanceOf,
         estimateFee: async () => ({ amount: 5000n, decimals: 9, symbol: 'SOL' }),
         sendTransfer: () => answer('5'.repeat(88)),
+        pulsarTransaction: (params) => ({ adapter: 'solana', ...params }) as unknown as Transaction,
       },
     ];
   }, [store, balance, balances, decline, sponsor]);
@@ -109,7 +128,9 @@ export function SimulatedWallet({
       value={store as unknown as Parameters<typeof SatelliteStoreContext.Provider>[0]['value']}
     >
       <NovaConnectProviderContext.Provider value={novaConnect}>
-        <NovaPaymentsProvider adapters={adapters}>{children}</NovaPaymentsProvider>
+        <NovaPaymentsProvider adapters={adapters} pulsar={PULSAR}>
+          {children}
+        </NovaPaymentsProvider>
       </NovaConnectProviderContext.Provider>
     </SatelliteStoreContext.Provider>
   );

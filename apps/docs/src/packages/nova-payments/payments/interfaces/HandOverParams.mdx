@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/HandOverParams" />
+
+# HandOverParams
+
+Defined in: [utils/handOver.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L61)
+
+What [handOverPayment](?path=/docs/packages-nova-payments-payments-functions-handoverpayment--docs) needs.
+
+## Properties
+
+### adapter
+
+> **adapter**: [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs) \| `undefined`
+
+Defined in: [utils/handOver.ts:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L63)
+
+The adapter of the payment's chain family.
+
+***
+
+### amount
+
+> **amount**: `string`
+
+Defined in: [utils/handOver.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L75)
+
+The amount sent, with its symbol.
+
+***
+
+### invoice
+
+> **invoice**: `object`
+
+Defined in: [utils/handOver.ts:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L73)
+
+The invoice: its ID and number (`null` before its document is issued).
+
+#### id
+
+> **id**: `string`
+
+#### number
+
+> **number**: `string` \| `null`
+
+***
+
+### labels
+
+> **labels**: [`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
+
+Defined in: [utils/handOver.ts:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L69)
+
+The labels of the checkout language.
+
+***
+
+### merchant
+
+> **merchant**: `string`
+
+Defined in: [utils/handOver.ts:71](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L71)
+
+The seller's name.
+
+***
+
+### payment
+
+> **payment**: [`SentPayment`](?path=/docs/packages-nova-payments-payments-interfaces-sentpayment--docs)
+
+Defined in: [utils/handOver.ts:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L67)
+
+The sent payment.
+
+***
+
+### pulsar
+
+> **pulsar**: [`PaymentsPulsar`](?path=/docs/packages-nova-payments-payments-interfaces-paymentspulsar--docs) \| `undefined`
+
+Defined in: [utils/handOver.ts:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L65)
+
+The app's Pulsar store, if any.

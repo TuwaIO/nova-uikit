@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Payment
 
-Defined in: [hooks/usePayment.ts:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L30)
+Defined in: [hooks/usePayment.ts:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L37)
 
 What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayment--docs) returns.
 
@@ -14,7 +14,7 @@ What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayme
 
 > **dismiss**: () => `void`
 
-Defined in: [hooks/usePayment.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L43)
+Defined in: [hooks/usePayment.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L50)
 
 Closes the wallet window. A request the wallet still shows stays open there: a transaction it sends later is
 still handed to Quasar, a refusal is not shown.
@@ -29,7 +29,7 @@ still handed to Quasar, a refusal is not shown.
 
 > **pay**: () => `Promise`\<`void`\>
 
-Defined in: [hooks/usePayment.ts:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L36)
+Defined in: [hooks/usePayment.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L43)
 
 Pays the quote from the wallet; resolves when Quasar took it or the wallet refused.
 
@@ -43,7 +43,7 @@ Pays the quote from the wallet; resolves when Quasar took it or the wallet refus
 
 > **problem**: [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs) \| `null`
 
-Defined in: [hooks/usePayment.ts:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L34)
+Defined in: [hooks/usePayment.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L41)
 
 Why the wallet did not pay or switch, until the next try.
 
@@ -53,7 +53,7 @@ Why the wallet did not pay or switch, until the next try.
 
 > **status**: [`PaymentStatus`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentstatus--docs)
 
-Defined in: [hooks/usePayment.ts:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L32)
+Defined in: [hooks/usePayment.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L39)
 
 Where the payment stands.
 
@@ -63,7 +63,7 @@ Where the payment stands.
 
 > **switchNetwork**: () => `Promise`\<`void`\>
 
-Defined in: [hooks/usePayment.ts:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L38)
+Defined in: [hooks/usePayment.ts:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L45)
 
 Asks the wallet to switch to the quote's chain.
 

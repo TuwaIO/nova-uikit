@@ -20,6 +20,29 @@ The adapter of the quote's chain family.
 
 ***
 
+### onSent?
+
+> `optional` **onSent?**: (`txKey`) => `void`
+
+Defined in: [utils/payInvoice.ts:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/payInvoice.ts#L35)
+
+Called with the transaction the wallet sent (its hash), before Quasar takes it; not for a gasless signature, whose
+transaction Quasar sends.
+
+#### Parameters
+
+##### txKey
+
+`string`
+
+The transaction hash (EVM) or signature (Solana).
+
+#### Returns
+
+`void`
+
+***
+
 ### onWalletDone?
 
 > `optional` **onWalletDone?**: () => `void`

@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaPaymentsProviderProps
 
-Defined in: [providers/NovaPaymentsProvider.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L30)
+Defined in: [providers/NovaPaymentsProvider.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L31)
 
 Props of [NovaPaymentsProvider](?path=/docs/packages-nova-payments-payments-functions-novapaymentsprovider--docs).
 
@@ -14,7 +14,7 @@ Props of [NovaPaymentsProvider](?path=/docs/packages-nova-payments-payments-func
 
 > `optional` **adapters?**: [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs)[]
 
-Defined in: [providers/NovaPaymentsProvider.tsx:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L42)
+Defined in: [providers/NovaPaymentsProvider.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L43)
 
 The chain families the checkouts pay from a connected wallet on: `paymentsEVMAdapter` of
 `@tuwaio/nova-payments/evm`, `paymentsSolanaAdapter` of `@tuwaio/nova-payments/solana`. Without the adapter of a
@@ -26,7 +26,7 @@ method's family, the buyer pays that method with a QR code.
 
 > `optional` **baseUrl?**: `string`
 
-Defined in: [providers/NovaPaymentsProvider.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L32)
+Defined in: [providers/NovaPaymentsProvider.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L33)
 
 The Quasar API (Quasar Cloud by default, the address of your node for the Community Edition).
 
@@ -36,7 +36,7 @@ The Quasar API (Quasar Cloud by default, the address of your node for the Commun
 
 > **children**: `ReactNode`
 
-Defined in: [providers/NovaPaymentsProvider.tsx:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L44)
+Defined in: [providers/NovaPaymentsProvider.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L51)
 
 The app.
 
@@ -46,7 +46,7 @@ The app.
 
 > `optional` **customization?**: [`NovaPaymentsProviderCustomization`](?path=/docs/packages-nova-payments-payments-type-aliases-novapaymentsprovidercustomization--docs)
 
-Defined in: [providers/NovaPaymentsProvider.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L36)
+Defined in: [providers/NovaPaymentsProvider.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L37)
 
 Customization of the labels.
 
@@ -56,6 +56,18 @@ Customization of the labels.
 
 > `optional` **labels?**: [`NovaPaymentsLabelOverrides`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabeloverrides--docs)
 
-Defined in: [providers/NovaPaymentsProvider.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L34)
+Defined in: [providers/NovaPaymentsProvider.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L35)
 
 Texts to replace in every language.
+
+***
+
+### pulsar?
+
+> `optional` **pulsar?**: [`PaymentsPulsar`](?path=/docs/packages-nova-payments-payments-interfaces-paymentspulsar--docs)
+
+Defined in: [providers/NovaPaymentsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L49)
+
+The app's Pulsar store (`injectExternalPendingTxs` of `createPulsarStore` from `@tuwaio/pulsar-core`). While a
+checkout is open it tracks the payment itself; when it closes before Quasar settled a payment the wallet sent, the
+payment goes to this store, which tracks it and keeps it in the history, and Nova Transactions shows its toast.
