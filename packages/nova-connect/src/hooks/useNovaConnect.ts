@@ -95,8 +95,12 @@ export interface NovaConnectProviderType extends Omit<
    * Opens or closes the connect modal (opening resets it to the wallet list).
    *
    * @param value - Whether the modal is open.
+   * @param options - `adapter`: open on the wallets of one chain family, for example when a payment needs a Solana
+   *   wallet (the user can still switch the family in the modal).
    */
-  setIsConnectModalOpen: (value: boolean) => void;
+  setIsConnectModalOpen: (value: boolean, options?: { adapter?: OrbitAdapter }) => void;
+  /** The chain family the connect modal was opened on with `setIsConnectModalOpen`; `undefined` for all wallets */
+  connectModalAdapter: OrbitAdapter | undefined;
   /** Whether the connected modal is open */
   isConnectedModalOpen: boolean;
   /**

@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/WalletPrompt" />
+
+# WalletPrompt()
+
+> **WalletPrompt**(`props`): `Element`
+
+Defined in: [components/WalletPrompt.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L46)
+
+The window over the pay step while the wallet asks the buyer: what to sign or confirm, and what to check in the
+wallet before — the amount, the recipient, the network and the time left of the price (WCAG 3.3.4). The heading
+takes the focus, so screen readers say what happens. "Try again" re-asks only for a signature; for a transaction
+the buyer is sent to the wallet, where the request still waits, so it cannot be paid twice.
+
+## Parameters
+
+### props
+
+[`WalletPromptProps`](?path=/docs/packages-nova-payments-payments-interfaces-walletpromptprops--docs)
+
+See [WalletPromptProps](?path=/docs/packages-nova-payments-payments-interfaces-walletpromptprops--docs).
+
+## Returns
+
+`Element`
+
+The window.

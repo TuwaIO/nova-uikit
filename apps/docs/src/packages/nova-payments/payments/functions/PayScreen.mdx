@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/PayScreen" />
+
+# PayScreen()
+
+> **PayScreen**(): `Element` \| `null`
+
+Defined in: [components/PayScreen.tsx:83](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PayScreen.tsx#L83)
+
+The pay step: the connected wallet (with "Change"), the exact amount to send with its network and invoice value,
+the price lock with "Keep this price" in its last minute, the rate, the network fee (the merchant's or an estimate),
+the recipient, and the main action — "Sign to pay" when the merchant pays the gas, "Pay" otherwise, "Switch to …"
+on the wrong network. Before the prompt it reads the wallet's balance and, when it is short, offers the methods
+the wallet can pay and the seller's top-up link.
+
+Side effects: balance, fee and wallet capability reads from the network through the chain adapter (no request to
+Quasar); wallet prompts; checkout requests to Quasar.
+
+## Returns
+
+`Element` \| `null`
+
+The pay step.

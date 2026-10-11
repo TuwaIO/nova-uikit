@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/instructionsChainId" />
+
+# instructionsChainId()
+
+> **instructionsChainId**(`instructions`): `string`
+
+Defined in: [utils/pay.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/pay.ts#L116)
+
+The CAIP-2 chain a quote is paid on.
+
+## Parameters
+
+### instructions
+
+`PaymentInstructions`
+
+What the wallet sends.
+
+## Returns
+
+`string`
+
+For example `eip155:8453` or `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`.

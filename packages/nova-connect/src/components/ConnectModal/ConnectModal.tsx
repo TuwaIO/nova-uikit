@@ -741,6 +741,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
     connectModalContentType,
     selectedAdapter,
     setSelectedAdapter,
+    connectModalAdapter,
     isConnected,
     activeConnector,
     impersonatedAddress,
@@ -791,7 +792,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   useEffect(() => {
     if (isConnectModalOpen) {
       setConnectModalContentType('connectors');
-      setSelectedAdapter(undefined);
+      setSelectedAdapter(connectModalAdapter);
       setActiveConnector(undefined);
       setImpersonatedAddress('');
       setIsConnected(false);

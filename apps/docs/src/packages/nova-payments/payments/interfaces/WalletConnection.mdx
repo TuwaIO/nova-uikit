@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/WalletConnection" />
+
+# WalletConnection
+
+Defined in: [hooks/useWalletConnection.ts:8](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useWalletConnection.ts#L8)
+
+What [useWalletConnection](?path=/docs/packages-nova-payments-payments-functions-usewalletconnection--docs) returns.
+
+## Properties
+
+### canConnect
+
+> **canConnect**: `boolean`
+
+Defined in: [hooks/useWalletConnection.ts:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useWalletConnection.ts#L10)
+
+Whether the page can connect a wallet: Nova Connect is set up, or the app handles it.
+
+***
+
+### connect
+
+> **connect**: (`family`) => `boolean`
+
+Defined in: [hooks/useWalletConnection.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useWalletConnection.ts#L19)
+
+Asks the buyer to connect a wallet of a chain family.
+
+#### Parameters
+
+##### family
+
+[`PaymentFamily`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentfamily--docs)
+
+The family of the chosen method.
+
+#### Returns
+
+`boolean`
+
+Whether the request went anywhere.
+
+***
+
+### connecting
+
+> **connecting**: `boolean`
+
+Defined in: [hooks/useWalletConnection.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useWalletConnection.ts#L12)
+
+Whether the connect modal of Nova Connect is open.

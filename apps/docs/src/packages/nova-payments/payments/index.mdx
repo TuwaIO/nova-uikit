@@ -7,8 +7,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 The checkout of Quasar Payments invoices (`PaymentCheckout`), its provider, parts and hooks, and the helpers that
 turn the state of a checkout store into what the checkout shows, imported from `@tuwaio/nova-payments`.
 
+## Classes
+
+- [PaymentWalletError](?path=/docs/packages-nova-payments-payments-classes-paymentwalleterror--docs)
+
 ## Interfaces
 
+- [BalanceShortfall](?path=/docs/packages-nova-payments-payments-interfaces-balanceshortfall--docs)
 - [BuyerField](?path=/docs/packages-nova-payments-payments-interfaces-buyerfield--docs)
 - [CheckoutContextValue](?path=/docs/packages-nova-payments-payments-interfaces-checkoutcontextvalue--docs)
 - [CheckoutHeaderProps](?path=/docs/packages-nova-payments-payments-interfaces-checkoutheaderprops--docs)
@@ -18,11 +23,19 @@ turn the state of a checkout store into what the checkout shows, imported from `
 - [CheckoutTokenGroup](?path=/docs/packages-nova-payments-payments-interfaces-checkouttokengroup--docs)
 - [CheckoutWallet](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs)
 - [LocaleSwitcherProps](?path=/docs/packages-nova-payments-payments-interfaces-localeswitcherprops--docs)
+- [NativeFee](?path=/docs/packages-nova-payments-payments-interfaces-nativefee--docs)
 - [NovaPaymentsLabelsContext](?path=/docs/packages-nova-payments-payments-interfaces-novapaymentslabelscontext--docs)
 - [NovaPaymentsProviderProps](?path=/docs/packages-nova-payments-payments-interfaces-novapaymentsproviderprops--docs)
 - [NovaPaymentsSettings](?path=/docs/packages-nova-payments-payments-interfaces-novapaymentssettings--docs)
+- [PayInvoiceParams](?path=/docs/packages-nova-payments-payments-interfaces-payinvoiceparams--docs)
+- [Payment](?path=/docs/packages-nova-payments-payments-interfaces-payment--docs)
 - [PaymentCheckoutProps](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutprops--docs)
+- [PaymentsAdapter](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs)
+- [QuoteAmounts](?path=/docs/packages-nova-payments-payments-interfaces-quoteamounts--docs)
 - [UseCheckoutStoreOptions](?path=/docs/packages-nova-payments-payments-interfaces-usecheckoutstoreoptions--docs)
+- [UsePaymentParams](?path=/docs/packages-nova-payments-payments-interfaces-usepaymentparams--docs)
+- [WalletConnection](?path=/docs/packages-nova-payments-payments-interfaces-walletconnection--docs)
+- [WalletPromptProps](?path=/docs/packages-nova-payments-payments-interfaces-walletpromptprops--docs)
 
 ## Type Aliases
 
@@ -32,6 +45,10 @@ turn the state of a checkout store into what the checkout shows, imported from `
 - [NovaPaymentsProviderCustomization](?path=/docs/packages-nova-payments-payments-type-aliases-novapaymentsprovidercustomization--docs)
 - [PaymentCheckoutDisplay](?path=/docs/packages-nova-payments-payments-type-aliases-paymentcheckoutdisplay--docs)
 - [PaymentFamily](?path=/docs/packages-nova-payments-payments-type-aliases-paymentfamily--docs)
+- [PaymentStatus](?path=/docs/packages-nova-payments-payments-type-aliases-paymentstatus--docs)
+- [PaymentWalletErrorKind](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs)
+- [PayPath](?path=/docs/packages-nova-payments-payments-type-aliases-paypath--docs)
+- [WalletPromptKind](?path=/docs/packages-nova-payments-payments-type-aliases-walletpromptkind--docs)
 
 ## Variables
 
@@ -40,6 +57,8 @@ turn the state of a checkout store into what the checkout shows, imported from `
 
 ## Functions
 
+- [balanceShortfall](?path=/docs/packages-nova-payments-payments-functions-balanceshortfall--docs)
+- [baseUnitsToDecimal](?path=/docs/packages-nova-payments-payments-functions-baseunitstodecimal--docs)
 - [buyerFields](?path=/docs/packages-nova-payments-payments-functions-buyerfields--docs)
 - [buyerIssues](?path=/docs/packages-nova-payments-payments-functions-buyerissues--docs)
 - [BuyerScreen](?path=/docs/packages-nova-payments-payments-functions-buyerscreen--docs)
@@ -58,23 +77,37 @@ turn the state of a checkout store into what the checkout shows, imported from `
 - [formatFiat](?path=/docs/packages-nova-payments-payments-functions-formatfiat--docs)
 - [formatTokenAmount](?path=/docs/packages-nova-payments-payments-functions-formattokenamount--docs)
 - [groupMethodsByToken](?path=/docs/packages-nova-payments-payments-functions-groupmethodsbytoken--docs)
+- [instructionsChainId](?path=/docs/packages-nova-payments-payments-functions-instructionschainid--docs)
 - [invoiceTotals](?path=/docs/packages-nova-payments-payments-functions-invoicetotals--docs)
 - [isQuoteEnding](?path=/docs/packages-nova-payments-payments-functions-isquoteending--docs)
 - [LocaleSwitcher](?path=/docs/packages-nova-payments-payments-functions-localeswitcher--docs)
 - [methodFamily](?path=/docs/packages-nova-payments-payments-functions-methodfamily--docs)
 - [MethodScreen](?path=/docs/packages-nova-payments-payments-functions-methodscreen--docs)
+- [methodToken](?path=/docs/packages-nova-payments-payments-functions-methodtoken--docs)
 - [minorToDecimal](?path=/docs/packages-nova-payments-payments-functions-minortodecimal--docs)
 - [networkName](?path=/docs/packages-nova-payments-payments-functions-networkname--docs)
 - [NovaPaymentsProvider](?path=/docs/packages-nova-payments-payments-functions-novapaymentsprovider--docs)
 - [payerFor](?path=/docs/packages-nova-payments-payments-functions-payerfor--docs)
+- [payInvoice](?path=/docs/packages-nova-payments-payments-functions-payinvoice--docs)
 - [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs)
+- [payPath](?path=/docs/packages-nova-payments-payments-functions-paypath--docs)
+- [PayScreen](?path=/docs/packages-nova-payments-payments-functions-payscreen--docs)
 - [priceAdjustment](?path=/docs/packages-nova-payments-payments-functions-priceadjustment--docs)
+- [qrPath](?path=/docs/packages-nova-payments-payments-functions-qrpath--docs)
+- [QrScreen](?path=/docs/packages-nova-payments-payments-functions-qrscreen--docs)
+- [quoteAmounts](?path=/docs/packages-nova-payments-payments-functions-quoteamounts--docs)
+- [quoteRate](?path=/docs/packages-nova-payments-payments-functions-quoterate--docs)
 - [shortAddress](?path=/docs/packages-nova-payments-payments-functions-shortaddress--docs)
+- [useAsyncValue](?path=/docs/packages-nova-payments-payments-functions-useasyncvalue--docs)
 - [useCheckoutContext](?path=/docs/packages-nova-payments-payments-functions-usecheckoutcontext--docs)
 - [useCheckoutState](?path=/docs/packages-nova-payments-payments-functions-usecheckoutstate--docs)
 - [useCheckoutStore](?path=/docs/packages-nova-payments-payments-functions-usecheckoutstore--docs)
 - [useConnectedWallet](?path=/docs/packages-nova-payments-payments-functions-useconnectedwallet--docs)
 - [useNovaPayments](?path=/docs/packages-nova-payments-payments-functions-usenovapayments--docs)
 - [useNow](?path=/docs/packages-nova-payments-payments-functions-usenow--docs)
+- [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayment--docs)
 - [usePaymentsLabels](?path=/docs/packages-nova-payments-payments-functions-usepaymentslabels--docs)
+- [useWalletConnection](?path=/docs/packages-nova-payments-payments-functions-usewalletconnection--docs)
+- [walletErrorKind](?path=/docs/packages-nova-payments-payments-functions-walleterrorkind--docs)
 - [walletLabel](?path=/docs/packages-nova-payments-payments-functions-walletlabel--docs)
+- [WalletPrompt](?path=/docs/packages-nova-payments-payments-functions-walletprompt--docs)

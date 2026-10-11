@@ -6,6 +6,7 @@ vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useState: (initial: unknown) => [initial, vi.fn()],
   useMemo: (fn: () => unknown) => fn(),
+  useCallback: (fn: unknown) => fn,
 }));
 
 vi.mock('../satellite', () => ({

@@ -5,7 +5,7 @@
 import { deepMerge } from '@tuwaio/nova-core';
 import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
-import { ComponentType, ReactNode, useMemo, useState } from 'react';
+import { ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { ConnectedModal, ConnectedModalCustomization } from '../components/ConnectedModal/ConnectedModal';
 import { ConnectModal, ConnectModalCustomization } from '../components/ConnectModal/ConnectModal';
@@ -304,7 +304,13 @@ export function NovaConnectProvider({
   }, [labels, customLabelsMerge]);
 
   // State management - all existing state
-  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  const [isConnectModalOpen, setConnectModalOpen] = useState(false);
+  const [connectModalAdapter, setConnectModalAdapter] = useState<OrbitAdapter | undefined>(undefined);
+  // Opening on one chain family is remembered until the modal closes; the modal starts on its wallets
+  const setIsConnectModalOpen = useCallback((value: boolean, options?: { adapter?: OrbitAdapter }) => {
+    setConnectModalAdapter(value ? options?.adapter : undefined);
+    setConnectModalOpen(value);
+  }, []);
   const [isConnectedModalOpen, setIsConnectedModalOpen] = useState(false);
   const [isChainsListOpen, setIsChainsListOpen] = useState(false);
   const [isChainsListOpenMobile, setIsChainsListOpenMobile] = useState(false);
@@ -326,6 +332,7 @@ export function NovaConnectProvider({
     withChain,
     isConnectModalOpen,
     setIsConnectModalOpen,
+    connectModalAdapter,
     isConnectedModalOpen,
     setIsConnectedModalOpen,
     isChainsListOpen,

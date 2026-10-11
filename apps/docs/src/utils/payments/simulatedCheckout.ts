@@ -128,7 +128,18 @@ export interface SimulationOptions {
   mode?: 'ok' | 'loading' | 'notFound' | 'failure';
   /** Serve a logo. */
   logo?: boolean;
+  /** The merchant sponsors the gas of the methods that allow it (an EIP-3009 signature; default `true`). */
+  gasless?: boolean;
+  /** The token keeps this fee on every transfer, in basis points. */
+  transferFeeBps?: number;
 }
+
+/** The merchant's Solana wallet and the devnet USDC mint of the stories. */
+const MERCHANT_SOLANA = '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU';
+const USDC_DEVNET = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
+const REFERENCE = '9yYb9dhzyFZGnJgUqt9uZaCvYEJcVwd8xTbgaiVtVb8Y';
+/** What the invoice costs in each token: 89.54 USD, SOL at 150 USD with the 2 % discount. */
+const EXPECTED: Record<string, string> = { USDC: '89540000', SOL: '584994667', ETH: '37308333333333334' };
 
 /**
  * A checkout API without a network, for the stories (`api` of `PaymentCheckout`): it answers from memory, keeps the
@@ -138,6 +149,8 @@ export function simulatedCheckoutApi({
   view = sampleCheckout(),
   mode = 'ok',
   logo = false,
+  gasless = true,
+  transferFeeBps = 0,
 }: SimulationOptions = {}): CheckoutApi {
   let current: CheckoutView = { ...view, merchant: { ...view.merchant, logo } };
   const never = <T>() => new Promise<T>(() => undefined);
@@ -152,36 +165,63 @@ export function simulatedCheckoutApi({
       if (mode === 'failure') return refuse('request_failed', 503);
       return Promise.resolve(current);
     },
-    // A price locked after a moment, for the next step
+    // A price locked after a moment, for the next step: a transfer of the method's token to the merchant
     quote: async ({ methodId, payer }) => {
       await new Promise((resolve) => setTimeout(resolve, 800));
       const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
-      const quote = {
+      const expected = BigInt(EXPECTED[method.symbol] ?? '89540000');
+      const send = expected + (expected * BigInt(transferFeeBps) + 9_999n) / 10_000n;
+      const amount = String(send);
+      const solana = method.chainId.startsWith('solana:');
+      const decimal = `${send / 10n ** BigInt(method.decimals)}.${String(send % 10n ** BigInt(method.decimals)).padStart(method.decimals, '0')}`;
+      const mint = method.symbol === 'SOL' ? 'native' : USDC_DEVNET;
+      const instructions = solana
+        ? {
+            family: 'solana' as const,
+            chainId: method.chainId,
+            to: MERCHANT_SOLANA,
+            token: mint,
+            amount,
+            decimals: method.decimals,
+            symbol: method.symbol,
+            reference: REFERENCE,
+            solanaPayUrl: `solana:${MERCHANT_SOLANA}?amount=${decimal}${mint === 'native' ? '' : `&spl-token=${mint}`}&reference=${REFERENCE}&label=Acme%20Labs`,
+          }
+        : {
+            family: 'eip155' as const,
+            chainId: Number(method.chainId.split(':')[1]),
+            to: '0x2222222222222222222222222222222222222222',
+            token: method.symbol === 'ETH' ? 'native' : '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+            amount,
+            decimals: method.decimals,
+            symbol: method.symbol,
+          };
+      const quote: CheckoutQuote = {
         object: 'checkout_quote',
         methodId: method.id,
         payer: payer ?? null,
-        cryptoAmountExpected: '89540000',
-        amountToSend: '89540000',
-        transferFee: null,
+        cryptoAmountExpected: String(expected),
+        amountToSend: amount,
+        transferFee: transferFeeBps ? { bps: transferFeeBps, maxFee: null, source: 'contract' } : null,
         decimals: method.decimals,
         symbol: method.symbol,
         lockedAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + current.quoteTtlSeconds * 1000).toISOString(),
-        reference: null,
+        reference: solana ? REFERENCE : null,
         rates: [],
         markupBps: method.markupBps,
         discountBps: method.discountBps,
-        instructions: {
-          family: 'eip155',
-          chainId: 84532,
-          to: '0x2222222222222222222222222222222222222222',
-          token: '0x3',
-          amount: '89540000',
-          decimals: 6,
-          symbol: method.symbol,
-        },
-        gasless: null,
-      } as unknown as CheckoutQuote;
+        instructions,
+        gasless:
+          !solana && gasless && method.gasless === 'auto'
+            ? {
+                relay: {
+                  typedData: { domain: {}, types: {}, primaryType: 'TransferWithAuthorization', message: {} },
+                },
+                paymaster: { calls: [{ to: instructions.token, value: '0', data: '0xa9059cbb' }] },
+              }
+            : null,
+      };
       current = { ...current, quote };
       return quote;
     },
@@ -194,8 +234,15 @@ export function simulatedCheckoutApi({
       current = { ...current, invoice: { ...current.invoice, locale } };
       return Promise.resolve({ locale });
     },
-    submit: () => never(),
-    relay: () => never(),
+    // The engine takes the payment after a moment; the outcome screens follow in the next step
+    submit: async ({ txKey }) => {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      return { txKey, status: 'submitted' };
+    },
+    relay: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      return { status: 'submitted' };
+    },
     permission: () => never(),
     url: (route) => (route === 'logo' ? STORY_LOGO : `sim://checkout/${route}`),
   };

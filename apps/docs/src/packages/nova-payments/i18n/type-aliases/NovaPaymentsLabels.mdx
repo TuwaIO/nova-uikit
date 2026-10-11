@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **buyer**: `object`
 
-Defined in: [i18n/types.ts:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L100)
+Defined in: [i18n/types.ts:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L102)
 
 The buyer details step.
 
@@ -277,6 +277,12 @@ Discount of a method; `{percent}` (default: `−{percent}%`)
 
 Markup of a method; `{percent}` (default: `+{percent}%`)
 
+#### methodUnavailable
+
+> **methodUnavailable**: `string`
+
+The page can pay the chosen method neither from a wallet nor with a QR code
+
 #### network
 
 > **network**: `string`
@@ -369,6 +375,428 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 ***
 
+### pay
+
+> **pay**: `object`
+
+Defined in: [i18n/types.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L143)
+
+The pay step: the wallet, the locked price, the network fee and the main action.
+
+#### back
+
+> **back**: `string`
+
+Link back to the method step (default: `Back to methods`)
+
+#### change
+
+> **change**: `string`
+
+Button that changes the wallet (default: `Change`)
+
+#### changeWallet
+
+> **changeWallet**: `string`
+
+Accessible name of that button (default: `Change wallet`)
+
+#### connect
+
+> **connect**: `string`
+
+Main button without a wallet of the method's family (default: `Connect a wallet`)
+
+#### connectUnavailable
+
+> **connectUnavailable**: `string`
+
+Without a way to connect a wallet in this app
+
+#### copied
+
+> **copied**: `string`
+
+After copying (default: `Copied`)
+
+#### copyAmount
+
+> **copyAmount**: `string`
+
+Accessible name of the copy button (default: `Copy amount`)
+
+#### declined
+
+> **declined**: `string`
+
+The buyer declined in the wallet: `{wallet}` (default: `You declined the request in {wallet}.`)
+
+#### disclaimer
+
+> **disclaimer**: `string`
+
+Under the button: `{merchant}`
+
+#### failed
+
+> **failed**: `string`
+
+The transaction failed: `{network}`
+
+#### fiatValue
+
+> **fiatValue**: `string`
+
+The invoice value of the amount: `{amount}`, `{currency}` (default: `= {amount} {currency}`)
+
+#### gasEstimate
+
+> **gasEstimate**: `string`
+
+The buyer pays the gas: `{amount}` is the estimate (default: `≈ {amount} · from your wallet`)
+
+#### gasFromWallet
+
+> **gasFromWallet**: `string`
+
+The buyer pays the gas, estimate unknown (default: `Paid from your wallet`)
+
+#### getToken
+
+> **getToken**: `string`
+
+The seller's top-up link: `{symbol}` (default: `Get {symbol}`)
+
+#### invoiceTotal
+
+> **invoiceTotal**: `string`
+
+Row of the invoice total, with a token transfer fee (default: `Invoice total`)
+
+#### keepPrice
+
+> **keepPrice**: `string`
+
+Button that locks the price again: `{minutes}` (default: `Keep this price · +{minutes} min`)
+
+#### merchantPaysGas
+
+> **merchantPaysGas**: `string`
+
+The merchant pays the gas: `{merchant}` (default: `{merchant} pays · you only sign`)
+
+#### merchantReceives
+
+> **merchantReceives**: `string`
+
+Row of what the merchant receives: `{merchant}` (default: `{merchant} receives`)
+
+#### networkFee
+
+> **networkFee**: `string`
+
+Row of the network fee (default: `Network fee`)
+
+#### newPrice
+
+> **newPrice**: `string`
+
+Button that locks a new price after it ran out (default: `Get a new price`)
+
+#### noAnswer
+
+> **noAnswer**: `string`
+
+No answer from Quasar
+
+#### notEnough
+
+> **notEnough**: `string`
+
+Heading of a short balance (default: `Not enough`)
+
+#### onNetwork
+
+> **onNetwork**: `string`
+
+Under the amount: `{network}` (default: `on {network}`)
+
+#### payAgain
+
+> **payAgain**: `string`
+
+Button after a failed transaction (default: `Pay again`)
+
+#### payAmount
+
+> **payAmount**: `string`
+
+Main button when the buyer pays the gas: `{amount}` (default: `Pay {amount}`)
+
+#### payFromBalance
+
+> **payFromBalance**: `string`
+
+Above the methods the wallet can pay (default: `Pay from what this wallet has`)
+
+#### payGasless
+
+> **payGasless**: `string`
+
+Goes back to the gasless payment: `{merchant}` (default: `Let {merchant} pay the gas`)
+
+#### payWithGas
+
+> **payWithGas**: `string`
+
+Pays the gas instead of signing (default: `Pay with gas instead`)
+
+#### priceEnding
+
+> **priceEnding**: `string`
+
+In the last minute of the price: `{time}` (default: `This price ends in {time}. Keep it?`)
+
+#### priceExpired
+
+> **priceExpired**: `string`
+
+The price lock ran out (default: `The price lock ran out.`)
+
+#### priceLocked
+
+> **priceLocked**: `string`
+
+The price lock: `{time}` is a countdown (default: `Price locked for {time}`)
+
+#### rate
+
+> **rate**: `string`
+
+Row of the rate (default: `Rate`)
+
+#### rateValue
+
+> **rateValue**: `string`
+
+The rate: `{symbol}`, `{price}`, `{currency}` (default: `1 {symbol} = {price} {currency}`)
+
+#### refreshPrice
+
+> **refreshPrice**: `string`
+
+Button that locks a new price (default: `Refresh price`)
+
+#### retryLater
+
+> **retryLater**: `string`
+
+Button then (default: `Try again in a minute`)
+
+#### screeningUnavailable
+
+> **screeningUnavailable**: `string`
+
+The wallet screening of Quasar is unavailable (default: `The wallet check is unavailable right now.`)
+
+#### shortBy
+
+> **shortBy**: `string`
+
+The difference: `{short}`, `{need}` (default: `{short} short of {need}.`)
+
+#### signToPay
+
+> **signToPay**: `string`
+
+Main button of a gasless payment: `{amount}` with its symbol (default: `Sign to pay {amount}`)
+
+#### switchHint
+
+> **switchHint**: `string`
+
+Under the switch button (default: `Your wallet asks you to approve the switch.`)
+
+#### switchTo
+
+> **switchTo**: `string`
+
+Main button on the wrong network: `{network}` (default: `Switch to {network}`)
+
+#### title
+
+> **title**: `string`
+
+Heading, read by screen readers (default: `Pay`)
+
+#### to
+
+> **to**: `string`
+
+Row of the recipient (default: `To`)
+
+#### topUp
+
+> **topUp**: `string`
+
+Before the seller's top-up link: `{symbol}` (default: `Or add {symbol} to this wallet and come back:`)
+
+#### transferFee
+
+> **transferFee**: `string`
+
+Row of the token's transfer fee: `{percent}` (default: `Token transfer fee {percent}%`)
+
+#### transferFeeNote
+
+> **transferFeeNote**: `string`
+
+Why the buyer sends more with a transfer fee
+
+#### tryAgain
+
+> **tryAgain**: `string`
+
+Button after a declined request (default: `Try again`)
+
+#### unsupported
+
+> **unsupported**: `string`
+
+The wallet cannot pay this way: `{wallet}` (default: `{wallet} can't make this payment.`)
+
+#### walletHas
+
+> **walletHas**: `string`
+
+The balance: `{amount}`, `{network}` (default: `Your wallet has {amount} on {network}`)
+
+#### walletLine
+
+> **walletLine**: `string`
+
+The connected wallet under its name: `{address}`, `{network}` (default: `{address} · {network}`)
+
+#### wrongNetwork
+
+> **wrongNetwork**: `string`
+
+Heading of the wrong network banner (default: `Wrong network`)
+
+#### wrongNetworkText
+
+> **wrongNetworkText**: `string`
+
+Text of the banner: `{current}`, `{network}` (default: `Your wallet is on {current}. This payment goes on {network}.`)
+
+#### youHave
+
+> **youHave**: `string`
+
+Balance under such a method: `{amount}` (default: `You have {amount}`)
+
+#### youSend
+
+> **youSend**: `string`
+
+Above the amount (default: `You send`)
+
+***
+
+### qr
+
+> **qr**: `object`
+
+Defined in: [i18n/types.ts:285](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L285)
+
+The QR code step: Solana Pay, or this checkout on a phone.
+
+#### approveStep
+
+> **approveStep**: `string`
+
+Second step (default: `Approve the amount below`)
+
+#### back
+
+> **back**: `string`
+
+Link back to the method step (default: `Back to methods`)
+
+#### copyLink
+
+> **copyLink**: `string`
+
+Copies the link of the payment page (default: `Copy link`)
+
+#### exchangeWarning
+
+> **exchangeWarning**: `string`
+
+Why not to pay from an exchange
+
+#### handoffCode
+
+> **handoffCode**: `string`
+
+Text alternative of the hand-off code (default: `QR code that opens this checkout on your phone`)
+
+#### handoffHint
+
+> **handoffHint**: `string`
+
+Under it
+
+#### handoffNote
+
+> **handoffNote**: `string`
+
+That this page follows the payment
+
+#### handoffTitle
+
+> **handoffTitle**: `string`
+
+Heading of the phone hand-off (default: `Pay on your phone`)
+
+#### openInWallet
+
+> **openInWallet**: `string`
+
+Link that opens the request in a wallet app (default: `Open in wallet app`)
+
+#### scanStep
+
+> **scanStep**: `string`
+
+First step (default: `Scan the code (Solana Pay)`)
+
+#### solanaCode
+
+> **solanaCode**: `string`
+
+Text alternative of the Solana Pay code: `{amount}` (default: `QR code of a Solana Pay request for {amount}`)
+
+#### solanaHint
+
+> **solanaHint**: `string`
+
+Under it (default: `Open Phantom, Solflare or Backpack`)
+
+#### solanaTitle
+
+> **solanaTitle**: `string`
+
+Heading of Solana Pay (default: `Scan with a Solana wallet`)
+
+#### waiting
+
+> **waiting**: `string`
+
+While waiting (default: `Waiting for the payment…`)
+
+***
+
 ### steps
 
 > **steps**: `object`
@@ -425,7 +853,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L141)
+Defined in: [i18n/types.ts:316](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L316)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -566,3 +994,103 @@ Total row (default: `Total`)
 > **until**: `string`
 
 Under the countdown; `{date}` is the deadline (default: `until {date}`)
+
+***
+
+### walletPrompt
+
+> **walletPrompt**: `object`
+
+Defined in: [i18n/types.ts:252](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L252)
+
+The window while the wallet asks the buyer.
+
+#### amount
+
+> **amount**: `string`
+
+Row of the amount (default: `Amount`)
+
+#### cancel
+
+> **cancel**: `string`
+
+Closes the window (default: `Cancel`)
+
+#### check
+
+> **check**: `string`
+
+Above the things to check: `{wallet}` (default: `Check in {wallet} before signing`)
+
+#### confirmIn
+
+> **confirmIn**: `string`
+
+Heading of a transaction: `{wallet}` (default: `Confirm in {wallet}`)
+
+#### confirmText
+
+> **confirmText**: `string`
+
+Text of a transaction: `{amount}`, `{merchant}`, `{network}`
+
+#### network
+
+> **network**: `string`
+
+Row of the network (default: `Network`)
+
+#### notOpened
+
+> **notOpened**: `string`
+
+Before the retry button (default: `The wallet window didn't open?`)
+
+#### priceLocked
+
+> **priceLocked**: `string`
+
+Row of the price lock (default: `Price locked`)
+
+#### signIn
+
+> **signIn**: `string`
+
+Heading of a gasless signature: `{wallet}` (default: `Sign in {wallet}`)
+
+#### signText
+
+> **signText**: `string`
+
+Text of a gasless signature: `{amount}`, `{merchant}`, `{network}`
+
+#### stillWaiting
+
+> **stillWaiting**: `string`
+
+For a transaction that may still wait in the wallet: `{wallet}`
+
+#### submitting
+
+> **submitting**: `string`
+
+While Quasar takes the payment (default: `Handing the payment to Quasar…`)
+
+#### switchIn
+
+> **switchIn**: `string`
+
+Heading while switching the network: `{wallet}` (default: `Approve the switch in {wallet}`)
+
+#### to
+
+> **to**: `string`
+
+Row of the recipient (default: `To`)
+
+#### tryAgain
+
+> **tryAgain**: `string`
+
+Retry button (default: `Try again`)

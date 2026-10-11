@@ -1,0 +1,72 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/Payment" />
+
+# Payment
+
+Defined in: [hooks/usePayment.ts:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L30)
+
+What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayment--docs) returns.
+
+## Properties
+
+### dismiss
+
+> **dismiss**: () => `void`
+
+Defined in: [hooks/usePayment.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L43)
+
+Closes the wallet window. A request the wallet still shows stays open there: a transaction it sends later is
+still handed to Quasar, a refusal is not shown.
+
+#### Returns
+
+`void`
+
+***
+
+### pay
+
+> **pay**: () => `Promise`\<`void`\>
+
+Defined in: [hooks/usePayment.ts:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L36)
+
+Pays the quote from the wallet; resolves when Quasar took it or the wallet refused.
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### problem
+
+> **problem**: [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs) \| `null`
+
+Defined in: [hooks/usePayment.ts:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L34)
+
+Why the wallet did not pay or switch, until the next try.
+
+***
+
+### status
+
+> **status**: [`PaymentStatus`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentstatus--docs)
+
+Defined in: [hooks/usePayment.ts:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L32)
+
+Where the payment stands.
+
+***
+
+### switchNetwork
+
+> **switchNetwork**: () => `Promise`\<`void`\>
+
+Defined in: [hooks/usePayment.ts:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L38)
+
+Asks the wallet to switch to the quote's chain.
+
+#### Returns
+
+`Promise`\<`void`\>

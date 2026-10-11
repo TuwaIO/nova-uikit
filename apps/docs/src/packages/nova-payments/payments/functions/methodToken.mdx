@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/methodToken" />
+
+# methodToken()
+
+> **methodToken**(`method`): `string`
+
+Defined in: [utils/methods.ts:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L156)
+
+The token of a method as a chain reads its balance, from its CAIP-19 asset.
+
+## Parameters
+
+### method
+
+`CheckoutMethod`
+
+The payment method.
+
+## Returns
+
+`string`
+
+The token contract or mint, or `native` for the coin of the chain (a `slip44` asset, or none).

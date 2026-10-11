@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/UsePaymentParams" />
+
+# UsePaymentParams
+
+Defined in: [hooks/usePayment.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L14)
+
+What [usePayment](?path=/docs/packages-nova-payments-payments-functions-usepayment--docs) needs.
+
+## Properties
+
+### adapter
+
+> **adapter**: [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs) \| `undefined`
+
+Defined in: [hooks/usePayment.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L16)
+
+The adapter of the quote's chain family; without it the wallet cannot pay.
+
+***
+
+### path
+
+> **path**: [`PayPath`](?path=/docs/packages-nova-payments-payments-type-aliases-paypath--docs)
+
+Defined in: [hooks/usePayment.ts:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L24)
+
+How the wallet pays.
+
+***
+
+### paymasterUrl
+
+> **paymasterUrl**: `string` \| `null`
+
+Defined in: [hooks/usePayment.ts:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L26)
+
+The checkout's ERC-7677 paymaster URL.
+
+***
+
+### quote
+
+> **quote**: `CheckoutQuote` \| `null`
+
+Defined in: [hooks/usePayment.ts:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L20)
+
+The locked quote.
+
+***
+
+### store
+
+> **store**: [`PayInvoiceParams`](?path=/docs/packages-nova-payments-payments-interfaces-payinvoiceparams--docs)\[`"store"`\]
+
+Defined in: [hooks/usePayment.ts:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L18)
+
+The checkout store.
+
+***
+
+### wallet
+
+> **wallet**: [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
+
+Defined in: [hooks/usePayment.ts:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePayment.ts#L22)
+
+The wallet the quote is locked to.

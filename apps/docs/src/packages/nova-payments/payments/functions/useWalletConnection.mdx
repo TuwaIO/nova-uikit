@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/useWalletConnection" />
+
+# useWalletConnection()
+
+> **useWalletConnection**(`onConnectWallet?`): [`WalletConnection`](?path=/docs/packages-nova-payments-payments-interfaces-walletconnection--docs)
+
+Defined in: [hooks/useWalletConnection.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useWalletConnection.ts#L29)
+
+Connects a wallet for a payment: opens the connect modal of Nova Connect on the wallets of the method's chain family
+when the checkout is inside `NovaConnectProvider` of `@tuwaio/nova-connect`, else calls the app's handler.
+
+## Parameters
+
+### onConnectWallet?
+
+(`family`) => `void`
+
+The app's handler, for apps that connect wallets without Nova Connect.
+
+## Returns
+
+[`WalletConnection`](?path=/docs/packages-nova-payments-payments-interfaces-walletconnection--docs)
+
+See [WalletConnection](?path=/docs/packages-nova-payments-payments-interfaces-walletconnection--docs).
