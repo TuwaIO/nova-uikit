@@ -4,9 +4,9 @@ import { defineConfig, type Options } from 'tsup';
 
 import pkg from './package.json';
 
-// The icons of @web3icons/react load through `dynamicIconImports`, a map of 2,222 `import()` calls that a bundler
-// compiles in full wherever the loader is reachable. The loader lives in its own entry, `dist/web3-icons.*`, which starts
-// with 'use client', and the main entry imports that file instead of bundling it: an app that uses `cn` or
+// The icons of @web3icons/react load through `web3IconImports`, a map of about 300 `import()` calls that the bundler of
+// an app compiles in full wherever the loader is reachable. The loader lives in its own entry, `dist/web3-icons.*`, which
+// starts with 'use client', and the main entry imports that file instead of bundling it: an app that uses `cn` or
 // `getChainName` on its server stops at the client boundary instead of compiling every icon for each server layer (RSC,
 // route handlers).
 
@@ -32,7 +32,7 @@ async function markClientEntry() {
   for (const file of await readdir('dist')) {
     if (!/\.c?js$/.test(file) || file.startsWith('web3-icons.')) continue;
     const code = await readFile(`dist/${file}`, 'utf8');
-    if (code.includes('dynamicIconImports')) {
+    if (code.includes('@web3icons/react/icons/') || code.includes('dynamicIconImports')) {
       throw new Error(`dist/${file} contains the web3icons loader: it must stay in dist/web3-icons.*`);
     }
     if (file.endsWith('.cjs')) imports.cjs ||= code.includes('./web3-icons.cjs');

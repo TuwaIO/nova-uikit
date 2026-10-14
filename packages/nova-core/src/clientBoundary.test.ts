@@ -18,18 +18,30 @@ function sourceFiles(dir: string): string[] {
 }
 
 describe('client boundary of the web3icons loader', () => {
-  it('lets only the web3-icons entry import Web3IconLazy and the loader', () => {
+  it('lets only the web3-icons entry import Web3IconLazy, the loader and the icon map', () => {
+    const allowed = [
+      path.join('src', 'web3-icons.ts'),
+      path.join('components', 'Web3IconLazy.tsx'),
+      path.join('utils', 'web3IconLoader.ts'),
+    ];
     const offenders = sourceFiles(src)
-      .filter((file) => !file.endsWith(path.join('src', 'web3-icons.ts')))
-      .filter((file) => !file.endsWith(path.join('components', 'Web3IconLazy.tsx')))
+      .filter((file) => !allowed.some((allowedFile) => file.endsWith(allowedFile)))
       .filter((file) =>
-        /from '\.{1,2}\/(?:components\/|\.\.\/components\/)?Web3IconLazy'|web3IconLoader'/.test(
+        /from '\.{1,2}\/(?:components\/|\.\.\/components\/)?Web3IconLazy'|web3IconLoader'|web3IconImports'/.test(
           readFileSync(file, 'utf8'),
         ),
       )
       .map((file) => path.relative(src, file));
 
     expect(offenders).toEqual([]);
+  });
+
+  it('imports the icon map only from the loader', () => {
+    const importers = sourceFiles(src)
+      .filter((file) => readFileSync(file, 'utf8').includes("web3IconImports'"))
+      .map((file) => path.relative(src, file));
+
+    expect(importers).toEqual([path.join('utils', 'web3IconLoader.ts')]);
   });
 
   it('renders the lazy icons of NetworkIcon and WalletIcon through the web3-icons entry', () => {
@@ -39,6 +51,8 @@ describe('client boundary of the web3icons loader', () => {
   });
 
   it('keeps the loader out of the main entry', () => {
-    expect(readFileSync(path.join(src, 'index.ts'), 'utf8')).not.toMatch(/web3-icons|Web3IconLazy|web3IconLoader/);
+    expect(readFileSync(path.join(src, 'index.ts'), 'utf8')).not.toMatch(
+      /web3-icons|Web3IconLazy|web3IconLoader|web3IconImports/,
+    );
   });
 });

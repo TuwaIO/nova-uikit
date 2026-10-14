@@ -26,6 +26,7 @@
   ],
   "scripts": {
     "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css",
+    "generate:web3-icons": "node scripts/generateWeb3IconImports.mjs",
     "test": "vitest run"
   },
   "keywords": [
@@ -56,7 +57,7 @@
     "@radix-ui/react-dialog": "1.x.x",
     "@tuwaio/orbit-core": ">=0.4",
     "@web3icons/common": ">=0.11",
-    "@web3icons/react": ">=4",
+    "@web3icons/react": ">=4.1.24",
     "clsx": "2.x.x",
     "framer-motion": "12.x.x || 13.x.x || 14.x.x",
     "react": ">=19.2.3",
