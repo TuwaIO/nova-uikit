@@ -38,7 +38,8 @@
     "typedoc-plugin-markdown",
     "./apps/docs/typedoc/preserveTypeAnnotations.mjs",
     "./apps/docs/typedoc/hideExternalMembers.mjs",
-    "./apps/docs/typedoc/storybookRoutes.mjs"
+    "./apps/docs/typedoc/storybookRoutes.mjs",
+    "./apps/docs/typedoc/stripBadges.mjs"
   ],
   "out": "apps/docs/src/packages",
   "fileExtension": ".mdx",
