@@ -1,5 +1,5 @@
 import { ConnectedModalCustomization } from '@tuwaio/nova-connect/components';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 import { balance_display_customization } from './balance_display';
 import { chain_list_customization } from './chain_list';

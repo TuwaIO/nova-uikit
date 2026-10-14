@@ -3,7 +3,7 @@
  * blockie fallback.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import makeBlockie from 'ethereum-blockies-base64';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useState } from 'react';
 

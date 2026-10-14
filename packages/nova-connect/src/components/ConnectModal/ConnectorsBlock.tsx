@@ -2,7 +2,7 @@
  * @file ConnectorsBlock component with comprehensive customization options and connector group display.
  */
 
-import { cn, isTouchDevice } from '@tuwaio/nova-core';
+import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
 import {
   ConnectorType,
   delay,

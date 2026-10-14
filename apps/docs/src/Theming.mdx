@@ -185,7 +185,7 @@ Create a centralized styles file to ensure consistency:
 
 ```typescript
 // utils/customization/shared_styles.ts
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 export const SHARED_STYLES = {
   // Typography
@@ -255,7 +255,7 @@ export const BUTTON_STYLES = {
 ```typescript
 // utils/customization/nova_connect_provider.ts
 import { NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 
 export const nova_connect_customization: NovaConnectProviderCustomization = {
@@ -323,7 +323,7 @@ export const nova_connect_customization: NovaConnectProviderCustomization = {
 ```typescript
 // utils/customization/connect_card.ts
 import { ConnectCardCustomization } from '@tuwaio/nova-connect/components';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { SHARED_STYLES } from './shared_styles';
 
 export const connect_card_customization: ConnectCardCustomization = {
@@ -372,7 +372,7 @@ export const connect_card_customization: ConnectCardCustomization = {
 
 ```typescript
 // utils/customization/nova_tx_provider.ts
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
 import type { Transaction } from '@tuwaio/pulsar-core';
 import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';

@@ -3,7 +3,7 @@
  */
 
 import { ArrowPathIcon, CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { ComponentType } from 'react';
 
 import { useLabels } from '../../providers';

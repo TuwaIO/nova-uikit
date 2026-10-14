@@ -1,4 +1,4 @@
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { TransactionsHistoryCustomization } from '@tuwaio/nova-transactions';
 
 import { ICON_BUTTON_STYLES, SHARED_STYLES } from './shared_styles';

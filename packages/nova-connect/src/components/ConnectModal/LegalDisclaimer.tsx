@@ -2,7 +2,7 @@
  * @file LegalDisclaimer component for displaying Terms and Privacy Policy links with comprehensive customization.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { ComponentType, ReactNode } from 'react';
 
 import { useNovaConnect, useNovaConnectLabels } from '../../hooks';

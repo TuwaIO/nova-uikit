@@ -3,7 +3,7 @@
  * the various identifiers associated with a transaction (e.g., hash, Gelato Task ID).
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';

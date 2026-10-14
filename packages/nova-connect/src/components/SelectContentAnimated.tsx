@@ -3,7 +3,7 @@
  */
 
 import * as Select from '@radix-ui/react-select';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, type Easing, motion } from 'framer-motion';
 import { type ComponentPropsWithoutRef, type ElementRef, forwardRef } from 'react';
 

@@ -1,5 +1,5 @@
 import { NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 import { connect_card_customization } from './connect_card';
 import { connected_modal_customization } from './connected_modal';

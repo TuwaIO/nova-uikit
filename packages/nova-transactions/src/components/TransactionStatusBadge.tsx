@@ -3,7 +3,7 @@
  */
 
 import { ArrowPathIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
 import { NovaTransactionsLabels } from '../i18n/types';

@@ -1,5 +1,5 @@
 import { ChainSelectorCustomization } from '@tuwaio/nova-connect/components';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 import { BUTTON_STYLES, SCROLL_BUTTON_STYLES, SHARED_STYLES } from './shared_styles';
 

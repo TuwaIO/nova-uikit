@@ -3,7 +3,7 @@
  * status.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 

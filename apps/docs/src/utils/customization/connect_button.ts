@@ -1,5 +1,5 @@
 import { ConnectButtonCustomization } from '@tuwaio/nova-connect/components';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 import { chain_list_customization } from './chain_list';
 import { BUTTON_STYLES, SHARED_STYLES } from './shared_styles';

@@ -3,7 +3,7 @@
  */
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { cn, isTouchDevice } from '@tuwaio/nova-core';
+import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
 import { formatConnectorName, isInSecureIframe, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 

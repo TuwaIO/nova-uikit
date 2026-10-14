@@ -1,4 +1,4 @@
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback } from 'react';

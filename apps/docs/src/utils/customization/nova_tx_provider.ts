@@ -1,4 +1,4 @@
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
 
 import {
