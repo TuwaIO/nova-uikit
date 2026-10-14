@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.1...nova-core-v0.9.2) (2026-10-14)
+
+
+### Bug Fixes
+
+* load only the web3icons that networks and wallets use ([38465df](https://github.com/TuwaIO/nova-uikit/commit/38465df7432b2d8ba5467ab729c6a730db2cd8bc))
+
 ## [0.9.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.0...nova-core-v0.9.1) (2026-10-14)
 
 
