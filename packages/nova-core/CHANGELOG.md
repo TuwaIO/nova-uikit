@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.2...nova-core-v0.9.3) (2026-10-14)
+
+
+### Bug Fixes
+
+* light @tuwaio/nova-core/utils entry without React, components and icons ([3fa496a](https://github.com/TuwaIO/nova-uikit/commit/3fa496a86ce766fbf0bb0760a444aee043c45ceb))
+
 ## [0.9.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.1...nova-core-v0.9.2) (2026-10-14)
 
 
