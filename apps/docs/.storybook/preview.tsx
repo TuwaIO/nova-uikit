@@ -8,6 +8,8 @@ import React, { useEffect, useState } from 'react';
 import { addons } from 'storybook/preview-api';
 import { create } from 'storybook/theming/create';
 
+import { DocsFooter } from './DocsFooter';
+
 /** Shared constants — must match manager.jsx */
 const STORAGE_KEY = 'tuwa-storybook-theme';
 const CHANNEL_EVENT = 'tuwa/set-theme';
@@ -127,6 +129,7 @@ const ThemedDocsContainer = ({ children, context }: any) => {
   return (
     <DocsContainer context={context} theme={theme === 'dark' ? tuwaDarkTheme : tuwaTheme}>
       {children}
+      <DocsFooter />
     </DocsContainer>
   );
 };
