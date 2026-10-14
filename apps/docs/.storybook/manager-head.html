@@ -1,3 +1,46 @@
+<script>
+  // Storybook writes its keyboard shortcuts and the recently viewed pages to localStorage as soon as
+  // the explorer opens. Keep both in memory only, so nothing is stored before the visitor acts
+  // (TUWA Cookie Policy), and drop what earlier versions of this site stored.
+  (function () {
+    var memoryKeys = ['@storybook/manager/store', 'lastViewedStoryIds'];
+    var memory = {};
+    var proto = Storage.prototype;
+    var getItem = proto.getItem;
+    var setItem = proto.setItem;
+    var removeItem = proto.removeItem;
+    var inMemory = function (storage, key) {
+      return storage === window.localStorage && memoryKeys.indexOf(String(key)) !== -1;
+    };
+    try {
+      memoryKeys.forEach(function (key) {
+        removeItem.call(window.localStorage, key);
+      });
+    } catch (e) {
+      // Storage unavailable: nothing to clean up
+    }
+    proto.setItem = function (key, value) {
+      if (inMemory(this, key)) {
+        memory[key] = String(value);
+        return;
+      }
+      return setItem.call(this, key, value);
+    };
+    proto.getItem = function (key) {
+      if (inMemory(this, key)) {
+        return Object.prototype.hasOwnProperty.call(memory, key) ? memory[key] : null;
+      }
+      return getItem.call(this, key);
+    };
+    proto.removeItem = function (key) {
+      if (inMemory(this, key)) {
+        delete memory[key];
+        return;
+      }
+      return removeItem.call(this, key);
+    };
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link

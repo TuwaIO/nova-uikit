@@ -13,8 +13,8 @@ const STORAGE_KEY = 'tuwa-storybook-theme';
 const CHANNEL_EVENT = 'tuwa/set-theme';
 
 /**
- * Resolves the initial theme from sessionStorage (written by manager on load)
- * or falls back to system preference.
+ * Resolves the initial theme from sessionStorage (written by the manager only after the user
+ * switches the theme) or falls back to system preference.
  */
 function getInitialTheme(): 'light' | 'dark' {
   if (typeof window !== 'undefined') {
