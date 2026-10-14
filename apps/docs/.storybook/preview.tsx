@@ -13,8 +13,8 @@ const STORAGE_KEY = 'tuwa-storybook-theme';
 const CHANNEL_EVENT = 'tuwa/set-theme';
 
 /**
- * Resolves the initial theme from sessionStorage (written by manager on load)
- * or falls back to system preference.
+ * Resolves the initial theme from sessionStorage (written by the manager only after the user
+ * switches the theme) or falls back to system preference.
  */
 function getInitialTheme(): 'light' | 'dark' {
   if (typeof window !== 'undefined') {
@@ -47,7 +47,7 @@ const tuwaTheme = create({
   base: 'light',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://cdn.jsdelivr.net/gh/TuwaIO/workflows@main/preview/logo_v2.svg',
+  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
   brandTarget: '_self',
   colorPrimary: '#6366f1',
   colorSecondary: '#8b5cf6',
@@ -72,7 +72,7 @@ const tuwaDarkTheme = create({
   base: 'dark',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://cdn.jsdelivr.net/gh/TuwaIO/workflows@main/preview/logo_v2.svg',
+  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
   brandTarget: '_self',
   colorPrimary: '#8b5cf6',
   colorSecondary: '#6366f1',

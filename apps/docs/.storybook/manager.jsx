@@ -119,7 +119,7 @@ export const tuwaTheme = create({
   base: 'light',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://cdn.jsdelivr.net/gh/TuwaIO/workflows@main/preview/logo_v2.svg',
+  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
   brandTarget: '_self',
   colorPrimary: '#6366f1',
   colorSecondary: '#8b5cf6',
@@ -144,7 +144,7 @@ export const tuwaDarkTheme = create({
   base: 'dark',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://cdn.jsdelivr.net/gh/TuwaIO/workflows@main/preview/logo_v2.svg',
+  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
   brandTarget: '_self',
   colorPrimary: '#8b5cf6',
   colorSecondary: '#6366f1',
@@ -178,9 +178,9 @@ function getInitialDark() {
 
 const initialIsDark = getInitialDark();
 
-// Persist immediately so preview iframe can read it on its own mount
+// Nothing is written to sessionStorage until the user switches the theme (Cookie Policy):
+// without a stored value, the preview iframe resolves the same system preference on its own mount
 if (typeof window !== 'undefined') {
-  sessionStorage.setItem(STORAGE_KEY, initialIsDark ? 'dark' : 'light');
   document.documentElement.setAttribute('data-tuwa-theme', initialIsDark ? 'dark' : 'light');
 }
 
@@ -257,7 +257,8 @@ addons.register('tuwa/system-theme-sync', (api) => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     media.addEventListener('change', (e) => {
       const next = e.matches;
-      sessionStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
+      // Only update a theme the user has already chosen; never create the key here
+      if (sessionStorage.getItem(STORAGE_KEY)) sessionStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
       document.documentElement.setAttribute('data-tuwa-theme', next ? 'dark' : 'light');
       api.setOptions({ theme: next ? tuwaDarkTheme : tuwaTheme });
       try {

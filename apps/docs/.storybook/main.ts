@@ -3,6 +3,8 @@ import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  // Fonts and brand files served from this site, not from Google Fonts or jsDelivr (Cookie and Privacy policies)
+  staticDirs: ['../public'],
   addons: [
     {
       // GitHub Flavored Markdown (tables) in MDX pages, including the package READMEs of the Packages section
@@ -18,6 +20,11 @@ const config: StorybookConfig = {
   },
   core: {
     disableTelemetry: true,
+  },
+  features: {
+    // The review UI is on at runtime unless turned off, and it writes the current page to
+    // sessionStorage (`storybook/review/pre-review-return`) on every navigation (Cookie Policy)
+    experimentalReview: false,
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',

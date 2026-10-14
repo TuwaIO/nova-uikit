@@ -12,7 +12,7 @@ import { createDefaultTransports, impersonated, safeSdkOptions } from '@tuwaio/s
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
 import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
 import { useSiwxSession } from '@tuwaio/siwx-react';
-import { safe, walletConnect } from '@wagmi/connectors';
+import { safe } from '@wagmi/connectors';
 import { createConfig, injected } from '@wagmi/core';
 import {
   arbitrum,
@@ -34,14 +34,6 @@ import { connectedWalletTransactionsMock } from './connectedWalletTransactionsMo
 // ============================================================================
 // App Configuration
 // ============================================================================
-
-export const appConfig = {
-  appName: 'Stories TUWA Demo',
-  appDescription: 'Stories TUWA Demo Connect Button',
-  projectId: '90f7d88db0bb324b93befd60e35107a4',
-  appLogoUrl: 'https://raw.githubusercontent.com/TuwaIO/workflows/refs/heads/main/preview/preview-logo.png',
-  appUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:6006/' : 'https://stories.tuwa.io/',
-};
 
 export const solanaRPCUrls = {
   devnet: 'https://api.devnet.solana.com',
@@ -71,21 +63,14 @@ export const wagmiConfig = createConfig({
     safe({
       ...safeSdkOptions,
     }),
-    walletConnect({
-      projectId: appConfig.projectId,
-      metadata: {
-        name: appConfig.appName,
-        description: appConfig.appDescription,
-        url: appConfig.appUrl,
-        icons: [appConfig.appLogoUrl],
-      },
-    }),
     impersonated({}),
   ],
   transports: createDefaultTransports(appEVMChains),
   chains: appEVMChains,
   ssr: true,
   syncConnectedChain: true,
+  // Satellite Connect remembers the last wallet; wagmi keeps nothing in the browser (Cookie Policy)
+  storage: null,
 });
 
 // Created once: `SatelliteConnectProvider` passes a new `adapter` value to its store on every change
