@@ -15,6 +15,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
     "./dist/index.css": "./dist/index.css"
   },
   "publishConfig": {
@@ -23,6 +28,9 @@
   "files": [
     "dist",
     "socket.json"
+  ],
+  "sideEffects": [
+    "*.css"
   ],
   "scripts": {
     "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css",

@@ -39,12 +39,27 @@ async function markClientEntry() {
     else imports.js ||= code.includes('./web3-icons.js');
   }
   if (!imports.js || !imports.cjs) throw new Error('The main entry does not import dist/web3-icons.*');
+
+  // `@tuwaio/nova-core/utils` and the chunks it loads must not reach the icons, React or the components
+  for (const entry of ['utils.js', 'utils.cjs']) {
+    const seen = new Set<string>();
+    const visit = async (file: string) => {
+      if (seen.has(file)) return;
+      seen.add(file);
+      const code = await readFile(`dist/${file}`, 'utf8');
+      if (/web3-icons|@web3icons\/react|from\s*["']react["']|require\(["']react["']\)/.test(code)) {
+        throw new Error(`dist/${file}, loaded by dist/${entry}, reaches the icons or React`);
+      }
+      for (const [, chunk] of code.matchAll(/["']\.\/(chunk-[\w-]+\.c?js)["']/g)) await visit(chunk);
+    };
+    await visit(entry);
+  }
 }
 
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
-    entry: { index: './src/index.ts', 'web3-icons': './src/web3-icons.ts' },
+    entry: { index: './src/index.ts', 'web3-icons': './src/web3-icons.ts', utils: './src/utils/index.ts' },
     treeshake: true,
     sourcemap: false,
     splitting: true,
