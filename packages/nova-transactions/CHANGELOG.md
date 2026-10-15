@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.9.1...nova-transactions-v0.10.0) (2026-10-15)
+
+
+### Features
+
+* added remember wallet; updated packages and docs ([569fab0](https://github.com/TuwaIO/nova-uikit/commit/569fab00f479863cfa7e03c56d3e94cbc1e17d3a))
+
 ## [0.9.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.9.0...nova-transactions-v0.9.1) (2026-10-14)
 
 
