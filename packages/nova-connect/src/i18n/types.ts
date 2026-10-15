@@ -218,6 +218,12 @@ export type NovaConnectLabels = {
   impersonateAddressConnected: string;
 
   // Legal section labels
+  /** Label of the "Remember this wallet" checkbox under the wallet list */
+  rememberWallet: string;
+  /** What the checkbox does: the tooltip of its info button and its description for screen readers */
+  rememberWalletHint: string;
+  /** Accessible name of the info button next to the checkbox */
+  rememberWalletInfo: string;
   /** Start of the legal disclaimer */
   legalIntro: string;
   /** Link text of the terms of service (default: `Terms of Service`) */

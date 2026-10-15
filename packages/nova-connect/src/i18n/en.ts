@@ -134,6 +134,10 @@ export const defaultLabels: NovaConnectLabels = {
   impersonateAddressConnected: 'First disconnect the wallet to impersonate another address.',
 
   // Legal section labels
+  rememberWallet: 'Remember this wallet',
+  rememberWalletHint:
+    'When ticked, this site reconnects the wallet on your next visits until you disconnect it. Otherwise it is kept only until you close the tab.',
+  rememberWalletInfo: 'About remembering the wallet',
   legalIntro: 'By connecting your wallet, you agree to our',
   legalTerms: 'Terms of Service',
   legalPrivacy: 'Privacy Policy',

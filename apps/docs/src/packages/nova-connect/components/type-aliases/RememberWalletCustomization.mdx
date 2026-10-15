@@ -1,0 +1,143 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Type Aliases/RememberWalletCustomization" />
+
+# RememberWalletCustomization
+
+> **RememberWalletCustomization** = `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx#L34)
+
+Customization options of [RememberWallet](?path=/docs/packages-nova-connect-components-functions-rememberwallet--docs).
+
+## Properties
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx#L43)
+
+Custom class name generators
+
+#### box?
+
+> `optional` **box?**: (`params`) => `string`
+
+Returns the classes of the drawn box, instead of the default ones.
+
+##### Parameters
+
+###### params
+
+The state of the box.
+
+###### checked
+
+`boolean`
+
+Whether the box is ticked.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### checkmark?
+
+> `optional` **checkmark?**: () => `string`
+
+Returns the classes of the check mark (an SVG), instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### container?
+
+> `optional` **container?**: () => `string`
+
+Returns the classes of the container, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### infoButton?
+
+> `optional` **infoButton?**: () => `string`
+
+Returns the classes of the info button, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### label?
+
+> `optional` **label?**: () => `string`
+
+Returns the classes of the `label` that holds the checkbox and its text, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### text?
+
+> `optional` **text?**: () => `string`
+
+Returns the classes of the label text, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+#### tooltip?
+
+> `optional` **tooltip?**: () => `string`
+
+Returns the classes of the tooltip, instead of the default ones.
+
+##### Returns
+
+`string`
+
+The classes.
+
+***
+
+### components?
+
+> `optional` **components?**: `object`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx#L38)
+
+Custom components
+
+#### Container?
+
+> `optional` **Container?**: `ComponentType`\<[`RememberWalletContainerProps`](?path=/docs/packages-nova-connect-components-type-aliases-rememberwalletcontainerprops--docs)\>
+
+Custom container (a `div` by default)
+
+***
+
+### hidden?
+
+> `optional` **hidden?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx#L36)
+
+Hides the checkbox; the store keeps the `rememberWallet` it was created with.

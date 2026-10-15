@@ -189,9 +189,10 @@ export function StorybookProviders({
   legal,
   customization,
 }: SatelliteConnectProvidersProps) {
-  // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear
+  // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear.
+  // rememberWallet={false}: a wallet is kept until the tab closes unless "Remember this wallet" is ticked (Cookie Policy)
   return (
-    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false}>
+    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false} rememberWallet={false}>
       {customization && <div className="custom-theme" style={{ display: 'none' }} />}
       <SatelliteConnectProvidersInner
         withBalance={withBalance}

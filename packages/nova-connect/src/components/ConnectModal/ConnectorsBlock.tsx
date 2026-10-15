@@ -44,7 +44,10 @@ export interface ConnectorsBlockData {
   isTouch: boolean;
   /** Whether there are connectors to display */
   hasConnectors: boolean;
-  /** The three most recently disconnected wallets (connector type and data), read from `localStorage` on mount */
+  /**
+   * The three most recently disconnected wallets (connector type and data), read on mount from `localStorage` and
+   * `sessionStorage` (wallets that are not remembered)
+   */
   recentWallets: [string, RecentlyConnectedConnectorData][] | null;
   /** `connectors-<title in kebab case>`, the prefix of the title ID */
   sectionId: string;
@@ -385,8 +388,8 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
 
 /**
  * A titled group of wallet cards in the connect modal ("Installed", "Popular" or a custom group). The cards of the
- * three most recently used wallets (read from `localStorage` key `orbit-core:recentlyConnectedConnectorsListHelpers`
- * on mount) show a "Recent" badge.
+ * three most recently used wallets (read on mount from the `orbit-core:recentlyConnectedConnectorsListHelpers` key in
+ * `localStorage` and, for wallets that are not remembered, `sessionStorage`) show a "Recent" badge.
  *
  * Clicking a wallet with several networks while no network is selected calls `onClick` (the modal shows the network
  * choice). Otherwise it calls `onClick`, connects the wallet through `connect` of the Satellite store to the chain
