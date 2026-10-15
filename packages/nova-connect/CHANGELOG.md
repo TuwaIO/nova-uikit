@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.9.2...nova-connect-v0.10.0) (2026-10-15)
+
+
+### Features
+
+* added remember wallet; updated packages and docs ([569fab0](https://github.com/TuwaIO/nova-uikit/commit/569fab00f479863cfa7e03c56d3e94cbc1e17d3a))
+
 ## [0.9.2](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.9.1...nova-connect-v0.9.2) (2026-10-14)
 
 
