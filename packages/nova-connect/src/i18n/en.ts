@@ -141,6 +141,7 @@ export const defaultLabels: NovaConnectLabels = {
   legalIntro: 'By connecting your wallet, you agree to our',
   legalTerms: 'Terms of Service',
   legalPrivacy: 'Privacy Policy',
+  legalPrivacyIntro: 'See our',
   legalAnd: 'and',
 
   // Screen reader texts and states (placeholders in braces are replaced by the components)

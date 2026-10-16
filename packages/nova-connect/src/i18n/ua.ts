@@ -141,6 +141,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   legalIntro: 'Підключаючи свій гаманець, ви погоджуєтесь з нашими',
   legalTerms: 'Умовами використання',
   legalPrivacy: 'Політикою конфіденційності',
+  legalPrivacyIntro: 'Ознайомтеся з нашою',
   legalAnd: 'та',
 
   // Тексти для скринрідерів і стани (заповнювачі у фігурних дужках замінюють компоненти)
