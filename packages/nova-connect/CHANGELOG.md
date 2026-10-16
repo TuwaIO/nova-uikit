@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.0...nova-connect-v0.10.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* legal disclaimer text ([2b0c155](https://github.com/TuwaIO/nova-uikit/commit/2b0c15558ac992a5f9f0b1b1b471e5040c4b091b))
+
 ## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.9.2...nova-connect-v0.10.0) (2026-10-15)
 
 
