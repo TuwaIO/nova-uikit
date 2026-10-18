@@ -27,7 +27,8 @@
   },
   "files": [
     "dist",
-    "socket.json"
+    "socket.json",
+    "NOTICE"
   ],
   "sideEffects": [
     "*.css"
