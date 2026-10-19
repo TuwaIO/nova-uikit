@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.0...nova-transactions-v0.10.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* updated packages ([43d1dab](https://github.com/TuwaIO/nova-uikit/commit/43d1dab38da7e64aac6650d53d89378414493cc0))
+
+## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.9.1...nova-transactions-v0.10.0) (2026-10-15)
+
+
+### Features
+
+* added remember wallet; updated packages and docs ([569fab0](https://github.com/TuwaIO/nova-uikit/commit/569fab00f479863cfa7e03c56d3e94cbc1e17d3a))
+
+## [0.9.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.9.0...nova-transactions-v0.9.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* updated nova core utils imports ([5fc06f5](https://github.com/TuwaIO/nova-uikit/commit/5fc06f5f0203201181205287dfcdddb7be956b12))
+
 ## [0.9.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.8.2...nova-transactions-v0.9.0) (2026-10-09)
 
 

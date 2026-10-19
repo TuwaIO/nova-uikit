@@ -1,4 +1,4 @@
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SHARED STYLES - Custom Theme

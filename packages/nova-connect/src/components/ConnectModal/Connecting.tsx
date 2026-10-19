@@ -3,7 +3,7 @@
  */
 
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 

@@ -2,7 +2,7 @@
  * @file Main NovaConnect provider component with comprehensive customization capabilities.
  */
 
-import { deepMerge } from '@tuwaio/nova-core';
+import { deepMerge } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';

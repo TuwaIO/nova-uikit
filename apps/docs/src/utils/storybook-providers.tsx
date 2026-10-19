@@ -13,7 +13,7 @@ import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
 import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
 import { useSiwxSession } from '@tuwaio/siwx-react';
 import { safe } from '@wagmi/connectors';
-import { createConfig, injected } from '@wagmi/core';
+import { createConfig, createStorage, injected, noopStorage } from '@wagmi/core';
 import {
   arbitrum,
   arbitrumSepolia,
@@ -69,8 +69,10 @@ export const wagmiConfig = createConfig({
   chains: appEVMChains,
   ssr: true,
   syncConnectedChain: true,
-  // Satellite Connect remembers the last wallet; wagmi keeps nothing in the browser (Cookie Policy)
-  storage: null,
+  // Satellite Connect remembers the last wallet; wagmi keeps nothing in the browser (Cookie Policy). A storage that saves
+  // nothing, not `null`: without a storage wagmi cannot hydrate a config with `ssr: true` and never lists the
+  // installed wallets (EIP-6963)
+  storage: createStorage({ storage: noopStorage }),
 });
 
 // Created once: `SatelliteConnectProvider` passes a new `adapter` value to its store on every change
@@ -187,9 +189,10 @@ export function StorybookProviders({
   legal,
   customization,
 }: SatelliteConnectProvidersProps) {
-  // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear
+  // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear.
+  // rememberWallet={false}: a wallet is kept until the tab closes unless "Remember this wallet" is ticked (Cookie Policy)
   return (
-    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false}>
+    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false} rememberWallet={false}>
       {customization && <div className="custom-theme" style={{ display: 'none' }} />}
       <SatelliteConnectProvidersInner
         withBalance={withBalance}

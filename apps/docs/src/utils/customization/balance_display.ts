@@ -1,5 +1,5 @@
 import { BalanceDisplayCustomization } from '@tuwaio/nova-connect/components';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 
 import { SHARED_STYLES } from './shared_styles';
 

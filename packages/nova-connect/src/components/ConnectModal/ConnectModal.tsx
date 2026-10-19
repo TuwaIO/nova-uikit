@@ -44,6 +44,7 @@ import { ImpersonateForm, ImpersonateFormCustomization } from './ImpersonatedFor
 import { LegalDisclaimer, LegalDisclaimerCustomization } from './LegalDisclaimer';
 import { NetworkSelections, NetworkSelectionsCustomization } from './NetworkSelections';
 import { NetworkTabs, NetworkTabsCustomization } from './NetworkTabs';
+import { RememberWallet, RememberWalletCustomization } from './RememberWallet';
 
 /**
  * A wallet with its connectors on each network (the connectors of the Satellite store grouped by wallet name).
@@ -498,6 +499,8 @@ export type ConnectModalCustomization = {
     networkTabs?: NetworkTabsCustomization;
     /** LegalDisclaimer customization */
     legalDisclaimer?: LegalDisclaimerCustomization;
+    /** RememberWallet customization (the "Remember this wallet" checkbox under the wallet list) */
+    rememberWallet?: RememberWalletCustomization;
   };
 };
 
@@ -992,6 +995,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
               setIsOpen={setIsConnectModalOpen}
               customization={childComponents.connectorsSelections}
             />
+
+            <RememberWallet customization={childComponents.rememberWallet} />
 
             <LegalDisclaimer customization={childComponents.legalDisclaimer} />
           </>

@@ -4,7 +4,7 @@
  */
 
 import { ArrowPathIcon, CheckIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useState } from 'react';
 

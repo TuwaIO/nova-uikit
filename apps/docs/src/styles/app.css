@@ -20,3 +20,128 @@
   font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
   letter-spacing: -0.02em !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DOCS FOOTER — .storybook/DocsFooter.tsx
+   Like the footer of the TUWA documentation sites (Footer of @tuwaio/docs-ui):
+   logo and links, a divider, the description and the policies, a divider,
+   the copyright. The footer has `sb-unstyled`, so the docs typography does not apply.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tuwa-docs-footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--tuwa-border-primary);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--tuwa-text-secondary);
+}
+
+.tuwa-docs-footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+
+.tuwa-docs-footer__divided {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tuwa-border-primary);
+}
+
+.tuwa-docs-footer__row.tuwa-docs-footer__divided {
+  align-items: flex-start;
+}
+
+.tuwa-docs-footer__logo {
+  display: flex;
+  align-items: center;
+}
+
+.tuwa-docs-footer__logo img {
+  display: block;
+  height: 24px;
+  width: auto;
+}
+
+.dark .tuwa-docs-footer__logo img {
+  filter: invert(1);
+}
+
+.tuwa-docs-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.tuwa-docs-footer__policies {
+  flex: 1 1 320px;
+  justify-content: flex-end;
+}
+
+.tuwa-docs-footer__link {
+  color: var(--tuwa-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.tuwa-docs-footer__link:hover,
+.tuwa-docs-footer__link:focus-visible {
+  color: var(--tuwa-text-primary);
+}
+
+.tuwa-docs-footer__link--strong {
+  font-weight: 600;
+}
+
+.tuwa-docs-footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.tuwa-docs-footer__social--npm:hover,
+.tuwa-docs-footer__social--npm:focus-visible {
+  color: rgb(220 38 38);
+}
+
+.tuwa-docs-footer__about {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.tuwa-docs-footer p {
+  margin: 0;
+}
+
+.tuwa-docs-footer__description {
+  font-size: 13px;
+  color: var(--tuwa-text-primary);
+}
+
+.tuwa-docs-footer .tuwa-docs-footer__license {
+  margin-top: 4px;
+}
+
+.tuwa-docs-footer__copyright {
+  text-align: center;
+  color: var(--tuwa-text-tertiary);
+}
+
+@media (max-width: 640px) {
+  .tuwa-docs-footer__row,
+  .tuwa-docs-footer__policies {
+    justify-content: center;
+  }
+
+  .tuwa-docs-footer__about {
+    text-align: center;
+  }
+
+  .tuwa-docs-footer__social span {
+    display: none;
+  }
+}

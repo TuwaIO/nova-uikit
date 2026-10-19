@@ -2,7 +2,7 @@
  * @file LegalDisclaimer component for displaying Terms and Privacy Policy links with comprehensive customization.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { ComponentType, ReactNode } from 'react';
 
 import { useNovaConnect, useNovaConnectLabels } from '../../hooks';
@@ -47,7 +47,7 @@ export type LegalDisclaimerContainerProps = {
 export type LegalDisclaimerTextProps = {
   /** Classes from `classNames.text` or the defaults */
   className?: string;
-  /** The `legalIntro` label, the links, the separator and a final period */
+  /** The sentence of the terms (`legalIntro` and its link), the separator and the sentence of the privacy policy (`legalPrivacyIntro` and its link) */
   children: ReactNode;
   /** The links */
   disclaimerData: LegalDisclaimerData;
@@ -107,7 +107,7 @@ export type LegalDisclaimerPrivacyLinkProps = {
 export type LegalDisclaimerSeparatorProps = {
   /** Classes from `classNames.separator` (none by default) */
   className?: string;
-  /** `config.display.separatorText`, or the `legalAnd` label with spaces */
+  /** `config.display.separatorText`, or a space */
   children?: ReactNode;
   /** The links */
   disclaimerData: LegalDisclaimerData;
@@ -215,7 +215,7 @@ export type LegalDisclaimerCustomization = {
       showTerms?: boolean;
       /** Show the privacy link when there is a `privacyUrl` (default: `true`) */
       showPrivacy?: boolean;
-      /** Text between the two links (default: the `legalAnd` label with spaces) */
+      /** Text between the sentence of the terms and the sentence of the privacy policy (default: a space) */
       separatorText?: string;
     };
   };
@@ -267,9 +267,10 @@ const DefaultSeparator = (props: LegalDisclaimerSeparatorProps) => {
 DefaultSeparator.displayName = 'DefaultSeparator';
 
 /**
- * The legal line under the wallet list: "By connecting your wallet, you agree to our Terms of Service and Privacy
- * Policy", with the links from `legal` of `NovaConnectProvider` (read through `useNovaConnect`). Renders nothing
- * without `legal.termsUrl` and `legal.privacyUrl`.
+ * The legal line under the wallet list: "By connecting your wallet, you agree to our Terms of Service. See our Privacy
+ * Policy.", with the links from `legal` of `NovaConnectProvider` (read through `useNovaConnect`). Connecting agrees to
+ * the terms only; the privacy policy is information to read and has a sentence of its own. Renders nothing without
+ * `legal.termsUrl` and `legal.privacyUrl`.
  *
  * @param props - See {@link LegalDisclaimerProps}.
  * @returns The legal line, or `null` without links.
@@ -370,7 +371,9 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
   const linkRel = customConfig?.links?.rel ?? 'noopener noreferrer';
   const showTerms = customConfig?.display?.showTerms !== false;
   const showPrivacy = customConfig?.display?.showPrivacy !== false;
-  const separatorText = customConfig?.display?.separatorText ?? ` ${labels.legalAnd} `;
+  const separatorText = customConfig?.display?.separatorText ?? ' ';
+  const terms = showTerms && disclaimerData.hasTerms;
+  const privacy = showPrivacy && disclaimerData.hasPrivacy;
 
   const ariaLabel = customConfig?.ariaLabels?.container?.(disclaimerData) ?? labels.legalInformation;
 
@@ -382,9 +385,9 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
       aria-label={ariaLabel}
     >
       <CustomText className={cssClasses.text} disclaimerData={disclaimerData}>
-        {labels.legalIntro}{' '}
-        {showTerms && disclaimerData.hasTerms && (
+        {terms && (
           <>
+            {labels.legalIntro}{' '}
             <CustomTermsLink
               className={cssClasses.termsLink}
               href={disclaimerData.termsUrl!}
@@ -395,15 +398,17 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
             >
               {labels.legalTerms}
             </CustomTermsLink>
+            .
           </>
         )}
-        {showTerms && showPrivacy && disclaimerData.hasBoth && (
+        {terms && privacy && (
           <CustomSeparator className={cssClasses.separator} disclaimerData={disclaimerData}>
             {separatorText}
           </CustomSeparator>
         )}
-        {showPrivacy && disclaimerData.hasPrivacy && (
+        {privacy && (
           <>
+            {labels.legalPrivacyIntro}{' '}
             <CustomPrivacyLink
               className={cssClasses.privacyLink}
               href={disclaimerData.privacyUrl!}
@@ -414,9 +419,9 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
             >
               {labels.legalPrivacy}
             </CustomPrivacyLink>
+            .
           </>
         )}
-        .
       </CustomText>
     </CustomContainer>
   );

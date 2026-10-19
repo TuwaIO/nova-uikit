@@ -3,7 +3,7 @@
  */
 
 import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 

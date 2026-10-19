@@ -10,6 +10,14 @@ Defined in: [providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaI
 
 Defines the props for the `NovaTransactionsProvider` component.
 
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The specific transaction type, extending the base `Transaction`.
+
 ## Type Declaration
 
 ### adapter
@@ -133,11 +141,3 @@ Pagination state for infinite scroll, forwarded to TransactionsInfoModal and Tra
 > **transactionsPool**: `TransactionPool`\<`T`\>
 
 The live transaction pool from the Pulsar store.
-
-## Type Parameters
-
-### T
-
-`T` *extends* `Transaction`
-
-The specific transaction type, extending the base `Transaction`.

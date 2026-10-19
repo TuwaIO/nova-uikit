@@ -3,7 +3,7 @@
  */
 
 import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
   Component,

@@ -1,5 +1,7 @@
 import type { ComponentType, Ref } from 'react';
 
+import { web3IconImports } from './web3IconImports';
+
 /**
  * An icon component of `@web3icons/react`, with the props Nova passes to it.
  * @internal
@@ -18,7 +20,7 @@ const iconCache = new Map<string, Promise<Web3IconComponent | null>>();
  * (`'network:arbitrum-one'` → `'NetworkArbitrumOne'`, `'token:SHIB'` → `'TokenSHIB'`), as the library itself does.
  *
  * @param filePath - The `filePath` of a network, wallet, token or exchange in the metadata.
- * @returns The key of the icon in `dynamicIconImports` of `@web3icons/react`.
+ * @returns The component name of the icon, its key in `web3IconImports`.
  * @internal
  */
 export function getWeb3IconKey(filePath: string): string {
@@ -31,25 +33,26 @@ export function getWeb3IconKey(filePath: string): string {
 }
 
 /**
- * Loads one icon component of `@web3icons/react` through its `dynamicIconImports` map, so only that icon (and the
- * map) are downloaded. Unlike the `@web3icons/react/dynamic` components, it does not load the metadata of every
- * network, wallet, exchange and token: the caller already knows the `filePath`.
+ * Loads one icon component of `@web3icons/react` through `web3IconImports`, so only that icon is downloaded. Unlike
+ * the `@web3icons/react/dynamic` components, it does not load the metadata of every network, wallet, exchange and
+ * token: the caller already knows the `filePath`.
  *
- * @param filePath - The `filePath` of the icon in the `@web3icons/common` metadata, such as `'network:ethereum'`.
- * @returns The same promise for every call with the same icon; it resolves to the component, or `null` when the icon
- * does not exist or fails to load.
+ * @param filePath - The `filePath` of the icon in the network or wallet metadata of `@web3icons/common`, such as
+ * `'network:ethereum'`.
+ * @returns The same promise for every call with the same icon; it resolves to the component, or `null` when
+ * `web3IconImports` has no such icon or it fails to load.
  * @internal
  */
 export function loadWeb3Icon(filePath: string): Promise<Web3IconComponent | null> {
   const key = getWeb3IconKey(filePath);
   let icon = iconCache.get(key);
   if (!icon) {
-    icon = import('@web3icons/react/dynamicIconImports')
-      .then(async ({ default: imports }) => {
-        const importIcon = imports[key];
-        return importIcon ? ((await importIcon()).default as Web3IconComponent) : null;
-      })
-      .catch(() => null);
+    const importIcon = web3IconImports[key];
+    icon = importIcon
+      ? importIcon()
+          .then((module) => module.default as Web3IconComponent)
+          .catch(() => null)
+      : Promise.resolve(null);
     iconCache.set(key, icon);
   }
   return icon;

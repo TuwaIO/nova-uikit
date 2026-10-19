@@ -2,7 +2,7 @@
  * @file RecentBadge component with comprehensive customization options and animated gradient border.
  */
 
-import { cn, isTouchDevice } from '@tuwaio/nova-core';
+import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
 import { motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 

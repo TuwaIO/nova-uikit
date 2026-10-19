@@ -2,10 +2,10 @@ import { networks } from '@web3icons/common/metadata/networks';
 import { Suspense } from 'react';
 
 import { cn, formatIconNameForGithub, getChainName, isSolanaDev } from '../utils';
+import { Web3IconLazy } from '../web3-icons';
 import { FallbackIcon } from './FallbackIcon';
 import { GithubFallbackIcon } from './GithubFallbackIcon';
 import { SvgToImg } from './SvgToImg';
-import { Web3IconLazy } from './Web3IconLazy';
 
 /**
  * Props of {@link NetworkIcon}.

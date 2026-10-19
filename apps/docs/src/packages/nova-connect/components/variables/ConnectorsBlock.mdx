@@ -6,11 +6,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > `const` **ConnectorsBlock**: `NamedExoticComponent`\<[`ConnectorsBlockProps`](?path=/docs/packages-nova-connect-components-interfaces-connectorsblockprops--docs) & `RefAttributes`\<`HTMLElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:431](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L431)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:434](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L434)
 
 A titled group of wallet cards in the connect modal ("Installed", "Popular" or a custom group). The cards of the
-three most recently used wallets (read from `localStorage` key `orbit-core:recentlyConnectedConnectorsListHelpers`
-on mount) show a "Recent" badge.
+three most recently used wallets (read on mount from the `orbit-core:recentlyConnectedConnectorsListHelpers` key in
+`localStorage` and, for wallets that are not remembered, `sessionStorage`) show a "Recent" badge.
 
 Clicking a wallet with several networks while no network is selected calls `onClick` (the modal shows the network
 choice). Otherwise it calls `onClick`, connects the wallet through `connect` of the Satellite store to the chain

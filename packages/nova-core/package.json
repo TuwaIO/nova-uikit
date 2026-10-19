@@ -1,6 +1,6 @@
 {
   "name": "@tuwaio/nova-core",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
@@ -15,6 +15,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
     "./dist/index.css": "./dist/index.css"
   },
   "publishConfig": {
@@ -22,10 +27,15 @@
   },
   "files": [
     "dist",
-    "socket.json"
+    "socket.json",
+    "NOTICE"
+  ],
+  "sideEffects": [
+    "*.css"
   ],
   "scripts": {
     "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css",
+    "generate:web3-icons": "node scripts/generateWeb3IconImports.mjs",
     "test": "vitest run"
   },
   "keywords": [
@@ -56,30 +66,30 @@
     "@radix-ui/react-dialog": "1.x.x",
     "@tuwaio/orbit-core": ">=0.4",
     "@web3icons/common": ">=0.11",
-    "@web3icons/react": ">=4",
+    "@web3icons/react": ">=4.1.24",
     "clsx": "2.x.x",
     "framer-motion": "12.x.x || 13.x.x || 14.x.x",
     "react": ">=19.2.3",
     "tailwind-merge": "3.x.x"
   },
   "devDependencies": {
-    "@radix-ui/react-dialog": "^1.2.0",
+    "@radix-ui/react-dialog": "^1.3.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
-    "@tuwaio/orbit-core": "0.5.1",
+    "@tuwaio/orbit-core": "0.6.0",
     "@types/react": "^19.3.0",
     "@web3icons/common": "^0.11.53",
     "@web3icons/react": "^4.1.24",
     "autoprefixer": "^10.6.1",
     "clsx": "^2.1.1",
-    "framer-motion": "14.0.0",
-    "postcss": "^8.5.29",
+    "framer-motion": "14.3.0",
+    "postcss": "^8.5.30",
     "postcss-cli": "^12.0.0",
-    "react": "^19.3.0",
+    "react": "^19.3.1",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3",
-    "tsup": "^8.5.1",
+    "tsup": "^9.0.0",
     "typescript": "6.0.3",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   }
 }

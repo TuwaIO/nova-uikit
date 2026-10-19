@@ -2,7 +2,7 @@
  * @file Disclaimer component with comprehensive customization options.
  */
 
-import { cn, standardButtonClasses } from '@tuwaio/nova-core';
+import { cn, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useEffectEvent, useId } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';

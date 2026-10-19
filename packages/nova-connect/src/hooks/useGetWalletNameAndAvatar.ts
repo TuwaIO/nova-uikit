@@ -1,4 +1,4 @@
-import { textCenterEllipsis } from '@tuwaio/nova-core';
+import { textCenterEllipsis } from '@tuwaio/nova-core/utils';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 

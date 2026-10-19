@@ -10,6 +10,14 @@ Defined in: [components/TransactionsHistory.tsx:115](https://github.com/TuwaIO/n
 
 Props of [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs).
 
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The transaction type of the Pulsar store.
+
 ## Type Declaration
 
 ### canViewDetails?
@@ -41,11 +49,3 @@ Optional transaction key to open directly in detail view
 > `optional` **pagination?**: `TxInMemoryPagination`
 
 Pagination state for infinite scroll. Uses TxInMemoryPagination from @tuwaio/pulsar-core.
-
-## Type Parameters
-
-### T
-
-`T` *extends* `Transaction`
-
-The transaction type of the Pulsar store.

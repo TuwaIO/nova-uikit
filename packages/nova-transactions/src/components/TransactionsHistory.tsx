@@ -3,7 +3,7 @@
  * Supports infinite scrolling when `pagination` props are provided.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 

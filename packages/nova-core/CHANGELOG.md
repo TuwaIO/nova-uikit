@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.3...nova-core-v0.10.0) (2026-10-15)
+
+
+### Features
+
+* added remember wallet; updated packages and docs ([569fab0](https://github.com/TuwaIO/nova-uikit/commit/569fab00f479863cfa7e03c56d3e94cbc1e17d3a))
+
+## [0.9.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.2...nova-core-v0.9.3) (2026-10-14)
+
+
+### Bug Fixes
+
+* light @tuwaio/nova-core/utils entry without React, components and icons ([3fa496a](https://github.com/TuwaIO/nova-uikit/commit/3fa496a86ce766fbf0bb0760a444aee043c45ceb))
+
+## [0.9.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.1...nova-core-v0.9.2) (2026-10-14)
+
+
+### Bug Fixes
+
+* load only the web3icons that networks and wallets use ([38465df](https://github.com/TuwaIO/nova-uikit/commit/38465df7432b2d8ba5467ab729c6a730db2cd8bc))
+
+## [0.9.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.0...nova-core-v0.9.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* web3 icons building ([84cf79d](https://github.com/TuwaIO/nova-uikit/commit/84cf79d6fd28b4ec1d39f86c01d81706e65fc33f))
+
 ## [0.9.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.8.2...nova-core-v0.9.0) (2026-10-09)
 
 

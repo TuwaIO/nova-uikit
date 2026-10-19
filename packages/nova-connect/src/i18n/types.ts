@@ -218,13 +218,29 @@ export type NovaConnectLabels = {
   impersonateAddressConnected: string;
 
   // Legal section labels
-  /** Start of the legal disclaimer */
+  /** Label of the "Remember this wallet" checkbox under the wallet list */
+  rememberWallet: string;
+  /** What the checkbox does: the tooltip of its info button and its description for screen readers */
+  rememberWalletHint: string;
+  /** Accessible name of the info button next to the checkbox */
+  rememberWalletInfo: string;
+  /** Start of the sentence of the legal disclaimer with the terms link: what connecting a wallet agrees to */
   legalIntro: string;
   /** Link text of the terms of service (default: `Terms of Service`) */
   legalTerms: string;
   /** Link text of the privacy policy (default: `Privacy Policy`) */
   legalPrivacy: string;
-  /** Word between the two legal links (default: `and`) */
+  /**
+   * Start of the sentence with the privacy policy link (default: `See our`). The privacy policy is information to
+   * read, not something the user agrees to, so it has a sentence of its own.
+   */
+  legalPrivacyIntro: string;
+  /**
+   * Word that once joined the two legal links (default: `and`).
+   *
+   * @deprecated Not used by the default legal disclaimer since the privacy policy has a sentence of its own; kept for
+   *   custom components that read it.
+   */
   legalAnd: string;
 
   // Screen reader texts and states. Placeholders in braces, such as `{name}`, are replaced by the components.

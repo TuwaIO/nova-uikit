@@ -34,6 +34,7 @@ export * from './ConnectModal/NetworkSelections';
 export * from './ConnectModal/NetworkSelections';
 export * from './ConnectModal/NetworkTabs';
 export * from './ConnectModal/RecentBadge';
+export * from './ConnectModal/RememberWallet';
 export * from './SelectContentAnimated';
 export * from './ToastError';
 export * from './ToBottomButton';

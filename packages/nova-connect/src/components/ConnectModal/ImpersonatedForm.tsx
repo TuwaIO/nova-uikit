@@ -2,7 +2,7 @@
  * @file ImpersonateForm component with comprehensive customization options and validation.
  */
 
-import { cn } from '@tuwaio/nova-core';
+import { cn } from '@tuwaio/nova-core/utils';
 import { isAddress, normalizeError, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, {
   ComponentType,

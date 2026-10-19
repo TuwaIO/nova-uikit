@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/components/Functions/RememberWallet" />
+
+# RememberWallet()
+
+> **RememberWallet**(`props`): `Element` \| `null`
+
+Defined in: [packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/RememberWallet.tsx#L128)
+
+The "Remember this wallet" checkbox under the wallet list of the connect modal. It shows and sets `rememberWallet`
+of the Satellite Connect store: ticked, the connection is saved in `localStorage` and the wallet is reconnected
+after any page load until it is disconnected; unticked, it is saved in `sessionStorage` and reconnected only until
+the tab closes. The store starts with the `rememberWallet` of `SatelliteConnectProvider` (default `true`).
+
+The box is drawn over a visually hidden checkbox input, so keyboards and screen readers use the native control;
+ticking it draws the check mark with a short bounce and ripple (Framer Motion). The info button next to the label
+opens a tooltip with the explanation: while a mouse is over it, when it has keyboard focus, and on a tap or click
+(also on touch screens); another tap or click, a tap or click elsewhere or Escape closes it (Escape closes only the
+tooltip, not the modal). Screen readers get the
+explanation as the description of the checkbox. With `prefers-reduced-motion` nothing moves.
+
+Side effects: while the tooltip is open, a `keydown` listener on `window` (capture phase) closes it on Escape and
+stops that key, so the modal stays open; while it is open after a tap or click, a `pointerdown` listener on `document`
+closes it.
+
+Labels: `rememberWallet`, `rememberWalletHint`, `rememberWalletInfo`.
+
+## Parameters
+
+### props
+
+The component props.
+
+#### customization?
+
+[`RememberWalletCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-rememberwalletcustomization--docs)
+
+Hides the checkbox or replaces its container and classes.
+
+## Returns
+
+`Element` \| `null`
+
+The checkbox, or `null` when `customization.hidden` is set.

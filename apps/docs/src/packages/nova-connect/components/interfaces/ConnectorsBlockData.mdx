@@ -64,9 +64,10 @@ Whether the device has a touch screen
 
 > **recentWallets**: \[`string`, `RecentlyConnectedConnectorData`\][] \| `null`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L48)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L51)
 
-The three most recently disconnected wallets (connector type and data), read from `localStorage` on mount
+The three most recently disconnected wallets (connector type and data), read on mount from `localStorage` and
+`sessionStorage` (wallets that are not remembered)
 
 ***
 
@@ -74,7 +75,7 @@ The three most recently disconnected wallets (connector type and data), read fro
 
 > **sectionId**: `string`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L50)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsBlock.tsx#L53)
 
 `connectors-<title in kebab case>`, the prefix of the title ID
 

@@ -10,6 +10,14 @@ Defined in: [components/TxActionButton.tsx:48](https://github.com/TuwaIO/nova-ui
 
 Props for the `TxActionButton` component.
 
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+The specific transaction type, extending the base `Transaction`.
+
 ## Type Declaration
 
 ### action
@@ -144,11 +152,3 @@ The live transaction pool from the Pulsar store.
 > `optional` **walletAddress?**: `string`
 
 The currently connected wallet address. Changing this resets the button to idle.
-
-## Type Parameters
-
-### T
-
-`T` *extends* `Transaction`
-
-The specific transaction type, extending the base `Transaction`.

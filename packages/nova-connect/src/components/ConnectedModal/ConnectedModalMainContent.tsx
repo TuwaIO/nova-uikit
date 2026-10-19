@@ -2,7 +2,7 @@
  * @file ConnectedModalMainContent component with comprehensive customization options for all child components.
  */
 
-import { cn, standardButtonClasses } from '@tuwaio/nova-core';
+import { cn, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
