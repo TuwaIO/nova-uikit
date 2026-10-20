@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.0...nova-core-v0.10.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* update dependencies (Satellite 0.11 with the auto-connect fix, orbit-solana 0.7.1, SIWX 0.7) ([1358808](https://github.com/TuwaIO/nova-uikit/commit/1358808a748344423c1c66fabc8a7f5f9bb15658))
+
 ## [0.10.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.9.3...nova-core-v0.10.0) (2026-10-15)
 
 
