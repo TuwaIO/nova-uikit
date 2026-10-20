@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.3](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.2...nova-transactions-v0.10.3) (2026-10-20)
+
+
+### Bug Fixes
+
+* update dependencies (Satellite 0.11 with the auto-connect fix, orbit-solana 0.7.1, SIWX 0.7) ([1358808](https://github.com/TuwaIO/nova-uikit/commit/1358808a748344423c1c66fabc8a7f5f9bb15658))
+
+## [0.10.2](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.1...nova-transactions-v0.10.2) (2026-10-20)
+
+
+### Bug Fixes
+
+* updated packages ([cc0c42a](https://github.com/TuwaIO/nova-uikit/commit/cc0c42a48cb910335f815906a1a7203fab7e1d57))
+
 ## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.0...nova-transactions-v0.10.1) (2026-10-16)
 
 
