@@ -6,10 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **usePaymentsLabels**(`locale`): [`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
 
-Defined in: [hooks/usePaymentsLabels.ts:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePaymentsLabels.ts#L13)
+Defined in: [hooks/usePaymentsLabels.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/usePaymentsLabels.ts#L15)
 
 The labels of a language: the built-in ones (English for a language without its own), then `labels` of
-`NovaPaymentsProvider`, then its `customization.labels.transform`.
+`NovaPaymentsProvider`, then its `customization.labels.transform`. The built-in labels of a language other than
+English load on first use (see `loadLabels`); until they arrive the hook keeps the labels it showed before (English
+the first time) and renders again once they are loaded.
 
 ## Parameters
 

@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **checkoutScreen**(`state`, `choices?`): [`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs)
 
-Defined in: [utils/checkout.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L56)
+Defined in: [utils/checkout.ts:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L62)
 
 The screen for the state of a checkout store.
 
@@ -47,4 +47,5 @@ What the buyer chose on the page.
 
 The screen: `qr` instead of `pay` when the buyer pays with a QR code (or the price was locked without a
 payer), `replaced` for an invoice the seller
-corrected, `autoPay` after a paid subscription period while the automatic payments offer is open.
+corrected, `autoPay` after a paid subscription period while the automatic payments offer is open, `loading` until
+the labels of the invoice's language are loaded.

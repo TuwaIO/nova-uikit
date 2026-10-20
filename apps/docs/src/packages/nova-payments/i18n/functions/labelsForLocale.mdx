@@ -6,9 +6,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **labelsForLocale**(`locale`): [`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
 
-Defined in: [i18n/locales.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/locales.ts#L29)
+Defined in: [i18n/locales.ts:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/locales.ts#L53)
 
-The built-in labels of a language.
+The built-in labels of a language, as far as they are loaded.
 
 ## Parameters
 
@@ -22,4 +22,5 @@ A language of the checkout; anything else gets English.
 
 [`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
 
-The labels.
+The labels: English for a language the package does not have, or whose labels are not loaded yet (see
+[loadLabels](?path=/docs/packages-nova-payments-i18n-functions-loadlabels--docs)).
