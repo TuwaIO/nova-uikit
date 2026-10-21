@@ -175,6 +175,8 @@ applyTheme(getInitialTheme());
 const preview: Preview = {
   parameters: {
     backgrounds: { disable: true },
+    // axe runs on every story; `error` fails the story tests (`pnpm test:stories`) on a violation
+    a11y: { test: 'error' },
     docs: {
       container: ThemedDocsContainer,
     },

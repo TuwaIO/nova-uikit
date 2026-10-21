@@ -144,12 +144,12 @@ export const FullyCustomized: Story = {
     customization: {
       components: {
         StatusBadge: () => (
-          <div className="rounded-full bg-purple-500 px-3 py-1 text-xs font-bold text-white">CUSTOM</div>
+          <div className="rounded-full bg-purple-700 px-3 py-1 text-xs font-bold text-white">CUSTOM</div>
         ),
         TxInfoButton: ({ onClick, children }) => (
           <button
             onClick={onClick}
-            className="rounded-[var(--tuwa-rounded-corners)] bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+            className="rounded-[var(--tuwa-rounded-corners)] bg-orange-700 px-4 py-2 text-white hover:bg-orange-800"
           >
             {children}
           </button>

@@ -292,7 +292,8 @@ const BADGE_TONES: Record<BadgeTone, string> = {
   error:
     'novatx:border-[var(--tuwa-error-icon)]/25 novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
   info: 'novatx:border-[var(--tuwa-info-icon)]/25 novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
-  muted: 'novatx:border-transparent novatx:bg-[var(--tuwa-bg-muted)] novatx:text-[var(--tuwa-text-secondary)]',
+  // The info colors: the secondary text on the muted background reads at 4.4:1 only
+  muted: 'novatx:border-transparent novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
 };
 
 const Badge = ({
@@ -641,7 +642,7 @@ export function TransactionDetails<T extends Transaction>({
                 </span>
                 <span className="novatx:truncate">{getChainName(chainId).name}</span>
                 {typeof tx.chainId === 'number' && (
-                  <span className="novatx:shrink-0 novatx:text-[var(--tuwa-text-tertiary)]">· {tx.chainId}</span>
+                  <span className="novatx:shrink-0 novatx:text-[var(--tuwa-text-secondary)]">· {tx.chainId}</span>
                 )}
               </span>
             </CMetadataRow>

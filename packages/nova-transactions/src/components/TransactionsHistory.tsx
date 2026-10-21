@@ -196,7 +196,8 @@ function HistoryPlaceholder({
   return (
     <div
       className={cn(
-        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center',
+        // The secondary background: the secondary text on the muted one reads at 4.4:1 only
+        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-8 novatx:text-center',
         className,
       )}
     >

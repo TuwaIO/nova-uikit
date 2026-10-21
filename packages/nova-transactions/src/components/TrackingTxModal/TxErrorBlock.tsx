@@ -78,11 +78,13 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
       <div className={cn('novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div
           className={cn(
-            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-icon)]',
+            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-text)]',
             classNames?.title,
           )}
         >
-          <ExclamationTriangleIcon className={cn('novatx:h-5 novatx:w-5', classNames?.icon)} />
+          <ExclamationTriangleIcon
+            className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', classNames?.icon)}
+          />
           <span>{txError.title}</span>
         </div>
         <button

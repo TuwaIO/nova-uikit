@@ -79,10 +79,11 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
               classNames?.link,
             )}
             title={actions.viewOnExplorer}
-            aria-label={actions.viewOnExplorer}
           >
+            {/* The visible hash starts the accessible name (WCAG 2.5.3), what the link does follows */}
             {hashContent}
-            <ArrowTopRightOnSquareIcon className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
+            <span className="novatx:sr-only"> {actions.viewOnExplorer}</span>
+            <ArrowTopRightOnSquareIcon aria-hidden className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
           </a>
         ) : (
           <span className={cn('novatx:text-[var(--tuwa-text-primary)]', classNames?.link)}>{hashContent}</span>

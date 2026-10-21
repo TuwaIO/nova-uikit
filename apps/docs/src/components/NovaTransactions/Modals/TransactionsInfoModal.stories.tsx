@@ -40,7 +40,7 @@ export const Default: Story = {
       <>
         <button
           onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-500 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
+          className="cursor-pointer bg-blue-600 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
         >
           Open Modal
         </button>
@@ -64,7 +64,7 @@ export const Empty: Story = {
       <>
         <button
           onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-500 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
+          className="cursor-pointer bg-blue-600 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
         >
           Open Modal
         </button>
@@ -94,7 +94,7 @@ export const OpenOnTransaction: Story = {
       <>
         <button
           onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-500 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
+          className="cursor-pointer bg-blue-600 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
         >
           Open Modal
         </button>
