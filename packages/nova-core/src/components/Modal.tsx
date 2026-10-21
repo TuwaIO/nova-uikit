@@ -95,7 +95,9 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
  * The dialog panel (`Content` of `@radix-ui/react-dialog`), rendered in a portal above {@link DialogOverlay}. It takes
  * the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
  * the panel scales in at the center of the screen, or slides up from the bottom on touch devices (`isTouchDevice`); its
- * content scrolls when it is taller than the viewport. Use it inside {@link Dialog}.
+ * content scrolls when it is taller than the viewport. When it closes, the focus returns to the element that had it
+ * when the dialog opened (Radix alone returns it only to a {@link DialogTrigger}), unless `onCloseAutoFocus` prevents
+ * that. Use it inside {@link Dialog}.
  */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -103,8 +105,11 @@ const DialogContent = React.forwardRef<
     modalAnimation?: Variants;
     backdropAnimation?: Variants;
   }
->(({ className, children, modalAnimation, backdropAnimation, ...props }, ref) => {
+>(({ className, children, modalAnimation, backdropAnimation, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
   const [isMobile, setIsMobile] = React.useState(false);
+  // The element that opened the dialog: Radix gives the focus back only to a `Dialog.Trigger`, and the Nova modals are
+  // opened by buttons of the app (WCAG 2.4.3)
+  const opener = React.useRef<HTMLElement | null>(null);
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -120,6 +125,18 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content
         aria-describedby="tuwa:modal-content"
         ref={ref}
+        onOpenAutoFocus={(event) => {
+          // Called before the focus moves into the dialog
+          const active = document.activeElement;
+          opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+          onOpenAutoFocus?.(event);
+        }}
+        onCloseAutoFocus={(event) => {
+          onCloseAutoFocus?.(event);
+          if (event.defaultPrevented || !opener.current?.isConnected) return;
+          event.preventDefault();
+          opener.current.focus();
+        }}
         className={cn(
           'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
           className,

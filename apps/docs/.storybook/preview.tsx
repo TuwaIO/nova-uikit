@@ -176,7 +176,8 @@ const preview: Preview = {
   parameters: {
     backgrounds: { disable: true },
     // axe runs on every story; `error` fails the story tests (`pnpm test:stories`) on a violation
-    a11y: { test: 'error' },
+    // WCAG 2.2 AA too: targets of 24 by 24 px at least (2.5.8)
+    a11y: { test: 'error', options: { rules: { 'target-size': { enabled: true } } } },
     docs: {
       container: ThemedDocsContainer,
     },

@@ -12,6 +12,7 @@ import {
 import type { CheckoutQuote } from '@tuwaio/quasar-sdk/checkout';
 import { useMemo, useState } from 'react';
 import { action } from 'storybook/actions';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 import { sampleCheckout, simulatedCheckoutApi, type SimulationOptions } from '../../utils/payments/simulatedCheckout';
 import {
@@ -43,7 +44,8 @@ function SimulatedCheckout({
   const [open, setOpen] = useState(true);
   return (
     <SimulatedWallet connection={wallet} options={walletOptions}>
-      {display === 'modal' && !open && (
+      {/* The opener stays in the page: the dialog gives the focus back to it when it closes */}
+      {display === 'modal' && (
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -555,5 +557,141 @@ export const WithChildCustomizations: Story = {
         hashLink: { classNames: { hash: 'font-semibold' } },
       },
     },
+  },
+};
+
+// --- Accessibility ---
+
+/** At 320 px wide (WCAG 1.4.10): the order on top, the steps below, nothing wider than the screen. */
+export const NarrowScreen: Story = {
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.ownerDocument.documentElement;
+    await expect(root.clientWidth).toBe(320);
+    await expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth);
+  },
+};
+
+/** The element that has the focus in the document of the story. */
+const focused = (element: Element) => element.ownerDocument.activeElement;
+
+/** Keyboard (WCAG 2.1.1, 2.4.3): the arrows choose the token, Enter continues, the focus moves to the pay step. */
+export const KeyboardMethodToPay: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const usdc = await canvas.findByRole('radio', { name: /^USDC/ });
+    usdc.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    const sol = canvas.getByRole('radio', { name: /^SOL/ });
+    await expect(sol).toHaveAttribute('aria-checked', 'true');
+    await expect(sol).toHaveFocus();
+    await userEvent.keyboard('{ArrowLeft}');
+    await expect(usdc).toHaveAttribute('aria-checked', 'true');
+
+    canvas.getByRole('button', { name: 'Continue' }).focus();
+    await userEvent.keyboard('{Enter}');
+    const heading = await canvas.findByRole('heading', { name: 'Pay' });
+    await waitFor(() => expect(heading).toHaveFocus());
+  },
+};
+
+/** Keyboard: Enter on "Sign to pay" sends the payment; the focus follows to the confirm step. */
+export const KeyboardPayToConfirm: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    (await canvas.findByRole('button', { name: 'Continue' })).focus();
+    await userEvent.keyboard('{Enter}');
+    const pay = await canvas.findByRole('button', { name: /^Sign to pay/ });
+    pay.focus();
+    await userEvent.keyboard('{Enter}');
+    const heading = await canvas.findByRole('heading', { name: 'Confirming your payment' }, { timeout: 5000 });
+    await waitFor(() => expect(heading).toHaveFocus());
+  },
+};
+
+/** Keyboard: the language menu opens with the down arrow, Enter picks, Escape closes; the focus returns to the button. */
+export const KeyboardLanguage: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByRole('button', { name: /Language: English/ });
+    button.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(await canvas.findByRole('listbox')).toHaveFocus();
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+    await waitFor(() => expect(button).toHaveFocus());
+    await waitFor(() => expect(canvasElement.querySelector('[lang]')).toHaveAttribute('lang', 'zh-CN'));
+
+    await userEvent.keyboard('{ArrowDown}');
+    await expect(await canvas.findByRole('listbox')).toHaveFocus();
+    await userEvent.keyboard('{Escape}');
+    await expect(canvas.queryByRole('listbox')).toBeNull();
+    await expect(button).toHaveFocus();
+  },
+};
+
+/**
+ * Keyboard in the dialog: Escape asks before leaving (the focus goes to the question and stays in it), Escape or
+ * "Stay and pay" goes back with the focus where it was, "Leave" closes and the focus returns to the opener.
+ */
+export const KeyboardLeaveDialog: Story = {
+  args: { display: 'modal' },
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    // Hidden from assistive technology while the dialog is open, as it should be
+    const opener = within(canvasElement).getByRole('button', { name: 'Open the checkout', hidden: true });
+    const dialog = await page.findByRole('dialog');
+    await waitFor(() => expect(dialog).toContainElement(focused(dialog) as HTMLElement));
+    const before = focused(dialog);
+
+    await userEvent.keyboard('{Escape}');
+    const question = await page.findByRole('alertdialog');
+    await waitFor(() => expect(within(question).getByRole('heading')).toHaveFocus());
+    for (let i = 0; i < 3; i++) {
+      await userEvent.tab();
+      await expect(question).toContainElement(focused(question) as HTMLElement);
+    }
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(page.queryByRole('alertdialog')).toBeNull());
+    await waitFor(() => expect(before).toHaveFocus());
+
+    await userEvent.keyboard('{Escape}');
+    within(await page.findByRole('alertdialog'))
+      .getByRole('button', { name: 'Stay and pay' })
+      .focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(before).toHaveFocus());
+
+    await userEvent.keyboard('{Escape}');
+    within(await page.findByRole('alertdialog'))
+      .getByRole('button', { name: 'Leave' })
+      .focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(page.queryByRole('dialog')).toBeNull());
+
+    opener.focus();
+    await userEvent.keyboard('{Enter}');
+    await page.findByRole('dialog');
+    await userEvent.keyboard('{Escape}');
+    within(await page.findByRole('alertdialog'))
+      .getByRole('button', { name: 'Leave' })
+      .focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(opener).toHaveFocus());
+  },
+};
+
+/** Keyboard: Enter on an empty form puts the focus on the first field to fix, with its error tied to it (WCAG 3.3.1). */
+export const KeyboardBuyerErrors: Story = {
+  args: { view: sampleCheckout({ buyer: { collect: 'full', required: true, companyInvoice: true } }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    (await canvas.findByRole('button', { name: 'Continue' })).focus();
+    await userEvent.keyboard('{Enter}');
+    const email = canvas.getByRole('textbox', { name: 'Email' });
+    await waitFor(() => expect(email).toHaveFocus());
+    await expect(email).toHaveAttribute('aria-invalid', 'true');
+    await expect(email).toHaveAccessibleDescription('Required');
   },
 };
