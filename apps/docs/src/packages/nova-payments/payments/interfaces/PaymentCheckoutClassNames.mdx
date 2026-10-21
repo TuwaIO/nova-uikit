@@ -91,9 +91,33 @@ Classes to add.
 
 > `optional` **detailRow?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L141)
+Defined in: [components/customization.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L155)
 
-A row of a details list (rate, network fee, recipient…).
+A row of a card of facts (rate, network fee, recipient…).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### detailsCard?
+
+> `optional` **detailsCard?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L148)
+
+A card of grouped facts (the transaction, the rate and fees, the terms of automatic payments).
 
 #### Parameters
 
@@ -115,7 +139,7 @@ Classes to add.
 
 > `optional` **error?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L107)
+Defined in: [components/customization.ts:114](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L114)
 
 A refusal or error message of a screen.
 
@@ -187,7 +211,7 @@ Classes to add.
 
 > `optional` **networkOption?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L125)
+Defined in: [components/customization.ts:132](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L132)
 
 A network option of the method step (when the token is on several networks).
 
@@ -211,7 +235,7 @@ Classes to add.
 
 > `optional` **payWithOption?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:134](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L134)
+Defined in: [components/customization.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L141)
 
 A "Pay with" option of the method step.
 
@@ -259,7 +283,7 @@ Classes to add.
 
 > `optional` **qrCode?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L155)
+Defined in: [components/customization.ts:169](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L169)
 
 A QR code (Solana Pay, or the payment page for a phone).
 
@@ -303,11 +327,35 @@ Classes to add.
 
 ***
 
+### secondaryButton?
+
+> `optional` **secondaryButton?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L107)
+
+The second action under the main button (back, close, not now, contact).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
 ### statusIcon?
 
 > `optional` **statusIcon?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:163](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L163)
+Defined in: [components/customization.ts:177](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L177)
 
 The icon of an outcome other than paid.
 
@@ -403,7 +451,7 @@ Classes to add.
 
 > `optional` **tokenOption?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L116)
+Defined in: [components/customization.ts:123](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L123)
 
 A token card of the method step.
 
@@ -427,7 +475,7 @@ Classes to add.
 
 > `optional` **total?**: (`params`) => `string` \| `undefined`
 
-Defined in: [components/customization.ts:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L148)
+Defined in: [components/customization.ts:162](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L162)
 
 The total of the order panel.
 
