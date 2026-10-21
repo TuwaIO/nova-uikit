@@ -414,7 +414,7 @@ const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, Y
  *   `cancelTxAction`, the speed-up and cancel buttons (the rule of {@link TrackingTxModal});
  * - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
  *   tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
- *   ERC-4337) and the sync status;
+ *   ERC-4337);
  * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
  *   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee);
  * - Context & Payload: the title and description of the current status, the error and the payload.
@@ -474,21 +474,13 @@ export function TransactionDetails<T extends Transaction>({
           ? { tone: 'info', icon: ArrowPathIcon, label: statuses.replaced }
           : { tone: 'info', icon: ExclamationTriangleIcon, label: tx.status ?? statuses.unknown };
 
-  const syncBadge = (inRow: boolean) =>
+  const syncBadge =
     tx.syncStatus === 'pending-sync' ? (
-      <Badge
-        tone="pending"
-        icon={inRow ? undefined : CloudArrowUpIcon}
-        title={transactionDetails.syncStatus.pendingTooltip}
-      >
+      <Badge tone="pending" icon={CloudArrowUpIcon} title={transactionDetails.syncStatus.pendingTooltip}>
         {transactionDetails.syncStatus.pending}
       </Badge>
     ) : tx.syncStatus === 'synced' ? (
-      <Badge
-        tone={inRow ? 'success' : 'muted'}
-        icon={inRow ? undefined : CloudIcon}
-        title={transactionDetails.syncStatus.syncedTooltip}
-      >
+      <Badge tone="muted" icon={CloudIcon} title={transactionDetails.syncStatus.syncedTooltip}>
         {transactionDetails.syncStatus.synced}
       </Badge>
     ) : null;
@@ -578,7 +570,7 @@ export function TransactionDetails<T extends Transaction>({
             <code className="novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-text-secondary)] novatx:[overflow-wrap:anywhere]">
               {tx.type}
             </code>
-            {syncBadge(false)}
+            {syncBadge}
           </div>
           {canReplace ? (
             <div className="novatx:flex novatx:flex-wrap novatx:gap-2">
@@ -682,11 +674,6 @@ export function TransactionDetails<T extends Transaction>({
               </CMetadataRow>
             )}
             {showTxKey && <CCopyableField label={transactionDetails.txKey} value={tx.txKey} />}
-            {tx.syncStatus && (
-              <CMetadataRow icon={CloudIcon} label={transactionDetails.syncStatus.label}>
-                {syncBadge(true)}
-              </CMetadataRow>
-            )}
           </dl>
         </CSectionCard>
 

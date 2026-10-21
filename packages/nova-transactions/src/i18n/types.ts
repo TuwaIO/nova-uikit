@@ -232,8 +232,6 @@ export type NovaTransactionsLabels = {
     replacedHash: string;
     /** Labels for the sync status indicator. */
     syncStatus: {
-      /** Label of the sync status row of the metadata. */
-      label: string;
       /** Badge shown while the transaction is not yet saved on the server (`syncStatus: 'pending-sync'`). */
       pending: string;
       /** Tooltip of the `pending` badge. */

@@ -35,6 +35,18 @@ function containsText(node: ReactNode | unknown, text: string): boolean {
 /** The props the tests read from the found elements. */
 type ElementProps = { onClick?: () => void; onBack?: () => void; href?: string; label?: string };
 
+/** How many strings equal to `text` are in the element tree (children and props). */
+function countText(node: ReactNode | unknown, text: string): number {
+  if (typeof node === 'string') return node === text ? 1 : 0;
+  if (Array.isArray(node)) return node.reduce((sum: number, child) => sum + countText(child, text), 0);
+  if (isValidElement(node))
+    return Object.values(node.props as Record<string, unknown>).reduce(
+      (sum: number, value) => sum + countText(value, text),
+      0,
+    );
+  return 0;
+}
+
 /** Finds the first element (at any depth of element props) whose props match. */
 function findElement(
   node: ReactNode | unknown,
@@ -220,5 +232,12 @@ describe('TransactionDetails', () => {
     expect(containsText(element, defaultLabels.transactionDetails.metadata)).toBe(true);
     expect(containsText(element, defaultLabels.transactionDetails.evmTitle)).toBe(false);
     expect(containsText(element, defaultLabels.transactionDetails.contextTitle)).toBe(false);
+  });
+  it('shows the sync status once, in the status row', () => {
+    const pendingSync = renderDetails({ ...evmTx, syncStatus: 'pending-sync' } as EvmTransaction);
+    expect(countText(pendingSync, defaultLabels.transactionDetails.syncStatus.pending)).toBe(1);
+
+    const synced = renderDetails({ ...evmTx, syncStatus: 'synced' } as EvmTransaction);
+    expect(countText(synced, defaultLabels.transactionDetails.syncStatus.synced)).toBe(1);
   });
 });

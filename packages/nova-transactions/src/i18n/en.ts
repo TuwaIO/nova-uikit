@@ -123,7 +123,6 @@ export const defaultLabels: NovaTransactionsLabels = {
     fullPayload: 'Full Payload',
     replacedHash: 'Replaced Hash',
     syncStatus: {
-      label: 'Sync Status',
       pending: 'Pending Sync',
       pendingTooltip: 'Queued for Cloud Sync',
       synced: 'Synced',
