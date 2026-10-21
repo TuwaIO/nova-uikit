@@ -1,0 +1,111 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/PaymentCheckoutComponents" />
+
+# PaymentCheckoutComponents
+
+Defined in: [components/customization.ts:217](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L217)
+
+Components that replace parts of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs). A replacement reads the checkout with
+[useCheckoutContext](?path=/docs/packages-nova-payments-payments-functions-usecheckoutcontext--docs) (the store, its state, the labels of the checkout language, the connected wallet and the
+actions of the steps).
+
+## Properties
+
+### CompactSummary?
+
+> `optional` **CompactSummary?**: `ComponentType`\<\{ `className?`: `string`; \}\>
+
+Defined in: [components/customization.ts:223](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L223)
+
+The order above the steps on a phone; `className` holds the classes of `classNames.compactSummary`.
+
+***
+
+### Header?
+
+> `optional` **Header?**: `ComponentType`\<[`CheckoutHeaderProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutheaderprops--docs)\>
+
+Defined in: [components/customization.ts:219](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L219)
+
+The header: the steps (or the heading of an outcome), the language menu and the close button; on a phone too.
+
+***
+
+### NetworkOption?
+
+> `optional` **NetworkOption?**: `ComponentType`\<[`CheckoutNetworkOptionProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutnetworkoptionprops--docs)\>
+
+Defined in: [components/customization.ts:229](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L229)
+
+The content of a network option of the method step (the option itself stays a radio button).
+
+***
+
+### PrimaryButton?
+
+> `optional` **PrimaryButton?**: `ComponentType`\<[`CheckoutPrimaryButtonProps`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutprimarybuttonprops--docs)\>
+
+Defined in: [components/customization.ts:231](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L231)
+
+The main button of every screen.
+
+***
+
+### QrCode?
+
+> `optional` **QrCode?**: `ComponentType`\<[`CheckoutQrCodeProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutqrcodeprops--docs)\>
+
+Defined in: [components/customization.ts:233](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L233)
+
+A QR code. Keep it dark on light: scanners read inverted codes badly.
+
+***
+
+### screens?
+
+> `optional` **screens?**: `Partial`\<`Record`\<[`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs), `ComponentType`\<[`CheckoutScreenProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutscreenprops--docs)\>\>\>
+
+Defined in: [components/customization.ts:237](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L237)
+
+Whole screens, by the screen they replace (for example `paid` or `loading`).
+
+***
+
+### StatusIcon?
+
+> `optional` **StatusIcon?**: `ComponentType`\<[`CheckoutStatusIconProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutstatusiconprops--docs)\>
+
+Defined in: [components/customization.ts:235](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L235)
+
+The icon of an outcome other than paid.
+
+***
+
+### Stepper?
+
+> `optional` **Stepper?**: `ComponentType`\<[`CheckoutStepperProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutstepperprops--docs)\>
+
+Defined in: [components/customization.ts:225](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L225)
+
+The list of steps, in the header and, on a phone, under the order.
+
+***
+
+### Summary?
+
+> `optional` **Summary?**: `ComponentType`
+
+Defined in: [components/customization.ts:221](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L221)
+
+The content of the order panel on the left (from 640 px; `classNames.summary` styles the panel around it).
+
+***
+
+### TokenOption?
+
+> `optional` **TokenOption?**: `ComponentType`\<[`CheckoutTokenOptionProps`](?path=/docs/packages-nova-payments-payments-interfaces-checkouttokenoptionprops--docs)\>
+
+Defined in: [components/customization.ts:227](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L227)
+
+The content of a token card of the method step (the card itself stays a radio button).

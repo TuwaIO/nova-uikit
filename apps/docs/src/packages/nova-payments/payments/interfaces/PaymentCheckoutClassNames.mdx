@@ -1,0 +1,446 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/PaymentCheckoutClassNames" />
+
+# PaymentCheckoutClassNames
+
+Defined in: [components/customization.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L27)
+
+Class name functions of the parts of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs). Each returns classes added after the default ones of
+its part (or nothing), from the state of the checkout and what the part knows; `className` of a replacement
+component (`PaymentCheckoutComponents`) gets them too. A color or size a part already sets is changed with the
+`--tuwa-*` theme variables of `@tuwaio/nova-core`, or by replacing the part: which of two classes for the same
+property wins depends on the order of the stylesheets.
+
+## Properties
+
+### body?
+
+> `optional` **body?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:79](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L79)
+
+The scrolling area of the screen, under the header.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### compactSummary?
+
+> `optional` **compactSummary?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L49)
+
+The order above the steps on a phone.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### container?
+
+> `optional` **container?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L35)
+
+The checkout block with the order panel, the header and the screen (where `className` of `PaymentCheckout` goes:
+inside the dialog, or the bordered block in the page).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### detailRow?
+
+> `optional` **detailRow?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L141)
+
+A row of a details list (rate, network fee, recipient…).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### error?
+
+> `optional` **error?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L107)
+
+A refusal or error message of a screen.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### footer?
+
+> `optional` **footer?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L93)
+
+The bottom of a screen, with its main button.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### header?
+
+> `optional` **header?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L56)
+
+The header: the steps (or the heading of an outcome), the language menu and the close button.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### networkOption?
+
+> `optional` **networkOption?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L125)
+
+A network option of the method step (when the token is on several networks).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs) & `object`
+
+The state of the checkout and the method.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### payWithOption?
+
+> `optional` **payWithOption?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:134](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L134)
+
+A "Pay with" option of the method step.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs) & `object`
+
+The state of the checkout and the option.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### primaryButton?
+
+> `optional` **primaryButton?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:100](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L100)
+
+The main button of a screen (Continue, Pay, Sign to pay, Pay the rest…).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### qrCode?
+
+> `optional` **qrCode?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L155)
+
+A QR code (Solana Pay, or the payment page for a phone).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### screen?
+
+> `optional` **screen?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L86)
+
+The content of a step screen (buyer details, method, QR code, automatic payments), with its heading.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### statusIcon?
+
+> `optional` **statusIcon?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:163](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L163)
+
+The icon of an outcome other than paid.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs) & `object`
+
+The state of the checkout and the outcome.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### step?
+
+> `optional` **step?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L72)
+
+One step of the list.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs) & `object`
+
+The state of the checkout and the step.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### stepper?
+
+> `optional` **stepper?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L63)
+
+The list of steps.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### summary?
+
+> `optional` **summary?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L42)
+
+The order panel on the left (from 640 px).
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### tokenOption?
+
+> `optional` **tokenOption?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L116)
+
+A token card of the method step.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs) & `object`
+
+The state of the checkout and the token.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.
+
+***
+
+### total?
+
+> `optional` **total?**: (`params`) => `string` \| `undefined`
+
+Defined in: [components/customization.ts:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L148)
+
+The total of the order panel.
+
+#### Parameters
+
+##### params
+
+[`CheckoutPartState`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutpartstate--docs)
+
+The state of the checkout.
+
+#### Returns
+
+`string` \| `undefined`
+
+Classes to add.

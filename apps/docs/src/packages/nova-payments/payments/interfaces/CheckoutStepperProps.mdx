@@ -30,6 +30,36 @@ The labels of the checkout language.
 
 ***
 
+### stepClassName?
+
+> `optional` **stepClassName?**: (`step`, `index`) => `string` \| `undefined`
+
+Defined in: [components/CheckoutStepper.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/CheckoutStepper.tsx#L23)
+
+Classes added to a step (`customization.classNames.step` of `PaymentCheckout`).
+
+#### Parameters
+
+##### step
+
+[`CheckoutStep`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutstep--docs)
+
+The step.
+
+##### index
+
+`number`
+
+Its position, from 0.
+
+#### Returns
+
+`string` \| `undefined`
+
+The classes, or nothing.
+
+***
+
 ### steps
 
 > **steps**: [`CheckoutStep`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutstep--docs)[]

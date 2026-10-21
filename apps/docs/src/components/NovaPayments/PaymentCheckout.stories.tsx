@@ -1,5 +1,14 @@
+import { CheckCircleIcon, FaceFrownIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { PaymentCheckout } from '@tuwaio/nova-payments';
+import {
+  type CheckoutPrimaryButtonProps,
+  type CheckoutScreenProps,
+  type CheckoutStatusIconProps,
+  type CheckoutTokenOptionProps,
+  PaymentCheckout,
+  type PaymentCheckoutCustomization,
+  useCheckoutContext,
+} from '@tuwaio/nova-payments';
 import type { CheckoutQuote } from '@tuwaio/quasar-sdk/checkout';
 import { useMemo, useState } from 'react';
 import { action } from 'storybook/actions';
@@ -17,10 +26,19 @@ type StoryProps = SimulationOptions & {
   walletOptions?: SimulatedWalletOptions;
   payUrl?: string;
   autoReturnSeconds?: number;
+  customization?: PaymentCheckoutCustomization;
 };
 
 /** A checkout on a simulated Quasar API: no network, the language the buyer picks is kept. */
-function SimulatedCheckout({ display, wallet, walletOptions, payUrl, autoReturnSeconds, ...simulation }: StoryProps) {
+function SimulatedCheckout({
+  display,
+  wallet,
+  walletOptions,
+  payUrl,
+  autoReturnSeconds,
+  customization,
+  ...simulation
+}: StoryProps) {
   const api = useMemo(() => simulatedCheckoutApi(simulation), [simulation]);
   const [open, setOpen] = useState(true);
   return (
@@ -51,6 +69,7 @@ function SimulatedCheckout({ display, wallet, walletOptions, payUrl, autoReturnS
         payUrl={payUrl}
         autoReturnSeconds={autoReturnSeconds}
         onPaid={action('onPaid')}
+        customization={customization}
       />
     </SimulatedWallet>
   );
@@ -64,6 +83,7 @@ const meta: Meta<typeof SimulatedCheckout> = {
   argTypes: {
     display: { control: 'inline-radio', options: ['modal', 'inline', 'page'] },
     mode: { control: 'inline-radio', options: ['ok', 'loading', 'notFound', 'failure'] },
+    customization: { control: false },
   },
 };
 export default meta;
@@ -387,4 +407,101 @@ export const Blocked: Story = { args: { wallet: METAMASK_ON_BASE_SEPOLIA, quoteE
 /** The wallet check is down: the method step says so, in the language of the checkout. */
 export const ScreeningUnavailable: Story = {
   args: { wallet: METAMASK_ON_BASE_SEPOLIA, quoteError: 'screening_unavailable' },
+};
+
+// --- Customization ---
+
+/**
+ * Class name functions add classes to the parts from the state of the checkout. They come after the default classes:
+ * change colors the parts already set with the `--tuwa-*` variables, or replace the part.
+ */
+const brandClassNames: PaymentCheckoutCustomization['classNames'] = {
+  container: ({ screen }) =>
+    screen === 'paid' ? 'ring-2 ring-emerald-500/50 shadow-xl' : 'ring-2 ring-indigo-500/40 shadow-xl',
+  step: ({ step }) => (step.state === 'current' ? 'rounded bg-indigo-500/10 pr-1.5' : undefined),
+  tokenOption: ({ selected }) => (selected ? 'shadow-md' : undefined),
+  networkOption: ({ method }) => (method.featured ? 'ring-1 ring-indigo-400/60' : undefined),
+  primaryButton: () => 'uppercase tracking-widest',
+  total: () => 'rounded border border-dashed border-indigo-400/60 px-2 py-1',
+  statusIcon: () => 'drop-shadow',
+};
+
+/** Classes from the state of the checkout: a ring on the block, the current step marked, the chosen token raised. */
+export const CustomClassNames: Story = { args: { customization: { classNames: brandClassNames } } };
+
+/** The main button of the app: same props as the default one (`busy`, `disabled`, `onClick`, `type`…). */
+function BrandButton({ busy, children, className, ...props }: CheckoutPrimaryButtonProps) {
+  return (
+    <button
+      type="button"
+      {...props}
+      disabled={props.disabled || busy}
+      aria-busy={busy || undefined}
+      className={`inline-flex h-11 w-full cursor-pointer items-center justify-center rounded-[var(--tuwa-rounded-corners)] border-0 bg-emerald-700 text-sm font-semibold text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-70 ${className ?? ''}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/** A token card that shows how many networks the token is on. */
+function BrandTokenOption({ group, selected }: CheckoutTokenOptionProps) {
+  return (
+    <>
+      <span className="text-[13px] font-bold">{group.symbol}</span>
+      <span className="text-[11px] text-[var(--tuwa-text-secondary)]">
+        {group.methods.length} {group.methods.length === 1 ? 'network' : 'networks'}
+        {selected ? ' · chosen' : ''}
+      </span>
+    </>
+  );
+}
+
+/** One icon for every outcome other than paid. */
+function BrandStatusIcon({ className }: CheckoutStatusIconProps) {
+  return <FaceFrownIcon aria-hidden className={`h-12 w-12 text-indigo-500 ${className ?? ''}`} />;
+}
+
+/** The app's own paid screen, reading the checkout with `useCheckoutContext`. */
+function BrandPaidScreen({ screen }: CheckoutScreenProps) {
+  const { checkout, close } = useCheckoutContext();
+  return (
+    <section
+      data-screen={screen}
+      className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center text-[var(--tuwa-text-primary)]"
+    >
+      <CheckCircleIcon aria-hidden className="h-12 w-12 text-emerald-600" />
+      <h2 className="m-0 text-lg font-semibold">Thank you for your order</h2>
+      <p className="m-0 text-sm text-[var(--tuwa-text-secondary)]">
+        {checkout?.merchant.name} received the payment of invoice {checkout?.invoice.number}.
+      </p>
+      {close && <BrandButton onClick={close}>Back to the shop</BrandButton>}
+    </section>
+  );
+}
+
+const brandComponents: PaymentCheckoutCustomization['components'] = {
+  PrimaryButton: BrandButton,
+  TokenOption: BrandTokenOption,
+  StatusIcon: BrandStatusIcon,
+  screens: { paid: BrandPaidScreen },
+};
+
+/** Parts replaced by the app's components: the main button, the token cards, the outcome icon. */
+export const CustomComponents: Story = { args: { customization: { components: brandComponents } } };
+
+/** The paid screen replaced by the app's own (`components.screens.paid`). */
+export const CustomPaidScreen: Story = {
+  args: {
+    customization: { components: brandComponents },
+    view: settled({ status: 'paid', amountPaid: '89540000' }),
+  },
+};
+
+/** An outcome with the app's icon and classes. */
+export const CustomOutcome: Story = {
+  args: {
+    customization: { classNames: brandClassNames, components: brandComponents },
+    view: sampleCheckout({}, { status: 'cancelled' }),
+  },
 };
