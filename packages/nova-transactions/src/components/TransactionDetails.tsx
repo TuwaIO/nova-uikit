@@ -415,9 +415,9 @@ const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, Y
  * - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
  *   tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
  *   ERC-4337);
+ * - Context & Payload: the title and description of the current status, the error and the payload;
  * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
- *   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee);
- * - Context & Payload: the title and description of the current status, the error and the payload.
+ *   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee).
  *
  * Sections without data are left out. The RPC URL of the transaction is not shown, since it may contain an API key.
  * Values can be copied to the clipboard.
@@ -677,6 +677,24 @@ export function TransactionDetails<T extends Transaction>({
           </dl>
         </CSectionCard>
 
+        {/* ── Context & Payload ── */}
+        {hasContext && (
+          <CSectionCard className={classNames?.contextSection}>
+            <CSectionHeading icon={CommandLineIcon} className={classNames?.sectionHeader}>
+              {transactionDetails.contextTitle}
+            </CSectionHeading>
+            {(titleContext || descriptionContext) && (
+              <dl className="novatx:m-0">
+                {titleContext && <CDetailItem label={transactionDetails.titleContext} value={titleContext} />}
+                {descriptionContext && (
+                  <CDetailItem label={transactionDetails.descriptionContext} value={descriptionContext} />
+                )}
+              </dl>
+            )}
+            {hasError && <CJsonBlock label={transactionDetails.errorContext} data={tx.error} />}
+            {hasPayload && <CJsonBlock label={transactionDetails.fullPayload} data={tx.payload} />}
+          </CSectionCard>
+        )}
         {/* ── Execution data of the chain ── */}
         {hasEvmData && evmTx && (
           <CSectionCard className={classNames?.executionSection}>
@@ -730,25 +748,6 @@ export function TransactionDetails<T extends Transaction>({
                 />
               )}
             </dl>
-          </CSectionCard>
-        )}
-
-        {/* ── Context & Payload ── */}
-        {hasContext && (
-          <CSectionCard className={classNames?.contextSection}>
-            <CSectionHeading icon={CommandLineIcon} className={classNames?.sectionHeader}>
-              {transactionDetails.contextTitle}
-            </CSectionHeading>
-            {(titleContext || descriptionContext) && (
-              <dl className="novatx:m-0">
-                {titleContext && <CDetailItem label={transactionDetails.titleContext} value={titleContext} />}
-                {descriptionContext && (
-                  <CDetailItem label={transactionDetails.descriptionContext} value={descriptionContext} />
-                )}
-              </dl>
-            )}
-            {hasError && <CJsonBlock label={transactionDetails.errorContext} data={tx.error} />}
-            {hasPayload && <CJsonBlock label={transactionDetails.fullPayload} data={tx.payload} />}
           </CSectionCard>
         )}
       </div>

@@ -35,6 +35,14 @@ function containsText(node: ReactNode | unknown, text: string): boolean {
 /** The props the tests read from the found elements. */
 type ElementProps = { onClick?: () => void; onBack?: () => void; href?: string; label?: string };
 
+/** The strings of the element tree (children and props) in document order. */
+function textsInOrder(node: ReactNode | unknown): string[] {
+  if (typeof node === 'string') return [node];
+  if (Array.isArray(node)) return node.flatMap(textsInOrder);
+  if (isValidElement(node)) return Object.values(node.props as Record<string, unknown>).flatMap(textsInOrder);
+  return [];
+}
+
 /** How many strings equal to `text` are in the element tree (children and props). */
 function countText(node: ReactNode | unknown, text: string): number {
   if (typeof node === 'string') return node === text ? 1 : 0;
@@ -239,5 +247,17 @@ describe('TransactionDetails', () => {
 
     const synced = renderDetails({ ...evmTx, syncStatus: 'synced' } as EvmTransaction);
     expect(countText(synced, defaultLabels.transactionDetails.syncStatus.synced)).toBe(1);
+  });
+  it('shows Context & Payload right after Metadata, above the execution data', () => {
+    const texts = textsInOrder(
+      renderDetails({ ...evmTx, nonce: 12, title: 'Pay order #1042', payload: { orderId: '1042' } } as EvmTransaction),
+    );
+    const metadata = texts.indexOf(defaultLabels.transactionDetails.metadata);
+    const context = texts.indexOf(defaultLabels.transactionDetails.contextTitle);
+    const execution = texts.indexOf(defaultLabels.transactionDetails.evmTitle);
+
+    expect(metadata).toBeGreaterThanOrEqual(0);
+    expect(context).toBeGreaterThan(metadata);
+    expect(execution).toBeGreaterThan(context);
   });
 });
