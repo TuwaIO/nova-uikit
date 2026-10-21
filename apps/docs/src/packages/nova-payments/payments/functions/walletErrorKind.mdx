@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **walletErrorKind**(`error`): [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs)
 
-Defined in: [utils/walletErrors.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L41)
+Defined in: [utils/walletErrors.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L42)
 
 Why a wallet request failed, from the error the wallet library threw: EIP-1193 code `4001` and viem's
 `UserRejectedRequestError` (also as a `cause`), and the "user rejected" messages of Wallet Standard wallets, are
@@ -24,4 +24,4 @@ What the wallet library threw.
 
 [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs)
 
-`declined`, `unsupported` or `failed`.
+`declined`, `unsupported`, `wrongNetwork` or `failed`.

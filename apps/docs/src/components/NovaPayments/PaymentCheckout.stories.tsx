@@ -228,6 +228,15 @@ export const PaySolanaWallet: Story = {
   },
 };
 
+/**
+ * Phantom sends a devnet payment on mainnet: the network does not know the payment's blockhash, nothing is paid, and
+ * the buyer is told to switch the wallet and pay again. Solana wallets have no network switch an app can ask for, so
+ * the pay step reminds the buyer of the cluster beforehand, with the steps of Phantom and Solflare.
+ */
+export const SolanaOtherNetwork: Story = {
+  args: { ...PaySolanaWallet.args, walletOptions: { otherCluster: true } },
+};
+
 /** A token that keeps a 0.2 % fee on every transfer: the buyer sends a bit more, and sees why. */
 export const TransferFee: Story = { args: { wallet: METAMASK_ON_BASE_SEPOLIA, transferFeeBps: 20 } };
 

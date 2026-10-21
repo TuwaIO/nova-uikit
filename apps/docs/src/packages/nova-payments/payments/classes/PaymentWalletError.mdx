@@ -18,7 +18,7 @@ The error a payments adapter throws when it knows why the wallet did not pay.
 
 > **new PaymentWalletError**(`kind`, `message`, `options?`): `PaymentWalletError`
 
-Defined in: [utils/walletErrors.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L15)
+Defined in: [utils/walletErrors.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L16)
 
 #### Parameters
 
@@ -26,7 +26,8 @@ Defined in: [utils/walletErrors.ts:15](https://github.com/TuwaIO/nova-uikit/blob
 
 [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs)
 
-Why: `declined` by the buyer, `unsupported` by the wallet, or `failed`.
+Why: `declined` by the buyer, `unsupported` by the wallet, `wrongNetwork` when the wallet sent it on
+another network than the payment's (a Solana wallet, which chooses its network itself), or `failed`.
 
 ##### message
 
@@ -56,6 +57,7 @@ The original error as `cause`.
 
 > `readonly` **kind**: [`PaymentWalletErrorKind`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentwalleterrorkind--docs)
 
-Defined in: [utils/walletErrors.ts:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L16)
+Defined in: [utils/walletErrors.ts:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/walletErrors.ts#L17)
 
-Why: `declined` by the buyer, `unsupported` by the wallet, or `failed`.
+Why: `declined` by the buyer, `unsupported` by the wallet, `wrongNetwork` when the wallet sent it on
+another network than the payment's (a Solana wallet, which chooses its network itself), or `failed`.

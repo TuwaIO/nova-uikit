@@ -31,6 +31,8 @@ export interface SimulatedWalletOptions {
   decline?: boolean;
   /** The EVM wallet takes a paymaster (a smart wallet). */
   sponsor?: boolean;
+  /** The Solana wallet is on another cluster than the payment's: the network refuses the transfer. */
+  otherCluster?: boolean;
 }
 
 /** The wallets "Connect" gives, by family: MetaMask on Ethereum (the wrong network for Base Sepolia), Phantom on devnet. */
@@ -66,7 +68,7 @@ export function SimulatedWallet({
 }) {
   const store = useMemo(() => createStore(() => ({ activeConnection: connection })), [connection]);
   const [connecting, setConnecting] = useState(false);
-  const { balance = 1_000_000_000_000n, balances, decline = false, sponsor = false } = options;
+  const { balance = 1_000_000_000_000n, balances, decline = false, sponsor = false, otherCluster = false } = options;
 
   const adapters = useMemo<PaymentsAdapter[]>(() => {
     const answer = async (value: string) => {
@@ -112,12 +114,16 @@ export function SimulatedWallet({
         family: 'solana',
         getBalance: balanceOf,
         estimateFee: async () => ({ amount: 5000n, decimals: 9, symbol: 'SOL' }),
-        sendTransfer: () => answer('5'.repeat(88)),
+        sendTransfer: async () => {
+          const signature = await answer('5'.repeat(88));
+          if (otherCluster) throw new PaymentWalletError('wrongNetwork', 'Blockhash not found');
+          return signature;
+        },
         explorerUrl: ({ txKey }) => `https://explorer.solana.com/tx/${txKey}?cluster=devnet`,
         pulsarTransaction: (params) => ({ adapter: 'solana', ...params }) as unknown as Transaction,
       },
     ];
-  }, [store, balance, balances, decline, sponsor]);
+  }, [store, balance, balances, decline, sponsor, otherCluster]);
 
   const novaConnect = useMemo(
     () =>
