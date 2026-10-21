@@ -505,3 +505,55 @@ export const CustomOutcome: Story = {
     view: sampleCheckout({}, { status: 'cancelled' }),
   },
 };
+
+/** Handlers that log every action of the buyer and every event to the Actions panel, then let the checkout go on. */
+const loggingHandlers: PaymentCheckoutCustomization['handlers'] = {
+  onMethodSelect: ({ method, select }) => {
+    action('onMethodSelect')(method.id);
+    select();
+  },
+  onQuote: async ({ method, payWith, proceed }) => {
+    action('onQuote')(method.id, payWith);
+    await proceed();
+  },
+  onSubmit: async ({ quote, proceed }) => {
+    action('onSubmit')(quote.amountToSend, quote.instructions.symbol);
+    await proceed();
+  },
+  onLocaleChange: async ({ locale, proceed }) => {
+    action('onLocaleChange')(locale);
+    await proceed();
+  },
+  onStatusChange: action('onStatusChange'),
+  onError: action('onError'),
+  onExpire: action('onExpire'),
+};
+
+/** Every handler logs to the Actions panel: pick a token or a network, continue, pay, change the language. */
+export const WithHandlers: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, customization: { handlers: loggingHandlers } },
+};
+
+/** No steps in the header, no animations, no balance check, the deadline announced 15 and 5 minutes before. */
+export const WithConfig: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    customization: {
+      config: { showSteps: false, animation: { disabled: true }, balanceCheck: false, deadlineAnnouncements: [15, 5] },
+    },
+  },
+};
+
+/** The Nova Transactions parts of the paid step styled through `childCustomizations`. */
+export const WithChildCustomizations: Story = {
+  args: {
+    view: settled({ status: 'paid', amountPaid: '89540000' }),
+    customization: {
+      childCustomizations: {
+        statusVisual: { iconClassNames: { icon: 'text-indigo-500' } },
+        progressIndicator: { stepClassNames: { label: 'uppercase tracking-wider' } },
+        hashLink: { classNames: { hash: 'font-semibold' } },
+      },
+    },
+  },
+};

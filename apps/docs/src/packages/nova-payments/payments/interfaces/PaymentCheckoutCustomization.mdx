@@ -4,17 +4,27 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # PaymentCheckoutCustomization
 
-Defined in: [components/customization.ts:255](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L255)
+Defined in: [components/customization.ts:373](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L373)
 
-Class name functions and replacement components of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs) (`customization`).
+Customization of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs) (`customization`).
 
 ## Properties
+
+### childCustomizations?
+
+> `optional` **childCustomizations?**: [`PaymentCheckoutChildCustomizations`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutchildcustomizations--docs)
+
+Defined in: [components/customization.ts:383](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L383)
+
+Customization of the Nova Transactions parts of the confirm and paid steps.
+
+***
 
 ### classNames?
 
 > `optional` **classNames?**: [`PaymentCheckoutClassNames`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutclassnames--docs)
 
-Defined in: [components/customization.ts:257](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L257)
+Defined in: [components/customization.ts:375](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L375)
 
 Classes added to the parts, from the state of the checkout.
 
@@ -24,6 +34,26 @@ Classes added to the parts, from the state of the checkout.
 
 > `optional` **components?**: [`PaymentCheckoutComponents`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcomponents--docs)
 
-Defined in: [components/customization.ts:259](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L259)
+Defined in: [components/customization.ts:377](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L377)
 
 Components that replace parts.
+
+***
+
+### config?
+
+> `optional` **config?**: [`PaymentCheckoutConfig`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutconfig--docs)
+
+Defined in: [components/customization.ts:381](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L381)
+
+Options: animations, steps, the balance check, the deadline announcements.
+
+***
+
+### handlers?
+
+> `optional` **handlers?**: [`PaymentCheckoutHandlers`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckouthandlers--docs)
+
+Defined in: [components/customization.ts:379](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L379)
+
+Handlers that wrap the actions of the buyer or tell what happened.

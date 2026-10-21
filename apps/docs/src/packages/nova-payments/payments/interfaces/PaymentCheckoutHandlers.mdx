@@ -1,0 +1,248 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/PaymentCheckoutHandlers" />
+
+# PaymentCheckoutHandlers
+
+Defined in: [components/customization.ts:267](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L267)
+
+Handlers of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs): some wrap an action of the buyer (call `proceed()` or `select()` to run it, or
+do something else instead), the others tell the app what happened. `onPaid`, `onClose` and `onContact` are props of
+the checkout.
+
+## Properties
+
+### onError?
+
+> `optional` **onError?**: (`params`) => `void`
+
+Defined in: [components/customization.ts:331](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L331)
+
+The checkout got a new error (Quasar refused an action, or did not answer); the screen shows it.
+
+#### Parameters
+
+##### params
+
+The error.
+
+###### error
+
+`CheckoutError`
+
+Its code and message.
+
+###### screen
+
+[`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs)
+
+The screen shown.
+
+#### Returns
+
+`void`
+
+***
+
+### onExpire?
+
+> `optional` **onExpire?**: (`params`) => `void`
+
+Defined in: [components/customization.ts:338](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L338)
+
+The locked price ran out (`quote`), or the invoice expired (`invoice`).
+
+#### Parameters
+
+##### params
+
+What expired.
+
+###### kind
+
+`"invoice"` \| `"quote"`
+
+`quote` or `invoice`.
+
+#### Returns
+
+`void`
+
+***
+
+### onLocaleChange?
+
+> `optional` **onLocaleChange?**: (`params`) => `void` \| `Promise`\<`void`\>
+
+Defined in: [components/customization.ts:310](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L310)
+
+The buyer picked a language. Without the handler the checkout switches to it and saves it on the invoice.
+
+#### Parameters
+
+##### params
+
+The language.
+
+###### locale
+
+`"en"` \| `"zh-CN"` \| `"es"` \| `"ru"` \| `"uk"` \| `"it"`
+
+The language picked.
+
+###### proceed
+
+() => `Promise`\<`void`\>
+
+Switches and saves it.
+
+#### Returns
+
+`void` \| `Promise`\<`void`\>
+
+***
+
+### onMethodSelect?
+
+> `optional` **onMethodSelect?**: (`params`) => `void`
+
+Defined in: [components/customization.ts:275](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L275)
+
+The buyer picked a token or a network. Without the handler the method is chosen.
+
+#### Parameters
+
+##### params
+
+The pick.
+
+###### method
+
+`CheckoutMethod`
+
+The method picked.
+
+###### select
+
+() => `void`
+
+Chooses it.
+
+#### Returns
+
+`void`
+
+***
+
+### onQuote?
+
+> `optional` **onQuote?**: (`params`) => `void` \| `Promise`\<`void`\>
+
+Defined in: [components/customization.ts:285](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L285)
+
+The buyer pressed "Continue" on the method step. Without the handler the checkout locks the price for the
+connected wallet (or connects one first), or shows the QR code.
+
+#### Parameters
+
+##### params
+
+The step.
+
+###### method
+
+`CheckoutMethod`
+
+The chosen method.
+
+###### payWith
+
+`"wallet"` \| `"qr"`
+
+`wallet` or `qr`.
+
+###### proceed
+
+() => `Promise`\<`void`\>
+
+Goes on as the checkout would.
+
+#### Returns
+
+`void` \| `Promise`\<`void`\>
+
+***
+
+### onStatusChange?
+
+> `optional` **onStatusChange?**: (`params`) => `void`
+
+Defined in: [components/customization.ts:319](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L319)
+
+The phase of the checkout or the status of the invoice changed; also called once with the first ones.
+
+#### Parameters
+
+##### params
+
+The state.
+
+###### phase
+
+`CheckoutPhase`
+
+The phase of the checkout store.
+
+###### screen
+
+[`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs)
+
+The screen shown.
+
+###### status
+
+`InvoiceStatus` \| `null`
+
+The invoice status, `null` before the invoice loads.
+
+#### Returns
+
+`void`
+
+***
+
+### onSubmit?
+
+> `optional` **onSubmit?**: (`params`) => `void` \| `Promise`\<`void`\>
+
+Defined in: [components/customization.ts:298](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L298)
+
+The buyer pressed the pay button ("Pay", "Sign to pay"). Without the handler the wallet prompt opens.
+
+#### Parameters
+
+##### params
+
+The payment.
+
+###### method
+
+`CheckoutMethod`
+
+The method.
+
+###### proceed
+
+() => `Promise`\<`void`\>
+
+Opens the wallet prompt.
+
+###### quote
+
+`CheckoutQuote`
+
+The locked price: amount, recipient, network.
+
+#### Returns
+
+`void` \| `Promise`\<`void`\>

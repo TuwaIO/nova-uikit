@@ -1,0 +1,57 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/PaymentCheckoutConfig" />
+
+# PaymentCheckoutConfig
+
+Defined in: [components/customization.ts:345](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L345)
+
+Options of [PaymentCheckout](?path=/docs/packages-nova-payments-payments-functions-paymentcheckout--docs). Every text and accessible name comes from the labels, and amounts and dates
+follow the language of the checkout.
+
+## Properties
+
+### animation?
+
+> `optional` **animation?**: `object`
+
+Defined in: [components/customization.ts:347](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L347)
+
+Animations. They always follow `prefers-reduced-motion`; `disabled: true` turns them off for everyone.
+
+#### disabled?
+
+> `optional` **disabled?**: `boolean`
+
+Turns the animations off.
+
+***
+
+### balanceCheck?
+
+> `optional` **balanceCheck?**: `boolean`
+
+Defined in: [components/customization.ts:357](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L357)
+
+Whether the pay step reads the wallet's balance (through the chain adapter) and, when it is short, offers what the
+wallet can pay with (default `true`).
+
+***
+
+### deadlineAnnouncements?
+
+> `optional` **deadlineAnnouncements?**: readonly `number`[]
+
+Defined in: [components/customization.ts:359](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L359)
+
+Minutes before the invoice deadline at which screen readers hear the time left (default `[10, 5, 1]`).
+
+***
+
+### showSteps?
+
+> `optional` **showSteps?**: `boolean`
+
+Defined in: [components/customization.ts:352](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/customization.ts#L352)
+
+Whether the header shows the steps of the payment (default `true`).
