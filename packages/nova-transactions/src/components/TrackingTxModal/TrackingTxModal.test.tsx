@@ -147,4 +147,30 @@ describe('TrackingTxModal', () => {
       }),
     );
   });
+  it('offers speed-up and cancel only for a transaction sent with MetaMask, whose handlers can replace it', () => {
+    const adapter = {
+      key: OrbitAdapter.EVM,
+      speedUpTxAction: vi.fn(),
+      cancelTxAction: vi.fn(),
+    } as unknown as TxAdapter<Transaction>;
+    const render = (tx: EvmTransaction) =>
+      TrackingTxModal({
+        adapter,
+        transactionsPool: { '0xdef': tx },
+        initialTx: { adapter: OrbitAdapter.EVM, lastTxKey: '0xdef', withTrackedModal: true } as InitialTransaction,
+        executeTxAction: vi.fn(),
+        onClose: vi.fn(),
+        onOpenAllTransactions: vi.fn(),
+      });
+    const replaceable = (element: ReturnType<typeof TrackingTxModal>) =>
+      findElement(element, (props) => 'canReplace' in props && 'onSpeedUp' in props)?.props as
+        { canReplace: boolean; onSpeedUp: () => void } | undefined;
+
+    const withMetaMask = replaceable(render(pendingTx));
+    expect(withMetaMask?.canReplace).toBe(true);
+    withMetaMask?.onSpeedUp();
+    expect(adapter.speedUpTxAction).toHaveBeenCalledWith(pendingTx);
+
+    expect(replaceable(render({ ...pendingTx, connectorType: 'evm:walletConnect' }))?.canReplace).toBe(false);
+  });
 });

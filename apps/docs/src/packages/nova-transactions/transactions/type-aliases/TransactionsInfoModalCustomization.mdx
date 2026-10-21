@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionsInfoModalCustomization**\<`T`\> = `object`
 
-Defined in: [components/TransactionsInfoModal.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L24)
+Defined in: [components/TransactionsInfoModal.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L28)
 
 Props, class names and replacement components for the parts of [TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs).
 
@@ -24,9 +24,15 @@ The transaction type of the Pulsar store.
 
 > `optional` **classNames?**: `object`
 
-Defined in: [components/TransactionsInfoModal.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L28)
+Defined in: [components/TransactionsInfoModal.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L32)
 
 Granular classNames for modal elements
+
+#### backButton?
+
+> `optional` **backButton?**: `string`
+
+Classes for the back button (shown with the details of a transaction)
 
 #### closeButton?
 
@@ -46,6 +52,12 @@ Classes for the content wrapper
 
 Classes for the header section
 
+#### headerSubtitle?
+
+> `optional` **headerSubtitle?**: `string`
+
+Classes for the subtitle under the header title (shown with the details of a transaction)
+
 #### headerTitle?
 
 > `optional` **headerTitle?**: `string`
@@ -58,7 +70,7 @@ Classes for the header title
 
 > `optional` **components?**: `object`
 
-Defined in: [components/TransactionsInfoModal.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L41)
+Defined in: [components/TransactionsInfoModal.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L49)
 
 Components that replace the default parts.
 
@@ -80,9 +92,9 @@ The transaction list.
 
 > `optional` **historyCustomization?**: [`TransactionsHistoryProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionshistoryprops--docs)\<`T`\>\[`"customization"`\]
 
-Defined in: [components/TransactionsInfoModal.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L39)
+Defined in: [components/TransactionsInfoModal.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L47)
 
-Customization for TransactionsHistory component
+Customization for TransactionsHistory component; its `detailsCustomization` also applies to the details here.
 
 ***
 
@@ -90,6 +102,6 @@ Customization for TransactionsHistory component
 
 > `optional` **modalProps?**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* [`DialogContent`](?path=/docs/packages-nova-core-variables-dialogcontent--docs)\>\>
 
-Defined in: [components/TransactionsInfoModal.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L26)
+Defined in: [components/TransactionsInfoModal.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionsInfoModal.tsx#L30)
 
 Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`).

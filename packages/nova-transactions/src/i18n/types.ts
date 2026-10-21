@@ -158,6 +158,8 @@ export type NovaTransactionsLabels = {
     title: string;
     /** Subtitle for the detailed view. */
     subtitle: string;
+    /** Accessible name of the button that goes back to the transaction list. */
+    back: string;
     /** Label for the metadata section. */
     metadata: string;
     /** Label for the execution data section. */
@@ -198,6 +200,8 @@ export type NovaTransactionsLabels = {
     maxFee: string;
     /** Label for the max priority fee per gas. */
     maxPriorityFee: string;
+    /** Label for the EVM section title. */
+    evmTitle: string;
     /** Label for the Solana section title. */
     solanaTitle: string;
     /** Label for the Starknet section title. */
@@ -228,6 +232,8 @@ export type NovaTransactionsLabels = {
     replacedHash: string;
     /** Labels for the sync status indicator. */
     syncStatus: {
+      /** Label of the sync status row of the metadata. */
+      label: string;
       /** Badge shown while the transaction is not yet saved on the server (`syncStatus: 'pending-sync'`). */
       pending: string;
       /** Tooltip of the `pending` badge. */

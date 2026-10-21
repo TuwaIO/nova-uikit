@@ -9,6 +9,7 @@ import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
+import { canReplaceTx } from '../../utils/canReplaceTx';
 import {
   TxErrorBlock,
   TxErrorBlockClassNames,
@@ -204,13 +205,7 @@ export function TrackingTxModal<T extends Transaction>({
   const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
 
   const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && executeTxAction);
-  const canReplace = !!(
-    foundAdapter?.speedUpTxAction &&
-    foundAdapter?.cancelTxAction &&
-    activeTx?.pending &&
-    (!activeTx.confirmations || Number(activeTx.confirmations) < 1) &&
-    activeTx.tracker === 'ethereum'
-  );
+  const canReplace = canReplaceTx(activeTx, foundAdapter);
 
   const handleRetry = () => {
     if (!canRetry || !foundAdapter?.retryTxAction) return;
@@ -230,14 +225,12 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
-  const isWithActions = canReplace && activeTx && ['metamask'].includes(activeTx?.connectorType.split(':')[1]);
-
   const handleCancel = () => {
-    if (isWithActions) foundAdapter.cancelTxAction!(activeTx);
+    if (canReplace && activeTx) foundAdapter?.cancelTxAction?.(activeTx);
   };
 
   const handleSpeedUp = () => {
-    if (isWithActions) foundAdapter.speedUpTxAction!(activeTx);
+    if (canReplace && activeTx) foundAdapter?.speedUpTxAction?.(activeTx);
   };
 
   const CustomHeader = customization?.components?.Header;
@@ -335,8 +328,8 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
-              onCancel={isWithActions ? handleCancel : undefined}
+              onSpeedUp={canReplace ? handleSpeedUp : undefined}
+              onCancel={canReplace ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
             />
           ) : (
@@ -347,8 +340,8 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
-              onCancel={isWithActions ? handleCancel : undefined}
+              onSpeedUp={canReplace ? handleSpeedUp : undefined}
+              onCancel={canReplace ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
               classNames={classNames}
             />

@@ -30,6 +30,7 @@ const meta: Meta<typeof TransactionDetails> = {
   ],
   args: {
     onBack: action('onBack'),
+    onClose: action('onClose'),
     adapter: [mockEvmAdapter, mockSolanaAdapter],
   },
   argTypes: {
@@ -40,6 +41,14 @@ const meta: Meta<typeof TransactionDetails> = {
     onBack: {
       action: 'onBack',
       description: 'Callback function triggered when clicking the back button in the header.',
+    },
+    onClose: {
+      action: 'onClose',
+      description: 'Shows the close button in the header and is called by it.',
+    },
+    hideHeader: {
+      control: 'boolean',
+      description: 'Leaves out the header, for a container that shows its own (as TransactionsInfoModal does).',
     },
     adapter: {
       control: false,
@@ -65,6 +74,9 @@ const mockEvmPendingTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   status: undefined,
   syncStatus: 'pending-sync',
   type: 'Token Swap',
+  connectorType: 'evm:metamask',
+  confirmations: 0,
+  requiredConfirmations: 3,
   from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   to: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
   value: '1500000000000000000',
@@ -113,6 +125,23 @@ const mockEvmFailedTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
     },
   },
 } as any) as EvmTransaction;
+
+const mockSafePendingTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
+  title: 'Treasury payout',
+  description: 'Waiting for the owners of the Safe to confirm',
+  pending: true,
+  status: undefined,
+  syncStatus: 'synced',
+  tracker: TransactionTracker.Safe,
+  type: 'Safe Transfer',
+  connectorType: 'evm:safe',
+  txKey: '0x3b2f9a7c51d04e6f8a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6a7b',
+  hash: undefined,
+  from: '0x8b99f36611f7c8b07043818e69248496bc120935',
+  to: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  confirmations: 1,
+  requiredConfirmations: 2,
+}) as EvmTransaction;
 
 const mockSolanaPendingTx: SolanaTransaction = {
   ...createMockTx(OrbitAdapter.SOLANA, {
@@ -168,7 +197,7 @@ const mockStarknetSuccessTx: StarknetTransaction = {
 // --- Stories ---
 
 /**
- * Default story showing an active EVM transaction currently pending confirmation.
+ * A pending EVM transaction sent with MetaMask: speed-up and cancel in the status row, as in the tracking modal.
  */
 export const Default: Story = {
   args: {
@@ -193,6 +222,17 @@ export const EvmSuccess: Story = {
 export const EvmError: Story = {
   args: {
     tx: mockEvmFailedTx,
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * A Safe transaction waiting for its owners: the TX key (the `safeTxHash`) differs from the on-chain hash, which is
+ * not known yet, and the confirmations show the owners who signed.
+ */
+export const SafePending: Story = {
+  args: {
+    tx: mockSafePendingTx,
     adapter: [mockEvmAdapter],
   },
 };
@@ -228,6 +268,17 @@ export const StarknetSuccess: Story = {
 };
 
 /**
+ * Without the header, as `TransactionsInfoModal` shows the details under its own header.
+ */
+export const WithoutHeader: Story = {
+  args: {
+    tx: mockEvmSuccessTx,
+    adapter: [mockEvmAdapter],
+    hideHeader: true,
+  },
+};
+
+/**
  * Demonstrates custom sub-component styling and layout overrides via the `customization` prop.
  */
 export const WithCustomization: Story = {
@@ -236,9 +287,10 @@ export const WithCustomization: Story = {
     adapter: [mockEvmAdapter],
     customization: {
       classNames: {
-        header: 'novatx:bg-gradient-to-r novatx:from-indigo-500/10 novatx:to-purple-500/10 novatx:border-purple-500/30',
-        title: 'novatx:text-purple-400',
-        networkBadge: 'novatx:border-purple-500/40 novatx:bg-purple-500/10',
+        header: 'novatx:bg-purple-500/10 novatx:border-purple-500/30',
+        title: 'novatx:text-purple-500',
+        sectionHeader: 'novatx:text-purple-500',
+        networkBadge: 'novatx:text-purple-500',
       },
     },
   },

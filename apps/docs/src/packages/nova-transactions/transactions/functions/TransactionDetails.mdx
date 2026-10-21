@@ -6,15 +6,25 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionDetails**\<`T`\>(`props`): `Element`
 
-Defined in: [components/TransactionDetails.tsx:422](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L422)
+Defined in: [components/TransactionDetails.tsx:429](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L429)
 
-A detailed view of one transaction, shown by [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs) when a transaction is selected: the status,
-hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
-recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
-the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
-(EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
-contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
-Pulsar store (`syncStatus`). Values can be copied to the clipboard.
+A detailed view of one transaction, shown by [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs) and [TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs) when a
+transaction is selected, laid out as the transaction page of the Quasar dashboard:
+
+- a header with the back button, the title and, with `onClose`, the close button (left out with `hideHeader`);
+- a status row with the status, the type and whether the transaction is saved on the server of the Pulsar store
+  (`syncStatus`); on the right, the explorer link of the adapter's `getExplorerTxUrl`, or, for a pending,
+  unconfirmed `ethereum`-tracker transaction sent with MetaMask whose adapter has `speedUpTxAction` and
+  `cancelTxAction`, the speed-up and cancel buttons (the rule of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs));
+- Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
+  tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
+  ERC-4337) and the sync status;
+- the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
+  SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee);
+- Context & Payload: the title and description of the current status, the error and the payload.
+
+Sections without data are left out. The RPC URL of the transaction is not shown, since it may contain an API key.
+Values can be copied to the clipboard.
 
 ## Type Parameters
 

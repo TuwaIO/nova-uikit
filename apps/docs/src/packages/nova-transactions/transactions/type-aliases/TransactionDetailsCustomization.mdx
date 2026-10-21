@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionDetailsCustomization** = `object`
 
-Defined in: [components/TransactionDetails.tsx:289](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L289)
+Defined in: [components/TransactionDetails.tsx:330](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L330)
 
 Class names and replacement components for the parts of [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs).
 
@@ -16,9 +16,15 @@ Class names and replacement components for the parts of [TransactionDetails](?pa
 
 > `optional` **classNames?**: `object`
 
-Defined in: [components/TransactionDetails.tsx:291](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L291)
+Defined in: [components/TransactionDetails.tsx:332](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L332)
 
 Classes added to the parts of the view.
+
+#### actionButton?
+
+> `optional` **actionButton?**: `string`
+
+The explorer link and the speed-up and cancel buttons.
 
 #### backButton?
 
@@ -26,29 +32,47 @@ Classes added to the parts of the view.
 
 The back button.
 
+#### body?
+
+> `optional` **body?**: `string`
+
+The part under the header: the status row and the sections.
+
+#### closeButton?
+
+> `optional` **closeButton?**: `string`
+
+The close button (shown with `onClose`).
+
 #### container?
 
 > `optional` **container?**: `string`
 
 The whole view.
 
+#### contextSection?
+
+> `optional` **contextSection?**: `string`
+
+The context and payload section.
+
 #### coreInfoCard?
 
 > `optional` **coreInfoCard?**: `string`
 
-The main card with the status, hash, network, sender and recipient.
+The status row: status, type, sync status and the explorer link or the speed-up and cancel buttons.
 
 #### executionSection?
 
 > `optional` **executionSection?**: `string`
 
-The execution data section.
+The execution data section of the chain.
 
 #### header?
 
 > `optional` **header?**: `string`
 
-The header row with the back button and the title.
+The header row with the back button, the title and the close button.
 
 #### metadataSection?
 
@@ -60,19 +84,19 @@ The metadata section.
 
 > `optional` **networkBadge?**: `string`
 
-The network badge in the main card.
+The network in the metadata section.
 
 #### sectionHeader?
 
 > `optional` **sectionHeader?**: `string`
 
-The headings of the metadata and execution data sections.
+The headings of the sections.
 
 #### statusIconContainer?
 
 > `optional` **statusIconContainer?**: `string`
 
-The status icon in the main card.
+The status badge in the status row.
 
 #### subtitle?
 
@@ -92,7 +116,7 @@ The title (the `transactionDetails.title` label).
 
 > `optional` **components?**: `object`
 
-Defined in: [components/TransactionDetails.tsx:316](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L316)
+Defined in: [components/TransactionDetails.tsx:365](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L365)
 
 Components that replace the default parts.
 
@@ -100,13 +124,13 @@ Components that replace the default parts.
 
 > `optional` **CopyableField?**: `ComponentType`\<[`CopyableFieldProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-copyablefieldprops--docs)\>
 
-A field with a copy button.
+A row with a copy button.
 
 #### DetailItem?
 
 > `optional` **DetailItem?**: `ComponentType`\<[`DetailItemProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-detailitemprops--docs)\>
 
-A label and value pair.
+A label and value row.
 
 #### JsonBlock?
 
@@ -128,6 +152,6 @@ A card around a section (props: `children`, `className`).
 
 #### SectionHeading?
 
-> `optional` **SectionHeading?**: `ComponentType`\<\{ `children`: `ReactNode`; `className?`: `string`; \}\>
+> `optional` **SectionHeading?**: `ComponentType`\<[`SectionHeadingProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-sectionheadingprops--docs)\>
 
-A section heading (props: `children`, `className`).
+A section heading with the icon of the section.

@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionDetailsProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\> & `object`
 
-Defined in: [components/TransactionDetails.tsx:337](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L337)
+Defined in: [components/TransactionDetails.tsx:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L386)
 
 Props of [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs).
 
@@ -32,11 +32,28 @@ Classes of the view.
 
 Class names and replacement components for the parts of the view.
 
+### hideHeader?
+
+> `optional` **hideHeader?**: `boolean`
+
+Leaves out the header (back button, title and close button), for a container that shows its own, as
+[TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs) does. Defaults to `false`.
+
 ### onBack
 
 > **onBack**: () => `void`
 
 Called by the back button.
+
+#### Returns
+
+`void`
+
+### onClose?
+
+> `optional` **onClose?**: () => `void`
+
+Called by the close button of the header; without it the header has no close button.
 
 #### Returns
 

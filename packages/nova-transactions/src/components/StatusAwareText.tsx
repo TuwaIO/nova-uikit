@@ -7,15 +7,14 @@ import { cn } from '@tuwaio/nova-core/utils';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
-/**
- * A mapping from transaction status to an array index and a theme-aware color class.
- * The index corresponds to the position in the `source` array prop: `[pending, success, error, replaced]`.
- */
-const STATUS_CONFIG = {
-  [TransactionStatus.Success]: { index: 1, colorClass: 'novatx:text-[var(--tuwa-success-text)]' },
-  [TransactionStatus.Failed]: { index: 2, colorClass: 'novatx:text-[var(--tuwa-error-text)]' },
-  [TransactionStatus.Replaced]: { index: 3, colorClass: 'novatx:text-[var(--tuwa-text-secondary)]' },
-  default: { index: 0, colorClass: 'novatx:text-[var(--tuwa-text-primary)]' }, // For pending or undefined status
+import { statusText } from '../utils/statusText';
+
+/** Theme-aware color classes of the text for each status (pending or no status: `default`). */
+const STATUS_COLORS = {
+  [TransactionStatus.Success]: 'novatx:text-[var(--tuwa-success-text)]',
+  [TransactionStatus.Failed]: 'novatx:text-[var(--tuwa-error-text)]',
+  [TransactionStatus.Replaced]: 'novatx:text-[var(--tuwa-text-secondary)]',
+  default: 'novatx:text-[var(--tuwa-text-primary)]',
 } as const;
 
 /** Props of {@link StatusAwareText}. */
@@ -52,21 +51,8 @@ export function StatusAwareText({
   className,
   applyColor = false,
 }: StatusAwareTextProps): ReactNode {
-  let displayText: string | undefined;
-  let colorClass = '';
-
-  if (typeof source === 'string') {
-    displayText = source;
-  } else if (Array.isArray(source)) {
-    const statusKey = txStatus || 'default';
-    const config = STATUS_CONFIG[statusKey] ?? STATUS_CONFIG.default;
-    displayText = source[config.index];
-    if (applyColor) {
-      colorClass = config.colorClass;
-    }
-  } else {
-    displayText = fallback;
-  }
+  const displayText = typeof source === 'string' || Array.isArray(source) ? statusText(source, txStatus) : fallback;
+  const colorClass = applyColor && Array.isArray(source) ? STATUS_COLORS[txStatus ?? 'default'] : '';
 
   if (!displayText) {
     return null;

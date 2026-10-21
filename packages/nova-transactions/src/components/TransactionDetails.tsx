@@ -4,21 +4,22 @@
  */
 
 import {
-  ArrowLeftIcon,
-  CheckBadgeIcon,
+  ArrowPathIcon,
+  ArrowTopRightOnSquareIcon,
+  BoltIcon,
   CheckCircleIcon,
   ClockIcon,
   CloudArrowUpIcon,
   CloudIcon,
+  CommandLineIcon,
   CpuChipIcon,
   DocumentDuplicateIcon,
+  DocumentTextIcon,
   ExclamationTriangleIcon,
-  GlobeAltIcon,
-  KeyIcon,
-  LinkIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 import { CheckIcon } from '@heroicons/react/24/solid';
-import { cn, getChainName, NetworkIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { CloseIcon, cn, getChainName, NetworkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
@@ -26,31 +27,36 @@ import {
   StarknetTransaction,
   Transaction,
   TransactionStatus,
+  TransactionTracker,
 } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode, useMemo } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { canReplaceTx } from '../utils/canReplaceTx';
+import { formatUnits } from '../utils/formatUnits';
+import { statusText } from '../utils/statusText';
+import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 
 // --- Sub-components Prop Types ---
 
-/** Props of a field with a copy button in {@link TransactionDetails} (hash, sender, recipient, replaced hash). */
+/** Props of a row with a copy button in {@link TransactionDetails} (hash, sender, recipient, TX key, blockhash). */
 export type CopyableFieldProps = {
-  /** Label shown above the field. */
+  /** Label shown on the left. */
   label: string;
-  /** Value shown in the field and copied to the clipboard by the copy button. */
+  /** Value copied to the clipboard by the copy button; the default row shows it shortened, in full on hover. */
   value: string;
   /** Whether the value uses a monospace font. Defaults to `true`. */
   mono?: boolean;
-  /** Classes of the field. */
+  /** Classes of the row. */
   className?: string;
   /** Content shown instead of the value (the copy button still copies `value`); used for the explorer link. */
   children?: ReactNode;
-  /** Classes of the parts of the field. */
+  /** Classes of the parts of the row. */
   classNames?: {
     /** The label. */
     label?: string;
-    /** The row with the value and the copy button. */
+    /** The value with the copy button. */
     container?: string;
     /** The value. */
     code?: string;
@@ -59,17 +65,17 @@ export type CopyableFieldProps = {
   };
 };
 
-/** Props of a label and value pair in the execution data of {@link TransactionDetails}. */
+/** Props of a label and value row in {@link TransactionDetails} (execution data, context). */
 export type DetailItemProps = {
-  /** Label shown above the value. */
+  /** Label shown on the left. */
   label: string;
-  /** The value. The default item renders nothing when it is `null`, `undefined` or an empty string. */
+  /** The value. The default row renders nothing when it is `null`, `undefined` or an empty string. */
   value: string | number | null | undefined;
   /** Whether the value uses a smaller monospace font. Defaults to `false`. */
   mono?: boolean;
-  /** Classes of the item. */
+  /** Classes of the row. */
   className?: string;
-  /** Classes of the parts of the item. */
+  /** Classes of the parts of the row. */
   classNames?: {
     /** The label. */
     label?: string;
@@ -78,9 +84,12 @@ export type DetailItemProps = {
   };
 };
 
-/** Props of a row of the metadata section of {@link TransactionDetails} (adapter, times, tracker, connector…). */
+/** Props of a row of the metadata section of {@link TransactionDetails} (network, adapter, times, tracker…). */
 export type MetadataRowProps = {
-  /** Icon component (a Heroicons icon by default), rendered with a `className`. */
+  /**
+   * Icon component (a Heroicons icon by default), rendered with a `className`. The default row does not show it; it is
+   * passed for custom rows.
+   */
   icon: ComponentType<{ className?: string }>;
   /** Label shown on the left. */
   label: string;
@@ -90,7 +99,7 @@ export type MetadataRowProps = {
   className?: string;
   /** Classes of the parts of the row. */
   classNames?: {
-    /** The icon. */
+    /** The icon (of custom rows). */
     icon?: string;
     /** The label. */
     label?: string;
@@ -103,7 +112,7 @@ export type MetadataRowProps = {
  * Props of a code block with a copy button in {@link TransactionDetails} (input data, instructions, payload, error).
  */
 export type JsonBlockProps = {
-  /** Label shown above the block. */
+  /** Label shown above the code. */
   label: string;
   /**
    * Data to show: strings as they are, other values as formatted JSON. The default block renders nothing for empty
@@ -127,130 +136,113 @@ export type JsonBlockProps = {
   };
 };
 
+/** Props of a section heading of {@link TransactionDetails}. */
+export type SectionHeadingProps = {
+  /** The heading text. */
+  children: ReactNode;
+  /** Classes of the heading. */
+  className?: string;
+  /** Icon component of the section (a Heroicons icon by default), rendered with a `className`. */
+  icon?: ComponentType<{ className?: string }>;
+};
+
 // --- Default Sub-components ---
 
 const SectionCard = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <div
+  <section
     className={cn(
-      'novatx:overflow-hidden novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-secondary)]',
+      'novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-xs novatx:sm:p-5',
       className,
     )}
   >
     {children}
+  </section>
+);
+
+const SectionHeading = ({ children, className, icon: Icon }: SectionHeadingProps) => (
+  <div className="novatx:mb-1 novatx:flex novatx:min-w-0 novatx:items-center novatx:gap-3.5">
+    {Icon && (
+      <span className="novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-text-accent)]/10 novatx:text-[var(--tuwa-text-accent)]">
+        <Icon className="novatx:h-5 novatx:w-5" />
+      </span>
+    )}
+    <h4
+      className={cn(
+        'novatx:m-0 novatx:min-w-0 novatx:truncate novatx:font-mono novatx:text-lg novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:sm:text-xl',
+        className,
+      )}
+    >
+      {children}
+    </h4>
   </div>
 );
 
-const SectionHeading = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <h4
-    className={cn(
-      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] sm:novatx:mb-4 sm:novatx:pb-4',
-      className,
-    )}
-  >
-    {children}
-  </h4>
-);
+const rowClassName =
+  'novatx:flex novatx:min-w-0 novatx:items-baseline novatx:justify-between novatx:gap-4 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:py-2.5 novatx:text-[13px] novatx:last:border-b-0';
+const rowLabelClassName = 'novatx:shrink-0 novatx:text-[var(--tuwa-text-secondary)]';
+const rowValueClassName =
+  'novatx:m-0 novatx:min-w-0 novatx:text-right novatx:text-[var(--tuwa-text-primary)] novatx:[overflow-wrap:anywhere]';
 
-const FieldLabel = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <span
-    className={cn(
-      'novatx:block novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-tertiary)]',
-      className,
-    )}
-  >
-    {children}
-  </span>
-);
-
-const CopyButton = ({ value, className, size = 'md' }: { value: string; className?: string; size?: 'sm' | 'md' }) => {
+const CopyButton = ({ value, className, dark = false }: { value: string; className?: string; dark?: boolean }) => {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
-
-  const iconSize = size === 'sm' ? 'novatx:h-3.5 novatx:w-3.5' : 'novatx:h-4 novatx:w-4';
 
   return (
     <button
       type="button"
       onClick={() => copy(value)}
       className={cn(
-        'novatx:cursor-pointer novatx:p-2 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:text-[var(--tuwa-text-accent)]',
-        size === 'sm' && 'novatx:p-1',
+        'novatx:inline-flex novatx:h-[26px] novatx:w-[26px] novatx:shrink-0 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:self-center novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:transition-colors',
+        dark
+          ? 'novatx:border-slate-700 novatx:text-slate-400 novatx:hover:text-slate-100'
+          : 'novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:text-[var(--tuwa-text-secondary)] novatx:hover:text-[var(--tuwa-text-accent)]',
         className,
       )}
       title={isCopied ? txError.copied : actions.copy}
       aria-label={isCopied ? txError.copied : actions.copy}
     >
       {isCopied ? (
-        <CheckIcon className={cn(iconSize, 'novatx:text-[var(--tuwa-success-icon)]')} />
+        <CheckIcon className="novatx:h-3.5 novatx:w-3.5 novatx:text-[var(--tuwa-success-icon)]" />
       ) : (
-        <DocumentDuplicateIcon className={iconSize} />
+        <DocumentDuplicateIcon className="novatx:h-3.5 novatx:w-3.5" />
       )}
     </button>
   );
 };
 
-const DefaultCopyableField = ({ label, value, mono = true, className, children, classNames }: CopyableFieldProps) => {
-  return (
-    <div className={cn('novatx:space-y-1.5', className)}>
-      <FieldLabel className={classNames?.label}>{label}</FieldLabel>
-      <div className={cn('novatx:flex novatx:items-center novatx:gap-2', classNames?.container)}>
-        {children || (
-          <code
-            className={cn(
-              'novatx:min-w-0 novatx:flex-1 novatx:truncate novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-muted)]/50 novatx:px-3 novatx:py-2 novatx:text-xs novatx:text-[var(--tuwa-text-primary)]',
-              mono && 'novatx:font-mono',
-              classNames?.code,
-            )}
-            title={value}
-          >
-            {value}
-          </code>
-        )}
-        <CopyButton value={value} className={classNames?.copyButton} />
-      </div>
-    </div>
-  );
-};
+const DefaultCopyableField = ({ label, value, mono = true, className, children, classNames }: CopyableFieldProps) => (
+  <div className={cn(rowClassName, className)}>
+    <dt className={cn(rowLabelClassName, classNames?.label)}>{label}</dt>
+    <dd
+      className={cn(rowValueClassName, 'novatx:inline-flex novatx:items-center novatx:gap-1.5', classNames?.container)}
+    >
+      {children || (
+        <span
+          className={cn('novatx:truncate', mono && 'novatx:font-mono novatx:text-[13px]', classNames?.code)}
+          title={value}
+        >
+          {textCenterEllipsis(value, 8, 8)}
+        </span>
+      )}
+      <CopyButton value={value} className={classNames?.copyButton} />
+    </dd>
+  </div>
+);
 
 const DefaultDetailItem = ({ label, value, mono = false, className, classNames }: DetailItemProps) => {
   if (value === null || value === undefined || value === '') return null;
   return (
-    <div className={cn('novatx:space-y-1', className)}>
-      <FieldLabel className={classNames?.label}>{label}</FieldLabel>
-      <span
-        className={cn(
-          'novatx:block novatx:break-all novatx:text-sm novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
-          mono && 'novatx:font-mono novatx:text-xs',
-          classNames?.value,
-        )}
-      >
-        {value}
-      </span>
+    <div className={cn(rowClassName, className)}>
+      <dt className={cn(rowLabelClassName, classNames?.label)}>{label}</dt>
+      <dd className={cn(rowValueClassName, mono && 'novatx:font-mono novatx:text-xs', classNames?.value)}>{value}</dd>
     </div>
   );
 };
 
-const DefaultMetadataRow = ({ icon: Icon, label, children, className, classNames }: MetadataRowProps) => (
-  <div className={cn('novatx:flex novatx:items-center novatx:justify-between novatx:py-2.5', className)}>
-    <div className="novatx:flex novatx:min-w-0 novatx:items-center novatx:gap-2.5">
-      <Icon
-        className={cn(
-          'novatx:h-4 novatx:w-4 novatx:shrink-0 novatx:text-[var(--tuwa-text-tertiary)]',
-          classNames?.icon,
-        )}
-      />
-      <span className={cn('novatx:truncate novatx:text-xs novatx:text-[var(--tuwa-text-tertiary)]', classNames?.label)}>
-        {label}
-      </span>
-    </div>
-    <div
-      className={cn(
-        'novatx:ml-4 novatx:max-w-[55%] novatx:shrink-0 novatx:truncate novatx:text-right novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]',
-        classNames?.value,
-      )}
-    >
-      {children}
-    </div>
+const DefaultMetadataRow = ({ label, children, className, classNames }: MetadataRowProps) => (
+  <div className={cn(rowClassName, className)}>
+    <dt className={cn(rowLabelClassName, classNames?.label)}>{label}</dt>
+    <dd className={cn(rowValueClassName, classNames?.value)}>{children}</dd>
   </div>
 );
 
@@ -259,20 +251,27 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
   const jsonStr = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
 
   return (
-    <div className={cn('novatx:space-y-2', className)}>
-      <div className={cn('novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
-        <FieldLabel className={classNames?.label}>{label}</FieldLabel>
-        <CopyButton value={jsonStr} size="sm" className={classNames?.copyButton} />
-      </div>
+    <div
+      className={cn(
+        'novatx:mt-2 novatx:overflow-hidden novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-slate-800 novatx:bg-slate-900',
+        className,
+      )}
+    >
       <div
         className={cn(
-          'NovaCustomScroll novatx:max-h-[300px] novatx:overflow-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-muted)]/50 novatx:p-3',
-          classNames?.container,
+          'novatx:flex novatx:items-center novatx:justify-between novatx:gap-2 novatx:border-b novatx:border-slate-800 novatx:py-1 novatx:pr-1.5 novatx:pl-4',
+          classNames?.header,
         )}
       >
+        <span className={cn('novatx:font-mono novatx:text-[11px] novatx:text-slate-400', classNames?.label)}>
+          {label}
+        </span>
+        <CopyButton value={jsonStr} dark className={classNames?.copyButton} />
+      </div>
+      <div className={cn('NovaCustomScroll novatx:max-h-[300px] novatx:overflow-auto', classNames?.container)}>
         <pre
           className={cn(
-            'novatx:font-mono novatx:text-[10px] novatx:leading-relaxed novatx:text-[var(--tuwa-text-primary)] novatx:whitespace-pre-wrap',
+            'novatx:m-0 novatx:px-5 novatx:py-4 novatx:font-mono novatx:text-[13px] novatx:leading-relaxed novatx:whitespace-pre-wrap novatx:text-slate-200 novatx:[overflow-wrap:anywhere]',
             classNames?.pre,
           )}
         >
@@ -283,6 +282,48 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
   );
 };
 
+type BadgeTone = 'success' | 'pending' | 'error' | 'info' | 'muted';
+
+const BADGE_TONES: Record<BadgeTone, string> = {
+  success:
+    'novatx:border-[var(--tuwa-success-icon)]/25 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
+  pending:
+    'novatx:border-[var(--tuwa-pending-icon)]/25 novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
+  error:
+    'novatx:border-[var(--tuwa-error-icon)]/25 novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
+  info: 'novatx:border-[var(--tuwa-info-icon)]/25 novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
+  muted: 'novatx:border-transparent novatx:bg-[var(--tuwa-bg-muted)] novatx:text-[var(--tuwa-text-secondary)]',
+};
+
+const Badge = ({
+  tone,
+  icon: Icon,
+  children,
+  title,
+  className,
+}: {
+  tone: BadgeTone;
+  icon?: ComponentType<{ className?: string }>;
+  children: ReactNode;
+  title?: string;
+  className?: string;
+}) => (
+  <span
+    title={title}
+    className={cn(
+      'novatx:inline-flex novatx:items-center novatx:gap-1.5 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-2 novatx:py-0.5 novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest',
+      BADGE_TONES[tone],
+      className,
+    )}
+  >
+    {Icon && <Icon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
+    {children}
+  </span>
+);
+
+const actionButtonClassName =
+  'novatx:inline-flex novatx:h-9 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-2 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:font-mono novatx:text-sm novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:no-underline novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)]';
+
 // --- Customization Types ---
 
 /** Class names and replacement components for the parts of {@link TransactionDetails}. */
@@ -291,36 +332,44 @@ export type TransactionDetailsCustomization = {
   classNames?: {
     /** The whole view. */
     container?: string;
-    /** The header row with the back button and the title. */
+    /** The header row with the back button, the title and the close button. */
     header?: string;
     /** The back button. */
     backButton?: string;
-    /** The status icon in the main card. */
+    /** The close button (shown with `onClose`). */
+    closeButton?: string;
+    /** The status badge in the status row. */
     statusIconContainer?: string;
     /** The title (the `transactionDetails.title` label). */
     title?: string;
     /** The subtitle under the title (the `transactionDetails.subtitle` label). */
     subtitle?: string;
-    /** The headings of the metadata and execution data sections. */
-    sectionHeader?: string;
-    /** The main card with the status, hash, network, sender and recipient. */
+    /** The part under the header: the status row and the sections. */
+    body?: string;
+    /** The status row: status, type, sync status and the explorer link or the speed-up and cancel buttons. */
     coreInfoCard?: string;
-    /** The network badge in the main card. */
+    /** The explorer link and the speed-up and cancel buttons. */
+    actionButton?: string;
+    /** The headings of the sections. */
+    sectionHeader?: string;
+    /** The network in the metadata section. */
     networkBadge?: string;
     /** The metadata section. */
     metadataSection?: string;
-    /** The execution data section. */
+    /** The execution data section of the chain. */
     executionSection?: string;
+    /** The context and payload section. */
+    contextSection?: string;
   };
   /** Components that replace the default parts. */
   components?: {
     /** A card around a section (props: `children`, `className`). */
     SectionCard?: ComponentType<{ children: ReactNode; className?: string }>;
-    /** A section heading (props: `children`, `className`). */
-    SectionHeading?: ComponentType<{ children: ReactNode; className?: string }>;
-    /** A field with a copy button. */
+    /** A section heading with the icon of the section. */
+    SectionHeading?: ComponentType<SectionHeadingProps>;
+    /** A row with a copy button. */
     CopyableField?: ComponentType<CopyableFieldProps>;
-    /** A label and value pair. */
+    /** A label and value row. */
     DetailItem?: ComponentType<DetailItemProps>;
     /** A row of the metadata section. */
     MetadataRow?: ComponentType<MetadataRowProps>;
@@ -339,81 +388,39 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
   tx: T;
   /** Called by the back button. */
   onBack: () => void;
+  /** Called by the close button of the header; without it the header has no close button. */
+  onClose?: () => void;
+  /**
+   * Leaves out the header (back button, title and close button), for a container that shows its own, as
+   * {@link TransactionsInfoModal} does. Defaults to `false`.
+   */
+  hideHeader?: boolean;
   /** Classes of the view. */
   className?: string;
   /** Class names and replacement components for the parts of the view. */
   customization?: TransactionDetailsCustomization;
 };
 
-const EvmExecutionData = ({
-  tx,
-  labels,
-  components: { DetailItem, CopyableField },
-}: {
-  tx: EvmTransaction;
-  labels: ReturnType<typeof useLabels>['transactionDetails'];
-  components: {
-    DetailItem: ComponentType<DetailItemProps>;
-    CopyableField: ComponentType<CopyableFieldProps>;
-  };
-}) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2 lg:novatx:grid-cols-3">
-    <DetailItem label={labels.nonce} value={tx.nonce} />
-    <DetailItem label={labels.maxFee} value={tx.maxFeePerGas} />
-    <DetailItem label={labels.maxPriorityFee} value={tx.maxPriorityFeePerGas} />
-    <DetailItem label={labels.value} value={tx.value} />
-    {tx.replacedTxHash && <CopyableField label={labels.replacedHash} value={tx.replacedTxHash} />}
-  </div>
-);
-
-const SolanaExecutionData = ({
-  tx,
-  labels,
-  components: { DetailItem, CopyableField },
-}: {
-  tx: SolanaTransaction;
-  labels: ReturnType<typeof useLabels>['transactionDetails'];
-  components: {
-    DetailItem: ComponentType<DetailItemProps>;
-    CopyableField: ComponentType<CopyableFieldProps>;
-  };
-}) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
-    <DetailItem label={labels.fee} value={tx.fee} />
-    <DetailItem label={labels.slot} value={tx.slot} />
-    {tx.recentBlockhash && <CopyableField label={labels.recentBlockhash} value={tx.recentBlockhash} />}
-  </div>
-);
-
-const StarknetExecutionData = ({
-  tx,
-  labels,
-  components: { DetailItem, CopyableField },
-}: {
-  tx: StarknetTransaction;
-  labels: ReturnType<typeof useLabels>['transactionDetails'];
-  components: {
-    DetailItem: ComponentType<DetailItemProps>;
-    CopyableField: ComponentType<CopyableFieldProps>;
-  };
-}) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
-    {tx.contractAddress && <CopyableField label={labels.contractAddress} value={tx.contractAddress} />}
-    <DetailItem
-      label={labels.actualFee}
-      value={tx.actualFee ? `${tx.actualFee.amount} ${tx.actualFee.unit}` : undefined}
-    />
-  </div>
-);
+const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, YYYY, HH:mm:ss');
 
 /**
- * A detailed view of one transaction, shown by {@link TransactionsHistory} when a transaction is selected: the status,
- * hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
- * recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
- * the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
- * (EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
- * contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
- * Pulsar store (`syncStatus`). Values can be copied to the clipboard.
+ * A detailed view of one transaction, shown by {@link TransactionsHistory} and {@link TransactionsInfoModal} when a
+ * transaction is selected, laid out as the transaction page of the Quasar dashboard:
+ *
+ * - a header with the back button, the title and, with `onClose`, the close button (left out with `hideHeader`);
+ * - a status row with the status, the type and whether the transaction is saved on the server of the Pulsar store
+ *   (`syncStatus`); on the right, the explorer link of the adapter's `getExplorerTxUrl`, or, for a pending,
+ *   unconfirmed `ethereum`-tracker transaction sent with MetaMask whose adapter has `speedUpTxAction` and
+ *   `cancelTxAction`, the speed-up and cancel buttons (the rule of {@link TrackingTxModal});
+ * - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
+ *   tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
+ *   ERC-4337) and the sync status;
+ * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
+ *   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee);
+ * - Context & Payload: the title and description of the current status, the error and the payload.
+ *
+ * Sections without data are left out. The RPC URL of the transaction is not shown, since it may contain an API key.
+ * Values can be copied to the clipboard.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionDetailsProps}.
@@ -422,6 +429,8 @@ const StarknetExecutionData = ({
 export function TransactionDetails<T extends Transaction>({
   tx,
   onBack,
+  onClose,
+  hideHeader = false,
   adapter,
   className,
   customization,
@@ -429,10 +438,6 @@ export function TransactionDetails<T extends Transaction>({
   const { transactionDetails, statuses, actions } = useLabels();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
-
-  const status = tx.pending ? 'pending' : tx.status === TransactionStatus.Success ? 'success' : 'error';
-
-  const explorerUrl = foundAdapter?.getExplorerTxUrl?.(tx);
 
   // Components from customization or defaults
   const {
@@ -450,246 +455,316 @@ export function TransactionDetails<T extends Transaction>({
   const solanaTx = tx.adapter === OrbitAdapter.SOLANA ? (tx as unknown as SolanaTransaction) : null;
   const starknetTx = tx.adapter === OrbitAdapter.Starknet ? (tx as unknown as StarknetTransaction) : null;
 
+  // The on-chain hash: the hash of an EVM transaction (the TX key for the ethereum tracker), the TX key otherwise
+  const hash = evmTx ? (evmTx.hash ?? (tx.tracker === TransactionTracker.Ethereum ? tx.txKey : undefined)) : tx.txKey;
+  const explorerUrl = foundAdapter?.getExplorerTxUrl?.(tx);
+  const canReplace = canReplaceTx(tx, foundAdapter);
+  const chainId = setChainId(tx.chainId);
+
+  const isConfirmed = tx.pending && 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed';
+  const status: { tone: BadgeTone; icon: ComponentType<{ className?: string }>; label: string } = tx.pending
+    ? isConfirmed
+      ? { tone: 'success', icon: CheckCircleIcon, label: statuses.confirmed }
+      : { tone: 'pending', icon: ClockIcon, label: statuses.pending }
+    : tx.status === TransactionStatus.Success
+      ? { tone: 'success', icon: CheckCircleIcon, label: statuses.success }
+      : tx.status === TransactionStatus.Failed
+        ? { tone: 'error', icon: ExclamationTriangleIcon, label: statuses.failed }
+        : tx.status === TransactionStatus.Replaced
+          ? { tone: 'info', icon: ArrowPathIcon, label: statuses.replaced }
+          : { tone: 'info', icon: ExclamationTriangleIcon, label: tx.status ?? statuses.unknown };
+
+  const syncBadge = (inRow: boolean) =>
+    tx.syncStatus === 'pending-sync' ? (
+      <Badge
+        tone="pending"
+        icon={inRow ? undefined : CloudArrowUpIcon}
+        title={transactionDetails.syncStatus.pendingTooltip}
+      >
+        {transactionDetails.syncStatus.pending}
+      </Badge>
+    ) : tx.syncStatus === 'synced' ? (
+      <Badge
+        tone={inRow ? 'success' : 'muted'}
+        icon={inRow ? undefined : CloudIcon}
+        title={transactionDetails.syncStatus.syncedTooltip}
+      >
+        {transactionDetails.syncStatus.synced}
+      </Badge>
+    ) : null;
+
+  const showConfirmations = tx.pending && tx.confirmations !== null && tx.confirmations !== undefined;
+  const showTxKey = tx.txKey !== hash;
+
+  // Execution data of the chain
+  const evmFees = evmTx && {
+    maxFee: formatUnits(evmTx.maxFeePerGas, 9),
+    maxPriorityFee: formatUnits(evmTx.maxPriorityFeePerGas, 9),
+  };
+  const evmInput = evmTx?.input && evmTx.input !== '0x' ? evmTx.input : undefined;
+  const hasEvmData = !!(
+    evmTx &&
+    (evmTx.nonce !== undefined ||
+      evmFees?.maxFee ||
+      evmFees?.maxPriorityFee ||
+      evmTx.value !== undefined ||
+      evmTx.replacedTxHash ||
+      evmInput)
+  );
+  const solanaFee = solanaTx ? formatUnits(solanaTx.fee, 9) : undefined;
+  const solanaInstructions = solanaTx?.instructions?.length ? solanaTx.instructions : undefined;
+  const hasSolanaData = !!(
+    solanaTx &&
+    (solanaFee || solanaTx.slot !== undefined || solanaTx.recentBlockhash || solanaInstructions)
+  );
+  const hasStarknetData = !!(starknetTx && (starknetTx.contractAddress || starknetTx.actualFee));
+
+  // Context and payload
+  const titleContext = statusText(tx.title, tx.status);
+  const descriptionContext = statusText(tx.description, tx.status);
+  const hasPayload = !!tx.payload && Object.keys(tx.payload).length > 0;
+  const hasError = !!tx.error && Object.keys(tx.error).length > 0;
+  const hasContext = !!(titleContext || descriptionContext || hasPayload || hasError);
+
   return (
-    <div className={cn('novatx:flex novatx:flex-col novatx:gap-6 novatx:p-4', className, classNames?.container)}>
-      {/* ── Header ── */}
-      <div className={cn('novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
-        <div className="novatx:flex novatx:items-center novatx:gap-3">
-          <button
-            type="button"
-            onClick={onBack}
-            className={cn(
-              'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:p-2 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
-              classNames?.backButton,
-            )}
-            title={actions.close}
-          >
-            <ArrowLeftIcon className="novatx:h-5 novatx:w-5" />
-          </button>
-          <div>
-            <h3
-              className={cn(
-                'novatx:text-lg novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]',
-                classNames?.title,
-              )}
-            >
-              {transactionDetails.title}
-            </h3>
-            <p
-              className={cn(
-                'novatx:text-[10px] novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-tertiary)]',
-                classNames?.subtitle,
-              )}
-            >
-              {transactionDetails.subtitle}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Core Transaction Card ── */}
-      <CSectionCard className={classNames?.coreInfoCard}>
-        {/* Status Header */}
-        <div className="novatx:flex novatx:gap-2 novatx:flex-wrap novatx:items-center novatx:justify-between novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-4">
-          <div className="novatx:flex novatx:items-center novatx:gap-3">
-            <div
-              className={cn(
-                'novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-corners)]',
-                status === 'success'
-                  ? 'novatx:bg-emerald-500/10 novatx:text-emerald-500'
-                  : status === 'pending'
-                    ? 'novatx:bg-amber-500/10 novatx:text-amber-500'
-                    : 'novatx:bg-rose-500/10 novatx:text-rose-500',
-                classNames?.statusIconContainer,
-              )}
-            >
-              {status === 'success' ? (
-                <CheckCircleIcon className="novatx:h-6 novatx:w-6" />
-              ) : status === 'pending' ? (
-                <ClockIcon className="novatx:h-6 novatx:w-6" />
-              ) : (
-                <ExclamationTriangleIcon className="novatx:h-6 novatx:w-6" />
-              )}
-            </div>
-            <div>
-              <h3 className="novatx:text-lg novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]">
-                {tx.type}
-              </h3>
-              <p
-                className={cn(
-                  'novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest',
-                  status === 'success'
-                    ? 'novatx:text-emerald-500'
-                    : status === 'pending'
-                      ? 'novatx:text-amber-500'
-                      : 'novatx:text-rose-500',
-                )}
-              >
-                {tx.pending ? statuses.pending : (tx.status ?? statuses.failed)}
-              </p>
-            </div>
-          </div>
-          {/* Sync Status Badge */}
-          {tx.syncStatus === 'pending-sync' && (
-            <div
-              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-amber-500/10 novatx:px-2.5 novatx:py-1.5 novatx:text-amber-500"
-              title={transactionDetails.syncStatus.pendingTooltip}
-            >
-              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse" />
-              <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
-                {transactionDetails.syncStatus.pending}
-              </span>
-            </div>
+    <div className={cn('novatx:flex novatx:min-w-0 novatx:flex-col', className, classNames?.container)}>
+      {!hideHeader && (
+        <header
+          className={cn(
+            'novatx:sticky novatx:top-0 novatx:z-10 novatx:flex novatx:items-center novatx:gap-3 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:py-3.5 novatx:sm:px-5 novatx:sm:py-4',
+            classNames?.header,
           )}
-          {tx.syncStatus === 'synced' && (
-            <div
-              className="novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-2.5 novatx:py-1.5 novatx:text-[var(--tuwa-text-tertiary)]"
-              title={transactionDetails.syncStatus.syncedTooltip}
-            >
-              <CloudIcon className="novatx:h-4 novatx:w-4" />
-              <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
-                {transactionDetails.syncStatus.synced}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Body */}
-        <div className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 sm:novatx:grid-cols-2">
-            <CCopyableField
-              label={transactionDetails.hash}
-              value={evmTx?.hash || tx.txKey}
-              className="novatx:min-w-0"
-              classNames={{
-                code: explorerUrl ? 'novatx:p-0 novatx:border-none novatx:bg-transparent' : undefined,
-              }}
-            >
-              {explorerUrl ? (
-                <a
-                  href={explorerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="novatx:block novatx:truncate novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-muted)]/50 novatx:px-3 novatx:py-2 novatx:text-xs novatx:font-mono novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80"
+        >
+          <HeaderContent
+            title={<h3 className={cn(headerTitleClassName, classNames?.title)}>{transactionDetails.title}</h3>}
+            subtitle={transactionDetails.subtitle}
+            onBack={onBack}
+            backLabel={transactionDetails.back}
+            classNames={{ backButton: classNames?.backButton, subtitle: classNames?.subtitle }}
+            closeButton={
+              onClose && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label={actions.close}
+                  title={actions.close}
+                  className={cn(headerCloseButtonClassName, classNames?.closeButton)}
                 >
-                  {evmTx?.hash || tx.txKey}
-                </a>
-              ) : null}
-            </CCopyableField>
+                  <CloseIcon />
+                </button>
+              )
+            }
+          />
+        </header>
+      )}
 
-            <div className="novatx:space-y-1.5">
-              <FieldLabel>{transactionDetails.network}</FieldLabel>
-              <div
+      <div
+        className={cn(
+          'novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-4 novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-4 novatx:sm:p-5',
+          classNames?.body,
+        )}
+      >
+        {/* ── Status row ── */}
+        <div
+          className={cn(
+            'novatx:flex novatx:flex-wrap novatx:items-center novatx:justify-between novatx:gap-3',
+            classNames?.coreInfoCard,
+          )}
+        >
+          <div className="novatx:flex novatx:min-w-0 novatx:flex-wrap novatx:items-center novatx:gap-2">
+            <Badge tone={status.tone} icon={status.icon} className={classNames?.statusIconContainer}>
+              {status.label}
+            </Badge>
+            <code className="novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-text-secondary)] novatx:[overflow-wrap:anywhere]">
+              {tx.type}
+            </code>
+            {syncBadge(false)}
+          </div>
+          {canReplace ? (
+            <div className="novatx:flex novatx:flex-wrap novatx:gap-2">
+              <button
+                type="button"
+                onClick={() => foundAdapter?.speedUpTxAction?.(tx)}
+                className={cn(actionButtonClassName, classNames?.actionButton)}
+              >
+                <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                {actions.speedUp}
+              </button>
+              <button
+                type="button"
+                onClick={() => foundAdapter?.cancelTxAction?.(tx)}
+                className={cn(actionButtonClassName, classNames?.actionButton)}
+              >
+                <XCircleIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                {actions.cancel}
+              </button>
+            </div>
+          ) : (
+            explorerUrl && (
+              <a
+                href={explorerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(actionButtonClassName, classNames?.actionButton)}
+              >
+                <ArrowTopRightOnSquareIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                {actions.viewOnExplorer}
+              </a>
+            )
+          )}
+        </div>
+
+        {/* ── Metadata ── */}
+        <CSectionCard className={classNames?.metadataSection}>
+          <CSectionHeading icon={DocumentTextIcon} className={classNames?.sectionHeader}>
+            {transactionDetails.metadata}
+          </CSectionHeading>
+          <dl className="novatx:m-0">
+            {hash ? (
+              <CCopyableField label={transactionDetails.hash} value={hash}>
+                {explorerUrl ? (
+                  <a
+                    href={explorerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={hash}
+                    className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
+                  >
+                    {textCenterEllipsis(hash, 8, 8)}
+                  </a>
+                ) : null}
+              </CCopyableField>
+            ) : (
+              <CDetailItem label={transactionDetails.hash} value="—" />
+            )}
+            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.network}>
+              <span
                 className={cn(
-                  'novatx:flex novatx:h-[42px] novatx:items-center novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-muted)]/50 novatx:px-4',
+                  'novatx:inline-flex novatx:max-w-full novatx:items-center novatx:gap-2 novatx:align-middle',
                   classNames?.networkBadge,
                 )}
               >
-                <div className="novatx:h-5 novatx:w-5">
-                  <NetworkIcon chainId={setChainId(tx.chainId)} />
-                </div>
-                <span className="novatx:truncate novatx:text-sm novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-primary)]">
-                  {getChainName(setChainId(tx.chainId)).name}
+                <span className="novatx:h-[18px] novatx:w-[18px] novatx:shrink-0">
+                  <NetworkIcon chainId={chainId} />
                 </span>
-                <span className="novatx:ml-auto novatx:shrink-0 novatx:font-mono novatx:text-[10px] novatx:text-[var(--tuwa-text-tertiary)]">
-                  ID: {tx.chainId}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-8 sm:novatx:grid-cols-2">
+                <span className="novatx:truncate">{getChainName(chainId).name}</span>
+                {typeof tx.chainId === 'number' && (
+                  <span className="novatx:shrink-0 novatx:text-[var(--tuwa-text-tertiary)]">· {tx.chainId}</span>
+                )}
+              </span>
+            </CMetadataRow>
             <CCopyableField label={transactionDetails.from} value={tx.from} />
             {evmTx?.to ? (
               <CCopyableField label={transactionDetails.to} value={evmTx.to} />
             ) : (
               <CDetailItem label={transactionDetails.to} value="—" />
             )}
-          </div>
-        </div>
-      </CSectionCard>
-
-      {/* ── Metadata Section ── */}
-      <CSectionCard className={cn('novatx:p-4', classNames?.metadataSection)}>
-        <CSectionHeading className={classNames?.sectionHeader}>{transactionDetails.metadata}</CSectionHeading>
-        <div className="novatx:divide-y novatx:divide-[var(--tuwa-border-primary)]">
-          <CMetadataRow icon={GlobeAltIcon} label={transactionDetails.adapter}>
-            <span className="novatx:capitalize">{tx.adapter}</span>
-          </CMetadataRow>
-          <CMetadataRow icon={ClockIcon} label={transactionDetails.submittedAt}>
-            {dayjs.unix(tx.localTimestamp).format('MMM D, YYYY HH:mm:ss')}
-          </CMetadataRow>
-          {tx.finishedTimestamp && (
-            <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.finishedAt}>
-              {dayjs.unix(tx.finishedTimestamp).format('MMM D, YYYY HH:mm:ss')}
+            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.adapter}>
+              {tx.adapter}
             </CMetadataRow>
-          )}
-          <CMetadataRow icon={CpuChipIcon} label={transactionDetails.tracker}>
-            <span className="novatx:capitalize">{tx.tracker}</span>
-          </CMetadataRow>
-          <CMetadataRow icon={LinkIcon} label={transactionDetails.connector}>
-            <span className="novatx:capitalize">{tx.connectorType}</span>
-          </CMetadataRow>
-          {tx.confirmations && Number(tx.confirmations) > 0 && (
-            <CMetadataRow icon={CheckBadgeIcon} label={transactionDetails.confirmations}>
-              {tx.confirmations}
-              {tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}
+            <CMetadataRow icon={ClockIcon} label={transactionDetails.submittedAt}>
+              {formatTime(tx.localTimestamp)}
             </CMetadataRow>
-          )}
-          <CMetadataRow icon={KeyIcon} label={transactionDetails.txKey}>
-            <div className="novatx:flex novatx:min-w-0 novatx:items-center novatx:gap-1.5">
-              <span className="novatx:truncate font-mono">{tx.txKey}</span>
-              <CopyButton value={tx.txKey} size="sm" className="novatx:p-0" />
-            </div>
-          </CMetadataRow>
-        </div>
-      </CSectionCard>
-
-      {/* ── Execution Data Section (Unified) ── */}
-      <CSectionCard className={cn('novatx:p-4', classNames?.executionSection)}>
-        <CSectionHeading className={classNames?.sectionHeader}>{transactionDetails.executionData}</CSectionHeading>
-
-        <div className="novatx:space-y-6">
-          {/* Chain Specific Metrics */}
-          {evmTx && (
-            <EvmExecutionData
-              tx={evmTx}
-              labels={transactionDetails}
-              components={{ DetailItem: CDetailItem, CopyableField: CCopyableField }}
-            />
-          )}
-
-          {solanaTx && (
-            <SolanaExecutionData
-              tx={solanaTx}
-              labels={transactionDetails}
-              components={{ DetailItem: CDetailItem, CopyableField: CCopyableField }}
-            />
-          )}
-
-          {starknetTx && (
-            <StarknetExecutionData
-              tx={starknetTx}
-              labels={transactionDetails}
-              components={{ DetailItem: CDetailItem, CopyableField: CCopyableField }}
-            />
-          )}
-
-          {/* Context & Payload Blocks */}
-          <div className="novatx:space-y-6 novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:pt-6">
-            {evmTx && evmTx.input && evmTx.input !== '0x' && (
-              <CJsonBlock label={transactionDetails.inputData} data={evmTx.input} />
+            {tx.finishedTimestamp && (
+              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.finishedAt}>
+                {formatTime(tx.finishedTimestamp)}
+              </CMetadataRow>
             )}
-            {solanaTx && solanaTx.instructions && (
-              <CJsonBlock label={transactionDetails.instructions} data={solanaTx.instructions} />
+            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.tracker}>
+              {tx.tracker}
+            </CMetadataRow>
+            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.connector}>
+              {tx.connectorType}
+            </CMetadataRow>
+            {showConfirmations && (
+              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.confirmations}>
+                {`${tx.confirmations}${tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}`}
+              </CMetadataRow>
             )}
+            {showTxKey && <CCopyableField label={transactionDetails.txKey} value={tx.txKey} />}
+            {tx.syncStatus && (
+              <CMetadataRow icon={CloudIcon} label={transactionDetails.syncStatus.label}>
+                {syncBadge(true)}
+              </CMetadataRow>
+            )}
+          </dl>
+        </CSectionCard>
 
-            <CJsonBlock label={transactionDetails.fullPayload} data={tx.payload} />
+        {/* ── Execution data of the chain ── */}
+        {hasEvmData && evmTx && (
+          <CSectionCard className={classNames?.executionSection}>
+            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+              {transactionDetails.evmTitle}
+            </CSectionHeading>
+            <dl className="novatx:m-0">
+              {evmTx.nonce !== undefined && <CDetailItem label={transactionDetails.nonce} value={evmTx.nonce} />}
+              {evmFees?.maxFee && <CDetailItem label={transactionDetails.maxFee} value={`${evmFees.maxFee} gwei`} />}
+              {evmFees?.maxPriorityFee && (
+                <CDetailItem label={transactionDetails.maxPriorityFee} value={`${evmFees.maxPriorityFee} gwei`} />
+              )}
+              {evmTx.value !== undefined && <CDetailItem label={transactionDetails.value} value={evmTx.value} />}
+              {evmTx.replacedTxHash && (
+                <CCopyableField label={transactionDetails.replacedHash} value={evmTx.replacedTxHash} />
+              )}
+            </dl>
+            {evmInput && <CJsonBlock label={transactionDetails.inputData} data={evmInput} />}
+          </CSectionCard>
+        )}
 
-            <CJsonBlock label={transactionDetails.errorContext} data={tx.error} />
-          </div>
-        </div>
-      </CSectionCard>
+        {hasSolanaData && solanaTx && (
+          <CSectionCard className={classNames?.executionSection}>
+            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+              {transactionDetails.solanaTitle}
+            </CSectionHeading>
+            <dl className="novatx:m-0">
+              {solanaFee && <CDetailItem label={transactionDetails.fee} value={`${solanaFee} SOL`} />}
+              {solanaTx.slot !== undefined && <CDetailItem label={transactionDetails.slot} value={solanaTx.slot} />}
+              {solanaTx.recentBlockhash && (
+                <CCopyableField label={transactionDetails.recentBlockhash} value={solanaTx.recentBlockhash} />
+              )}
+            </dl>
+            {solanaInstructions && <CJsonBlock label={transactionDetails.instructions} data={solanaInstructions} />}
+          </CSectionCard>
+        )}
+
+        {hasStarknetData && starknetTx && (
+          <CSectionCard className={classNames?.executionSection}>
+            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+              {transactionDetails.starknetTitle}
+            </CSectionHeading>
+            <dl className="novatx:m-0">
+              {starknetTx.contractAddress && (
+                <CCopyableField label={transactionDetails.contractAddress} value={starknetTx.contractAddress} />
+              )}
+              {starknetTx.actualFee && (
+                <CDetailItem
+                  label={transactionDetails.actualFee}
+                  value={`${starknetTx.actualFee.amount} ${starknetTx.actualFee.unit}`}
+                />
+              )}
+            </dl>
+          </CSectionCard>
+        )}
+
+        {/* ── Context & Payload ── */}
+        {hasContext && (
+          <CSectionCard className={classNames?.contextSection}>
+            <CSectionHeading icon={CommandLineIcon} className={classNames?.sectionHeader}>
+              {transactionDetails.contextTitle}
+            </CSectionHeading>
+            {(titleContext || descriptionContext) && (
+              <dl className="novatx:m-0">
+                {titleContext && <CDetailItem label={transactionDetails.titleContext} value={titleContext} />}
+                {descriptionContext && (
+                  <CDetailItem label={transactionDetails.descriptionContext} value={descriptionContext} />
+                )}
+              </dl>
+            )}
+            {hasError && <CJsonBlock label={transactionDetails.errorContext} data={tx.error} />}
+            {hasPayload && <CJsonBlock label={transactionDetails.fullPayload} data={tx.payload} />}
+          </CSectionCard>
+        )}
+      </div>
     </div>
   );
 }

@@ -126,6 +126,13 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   initialTxKey?: string | null;
   /** Whether transaction details can be viewed by clicking on history items. Defaults to true. */
   canViewDetails?: boolean;
+  /**
+   * Called with the key of the selected transaction instead of opening its details inside the list; for a container
+   * that shows them itself, as {@link TransactionsInfoModal} does under its own header.
+   *
+   * @param txKey - The `txKey` of the selected transaction.
+   */
+  onSelectTx?: (txKey: string) => void;
 };
 
 /** Duration (ms) for the error indicator to stay visible before fading out. */
@@ -211,10 +218,10 @@ function HistoryPlaceholder({
 /**
  * The transactions of the connected wallet (`selectAllTransactionsByActiveWallet` from `@tuwaio/pulsar-core`), newest
  * first, with a placeholder when no wallet is connected or there are no transactions. Selecting an item opens
- * {@link TransactionDetails} (when `canViewDetails` is `true`; `initialTxKey` opens one directly). With `pagination`,
- * it
- * calls `pagination.fetchNextPage(connectedWalletAddress)` when the end of the list becomes visible (an
- * `IntersectionObserver`) and shows a short error indicator when loading a page fails.
+ * {@link TransactionDetails} (when `canViewDetails` is `true`; `initialTxKey` opens one directly), or calls
+ * `onSelectTx` when it is set. With `pagination`, it calls `pagination.fetchNextPage(connectedWalletAddress)` when the
+ * end of the list becomes visible (an `IntersectionObserver`) and shows a short error indicator when loading a page
+ * fails.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionsHistoryProps}.
@@ -229,6 +236,7 @@ export function TransactionsHistory<T extends Transaction>({
   pagination,
   initialTxKey,
   canViewDetails = true,
+  onSelectTx,
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -364,7 +372,11 @@ export function TransactionsHistory<T extends Transaction>({
               adapter={adapter}
               canViewDetails={canViewDetails}
               customization={{ classNames: itemClassNames }}
-              onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
+              onSelectTx={() => {
+                if (!canViewDetails) return;
+                if (onSelectTx) onSelectTx(tx.txKey);
+                else setSelectedTxKey(tx.txKey);
+              }}
             />
           ))}
 
@@ -403,7 +415,7 @@ export function TransactionsHistory<T extends Transaction>({
     );
   };
 
-  if (selectedTxKey) {
+  if (selectedTxKey && !onSelectTx) {
     const selectedTx = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
     if (selectedTx) {
       return (

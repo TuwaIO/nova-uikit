@@ -4,16 +4,20 @@
  */
 
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
-import { Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
-import { ComponentPropsWithoutRef, ComponentType } from 'react';
+import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
+import { ComponentPropsWithoutRef, ComponentType, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
+import { TransactionDetails } from './TransactionDetails';
 import { TransactionsHistory, TransactionsHistoryProps } from './TransactionsHistory';
 
 /** Props of the header of {@link TransactionsInfoModal} (`customization.components.Header`). */
 export type TransactionsInfoModalHeaderProps = {
   /** Closes the modal. */
   closeModal: () => void;
+  /** Goes back from the details of a transaction to the list; `undefined` while the list is shown. */
+  onBack?: () => void;
 };
 
 /**
@@ -32,10 +36,14 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
     header?: string;
     /** Classes for the header title */
     headerTitle?: string;
+    /** Classes for the subtitle under the header title (shown with the details of a transaction) */
+    headerSubtitle?: string;
+    /** Classes for the back button (shown with the details of a transaction) */
+    backButton?: string;
     /** Classes for the close button */
     closeButton?: string;
   };
-  /** Customization for TransactionsHistory component */
+  /** Customization for TransactionsHistory component; its `detailsCustomization` also applies to the details here. */
   historyCustomization?: TransactionsHistoryProps<T>['customization'];
   /** Components that replace the default parts. */
   components?: {
@@ -74,40 +82,57 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
 type DefaultHeaderClassNames = {
   header?: string;
   title?: string;
+  subtitle?: string;
+  backButton?: string;
   closeButton?: string;
 };
 
 const DefaultHeader = ({
   closeModal,
+  onBack,
   title,
+  subtitle,
+  backLabel,
   classNames,
-}: TransactionsInfoModalHeaderProps & { title: string; classNames?: DefaultHeaderClassNames }) => {
+}: TransactionsInfoModalHeaderProps & {
+  title: string;
+  subtitle?: string;
+  backLabel: string;
+  classNames?: DefaultHeaderClassNames;
+}) => {
   const { actions } = useLabels();
   return (
-    <DialogHeader className={classNames?.header}>
-      <DialogTitle className={classNames?.title}>{title}</DialogTitle>
-
-      <DialogClose asChild>
-        <button
-          type="button"
-          onClick={closeModal}
-          aria-label={actions.close}
-          className={cn(
-            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:p-1 novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)] novatx:hover:text-[var(--tuwa-text-primary)]',
-            classNames?.closeButton,
-          )}
-        >
-          <CloseIcon />
-        </button>
-      </DialogClose>
+    <DialogHeader className={cn('novatx:gap-3', classNames?.header)}>
+      <HeaderContent
+        title={<DialogTitle className={cn(headerTitleClassName, classNames?.title)}>{title}</DialogTitle>}
+        subtitle={subtitle}
+        onBack={onBack}
+        backLabel={backLabel}
+        classNames={{ backButton: classNames?.backButton, subtitle: classNames?.subtitle }}
+        closeButton={
+          <DialogClose asChild>
+            <button
+              type="button"
+              onClick={closeModal}
+              aria-label={actions.close}
+              title={actions.close}
+              className={cn(headerCloseButtonClassName, classNames?.closeButton)}
+            >
+              <CloseIcon />
+            </button>
+          </DialogClose>
+        }
+      />
     </DialogHeader>
   );
 };
 
 /**
- * A modal with the transaction history of the connected wallet ({@link TransactionsHistory}).
- * `NovaTransactionsProvider`
- * opens it from the toasts and the tracking modal.
+ * A modal with the transaction history of the connected wallet ({@link TransactionsHistory}) and the details of a
+ * transaction ({@link TransactionDetails}): selecting a transaction in the list, or opening the modal with
+ * `selectedTxKey`, shows its details under the same header, which then has a back button and the title of the details.
+ * The modal opens on the list again after it is closed. Only transactions of `connectedWalletAddress` are shown.
+ * `NovaTransactionsProvider` opens it from the toasts and the tracking modal.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionsInfoModalProps}.
@@ -123,7 +148,25 @@ export function TransactionsInfoModal<T extends Transaction>({
   pagination,
   selectedTxKey,
 }: TransactionsInfoModalProps<T>) {
-  const { transactionsModal } = useLabels();
+  const { transactionsModal, transactionDetails } = useLabels();
+
+  // The transaction whose details are shown: the one the modal is opened with, then the one chosen in the list. It is
+  // reset to `selectedTxKey` whenever the modal opens or closes or `selectedTxKey` changes.
+  const [view, setView] = useState({ isOpen, selectedTxKey, openTxKey: selectedTxKey ?? null });
+  let openTxKey = view.openTxKey;
+  if (view.isOpen !== isOpen || view.selectedTxKey !== selectedTxKey) {
+    openTxKey = selectedTxKey ?? null;
+    setView({ isOpen, selectedTxKey, openTxKey });
+  }
+  const showTx = (txKey: string | null) => setView({ isOpen, selectedTxKey, openTxKey: txKey });
+
+  const openTx =
+    openTxKey && connectedWalletAddress
+      ? selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress).find(
+          (tx) => tx.txKey === openTxKey,
+        )
+      : undefined;
+  const onBack = openTx ? () => showTx(null) : undefined;
 
   const closeModal = () => setIsOpen(false);
 
@@ -143,26 +186,40 @@ export function TransactionsInfoModal<T extends Transaction>({
           )}
         >
           {CustomHeader ? (
-            <CustomHeader closeModal={closeModal} />
+            <CustomHeader closeModal={closeModal} onBack={onBack} />
           ) : (
             <DefaultHeader
               closeModal={closeModal}
-              title={transactionsModal.history.title}
+              onBack={onBack}
+              title={openTx ? transactionDetails.title : transactionsModal.history.title}
+              subtitle={openTx ? transactionDetails.subtitle : undefined}
+              backLabel={transactionDetails.back}
               classNames={{
                 header: customization?.classNames?.header,
                 title: customization?.classNames?.headerTitle,
+                subtitle: customization?.classNames?.headerSubtitle,
+                backButton: customization?.classNames?.backButton,
                 closeButton: customization?.classNames?.closeButton,
               }}
             />
           )}
 
-          {CustomHistory ? (
+          {openTx ? (
+            <TransactionDetails
+              tx={openTx}
+              adapter={adapter}
+              onBack={() => showTx(null)}
+              hideHeader
+              customization={customization?.historyCustomization?.detailsCustomization}
+            />
+          ) : CustomHistory ? (
             <CustomHistory
               adapter={adapter}
               transactionsPool={transactionsPool}
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
               pagination={pagination}
+              onSelectTx={showTx}
             />
           ) : (
             <TransactionsHistory
@@ -171,7 +228,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
               pagination={pagination}
-              initialTxKey={selectedTxKey}
+              onSelectTx={showTx}
             />
           )}
         </div>

@@ -86,6 +86,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   transactionDetails: {
     title: 'Transaction Details',
     subtitle: 'View full execution metrics and on-chain status.',
+    back: 'Back to history',
     metadata: 'Metadata',
     executionData: 'Execution Data',
     adapter: 'Adapter',
@@ -98,7 +99,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     from: 'From (Origin)',
     to: 'To (Recipient)',
     hash: 'Transaction Hash',
-    network: 'Network',
+    network: 'Network / Chain',
     inputData: 'Input Data',
     payload: 'Payload Data',
     context: 'Context',
@@ -106,6 +107,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     value: 'Value (Raw)',
     maxFee: 'Max Fee per Gas',
     maxPriorityFee: 'Max Priority Fee per Gas',
+    evmTitle: 'EVM Execution Data',
     solanaTitle: 'Solana Execution Data',
     starknetTitle: 'Starknet Execution Data',
     contextTitle: 'Context & Payload',
@@ -121,6 +123,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     fullPayload: 'Full Payload',
     replacedHash: 'Replaced Hash',
     syncStatus: {
+      label: 'Sync Status',
       pending: 'Pending Sync',
       pendingTooltip: 'Queued for Cloud Sync',
       synced: 'Synced',
