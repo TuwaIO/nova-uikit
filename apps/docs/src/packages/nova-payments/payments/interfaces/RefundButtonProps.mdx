@@ -1,0 +1,208 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/RefundButtonProps" />
+
+# RefundButtonProps
+
+Defined in: components/RefundButton.tsx:67
+
+Props of [RefundButton](?path=/docs/packages-nova-payments-payments-functions-refundbutton--docs).
+
+## Extends
+
+- `Omit`\<[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs), `"open"` \| `"onOpenChange"`\>
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: components/RefundButton.tsx:71
+
+Classes of the button.
+
+***
+
+### currency?
+
+> `optional` **currency?**: `string`
+
+Defined in: components/RefundButton.tsx:49
+
+The invoice currency, for the amount step. Defaults to `USD`.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`currency`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#currency)
+
+***
+
+### details?
+
+> `optional` **details?**: `object`
+
+Defined in: components/RefundButton.tsx:55
+
+Rows the app adds: to the confirm step (what the refund takes back) and to the refunded step.
+
+#### confirm?
+
+> `optional` **confirm?**: `ReactNode`
+
+#### done?
+
+> `optional` **done?**: `ReactNode`
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`details`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#details)
+
+***
+
+### disabled?
+
+> `optional` **disabled?**: `boolean`
+
+Defined in: components/RefundButton.tsx:73
+
+Whether the button is disabled.
+
+***
+
+### invoice?
+
+> `optional` **invoice?**: `string`
+
+Defined in: components/RefundButton.tsx:45
+
+Its number, shown in the title and in the transaction of Pulsar.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`invoice`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#invoice)
+
+***
+
+### invoiceId
+
+> **invoiceId**: `string`
+
+Defined in: components/RefundButton.tsx:43
+
+The paid invoice to refund.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`invoiceId`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#invoiceid)
+
+***
+
+### label?
+
+> `optional` **label?**: `ReactNode`
+
+Defined in: components/RefundButton.tsx:69
+
+The button's text. Defaults to the `refund.button` label.
+
+***
+
+### locale?
+
+> `optional` **locale?**: `string`
+
+Defined in: components/RefundButton.tsx:53
+
+The language (a BCP 47 tag). Defaults to `en`.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`locale`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#locale)
+
+***
+
+### onRecord?
+
+> `optional` **onRecord?**: () => `void`
+
+Defined in: components/RefundButton.tsx:57
+
+"Record refund": the app's form for a refund sent another way; offered when the wallet does not send it.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`onRecord`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#onrecord)
+
+***
+
+### onRefunded?
+
+> `optional` **onRefunded?**: (`refund`) => `void`
+
+Defined in: components/RefundButton.tsx:63
+
+Called once Quasar confirmed the refund and issued its credit note.
+
+#### Parameters
+
+##### refund
+
+`NonNullable`\<`RefundState`\[`"refund"`\]\>
+
+The confirmed refund (`Refund` of `@tuwaio/quasar-sdk`).
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`onRefunded`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#onrefunded)
+
+***
+
+### params?
+
+> `optional` **params?**: `RefundParams`
+
+Defined in: components/RefundButton.tsx:47
+
+The refund the app worked out (amount, mode, reason): asked for at once, without the amount step.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`params`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#params)
+
+***
+
+### refundable?
+
+> `optional` **refundable?**: `string`
+
+Defined in: components/RefundButton.tsx:51
+
+What is left to refund, with its currency, shown under the amount (`20.00 USD`).
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`refundable`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#refundable)
+
+***
+
+### store
+
+> **store**: `RefundStore`
+
+Defined in: components/RefundButton.tsx:41
+
+The refund store (`createRefundStore` of `@tuwaio/quasar-sdk/checkout`), whose calls the app runs on its server
+with the secret key. One store per invoice: it keeps the refund while the window is closed.
+
+#### Inherited from
+
+[`RefundDialogProps`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs).[`store`](?path=/docs/packages-nova-payments-payments-interfaces-refunddialogprops--docs#store)

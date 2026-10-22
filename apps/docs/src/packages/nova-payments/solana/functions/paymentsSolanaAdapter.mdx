@@ -6,15 +6,15 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **paymentsSolanaAdapter**(`options?`): [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs)
 
-Defined in: [solana/paymentsSolanaAdapter.ts:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/solana/paymentsSolanaAdapter.ts#L124)
+Defined in: [solana/paymentsSolanaAdapter.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/solana/paymentsSolanaAdapter.ts#L127)
 
 The adapter that pays Solana methods of a Nova Payments checkout from the Wallet Standard wallet connected through
 Satellite Connect. It reads balances and estimates fees on the network, and sends SOL with a system transfer or a
 token with `transferChecked` to the merchant's associated token account (created when missing), in the token's own
-program (Token or Token-2022), always with the Solana Pay reference key of the quote. A Token-2022 mint with a
-transfer hook is refused: a Solana Pay wallet pays it with the QR code. A transfer the network refuses for an
-unknown blockhash, because the wallet sent it on another cluster (Solana wallets choose their network themselves),
-throws `PaymentWalletError` with the kind `wrongNetwork`: nothing was paid. Pass it in `adapters` of
+program (Token or Token-2022), with the Solana Pay reference key of the quote (a refund has none). A Token-2022
+mint with a transfer hook is refused: a Solana Pay wallet pays it with the QR code. A transfer the network refuses
+for an unknown blockhash, because the wallet sent it on another cluster (Solana wallets choose their network
+themselves), throws `PaymentWalletError` with the kind `wrongNetwork`: nothing was paid. Pass it in `adapters` of
 `NovaPaymentsProvider`.
 
 Side effects: RPC reads (the URLs of `rpcUrls`, else the public endpoints of the clusters); wallet prompts.

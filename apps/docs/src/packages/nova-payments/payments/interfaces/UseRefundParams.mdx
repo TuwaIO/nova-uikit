@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Interfaces/UseRefundParams" />
+
+# UseRefundParams
+
+Defined in: hooks/useRefund.ts:54
+
+What [useRefund](?path=/docs/packages-nova-payments-payments-functions-userefund--docs) needs.
+
+## Properties
+
+### invoice?
+
+> `optional` **invoice?**: `string`
+
+Defined in: hooks/useRefund.ts:60
+
+Its number, for the transaction in Pulsar (the ID without one).
+
+***
+
+### invoiceId
+
+> **invoiceId**: `string`
+
+Defined in: hooks/useRefund.ts:58
+
+The paid invoice to refund.
+
+***
+
+### labels
+
+> **labels**: [`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
+
+Defined in: hooks/useRefund.ts:64
+
+The labels of the language.
+
+***
+
+### locale
+
+> **locale**: `string`
+
+Defined in: hooks/useRefund.ts:66
+
+The language, for amounts.
+
+***
+
+### params?
+
+> `optional` **params?**: `RefundParams`
+
+Defined in: hooks/useRefund.ts:62
+
+The refund the app worked out: asked for at once, without the amount step.
+
+***
+
+### store
+
+> **store**: `RefundStore`
+
+Defined in: hooks/useRefund.ts:56
+
+The refund store (`createRefundStore` of `@tuwaio/quasar-sdk/checkout`).

@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Type Aliases/RefundProblem" />
+
+# RefundProblem
+
+> **RefundProblem** = `"notEnough"` \| `"declined"` \| `"unsupported"` \| `"wrongNetwork"` \| `"failed"` \| `"noRecipient"`
+
+Defined in: hooks/useRefund.ts:47
+
+Why a refund was not sent: the wallet holds too little (`notEnough`), the merchant declined, the wallet cannot send
+it or sent it on another network, it failed, or Quasar does not know the payer (`noRecipient`).

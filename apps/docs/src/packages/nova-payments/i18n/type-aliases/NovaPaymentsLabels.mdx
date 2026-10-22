@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:394](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L394)
+Defined in: [i18n/types.ts:396](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L396)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -129,7 +129,7 @@ Under the buttons (default: `Your wallet shows this permission (ERC-7715) before
 
 > **buyer**: `object`
 
-Defined in: [i18n/types.ts:108](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L108)
+Defined in: [i18n/types.ts:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L110)
 
 The buyer details step.
 
@@ -287,7 +287,7 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:338](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L338)
+Defined in: [i18n/types.ts:340](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L340)
 
 The confirm step: the transaction is on its way.
 
@@ -443,7 +443,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:486](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L486)
+Defined in: [i18n/types.ts:488](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L488)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -583,6 +583,12 @@ Name of the payment way group (default: `Pay with`)
 
 Badge of a method the merchant marks (default: `Popular`)
 
+#### priceUnavailable
+
+> **priceUnavailable**: `string`
+
+Quasar cannot read the price of the method now: its feed or network is down (`price_unavailable`)
+
 #### qr
 
 > **qr**: `string`
@@ -649,7 +655,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:431](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L431)
+Defined in: [i18n/types.ts:433](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L433)
 
 The outcomes other than paid.
 
@@ -815,7 +821,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:369](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L369)
+Defined in: [i18n/types.ts:371](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L371)
 
 The paid outcome.
 
@@ -891,7 +897,7 @@ Heading (default: `Payment received`)
 
 > **pay**: `object`
 
-Defined in: [i18n/types.ts:149](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L149)
+Defined in: [i18n/types.ts:151](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L151)
 
 The pay step: the wallet, the locked price, the network fee and the main action.
 
@@ -1267,7 +1273,7 @@ Above the amount (default: `You send`)
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:307](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L307)
+Defined in: [i18n/types.ts:309](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L309)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1357,6 +1363,364 @@ While waiting (default: `Waiting for the payment…`)
 
 ***
 
+### refund
+
+> **refund**: `object`
+
+Defined in: [i18n/types.ts:552](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L552)
+
+A refund the merchant sends from a wallet (`RefundButton`).
+
+#### amount
+
+> **amount**: `string`
+
+Label of the amount; `{currency}` (default: `Amount, {currency}`)
+
+#### amountHint
+
+> **amountHint**: `string`
+
+Under the amount; `{amount}` is what is left to refund (default: `Up to {amount}`)
+
+#### amountTitle
+
+> **amountTitle**: `string`
+
+Heading of the amount step (default: `What to refund`)
+
+#### balance
+
+> **balance**: `string`
+
+Under the sending wallet; `{amount}` (default: `Holds {amount}`)
+
+#### button
+
+> **button**: `string`
+
+The button that opens the refund (default: `Refund`)
+
+#### canClose
+
+> **canClose**: `string`
+
+Note while it is confirmed (default: `You can close this window: the invoice shows how the refund goes.`)
+
+#### close
+
+> **close**: `string`
+
+Button that closes the window (default: `Close`)
+
+#### confirmTitle
+
+> **confirmTitle**: `string`
+
+Heading of the confirm step (default: `Confirm the refund`)
+
+#### connect
+
+> **connect**: `string`
+
+Button of the wallet step (default: `Connect wallet`)
+
+#### connectText
+
+> **connectText**: `string`
+
+Text of the wallet step; `{network}`, `{symbol}` (default: `The refund goes out on {network}, the network of the payment. Any wallet that holds {symbol} there can send it.`)
+
+#### connectTitle
+
+> **connectTitle**: `string`
+
+Heading of the wallet step (default: `Connect a wallet`)
+
+#### connectUnavailable
+
+> **connectUnavailable**: `string`
+
+The page cannot connect a wallet (default: `This page can't connect a wallet. Send the refund from your wallet, then record it.`)
+
+#### continue
+
+> **continue**: `string`
+
+Button of the amount step (default: `Continue`)
+
+#### creditNote
+
+> **creditNote**: `string`
+
+Row: the credit note (default: `Credit note`)
+
+#### declined
+
+> **declined**: `string`
+
+The merchant declined in the wallet; `{wallet}` (default: `You declined the request in {wallet}.`)
+
+#### done
+
+> **done**: `string`
+
+Button that closes the window once refunded (default: `Done`)
+
+#### failed
+
+> **failed**: `string`
+
+The wallet failed (default: `The wallet did not send the refund. Try again.`)
+
+#### failedText
+
+> **failedText**: `string`
+
+Under it; `{network}` (default: `The transaction failed on {network}; only the network fee was spent. Send the refund again.`)
+
+#### failedTitle
+
+> **failedTitle**: `string`
+
+Heading when the transaction failed (default: `The refund failed`)
+
+#### feeEstimate
+
+> **feeEstimate**: `string`
+
+Its value; `{amount}` (default: `≈ {amount} · from your wallet`)
+
+#### from
+
+> **from**: `string`
+
+Row: the sending wallet (default: `From`)
+
+#### handOver
+
+> **handOver**: `string`
+
+Button that hands the transaction over again (default: `Hand it over again`)
+
+#### modeExact
+
+> **modeExact**: `string`
+
+Option: the tokens the payment brought (default: `Everything received`)
+
+#### modeExactText
+
+> **modeExactText**: `string`
+
+Under that option (default: `The tokens the payment brought, as they are`)
+
+#### modeFiat
+
+> **modeFiat**: `string`
+
+Option: an amount of the invoice currency (default: `An amount`)
+
+#### modeFiatText
+
+> **modeFiatText**: `string`
+
+Under that option; `{currency}` (default: `In {currency}, converted at the rate of now`)
+
+#### network
+
+> **network**: `string`
+
+Row: the network (default: `Network`)
+
+#### networkFee
+
+> **networkFee**: `string`
+
+Row: the network fee (default: `Network fee`)
+
+#### noRecipient
+
+> **noRecipient**: `string`
+
+Quasar does not know the payer (default: `The payer's wallet is not known, so this refund can't be sent from here.`)
+
+#### notEnough
+
+> **notEnough**: `string`
+
+The wallet holds too little; `{symbol}`, `{address}`, `{balance}` (default: `Not enough {symbol} on {address}: it holds {balance}.`)
+
+#### notHandedOver
+
+> **notHandedOver**: `string`
+
+The wallet sent it, Quasar did not take it (default: `The refund was sent, but Quasar hasn't taken its transaction yet. Hand it over again: nothing is sent twice.`)
+
+#### nothingSent
+
+> **nothingSent**: `string`
+
+Under a refusal: nothing went out (default: `Nothing was sent: the refund waits for its transaction.`)
+
+#### notSent
+
+> **notSent**: `string`
+
+Heading of a refund the wallet did not send (default: `Not sent`)
+
+#### onItsWay
+
+> **onItsWay**: `string`
+
+Heading while the network confirms it (default: `On its way`)
+
+#### pending
+
+> **pending**: `string`
+
+Status: pending (default: `Pending`)
+
+#### reason
+
+> **reason**: `string`
+
+Label of the reason (default: `Reason (optional)`)
+
+#### record
+
+> **record**: `string`
+
+Button of the other way: record a refund sent elsewhere (default: `Record refund`)
+
+#### recordHint
+
+> **recordHint**: `string`
+
+Note of that button (default: `Sent it another way? Record the refund with its transaction: Quasar checks it on-chain.`)
+
+#### refunded
+
+> **refunded**: `string`
+
+Heading once confirmed (default: `Refunded`)
+
+#### requesting
+
+> **requesting**: `string`
+
+While Quasar prices the refund (default: `Asking Quasar for the refund…`)
+
+#### send
+
+> **send**: `string`
+
+Row: what is sent (default: `Send`)
+
+#### sendRefund
+
+> **sendRefund**: `string`
+
+Button that sends the refund (default: `Send refund`)
+
+#### sendValue
+
+> **sendValue**: `string`
+
+Its value; `{amount}`, `{network}` (default: `{amount} on {network}`)
+
+#### status
+
+> **status**: `string`
+
+Row: status (default: `Status`)
+
+#### submitting
+
+> **submitting**: `string`
+
+While Quasar takes the transaction (default: `Handing the refund to Quasar…`)
+
+#### switchTitle
+
+> **switchTitle**: `string`
+
+While the wallet switches network; `{wallet}` (default: `Approve the switch in {wallet}`)
+
+#### switchTo
+
+> **switchTo**: `string`
+
+Button when the wallet is on another network; `{network}` (default: `Switch to {network}`)
+
+#### thePayer
+
+> **thePayer**: `string`
+
+After the recipient (default: `the payer`)
+
+#### title
+
+> **title**: `string`
+
+Title of the window; `{invoice}` is the invoice number (default: `Refund {invoice}`)
+
+#### to
+
+> **to**: `string`
+
+Row: the recipient (default: `To`)
+
+#### transaction
+
+> **transaction**: `string`
+
+Row: the transaction (default: `Transaction`)
+
+#### txDescription
+
+> **txDescription**: `string`
+
+Its description; `{amount}` (default: `{amount} to the payer`)
+
+#### txTitle
+
+> **txTitle**: `string`
+
+Title of the transaction in Pulsar; `{invoice}` (default: `Refund of {invoice}`)
+
+#### unsupported
+
+> **unsupported**: `string`
+
+The wallet cannot send it; `{wallet}` (default: `{wallet} can't send this refund.`)
+
+#### waiting
+
+> **waiting**: `string`
+
+Its value; `{network}` (default: `{network} · waiting for confirmation`)
+
+#### walletText
+
+> **walletText**: `string`
+
+Under it; `{amount}`, `{network}` (default: `Confirm the transfer of {amount} on {network}.`)
+
+#### walletTitle
+
+> **walletTitle**: `string`
+
+While the wallet asks; `{wallet}` (default: `Confirm in {wallet}`)
+
+#### wrongNetwork
+
+> **wrongNetwork**: `string`
+
+The wallet sent it on another network; `{wallet}`, `{network}` (default: `{wallet} is on another network, so nothing was sent. Switch it to {network} and send again.`)
+
+***
+
 ### steps
 
 > **steps**: `object`
@@ -1413,7 +1777,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:501](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L501)
+Defined in: [i18n/types.ts:503](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L503)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -1561,7 +1925,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:274](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L274)
+Defined in: [i18n/types.ts:276](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L276)
 
 The window while the wallet asks the buyer.
 
