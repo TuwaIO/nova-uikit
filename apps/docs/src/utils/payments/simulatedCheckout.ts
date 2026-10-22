@@ -75,6 +75,7 @@ export function sampleCheckout(
       ...invoice,
     },
     buyer: { collect: 'off', required: false, companyInvoice: false },
+    consent: null,
     methods: [
       {
         id: 'ap_usdc_base',
@@ -167,7 +168,9 @@ export function simulatedCheckoutApi({
         ? 'No such checkout'
         : code === 'payer_blocked'
           ? 'This wallet cannot pay'
-          : 'Service unavailable';
+          : code === 'consent_required'
+            ? 'The buyer must accept the consent of the checkout first'
+            : 'Service unavailable';
     return Promise.reject(new QuasarSDKError(message, status, new Error(message), { code }));
   };
   return {
@@ -180,9 +183,10 @@ export function simulatedCheckoutApi({
       return Promise.resolve(current);
     },
     // A price locked after a moment, for the next step: a transfer of the method's token to the merchant
-    quote: async ({ methodId, payer }) => {
+    quote: async ({ methodId, payer, consentGiven }) => {
       await new Promise((resolve) => setTimeout(resolve, 800));
       if (quoteError) return refuse(quoteError, quoteError === 'payer_blocked' ? 403 : 503);
+      if (current.consent?.required && !consentGiven) return refuse('consent_required', 409);
       const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
       const expected = BigInt(EXPECTED[method.symbol] ?? '89540000');
       const send = expected + (expected * BigInt(transferFeeBps) + 9_999n) / 10_000n;

@@ -158,6 +158,22 @@ export const BuyerDetails: Story = {
 };
 
 /**
+ * The seller asks the buyer to tick a line before paying, here the request to start a service at once that Quasar
+ * Cloud's quota checkout asks: "Continue" stays off until it is ticked, and the quote carries the consent.
+ */
+export const RequiredConsent: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: sampleCheckout({
+      consent: {
+        text: 'I ask Acme Labs to start providing the service immediately and understand that if I withdraw as a consumer I may have to pay for the part already provided',
+        required: true,
+      },
+    }),
+  },
+};
+
+/**
  * The pay step of a gasless method: "Continue" locks the price, "Sign to pay" asks the wallet for a signature and the
  * merchant pays the gas; "Pay with gas instead" sends the transfer from the wallet with a fee estimate.
  */
