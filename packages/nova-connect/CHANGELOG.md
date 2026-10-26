@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.4...nova-connect-v0.10.5) (2026-10-26)
+
+
+### Bug Fixes
+
+* Add Chinese and Ukrainian i18n; improve Cyrillic typography ([c1443eb](https://github.com/TuwaIO/nova-uikit/commit/c1443eb385dffeead2a84b89f5d1ead2702da8cc))
+
 ## [0.10.4](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.3...nova-connect-v0.10.4) (2026-10-20)
 
 
