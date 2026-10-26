@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.2...nova-core-v0.10.3) (2026-10-26)
+
+
+### Bug Fixes
+
+* updated fonts ([6a343a5](https://github.com/TuwaIO/nova-uikit/commit/6a343a5a0fd842f23cd90671fac055eb2bab8ca1))
+
 ## [0.10.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.1...nova-core-v0.10.2) (2026-10-26)
 
 
