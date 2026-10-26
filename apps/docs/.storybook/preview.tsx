@@ -45,11 +45,13 @@ function applyTheme(theme: 'light' | 'dark') {
 
 // ─── Theme Definitions ────────────────────────────────────────────────────────
 
+const LOGO_GLOW = 'https://tuwa.io/brand/logo_glow.svg';
+
 const tuwaTheme = create({
   base: 'light',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
+  brandImage: LOGO_GLOW,
   brandTarget: '_self',
   colorPrimary: '#6366f1',
   colorSecondary: '#8b5cf6',
@@ -74,7 +76,7 @@ const tuwaDarkTheme = create({
   base: 'dark',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://tuwa.io/brand/logo_v2_white.svg',
+  brandImage: LOGO_GLOW,
   brandTarget: '_self',
   colorPrimary: '#8b5cf6',
   colorSecondary: '#6366f1',

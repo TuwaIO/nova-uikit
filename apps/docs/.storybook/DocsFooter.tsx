@@ -41,7 +41,7 @@ export function DocsFooter() {
     <footer className="sb-unstyled tuwa-docs-footer">
       <div className="tuwa-docs-footer__row">
         <a href="https://tuwa.io" {...external} aria-label="TUWA" className="tuwa-docs-footer__logo">
-          <img src="https://tuwa.io/brand/logo_v2.svg" alt="TUWA" height={24} />
+          <img src="https://tuwa.io/brand/logo_glow.svg" alt="TUWA" height={24} />
         </a>
         <nav aria-label="TUWA on the web" className="tuwa-docs-footer__links">
           {LINKS.map((link) => (

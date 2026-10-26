@@ -62,19 +62,7 @@
   display: block;
   height: 24px;
   width: auto;
-}
-
-.tuwa-docs-footer__logo-dark {
-  display: none;
-}
-
-.dark .tuwa-docs-footer__logo-light {
-  display: none;
-}
-
-.dark .tuwa-docs-footer__logo-dark {
-  display: block;
-  filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.45));
+  filter: drop-shadow(0 0 10px rgba(103, 232, 249, 0.45));
 }
 
 .tuwa-docs-footer__links {
