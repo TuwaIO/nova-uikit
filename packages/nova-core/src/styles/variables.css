@@ -4,14 +4,56 @@
 @import './fonts.css';
 
 @theme {
-  --font-mono:
-    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-mono: var(
+    --tuwa-font-mono,
+    'Geist Mono',
+    'JetBrains Mono',
+    'Cascadia Code',
+    'Fira Code',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
 }
 
 @layer base {
   [class*='font-mono'] {
     letter-spacing: -0.025em !important;
     line-height: 1 !important;
+  }
+
+  /* Reset negative tracking for Cyrillic / Ukrainian to prevent glyph collision */
+  :lang(uk) [class*='font-mono'],
+  html[lang='uk'] [class*='font-mono'],
+  html[lang^='uk'] [class*='font-mono'],
+  [lang='uk'] [class*='font-mono'],
+  [lang^='uk'] [class*='font-mono'] {
+    letter-spacing: normal !important;
+  }
+
+  :lang(uk) h1,
+  :lang(uk) h2,
+  :lang(uk) h3,
+  :lang(uk) h4,
+  :lang(uk) h5,
+  :lang(uk) h6,
+  html[lang='uk'] h1,
+  html[lang='uk'] h2,
+  html[lang='uk'] h3,
+  html[lang='uk'] h4,
+  html[lang='uk'] h5,
+  html[lang='uk'] h6,
+  html[lang^='uk'] h1,
+  html[lang^='uk'] h2,
+  html[lang^='uk'] h3,
+  html[lang^='uk'] h4,
+  html[lang^='uk'] h5,
+  html[lang^='uk'] h6 {
+    letter-spacing: normal !important;
   }
 }
 
@@ -58,6 +100,31 @@
 
   --tuwa-rounded-corners: 4px;
   --tuwa-ring-width: 2px;
+
+  --tuwa-font-mono:
+    'Geist Mono', 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', monospace;
+}
+
+:lang(uk),
+html[lang='uk'],
+html[lang^='uk'],
+[lang='uk'],
+[lang^='uk'] {
+  --tuwa-font-mono: var(
+    --tuwa-font-mono-uk,
+    'JetBrains Mono',
+    'Geist Mono',
+    'Cascadia Code',
+    'Fira Code',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
 }
 
 .dark {

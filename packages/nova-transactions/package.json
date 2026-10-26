@@ -20,6 +20,11 @@
       "import": "./dist/providers/index.js",
       "require": "./dist/providers/index.cjs"
     },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.js",
+      "require": "./dist/i18n/index.cjs"
+    },
     "./dist/index.css": "./dist/index.css"
   },
   "publishConfig": {
