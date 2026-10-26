@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.1...nova-core-v0.10.2) (2026-10-26)
+
+
+### Bug Fixes
+
+* Add Chinese and Ukrainian i18n; improve Cyrillic typography ([c1443eb](https://github.com/TuwaIO/nova-uikit/commit/c1443eb385dffeead2a84b89f5d1ead2702da8cc))
+
 ## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.0...nova-core-v0.10.1) (2026-10-20)
 
 
