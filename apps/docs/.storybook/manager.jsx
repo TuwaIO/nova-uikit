@@ -144,7 +144,7 @@ export const tuwaDarkTheme = create({
   base: 'dark',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
+  brandImage: 'https://tuwa.io/brand/logo_v2_white.svg',
   brandTarget: '_self',
   colorPrimary: '#8b5cf6',
   colorSecondary: '#6366f1',
