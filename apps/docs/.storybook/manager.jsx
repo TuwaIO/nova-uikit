@@ -104,7 +104,7 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <MoonIcon
             size={ICON_SIZE}
-            color={isDark ? '#0052ff' : hovered ? '#2563eb' : '#64748b'}
+            color={isDark ? '#0052ff' : hovered ? '#0052ff' : '#64748b'}
             style={{ transition: 'color 0.3s ease', position: 'relative', left: 1 }}
           />
         </div>
@@ -125,7 +125,7 @@ export const tuwaTheme = create({
   brandImage: LOGO_LIGHT,
   brandTarget: '_self',
   colorPrimary: '#0052ff',
-  colorSecondary: '#0052ff',
+  colorSecondary: '#0284c7',
   appBg: '#ffffff',
   appContentBg: '#ffffff',
   appBorderColor: '#e5e7eb',
@@ -136,6 +136,7 @@ export const tuwaTheme = create({
   textInverseColor: '#ffffff',
   barTextColor: '#6b7280',
   barSelectedColor: '#0052ff',
+  barHoverColor: '#0284c7',
   barBg: '#f9fafb',
   inputBg: '#ffffff',
   inputBorder: '#d1d5db',
@@ -149,7 +150,7 @@ export const tuwaDarkTheme = create({
   brandUrl: 'https://www.tuwa.io/',
   brandImage: LOGO_DARK,
   brandTarget: '_self',
-  colorPrimary: '#0052ff',
+  colorPrimary: '#2563eb',
   colorSecondary: '#38bdf8',
   appBg: '#0a0e27',
   appContentBg: '#0d1230',
@@ -161,6 +162,7 @@ export const tuwaDarkTheme = create({
   textInverseColor: '#0a0e27',
   barTextColor: '#94a3b8',
   barSelectedColor: '#38bdf8',
+  barHoverColor: '#7dd3fc',
   barBg: '#0a0e27',
   inputBg: '#11183c',
   inputBorder: '#334155',
@@ -168,7 +170,10 @@ export const tuwaDarkTheme = create({
   inputBorderRadius: 6,
 });
 
+let currentLogoIsDark = false;
+
 function syncBrandLogo(isDark) {
+  currentLogoIsDark = isDark;
   if (typeof document === 'undefined') return;
   document.documentElement.setAttribute('data-tuwa-theme', isDark ? 'dark' : 'light');
   const targetSrc = isDark ? LOGO_DARK : LOGO_LIGHT;
@@ -178,6 +183,19 @@ function syncBrandLogo(isDark) {
       img.src = targetSrc;
     }
   });
+}
+
+if (typeof document !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const targetSrc = currentLogoIsDark ? LOGO_DARK : LOGO_LIGHT;
+    const imgs = document.querySelectorAll('.sidebar-header img, a[title*="TUWA"] img');
+    imgs.forEach((img) => {
+      if (img instanceof HTMLImageElement && img.src !== targetSrc) {
+        img.src = targetSrc;
+      }
+    });
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
 // ─── Resolve initial theme (sessionStorage > system preference) ──────────────

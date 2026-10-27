@@ -127,7 +127,7 @@ export const Solana: Story = {
 export const WithCustomIcon: Story = {
   args: {
     icon: (
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-[#0052ff] to-[#00d2ff] font-bold text-white">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-[#0052ff] via-[#1d4ed8] to-[#0284c7] font-bold text-white dark:from-[#2563eb] dark:via-[#3b82f6] dark:to-[#38bdf8]">
         🦄
       </div>
     ),
@@ -144,7 +144,9 @@ export const FullyCustomized: Story = {
     customization: {
       components: {
         StatusBadge: () => (
-          <div className="rounded-full bg-[#0052ff] px-3 py-1 text-xs font-bold text-white">CUSTOM</div>
+          <div className="rounded-full bg-[#0052ff] px-3 py-1 text-xs font-bold text-white dark:bg-[#2563eb]">
+            CUSTOM
+          </div>
         ),
         TxInfoButton: ({ onClick, children }) => (
           <button

@@ -114,12 +114,12 @@ export const WithCustomization: Story = {
     customization: {
       components: {
         InfoRow: ({ label, value }) => (
-          <div className="flex items-center justify-between rounded-[var(--tuwa-rounded-corners)] bg-blue-500/10 p-2">
-            <div className="flex items-center gap-2 font-medium text-blue-700">
+          <div className="flex items-center justify-between rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/10 p-2 dark:bg-[#38bdf8]/10">
+            <div className="flex items-center gap-2 font-medium text-[#0052ff] dark:text-[#38bdf8]">
               <SparklesIcon className="h-4 w-4" />
               {label}
             </div>
-            <div className="font-bold text-blue-800">{value}</div>
+            <div className="font-bold text-[#1d4ed8] dark:text-[#7dd3fc]">{value}</div>
           </div>
         ),
       },

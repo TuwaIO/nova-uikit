@@ -164,10 +164,10 @@ export const WithCustomPlaceholder: Story = {
     customization: {
       components: {
         Placeholder: ({ title, message }) => (
-          <div className="rounded-[var(--tuwa-rounded-corners)] border-2 border-dashed border-blue-300 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 p-12 text-center">
+          <div className="rounded-[var(--tuwa-rounded-corners)] border-2 border-dashed border-[#0052ff]/30 bg-gradient-to-r from-[#0052ff]/10 via-[#1d4ed8]/10 to-[#0284c7]/10 p-12 text-center dark:border-[#38bdf8]/30 dark:from-[#2563eb]/15 dark:via-[#3b82f6]/15 dark:to-[#38bdf8]/15">
             <div className="mb-4 text-6xl">🔗</div>
-            <h4 className="mb-2 text-xl font-bold text-[#0052ff]">{title}</h4>
-            <p className="italic text-blue-500">{message}</p>
+            <h4 className="mb-2 text-xl font-bold text-[#0052ff] dark:text-[#38bdf8]">{title}</h4>
+            <p className="italic text-[#0284c7] dark:text-[#7dd3fc]">{message}</p>
           </div>
         ),
       },

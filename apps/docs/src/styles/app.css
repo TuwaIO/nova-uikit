@@ -3,6 +3,28 @@
 @import '@tuwaio/nova-connect/dist/index.css';
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STORYBOOK DOCS PALETTE — Sapphire / Cobalt / Oceanic Azure (Light)
+                            & Sapphire / Glacial Sky (Dark)
+   Matches @tuwaio/docs-ui v0.5.5 while keeping Nova's --tuwa-button-gradient-*
+   variables untouched for the ConnectButton.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --tuwa-docs-primary: #0052ff;
+  --tuwa-docs-via: #1d4ed8;
+  --tuwa-docs-secondary: #0284c7;
+  --tuwa-docs-gradient: linear-gradient(135deg, #0052ff 0%, #1d4ed8 50%, #0284c7 100%);
+}
+
+.dark {
+  --tuwa-docs-primary: #38bdf8;
+  --tuwa-docs-via: #3b82f6;
+  --tuwa-docs-secondary: #7dd3fc;
+  --tuwa-docs-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #7dd3fc 100%);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    STORYBOOK DOCS HEADINGS — Geist Mono
    Applies Geist Mono to all h1-h6 inside the Storybook docs container, 
@@ -18,6 +40,29 @@
 .sbdocs-content h6:not(.sbdocs-preview h6):not(.docs-story h6) {
   font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
   letter-spacing: -0.02em !important;
+}
+
+.sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a) {
+  color: var(--tuwa-docs-primary);
+  text-decoration-color: rgba(0, 82, 255, 0.3);
+  transition:
+    color 0.2s ease,
+    text-decoration-color 0.2s ease;
+}
+
+.sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a):hover {
+  color: var(--tuwa-docs-secondary);
+  text-decoration-color: var(--tuwa-docs-secondary);
+}
+
+.dark .sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a) {
+  color: var(--tuwa-docs-primary);
+  text-decoration-color: rgba(56, 189, 248, 0.4);
+}
+
+.dark .sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a):hover {
+  color: var(--tuwa-docs-secondary);
+  text-decoration-color: var(--tuwa-docs-secondary);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -69,7 +114,7 @@
 
 .tuwa-docs-footer__logo-dark {
   display: none;
-  filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.45));
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
 }
 
 .dark .tuwa-docs-footer__logo-light {
@@ -100,7 +145,7 @@
 
 .tuwa-docs-footer__link:hover,
 .tuwa-docs-footer__link:focus-visible {
-  color: var(--tuwa-text-primary);
+  color: var(--tuwa-docs-primary);
 }
 
 .tuwa-docs-footer__link--strong {
@@ -117,6 +162,11 @@
 .tuwa-docs-footer__social--npm:hover,
 .tuwa-docs-footer__social--npm:focus-visible {
   color: rgb(220 38 38);
+}
+
+.dark .tuwa-docs-footer__social--npm:hover,
+.dark .tuwa-docs-footer__social--npm:focus-visible {
+  color: rgb(248 113 113);
 }
 
 .tuwa-docs-footer__about {

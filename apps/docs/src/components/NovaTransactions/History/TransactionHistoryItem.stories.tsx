@@ -134,7 +134,9 @@ export const WithCustomization: Story = {
     }),
     customization: {
       components: {
-        Title: (props) => <div className="font-bold text-[#0052ff]">✨ Custom Title: {props.fallback}</div>,
+        Title: (props) => (
+          <div className="font-bold text-[#0052ff] dark:text-[#38bdf8]">✨ Custom Title: {props.fallback}</div>
+        ),
         Timestamp: ({ timestamp }) => (
           <div className="font-mono text-xs text-orange-500">⏰ {dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
         ),

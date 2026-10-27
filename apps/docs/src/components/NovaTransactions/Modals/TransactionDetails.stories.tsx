@@ -236,9 +236,10 @@ export const WithCustomization: Story = {
     adapter: [mockEvmAdapter],
     customization: {
       classNames: {
-        header: 'novatx:bg-gradient-to-r novatx:from-blue-500/10 novatx:to-cyan-500/10 novatx:border-blue-500/30',
-        title: 'novatx:text-sky-400',
-        networkBadge: 'novatx:border-blue-500/40 novatx:bg-blue-500/10',
+        header:
+          'bg-gradient-to-r from-[#0052ff]/10 via-[#1d4ed8]/10 to-[#0284c7]/10 border-[#0052ff]/30 dark:from-[#2563eb]/15 dark:via-[#3b82f6]/15 dark:to-[#38bdf8]/15 dark:border-[#38bdf8]/30',
+        title: 'text-[#0052ff] dark:text-[#38bdf8]',
+        networkBadge: 'border-[#0052ff]/40 bg-[#0052ff]/10 dark:border-[#38bdf8]/40 dark:bg-[#38bdf8]/10',
       },
     },
   },
