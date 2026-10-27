@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.4](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.3...nova-core-v0.10.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* docs and colors ([7d30187](https://github.com/TuwaIO/nova-uikit/commit/7d30187b4bcd24c8c5bd0cd390281bc74c14c260))
+
 ## [0.10.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.2...nova-core-v0.10.3) (2026-10-26)
 
 
