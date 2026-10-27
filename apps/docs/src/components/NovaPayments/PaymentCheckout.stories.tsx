@@ -444,12 +444,12 @@ export const ScreeningUnavailable: Story = {
  */
 const brandClassNames: PaymentCheckoutCustomization['classNames'] = {
   container: ({ screen }) =>
-    screen === 'paid' ? 'ring-2 ring-emerald-500/50 shadow-xl' : 'ring-2 ring-indigo-500/40 shadow-xl',
-  step: ({ step }) => (step.state === 'current' ? 'rounded bg-indigo-500/10 pr-1.5' : undefined),
+    screen === 'paid' ? 'ring-2 ring-emerald-500/50 shadow-xl' : 'ring-2 ring-blue-600/40 shadow-xl',
+  step: ({ step }) => (step.state === 'current' ? 'rounded bg-blue-600/10 pr-1.5' : undefined),
   tokenOption: ({ selected }) => (selected ? 'shadow-md' : undefined),
-  networkOption: ({ method }) => (method.featured ? 'ring-1 ring-indigo-400/60' : undefined),
+  networkOption: ({ method }) => (method.featured ? 'ring-1 ring-sky-500/60' : undefined),
   primaryButton: () => 'uppercase tracking-widest',
-  total: () => 'rounded border border-dashed border-indigo-400/60 px-2 py-1',
+  total: () => 'rounded border border-dashed border-sky-500/60 px-2 py-1',
   statusIcon: () => 'drop-shadow',
 };
 
@@ -486,7 +486,7 @@ function BrandTokenOption({ group, selected }: CheckoutTokenOptionProps) {
 
 /** One icon for every outcome other than paid. */
 function BrandStatusIcon({ className }: CheckoutStatusIconProps) {
-  return <FaceFrownIcon aria-hidden className={`h-12 w-12 text-indigo-500 ${className ?? ''}`} />;
+  return <FaceFrownIcon aria-hidden className={`h-12 w-12 text-blue-600 ${className ?? ''}`} />;
 }
 
 /** The app's own paid screen, reading the checkout with `useCheckoutContext`. */
@@ -577,7 +577,7 @@ export const WithChildCustomizations: Story = {
     view: settled({ status: 'paid', amountPaid: '89540000' }),
     customization: {
       childCustomizations: {
-        statusVisual: { iconClassNames: { icon: 'text-indigo-500' } },
+        statusVisual: { iconClassNames: { icon: 'text-blue-600' } },
         progressIndicator: { stepClassNames: { label: 'uppercase tracking-wider' } },
         hashLink: { classNames: { hash: 'font-semibold' } },
       },

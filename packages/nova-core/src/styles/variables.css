@@ -4,14 +4,71 @@
 @import './fonts.css';
 
 @theme {
-  --font-mono:
-    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-sans: var(
+    --tuwa-font-sans,
+    'Geist',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif
+  );
+  --font-mono: var(
+    --tuwa-font-mono,
+    'Geist Mono',
+    'JetBrains Mono',
+    'Cascadia Code',
+    'Fira Code',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
 }
 
 @layer base {
+  body {
+    font-family: var(--tuwa-font-sans);
+  }
+
   [class*='font-mono'] {
     letter-spacing: -0.025em !important;
     line-height: 1 !important;
+  }
+
+  /* Reset negative tracking for Cyrillic / Ukrainian to prevent glyph collision */
+  :lang(uk) [class*='font-mono'],
+  html[lang='uk'] [class*='font-mono'],
+  html[lang^='uk'] [class*='font-mono'],
+  [lang='uk'] [class*='font-mono'],
+  [lang^='uk'] [class*='font-mono'] {
+    letter-spacing: normal !important;
+  }
+
+  :lang(uk) h1,
+  :lang(uk) h2,
+  :lang(uk) h3,
+  :lang(uk) h4,
+  :lang(uk) h5,
+  :lang(uk) h6,
+  html[lang='uk'] h1,
+  html[lang='uk'] h2,
+  html[lang='uk'] h3,
+  html[lang='uk'] h4,
+  html[lang='uk'] h5,
+  html[lang='uk'] h6,
+  html[lang^='uk'] h1,
+  html[lang^='uk'] h2,
+  html[lang^='uk'] h3,
+  html[lang^='uk'] h4,
+  html[lang^='uk'] h5,
+  html[lang^='uk'] h6 {
+    letter-spacing: normal !important;
   }
 }
 
@@ -51,10 +108,10 @@
   --tuwa-button-primary-bg-hover: var(--tuwa-button-gradient-from-hover);
 
   --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.purple.600');
+  --tuwa-button-gradient-to: theme('colors.sky.600');
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+  --tuwa-button-gradient-to-hover: theme('colors.sky.700');
 
   --tuwa-standart-button-bg: theme('colors.gray.100');
   --tuwa-standart-button-hover: theme('colors.gray.200');
@@ -63,6 +120,33 @@
 
   --tuwa-rounded-corners: 4px;
   --tuwa-ring-width: 2px;
+
+  --tuwa-font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --tuwa-font-mono:
+    'Geist Mono', 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', monospace;
+}
+
+:lang(uk),
+html[lang='uk'],
+html[lang^='uk'],
+[lang='uk'],
+[lang^='uk'] {
+  --tuwa-font-mono: var(
+    --tuwa-font-mono-uk,
+    'JetBrains Mono',
+    'Geist Mono',
+    'Cascadia Code',
+    'Fira Code',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    monospace
+  );
 }
 
 .dark {
@@ -97,10 +181,10 @@
 
   /* blue-600: white text on blue-500 is only 3.8:1 (WCAG AA needs 4.5) */
   --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.purple.500');
+  --tuwa-button-gradient-to: theme('colors.sky.300');
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.purple.600');
+  --tuwa-button-gradient-to-hover: theme('colors.sky.400');
 
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');

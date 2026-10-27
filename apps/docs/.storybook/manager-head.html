@@ -48,9 +48,15 @@
 <link rel="apple-touch-icon" href="https://tuwa.io/brand/web-app-manifest-512x512.png" />
 
 <style>
-  /* Make the brand logo white when the TUWA theme is dark.
-     data-tuwa-theme is set on <html> by manager.jsx on init and toggle. */
-  [data-tuwa-theme='dark'] img {
-    filter: brightness(0) invert(1) !important;
+  /* Sidebar brand logo: glacial sky drop-shadow glow in dark mode only */
+  html[data-tuwa-theme='dark'] .sidebar-header img,
+  html[data-tuwa-theme='dark'] a[title*='TUWA'] img,
+  html[data-tuwa-theme='dark'] [class*='sidebar'] img {
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));
+  }
+  html[data-tuwa-theme='light'] .sidebar-header img,
+  html[data-tuwa-theme='light'] a[title*='TUWA'] img,
+  html[data-tuwa-theme='light'] [class*='sidebar'] img {
+    filter: none;
   }
 </style>

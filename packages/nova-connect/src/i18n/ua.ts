@@ -1,8 +1,8 @@
 import { NovaConnectLabels } from './types';
 
 /**
- * Українські переклади для компонента NovaConnect
- * Всі текстові рядки витягнуті з файлів компонентів
+ * Ukrainian (uk) translations for Nova Connect components.
+ * Contains localized text strings for wallet connections, modals, states, and accessibility.
  */
 export const ukrainianLabels: NovaConnectLabels = {
   // Основні дії - Основні взаємодії користувача
@@ -61,7 +61,7 @@ export const ukrainianLabels: NovaConnectLabels = {
     'Мережа (або блокчейн) — це децентралізований цифровий реєстр, який записує транзакції. Вибір мережі дозволяє вам обрати, до якого блокчейну ви хочете підключитись.',
   learnMore: 'Дізнатися більше',
   listOfNetworks: 'Список мереж',
-  viewOnExplorer: 'Переглянути в провіднику',
+  viewOnExplorer: 'В експлорері',
   viewTransactions: 'Переглянути транзакції',
 
   // Форма імітації - Підписи для функції імітації адреси гаманця
@@ -227,6 +227,6 @@ export const ukrainianLabels: NovaConnectLabels = {
   connectedWallet: 'Гаманець {name} підключено',
   copyAddress: 'Скопіювати адресу',
   copy: 'Копіювати',
-  explorer: 'Оглядач',
+  explorer: 'Експлорер',
   removeFromRecent: 'Видалити {name} з нещодавніх гаманців',
 };

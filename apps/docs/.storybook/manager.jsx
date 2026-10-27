@@ -76,7 +76,7 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
           width: INDICATOR_SIZE,
           height: INDICATOR_SIZE,
           borderRadius: BORDER_RADIUS - 1,
-          background: isDark ? '#1e293b' : '#ffffff',
+          background: isDark ? '#0a0e27' : '#ffffff',
           boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
           transition: 'left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease',
           zIndex: 10,
@@ -104,7 +104,7 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <MoonIcon
             size={ICON_SIZE}
-            color={isDark ? '#818cf8' : hovered ? '#a5b4fc' : '#64748b'}
+            color={isDark ? '#0052ff' : hovered ? '#0052ff' : '#64748b'}
             style={{ transition: 'color 0.3s ease', position: 'relative', left: 1 }}
           />
         </div>
@@ -115,14 +115,17 @@ const ThemeSwitcher = ({ isDark, onToggle }) => {
 
 // ─── Storybook Themes ────────────────────────────────────────────────────────
 
+const LOGO_LIGHT = 'https://tuwa.io/brand/logo_v2.svg';
+const LOGO_DARK = 'https://tuwa.io/brand/logo_glow.svg';
+
 export const tuwaTheme = create({
   base: 'light',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
+  brandImage: LOGO_LIGHT,
   brandTarget: '_self',
-  colorPrimary: '#6366f1',
-  colorSecondary: '#8b5cf6',
+  colorPrimary: '#0052ff',
+  colorSecondary: '#0284c7',
   appBg: '#ffffff',
   appContentBg: '#ffffff',
   appBorderColor: '#e5e7eb',
@@ -132,7 +135,8 @@ export const tuwaTheme = create({
   textColor: '#1f2937',
   textInverseColor: '#ffffff',
   barTextColor: '#6b7280',
-  barSelectedColor: '#6366f1',
+  barSelectedColor: '#0052ff',
+  barHoverColor: '#0284c7',
   barBg: '#f9fafb',
   inputBg: '#ffffff',
   inputBorder: '#d1d5db',
@@ -144,26 +148,55 @@ export const tuwaDarkTheme = create({
   base: 'dark',
   brandTitle: 'TUWA UI Components',
   brandUrl: 'https://www.tuwa.io/',
-  brandImage: 'https://tuwa.io/brand/logo_v2.svg',
+  brandImage: LOGO_DARK,
   brandTarget: '_self',
-  colorPrimary: '#8b5cf6',
-  colorSecondary: '#6366f1',
-  appBg: '#0f172a',
-  appContentBg: '#1e293b',
-  appBorderColor: '#334155',
+  colorPrimary: '#2563eb',
+  colorSecondary: '#38bdf8',
+  appBg: '#0a0e27',
+  appContentBg: '#0d1230',
+  appBorderColor: '#1e293b',
   appBorderRadius: 8,
   fontBase: '"Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
   fontCode: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
   textColor: '#f1f5f9',
-  textInverseColor: '#0f172a',
+  textInverseColor: '#0a0e27',
   barTextColor: '#94a3b8',
-  barSelectedColor: '#8b5cf6',
-  barBg: '#1e293b',
-  inputBg: '#334155',
-  inputBorder: '#475569',
+  barSelectedColor: '#38bdf8',
+  barHoverColor: '#7dd3fc',
+  barBg: '#0a0e27',
+  inputBg: '#11183c',
+  inputBorder: '#334155',
   inputTextColor: '#f1f5f9',
   inputBorderRadius: 6,
 });
+
+let currentLogoIsDark = false;
+
+function syncBrandLogo(isDark) {
+  currentLogoIsDark = isDark;
+  if (typeof document === 'undefined') return;
+  document.documentElement.setAttribute('data-tuwa-theme', isDark ? 'dark' : 'light');
+  const targetSrc = isDark ? LOGO_DARK : LOGO_LIGHT;
+  const imgs = document.querySelectorAll('.sidebar-header img, a[title*="TUWA"] img');
+  imgs.forEach((img) => {
+    if (img instanceof HTMLImageElement && img.src !== targetSrc) {
+      img.src = targetSrc;
+    }
+  });
+}
+
+if (typeof document !== 'undefined' && typeof MutationObserver !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const targetSrc = currentLogoIsDark ? LOGO_DARK : LOGO_LIGHT;
+    const imgs = document.querySelectorAll('.sidebar-header img, a[title*="TUWA"] img');
+    imgs.forEach((img) => {
+      if (img instanceof HTMLImageElement && img.src !== targetSrc) {
+        img.src = targetSrc;
+      }
+    });
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+}
 
 // ─── Resolve initial theme (sessionStorage > system preference) ──────────────
 
@@ -181,7 +214,7 @@ const initialIsDark = getInitialDark();
 // Nothing is written to sessionStorage until the user switches the theme (Cookie Policy):
 // without a stored value, the preview iframe resolves the same system preference on its own mount
 if (typeof window !== 'undefined') {
-  document.documentElement.setAttribute('data-tuwa-theme', initialIsDark ? 'dark' : 'light');
+  syncBrandLogo(initialIsDark);
 }
 
 // ─── Set initial manager theme (runs once on module load) ────────────────────
@@ -192,11 +225,12 @@ addons.setConfig({
 
 // ─── Unified Theme Toggle ────────────────────────────────────────────────────
 
-const UnifiedThemeTool = () => {
+const UnifiedThemeTool = ({ api }) => {
   const [isDark, setIsDark] = React.useState(getInitialDark);
 
   // Broadcast to preview iframe whenever theme changes (including initial mount)
   React.useEffect(() => {
+    syncBrandLogo(isDark);
     try {
       const channel = addons.getChannel();
       channel.emit(CHANNEL_EVENT, isDark ? 'dark' : 'light');
@@ -222,15 +256,19 @@ const UnifiedThemeTool = () => {
   const handleToggle = React.useCallback(() => {
     setIsDark((prev) => {
       const next = !prev;
+      const nextTheme = next ? tuwaDarkTheme : tuwaTheme;
       // 1. Update manager UI
-      addons.setConfig({ theme: next ? tuwaDarkTheme : tuwaTheme });
+      addons.setConfig({ theme: nextTheme });
+      if (api?.setOptions) {
+        api.setOptions({ theme: nextTheme });
+      }
       // 2. Persist
       sessionStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
-      // 3. Set data attribute for CSS logo targeting
-      document.documentElement.setAttribute('data-tuwa-theme', next ? 'dark' : 'light');
+      // 3. Sync data attribute and brand logo image src
+      syncBrandLogo(next);
       return next;
     });
-  }, []);
+  }, [api]);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', height: '100%', padding: '0 8px' }}>
@@ -241,12 +279,12 @@ const UnifiedThemeTool = () => {
 
 // ─── Register ────────────────────────────────────────────────────────────────
 
-addons.register('tuwa/theme-tools', () => {
+addons.register('tuwa/theme-tools', (api) => {
   addons.add('tuwa/theme-tools/toggle', {
     title: 'Theme',
     type: types.TOOL,
     match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
-    render: () => <UnifiedThemeTool />,
+    render: () => <UnifiedThemeTool api={api} />,
   });
 });
 
@@ -259,7 +297,7 @@ addons.register('tuwa/system-theme-sync', (api) => {
       const next = e.matches;
       // Only update a theme the user has already chosen; never create the key here
       if (sessionStorage.getItem(STORAGE_KEY)) sessionStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-tuwa-theme', next ? 'dark' : 'light');
+      syncBrandLogo(next);
       api.setOptions({ theme: next ? tuwaDarkTheme : tuwaTheme });
       try {
         addons.getChannel().emit(CHANNEL_EVENT, next ? 'dark' : 'light');

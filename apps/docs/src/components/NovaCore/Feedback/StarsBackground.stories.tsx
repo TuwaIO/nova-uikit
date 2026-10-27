@@ -24,7 +24,7 @@ const meta: Meta<typeof StarsBackground> = {
   // Wrapper to give it some height in Storybook
   decorators: [
     (Story) => (
-      <div className="w-full h-[400px] relative bg-gray-300 overflow-hidden">
+      <div className="w-full h-[400px] relative bg-gray-300 dark:bg-[#0a0e27] overflow-hidden">
         <Story />
       </div>
     ),

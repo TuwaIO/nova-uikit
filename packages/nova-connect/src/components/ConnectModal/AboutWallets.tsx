@@ -495,7 +495,7 @@ const DefaultSlideContainer: React.FC<AboutWalletsSlideContainerProps> = ({ chil
   <div className={cn('novacon:relative novacon:z-1 novacon:overflow-hidden novacon:h-full', className)} {...props}>
     <StarsBackground starsCount={50} />
     <div
-      className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]"
+      className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,82,255,0.12),rgba(255,255,255,0))]"
       aria-hidden="true"
     />
 

@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.4...nova-core-v0.10.5) (2026-10-27)
+
+
+### Bug Fixes
+
+* colors ([dcfa29f](https://github.com/TuwaIO/nova-uikit/commit/dcfa29fb3f8802dbbc1c943dd4e3bd519390d5e7))
+
+## [0.10.4](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.3...nova-core-v0.10.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* docs and colors ([7d30187](https://github.com/TuwaIO/nova-uikit/commit/7d30187b4bcd24c8c5bd0cd390281bc74c14c260))
+
+## [0.10.3](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.2...nova-core-v0.10.3) (2026-10-26)
+
+
+### Bug Fixes
+
+* updated fonts ([6a343a5](https://github.com/TuwaIO/nova-uikit/commit/6a343a5a0fd842f23cd90671fac055eb2bab8ca1))
+
+## [0.10.2](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.1...nova-core-v0.10.2) (2026-10-26)
+
+
+### Bug Fixes
+
+* Add Chinese and Ukrainian i18n; improve Cyrillic typography ([c1443eb](https://github.com/TuwaIO/nova-uikit/commit/c1443eb385dffeead2a84b89f5d1ead2702da8cc))
+
 ## [0.10.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.0...nova-core-v0.10.1) (2026-10-20)
 
 

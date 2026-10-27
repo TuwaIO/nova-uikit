@@ -142,7 +142,7 @@ export const FullLifecycle: Story = {
     }, []);
 
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-gray-100">
+      <div className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-[#0a0e27]">
         <TrackingTxModal {...args} initialTx={initialTx} transactionsPool={transactionsPool} />
       </div>
     );
@@ -196,7 +196,7 @@ export const SolanaLifecycle: Story = {
     }, []);
 
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-gray-100">
+      <div className="flex h-screen w-full items-center justify-center bg-gray-100 dark:bg-[#0a0e27]">
         <TrackingTxModal {...args} initialTx={initialTx} transactionsPool={transactionsPool} />
       </div>
     );
