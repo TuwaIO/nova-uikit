@@ -59,10 +59,25 @@
 }
 
 .tuwa-docs-footer__logo img {
-  display: block;
   height: 24px;
   width: auto;
-  filter: drop-shadow(0 0 10px rgba(103, 232, 249, 0.45));
+}
+
+.tuwa-docs-footer__logo-light {
+  display: block;
+}
+
+.tuwa-docs-footer__logo-dark {
+  display: none;
+  filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.45));
+}
+
+.dark .tuwa-docs-footer__logo-light {
+  display: none;
+}
+
+.dark .tuwa-docs-footer__logo-dark {
+  display: block;
 }
 
 .tuwa-docs-footer__links {

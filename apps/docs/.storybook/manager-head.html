@@ -48,10 +48,15 @@
 <link rel="apple-touch-icon" href="https://tuwa.io/brand/web-app-manifest-512x512.png" />
 
 <style>
-  /* Sidebar brand logo: cyan drop-shadow glow */
-  .sidebar-header img,
-  a[title*='TUWA'] img,
-  [class*='sidebar'] img {
-    filter: drop-shadow(0 0 10px rgba(103, 232, 249, 0.45));
+  /* Sidebar brand logo: cyan drop-shadow glow in dark mode only */
+  html[data-tuwa-theme='dark'] .sidebar-header img,
+  html[data-tuwa-theme='dark'] a[title*='TUWA'] img,
+  html[data-tuwa-theme='dark'] [class*='sidebar'] img {
+    filter: drop-shadow(0 0 12px rgba(103, 232, 249, 0.45));
+  }
+  html[data-tuwa-theme='light'] .sidebar-header img,
+  html[data-tuwa-theme='light'] a[title*='TUWA'] img,
+  html[data-tuwa-theme='light'] [class*='sidebar'] img {
+    filter: none;
   }
 </style>

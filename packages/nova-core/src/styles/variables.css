@@ -103,10 +103,10 @@
   --tuwa-border-secondary: theme('colors.gray.100');
 
   --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.purple.600');
+  --tuwa-button-gradient-to: theme('colors.cyan.500');
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.purple.700');
+  --tuwa-button-gradient-to-hover: theme('colors.cyan.600');
 
   --tuwa-standart-button-bg: theme('colors.gray.100');
   --tuwa-standart-button-hover: theme('colors.gray.200');
@@ -175,10 +175,10 @@ html[lang^='uk'],
   --tuwa-border-secondary: theme('colors.gray.800');
 
   --tuwa-button-gradient-from: theme('colors.blue.500');
-  --tuwa-button-gradient-to: theme('colors.purple.500');
+  --tuwa-button-gradient-to: theme('colors.cyan.400');
 
   --tuwa-button-gradient-from-hover: theme('colors.blue.600');
-  --tuwa-button-gradient-to-hover: theme('colors.purple.600');
+  --tuwa-button-gradient-to-hover: theme('colors.cyan.500');
 
   --tuwa-standart-button-bg: theme('colors.gray.700');
   --tuwa-standart-button-hover: theme('colors.gray.800');

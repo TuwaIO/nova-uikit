@@ -236,9 +236,9 @@ export const WithCustomization: Story = {
     adapter: [mockEvmAdapter],
     customization: {
       classNames: {
-        header: 'novatx:bg-gradient-to-r novatx:from-indigo-500/10 novatx:to-purple-500/10 novatx:border-purple-500/30',
-        title: 'novatx:text-purple-400',
-        networkBadge: 'novatx:border-purple-500/40 novatx:bg-purple-500/10',
+        header: 'novatx:bg-gradient-to-r novatx:from-blue-500/10 novatx:to-cyan-500/10 novatx:border-blue-500/30',
+        title: 'novatx:text-sky-400',
+        networkBadge: 'novatx:border-blue-500/40 novatx:bg-blue-500/10',
       },
     },
   },
