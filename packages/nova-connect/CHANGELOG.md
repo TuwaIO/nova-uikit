@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.6](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.5...nova-connect-v0.10.6) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** Satellite Connect core 0.11.1, evm 0.10.1, solana 0.11.1, react 0.10.1 ([337699d](https://github.com/TuwaIO/nova-uikit/commit/337699d0fb6f44f8c308542199063258ba9290cd))
+
 ## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.4...nova-connect-v0.10.5) (2026-10-26)
 
 
