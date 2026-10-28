@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.10.7](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.6...nova-connect-v0.10.7) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** Satellite Connect 0.11.2, SIWX 0.6.5, Pulsar 0.11.1 and Orbit 0.7.2 — wallet lists update live ([54a78bd](https://github.com/TuwaIO/nova-uikit/commit/54a78bdd4e207a1f94cc4388b4dcaf1432c04b2b))
+* **deps:** update dependencies except TypeScript ([003ba2b](https://github.com/TuwaIO/nova-uikit/commit/003ba2be8969156ffbaa14e30443cadf1e35d1db))
+* **nova-connect:** connect and connected windows keep one size through their steps and never stretch ([2cac299](https://github.com/TuwaIO/nova-uikit/commit/2cac29906ff15ec7efdd339b783efe35e147ce65))
+* **nova-connect:** wallet lists are also read again on every render, for adapters that do not report changes ([420cdd3](https://github.com/TuwaIO/nova-uikit/commit/420cdd32400b1c582a87c1a0dcdbdf35b3e054dd))
+* **nova-connect:** wallet lists update when wallets are added after a modal opened — useWalletConnectors ([b0a5f33](https://github.com/TuwaIO/nova-uikit/commit/b0a5f33ecb6eb765cd5d595fc29f57bfd750b245))
+* **nova-core,nova-connect:** Nova windows never leave an empty band when their content shrinks, and the connecting screen names the wallet ([471c5af](https://github.com/TuwaIO/nova-uikit/commit/471c5af99d67c0273a8086bb1a66eeb65158fa66))
+
 ## [0.10.6](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.5...nova-connect-v0.10.6) (2026-10-28)
 
 
