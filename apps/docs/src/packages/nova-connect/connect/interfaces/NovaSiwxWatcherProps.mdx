@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaSiwxWatcherProps
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L23)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L26)
 
 Props of [NovaSiwxWatcher](?path=/docs/packages-nova-connect-connect-functions-novasiwxwatcher--docs) (the `siwx` prop of `NovaConnectProvider`): the sign-in callbacks and the SIWX
 message fields of `getSatelliteSiwxFields` from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
@@ -19,7 +19,7 @@ message fields of `getSatelliteSiwxFields` from `@tuwaio/siwx-react` (`domain`, 
 
 > `optional` **destroyer?**: () => `Promise`\<`void`\>
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L46)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L72)
 
 Optional callback triggered when the wallet disconnects or when `signOut` is called.
 Useful for hitting a `/logout` endpoint to clear the backend cookie.
@@ -34,9 +34,31 @@ Useful for hitting a `/logout` endpoint to clear the backend cookie.
 
 > `optional` **enabled?**: `boolean`
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L25)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L28)
 
 Whether to ask connected wallets to sign in (default: `true`)
+
+***
+
+### endSessionOnlyAfterDisconnect?
+
+> `optional` **endSessionOnlyAfterDisconnect?**: `boolean`
+
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L63)
+
+Whether only the disconnect of a wallet clears the session (default: `false`).
+
+- `false`: the session is cleared, and `destroyer` called, whenever no wallet is connected after Satellite Connect
+  has finished reconnecting, also on a page that has had no wallet.
+- `true`: the session is cleared, and `destroyer` called, only when no wallet is connected after a wallet that this
+  page connected or restored has been disconnected. A page that has had no wallet keeps the session: a new tab
+  whose last connection is in the `sessionStorage` of another tab (a wallet that is not remembered), or whose wallet
+  Satellite Connect does not restore after a page load. A wallet of another address than the session's that is
+  disconnected after a rejected sign-in does not count. Use it when the session is shared by the tabs of the app
+  (`@tuwaio/siwx-react` keeps it in `localStorage`) and your server keeps it until a sign-out. When your app ends
+  the server session itself (a sign-out, a session guard of its own), clear this session too (`signOut` of
+  `useNovaSiwx`, or `reset` of `useSiwxSessionStore` from `@tuwaio/siwx-react`): a kept session counts as signed in
+  for a wallet of its account connected later, which is then not asked to sign in, and `onSuccess` is not called.
 
 ***
 
@@ -44,7 +66,7 @@ Whether to ask connected wallets to sign in (default: `true`)
 
 > `optional` **getNonce?**: () => `Promise`\<`string`\>
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L39)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L65)
 
 Fetches the nonce of the SIWX message from your backend
 
@@ -58,7 +80,7 @@ Fetches the nonce of the SIWX message from your backend
 
 > `optional` **onError?**: `UseSiwxSignInOptions`\[`"onError"`\]
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L50)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L76)
 
 Optional callback triggered if SIWX signing or verification fails
 
@@ -68,7 +90,7 @@ Optional callback triggered if SIWX signing or verification fails
 
 > `optional` **onSuccess?**: `UseSiwxSignInOptions`\[`"onSuccess"`\]
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L48)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L74)
 
 Optional callback triggered immediately after successful SIWX authentication
 
@@ -78,7 +100,7 @@ Optional callback triggered immediately after successful SIWX authentication
 
 > `optional` **sessionScope?**: [`NovaSiwxSessionScope`](?path=/docs/packages-nova-connect-connect-type-aliases-novasiwxsessionscope--docs)
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L37)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L47)
 
 What the session belongs to (default: `'chain'`).
 
@@ -90,12 +112,19 @@ What the session belongs to (default: `'chain'`).
   with Nova Payments, whose checkout switches the wallet to the network of the payment); keep `'chain'` when your
   server ties permissions to the chain the session was signed on.
 
+A rejected sign-in disconnects the wallet that was asked. When the session belongs to another account (another
+address or namespace; with `'chain'`, also the same address on another chain), the session is kept, so Satellite
+Connect falls back to the wallet of the session without asking it again (a second wallet connected for a payment,
+say). For the account of the session, or without a session, the session is cleared as well. With `'chain'`, when
+the wallet of the session rejects the sign-in on another network, that wallet is disconnected and the session ends
+as soon as no wallet is connected.
+
 ***
 
 ### verifier?
 
 > `optional` **verifier?**: `UseSiwxSignInOptions`\[`"verifier"`\]
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L41)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L67)
 
 Verifies the signed message on your backend (required for the sign-in)

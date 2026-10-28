@@ -41,6 +41,7 @@ let session: { address: string; chainId: string; domain: string; issuedAt: strin
 let status = 'idle';
 const disconnect = vi.fn();
 const reset = vi.fn();
+const setState = vi.fn();
 let rejectSignIn: (error: Error) => void = () => undefined;
 const signIn = vi.fn(
   () =>
@@ -58,7 +59,10 @@ vi.mock('../satellite', () => ({
 vi.mock('@tuwaio/siwx-react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@tuwaio/siwx-react')>()),
   useSiwx: () => ({ signIn }),
-  useSiwxSessionStore: (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status, reset }),
+  useSiwxSessionStore: Object.assign(
+    (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status, reset }),
+    { setState },
+  ),
 }));
 
 const { NovaSiwxWatcher } = await import('./NovaSiwxWatcher');
@@ -121,7 +125,7 @@ describe('NovaSiwxWatcher sessionScope', () => {
       expect(signIn).toHaveBeenCalledTimes(1);
     });
 
-    it('asks another account to sign in, and disconnects it on a rejection', async () => {
+    it('asks another account to sign in, and on a rejection disconnects it and keeps the session', async () => {
       signedIn(EVM, 'eip155:1');
       activeConnection = evm(1);
       render(NovaSiwxWatcher, props);
@@ -135,6 +139,8 @@ describe('NovaSiwxWatcher sessionScope', () => {
       rejectSignIn(new Error('User rejected'));
       await flush();
       expect(disconnect).toHaveBeenCalledWith('evm:metamask');
+      expect(reset).not.toHaveBeenCalled();
+      expect(setState).toHaveBeenCalledWith(expect.objectContaining({ status: 'authenticated', session }));
     });
 
     it('asks a wallet of another namespace to sign in', () => {
