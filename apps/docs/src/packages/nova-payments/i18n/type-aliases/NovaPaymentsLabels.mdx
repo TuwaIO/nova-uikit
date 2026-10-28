@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:396](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L396)
+Defined in: [i18n/types.ts:398](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L398)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -37,7 +37,13 @@ Heading while the wallet asks: `{wallet}` (default: `Approve in {wallet}`)
 
 > **cap**: `string`
 
-Second note: `{merchant}` (default: `{merchant} can't take more than this limit in a period.`)
+Third note: `{merchant}` (default: `{merchant} can't take more than this limit in a period.`)
+
+#### collector
+
+> **collector**: `string`
+
+First note, on who sends the charges: `{merchant}` (default: `Quasar sends each charge for {merchant}, only to {merchant}'s wallet and within this limit.`)
 
 #### confirm
 
@@ -61,7 +67,7 @@ Row of the paying wallet (default: `From`)
 
 > **invoices**: `string`
 
-First note (default: `Each charge comes with an invoice and a receipt by email.`)
+Second note (default: `Each charge comes with an invoice and a receipt by email.`)
 
 #### limit
 
@@ -91,13 +97,13 @@ Heading (default: `Pay next periods automatically?`)
 
 > **to**: `string`
 
-Row of the account that takes the payments (default: `To`)
+Row of the merchant's wallet the charges are paid to (default: `To`)
 
 #### turnOff
 
 > **turnOff**: `string`
 
-Third note
+Fourth note
 
 #### unavailable
 
@@ -287,7 +293,7 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:340](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L340)
+Defined in: [i18n/types.ts:342](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L342)
 
 The confirm step: the transaction is on its way.
 
@@ -443,7 +449,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:488](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L488)
+Defined in: [i18n/types.ts:500](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L500)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -655,7 +661,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:433](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L433)
+Defined in: [i18n/types.ts:437](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L437)
 
 The outcomes other than paid.
 
@@ -701,11 +707,29 @@ Subject of the email to the seller: `{number}` (default: `Invoice {number}`)
 
 Under it
 
+#### expiredPartNoAmount
+
+> **expiredPartNoAmount**: `string`
+
+The same without the amount, when no locked quote tells its token: `{date}` (default: `It was payable until {date}. Part of the payment arrived.`)
+
+#### expiredPartRefund
+
+> **expiredPartRefund**: `string`
+
+Under it: `{merchant}` (default: `{merchant} can refund it to the wallet that paid; contact {merchant}.`)
+
+#### expiredPartText
+
+> **expiredPartText**: `string`
+
+Its text when part of the payment arrived before it expired: `{date}`, `{amount}` with its symbol (default: `It was payable until {date}. Part of the payment arrived: {amount}.`)
+
 #### expiredText
 
 > **expiredText**: `string`
 
-Its text: `{date}`, `{merchant}`
+Its text when nothing arrived: `{date}`, `{merchant}`
 
 #### expiredTitle
 
@@ -731,11 +755,17 @@ Under it (default: `The seller contacts you if anything is needed.`)
 
 Reason `overpaid`: `{merchant}`
 
+#### heldQuoteExpired
+
+> **heldQuoteExpired**: `string`
+
+Reason `quote_expired`: `{merchant}` (default: `The payment arrived after the price lock ran out. {merchant} accepts it or returns it.`)
+
 #### heldScreening
 
 > **heldScreening**: `string`
 
-Reason `screening`: `{merchant}` (default: `{merchant} checks the payment before confirming the order.`)
+Reason `screening`, also while the reason is unknown or not read yet: `{merchant}` (default: `{merchant} checks the payment before confirming the order.`)
 
 #### heldTitle
 
@@ -821,7 +851,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:371](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L371)
+Defined in: [i18n/types.ts:373](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L373)
 
 The paid outcome.
 
@@ -953,7 +983,13 @@ The buyer declined in the wallet: `{wallet}` (default: `You declined the request
 
 > **disclaimer**: `string`
 
-Under the button: `{merchant}`
+Under the button: `{merchant}` (default: `Payments go straight to {merchant} and can't be reversed; refunds come from the seller.`)
+
+#### disclaimerScreening
+
+> **disclaimerScreening**: `string`
+
+After it, only when the merchant checks paying wallets (`amlScreening` of the checkout): `{merchant}` (default: `{merchant} checks paying wallets against sanctions lists and, where available, other risk signals.`)
 
 #### failed
 
@@ -1273,7 +1309,7 @@ Above the amount (default: `You send`)
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:309](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L309)
+Defined in: [i18n/types.ts:311](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L311)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1367,7 +1403,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:552](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L552)
+Defined in: [i18n/types.ts:564](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L564)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1777,7 +1813,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:503](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L503)
+Defined in: [i18n/types.ts:515](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L515)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -1925,7 +1961,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:276](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L276)
+Defined in: [i18n/types.ts:278](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L278)
 
 The window while the wallet asks the buyer.
 

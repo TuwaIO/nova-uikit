@@ -9,9 +9,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Defined in: [components/AutoPayScreen.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/AutoPayScreen.tsx#L33)
 
 The automatic payments offer of a subscription, after a paid period: the limit the seller may take each period, the
-period, the paying wallet and the account that takes the charges, until when, and how to turn it off. "Allow" asks
-the wallet for the ERC-7715 permission and hands it to Quasar (then the paid outcome says automatic payments are
-on); "Not now" keeps paying each invoice.
+period, the paying wallet and the seller's wallet the charges are paid to, until when, that Quasar sends each charge
+for the seller, and how to turn it off. "Allow" asks the wallet for the ERC-7715 permission and hands it to Quasar
+(then the paid outcome says automatic payments are on); "Not now" keeps paying each invoice.
 
 Side effects: a wallet prompt; `POST permission` of the checkout.
 

@@ -24,10 +24,11 @@ Calls to make instead of the HTTP ones, for tests and simulations (`CheckoutApi`
 
 > `optional` **autoReturnSeconds?**: `number`
 
-Defined in: [components/PaymentCheckout.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L91)
+Defined in: [components/PaymentCheckout.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L92)
 
 Seconds before the paid outcome sends the buyer back to the invoice's `successUrl`, with a visible countdown and
-"Stay here" (default `5`; `0` for no automatic return).
+"Stay here" (`0` for no automatic return). Default `5` on a page; `0` in a modal, whose paid outcome offers Close
+instead, since the page under it is the seller's (handle the payment there with `onPaid`).
 
 ***
 
@@ -45,7 +46,7 @@ The Quasar API; overrides `baseUrl` of `NovaPaymentsProvider`.
 
 > `optional` **className?**: `string`
 
-Defined in: [components/PaymentCheckout.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L95)
+Defined in: [components/PaymentCheckout.tsx:96](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L96)
 
 Classes added to the checkout block.
 
@@ -55,7 +56,7 @@ Classes added to the checkout block.
 
 > `optional` **customization?**: [`PaymentCheckoutCustomization`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcustomization--docs)
 
-Defined in: [components/PaymentCheckout.tsx:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L101)
+Defined in: [components/PaymentCheckout.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L102)
 
 Class name functions of the parts, from the state of the checkout, and components that replace parts (the
 header, the order, the steps, the options of the method step, the main button, the QR code, the outcome icon or
@@ -125,7 +126,7 @@ The family of the chosen method.
 
 > `optional` **onContact?**: () => `void`
 
-Defined in: [components/PaymentCheckout.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L93)
+Defined in: [components/PaymentCheckout.tsx:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L94)
 
 Replaces the link of "Contact \<seller\>" (the seller's support email, else site) with the app's own handler.
 
