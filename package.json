@@ -43,16 +43,16 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "eslint-plugin-storybook": "10.6.2",
+    "eslint-plugin-storybook": "10.6.5",
     "globals": "^17.13.0",
     "husky": "^9.1.7",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "semantic-release": "^25.0.9",
     "typedoc": "^0.28.20",
-    "typedoc-plugin-markdown": "^4.14.0",
+    "typedoc-plugin-markdown": "^4.14.1",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.71.2",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.5"
   }
 }
