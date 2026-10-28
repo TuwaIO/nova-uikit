@@ -6,9 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ConnectModalContainerProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L110)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectModal.tsx#L114)
 
-Props for a custom container of the modal content.
+Props for a custom container of the modal content (`customization.components.ModalContainer`). To keep the height of
+the wallet list on the connecting screen, a custom container forwards `ref` to its element (the modal measures it on
+the wallet list), passes `className` and `style` to it and is a flex column; a custom `MainContent` is a flex container.
+Without `ref`, the connecting screen takes the height of its content.
 
 ## Type Declaration
 
@@ -22,10 +25,19 @@ The header, main content and footer
 
 > `optional` **className?**: `string`
 
-Classes from `classNames.modalContainer`
+Classes from `classNames.modalContainer`; on the `connecting` screen, preceded by
+`novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]`, which keeps the height of the wallet
+list (at most the height of the window less 2rem)
 
 ### modalData
 
 > **modalData**: [`ConnectModalData`](?path=/docs/packages-nova-connect-components-interfaces-connectmodaldata--docs)
 
 State of the modal
+
+### style?
+
+> `optional` **style?**: `React.CSSProperties`
+
+On the `connecting` screen, the `--novacon-connect-list-height` variable: the height of the wallet list shown
+before it, in pixels

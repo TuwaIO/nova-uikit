@@ -28,7 +28,10 @@ export type ConnectionState = 'connecting' | 'success' | 'error';
 export interface ConnectingStatusData {
   /** Connection state */
   state: ConnectionState;
-  /** The heading: `customErrorMessage` or the `connectionError` label, `connectedSuccessfully`, or `connectingTo` */
+  /**
+   * The heading: `customErrorMessage` or the `connectionError` label, `connectedSuccessfully`, or `connectingTo`
+   * followed by the name of the wallet (the `name` of `currentConnector`, such as `MetaMask`)
+   */
   message: string;
   /**
    * Text under the heading in the `error` state (`customErrorMessage` with `showDetailedError`, or the
@@ -39,7 +42,10 @@ export interface ConnectingStatusData {
   activeConnector: string | undefined;
   /** The `selectedAdapter` prop */
   selectedAdapter: OrbitAdapter | undefined;
-  /** The wallet of `connectors` whose formatted name contains `activeConnector` */
+  /**
+   * The wallet of `connectors` whose connector type (`formatConnectorName` of its name) is `activeConnector`, or, when
+   * none is, the first one whose connector type contains it
+   */
   currentConnector: GroupedConnector | null;
   /** The `showDetailedError` prop */
   showDetailedError: boolean;
@@ -365,12 +371,14 @@ export type ConnectingCustomization = {
  */
 export interface ConnectingProps {
   /**
-   * The wallet being connected, as `formatConnectorName` of `@tuwaio/orbit-core` returns it (for example `metamask`)
+   * The wallet being connected, as `formatConnectorName` of `@tuwaio/orbit-core` returns it (for example `metamask`).
+   * The texts name the wallet of `connectors` with exactly this connector type (`MetaMask`), or, when none has it, the
+   * first one whose connector type contains it, or this value when none does.
    */
   activeConnector: string | undefined;
   /** Selected orbit adapter for the connection */
   selectedAdapter: OrbitAdapter | undefined;
-  /** Wallets with their connectors (the icon comes from the wallet matching `activeConnector`) */
+  /** Wallets with their connectors (the icon and the name come from the wallet matching `activeConnector`) */
   connectors: GroupedConnector[];
   /** Whether the wallet connection is successfully established */
   isConnected: boolean;
@@ -382,6 +390,21 @@ export interface ConnectingProps {
   className?: string;
   /** Customization options */
   customization?: ConnectingCustomization;
+}
+
+// The wallet with exactly the connector type `activeConnector`, else the first one whose connector type contains it.
+// A substring match alone picks the wrong wallet when one connector type contains another: `coinbasewallet` (Coinbase
+// Wallet) for `coinbase` (Base Account), `safepal` for `safe`, `metamaskflask` for `metamask`
+function findActiveConnector(
+  connectors: GroupedConnector[],
+  activeConnector: string | undefined,
+): GroupedConnector | null {
+  if (!activeConnector) return null;
+  const type = activeConnector.toLowerCase();
+  const types = connectors.map((connector) => formatConnectorName(connector.name).toLowerCase());
+  const index = types.indexOf(type);
+  if (index !== -1) return connectors[index];
+  return connectors[types.findIndex((connectorType) => connectorType.includes(type))] ?? null;
 }
 
 // --- Default Sub-Components ---
@@ -585,11 +608,11 @@ export const Connecting = memo(
       /**
        * Find the current connector configuration
        */
-      const currentConnector = activeConnector
-        ? connectors.find((connector) =>
-            formatConnectorName(connector.name).toLowerCase().includes(activeConnector.toLowerCase()),
-          ) || null
-        : null;
+      const currentConnector = findActiveConnector(connectors, activeConnector);
+
+      // The name of the wallet as the user knows it (`MetaMask`), as in the title of the modal: `activeConnector` is
+      // its connector type (`metamask`)
+      const walletName = currentConnector?.name ?? activeConnector ?? '';
 
       /**
        * Determine current connection state
@@ -608,7 +631,7 @@ export const Connecting = memo(
             return labels.connectedSuccessfully;
           case 'connecting':
           default:
-            return activeConnector ? `${labels.connectingTo} ${activeConnector}...` : labels.connectingEllipsis;
+            return walletName ? `${labels.connectingTo} ${walletName}...` : labels.connectingEllipsis;
         }
       })();
 
@@ -826,7 +849,7 @@ export const Connecting = memo(
               <WalletIcon
                 icon={currentConnector.icon}
                 name={activeConnector}
-                altText={`${activeConnector} ${labels.walletIcon}`}
+                altText={`${walletName} ${labels.walletIcon}`}
                 showLoading={connectionState === 'connecting'}
                 customization={customization?.walletIcon}
               />
@@ -898,16 +921,16 @@ export const Connecting = memo(
 
           {/* Screen Reader Announcements */}
           <div className="novacon:sr-only" aria-live="assertive" role="status">
-            {connectionState === 'connecting' && `${labels.connecting} ${activeConnector}`}
-            {connectionState === 'success' && `${labels.connectedSuccessfully} ${activeConnector}`}
-            {connectionState === 'error' && `${labels.connectionError} ${activeConnector}`}
+            {connectionState === 'connecting' && `${labels.connecting} ${walletName}`}
+            {connectionState === 'success' && `${labels.connectedSuccessfully} ${walletName}`}
+            {connectionState === 'error' && `${labels.connectionError} ${walletName}`}
           </div>
 
           {/* Hidden Content for Screen Readers */}
           <div className="novacon:sr-only">
             <p>
               {formatLabel(labels.connectingDetails, {
-                wallet: activeConnector,
+                wallet: walletName,
                 network: selectedAdapter,
                 status: connectionState,
               })}

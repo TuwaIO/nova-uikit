@@ -3,6 +3,7 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 import * as React from 'react';
 
 import { cn, isTouchDevice } from '../utils';
+import { watchDialogFrameHeight } from './dialogFrameHeight';
 
 /**
  * The dialog root (`Root` of `@radix-ui/react-dialog`): holds the open state (`open`, `defaultOpen`, `onOpenChange`).
@@ -96,6 +97,14 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
  * the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
  * the panel scales in at the center of the screen, or slides up from the bottom on touch devices (`isTouchDevice`); its
  * content scrolls when it is taller than the viewport. Use it inside {@link Dialog}.
+ *
+ * When the content changes size (a modal goes to another screen), the panel takes a smaller height at once and grows to
+ * a larger one with a 0.2 s height animation that clips the content, so it never shows an empty band under shrinking
+ * content, even while the page renders no frames (as when a wallet opens its window). No animation with
+ * `prefers-reduced-motion: reduce`.
+ *
+ * Side effects: observes the size of the content with a `ResizeObserver` while open, and the side effects of
+ * {@link DialogOverlay}.
  */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -105,11 +114,21 @@ const DialogContent = React.forwardRef<
   }
 >(({ className, children, modalAnimation, backdropAnimation, ...props }, ref) => {
   const [isMobile, setIsMobile] = React.useState(false);
+  // State, not refs: Radix mounts the elements only while the dialog is open
+  const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
+  const [content, setContent] = React.useState<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(isTouchDevice());
   }, []);
+
+  // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
+  // has the new size, which leaves an empty band under the footer
+  React.useEffect(() => {
+    if (!frame || !content) return;
+    return watchDialogFrameHeight({ frame, content });
+  }, [frame, content]);
 
   const selectedAnimation = modalAnimation ?? (isMobile ? mobileModalAnimation : defaultModalAnimation);
 
@@ -126,16 +145,7 @@ const DialogContent = React.forwardRef<
         )}
         {...props}
       >
-        <motion.div
-          layout
-          className="NovaNoScrolling novacore:relative novacore:overflow-hidden"
-          transition={{
-            layout: {
-              duration: 0.2,
-              ease: [0.1, 0.1, 0.2, 1],
-            },
-          }}
-        >
+        <div className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
           <AnimatePresence>
             <motion.div
               variants={selectedAnimation}
@@ -145,17 +155,20 @@ const DialogContent = React.forwardRef<
               exit="exit"
               className="NovaNoScrolling novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
             >
-              <div
-                className={cn(
-                  'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
-                  'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
-                )}
-              >
-                {children}
+              <div ref={setFrame} className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
+                <div
+                  ref={setContent}
+                  className={cn(
+                    'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
+                    'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
+                  )}
+                >
+                  {children}
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
       </DialogPrimitive.Content>
     </DialogPortal>
   );
