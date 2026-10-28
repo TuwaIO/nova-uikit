@@ -20,23 +20,37 @@ Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.
 
 Custom animation configuration
 
-#### layout?
+#### ~~layout?~~
 
 > `optional` **layout?**: `object`
 
-Layout animation between screens
+The former layout animation between screens.
 
-##### layout.duration?
+##### Deprecated
+
+No longer applied: a layout animation stretched the window for a frame after a size change, and
+`DialogContent` of `@tuwaio/nova-core` follows the height of the content. It will be removed in the next major
+version.
+
+##### ~~layout.duration?~~
 
 > `optional` **duration?**: `number`
 
-Animation duration in seconds (default: `0.0001`)
+Animation duration in seconds.
 
-##### layout.ease?
+###### Deprecated
+
+No longer applied.
+
+##### ~~layout.ease?~~
 
 > `optional` **ease?**: `Easing` \| `Easing`[]
 
-Animation easing curve
+Animation easing curve.
+
+###### Deprecated
+
+No longer applied.
 
 #### modal?
 
@@ -68,7 +82,7 @@ Animation easing curve
 
 > `optional` **childCustomizations?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:321](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L321)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:335](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L335)
 
 Child component customizations
 
@@ -266,7 +280,7 @@ The classes.
 
 > `optional` **motionContainer?**: () => `string`
 
-Returns the classes of the layout animation container.
+Returns the classes of the container of the opening animation.
 
 ##### Returns
 
@@ -340,7 +354,7 @@ Custom main content component (renders different views based on contentType)
 
 > `optional` **MotionContainer?**: `ComponentType`\<`ComponentPropsWithoutRef`\<*typeof* `motion.div`\>\>
 
-Custom motion container for animations
+Custom container of the opening animation (default: `motion.div`)
 
 ***
 
@@ -348,7 +362,7 @@ Custom motion container for animations
 
 > `optional` **config?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:334](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L334)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:348](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L348)
 
 Configuration options
 
@@ -374,7 +388,7 @@ Whether to show the main screen each time the modal opens (default: `true`)
 
 > `optional` **disableAnimation?**: `boolean`
 
-Disables the modal and layout animations (default: `false`)
+Disables the opening animation of the modal (default: `false`)
 
 #### hooks?
 
@@ -420,7 +434,7 @@ Props of the dialog, applied after `open` and `onOpenChange` (they override them
 
 > `optional` **handlers?**: `object`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:301](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L301)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:315](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L315)
 
 Custom event handlers
 

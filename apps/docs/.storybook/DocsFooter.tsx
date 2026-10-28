@@ -1,14 +1,12 @@
 import React from 'react';
 
+import { type FooterPolicySlug, policyLanguageOf, storybookLabels } from '../i18n/labels';
+import type { StorybookLocale } from '../i18n/locale';
+
 // The policies in force, in the order of `footerPolicies` of @tuwaio/docs-ui (packages/docs-ui/src/policies.ts in
-// TuwaIO/docs); the Storybook does not depend on docs-ui, which needs Next.js. Add a policy here when it is published there.
-const POLICIES = [
-  { slug: 'terms', title: 'Terms of Service' },
-  { slug: 'privacy', title: 'Privacy Policy' },
-  { slug: 'cookie', title: 'Cookie Policy' },
-  { slug: 'security', title: 'Security Policy' },
-  { slug: 'dpa', title: 'Data Processing Addendum' },
-];
+// TuwaIO/docs); the Storybook does not depend on docs-ui, which needs Next.js. Add a policy here (and its title to
+// `i18n/labels.ts`) when it is published there.
+const POLICIES: readonly FooterPolicySlug[] = ['terms', 'privacy', 'cookie', 'security', 'dpa'];
 
 const POLICIES_INDEX_URL = 'https://docs.tuwa.io/policies';
 
@@ -33,12 +31,19 @@ const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 /**
  * The footer of every docs page, like the footer of the TUWA documentation sites: the TUWA logo and the npm and GitHub
  * organizations, the TUWA description and license, the policies on tuwa.io, the list of all policies on the docs hub
- * and the copyright line. `sb-unstyled` keeps the typography of the docs pages off it; the styles are in
- * `src/styles/app.css` (`.tuwa-docs-footer`).
+ * and the copyright line, in the language selected in the toolbar. The policies open in Ukrainian for Ukrainian
+ * (`?lang=uk`) and in English otherwise, the languages they exist in. `sb-unstyled` keeps the typography of the docs
+ * pages off it; the styles are in `src/styles/app.css` (`.tuwa-docs-footer`).
+ *
+ * @param props - The props.
+ * @param props.locale - The language selected in the toolbar.
  */
-export function DocsFooter() {
+export function DocsFooter({ locale }: { locale: StorybookLocale }) {
+  const labels = storybookLabels[locale].footer;
+  const policyQuery = policyLanguageOf(locale) === 'en' ? '' : `?lang=${policyLanguageOf(locale)}`;
+
   return (
-    <footer className="sb-unstyled tuwa-docs-footer">
+    <footer className="sb-unstyled tuwa-docs-footer" lang={locale}>
       <div className="tuwa-docs-footer__row">
         <a href="https://tuwa.io" {...external} aria-label="TUWA" className="tuwa-docs-footer__logo">
           <img
@@ -54,7 +59,7 @@ export function DocsFooter() {
             className="tuwa-docs-footer__logo-dark"
           />
         </a>
-        <nav aria-label="TUWA on the web" className="tuwa-docs-footer__links">
+        <nav aria-label={labels.linksAriaLabel} className="tuwa-docs-footer__links">
           {LINKS.map((link) => (
             <a
               key={link.title}
@@ -73,31 +78,28 @@ export function DocsFooter() {
 
       <div className="tuwa-docs-footer__row tuwa-docs-footer__divided">
         <div className="tuwa-docs-footer__about">
-          <p className="tuwa-docs-footer__description">
-            The modular, headless-first Web3 infrastructure. Build self-custodial applications on open-source, portable
-            building blocks.
-          </p>
-          <p className="tuwa-docs-footer__license">Licensed under Apache 2.0. Open source and free to use.</p>
+          <p className="tuwa-docs-footer__description">{labels.description}</p>
+          <p className="tuwa-docs-footer__license">{labels.license}</p>
         </div>
-        <nav aria-label="Policies" className="tuwa-docs-footer__links tuwa-docs-footer__policies">
-          {POLICIES.map((policy) => (
+        <nav aria-label={labels.policiesAriaLabel} className="tuwa-docs-footer__links tuwa-docs-footer__policies">
+          {POLICIES.map((slug) => (
             <a
-              key={policy.slug}
-              href={`https://tuwa.io/${policy.slug}`}
+              key={slug}
+              href={`https://tuwa.io/${slug}${policyQuery}`}
               {...external}
               className="tuwa-docs-footer__link"
             >
-              {policy.title}
+              {labels.policyTitles[slug]}
             </a>
           ))}
           <a href={POLICIES_INDEX_URL} {...external} className="tuwa-docs-footer__link tuwa-docs-footer__link--strong">
-            All policies
+            {labels.allPolicies}
           </a>
         </nav>
       </div>
 
       <div className="tuwa-docs-footer__copyright tuwa-docs-footer__divided">
-        © 2025 - {new Date().getFullYear()} TUWA. All rights reserved.
+        © 2025 - {new Date().getFullYear()} TUWA. {labels.copyright}
       </div>
     </footer>
   );

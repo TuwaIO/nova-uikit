@@ -482,17 +482,18 @@ DefaultErrorMessage.displayName = 'DefaultErrorMessage';
  * ```tsx
  * import { getFilteredConnectors } from '@tuwaio/nova-connect';
  * import { NetworkSelections } from '@tuwaio/nova-connect/components';
+ * import { useWalletConnectors } from '@tuwaio/nova-connect/hooks';
  * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
  * import { OrbitAdapter } from '@tuwaio/orbit-core';
  *
  * export function MetaMaskNetworks() {
- *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const connectors = useWalletConnectors() ?? {};
  *   const connect = useSatelliteConnectStore((store) => store.connect);
  *
  *   return (
  *     <NetworkSelections
  *       activeConnector="metamask"
- *       connectors={getFilteredConnectors({ connectors: getConnectors() })}
+ *       connectors={getFilteredConnectors({ connectors })}
  *       onClick={(adapter, connectorType) =>
  *         connect({ connectorType, chainId: adapter === OrbitAdapter.EVM ? 1 : 'solana:devnet' })
  *       }

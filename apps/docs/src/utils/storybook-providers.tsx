@@ -29,6 +29,8 @@ import {
   sepolia,
 } from 'viem/chains';
 
+import { novaConnectLabels } from '../../i18n/novaLabels';
+import { useStorybookLocale } from '../../i18n/useStorybookLocale';
 import { connectedWalletTransactionsMock } from './connectedWalletTransactionsMock';
 
 // ============================================================================
@@ -153,6 +155,8 @@ function SatelliteConnectProvidersInner({
   const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
   const getAdapter = usePulsarStore((state) => state.getAdapter);
   const siwxSession = useSiwxSession();
+  // The language tool of the toolbar picks the labels, as an app passes its own language
+  const locale = useStorybookLocale();
 
   return (
     <>
@@ -172,6 +176,7 @@ function SatelliteConnectProvidersInner({
         customConnectorGroups={customConnectorGroups}
         popularConnectors={popularConnectors}
         legal={legal}
+        labels={novaConnectLabels[locale]}
       >
         {children}
       </NovaConnectProvider>

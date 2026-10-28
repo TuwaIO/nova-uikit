@@ -1,3 +1,11 @@
+import { LocalizedPage } from '../i18n/LocalizedPage';
+import ThemingUk from '../i18n/uk/Theming.mdx';
+import ThemingZhCN from '../i18n/zh-CN/Theming.mdx';
+
+{/* The translations in ../i18n/<language>/Theming.mdx follow this page: change them together */}
+
+<LocalizedPage translations={{ uk: ThemingUk, 'zh-CN': ThemingZhCN }}>
+
 # Theming & Customization Guide
 
 Welcome to the comprehensive theming guide for **Nova UI Kit**. This document provides everything you need to customize the look, feel, and behavior of components to perfectly match your brand. 🎨
@@ -444,3 +452,5 @@ export function Providers({ children, pulsar }: { children: ReactNode; pulsar: P
   );
 }
 ```
+
+</LocalizedPage>

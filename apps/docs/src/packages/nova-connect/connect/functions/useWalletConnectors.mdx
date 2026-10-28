@@ -1,0 +1,53 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/useWalletConnectors" />
+
+# useWalletConnectors()
+
+> **useWalletConnectors**(`params?`): `Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\> \| `undefined`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletConnectors.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletConnectors.ts#L116)
+
+The wallets of the Satellite Connect store by adapter (`getConnectors()` of the store), read again whenever the store
+reports that the wallets of an adapter changed (`watchConnectors` of `@tuwaio/satellite-core`). A list shown before
+wagmi added the installed EIP-6963 wallets, or before a Wallet Standard wallet registered, fills in by itself. The
+connect modal and the connected modal list their wallets with it.
+
+The list is also read again on every render of the component: the wallets of an adapter that reports no changes (an
+adapter without `watchConnectors`, such as an older `@tuwaio/satellite-solana` or a custom adapter, or a
+`@tuwaio/satellite-core` without `watchConnectors`) appear at the next render.
+
+Side effects: while `enabled`, a subscription to the wallet list of the store (`watchConnectors`, which follows wagmi's
+connectors and the Wallet Standard registry), from the commit until `enabled` turns `false` or the component unmounts.
+Nothing is read or subscribed on the server.
+
+## Parameters
+
+### params?
+
+[`UseWalletConnectorsParams`](?path=/docs/packages-nova-connect-connect-interfaces-usewalletconnectorsparams--docs) = `{}`
+
+Options. See [UseWalletConnectorsParams](?path=/docs/packages-nova-connect-connect-interfaces-usewalletconnectorsparams--docs).
+
+## Returns
+
+`Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\> \| `undefined`
+
+The wallets by adapter key, or `undefined` while disabled and on the server. The record stays the same object
+while the store returns the same wallet objects, so it can be a dependency of memos and effects.
+
+## Throws
+
+`useSatelliteConnectStore must be used within a SatelliteConnectProvider` outside the provider.
+
+## Example
+
+```tsx
+import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { useWalletConnectors } from '@tuwaio/nova-connect/hooks';
+
+export function EvmWalletCount() {
+  const connectors = useWalletConnectors();
+  return <span>{connectors?.[OrbitAdapter.EVM]?.length ?? 0} EVM wallets</span>;
+}
+```

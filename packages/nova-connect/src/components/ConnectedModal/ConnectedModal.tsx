@@ -208,7 +208,7 @@ export type ConnectedModalCustomization = {
     MainContent?: ComponentType<ConnectedModalMainContentSlotProps>;
     /** Custom footer component */
     Footer?: ComponentType<ConnectedModalFooterProps>;
-    /** Custom motion container for animations */
+    /** Custom container of the opening animation (default: `motion.div`) */
     MotionContainer?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
   };
   /** Custom class name generators */
@@ -223,7 +223,7 @@ export type ConnectedModalCustomization = {
      */
     dialogContent?: (params: { contentType: ConnectedContentType; hasActiveWallet: boolean }) => string;
     /**
-     * Returns the classes of the layout animation container.
+     * Returns the classes of the container of the opening animation.
      *
      * @returns The classes.
      */
@@ -289,11 +289,25 @@ export type ConnectedModalCustomization = {
       /** Animation delay in seconds */
       delay?: number;
     };
-    /** Layout animation between screens */
+    /**
+     * The former layout animation between screens.
+     *
+     * @deprecated No longer applied: a layout animation stretched the window for a frame after a size change, and
+     * `DialogContent` of `@tuwaio/nova-core` follows the height of the content. It will be removed in the next major
+     * version.
+     */
     layout?: {
-      /** Animation duration in seconds (default: `0.0001`) */
+      /**
+       * Animation duration in seconds.
+       *
+       * @deprecated No longer applied.
+       */
       duration?: number;
-      /** Animation easing curve */
+      /**
+       * Animation easing curve.
+       *
+       * @deprecated No longer applied.
+       */
       ease?: Easing | Easing[];
     };
   };
@@ -332,7 +346,7 @@ export type ConnectedModalCustomization = {
   };
   /** Configuration options */
   config?: {
-    /** Disables the modal and layout animations (default: `false`) */
+    /** Disables the opening animation of the modal (default: `false`) */
     disableAnimation?: boolean;
     /** Same as `disableAnimation` (default: `false`) */
     reduceMotion?: boolean;
@@ -793,23 +807,20 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         return {};
       }
 
-      const layoutTransition: Transition = {
-        duration: customization?.animation?.layout?.duration ?? 0.0001,
-        ease: customization?.animation?.layout?.ease,
+      // No `layout`: a layout animation follows a size change from the old box, which stretches the window for a frame.
+      // `DialogContent` of nova-core follows the height of the content
+      const transition: Transition = {
+        duration: customization?.animation?.modal?.duration ?? 0.3,
+        ease: customization?.animation?.modal?.ease ?? 'easeOut',
+        delay: customization?.animation?.modal?.delay ?? 0,
       };
 
       return {
-        layout: true,
         variants: modalVariants,
         initial: 'initial' as const,
         animate: 'animate' as const,
         exit: 'exit' as const,
-        transition: {
-          layout: layoutTransition,
-          duration: customization?.animation?.modal?.duration ?? 0.3,
-          ease: customization?.animation?.modal?.ease ?? 'easeOut',
-          delay: customization?.animation?.modal?.delay ?? 0,
-        },
+        transition,
       };
     })();
 

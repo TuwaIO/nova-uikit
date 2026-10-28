@@ -13,6 +13,7 @@ vi.mock('react', async (importOriginal) => ({
   useCallback: (fn: unknown) => fn,
   useMemo: (fn: () => unknown) => fn(),
   useRef: (initial: unknown) => ({ current: initial }),
+  useSyncExternalStore: (_subscribe: unknown, getSnapshot: () => unknown) => getSnapshot(),
 }));
 
 vi.mock('../../hooks', () => ({

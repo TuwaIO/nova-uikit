@@ -43,8 +43,17 @@ pnpm --filter @tuwaio/storybook build-storybook
 apps/docs/
 ├── .storybook/
 │   ├── main.ts                # Stories: src/**/*.mdx and src/**/*.stories.tsx
-│   ├── preview.tsx            # Themes, docs container and the sidebar order (storySort)
-│   └── manager.jsx            # Manager theme
+│   ├── preview.tsx            # Themes, language, docs container and the sidebar order (storySort)
+│   ├── DocsFooter.tsx         # Footer of the docs pages, in the selected language
+│   └── manager.jsx            # Manager theme and the language and theme tools of the toolbar
+├── i18n/                      # Languages (outside the stories glob, so nothing here gets a sidebar entry)
+│   ├── locale.ts              # Languages, Session Storage key, channel events (manager and preview)
+│   ├── labels.ts              # Toolbar, "English only" note and footer texts
+│   ├── novaLabels.ts          # Nova Connect and Nova Transactions labels by language
+│   ├── LocalizedPage.tsx      # Shows a hand-written page in the selected language
+│   ├── checkTranslations.mjs  # Checks the translations against their English pages (pnpm docs:gen, build)
+│   ├── uk/                    # Ukrainian Introduction.mdx and Theming.mdx
+│   └── zh-CN/                 # Simplified Chinese Introduction.mdx and Theming.mdx
 ├── src/
 │   ├── Introduction.mdx       # Introduction (hand-written)
 │   ├── Theming.mdx            # Theme variables and customization (hand-written)
@@ -72,6 +81,16 @@ apps/docs/
 ```
 
 The **Introduction** explains what Nova UI Kit is, where it fits in TUWA, how the UI works with Satellite Connect and Pulsar, the packages and the installation, and links to the package pages instead of repeating code. Usage examples live in the package READMEs; the full-stack integration with SIWX and a server is documented in the [Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react).
+
+## 🌐 Languages
+
+The language tool of the toolbar (before the theme tool) switches the Storybook between English, Ukrainian (`uk`) and Simplified Chinese (`zh-CN`), like the language switch of the TUWA documentation sites:
+
+- **Component stories** get the labels of the language: `defaultLabels`, `ukrainianLabels` and `chineseLabels` of `@tuwaio/nova-connect/i18n` and `@tuwaio/nova-transactions/i18n`, passed to `NovaConnectProvider` (`src/utils/storybook-providers.tsx`) and `NovaTransactionsLabelsProvider` (`i18n/StoryLocaleRoot.tsx`, a global decorator). The preview `<html lang>` follows the language.
+- **Introduction and Theming** wrap the English text in `LocalizedPage`, which shows `i18n/<language>/<Page>.mdx` instead. A translation follows its English page line by line, with the same code blocks (diagrams included, never translated) and links: change them together. `node i18n/checkTranslations.mjs` (`pnpm i18n:check` here, part of `pnpm docs:gen` in the root and of the Storybook build) fails when a translation is missing in a language or its code blocks or links differ from its English page.
+- **Packages and component pages** stay in English (the READMEs and the reference are generated from the source); in Ukrainian and Chinese they start with a note saying so.
+- **Storage:** nothing until the visitor picks a language; then `tuwa-storybook-locale` in Session Storage until the tab closes, like `tuwa-storybook-theme`. Before that, the first language of the browser (`navigator.languages`) that the Storybook has is used, otherwise English. No cookie and no URL parameter.
+- **Storybook's own interface** (sidebar, story names, controls) stays in English.
 
 ---
 

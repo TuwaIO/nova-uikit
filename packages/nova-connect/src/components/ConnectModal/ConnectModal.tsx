@@ -30,9 +30,11 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors } from '../../utils';
@@ -81,7 +83,10 @@ export interface ConnectModalData {
   isOpen: boolean;
   /** `connectionError` of the Satellite store, or `null` */
   error: Error | TuwaErrorState | null | undefined;
-  /** Connectors of the Satellite store by adapter (`getConnectors()`; `undefined` while the modal is closed) */
+  /**
+   * Connectors of the Satellite store by adapter (`useWalletConnectors`: updated while the modal is open when wallets are
+   * added or removed; `undefined` while the modal is closed)
+   */
   connectors: Record<string, Connector[]>;
   /** Filtered connectors for current adapter */
   filteredConnectors: GroupedConnector[];
@@ -105,11 +110,23 @@ export interface BottomButtonConfig {
 
 // --- Component Props Types ---
 /**
- * Props for a custom container of the modal content.
+ * Props for a custom container of the modal content (`customization.components.ModalContainer`). To keep the height of
+ * the wallet list on the network and connecting screens, a custom container forwards `ref` to its element (the modal
+ * measures it on the wallet list), passes `className` and `style` to it and is a flex column; a custom `MainContent` is a
+ * flex container. Without `ref`, these screens take the height of their content.
  */
 export type ConnectModalContainerProps = {
-  /** Classes from `classNames.modalContainer` */
+  /**
+   * Classes from `classNames.modalContainer`; on the `network` and `connecting` screens, preceded by
+   * `novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]`, which keeps the height of the wallet
+   * list (at most the height of the window less 2rem)
+   */
   className?: string;
+  /**
+   * On the `network` and `connecting` screens, the `--novacon-connect-list-height` variable: the height of the wallet
+   * list shown before them, in pixels
+   */
+  style?: React.CSSProperties;
   /** The header, main content and footer */
   children: React.ReactNode;
   /** State of the modal */
@@ -286,7 +303,10 @@ export type ConnectModalCustomization = {
     Dialog?: ComponentType<ComponentPropsWithoutRef<typeof Dialog>>;
     /** Custom dialog content (default: `DialogContent` from `@tuwaio/nova-core`) */
     DialogContent?: ComponentType<ComponentPropsWithoutRef<typeof DialogContent>>;
-    /** Custom layout animation wrapper (default: `motion.div`) */
+    /**
+     * Custom wrapper of the screens (default: `motion.div`). It receives `layoutRoot`: the layout animations inside it
+     * (the network tabs) are measured relative to it, so they do not follow the window when it moves to stay centered.
+     */
     MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
     /** Custom empty state */
     EmptyState?: ComponentType<ConnectModalEmptyProps>;
@@ -473,11 +493,24 @@ export type ConnectModalCustomization = {
        */
       backButton?: (modalData: ConnectModalData) => string;
     };
-    /** Animation configuration */
+    /**
+     * Animation configuration.
+     *
+     * @deprecated No longer applied: the screens have no layout transition, and `DialogContent` of
+     * `@tuwaio/nova-core` follows the height of the content. It will be removed in the next major version.
+     */
     animation?: {
-      /** Duration of the layout transition between screens, in seconds (default: `0.0001`) */
+      /**
+       * Duration of the former layout transition between screens, in seconds.
+       *
+       * @deprecated No longer applied (a layout transition stretched the window for a frame after a size change).
+       */
       layoutDuration?: number;
-      /** Sets the duration of the layout transition to `0` */
+      /**
+       * Set the duration of the former layout transition to `0`.
+       *
+       * @deprecated No longer applied.
+       */
       disabled?: boolean;
     };
   };
@@ -710,8 +743,11 @@ export interface ConnectModalProps extends InitialChains {
  *
  * Opening the modal resets it to the wallet list. A wallet connects through `connect` of the Satellite store to the
  * first chain of `appChains` (EVM) or the first cluster of `solanaRPCUrls` (Solana), and the modal closes 400 ms after
- * the wallet reports the connection (it waits up to 10 seconds). Texts come from the Nova Connect labels, except a
- * few English accessibility texts.
+ * the wallet reports the connection (it waits up to 10 seconds). The network and connecting screens keep the height of
+ * the wallet list (measured with a `ResizeObserver` while the list is shown and forgotten when the modal closes; at most
+ * the height of the window less 2rem), with the footer at the bottom and the connection status in the middle, so
+ * choosing a wallet, its network and going back do not resize the modal. Texts
+ * come from the Nova Connect labels, except a few English accessibility texts.
  *
  * Props: {@link ConnectModalProps}.
  *
@@ -751,17 +787,19 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   } = useNovaConnect();
 
   const connectionError = useSatelliteConnectStore((store) => store.connectionError);
-  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
   const connect = useSatelliteConnectStore((store) => store.connect);
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
   const labels = useNovaConnectLabels();
   const store = useContext(SatelliteStoreContext);
 
-  // Memoize connectors to avoid recalculation on every render
-  const connectors = isConnectModalOpen ? getConnectors() : undefined;
+  // The wallets of the store while the modal is open, updated when wallets are added after it opened
+  const connectors = useWalletConnectors({ enabled: isConnectModalOpen });
 
-  const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
+  const filteredConnectors = useMemo(
+    () => getFilteredConnectors({ connectors: connectors ?? {}, selectedAdapter }),
+    [connectors, selectedAdapter],
+  );
 
   // Memoize modal data for customization context
   const modalData = useMemo<ConnectModalData>(
@@ -821,6 +859,31 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const CustomDialog = components.Dialog || Dialog;
   const CustomDialogContent = components.DialogContent || DialogContent;
   const CustomMotionDiv = components.MotionDiv || motion.div;
+
+  // The network and connecting screens keep the height of the wallet list, so choosing a wallet, its network (and
+  // Back) do not resize the modal. `DialogContent` of nova-core takes a smaller height at once and animates a larger
+  // one, so a screen taller than the list (a wallet family of one or two, an error with details) only grows
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [listHeight, setListHeight] = useState<number | null>(null);
+  useEffect(() => {
+    if (!isConnectModalOpen || !container) {
+      // Forgotten when the modal closes or its element is removed, so a modal opened later straight on the connecting
+      // screen does not take the height of an old list
+
+      setListHeight(null);
+      return;
+    }
+    if (connectModalContentType !== 'connectors' || typeof ResizeObserver === 'undefined') return;
+    // `offsetHeight` is the height of the layout, without the scale of the opening animation. Measured at once too: the
+    // observer reports only when the page renders a frame
+    const measure = () => setListHeight(container.offsetHeight);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [isConnectModalOpen, container, connectModalContentType]);
+  const keepsListHeight =
+    (connectModalContentType === 'network' || connectModalContentType === 'connecting') && listHeight !== null;
 
   /**
    * Gets the appropriate title for the current modal content
@@ -1162,15 +1225,23 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   return (
     <CustomDialog open={isConnectModalOpen} onOpenChange={handleOpenChange}>
       <CustomDialogContent className={cn('novacon:w-full novacon:sm:max-w-md')}>
-        <CustomMotionDiv
-          layout
-          transition={{
-            layout: {
-              duration: config.animation?.disabled ? 0 : (config.animation?.layoutDuration ?? 0.0001),
-            },
-          }}
-        >
-          <ModalContainer className={classNames.modalContainer?.({ modalData })} modalData={modalData}>
+        {/* No `layout`: a layout animation follows a size change from the old box, which stretches the window for a
+            frame. A layout root keeps the layout animations inside it (the network tabs) relative to it, so they do
+            not follow the window when it moves to stay centered */}
+        <CustomMotionDiv layoutRoot>
+          <ModalContainer
+            ref={setContainer}
+            className={cn(
+              keepsListHeight && 'novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]',
+              classNames.modalContainer?.({ modalData }),
+            )}
+            style={
+              keepsListHeight
+                ? ({ '--novacon-connect-list-height': `${listHeight}px` } as React.CSSProperties)
+                : undefined
+            }
+            modalData={modalData}
+          >
             <ModalHeader className={classNames.header?.({ modalData })} modalData={modalData}>
               <Title className={classNames.title?.({ modalData })} modalData={modalData}>
                 {connectModalContentType === 'connectors' && (
@@ -1194,7 +1265,15 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
               />
             </ModalHeader>
 
-            <MainContent className={classNames.mainContent?.({ modalData })} modalData={modalData}>
+            <MainContent
+              className={cn(
+                // The footer at the bottom of the kept height, the status of the connecting screen in the middle
+                (connectModalContentType === 'network' || connectModalContentType === 'connecting') && 'novacon:flex-1',
+                connectModalContentType === 'connecting' && 'novacon:justify-center',
+                classNames.mainContent?.({ modalData }),
+              )}
+              modalData={modalData}
+            >
               {renderMainContent()}
             </MainContent>
 

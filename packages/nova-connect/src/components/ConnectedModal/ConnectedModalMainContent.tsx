@@ -18,6 +18,7 @@ import React, {
 } from 'react';
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
@@ -613,7 +614,8 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     // Get modal controls and state from hook
     const { setConnectedModalContentType, setIsConnectedModalOpen, setIsConnectModalOpen } = useNovaConnect();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
-    const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+    // The wallets of the store, updated when wallets are added after the modal opened
+    const connectors = useWalletConnectors() ?? {};
 
     // Extract custom components and config with stable references
     const customComponents = customization?.components;
@@ -672,11 +674,6 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customHandlers?.onViewTransactions, setConnectedModalContentType]);
-
-    /**
-     * Connectors from store
-     */
-    const connectors = getConnectors();
 
     /**
      * Wallet transactions filtered by current wallet address
