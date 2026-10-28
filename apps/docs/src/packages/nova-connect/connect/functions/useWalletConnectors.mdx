@@ -6,15 +6,16 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **useWalletConnectors**(`params?`): `Partial`\<`Record`\<`OrbitAdapter`, `Connector`[]\>\> \| `undefined`
 
-Defined in: [packages/nova-connect/src/hooks/useWalletConnectors.ts:113](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletConnectors.ts#L113)
+Defined in: [packages/nova-connect/src/hooks/useWalletConnectors.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletConnectors.ts#L116)
 
 The wallets of the Satellite Connect store by adapter (`getConnectors()` of the store), read again whenever the store
 reports that the wallets of an adapter changed (`watchConnectors` of `@tuwaio/satellite-core`). A list shown before
 wagmi added the installed EIP-6963 wallets, or before a Wallet Standard wallet registered, fills in by itself. The
 connect modal and the connected modal list their wallets with it.
 
-With a `@tuwaio/satellite-core` that has no `watchConnectors`, the list is read again on every render instead, and a
-wallet added later appears at the next render.
+The list is also read again on every render of the component: the wallets of an adapter that reports no changes (an
+adapter without `watchConnectors`, such as an older `@tuwaio/satellite-solana` or a custom adapter, or a
+`@tuwaio/satellite-core` without `watchConnectors`) appear at the next render.
 
 Side effects: while `enabled`, a subscription to the wallet list of the store (`watchConnectors`, which follows wagmi's
 connectors and the Wallet Standard registry), from the commit until `enabled` turns `false` or the component unmounts.

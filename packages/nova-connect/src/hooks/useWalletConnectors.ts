@@ -40,10 +40,12 @@ const signatureOf = (connectors: WalletConnectors): string =>
     .join(';');
 
 /**
- * The external store of `useSyncExternalStore`. The list is read again only after a change was reported (or after
- * subscribing, for a change between the render and the subscription), so the snapshot stays the same object between
- * React's checks even when an adapter returns new wallet objects on every call, and a render never loops. A store
- * without `watchConnectors` reports nothing: its list is read again on every render, as Nova Connect did before.
+ * The external store of `useSyncExternalStore`. The list is read again on every render, after a reported change and
+ * after subscribing (for a change between the render and the subscription), but not between React's checks of one
+ * render, so the snapshot stays the same object there even when an adapter returns new wallet objects on every call,
+ * and a render never loops. Reading on every render keeps the wallets of adapters that report nothing (an adapter
+ * without `watchConnectors`, or a store without it) as current as Nova Connect showed them before `watchConnectors`.
+ * The record stays the same object while the wallet objects are the same.
  */
 function createWalletConnectorsSource(
   enabled: boolean,
@@ -56,7 +58,7 @@ function createWalletConnectorsSource(
 
   return {
     render: () => {
-      if (!watchConnectors) version += 1;
+      version += 1;
     },
     subscribe: (onStoreChange: () => void) => {
       if (!enabled || !watchConnectors) return noSubscription;
@@ -86,8 +88,9 @@ const getServerSnapshot = () => undefined;
  * wagmi added the installed EIP-6963 wallets, or before a Wallet Standard wallet registered, fills in by itself. The
  * connect modal and the connected modal list their wallets with it.
  *
- * With a `@tuwaio/satellite-core` that has no `watchConnectors`, the list is read again on every render instead, and a
- * wallet added later appears at the next render.
+ * The list is also read again on every render of the component: the wallets of an adapter that reports no changes (an
+ * adapter without `watchConnectors`, such as an older `@tuwaio/satellite-solana` or a custom adapter, or a
+ * `@tuwaio/satellite-core` without `watchConnectors`) appear at the next render.
  *
  * Side effects: while `enabled`, a subscription to the wallet list of the store (`watchConnectors`, which follows wagmi's
  * connectors and the Wallet Standard registry), from the commit until `enabled` turns `false` or the component unmounts.

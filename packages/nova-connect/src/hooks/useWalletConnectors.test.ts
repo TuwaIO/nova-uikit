@@ -145,6 +145,23 @@ describe('useWalletConnectors', () => {
     expect(listeners.size).toBe(0);
   });
 
+  it('shows a wallet at the next render when watchConnectors does not report the change of an adapter', () => {
+    // A newer `@tuwaio/satellite-core` with an adapter that has no `watchConnectors` (an older
+    // `@tuwaio/satellite-solana`, a custom adapter): the store has `watchConnectors`, but it never hears of this wallet
+    const before = renderHook();
+    expect(names(before).evm).toEqual([]);
+    // Rendered again after the subscription, as the open modal is
+    expect(renderHook()).toBe(before);
+
+    wallets.evm = [metaMask];
+    const after = renderHook();
+
+    expect(after).not.toBe(before);
+    expect(names(after)).toEqual({ evm: ['MetaMask'], solana: ['Phantom'] });
+    expect(renderHook()).toBe(after);
+    expect(watchConnectors).toHaveBeenCalledTimes(1);
+  });
+
   it('reads the list on every render with a store that has no watchConnectors', () => {
     storeState = { getConnectors };
 
