@@ -30,7 +30,12 @@ describe('DialogContent', () => {
 });
 
 describe('watchDialogFrameHeight', () => {
-  type Animation = { cancel: ReturnType<typeof vi.fn>; keyframes: Keyframe[]; options: KeyframeAnimationOptions };
+  type Animation = {
+    cancel: ReturnType<typeof vi.fn>;
+    keyframes: Keyframe[];
+    options: KeyframeAnimationOptions;
+    playState: AnimationPlayState;
+  };
 
   const setup = ({ reduceMotion = false } = {}) => {
     let report: () => void = () => undefined;
@@ -50,7 +55,7 @@ describe('watchDialogFrameHeight', () => {
     const frame = {
       offsetHeight: 0,
       animate: vi.fn((keyframes: Keyframe[], options: KeyframeAnimationOptions) => {
-        const animation = { cancel: vi.fn(), keyframes, options };
+        const animation: Animation = { cancel: vi.fn(), keyframes, options, playState: 'running' };
         animations.push(animation);
         return animation;
       }),
@@ -104,6 +109,17 @@ describe('watchDialogFrameHeight', () => {
     resize(300);
     expect(animations[1].cancel).toHaveBeenCalled();
     expect(animations).toHaveLength(2);
+  });
+
+  it('grows again from the previous height when the last growth has finished but its finish event is not handled yet', () => {
+    const { frame, animations, resize } = setup();
+    resize(520);
+    animations[0].playState = 'finished';
+    // Without its animation the frame already has the height of the new content when the observer reports
+    frame.offsetHeight = 600;
+    resize(600);
+    expect(animations).toHaveLength(2);
+    expect(animations[1].keyframes).toEqual([{ height: '520px' }, { height: '600px' }]);
   });
 
   it('does not animate with reduced motion', () => {

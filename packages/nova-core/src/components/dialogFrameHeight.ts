@@ -67,8 +67,9 @@ export function watchDialogFrameHeight({
     height = next;
     if (previous === undefined || next === previous) return;
 
-    // The height on screen: during a growth, the animated height of the frame
-    const current = growth ? frame.offsetHeight : previous;
+    // The height on screen: during a growth, the animated height of the frame. A growth that has finished (its
+    // `finish` event may not be handled yet) no longer holds the frame, which already has the height of the new content
+    const current = growth?.playState === 'running' ? frame.offsetHeight : previous;
     growth?.cancel();
     growth = undefined;
     if (next <= current || prefersReducedMotion() || typeof frame.animate !== 'function') return;

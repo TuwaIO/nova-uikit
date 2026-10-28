@@ -731,6 +731,8 @@ export const ConnectorsBlock = memo(
                       <WalletIcon
                         icon={itemData.group.icon}
                         name={itemData.name}
+                        // Named as the card is (MetaMask), not by the connector type (metamask)
+                        altText={`${itemData.group.name} ${labels.walletIcon}`}
                         customization={customization?.walletIcon}
                       />
                     }
