@@ -1,0 +1,17 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Type Aliases/UnconfirmedFollowUp" />
+
+# UnconfirmedFollowUp
+
+> **UnconfirmedFollowUp** = `"rechecked"` \| `"retrying"` \| `"notReceived"` \| `"contact"` \| `"closed"`
+
+Defined in: [utils/checkout.ts:431](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L431)
+
+What the checkout tells the buyer about a payment that may have left the wallet and that Quasar did not confirm:
+`rechecked` (Quasar still reads it again, for up to 24 hours after it learned of it, and records it for the seller if
+it arrives), `retrying` (the checkout store keeps handing over a transaction the wallet sent, which Quasar has not
+received yet: keep the page open), `notReceived` (the store gave up handing it over after an hour: Quasar never
+received it), `contact` (a reason Quasar never reads again: a relay operation lost, `transaction_failed`, a Quasar
+or a store that does not say) and `closed` (Quasar saw no result on chain within 24 hours and closed it). For all but
+`rechecked` and `retrying` the buyer contacts the seller with the transaction hash if the payment left the wallet.

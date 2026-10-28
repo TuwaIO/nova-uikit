@@ -6,11 +6,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **needsLeaveConfirm**(`phase`, `error?`): `boolean`
 
-Defined in: [utils/outcome.ts:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L47)
+Defined in: [utils/outcome.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L49)
 
 Whether closing the checkout asks first: only while nothing has been sent. Once a transaction is on its way, or the
 invoice is settled, the checkout closes without a question; also after a transaction that does not pay the invoice
-(`isMovedMoneyFailure`), which may have moved money, so the question's "Nothing is sent yet" would not be true.
+(`isMovedMoneyFailure`), which may have moved money, and after a payment Quasar closed without a result on chain
+within 24 hours (`unresolved_after_24h`), which may have left the wallet, so the question's "Nothing is sent yet"
+would not be true.
 
 ## Parameters
 
