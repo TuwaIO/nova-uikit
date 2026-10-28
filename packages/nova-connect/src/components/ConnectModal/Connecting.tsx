@@ -535,12 +535,14 @@ DefaultLoadingPlaceholder.displayName = 'DefaultLoadingPlaceholder';
  * ```tsx
  * import { getFilteredConnectors } from '@tuwaio/nova-connect';
  * import { Connecting } from '@tuwaio/nova-connect/components';
- * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { useWalletConnectors } from '@tuwaio/nova-connect/hooks';
  * import { OrbitAdapter } from '@tuwaio/orbit-core';
  *
  * export function MetaMaskStatus({ isConnected }: { isConnected: boolean }) {
- *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
- *   const connectors = getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM });
+ *   const connectors = getFilteredConnectors({
+ *     connectors: useWalletConnectors() ?? {},
+ *     selectedAdapter: OrbitAdapter.EVM,
+ *   });
  *
  *   return (
  *     <Connecting

@@ -2,7 +2,9 @@
  * @file A minimal renderer of one component for tests: the package has no DOM testing library. Mock `react` with
  * `hooks` (keeping the other exports), then call `render` several times and `unmount`. Hooks keep their state between
  * renders in call order, effects compare their dependencies, and `useEffectEvent` returns a stable function that calls
- * the callback of the latest render. This module must not import `react`.
+ * the callback of the latest render. `useSyncExternalStore` returns `getSnapshot()` and subscribes after the render
+ * (again when `subscribe` changes) with a listener that does nothing: a test calls the listener its store received and
+ * renders again. This module must not import `react`.
  */
 
 type Slot = { deps?: readonly unknown[]; value?: unknown; cleanup?: unknown; latest?: (...args: unknown[]) => unknown };
@@ -57,6 +59,17 @@ export const hooks = {
     slot.latest = callback;
     if (!('value' in slot)) slot.value = (...args: unknown[]) => slot.latest!(...args);
     return slot.value;
+  },
+  useSyncExternalStore(subscribe: (onStoreChange: () => void) => () => void, getSnapshot: () => unknown) {
+    const slot = nextSlot();
+    if (depsChanged(slot.deps, [subscribe])) {
+      slot.deps = [subscribe];
+      pendingEffects.push(() => {
+        if (typeof slot.cleanup === 'function') slot.cleanup();
+        slot.cleanup = subscribe(() => undefined);
+      });
+    }
+    return getSnapshot();
   },
   useId() {
     const slot = nextSlot();

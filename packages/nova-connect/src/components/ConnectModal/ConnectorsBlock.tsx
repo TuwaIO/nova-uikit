@@ -402,13 +402,12 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
  * ```tsx
  * import { getFilteredConnectors } from '@tuwaio/nova-connect';
  * import { ConnectorsBlock } from '@tuwaio/nova-connect/components';
- * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
- * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { useNovaConnect, useWalletConnectors } from '@tuwaio/nova-connect/hooks';
  * import { OrbitAdapter } from '@tuwaio/orbit-core';
  * import { mainnet } from 'viem/chains';
  *
  * export function InstalledWallets() {
- *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const connectors = useWalletConnectors() ?? {};
  *   const { setIsConnected, setIsConnectModalOpen } = useNovaConnect();
  *
  *   return (
@@ -416,7 +415,7 @@ DefaultEmptyState.displayName = 'DefaultEmptyState';
  *       title="Installed"
  *       isTitleBold
  *       selectedAdapter={OrbitAdapter.EVM}
- *       connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+ *       connectors={getFilteredConnectors({ connectors, selectedAdapter: OrbitAdapter.EVM })}
  *       onClick={(connector) => console.log('selected', connector.name)}
  *       setIsConnected={setIsConnected}
  *       setIsOpen={setIsConnectModalOpen}

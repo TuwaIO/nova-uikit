@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > `const` **Connecting**: `NamedExoticComponent`\<[`ConnectingProps`](?path=/docs/packages-nova-connect-components-interfaces-connectingprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:556](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L556)
+Defined in: [packages/nova-connect/src/components/ConnectModal/Connecting.tsx:558](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/Connecting.tsx#L558)
 
 The connection screen of the connect modal: the wallet icon in a circle with a spinner while connecting, a success
 or error icon, the heading and, on error, a message. Reads `connectionError` from the Satellite store.
@@ -18,12 +18,14 @@ Props: [ConnectingProps](?path=/docs/packages-nova-connect-components-interfaces
 ```tsx
 import { getFilteredConnectors } from '@tuwaio/nova-connect';
 import { Connecting } from '@tuwaio/nova-connect/components';
-import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { useWalletConnectors } from '@tuwaio/nova-connect/hooks';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 
 export function MetaMaskStatus({ isConnected }: { isConnected: boolean }) {
-  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
-  const connectors = getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM });
+  const connectors = getFilteredConnectors({
+    connectors: useWalletConnectors() ?? {},
+    selectedAdapter: OrbitAdapter.EVM,
+  });
 
   return (
     <Connecting

@@ -34,6 +34,7 @@ import React, {
 } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors } from '../../utils';
@@ -82,7 +83,10 @@ export interface ConnectModalData {
   isOpen: boolean;
   /** `connectionError` of the Satellite store, or `null` */
   error: Error | TuwaErrorState | null | undefined;
-  /** Connectors of the Satellite store by adapter (`getConnectors()`; `undefined` while the modal is closed) */
+  /**
+   * Connectors of the Satellite store by adapter (`useWalletConnectors`: updated while the modal is open when wallets are
+   * added or removed; `undefined` while the modal is closed)
+   */
   connectors: Record<string, Connector[]>;
   /** Filtered connectors for current adapter */
   filteredConnectors: GroupedConnector[];
@@ -765,17 +769,19 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   } = useNovaConnect();
 
   const connectionError = useSatelliteConnectStore((store) => store.connectionError);
-  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
   const connect = useSatelliteConnectStore((store) => store.connect);
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
   const labels = useNovaConnectLabels();
   const store = useContext(SatelliteStoreContext);
 
-  // Memoize connectors to avoid recalculation on every render
-  const connectors = isConnectModalOpen ? getConnectors() : undefined;
+  // The wallets of the store while the modal is open, updated when wallets are added after it opened
+  const connectors = useWalletConnectors({ enabled: isConnectModalOpen });
 
-  const filteredConnectors = getFilteredConnectors({ connectors: connectors!, selectedAdapter });
+  const filteredConnectors = useMemo(
+    () => getFilteredConnectors({ connectors: connectors ?? {}, selectedAdapter }),
+    [connectors, selectedAdapter],
+  );
 
   // Memoize modal data for customization context
   const modalData = useMemo<ConnectModalData>(

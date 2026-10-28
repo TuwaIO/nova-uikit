@@ -509,19 +509,18 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
  * ```tsx
  * import { getFilteredConnectors } from '@tuwaio/nova-connect';
  * import { ConnectorsSelections } from '@tuwaio/nova-connect/components';
- * import { useNovaConnect } from '@tuwaio/nova-connect/hooks';
- * import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+ * import { useNovaConnect, useWalletConnectors } from '@tuwaio/nova-connect/hooks';
  * import { OrbitAdapter } from '@tuwaio/orbit-core';
  * import { mainnet } from 'viem/chains';
  *
  * export function EvmWallets() {
- *   const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+ *   const connectors = useWalletConnectors() ?? {};
  *   const { setIsConnected, setIsConnectModalOpen, setConnectModalContentType } = useNovaConnect();
  *
  *   return (
  *     <ConnectorsSelections
  *       selectedAdapter={OrbitAdapter.EVM}
- *       connectors={getFilteredConnectors({ connectors: getConnectors(), selectedAdapter: OrbitAdapter.EVM })}
+ *       connectors={getFilteredConnectors({ connectors, selectedAdapter: OrbitAdapter.EVM })}
  *       onClick={(connector) => console.log('selected', connector.name)}
  *       setIsConnected={setIsConnected}
  *       setIsOpen={setIsConnectModalOpen}

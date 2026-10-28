@@ -23,6 +23,7 @@ import {
 import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
@@ -1182,7 +1183,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   const connect = useSatelliteConnectStore((store) => store.connect);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
   const connecting = useSatelliteConnectStore((store) => store.connecting);
-  const getConnectors = useSatelliteConnectStore((store) => store.getConnectors);
+  // The wallets of the store, updated when wallets are added after the modal opened
+  const allConnectors = useWalletConnectors() ?? {};
 
   // Fetch ENS/SNS name and avatar for active connection
   const { ensNameAbbreviated } = useGetWalletNameAndAvatar({
@@ -1439,8 +1441,6 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
       void handleDisconnect(activeConnection.connectorType, event);
     }
   };
-
-  const allConnectors = getConnectors();
 
   // `undefined` when the chain of the active connection has no block explorer
   const activeExplorerLink = (() => {
