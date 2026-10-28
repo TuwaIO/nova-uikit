@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/deadlineState" />
+
+# deadlineState()
+
+> **deadlineState**(`status`, `screen`): `"confirming"` \| `"paying"` \| `null`
+
+Defined in: [utils/checkout.ts:194](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L194)
+
+Where the invoice deadline stands for the checkout: the countdown shows through every step of the payment, also while
+the wallet signs, the payment is handed to Quasar and it confirms, and ends only with the outcome. Quasar closes an
+`open` or `underpaid` invoice at its deadline even while a payment confirms (the invoice stays `open` until the
+transaction is final), and a payment that lands after that is held for the seller to accept or return.
+
+## Parameters
+
+### status
+
+`string`
+
+The invoice state (`checkout.invoice.status`).
+
+### screen
+
+[`CheckoutScreen`](?path=/docs/packages-nova-payments-payments-type-aliases-checkoutscreen--docs)
+
+The screen shown.
+
+## Returns
+
+`"confirming"` \| `"paying"` \| `null`
+
+`paying` while the buyer can still pay (the countdown shows and screen readers hear the minutes left),
+`confirming` while the payment is on its way (the countdown shows; at zero the confirm step says what happens to a
+payment that lands after the deadline), or `null` once the payment succeeded (`paid`, `autoPay`), on the outcomes in
+which a deadline means nothing (`held`, `refunded`, `expired`, `cancelled`, `replaced`) and for an invoice that can
+no longer be paid.
