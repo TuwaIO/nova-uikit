@@ -43,11 +43,12 @@ The payment adapters, on the same wagmi config as `adapter`: `paymentsEVMAdapter
 
 > `optional` **autoConnect?**: `boolean`
 
-Defined in: [providers/NovaPaymentsProvider.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L73)
+Defined in: [providers/NovaPaymentsProvider.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L74)
 
 Whether to reconnect the last wallet after a page load (default `false`). With `true`, Satellite's start-up runs
-once per page load (`initializeAutoConnect` of the store), which first disconnects the wallets of its adapters.
-Without it, Nova's connect modal hides "Remember this wallet", since nothing would reconnect the wallet, unless
+once per page load (`initializeAutoConnect` of the store): with `@tuwaio/satellite-core` 0.11.1 or later it
+reconnects only the last wallet, without a permission prompt, and disconnects only connections this page opened;
+earlier versions first disconnect every wallet of its adapters, which can drop the wallets of other tabs. Without it, Nova's connect modal hides "Remember this wallet", since nothing would reconnect the wallet, unless
 `novaConnect.customization` sets `hidden` of `modals.connectModal.childComponents.rememberWallet`.
 
 ***
@@ -68,7 +69,7 @@ own connection pays and refunds, it does not sign anyone in.
 
 > `optional` **rememberWallet?**: `boolean`
 
-Defined in: [providers/NovaPaymentsProvider.tsx:81](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L81)
+Defined in: [providers/NovaPaymentsProvider.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L82)
 
 Whether to keep the connected wallet in `localStorage` after the tab closes (default `false`: in `sessionStorage`
 until the tab closes). See `rememberWallet` of `createSatelliteConnectStore` from `@tuwaio/satellite-core`. The

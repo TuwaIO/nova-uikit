@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaPaymentsProvider**(`props`): `Element`
 
-Defined in: [providers/NovaPaymentsProvider.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L171)
+Defined in: [providers/NovaPaymentsProvider.tsx:172](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/providers/NovaPaymentsProvider.tsx#L172)
 
 Gives the checkouts and refunds below it the Quasar API, the labels, the chain adapters and a wallet connection. A
 checkout works without it, with Quasar Cloud, the built-in labels and QR payments only.
@@ -20,7 +20,7 @@ The wallet connection is chosen once, on the first render (see [PaymentsConnecti
 - Inside the app's Satellite store without Nova Connect: the app's wallet; "Connect wallet" calls `onConnectWallet`.
   Nova never adds a second store.
 - Without a Satellite store, with `ownConnection`: Nova's own store, watchers and connect modal (never SIWX), with
-  the adapters of `ownConnection`. It runs no start-up disconnect unless `autoConnect` is set. That part loads on
+  the adapters of `ownConnection`. It runs Satellite's start-up only when `autoConnect` is set. That part loads on
   demand: until it is loaded, nothing below the provider is rendered.
 - Without either: QR payments, and `onConnectWallet`.
 
