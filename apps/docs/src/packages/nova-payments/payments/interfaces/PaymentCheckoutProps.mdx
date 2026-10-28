@@ -24,7 +24,7 @@ Calls to make instead of the HTTP ones, for tests and simulations (`CheckoutApi`
 
 > `optional` **autoReturnSeconds?**: `number`
 
-Defined in: [components/PaymentCheckout.tsx:92](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L92)
+Defined in: [components/PaymentCheckout.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L93)
 
 Seconds before the paid outcome sends the buyer back to the invoice's `successUrl`, with a visible countdown and
 "Stay here" (`0` for no automatic return). Default `5` on a page; `0` in a modal, whose paid outcome offers Close
@@ -46,7 +46,7 @@ The Quasar API; overrides `baseUrl` of `NovaPaymentsProvider`.
 
 > `optional` **className?**: `string`
 
-Defined in: [components/PaymentCheckout.tsx:96](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L96)
+Defined in: [components/PaymentCheckout.tsx:97](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L97)
 
 Classes added to the checkout block.
 
@@ -56,7 +56,7 @@ Classes added to the checkout block.
 
 > `optional` **customization?**: [`PaymentCheckoutCustomization`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcustomization--docs)
 
-Defined in: [components/PaymentCheckout.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L102)
+Defined in: [components/PaymentCheckout.tsx:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L103)
 
 Class name functions of the parts, from the state of the checkout, and components that replace parts (the
 header, the order, the steps, the options of the method step, the main button, the QR code, the outcome icon or
@@ -103,10 +103,11 @@ Called when the buyer closes the checkout; without it an inline checkout has no 
 
 > `optional` **onConnectWallet?**: (`family`) => `void`
 
-Defined in: [components/PaymentCheckout.tsx:79](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L79)
+Defined in: [components/PaymentCheckout.tsx:80](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L80)
 
-Connects a wallet of a chain family, for apps without Nova Connect. Inside `NovaConnectProvider` the checkout opens
-its connect modal instead.
+Connects a wallet of a chain family, for apps without Nova Connect; overrides the `onConnectWallet` of
+`NovaPaymentsProvider`. Inside `NovaConnectProvider` (the app's, or Nova's own connection of `NovaPaymentsProvider`)
+the checkout opens its connect modal instead.
 
 #### Parameters
 
@@ -126,7 +127,7 @@ The family of the chosen method.
 
 > `optional` **onContact?**: () => `void`
 
-Defined in: [components/PaymentCheckout.tsx:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L94)
+Defined in: [components/PaymentCheckout.tsx:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L95)
 
 Replaces the link of "Contact \<seller\>" (the seller's support email, else site) with the app's own handler.
 
@@ -162,7 +163,7 @@ The new state.
 
 > `optional` **onPaid?**: (`invoice`) => `void`
 
-Defined in: [components/PaymentCheckout.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L86)
+Defined in: [components/PaymentCheckout.tsx:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PaymentCheckout.tsx#L87)
 
 Called once when the invoice is paid (Quasar confirmed the payment). Fulfil orders from the `invoice.paid` webhook
 on your server: this callback is for the page only.

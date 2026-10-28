@@ -6,6 +6,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > `const` **NovaConnectProviderContext**: `Context`\<[`NovaConnectProviderType`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectprovidertype--docs) \| `undefined`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:216](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L216)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:227](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L227)
 
 React context of `NovaConnectProvider` (`undefined` outside the provider). Read it with [useNovaConnect](?path=/docs/packages-nova-connect-connect-functions-usenovaconnect--docs).
+
+The context object is created once and saved on `globalThis` (`Symbol.for('tuwaio.nova-connect.context')`), so
+packages that bundle or resolve their own copy of `@tuwaio/nova-connect` (such as `@tuwaio/nova-payments`, which
+opens the app's connect modal) share the same context.

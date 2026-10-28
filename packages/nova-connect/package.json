@@ -95,7 +95,7 @@
     "@radix-ui/react-select": "2.x.x",
     "@tuwaio/nova-core": ">=0.9.3",
     "@tuwaio/nova-transactions": ">=0.8",
-    "@tuwaio/orbit-core": ">=0.4",
+    "@tuwaio/orbit-core": ">=0.5",
     "@tuwaio/orbit-evm": ">=0.3",
     "@tuwaio/orbit-solana": ">=0.4",
     "@tuwaio/pulsar-core": ">=0.10",

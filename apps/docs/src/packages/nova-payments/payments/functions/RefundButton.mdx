@@ -6,11 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **RefundButton**(`props`): `Element`
 
-Defined in: [components/RefundButton.tsx:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/RefundButton.tsx#L94)
+Defined in: [components/RefundButton.tsx:104](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/RefundButton.tsx#L104)
 
 A button that refunds a paid invoice from the merchant's connected wallet: it opens [RefundDialog](?path=/docs/packages-nova-payments-payments-functions-refunddialog--docs). Put it
-inside `NovaPaymentsProvider` with the adapters of the chain families, and inside `NovaConnectProvider` to connect
-the wallet.
+inside [NovaPaymentsProvider](?path=/docs/packages-nova-payments-payments-functions-novapaymentsprovider--docs): it uses the provider's wallet connection (the app's Satellite store and Nova
+Connect when the app has them, else Nova's own `ownConnection`) and its adapters. In an app whose wallets connect
+without Nova Connect, pass `onConnectWallet` here or to the provider.
 
 ## Parameters
 

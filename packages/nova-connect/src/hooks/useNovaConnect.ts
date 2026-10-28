@@ -1,6 +1,6 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
-import { createContext, useContext } from 'react';
+import { type Context, createContext, useContext } from 'react';
 
 import { LocalTxPagination } from '../components';
 import { NovaConnectLabels } from '../i18n';
@@ -210,10 +210,23 @@ export class NovaConnectProviderError extends Error {
   }
 }
 
+// The context is stored on `globalThis` under a global symbol, so several copies of this package share one context
+const CONTEXT_SYMBOL = Symbol.for('tuwaio.nova-connect.context');
+
+const contextHolder = globalThis as unknown as {
+  [CONTEXT_SYMBOL]?: Context<NovaConnectProviderType | undefined>;
+};
+
 /**
  * React context of `NovaConnectProvider` (`undefined` outside the provider). Read it with {@link useNovaConnect}.
+ *
+ * The context object is created once and saved on `globalThis` (`Symbol.for('tuwaio.nova-connect.context')`), so
+ * packages that bundle or resolve their own copy of `@tuwaio/nova-connect` (such as `@tuwaio/nova-payments`, which
+ * opens the app's connect modal) share the same context.
  */
-export const NovaConnectProviderContext = createContext<NovaConnectProviderType | undefined>(undefined);
+export const NovaConnectProviderContext =
+  contextHolder[CONTEXT_SYMBOL] ??
+  (contextHolder[CONTEXT_SYMBOL] = createContext<NovaConnectProviderType | undefined>(undefined));
 
 /**
  * Returns the state of `NovaConnectProvider`: the modal states and their setters, the selected network and wallet,

@@ -50,6 +50,29 @@ The language, for amounts.
 
 ***
 
+### onConnectWallet?
+
+> `optional` **onConnectWallet?**: (`family`) => `void`
+
+Defined in: [hooks/useRefund.ts:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/hooks/useRefund.ts#L73)
+
+Connects a wallet of the payment's chain family, for apps without Nova Connect (the `onConnectWallet` of
+`NovaPaymentsProvider` otherwise). Inside `NovaConnectProvider` the refund opens its connect modal instead.
+
+#### Parameters
+
+##### family
+
+[`PaymentFamily`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentfamily--docs)
+
+The chain family of the payment.
+
+#### Returns
+
+`void`
+
+***
+
 ### params?
 
 > `optional` **params?**: `RefundParams`

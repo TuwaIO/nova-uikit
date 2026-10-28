@@ -35,7 +35,7 @@ export type LegalDisclaimerContainerProps = {
   children: ReactNode;
   /** The links */
   disclaimerData: LegalDisclaimerData;
-  /** `contentinfo` */
+  /** `note`: legal text beside the wallet list (a `contentinfo` landmark cannot sit inside the modal's main content) */
   role?: string;
   /** `config.ariaLabels.container` or the `legalInformation` label */
   'aria-label'?: string;
@@ -381,7 +381,7 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
     <CustomContainer
       className={cssClasses.container}
       disclaimerData={disclaimerData}
-      role="contentinfo"
+      role="note"
       aria-label={ariaLabel}
     >
       <CustomText className={cssClasses.text} disclaimerData={disclaimerData}>

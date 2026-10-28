@@ -8,6 +8,13 @@ import { getSatelliteSiwxFields, isSessionMatchingConnection, useSiwx, useSiwxSe
 import { useEffect, useEffectEvent, useRef } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
+import { accountKey, isSessionForAccount } from '../utils/siwxAccount';
+
+/**
+ * What a SIWX session belongs to: `'chain'`, the account on the chain it was signed on, or `'account'`, the account on
+ * every chain of its namespace (an EVM address on every EVM chain, a Solana address on every cluster).
+ */
+export type NovaSiwxSessionScope = 'chain' | 'account';
 
 /**
  * Props of {@link NovaSiwxWatcher} (the `siwx` prop of `NovaConnectProvider`): the sign-in callbacks and the SIWX
@@ -16,6 +23,18 @@ import { useSatelliteConnectStore } from '../satellite';
 export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
   /** Whether to ask connected wallets to sign in (default: `true`) */
   enabled?: boolean;
+  /**
+   * What the session belongs to (default: `'chain'`).
+   *
+   * - `'chain'`: the account on the chain it was signed on. A network or cluster switch asks the wallet to sign in
+   *   again, and a rejection disconnects it.
+   * - `'account'`: the account on every chain of its namespace. A network or cluster switch of the same account keeps
+   *   the session and asks nothing; another account, another wallet or another namespace asks to sign in as with
+   *   `'chain'`, and a rejection still disconnects. Use it when your server binds a session to the address only (as
+   *   with Nova Payments, whose checkout switches the wallet to the network of the payment); keep `'chain'` when your
+   *   server ties permissions to the chain the session was signed on.
+   */
+  sessionScope?: NovaSiwxSessionScope;
   /** Fetches the nonce of the SIWX message from your backend */
   getNonce?: () => Promise<string>;
   /** Verifies the signed message on your backend (required for the sign-in) */
@@ -39,6 +58,8 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  *   (`signIn` of `useSiwx` from `@tuwaio/siwx-react`: a wallet prompt, then `getNonce` and `verifier` requests to your
  *   backend). A rejected or failed sign-in disconnects that wallet (if it is still the active one) and calls
  *   `onError`. Without `verifier` it logs a warning and does not sign in.
+ * - With the default `sessionScope` (`'chain'`), a network or cluster switch also asks the wallet to sign in again;
+ *   with `'account'`, a switch of the same account keeps the session and asks nothing.
  * - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until
  *   Satellite Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by
  *   `@tuwaio/siwx-react` is kept.
@@ -49,6 +70,7 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
 export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   const {
     enabled = true,
+    sessionScope = 'chain',
     getNonce,
     verifier,
     destroyer,
@@ -126,19 +148,26 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
         resources,
       });
 
-      // If already authenticated for this account and chain, skip prompt (a Solana session signed for `solana:devnet`
-      // before the switch to genesis-hash chain IDs still matches)
-      if (status === 'authenticated' && isSessionMatchingConnection(session, minimalConnection)) {
+      const byAccount = sessionScope === 'account';
+      // If already authenticated for this account (and chain, unless the session belongs to the account), skip prompt
+      // (a Solana session signed for `solana:devnet` before the switch to genesis-hash chain IDs still matches)
+      if (
+        status === 'authenticated' &&
+        (byAccount
+          ? isSessionForAccount(session, fields.address)
+          : isSessionMatchingConnection(session, minimalConnection))
+      ) {
         return;
       }
 
-      // If already prompted for this exact address in this session lifecycle, skip prompt
-      if (lastPromptedAddress.current === fields.address) {
+      // If already prompted for this exact address (or account) in this session lifecycle, skip prompt
+      const promptKey = byAccount ? accountKey(fields.address) : fields.address;
+      if (lastPromptedAddress.current === promptKey) {
         return;
       }
 
       // Lock prompt for this address to prevent loops on user rejection
-      lastPromptedAddress.current = fields.address;
+      lastPromptedAddress.current = promptKey;
 
       if (!verifier) {
         console.warn('[NovaSiwxWatcher] Verifier not provided, skipping SIWX auto-authentication.');

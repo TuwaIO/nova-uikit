@@ -1,6 +1,7 @@
 import { NovaConnectProviderContext, type NovaConnectProviderType } from '@tuwaio/nova-connect/hooks';
 import {
   NovaPaymentsProvider,
+  type PaymentFamily,
   type PaymentsAdapter,
   type PaymentsPulsar,
   PaymentWalletError,
@@ -55,15 +56,19 @@ const PULSAR: PaymentsPulsar = {
 /**
  * Wallets for the stories, without an extension: the active connection of a Satellite store, a Nova Connect whose
  * connect modal "connects" a wallet of the requested family after a moment, and chain adapters that answer like a
- * wallet (a delay, then a hash or a refusal) and switch the network in the store.
+ * wallet (a delay, then a hash or a refusal) and switch the network in the store. The app's connection for Nova
+ * Payments (`app`); with `novaConnect={false}` the app has no Nova Connect (`appStore`), and its own connect button
+ * (`onConnectWallet` of `NovaPaymentsProvider`, see the actions panel) connects the wallet.
  */
 export function SimulatedWallet({
   connection,
   options = {},
+  novaConnect: withNovaConnect = true,
   children,
 }: {
   connection?: SimulatedConnection;
   options?: SimulatedWalletOptions;
+  novaConnect?: boolean;
   children: ReactNode;
 }) {
   const store = useMemo(() => createStore(() => ({ activeConnection: connection })), [connection]);
@@ -141,15 +146,35 @@ export function SimulatedWallet({
     [connecting, store],
   );
 
+  // The app's own connect button, for an app without Nova Connect
+  const onConnectWallet = useMemo(
+    () =>
+      withNovaConnect
+        ? undefined
+        : (family: PaymentFamily) => {
+            action('onConnectWallet')(family);
+            setTimeout(
+              () => store.setState({ activeConnection: CONNECT_AS[family === 'solana' ? 'solana' : 'evm'] }),
+              900,
+            );
+          },
+    [withNovaConnect, store],
+  );
+
+  const payments = (
+    <NovaPaymentsProvider adapters={adapters} pulsar={PULSAR} onConnectWallet={onConnectWallet}>
+      {children}
+    </NovaPaymentsProvider>
+  );
   return (
     <SatelliteStoreContext.Provider
       value={store as unknown as Parameters<typeof SatelliteStoreContext.Provider>[0]['value']}
     >
-      <NovaConnectProviderContext.Provider value={novaConnect}>
-        <NovaPaymentsProvider adapters={adapters} pulsar={PULSAR}>
-          {children}
-        </NovaPaymentsProvider>
-      </NovaConnectProviderContext.Provider>
+      {withNovaConnect ? (
+        <NovaConnectProviderContext.Provider value={novaConnect}>{payments}</NovaConnectProviderContext.Provider>
+      ) : (
+        payments
+      )}
     </SatelliteStoreContext.Provider>
   );
 }

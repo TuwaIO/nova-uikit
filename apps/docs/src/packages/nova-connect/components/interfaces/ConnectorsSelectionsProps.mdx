@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # ConnectorsSelectionsProps
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:353](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L353)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:357](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L357)
 
 Props for the [ConnectorsSelections](?path=/docs/packages-nova-connect-components-variables-connectorsselections--docs) component. `appChains` and `solanaRPCUrls` choose the chain a wallet
 connects to.
@@ -33,7 +33,7 @@ EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectApp
 
 > **connectors**: [`GroupedConnector`](?path=/docs/packages-nova-connect-components-interfaces-groupedconnector--docs)[]
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:357](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L357)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:361](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L361)
 
 Wallets of the selected network (all wallets without one)
 
@@ -43,7 +43,7 @@ Wallets of the selected network (all wallets without one)
 
 > `optional` **customization?**: [`ConnectorsSelectionsCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectorsselectionscustomization--docs)
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L386)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:390](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L390)
 
 Customization options
 
@@ -53,7 +53,7 @@ Customization options
 
 > `optional` **isOnlyOneNetwork?**: `boolean`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:384](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L384)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:388](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L388)
 
 Whether only one network is available
 
@@ -63,7 +63,7 @@ Whether only one network is available
 
 > **onClick**: (`connector`) => `void`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:364](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L364)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:368](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L368)
 
 Called when a wallet card is clicked, before a single-network wallet connects (the connect modal shows the
 connection screen or the network choice).
@@ -86,7 +86,7 @@ The clicked wallet.
 
 > **selectedAdapter**: `OrbitAdapter` \| `undefined`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:355](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L355)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:359](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L359)
 
 Currently selected network adapter
 
@@ -96,7 +96,7 @@ Currently selected network adapter
 
 > **setContentType**: (`contentType`) => `void`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:382](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L382)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L386)
 
 Changes the screen of the connect modal (the disclaimer uses it to show "About wallets").
 
@@ -118,7 +118,7 @@ The screen.
 
 > **setIsConnected**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:370](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L370)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:374](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L374)
 
 Sets the "just connected" state of the modal: `true` after the wallet connects, `false` 500 ms later.
 
@@ -140,7 +140,7 @@ The state.
 
 > **setIsOpen**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:376](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L376)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:380](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L380)
 
 Opens or closes the modal (closes it 400 ms after the wallet connects).
 

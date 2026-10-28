@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { RefundButton, RefundDialog, type RefundRequest } from '@tuwaio/nova-payments';
+import { NovaPaymentsProvider, RefundButton, RefundDialog, type RefundRequest } from '@tuwaio/nova-payments';
 import { createRefundStore, type RefundState } from '@tuwaio/quasar-sdk/checkout';
 import { useMemo, useState } from 'react';
 import { action } from 'storybook/actions';
 import { expect, userEvent, within } from 'storybook/test';
 
+import { STORY_OWN_CONNECTION } from '../../utils/payments/ownConnection';
+import { PaymentsConnectionCaption } from '../../utils/payments/PaymentsConnectionCaption';
 import {
   type SimulatedConnection,
   SimulatedWallet,
@@ -30,6 +32,8 @@ type StoryProps = RefundSimulation & {
   locale?: string;
   record?: boolean;
   trigger?: boolean;
+  /** Whose wallet connection the refund uses, shown above it: the app's (the simulated wallet) or Nova's own. */
+  connection?: 'app' | 'own';
 };
 
 const PAYMENT = {
@@ -120,7 +124,16 @@ function simulatedRefundStore({ chain = 'base', payer = true, outcome = 'confirm
 }
 
 /** A refund of a paid 20 USD invoice on a simulated Quasar and wallet: no network. */
-function SimulatedRefund({ wallet, walletOptions, params, locale, record, trigger, ...simulation }: StoryProps) {
+function SimulatedRefund({
+  wallet,
+  walletOptions,
+  params,
+  locale,
+  record,
+  trigger,
+  connection,
+  ...simulation
+}: StoryProps) {
   const { chain, payer, outcome } = simulation;
   const store = useMemo(() => simulatedRefundStore({ chain, payer, outcome }), [chain, payer, outcome]);
   const [open, setOpen] = useState(true);
@@ -135,8 +148,9 @@ function SimulatedRefund({ wallet, walletOptions, params, locale, record, trigge
     onRecord: record ? action('onRecord') : undefined,
     onRefunded: action('onRefunded'),
   };
-  return (
-    <SimulatedWallet connection={wallet} options={walletOptions}>
+  const refund = (
+    <>
+      {connection && <PaymentsConnectionCaption />}
       {trigger ? (
         <RefundButton {...props} />
       ) : (
@@ -152,6 +166,15 @@ function SimulatedRefund({ wallet, walletOptions, params, locale, record, trigge
           <RefundDialog {...props} open={open} onOpenChange={setOpen} />
         </>
       )}
+    </>
+  );
+  // Nova's own connection: no Satellite store above, a real Nova Connect modal
+  if (connection === 'own') {
+    return <NovaPaymentsProvider ownConnection={STORY_OWN_CONNECTION}>{refund}</NovaPaymentsProvider>;
+  }
+  return (
+    <SimulatedWallet connection={wallet} options={walletOptions}>
+      {refund}
     </SimulatedWallet>
   );
 }
@@ -164,6 +187,7 @@ const meta: Meta<typeof SimulatedRefund> = {
   argTypes: {
     chain: { control: 'inline-radio', options: ['base', 'solana'] },
     outcome: { control: 'inline-radio', options: ['confirmed', 'failed', 'notTaken'] },
+    connection: { control: false },
   },
 };
 export default meta;
@@ -257,6 +281,35 @@ export const Solana: Story = {
       chainId: 'devnet',
       connectorType: 'solana:phantom',
     },
+  },
+};
+
+/**
+ * The app's connection: the refund sends from the wallet of the app's Satellite store (here the simulated wallet), and
+ * "Change wallet" opens the app's Nova Connect.
+ */
+export const AppConnection: Story = {
+  name: "App's connection",
+  args: { connection: 'app', params: EVERYTHING, wallet: METAMASK_ON_BASE_SEPOLIA },
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    await expect(await page.findByTestId('payments-connection')).toHaveTextContent(/^app$/);
+    await expect(await page.findByRole('button', { name: 'Send refund' })).toBeVisible();
+  },
+};
+
+/**
+ * Nova's own connection: an app without a Satellite store (an admin page, say) gives `ownConnection`, and "Connect
+ * wallet" opens Nova's own Nova Connect modal on the wallets of the payment's network.
+ */
+export const OwnConnection: Story = {
+  name: "Nova's own connection",
+  args: { connection: 'own', params: EVERYTHING },
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    await expect(await page.findByTestId('payments-connection')).toHaveTextContent(/^own$/);
+    await userEvent.click(await page.findByRole('button', { name: 'Connect wallet' }, { timeout: 5000 }));
+    await expect(await page.findByRole('dialog', { name: /Connect Wallet/i })).toBeVisible();
   },
 };
 

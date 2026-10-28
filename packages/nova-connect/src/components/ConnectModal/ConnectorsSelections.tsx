@@ -74,6 +74,8 @@ export type ConnectorsSelectionsContainerProps = {
   children: React.ReactNode;
   /** `region` */
   role?: string;
+  /** `network-panel-<selected adapter or all>`: the panel the selected tab of `NetworkTabs` controls */
+  id?: string;
   /** `config.ariaLabels.container` or the `connectWallet` label */
   'aria-label'?: string;
   /** State of the wallet list */
@@ -150,6 +152,8 @@ export type ConnectorsSelectionsEmptyStateProps = {
   children: React.ReactNode;
   /** `alert` */
   role?: string;
+  /** `network-panel-<selected adapter>`: the panel the selected tab of `NetworkTabs` controls */
+  id?: string;
   /** `polite` */
   'aria-live'?: 'polite' | 'assertive' | 'off';
   /** Calls `handlers.onEmptyStateAction`, when set */
@@ -830,6 +834,7 @@ export const ConnectorsSelections = memo(
             ref={ref}
             className={cssClasses.emptyState}
             role="alert"
+            id={`network-panel-${selectedAdapter}`}
             aria-live="polite"
             selectionsData={selectionsData}
             onClick={
@@ -861,6 +866,8 @@ export const ConnectorsSelections = memo(
           ref={ref}
           className={cssClasses.container}
           role="region"
+          // The panel of the selected network tab (`aria-controls` of NetworkTabs)
+          id={`network-panel-${selectedAdapter ?? 'all'}`}
           aria-label={containerAriaLabel}
           selectionsData={selectionsData}
         >

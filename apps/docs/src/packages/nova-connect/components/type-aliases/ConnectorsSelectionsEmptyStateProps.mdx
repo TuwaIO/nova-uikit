@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ConnectorsSelectionsEmptyStateProps** = `object` & `React.RefAttributes`\<`HTMLDivElement`\>
 
-Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L146)
+Defined in: [packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectModal/ConnectorsSelections.tsx#L148)
 
 Props for a custom empty state (shown when the selected network has no wallets).
 
@@ -29,6 +29,12 @@ A warning icon, the `noConnectorsFound` title and the `noConnectorsDescription` 
 > `optional` **className?**: `string`
 
 Classes from `classNames.emptyState` or the defaults
+
+### id?
+
+> `optional` **id?**: `string`
+
+`network-panel-<selected adapter>`: the panel the selected tab of `NetworkTabs` controls
 
 ### onClick?
 

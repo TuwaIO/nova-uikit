@@ -5,15 +5,20 @@ import {
   type CheckoutScreenProps,
   type CheckoutStatusIconProps,
   type CheckoutTokenOptionProps,
+  NovaPaymentsProvider,
   PaymentCheckout,
   type PaymentCheckoutCustomization,
+  type PaymentsConnectionMode,
   useCheckoutContext,
 } from '@tuwaio/nova-payments';
 import type { CheckoutQuote } from '@tuwaio/quasar-sdk/checkout';
+import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { action } from 'storybook/actions';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 
+import { STORY_OWN_CONNECTION } from '../../utils/payments/ownConnection';
+import { PaymentsConnectionCaption } from '../../utils/payments/PaymentsConnectionCaption';
 import { sampleCheckout, simulatedCheckoutApi, type SimulationOptions } from '../../utils/payments/simulatedCheckout';
 import {
   type SimulatedConnection,
@@ -28,7 +33,35 @@ type StoryProps = SimulationOptions & {
   payUrl?: string;
   autoReturnSeconds?: number;
   customization?: PaymentCheckoutCustomization;
+  /**
+   * Whose wallet connection the checkout uses, shown above it: the app's (the simulated wallet with its Nova Connect),
+   * the app's store with the app's own connect button, or Nova's own (a real Nova Connect modal).
+   */
+  connection?: Exclude<PaymentsConnectionMode, 'none'>;
 };
+
+/** The wallet connection of a story: the simulated app's, or Nova's own. */
+function StoryConnection({
+  connection,
+  wallet,
+  walletOptions,
+  children,
+}: Pick<StoryProps, 'connection' | 'wallet' | 'walletOptions'> & { children: ReactNode }) {
+  if (connection === 'own') {
+    return (
+      <NovaPaymentsProvider ownConnection={STORY_OWN_CONNECTION}>
+        <PaymentsConnectionCaption />
+        {children}
+      </NovaPaymentsProvider>
+    );
+  }
+  return (
+    <SimulatedWallet connection={wallet} options={walletOptions} novaConnect={connection !== 'appStore'}>
+      {connection && <PaymentsConnectionCaption />}
+      {children}
+    </SimulatedWallet>
+  );
+}
 
 /** A checkout on a simulated Quasar API: no network, the language the buyer picks is kept. */
 function SimulatedCheckout({
@@ -38,12 +71,13 @@ function SimulatedCheckout({
   payUrl,
   autoReturnSeconds,
   customization,
+  connection,
   ...simulation
 }: StoryProps) {
   const api = useMemo(() => simulatedCheckoutApi(simulation), [simulation]);
   const [open, setOpen] = useState(true);
   return (
-    <SimulatedWallet connection={wallet} options={walletOptions}>
+    <StoryConnection connection={connection} wallet={wallet} walletOptions={walletOptions}>
       {/* The opener stays in the page: the dialog gives the focus back to it when it closes */}
       {display === 'modal' && (
         <button
@@ -73,7 +107,7 @@ function SimulatedCheckout({
         onPaid={action('onPaid')}
         customization={customization}
       />
-    </SimulatedWallet>
+    </StoryConnection>
   );
 }
 
@@ -86,6 +120,7 @@ const meta: Meta<typeof SimulatedCheckout> = {
     display: { control: 'inline-radio', options: ['modal', 'inline', 'page'] },
     mode: { control: 'inline-radio', options: ['ok', 'loading', 'notFound', 'failure'] },
     customization: { control: false },
+    connection: { control: false },
   },
 };
 export default meta;
@@ -232,6 +267,53 @@ export const Declined: Story = { args: { wallet: METAMASK_ON_BASE_SEPOLIA, walle
  * MetaMask connects on Ethereum after a moment), then the price is locked for it.
  */
 export const ConnectFromCheckout: Story = {};
+
+/**
+ * The app's connection: the app has a Satellite store and Nova Connect (here the simulated wallet), so the checkout
+ * shows the app's wallet and "Connect wallet" opens the app's modal; Nova adds no store or modal of its own.
+ */
+export const AppConnection: Story = {
+  name: "App's connection",
+  args: { connection: 'app', wallet: METAMASK_ON_BASE_SEPOLIA },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByTestId('payments-connection')).toHaveTextContent(/^app$/);
+    await expect(await canvas.findByRole('button', { name: 'Continue' })).toBeVisible();
+  },
+};
+
+/**
+ * Nova's own connection: the app has no Satellite store, so `ownConnection` gives the checkout its own store (Sepolia,
+ * Base Sepolia and Solana devnet), its own watchers and a real Nova Connect modal without SIWX. "Continue" opens that
+ * modal on the wallets of the method's network.
+ */
+export const OwnConnection: Story = {
+  name: "Nova's own connection",
+  args: { connection: 'own' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByTestId('payments-connection')).toHaveTextContent(/^own$/);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Continue' }));
+    const page = within(canvasElement.ownerDocument.body);
+    await expect(await page.findByRole('dialog', { name: /Connect Wallet/i })).toBeVisible();
+  },
+};
+
+/**
+ * The app has a Satellite store but no Nova Connect: the checkout shows the app's wallet, and "Continue" calls the
+ * app's own connect button (`onConnectWallet` of `NovaPaymentsProvider`, see the actions panel), which connects
+ * MetaMask after a moment. Nova never adds a second store.
+ */
+export const AppStoreConnection: Story = {
+  name: "App store, app's connect button",
+  args: { connection: 'appStore' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByTestId('payments-connection')).toHaveTextContent(/^appStore$/);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Continue' }));
+    await expect(await canvas.findByRole('heading', { name: 'Pay' }, { timeout: 5000 })).toBeVisible();
+  },
+};
 
 /** Phantom is connected on devnet: Solana comes first, and the pay step sends USDC from the wallet. */
 export const PaySolanaWallet: Story = {
