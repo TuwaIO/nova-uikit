@@ -206,3 +206,25 @@
     display: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LANGUAGE — the language tool of the toolbar (.storybook/manager.jsx, i18n/)
+   The note above docs pages that stay in English while Ukrainian or Chinese is
+   selected (.storybook/preview.tsx), and the wrapper that gives the component
+   previews the `lang` of their labels without taking part in the layout.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tuwa-storybook-locale {
+  display: contents;
+}
+
+.tuwa-docs-note {
+  margin: 0 0 24px;
+  padding: 10px 14px;
+  border: 1px solid var(--tuwa-border-primary);
+  border-left: 3px solid var(--tuwa-docs-primary);
+  border-radius: var(--tuwa-rounded-corners);
+  background: var(--tuwa-bg-secondary);
+  color: var(--tuwa-text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}

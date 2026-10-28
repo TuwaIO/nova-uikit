@@ -1,0 +1,99 @@
+{/* Simplified Chinese translation of src/Introduction.mdx, shown by its LocalizedPage: change it together with the English page */}
+
+# 简介
+
+<p align="center">
+  <img
+    src="https://tuwa.io/brand/nova_uikit.png"
+    alt="Nova UI Kit"
+    width="450"
+    style={{ borderRadius: '12px', margin: '24px auto', display: 'block' }}
+  />
+</p>
+
+**Nova UI Kit** 是 TUWA 第 4 阶段的用户界面项目：面向 EVM 与 Solana 钱包连接和交易的 React 组件。它渲染 Satellite Connect 的状态（连接按钮、连接与账户模态框、网络切换器）和 Pulsar 的状态（交易弹窗提示 (Toast)、追踪模态框、交易历史），并通过 SIWX 完成用户登录。钱包与交易状态始终保存在这些库中；Nova 只保存界面状态，并提供可通过 CSS 变量定制主题的预编译样式。
+
+本 Storybook 即 Nova UI Kit 的文档：**Packages** 部分介绍每个软件包与每个导出，**Theming** 页面说明主题变量，其余部分展示各组件及其定制选项。
+
+---
+
+## 🏛️ Nova UI Kit 在 TUWA 中的位置
+
+TUWA 按阶段构建，每个阶段都建立在之前的阶段之上：
+
+| 阶段                       | 项目                                                                                                                  | 作用                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| **1 — 核心认证与底层原语** | [SIWX](https://siwx.docs.tuwa.io/)、[Orbit Utils](https://orbit.docs.tuwa.io/)                                        | CAIP-122 身份认证与多链原语  |
+| **2 — 状态机与连接层**     | [Satellite Connect](https://satellite.docs.tuwa.io/)、[Pulsar](https://pulsar.docs.tuwa.io/)                          | 钱包连接状态机与交易追踪     |
+| **3 — 服务端与状态同步**   | [Quasar Cloud](https://docs.tuwa.io/quasar) 或自部署的 [Quasar Community](https://github.com/TuwaIO/quasar-community) | 交易索引与跨设备同步         |
+| **4 — 用户界面组件**       | **Nova UI Kit**                                                                                                       | React 设计系统与组件         |
+| **5 — SDK 统一集成层**     | [TUWA SDK](https://sdk.docs.tuwa.io/)                                                                                 | 通过一个依赖重导出以上各阶段 |
+
+Nova Connect 渲染 Satellite Connect 的状态仓库，并通过 SIWX 完成用户登录；Nova Transactions 渲染 Pulsar 的状态仓库（可与 Quasar 同步）；两者都使用 Orbit Utils 提供的链相关工具函数。Nova Transactions 是可选的：只有当您向 Nova Connect 提供 Pulsar 状态仓库时，它才会显示交易历史。
+
+---
+
+## 🧭 设计原则
+
+1. **状态独立于界面：** 钱包状态位于 Satellite Connect，交易位于 Pulsar，会话位于 SIWX。Nova 组件只读取这些状态并调用其操作，因此自定义界面可以与 Nova 并行使用相同的状态仓库。
+2. **一套组件，多条链：** EVM 与 Solana 钱包出现在同一个连接模态框中，账户模态框、网络切换器与交易视图也同时支持两者。
+3. **可定制主题、可替换部件：** 每种颜色、边框与圆角都是一个 `--tuwa-*` CSS 变量；大多数组件接受 `customization` 属性，可为其各个部件提供类名函数与替换组件，且每条界面文案都可以覆盖。
+4. **预编译样式，互不冲突：** 每个软件包都自带样式表，使用带前缀的 Tailwind CSS v4 类（`novacore:`、`novacon:`、`novatx:`），因此无论您的应用是否使用 Tailwind CSS 都能正常工作。
+5. **无障碍：** 对话框基于 Radix UI 构建，支持焦点管理与键盘操作；按钮与列表均带有 ARIA 标签。
+6. **副作用透明：** 软件包页面列出了写入 `localStorage` 的内容以及会访问的主机。
+
+---
+
+## 🔄 界面如何工作
+
+```
+Satellite Connect store (wallets)          Pulsar store (transactions)
+  │ activeConnection, connections             │ transactionsPool, initialTx
+  │ connectionError, switchNetworkError       │ executeTxAction
+  ▼                                           ▼
+NovaConnectProvider                         NovaTransactionsProvider
+  │ ConnectButton, connect modal,             │ progress toasts, tracking modal,
+  │ connected modal, chain selector,          │ transaction history, error toast
+  │ error toasts, SIWX watcher                │
+  ▼                                           ▼
+user action (pick a wallet, switch chain,   user action (speed up, cancel, retry,
+sign in, disconnect)                        open history)
+  │                                           │
+  └──► store action (connect, switchNetwork,  └──► adapter action (speedUpTxAction,
+       disconnect) — the store changes and         cancelTxAction, retryTxAction) — the
+       the components re-render                    store changes and the components re-render
+```
+
+---
+
+## 🧩 软件包
+
+| 软件包                                                                               | 层级 | 提供的功能                                                        |
+| ------------------------------------------------------------------------------------ | ---- | ----------------------------------------------------------------- |
+| [`@tuwaio/nova-core`](?path=/docs/packages-nova-core-overview--docs)                 | L6   | 主题变量与样式、对话框、网络与钱包图标、Hook 与工具函数           |
+| [`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)           | L7   | 连接按钮、连接与账户模态框、网络切换器、错误弹窗提示、SIWX 监听器 |
+| [`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) | L7   | 交易弹窗提示 (Toast)、追踪模态框、交易历史及其组成部件            |
+
+每个软件包页面先展示该包的 README（含每个入口点的对等依赖），随后是根据 TypeScript 源代码生成的全部导出参考。
+
+---
+
+## 💾 安装
+
+按照软件包页面的说明安装软件包及其对等依赖：[`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs) 列出了钱包连接界面所需的全部依赖，[`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) 列出了交易功能的额外依赖。然后在应用中导入一次样式表：
+
+```css
+@import '@tuwaio/nova-core/dist/index.css';
+@import '@tuwaio/nova-connect/dist/index.css';
+@import '@tuwaio/nova-transactions/dist/index.css';
+```
+
+---
+
+## 📚 后续步骤
+
+- 参照 **[`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)** 与 **[`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs)** 的示例配置 Provider，并在 **Packages** 部分查阅每个导出的参考。
+- 借助 **[Theming](?path=/docs/theming--docs)** 页面调整外观，并在组件示例（stories）中尝试各项定制选项。
+- 使用 Satellite Connect、SIWX、Pulsar 与 Quasar 构建全栈应用：请参阅 **[全栈 React 应用指南](https://docs.tuwa.io/guides/full-stack-react)**。
+- 阅读 **[基于 SIWX 的多链身份认证指南](https://docs.tuwa.io/guides/multi-chain-auth-siwx-caip122)**，了解如何在 EVM 与 Solana 上通过 SIWX 登录；更多指南请访问 **[docs.tuwa.io/guides](https://docs.tuwa.io/guides)**。
+- 在 **[GitHub](https://github.com/TuwaIO/nova-uikit)** 上阅读源代码。

@@ -2,12 +2,15 @@ import '../src/styles/app.css';
 
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import type { Preview } from '@storybook/react-vite';
-import { defaultLabels as transactionsLabels } from '@tuwaio/nova-transactions';
-import { NovaTransactionsLabelsProvider } from '@tuwaio/nova-transactions/providers';
 import React, { useEffect, useState } from 'react';
 import { addons } from 'storybook/preview-api';
 import { create } from 'storybook/theming/create';
 
+import { storybookLabels } from '../i18n/labels';
+import { DEFAULT_LOCALE } from '../i18n/locale';
+import { PageTranslationContext } from '../i18n/pageTranslation';
+import { StoryLocaleRoot } from '../i18n/StoryLocaleRoot';
+import { useStorybookLocale } from '../i18n/useStorybookLocale';
 import { DocsFooter } from './DocsFooter';
 
 /** Shared constants — must match manager.jsx */
@@ -103,9 +106,13 @@ const tuwaDarkTheme = create({
 // ─── Themed Docs Container ────────────────────────────────────────────────────
 // This wraps MDX pages and auto-docs. By using DocsContainer, Storybook natively
 // themes the entire Docs UI (tables, backgrounds, copy buttons) perfectly.
+// In Ukrainian and Chinese, pages without a translation (the package pages, the API reference and the component
+// pages) start with a note that they are in English; `LocalizedPage` of the hand-written pages hides it.
 
 const ThemedDocsContainer = ({ children, context }: any) => {
   const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme);
+  const locale = useStorybookLocale();
+  const [inSelectedLanguage, setInSelectedLanguage] = useState(false);
 
   useEffect(() => {
     applyTheme(theme);
@@ -133,8 +140,15 @@ const ThemedDocsContainer = ({ children, context }: any) => {
 
   return (
     <DocsContainer context={context} theme={theme === 'dark' ? tuwaDarkTheme : tuwaTheme}>
-      {children}
-      <DocsFooter />
+      <PageTranslationContext.Provider value={setInSelectedLanguage}>
+        {locale !== DEFAULT_LOCALE && !inSelectedLanguage && (
+          <p className="sb-unstyled tuwa-docs-note" role="note" lang={locale}>
+            {storybookLabels[locale].englishOnly}
+          </p>
+        )}
+        {children}
+      </PageTranslationContext.Provider>
+      <DocsFooter locale={locale} />
     </DocsContainer>
   );
 };
@@ -236,10 +250,11 @@ const preview: Preview = {
         <Story />
       </ThemeInjector>
     ),
+    // The language tool of the toolbar picks the labels of the Nova components
     (Story) => (
-      <NovaTransactionsLabelsProvider labels={transactionsLabels}>
+      <StoryLocaleRoot>
         <Story />
-      </NovaTransactionsLabelsProvider>
+      </StoryLocaleRoot>
     ),
   ],
 };

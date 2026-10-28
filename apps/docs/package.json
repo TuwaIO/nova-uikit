@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "node i18n/checkTranslations.mjs && storybook build",
+    "i18n:check": "node i18n/checkTranslations.mjs"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",

@@ -1,0 +1,99 @@
+{/* Ukrainian translation of src/Introduction.mdx, shown by its LocalizedPage: change it together with the English page */}
+
+# Вступ
+
+<p align="center">
+  <img
+    src="https://tuwa.io/brand/nova_uikit.png"
+    alt="Nova UI Kit"
+    width="450"
+    style={{ borderRadius: '12px', margin: '24px auto', display: 'block' }}
+  />
+</p>
+
+**Nova UI Kit** — проєкт інтерфейсу користувача Етапу 4 TUWA: React-компоненти для підключення гаманців і транзакцій в EVM та Solana. Він відображає стан Satellite Connect (кнопка підключення, модальні вікна підключення й акаунту, вибір мережі) і Pulsar (спливаючі сповіщення про транзакції, модальне вікно відстеження, історія) та виконує вхід користувачів через SIWX. Стан гаманців і транзакцій залишається в цих бібліотеках; Nova зберігає лише стан інтерфейсу й постачає скомпільовані стилі, які ви налаштовуєте CSS-змінними.
+
+Цей Storybook — документація Nova UI Kit: розділ **Packages** описує кожен пакет і кожен експорт, сторінка **Theming** — змінні теми, а інші розділи показують компоненти з їхніми параметрами кастомізації.
+
+---
+
+## 🏛️ Місце Nova UI Kit у TUWA
+
+TUWA побудовано етапами. Кожен етап спирається на попередні:
+
+| Етап                                       | Проєкти                                                                                                                            | Роль                                                        |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **1 — Базова автентифікація та примітиви** | [SIWX](https://siwx.docs.tuwa.io/), [Orbit Utils](https://orbit.docs.tuwa.io/)                                                     | Автентифікація CAIP-122 та мультичейн-примітиви             |
+| **2 — Стан та підключення**                | [Satellite Connect](https://satellite.docs.tuwa.io/), [Pulsar](https://pulsar.docs.tuwa.io/)                                       | Машина станів підключення гаманців і відстеження транзакцій |
+| **3 — Бекенд та синхронізація**            | [Quasar Cloud](https://docs.tuwa.io/quasar) або [Quasar Community](https://github.com/TuwaIO/quasar-community) на власному сервері | Індексація транзакцій і синхронізація між пристроями        |
+| **4 — Інтерфейс користувача**              | **Nova UI Kit**                                                                                                                    | Дизайн-система та компоненти React                          |
+| **5 — Рівень інтеграції SDK**              | [TUWA SDK](https://sdk.docs.tuwa.io/)                                                                                              | Одна залежність, що реекспортує етапи вище                  |
+
+Nova Connect відображає сховище Satellite Connect і виконує вхід користувачів через SIWX, Nova Transactions відображає сховище Pulsar (яке може синхронізуватися з Quasar), і обидва пакети беруть допоміжні функції мереж з Orbit Utils. Nova Transactions — необов’язковий пакет: Nova Connect показує історію транзакцій, лише коли ви передаєте йому сховище Pulsar.
+
+---
+
+## 🧭 Принципи
+
+1. **Стан живе поза інтерфейсом:** гаманці — у Satellite Connect, транзакції — у Pulsar, сесія — у SIWX. Компоненти Nova лише читають цей стан і викликають його дії, тож власний інтерфейс може працювати з тими самими сховищами поруч із Nova.
+2. **Один набір — багато мереж:** гаманці EVM і Solana з’являються в одному модальному вікні підключення, а модальне вікно акаунту, вибір мережі та екрани транзакцій працюють для обох.
+3. **Теми й заміна частин:** кожен колір, рамка й радіус — це CSS-змінна `--tuwa-*`; більшість компонентів приймає проп `customization` з функціями назв класів і компонентами-замінниками для своїх частин, а кожен текст інтерфейсу можна перевизначити.
+4. **Скомпільовані стилі без конфліктів:** кожен пакет постачає власну таблицю стилів із класами Tailwind CSS v4 з префіксами (`novacore:`, `novacon:`, `novatx:`), тож він працює як із Tailwind CSS у вашому застосунку, так і без нього.
+5. **Доступність:** діалогові вікна побудовані на Radix UI з керуванням фокусом і підтримкою клавіатури; кнопки та списки мають ARIA-мітки.
+6. **Прозорі побічні ефекти:** сторінки пакетів перелічують, що зберігається в `localStorage` і до яких хостів надсилаються запити.
+
+---
+
+## 🔄 Як працює інтерфейс
+
+```
+Satellite Connect store (wallets)          Pulsar store (transactions)
+  │ activeConnection, connections             │ transactionsPool, initialTx
+  │ connectionError, switchNetworkError       │ executeTxAction
+  ▼                                           ▼
+NovaConnectProvider                         NovaTransactionsProvider
+  │ ConnectButton, connect modal,             │ progress toasts, tracking modal,
+  │ connected modal, chain selector,          │ transaction history, error toast
+  │ error toasts, SIWX watcher                │
+  ▼                                           ▼
+user action (pick a wallet, switch chain,   user action (speed up, cancel, retry,
+sign in, disconnect)                        open history)
+  │                                           │
+  └──► store action (connect, switchNetwork,  └──► adapter action (speedUpTxAction,
+       disconnect) — the store changes and         cancelTxAction, retryTxAction) — the
+       the components re-render                    store changes and the components re-render
+```
+
+---
+
+## 🧩 Пакети
+
+| Пакет                                                                                | Рівень | Надає                                                                                                            |
+| ------------------------------------------------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------- |
+| [`@tuwaio/nova-core`](?path=/docs/packages-nova-core-overview--docs)                 | L6     | Змінні теми та стилі, діалогове вікно, іконки мереж і гаманців, хуки та допоміжні функції                        |
+| [`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)           | L7     | Кнопка підключення, модальні вікна підключення й акаунту, вибір мережі, сповіщення про помилки, спостерігач SIWX |
+| [`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) | L7     | Сповіщення про транзакції, модальне вікно відстеження, історія транзакцій та їхні частини                        |
+
+Сторінка кожного пакета містить його README з peer-залежностями кожної точки входу, а далі — довідник кожного експорту, згенерований із вихідного коду TypeScript.
+
+---
+
+## 💾 Встановлення
+
+Встановіть пакети та їхні peer-залежності, як зазначено на сторінках пакетів: [`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs) перелічує все, що потрібно інтерфейсу підключення гаманців, [`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs) — доповнення для транзакцій. Потім один раз імпортуйте таблиці стилів у застосунку:
+
+```css
+@import '@tuwaio/nova-core/dist/index.css';
+@import '@tuwaio/nova-connect/dist/index.css';
+@import '@tuwaio/nova-transactions/dist/index.css';
+```
+
+---
+
+## 📚 Що далі
+
+- Налаштуйте провайдери за прикладами **[`@tuwaio/nova-connect`](?path=/docs/packages-nova-connect-overview--docs)** і **[`@tuwaio/nova-transactions`](?path=/docs/packages-nova-transactions-overview--docs)** та перегляньте розділ **Packages** з довідником кожного експорту.
+- Змініть вигляд за сторінкою **[Theming](?path=/docs/theming--docs)** і спробуйте параметри кастомізації в історіях (stories) компонентів.
+- Створіть full-stack застосунок із Satellite Connect, SIWX, Pulsar і Quasar: див. **[посібник «Full-Stack React застосунок»](https://docs.tuwa.io/guides/full-stack-react)**.
+- Прочитайте **[посібник «Мультичейн-автентифікація з SIWX»](https://docs.tuwa.io/guides/multi-chain-auth-siwx-caip122)** про вхід через SIWX в EVM і Solana; більше посібників — на **[docs.tuwa.io/guides](https://docs.tuwa.io/guides)**.
+- Вихідний код — на **[GitHub](https://github.com/TuwaIO/nova-uikit)**.

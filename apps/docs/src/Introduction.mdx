@@ -1,6 +1,14 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
+import { LocalizedPage } from '../i18n/LocalizedPage';
+import IntroductionUk from '../i18n/uk/Introduction.mdx';
+import IntroductionZhCN from '../i18n/zh-CN/Introduction.mdx';
+
 <Meta title="Introduction" />
+
+{/* The translations in ../i18n/<language>/Introduction.mdx follow this page: change them together */}
+
+<LocalizedPage translations={{ uk: IntroductionUk, 'zh-CN': IntroductionZhCN }}>
 
 # Introduction
 
@@ -99,3 +107,5 @@ Install the packages and their peer dependencies as listed on the package pages:
 - Build a full-stack app with Satellite Connect, SIWX, Pulsar and Quasar: see the **[Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react)**.
 - Read the **[Multi-Chain Authentication guide](https://docs.tuwa.io/guides/multi-chain-auth-siwx-caip122)** for SIWX sign-in across EVM and Solana, and find more guides at **[docs.tuwa.io/guides](https://docs.tuwa.io/guides)**.
 - Read the source on **[GitHub](https://github.com/TuwaIO/nova-uikit)**.
+
+</LocalizedPage>

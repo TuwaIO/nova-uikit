@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "test": "pnpm --filter \"./packages/**\" test",
     "clean": "find . -name node_modules -type d -prune -exec rm -rf '{}' + && find . -name dist -type d -prune -exec rm -rf '{}' + && rm -rf .turbo",
-    "docs:gen": "typedoc",
+    "docs:gen": "typedoc && node apps/docs/i18n/checkTranslations.mjs",
     "storybook": "pnpm docs:gen && pnpm --filter @tuwaio/storybook storybook",
     "prepare": "husky"
   },
