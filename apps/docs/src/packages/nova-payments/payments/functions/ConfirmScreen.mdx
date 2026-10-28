@@ -6,17 +6,20 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ConfirmScreen**(): `Element`
 
-Defined in: [components/ConfirmScreen.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/ConfirmScreen.tsx#L28)
+Defined in: [components/ConfirmScreen.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/ConfirmScreen.tsx#L31)
 
 The confirm step: the transaction is on its way and Quasar follows it until it is final. It reuses the status and
 progress of Nova Transactions (Sent → Confirming → Paid, in the language of the checkout) and shows the network, the
 amount, the transaction with its explorer link and the sender. The buyer may close the window: the payment keeps
-going. When the invoice deadline passes while a payment this page handed over is on its way (the countdown of the
-order stays at 00:00), and the invoice is still `open` or `underpaid`, the note follows the payment: handed over
-before the deadline, it says that the payment was sent in time and is being confirmed (Quasar keeps the invoice open
-for a payment it learned of before the deadline while it confirms); handed over at or after the deadline, or at a time
-this page does not know (it was reloaded), it says that the seller accepts or returns a payment that arrives after
-the invoice closes. A payment that failed or settled is no longer on its way, and the usual note comes back.
+going. It also shows a payment of the invoice that this page did not hand over while Quasar reports it on its way
+(the page was reopened or reloaded, another tab paid, Quasar found a Solana Pay transfer), instead of offering to pay
+again: its note asks the buyer to wait for it. When the invoice deadline passes while a payment is on its way (the
+countdown of the order stays at 00:00), and the invoice is still `open` or `underpaid`, the note follows the payment:
+sent before the deadline, it says that the payment was sent in time and is being confirmed (Quasar keeps the invoice
+open for a payment it learned of before the deadline while it confirms, and says so with `paymentCountsUntil`; with a
+Quasar that does not, a payment this page handed over before the deadline by its clock); otherwise it says that the
+seller accepts or returns a payment that arrives after the invoice closes. A payment that failed or settled is no
+longer on its way, and the usual note comes back.
 
 ## Returns
 

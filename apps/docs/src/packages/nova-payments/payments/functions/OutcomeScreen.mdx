@@ -6,14 +6,17 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **OutcomeScreen**(`props`): `Element` \| `null`
 
-Defined in: [components/OutcomeScreen.tsx:98](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/OutcomeScreen.tsx#L98)
+Defined in: [components/OutcomeScreen.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/OutcomeScreen.tsx#L102)
 
-An outcome other than paid: an underpaid invoice ("Pay the rest"), a payment the seller reviews (screening, late,
-overpaid, after the price lock ran out), a refunded invoice, an expired one (with what arrived before the deadline,
-which the seller can refund, and, when a payment this page handed over is still on its way, that the seller accepts or
-returns it if it arrives; after a QR code showed, the same for a payment made with it, as this page does not see it),
-a cancelled one, a corrected one ("Open \<new invoice\>" opens it here) and a payer the
-wallet check refused ("Use another wallet"). Each offers to contact the seller.
+An outcome other than paid: a payment Quasar could not confirm on a payable invoice (`unconfirmed`: it may still
+arrive, so the buyer checks the wallet before paying again; no payment is offered, only "The payment did not leave my
+wallet", which goes back to it with `payAgain` of the checkout store), an underpaid invoice ("Pay the rest"), a payment
+the seller reviews (screening, late, overpaid, after the price lock ran out), a refunded invoice, an expired one (with
+what arrived before the deadline, which the seller can refund; never "nothing was charged" while a payment may still
+arrive: one this page handed over or saw on its way, also after the checkout stopped following it, that the seller
+accepts or returns if it arrives, one Quasar could not confirm, to check in the wallet, and after a QR code showed, a
+payment made with it, as this page does not see it), a cancelled one, a corrected one ("Open \<new invoice\>" opens it
+here) and a payer the wallet check refused ("Use another wallet"). Each offers to contact the seller.
 
 ## Parameters
 

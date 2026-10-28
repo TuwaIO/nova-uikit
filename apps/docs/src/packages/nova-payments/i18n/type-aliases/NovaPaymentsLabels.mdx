@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:411](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L411)
+Defined in: [i18n/types.ts:417](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L417)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -353,6 +353,14 @@ Row of the sender (default: `From`)
 
 Under the heading: `{network}` (default: `Usually under a minute on {network}.`)
 
+#### invoicePayment
+
+> **invoicePayment**: `string`
+
+Instead of `canClose` while a payment of the invoice that this page did not hand over is on its way (the page was
+reopened or reloaded, another tab paid, Quasar found a Solana Pay transfer), before the deadline (default: `A
+payment for this invoice is on its way. Wait until it is confirmed before paying again.`)
+
 #### network
 
 > **network**: `string`
@@ -466,7 +474,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:525](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L525)
+Defined in: [i18n/types.ts:551](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L551)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -678,7 +686,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:450](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L450)
+Defined in: [i18n/types.ts:456](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L456)
 
 The outcomes other than paid.
 
@@ -761,6 +769,14 @@ Its text when nothing arrived: `{date}`, `{merchant}`
 > **expiredTitle**: `string`
 
 Heading of an expired invoice (default: `This invoice has expired`)
+
+#### expiredUnconfirmed
+
+> **expiredUnconfirmed**: `string`
+
+Instead of `expiredText` and `expiredNote` when the invoice expired after Quasar could not confirm the payment
+(not found, no receipt in time, replaced), which may still arrive: `{merchant}` (default: `Your payment could not
+be confirmed. Check your wallet: if the payment left it, {merchant} accepts it or returns it.`)
 
 #### expiredWhileConfirming
 
@@ -848,6 +864,32 @@ Its text: `{number}` of the new invoice (default: `{number} replaces it. This in
 
 Heading of a corrected invoice: `{merchant}` (default: `{merchant} corrected this invoice`)
 
+#### unconfirmedNote
+
+> **unconfirmedNote**: `string`
+
+Under it (default: `This page keeps following the invoice: if the payment arrives, it shows as paid.`)
+
+#### unconfirmedPayAgain
+
+> **unconfirmedPayAgain**: `string`
+
+The button that goes back to the payment once the buyer checked the wallet (default: `The payment did not leave
+my wallet`)
+
+#### unconfirmedText
+
+> **unconfirmedText**: `string`
+
+Its text (default: `Check your wallet before paying again: your payment may still be on its way.`)
+
+#### unconfirmedTitle
+
+> **unconfirmedTitle**: `string`
+
+Heading when Quasar could not confirm the payment on a payable invoice: it may still arrive, so the checkout offers
+no payment (default: `We could not confirm your payment`)
+
 #### underpaidNote
 
 > **underpaidNote**: `string`
@@ -884,7 +926,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L386)
+Defined in: [i18n/types.ts:392](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L392)
 
 The paid outcome.
 
@@ -1436,7 +1478,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:589](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L589)
+Defined in: [i18n/types.ts:615](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L615)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1846,7 +1888,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:540](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L540)
+Defined in: [i18n/types.ts:566](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L566)
 
 The order panel: the seller, the deadline, the lines and the total.
 

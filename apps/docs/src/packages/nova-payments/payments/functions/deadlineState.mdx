@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **deadlineState**(`status`, `screen`): `"confirming"` \| `"paying"` \| `null`
 
-Defined in: [utils/checkout.ts:202](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L202)
+Defined in: [utils/checkout.ts:211](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L211)
 
 Where the invoice deadline stands for the checkout: the countdown shows through every step of the payment, also while
 the wallet signs, the payment is handed to Quasar and it confirms, and on a payer the wallet check refused
@@ -35,6 +35,8 @@ The screen shown.
 
 `paying` while the buyer can still pay (the countdown shows and screen readers hear the minutes left),
 `confirming` while the payment is on its way (the countdown shows; at zero the confirm step says that the payment
-sent in time is being confirmed), or `null` once the payment succeeded (`paid`, `autoPay`), on the outcomes in
+sent in time is being confirmed) and while Quasar could not confirm it (`unconfirmed`: the buyer checks the wallet
+before paying again, so no minutes left to pay are announced), or `null` once the payment succeeded (`paid`,
+`autoPay`), on the outcomes in
 which a deadline means nothing (`held`, `refunded`, `expired`, `cancelled`, `replaced`) and for an invoice that can
 no longer be paid.
