@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:404](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L404)
+Defined in: [i18n/types.ts:411](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L411)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -301,9 +301,9 @@ The confirm step: the transaction is on its way.
 
 > **afterDeadline**: `string`
 
-Instead of `canClose` once the deadline passed while the payment this page sent confirms and the invoice is still
-`open` or `underpaid` (Quasar waits for a payment it learned of before the deadline); `{merchant}` may be used
-(default: `Your payment was sent before the deadline and is being confirmed.`)
+Instead of `canClose` once the deadline passed while the payment this page handed over before the deadline is on
+its way and the invoice is still `open` or `underpaid` (Quasar waits for a payment it learned of before the
+deadline); `{merchant}` may be used (default: `Your payment was sent before the deadline and is being confirmed.`)
 
 #### amount
 
@@ -364,6 +364,15 @@ Row of the network (default: `Network`)
 > **paid**: `string`
 
 Last step (default: `Paid`)
+
+#### pastDeadline
+
+> **pastDeadline**: `string`
+
+Instead of `canClose` once the deadline passed while a payment this page handed over at or after the deadline, or
+at a time it does not know (it was reloaded), is on its way and the invoice is still `open` or `underpaid`:
+`{merchant}` (default: `Your payment is being confirmed. If it arrives after the invoice closes, {merchant}
+accepts it or returns it.`)
 
 #### sent
 
@@ -457,7 +466,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:512](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L512)
+Defined in: [i18n/types.ts:525](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L525)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -669,7 +678,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:443](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L443)
+Defined in: [i18n/types.ts:450](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L450)
 
 The outcomes other than paid.
 
@@ -708,6 +717,14 @@ Contacts the seller: `{merchant}` (default: `Contact {merchant}`)
 > **contactSubject**: `string`
 
 Subject of the email to the seller: `{number}` (default: `Invoice {number}`)
+
+#### expiredAfterQr
+
+> **expiredAfterQr**: `string`
+
+Instead of `expiredText` and `expiredNote` when the invoice expired after the checkout showed a QR code, which
+the buyer may have paid with from a phone: `{merchant}` (default: `If you paid with the QR code, {merchant}
+accepts the payment when it arrives or returns it.`)
 
 #### expiredNote
 
@@ -867,7 +884,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:379](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L379)
+Defined in: [i18n/types.ts:386](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L386)
 
 The paid outcome.
 
@@ -1419,7 +1436,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:576](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L576)
+Defined in: [i18n/types.ts:589](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L589)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1829,7 +1846,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:527](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L527)
+Defined in: [i18n/types.ts:540](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L540)
 
 The order panel: the seller, the deadline, the lines and the total.
 
