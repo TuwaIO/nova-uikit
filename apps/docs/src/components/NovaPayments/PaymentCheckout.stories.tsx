@@ -330,6 +330,22 @@ const LOCKED: CheckoutQuote = {
 const settled = (invoice: Partial<ReturnType<typeof sampleCheckout>['invoice']>, extra = {}) =>
   sampleCheckout({ quote: LOCKED, ...extra }, invoice);
 
+/**
+ * The price is locked and the seller does not check paying wallets (`amlScreening: false`): the note under the button
+ * says only that the payment goes straight to the seller.
+ */
+export const PayWithoutScreening: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({}, { amlScreening: false }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // The whole note: no sentence about screening after it
+    const note = await canvas.findByText(/^Payments go straight to Acme Labs/);
+    await expect(note).toHaveTextContent(
+      /^Payments go straight to Acme Labs and can't be reversed; refunds come from the seller\.$/,
+    );
+  },
+};
+
 /** The transaction is on its way: Sent, then Confirming, with the network, amount and sender. */
 export const Confirming: Story = {
   args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({ status: 'processing' }) },
@@ -350,7 +366,10 @@ export const PartRefunded: Story = {
   args: { view: settled({ status: 'partially_refunded', amountPaid: '89540000', refundedTotalMinor: '1000' }) },
 };
 
-/** A paid subscription period: the checkout offers automatic payments for the next ones (ERC-7715). */
+/**
+ * A paid subscription period: the checkout offers automatic payments for the next ones (ERC-7715), paid only to the
+ * seller's wallet; Quasar's collector sends each charge.
+ */
 export const SubscriptionAutoPay: Story = {
   args: {
     wallet: METAMASK_ON_BASE_SEPOLIA,
@@ -388,7 +407,11 @@ export const SubscriptionAutoPay: Story = {
                 justification: 'Pro plan',
               },
             },
-            rules: [{ type: 'expiry', data: { timestamp: Math.floor(Date.now() / 1000) + 365 * 86_400 } }],
+            rules: [
+              { type: 'expiry', data: { timestamp: Math.floor(Date.now() / 1000) + 365 * 86_400 } },
+              { type: 'payee', data: { addresses: ['0x2222222222222222222222222222222222222222'] } },
+              { type: 'redeemer', data: { addresses: ['0x3333333333333333333333333333333333333333'] } },
+            ],
           },
         },
       },
@@ -412,6 +435,19 @@ export const Refunded: Story = { args: { view: settled({ status: 'refunded', ref
 /** The deadline passed before the payment. */
 export const Expired: Story = {
   args: { view: sampleCheckout({}, { status: 'expired', dueAt: new Date(Date.now() - 3_600_000).toISOString() }) },
+};
+
+/** The deadline passed after part of the payment arrived: what arrived, and that the seller can refund it. */
+export const ExpiredPartPaid: Story = {
+  args: {
+    view: settled({ status: 'expired', amountPaid: '80000000', dueAt: new Date(Date.now() - 3_600_000).toISOString() }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText(/Part of the payment arrived: 80\.00 USDC\./);
+    await expect(canvas.getByText('Acme Labs can refund it to the wallet that paid; contact Acme Labs.')).toBeVisible();
+    await expect(canvas.queryByText(/nothing was charged/)).toBeNull();
+  },
 };
 
 /** The seller cancelled the invoice. */
