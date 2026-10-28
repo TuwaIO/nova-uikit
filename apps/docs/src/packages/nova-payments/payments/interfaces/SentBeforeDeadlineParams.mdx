@@ -14,7 +14,7 @@ What [sentBeforeDeadline](?path=/docs/packages-nova-payments-payments-functions-
 
 > **checkout**: `CheckoutView`
 
-Defined in: [utils/checkout.ts:307](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L307)
+Defined in: [utils/checkout.ts:316](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L316)
 
 The checkout: its invoice's `paymentCountsUntil` tells whether Quasar reports it, and is read with an older store.
 
@@ -24,7 +24,7 @@ The checkout: its invoice's `paymentCountsUntil` tells whether Quasar reports it
 
 > **dueAt**: `number`
 
-Defined in: [utils/checkout.ts:311](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L311)
+Defined in: [utils/checkout.ts:320](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L320)
 
 The invoice deadline (`dueAt`) in milliseconds.
 
@@ -34,7 +34,7 @@ The invoice deadline (`dueAt`) in milliseconds.
 
 > **handedOverAt**: `number` \| `null`
 
-Defined in: [utils/checkout.ts:309](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L309)
+Defined in: [utils/checkout.ts:318](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L318)
 
 When this page handed its payment over, by its clock; `null` when it does not know (a reload, another tab).
 
@@ -44,12 +44,29 @@ When this page handed its payment over, by its clock; `null` when it does not kn
 
 > **state**: `object` & `object`
 
-Defined in: [utils/checkout.ts:305](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L305)
+Defined in: [utils/checkout.ts:308](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L308)
 
-The state of the checkout store: `paymentCountsUntil` of a current `@tuwaio/quasar-sdk`.
+The state of the checkout store: `paymentCountsUntil`, `paymentSentInTime` and `paymentOnTheWay` of a current
+`@tuwaio/quasar-sdk` (`txKey`/`txHash` with an older one).
 
 #### Type Declaration
 
 ##### paymentCountsUntil?
 
 > `readonly` `optional` **paymentCountsUntil?**: `string` \| `null`
+
+##### paymentOnTheWay?
+
+> `readonly` `optional` **paymentOnTheWay?**: `boolean`
+
+##### paymentSentInTime?
+
+> `readonly` `optional` **paymentSentInTime?**: `boolean` \| `null`
+
+##### txHash?
+
+> `readonly` `optional` **txHash?**: `string` \| `null`
+
+##### txKey?
+
+> `readonly` `optional` **txKey?**: `string` \| `null`

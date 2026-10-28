@@ -6,10 +6,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **shouldHandOver**(`state`): `boolean`
 
-Defined in: [utils/handOver.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L56)
+Defined in: [utils/handOver.ts:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/handOver.ts#L57)
 
 Whether a sent payment still needs tracking when the checkout closes: Quasar has not settled it, and it did not
-fail on-chain.
+fail on-chain or turn out not to pay the invoice.
 
 ## Parameters
 
@@ -21,7 +21,8 @@ The `phase` and `error` of the checkout store.
 
 `CheckoutError` \| `null`
 
-The last failure; `payment_failed` means the transaction failed on-chain.
+The last failure; `payment_failed` means the transaction failed on-chain, `payment_mismatch`
+that it succeeded without paying the invoice: Quasar already has the final word on both.
 
 #### phase
 

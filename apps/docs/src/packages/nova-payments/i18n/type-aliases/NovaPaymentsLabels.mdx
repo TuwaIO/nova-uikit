@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:417](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L417)
+Defined in: [i18n/types.ts:424](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L424)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -293,7 +293,7 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:342](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L342)
+Defined in: [i18n/types.ts:349](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L349)
 
 The confirm step: the transaction is on its way.
 
@@ -474,7 +474,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:551](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L551)
+Defined in: [i18n/types.ts:576](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L576)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -686,7 +686,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:456](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L456)
+Defined in: [i18n/types.ts:463](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L463)
 
 The outcomes other than paid.
 
@@ -713,6 +713,14 @@ Its text: `{merchant}` (default: `{merchant} cancelled it; nothing was charged.`
 > **cancelledTitle**: `string`
 
 Heading of a cancelled invoice (default: `This invoice was cancelled`)
+
+#### cancelledWhilePaying
+
+> **cancelledWhilePaying**: `string`
+
+Instead of `cancelledText` while a payment may still arrive (on its way, not confirmed yet, read again by Quasar),
+which Quasar records and holds for the seller: `{merchant}` (default: `{merchant} cancelled it. If your payment
+arrives, it is recorded and shown to {merchant}, who accepts it or returns it.`)
 
 #### contact
 
@@ -775,16 +783,19 @@ Heading of an expired invoice (default: `This invoice has expired`)
 > **expiredUnconfirmed**: `string`
 
 Instead of `expiredText` and `expiredNote` when the invoice expired after Quasar could not confirm the payment
-(not found, no receipt in time, replaced), which may still arrive: `{merchant}` (default: `Your payment could not
-be confirmed. Check your wallet: if the payment left it, {merchant} accepts it or returns it.`)
+(not found, no receipt in time, replaced), or while it reports a payment it reads again, which may still arrive:
+`{merchant}`. Quasar reads such a payment again for 24 hours (default: `Your payment could not be confirmed yet.
+Check your wallet: if the payment left it, Quasar checks it again for 24 hours. If it arrives, it is recorded and
+shown to {merchant}, who accepts it or returns it.`)
 
 #### expiredWhileConfirming
 
 > **expiredWhileConfirming**: `string`
 
 Instead of `expiredText` and `expiredNote` when the invoice expired while the payment this page sent was still
-confirming: `{merchant}` (default: `The invoice closed while your payment was confirming. If it arrives,
-{merchant} accepts it or returns it.`)
+confirming: `{merchant}`. Quasar records a payment that arrives after the invoice closed and holds it for the
+seller (default: `The invoice closed while your payment was confirming. If it arrives, it is recorded and shown to
+{merchant}, who accepts it or returns it.`)
 
 #### heldLate
 
@@ -868,7 +879,8 @@ Heading of a corrected invoice: `{merchant}` (default: `{merchant} corrected thi
 
 > **unconfirmedNote**: `string`
 
-Under it (default: `This page keeps following the invoice: if the payment arrives, it shows as paid.`)
+Under it: `{merchant}`. Quasar reads such a payment again for 24 hours (default: `Quasar checks your payment again
+for 24 hours. If it arrives, it is recorded and shown to {merchant}.`)
 
 #### unconfirmedPayAgain
 
@@ -876,6 +888,14 @@ Under it (default: `This page keeps following the invoice: if the payment arrive
 
 The button that goes back to the payment once the buyer checked the wallet (default: `The payment did not leave
 my wallet`)
+
+#### unconfirmedRetrying
+
+> **unconfirmedRetrying**: `string`
+
+Under it instead of `unconfirmedNote` while the checkout hands over again a transaction the wallet sent, which
+Quasar has not received yet (default: `This page keeps handing your payment over to Quasar. Keep it open until the
+payment shows here.`)
 
 #### unconfirmedText
 
@@ -926,7 +946,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:392](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L392)
+Defined in: [i18n/types.ts:399](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L399)
 
 The paid outcome.
 
@@ -1119,6 +1139,15 @@ The merchant pays the gas: `{merchant}` (default: `{merchant} pays · you only s
 > **merchantReceives**: `string`
 
 Row of what the merchant receives: `{merchant}` (default: `{merchant} receives`)
+
+#### mismatch
+
+> **mismatch**: `string`
+
+The transaction succeeded on chain but does not pay the invoice (a wrong amount, asset or recipient, no Solana Pay
+reference, sent before the price was locked…): it may have moved money, so never say that it failed or that
+nothing was charged. Also on the method step and on an expired or cancelled invoice: `{merchant}` (default: `This
+transaction does not pay the invoice. If money left your wallet, contact {merchant}.`)
 
 #### networkFee
 
@@ -1384,7 +1413,7 @@ Above the amount (default: `You send`)
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:311](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L311)
+Defined in: [i18n/types.ts:318](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L318)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1478,7 +1507,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:615](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L615)
+Defined in: [i18n/types.ts:640](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L640)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1888,7 +1917,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:566](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L566)
+Defined in: [i18n/types.ts:591](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L591)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -2036,7 +2065,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:278](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L278)
+Defined in: [i18n/types.ts:285](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L285)
 
 The window while the wallet asks the buyer.
 
