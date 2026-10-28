@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.5...nova-core-v0.10.6) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies except TypeScript ([003ba2b](https://github.com/TuwaIO/nova-uikit/commit/003ba2be8969156ffbaa14e30443cadf1e35d1db))
+* **nova-connect:** connect and connected windows keep one size through their steps and never stretch ([2cac299](https://github.com/TuwaIO/nova-uikit/commit/2cac29906ff15ec7efdd339b783efe35e147ce65))
+* **nova-core,nova-connect:** Nova windows never leave an empty band when their content shrinks, and the connecting screen names the wallet ([471c5af](https://github.com/TuwaIO/nova-uikit/commit/471c5af99d67c0273a8086bb1a66eeb65158fa66))
+
 ## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.4...nova-core-v0.10.5) (2026-10-27)
 
 

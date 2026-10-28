@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.4...nova-transactions-v0.10.5) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** Satellite Connect 0.11.2, SIWX 0.6.5, Pulsar 0.11.1 and Orbit 0.7.2 — wallet lists update live ([54a78bd](https://github.com/TuwaIO/nova-uikit/commit/54a78bdd4e207a1f94cc4388b4dcaf1432c04b2b))
+* **deps:** update dependencies except TypeScript ([003ba2b](https://github.com/TuwaIO/nova-uikit/commit/003ba2be8969156ffbaa14e30443cadf1e35d1db))
+
 ## [0.10.4](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.3...nova-transactions-v0.10.4) (2026-10-26)
 
 
