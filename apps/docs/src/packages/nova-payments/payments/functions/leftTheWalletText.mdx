@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/leftTheWalletText" />
+
+# leftTheWalletText()
+
+> **leftTheWalletText**(`error`, `labels`, `merchant?`): `string` \| `null`
+
+Defined in: [utils/outcome.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L60)
+
+What the checkout says about a payment that left the wallet, or may have, from the store's error: a transaction that
+does not pay the invoice (`pay.mismatch`; `pay.mismatchTakenElsewhere` when Quasar credited it to another invoice), a
+payment Quasar closed after 24 hours without a result on chain (`outcome.unconfirmedClosed`), a transaction another
+invoice handed over first (`outcome.unconfirmedTakenElsewhere`) and a payment the network confirmed that Quasar has
+not recorded yet (`outcome.unconfirmedSettlementFailed`). Never "it failed", "only the network fee was spent" or
+"nothing was charged" for them.
+
+## Parameters
+
+### error
+
+`CheckoutError` \| `null` \| `undefined`
+
+The store's error, if any.
+
+### labels
+
+[`NovaPaymentsLabels`](?path=/docs/packages-nova-payments-i18n-type-aliases-novapaymentslabels--docs)
+
+The labels of the checkout language.
+
+### merchant?
+
+`string` = `''`
+
+The seller's name.
+
+## Returns
+
+`string` \| `null`
+
+The text, or `null` for any other error, or none.

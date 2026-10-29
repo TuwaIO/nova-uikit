@@ -6,12 +6,14 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **unconfirmedFollowUp**(`error`): [`UnconfirmedFollowUp`](?path=/docs/packages-nova-payments-payments-type-aliases-unconfirmedfollowup--docs) \| `null`
 
-Defined in: [utils/checkout.ts:442](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L442)
+Defined in: [utils/checkout.ts:479](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L479)
 
 What to tell the buyer about a payment Quasar did not confirm, from the store's error: `payment_unconfirmed` with
 `rechecked` (set by a current `@tuwaio/quasar-sdk` only while Quasar reads the payment again) promises the 24-hour
-re-check, its `submit_retrying` and `submit_failed` reasons are the store's hand-over, any other is for the seller;
-`payment_failed` with the reason `unresolved_after_24h` is a payment Quasar closed without a result.
+re-check, its `submit_retrying` and `submit_failed` reasons are the store's hand-over, `tx_already_used` a transaction
+another invoice handed over first, any other is for the seller; `payment_failed` with the reason
+`unresolved_after_24h` is a payment Quasar closed without a result; the reason `settlement_failed` (`payment_mismatch`
+of an older store) a confirmed payment Quasar has not recorded yet.
 
 ## Parameters
 
