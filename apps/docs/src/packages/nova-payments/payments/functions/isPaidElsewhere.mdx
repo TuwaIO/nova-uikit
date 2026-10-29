@@ -6,11 +6,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **isPaidElsewhere**(`error`): `boolean`
 
-Defined in: [utils/checkout.ts:427](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L427)
+Defined in: [utils/checkout.ts:449](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L449)
 
-Whether the last error says that Quasar credited the transaction to another invoice of the seller, the one whose
-quoted wallet sent it (`tx_already_used` of a transaction that does not pay this invoice): the buyer names it to the
-seller if it was the payment of this invoice.
+Whether the last error says that Quasar credited the transaction to another invoice of the seller, the one the
+wallet that sent it confirmed or whose mark it carries (`tx_already_used` of a transaction that does not pay this
+invoice): the buyer names it to the seller if it was the payment of this invoice.
 
 ## Parameters
 

@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **OutcomeScreen**(`props`): `Element` \| `null`
 
-Defined in: [components/OutcomeScreen.tsx:159](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/OutcomeScreen.tsx#L159)
+Defined in: [components/OutcomeScreen.tsx:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/OutcomeScreen.tsx#L171)
 
 An outcome other than paid: a payment Quasar could not confirm (`unconfirmed`: it may still arrive, so the buyer
 checks the wallet before paying again; only while Quasar still reads it again, `error.rechecked` of the checkout
@@ -20,13 +20,16 @@ with their hash for the seller, and the buyer is asked not to pay again; no paym
 invoice and for a payment that may not have left the wallet, "The payment did not leave my wallet", which goes back
 to it with `payAgain` of the checkout store), an
 underpaid invoice ("Pay the rest"), a payment the seller reviews (screening,
-late, overpaid, after the price lock ran out), a refunded invoice, an expired one (with what arrived before the
+late, overpaid, after the price lock ran out), a payment held for a refund only (`refundOnly`: it came from a wallet
+that did not confirm the invoice, pays no invoice, and the seller returns it to the wallet that sent it; this
+invoice takes no other payment), a refunded invoice, an expired one (with what arrived before the
 deadline, which the seller can refund; never "nothing was charged" while a payment may still arrive: one this page
 handed over or saw on its way, or that the wallet sent, also after the checkout stopped following it, which Quasar
 records and shows to the seller if it arrives, one Quasar could not confirm or reports as unresolved, to check in the
 wallet, one Quasar does not read again or closed after 24 hours without a result, for the seller with its transaction
 hash, one that does not pay the invoice and may have moved money, and after a QR code showed, a payment made with it,
-as this page does not see it), a cancelled one (the same: never "nothing was charged" while a payment may still
+as this page does not see it; while this page follows a payment on its way, until when it does, `followingUntil` of
+the checkout store), a cancelled one (the same: never "nothing was charged" while a payment may still
 arrive, also after a QR code showed, and "recorded if it arrives" only for a payment Quasar records), a corrected one
 ("Open \<new invoice\>" opens it here) and a payer the wallet check refused ("Use another wallet"). Each offers to
 contact the seller.

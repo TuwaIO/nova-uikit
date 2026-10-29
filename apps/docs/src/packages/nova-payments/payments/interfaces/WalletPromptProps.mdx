@@ -20,6 +20,24 @@ The amount with its symbol.
 
 ***
 
+### details?
+
+> `optional` **details?**: `object`[]
+
+Defined in: [components/WalletPrompt.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L39)
+
+The rows to check in the wallet instead of the payment's (the signature that confirms the wallet).
+
+#### name
+
+> **name**: `string`
+
+#### value
+
+> **value**: `string`
+
+***
+
 ### kind
 
 > **kind**: [`WalletPromptKind`](?path=/docs/packages-nova-payments-payments-type-aliases-walletpromptkind--docs)
@@ -54,7 +72,7 @@ The network of the payment.
 
 > **onCancel**: () => `void`
 
-Defined in: [components/WalletPrompt.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L37)
+Defined in: [components/WalletPrompt.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L41)
 
 Closes the window.
 
@@ -85,6 +103,16 @@ Asks the wallet again; only where a second request cannot pay twice (a signature
 Defined in: [components/WalletPrompt.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L33)
 
 The countdown of the price lock; `null` once it ended.
+
+***
+
+### text?
+
+> `optional` **text?**: `string`
+
+Defined in: [components/WalletPrompt.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/WalletPrompt.tsx#L37)
+
+What the window says instead of the text of its kind (the signature that confirms the wallet).
 
 ***
 

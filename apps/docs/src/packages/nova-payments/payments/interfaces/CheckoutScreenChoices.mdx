@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # CheckoutScreenChoices
 
-Defined in: [utils/checkout.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L40)
+Defined in: [utils/checkout.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L41)
 
 Choices of the buyer that the checkout store does not hold.
 
@@ -14,9 +14,21 @@ Choices of the buyer that the checkout store does not hold.
 
 > `optional` **autoPay?**: `boolean`
 
-Defined in: [utils/checkout.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L44)
+Defined in: [utils/checkout.ts:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L45)
 
 The buyer opened the automatic payments offer after paying the first period of a subscription.
+
+***
+
+### confirmWallet?
+
+> `optional` **confirmWallet?**: `boolean`
+
+Defined in: [utils/checkout.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L61)
+
+The buyer continued with a wallet that must confirm the invoice before the price (`payerProof` of the checkout
+store is `required`): the step that confirms it shows while the store waits for the signature and locks the price
+after it.
 
 ***
 
@@ -24,7 +36,7 @@ The buyer opened the automatic payments offer after paying the first period of a
 
 > `optional` **handoff?**: `boolean`
 
-Defined in: [utils/checkout.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L49)
+Defined in: [utils/checkout.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L50)
 
 The buyer continues on a phone: with `payWith` `qr`, the QR code of the payment page shows before any price is
 locked (an EVM method, paid from the phone's wallet on that page).
@@ -35,7 +47,7 @@ locked (an EVM method, paid from the phone's wallet on that page).
 
 > `optional` **labelsReady?**: `boolean`
 
-Defined in: [utils/checkout.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L54)
+Defined in: [utils/checkout.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L55)
 
 The labels of the invoice's language are loaded (default `true`). Until then the checkout stays on `loading`, so
 its first screen never shows in English before the buyer's language arrives.
@@ -46,6 +58,6 @@ its first screen never shows in English before the buyer's language arrives.
 
 > `optional` **payWith?**: `"wallet"` \| `"qr"`
 
-Defined in: [utils/checkout.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L42)
+Defined in: [utils/checkout.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/checkout.ts#L43)
 
 Pay from a wallet in this browser (default) or scan a QR code with a phone.

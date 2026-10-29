@@ -6,12 +6,14 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **PayScreen**(): `Element` \| `null`
 
-Defined in: [components/PayScreen.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PayScreen.tsx#L115)
+Defined in: [components/PayScreen.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/PayScreen.tsx#L119)
 
 The pay step: the connected wallet (with "Change"), the exact amount to send with its network and invoice value,
 the price lock with "Keep this price" in its last minute, the rate, the network fee (the merchant's or an estimate),
 the recipient, and the main action — "Sign to pay" when the merchant pays the gas, "Pay" otherwise, "Switch to …"
-on the wrong network. Before the prompt it reads the wallet's balance (unless `config.balanceCheck` is `false`)
+on the wrong network, "Confirm this wallet to pay" before a transfer or a paymaster payment of a method the gasless
+relay could pay (the wallet signs Quasar's free confirmation of the invoice first; the relay's authorization needs
+none). Before the prompt it reads the wallet's balance (unless `config.balanceCheck` is `false`)
 and, when it is short, offers the methods the wallet can pay and the seller's top-up link. `handlers.onSubmit` wraps
 the pay button. A Solana payment off mainnet reminds the buyer to switch the wallet to its cluster (Solana wallets
 choose their network themselves), with the steps of Phantom and Solflare. The note under the buttons says that the

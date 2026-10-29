@@ -78,7 +78,7 @@ The fee, or `null` when it cannot be estimated.
 
 > `optional` **explorerUrl?**: (`params`) => `string` \| `undefined`
 
-Defined in: [adapters/types.ts:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L112)
+Defined in: [adapters/types.ts:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L124)
 
 The link of a transaction on a block explorer of its chain.
 
@@ -152,7 +152,7 @@ The balance, in base units.
 
 > `optional` **pulsarTransaction?**: (`params`) => `Transaction`
 
-Defined in: [adapters/types.ts:130](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L130)
+Defined in: [adapters/types.ts:142](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L142)
 
 Describes a sent payment as a pending transaction of `@tuwaio/pulsar-core`, so that the app's Pulsar store tracks
 it (and Nova Transactions shows its toast) once the checkout closes.
@@ -177,7 +177,7 @@ The pending transaction, for `injectExternalPendingTxs` of the Pulsar store.
 
 > `optional` **requestPermission?**: (`params`) => `Promise`\<`Omit`\<`GrantPermissionParams`, `"payer"`\>\>
 
-Defined in: [adapters/types.ts:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L119)
+Defined in: [adapters/types.ts:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L131)
 
 Asks the wallet for the ERC-7715 permission of a subscription's automatic payments, with the wallet's prompt.
 
@@ -207,7 +207,7 @@ What the wallet granted, for `grantPermission` of the checkout store (without th
 
 > `optional` **sendSponsoredCalls?**: (`params`) => `Promise`\<`string`\>
 
-Defined in: [adapters/types.ts:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L131)
+Defined in: [adapters/types.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L143)
 
 #### Parameters
 
@@ -271,6 +271,45 @@ The quote's instructions, the sender, and the Satellite Connect connection of th
 `Promise`\<`string`\>
 
 The transaction hash (EVM) or signature (Solana).
+
+***
+
+### signMessage?
+
+> `optional` **signMessage?**: (`params`) => `Promise`\<`string`\>
+
+Defined in: [adapters/types.ts:109](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L109)
+
+Signs a message with `personal_sign` (EIP-191), with the wallet's prompt: the EIP-4361 message by which the paying
+wallet confirms the invoice before an EVM payment it sends itself (`confirmPayer` of the checkout store of
+`@tuwaio/quasar-sdk/checkout`). A free signature that moves no funds; a smart wallet signs it through its own flow
+(ERC-1271, ERC-6492), often with a passkey. Without it the checkout cannot pay methods that need the confirmation
+from this wallet.
+
+#### Parameters
+
+##### params
+
+The message exactly as Quasar wrote it, the signer, and the CAIP-2 network the message names (the
+  wallet is on it already: the checkout switches it first).
+
+###### account
+
+`string`
+
+###### chainId
+
+`string`
+
+###### message
+
+`string`
+
+#### Returns
+
+`Promise`\<`string`\>
+
+The signature, as hex.
 
 ***
 
