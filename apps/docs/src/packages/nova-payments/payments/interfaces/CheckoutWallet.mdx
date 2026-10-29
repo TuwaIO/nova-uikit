@@ -66,9 +66,9 @@ Its chain family.
 
 Defined in: [utils/methods.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L42)
 
-The icon the wallet gives itself, usually a `data:` URI (EIP-6963, Wallet Standard): of its connector in the
-Satellite store, else of the connection; `undefined` when it has none, and the checkout shows the icon of
-`walletId`.
+The icon the wallet gives itself, an image `data:` URI (EIP-6963, Wallet Standard) or an HTTPS URL: of the
+connection (the connector that connected), else of its wallet in the Satellite store; `undefined` when neither
+gives one the checkout can show, and the checkout shows the icon of `walletId`.
 
 ***
 

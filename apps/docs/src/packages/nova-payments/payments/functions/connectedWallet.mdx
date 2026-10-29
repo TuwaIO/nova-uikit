@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **connectedWallet**(`connection`, `connectors?`): [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
 
-Defined in: [utils/methods.ts:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L120)
+Defined in: [utils/methods.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/methods.ts#L143)
 
 The connected wallet of Satellite Connect in CAIP identifiers, named and shown as the wallet calls itself.
 
@@ -24,8 +24,9 @@ cluster), `connectorType`, and the `icon` of the wallet when the adapter set it.
 `Partial`\<`Record`\<`string`, `unknown`[]\>\>
 
 The wallets of the Satellite store by adapter (`getConnectors()`): the one with the connector
-type of the connection gives the name and the icon (see [walletLabel](?path=/docs/packages-nova-payments-payments-functions-walletlabel--docs)). Without it, or when it is not listed,
-the name comes from the connector type and the icon from the connection.
+type of the connection gives the name (see [walletLabel](?path=/docs/packages-nova-payments-payments-functions-walletlabel--docs)); of several such wallets, the one with the icon of
+the connection. When it is not listed, the name comes from the connector type. The icon is the connection's, else
+the listed wallet's, when it is an image `data:` URI or an HTTPS URL.
 
 ## Returns
 
