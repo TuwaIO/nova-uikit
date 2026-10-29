@@ -30,7 +30,9 @@ const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
  * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand one
  * icon at a time (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
  * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
- * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet are recolored with `--tuwa-testnet-icons`.
+ * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet draw the icon of their mainnet on a
+ * `--tuwa-testnet-icons` background, the white mark in the color of the mainnet background (Base Sepolia: a blue square
+ * on grey).
  *
  * Side effect: a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common` does not list.
  *

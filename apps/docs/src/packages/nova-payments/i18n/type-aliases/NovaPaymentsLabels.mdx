@@ -1403,7 +1403,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:564](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L564)
+Defined in: [i18n/types.ts:572](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L572)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1821,7 +1821,15 @@ The order panel: the seller, the deadline, the lines and the total.
 
 > **compact**: `string`
 
-On a phone: the number of lines and the tax; `{count}`, `{tax}` (default: `{count} items · incl. VAT {tax}`)
+On a phone: the number of lines and the tax; `{count}`, `{tax}` (default: `{count} items · incl. VAT {tax}`).
+Used when the plural rule of the language does not pick `one` for the count.
+
+#### compactOne
+
+> **compactOne**: `string`
+
+On a phone, when the plural rule of the language picks `one` for the number of lines (1; in Ukrainian and
+Russian also 21, 31…); `{count}`, `{tax}` (default: `{count} item · incl. VAT {tax}`)
 
 #### help
 

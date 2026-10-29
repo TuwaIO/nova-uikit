@@ -31,8 +31,8 @@ export interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'sr
    */
   githubSrc: string;
   /**
-   * Optional fill color to apply to the first `<path>` element.
-   * Used for testnet/devnet visual differentiation.
+   * Optional fill color of the first `<path>` element, the background of a network icon, for testnets and the Solana
+   * devnet and testnet: the white mark over it takes the color the background had (`applyFirstPathFill`).
    */
   firstPathFill?: string;
 }

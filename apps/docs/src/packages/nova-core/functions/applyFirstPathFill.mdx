@@ -6,11 +6,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **applyFirstPathFill**(`svgString`, `fillColor`): `string`
 
-Defined in: [utils/svgUtils.ts:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/svgUtils.ts#L32)
+Defined in: [utils/svgUtils.ts:79](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/svgUtils.ts#L79)
 
-Modifies the fill attribute of the first `<path>` element in an SVG string.
-Uses DOMParser for safe XML manipulation, so call it in the browser.
-Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values with [resolveCssVariable](?path=/docs/packages-nova-core-functions-resolvecssvariable--docs).
+Recolors a network icon for a testnet: the first drawn `<path>` (the background) takes the color, and the white paths
+over it (the mark) take the color the background had, so the mark keeps its brand color (the Base square stays blue
+on grey instead of reading as an empty white box); a mark with colors of its own keeps them. Paths of `<defs>`,
+`<clipPath>` and `<mask>` are left alone. Uses DOMParser for safe XML manipulation, so call it in the browser. Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values with
+[resolveCssVariable](?path=/docs/packages-nova-core-functions-resolvecssvariable--docs).
 
 ## Parameters
 
@@ -24,7 +26,7 @@ The original SVG markup
 
 `string`
 
-The color to apply (supports CSS variables)
+The color of the background (supports CSS variables)
 
 ## Returns
 
