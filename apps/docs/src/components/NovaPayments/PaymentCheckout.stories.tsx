@@ -557,8 +557,8 @@ export const ScreeningUnavailable: Story = {
 // --- Confirming the paying wallet (owner rule of 2026-10-29) ---
 
 /** The checkout of the stories with USDC on Base Sepolia paid by the buyer's wallet, which confirms the invoice first. */
-const proofCheckout = (invoice: Partial<ReturnType<typeof sampleCheckout>['invoice']> = {}) => {
-  const view = sampleCheckout({}, invoice);
+const proofCheckout = (invoice: Partial<ReturnType<typeof sampleCheckout>['invoice']> = {}, extra = {}) => {
+  const view = sampleCheckout(extra, invoice);
   return {
     ...view,
     methods: view.methods.map((method) =>
@@ -610,6 +610,25 @@ export const ConfirmWalletSigning: Story = {
   },
 };
 
+/**
+ * The wallet window was closed while the wallet never answered (a lost WalletConnect or mobile request): the button
+ * works again, and the window offers "Try again" (signing again moves no money). The window also says that the wallet
+ * may show the message as a sign-in request for the site.
+ */
+export const ConfirmWalletRetry: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, walletOptions: { signPending: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByText(/^MetaMask may show it as a sign-in request for /)).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    const button = await canvas.findByRole('button', { name: 'Confirm in MetaMask' });
+    await waitFor(() => expect(button).toBeEnabled());
+    await userEvent.click(button);
+    await expect(await canvas.findByRole('button', { name: 'Try again' })).toBeVisible();
+  },
+};
+
 /** The wallet signed: the price is locked and the pay step follows, with the buyer paying the gas. */
 export const ConfirmWalletThenPay: Story = {
   args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: proofCheckout() },
@@ -639,6 +658,8 @@ export const ConfirmSmartWallet: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await continueToConfirmWallet(canvasElement);
     await expect(canvas.getByText(/may ask for your passkey or fingerprint to sign/)).toBeVisible();
+    // Its signature counts on its network only
+    await expect(canvas.getByText(/another network asks again\.$/)).toBeVisible();
   },
 };
 
@@ -699,6 +720,36 @@ export const ConfirmBeforePayingGas: Story = {
  */
 export const HeldRefundOnly: Story = {
   args: { view: settled({ status: 'held', review: { reason: 'payer_mismatch', refundOnly: true } }) },
+};
+
+/**
+ * The same from a wallet when no wallet confirmed the invoice: the next invoice asks the buyer to confirm the wallet on
+ * its page before paying.
+ */
+export const HeldRefundOnlyUnconfirmed: Story = {
+  args: { view: settled({ status: 'held', review: { reason: 'payer_unconfirmed', refundOnly: true } }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByText(/confirm your wallet on its page before paying\.$/)).toBeVisible();
+  },
+};
+
+/**
+ * Part of the invoice was paid from another wallet: the wallet connected now confirms the invoice before "Pay the rest"
+ * locks the price of what is left.
+ */
+export const PayRestNewWallet: Story = {
+  args: {
+    wallet: { ...METAMASK_ON_BASE_SEPOLIA, address: '0x3333333333333333333333333333333333333333' },
+    view: proofCheckout({ status: 'underpaid', amountPaid: '80000000' }, { quote: LOCKED }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
+    await expect(await canvas.findByRole('heading', { name: 'Confirm your wallet' })).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByRole('button', { name: /^Pay / }, { timeout: 6000 })).toBeVisible();
+  },
 };
 
 // --- Customization ---
