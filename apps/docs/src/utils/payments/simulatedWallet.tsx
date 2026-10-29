@@ -20,6 +20,11 @@ export interface SimulatedConnection {
   chainId: string | number;
   /** Connector type (`evm:metamask`, `solana:phantom`). */
   connectorType: string;
+  /**
+   * The wallet as it announces itself (EIP-6963, Wallet Standard): its name and icon, listed by `getConnectors()` of
+   * the store under the family of `connectorType`.
+   */
+  wallet?: { name: string; icon?: string };
 }
 
 /** How the simulated wallet answers. */
@@ -71,7 +76,16 @@ export function SimulatedWallet({
   novaConnect?: boolean;
   children: ReactNode;
 }) {
-  const store = useMemo(() => createStore(() => ({ activeConnection: connection })), [connection]);
+  const store = useMemo(
+    () =>
+      createStore(() => ({
+        activeConnection: connection,
+        // The wallet lists of Satellite Connect: the connected wallet as it announces itself
+        getConnectors: () =>
+          connection?.wallet ? { [connection.connectorType.split(':')[0]]: [connection.wallet] } : {},
+      })),
+    [connection],
+  );
   const [connecting, setConnecting] = useState(false);
   const { balance = 1_000_000_000_000n, balances, decline = false, sponsor = false, otherCluster = false } = options;
 

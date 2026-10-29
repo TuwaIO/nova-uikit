@@ -223,6 +223,45 @@ export const SmartWallet: Story = { args: { wallet: METAMASK_ON_BASE_SEPOLIA, wa
 /** The wallet is on Ethereum: the pay step asks to switch to Base Sepolia first. */
 export const WrongNetwork: Story = { args: { wallet: { ...METAMASK_ON_BASE_SEPOLIA, chainId: 1 } } };
 
+// The icon an EIP-6963 wallet announces: a data URI
+const SWITCH_WALLET_ICON = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0f766e"/><path d="M9 12h11l-3-3m6 11H12l3 3" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+)}`;
+
+/**
+ * A wallet Nova has neither a name nor an icon of, an EIP-6963 wallet that calls itself "Switch Wallet", is on
+ * Ethereum: the checkout names it and shows its own icon, as the wallet list of Nova Connect does. "Switch to Base
+ * Sepolia" asks the wallet: the prompt takes the place of the pay step and fills the pane, without a scrollbar.
+ */
+export const WalletOwnName: Story = {
+  name: "Wallet's own name and icon",
+  args: {
+    display: 'modal',
+    wallet: {
+      ...METAMASK_ON_BASE_SEPOLIA,
+      chainId: 1,
+      connectorType: 'evm:switchwallet',
+      wallet: { name: 'Switch Wallet', icon: SWITCH_WALLET_ICON },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(await page.findByRole('button', { name: 'Continue' }));
+    await userEvent.click(await page.findByRole('button', { name: /^Switch to Base Sepolia/ }, { timeout: 5000 }));
+    const prompt = await page.findByRole('heading', { name: 'Approve the switch in Switch Wallet' });
+    const pane = prompt.closest<HTMLElement>('[data-novapay-scroll]')!;
+    await expect(pane.scrollHeight).toBeLessThanOrEqual(pane.clientHeight);
+    await expect(prompt.closest('section')!.querySelector('img')).toHaveAttribute('src', SWITCH_WALLET_ICON);
+    // The wallet switched: the pay step is back, with the wallet's name, and the focus on its button
+    await waitFor(() => expect(page.queryByRole('heading', { name: /^Approve the switch/ })).toBeNull(), {
+      timeout: 5000,
+    });
+    await expect(page.getByText('Switch Wallet')).toBeVisible();
+    // After the dialog put it on its frame for a moment
+    await waitFor(() => expect(page.getByRole('button', { name: /^Sign to pay/ })).toHaveFocus());
+  },
+};
+
 /**
  * The wallet holds 52.10 USDC and 0.08 ETH: the pay step offers ETH, which this wallet can pay, and the seller's
  * top-up link.
