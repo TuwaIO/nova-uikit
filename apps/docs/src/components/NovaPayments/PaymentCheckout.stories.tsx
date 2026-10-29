@@ -735,8 +735,8 @@ export const HeldRefundOnlyUnconfirmed: Story = {
 };
 
 /**
- * Part of the invoice was paid from another wallet: the wallet connected now confirms the invoice before "Pay the rest"
- * locks the price of what is left.
+ * Part of the invoice was paid from one wallet and another one is connected now: only the wallet that paid first pays
+ * the rest, and "Pay the rest" asks for it.
  */
 export const PayRestNewWallet: Story = {
   args: {
@@ -745,10 +745,21 @@ export const PayRestNewWallet: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByText(
+        'Only the wallet that paid first, 0x1111…1111, can pay the rest. Connect that wallet to pay it.',
+      ),
+    ).toBeVisible();
+  },
+};
+
+/** The wallet that paid first pays the rest: the price is what is left, 9.54 of 89.54 USDC. */
+export const PayRest: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({ status: 'underpaid', amountPaid: '80000000' }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
-    await expect(await canvas.findByRole('heading', { name: 'Confirm your wallet' })).toBeVisible();
-    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
-    await expect(await canvas.findByRole('button', { name: /^Pay / }, { timeout: 6000 })).toBeVisible();
+    await expect(await canvas.findByRole('button', { name: /^Pay 9\.54 USDC/ }, { timeout: 6000 })).toBeVisible();
   },
 };
 

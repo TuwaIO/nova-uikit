@@ -169,7 +169,7 @@ export function simulatedCheckoutApi({
   let reads = 0;
   let current: CheckoutView = { ...view, merchant: { ...view.merchant, logo } };
   const never = <T>() => new Promise<T>(() => undefined);
-  const refuse = (code: string, status: number) => {
+  const refuse = (code: string, status: number, details?: Record<string, unknown>) => {
     const message =
       code === 'checkout_not_found'
         ? 'No such checkout'
@@ -177,8 +177,10 @@ export function simulatedCheckoutApi({
           ? 'This wallet cannot pay'
           : code === 'consent_required'
             ? 'The buyer must accept the consent of the checkout first'
-            : 'Service unavailable';
-    return Promise.reject(new QuasarSDKError(message, status, new Error(message), { code }));
+            : code === 'payer_mismatch'
+              ? 'Pay the rest from the wallet that paid first'
+              : 'Service unavailable';
+    return Promise.reject(new QuasarSDKError(message, status, new Error(message), { code, details }));
   };
   // The wallets that confirmed the invoice, as Quasar records them
   const confirmed = new Set<string>();
@@ -197,10 +199,18 @@ export function simulatedCheckoutApi({
       if (quoteError) return refuse(quoteError, quoteError === 'payer_blocked' ? 403 : 503);
       if (current.consent?.required && !consentGiven) return refuse('consent_required', 409);
       const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
+      // The rest of an underpaid invoice: only the wallet that paid first, for what is left
+      const underpaid = current.invoice.status === 'underpaid' ? current.quote : null;
+      const firstWallet = underpaid?.payer ?? null;
+      if (firstWallet && payer && payer.split(':')[2]?.toLowerCase() !== firstWallet.split(':')[2]?.toLowerCase()) {
+        return refuse('payer_mismatch', 409, { originWallet: firstWallet });
+      }
       // An EVM method the buyer's wallet pays itself takes a price only for a wallet that confirmed the invoice
       const proven = Boolean(payer && confirmed.has(payer.toLowerCase()));
       if (method.payerProof === 'before_quote' && !proven) return refuse('payer_proof_required', 409);
-      const expected = BigInt(EXPECTED[method.symbol] ?? '89540000');
+      const full = BigInt(EXPECTED[method.symbol] ?? '89540000');
+      const paid = underpaid && underpaid.symbol === method.symbol ? BigInt(current.invoice.amountPaid ?? '0') : 0n;
+      const expected = full > paid ? full - paid : full;
       const send = expected + (expected * BigInt(transferFeeBps) + 9_999n) / 10_000n;
       const amount = String(send);
       const solana = method.chainId.startsWith('solana:');
