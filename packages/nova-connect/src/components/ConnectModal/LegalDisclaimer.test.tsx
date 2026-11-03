@@ -38,7 +38,7 @@ const sentence = () => {
 };
 
 // The legal line under the wallet list. Connecting is agreement to the terms of service only: the privacy policy is
-// an information to read, not something the user agrees to, so it has a sentence of its own (lawyer of TUWA, 2026-10-16).
+// an information to read, not something the user agrees to, so it has a sentence of its own.
 describe('LegalDisclaimer', () => {
   afterEach(() => {
     unmount();

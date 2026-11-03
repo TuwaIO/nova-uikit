@@ -593,7 +593,7 @@ export const ScreeningUnavailable: Story = {
   args: { wallet: METAMASK_ON_BASE_SEPOLIA, quoteError: 'screening_unavailable' },
 };
 
-// --- Confirming the paying wallet (owner rule of 2026-10-29) ---
+// --- Confirming the paying wallet ---
 
 /** The checkout of the stories with USDC on Base Sepolia paid by the buyer's wallet, which confirms the invoice first. */
 const proofCheckout = (invoice: Partial<ReturnType<typeof sampleCheckout>['invoice']> = {}, extra = {}) => {
