@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:528](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L528)
+Defined in: [i18n/types.ts:535](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L535)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -293,7 +293,7 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:453](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L453)
+Defined in: [i18n/types.ts:460](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L460)
 
 The confirm step: the transaction is on its way.
 
@@ -474,7 +474,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:771](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L771)
+Defined in: [i18n/types.ts:752](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L752)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -686,7 +686,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:567](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L567)
+Defined in: [i18n/types.ts:574](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L574)
 
 The outcomes other than paid.
 
@@ -832,47 +832,11 @@ Under it (default: `The seller contacts you if anything is needed.`)
 
 Reason `overpaid`: `{merchant}`
 
-#### heldPayerMismatch
-
-> **heldPayerMismatch**: `string`
-
-Reason `payer_mismatch`: `{merchant}` (default: `The payment came from another wallet than the one that confirmed
-this invoice. {merchant} returns it to the wallet that sent it.`)
-
-#### heldPayerUnconfirmed
-
-> **heldPayerUnconfirmed**: `string`
-
-Reason `payer_unconfirmed`: `{merchant}` (default: `The payment came from a wallet that did not confirm this
-invoice. {merchant} returns it to the wallet that sent it.`)
-
 #### heldQuoteExpired
 
 > **heldQuoteExpired**: `string`
 
 Reason `quote_expired`: `{merchant}` (default: `The payment arrived after the price lock ran out. {merchant} accepts it or returns it.`)
-
-#### heldRefundOnlyNext
-
-> **heldRefundOnlyNext**: `string`
-
-Under it: a held invoice takes no other payment: `{merchant}` (default: `This invoice takes no other payment: ask
-{merchant} for a new invoice and pay it from the confirmed wallet.`)
-
-#### heldRefundOnlyNextUnconfirmed
-
-> **heldRefundOnlyNextUnconfirmed**: `string`
-
-Instead of `heldRefundOnlyNext` for reason `payer_unconfirmed`, where no wallet confirmed the invoice: `{merchant}`
-(default: `This invoice takes no other payment: ask {merchant} for a new invoice, and confirm your wallet on its
-page before paying.`)
-
-#### heldRefundOnlyTitle
-
-> **heldRefundOnlyTitle**: `string`
-
-Heading of a payment held for a refund only (`refundOnly` of the review: Quasar ties it to no invoice):
-`{merchant}` (default: `{merchant} returns this payment`)
 
 #### heldScreening
 
@@ -1065,7 +1029,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:503](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L503)
+Defined in: [i18n/types.ts:510](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L510)
 
 The paid outcome.
 
@@ -1285,6 +1249,15 @@ Instead of `mismatch` for a transfer from a wallet that did not confirm the invo
 `payer_unconfirmed`): it does not pay the invoice, and no hold promises a refund (a held invoice shows its own
 outcome): `{merchant}` (default: `This transfer came from a wallet that did not confirm this invoice, so it does
 not pay it. If money left your wallet, contact {merchant}.`)
+
+#### mismatchOtherWalletHeld
+
+> **mismatchOtherWalletHeld**: `string`
+
+Instead of `mismatchOtherWallet` when Quasar recorded the transfer as a held transfer, which the seller returns:
+`{merchant}` (default: `This transfer came from a wallet that did not confirm this invoice, so it does not pay
+it. {merchant} returns it to the wallet that sent it, and you can still pay this invoice from the wallet that
+confirmed it.`)
 
 #### mismatchTakenElsewhere
 
@@ -1558,7 +1531,7 @@ Above the amount (default: `You send`)
 
 > **payerProof**: `object`
 
-Defined in: [i18n/types.ts:342](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L342)
+Defined in: [i18n/types.ts:349](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L349)
 
 The step that confirms the paying wallet: right after the wallet and the method, before the price, the wallet signs
 Quasar's message (a free signature that moves no money) for an EVM payment it sends itself; one signature per
@@ -1735,7 +1708,7 @@ The wallet is on another network than the method's (`payer_chain_mismatch`): `{w
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:422](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L422)
+Defined in: [i18n/types.ts:429](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L429)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1829,7 +1802,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:843](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L843)
+Defined in: [i18n/types.ts:824](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L824)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -2121,6 +2094,12 @@ Button when the wallet is on another network; `{network}` (default: `Switch to {
 
 After the recipient (default: `the payer`)
 
+#### theSender
+
+> **theSender**: `string`
+
+After the recipient of the refund of a held transfer (default: `the sender of this transfer`)
+
 #### title
 
 > **title**: `string`
@@ -2144,6 +2123,12 @@ Row: the transaction (default: `Transaction`)
 > **txDescription**: `string`
 
 Its description; `{amount}` (default: `{amount} to the payer`)
+
+#### txDescriptionSender
+
+> **txDescriptionSender**: `string`
+
+Its description for the refund of a held transfer; `{amount}` (default: `{amount} to the sender of the transfer`)
 
 #### txTitle
 
@@ -2239,7 +2224,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:786](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L786)
+Defined in: [i18n/types.ts:767](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L767)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -2395,7 +2380,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:305](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L305)
+Defined in: [i18n/types.ts:312](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L312)
 
 The window while the wallet asks the buyer.
 

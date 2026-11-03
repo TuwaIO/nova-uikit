@@ -754,22 +754,34 @@ export const ConfirmBeforePayingGas: Story = {
 };
 
 /**
- * A payment from another wallet than the one that confirmed the invoice: Quasar ties it to no invoice, and the seller
- * returns it to the wallet that sent it. Never "the seller checks your payment".
+ * A transfer from a wallet that never confirmed the invoice: Quasar ties it to no invoice and records it as a held
+ * transfer, which the seller returns to the wallet that sent it. The invoice stays open: the page says so, and that
+ * the confirmed wallet can still pay it. Never "the seller checks your payment".
  */
-export const HeldRefundOnly: Story = {
-  args: { view: settled({ status: 'held', review: { reason: 'payer_mismatch', refundOnly: true } }) },
-};
-
-/**
- * The same from a wallet when no wallet confirmed the invoice: the next invoice asks the buyer to confirm the wallet on
- * its page before paying.
- */
-export const HeldRefundOnlyUnconfirmed: Story = {
-  args: { view: settled({ status: 'held', review: { reason: 'payer_unconfirmed', refundOnly: true } }) },
+export const HeldTransfer: Story = {
+  args: {
+    view: sampleCheckout(
+      {},
+      {
+        pendingPayments: 0,
+        rejectedPayments: [
+          {
+            txKey: '0x5c1e000000000000000000000000000000000000000000000000000000007d1a',
+            reason: 'payer_unconfirmed',
+            final: true,
+            movedMoney: true,
+            held: true,
+            at: Date.parse('2026-11-03T14:02:00.000Z'),
+          },
+        ],
+      },
+    ),
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(await canvas.findByText(/confirm your wallet on its page before paying\.$/)).toBeVisible();
+    await expect(
+      await canvas.findByText(/returns it to the wallet that sent it, and you can still pay this invoice/),
+    ).toBeVisible();
   },
 };
 
