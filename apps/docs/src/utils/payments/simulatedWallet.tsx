@@ -39,6 +39,10 @@ export interface SimulatedWalletOptions {
   sponsor?: boolean;
   /** The Solana wallet is on another cluster than the payment's: the network refuses the transfer. */
   otherCluster?: boolean;
+  /** The wallet cannot sign messages (the confirmation of the paying wallet). */
+  cannotSign?: boolean;
+  /** The signature request stays open in the wallet, never answered (to look at the wallet window). */
+  signPending?: boolean;
 }
 
 /** The wallets "Connect" gives, by family: MetaMask on Ethereum (the wrong network for Base Sepolia), Phantom on devnet. */
@@ -87,7 +91,15 @@ export function SimulatedWallet({
     [connection],
   );
   const [connecting, setConnecting] = useState(false);
-  const { balance = 1_000_000_000_000n, balances, decline = false, sponsor = false, otherCluster = false } = options;
+  const {
+    balance = 1_000_000_000_000n,
+    balances,
+    decline = false,
+    sponsor = false,
+    otherCluster = false,
+    cannotSign = false,
+    signPending = false,
+  } = options;
 
   const adapters = useMemo<PaymentsAdapter[]>(() => {
     const answer = async (value: string) => {
@@ -110,6 +122,12 @@ export function SimulatedWallet({
         },
         sendTransfer: () => answer(`0x${'ab'.repeat(32)}`),
         signTransferAuthorization: () => answer(`0x${'cd'.repeat(65)}`),
+        // personal_sign of the message that confirms the paying wallet
+        signMessage: async () => {
+          if (cannotSign) throw new PaymentWalletError('unsupported', 'The wallet cannot sign messages');
+          if (signPending) return new Promise<string>(() => undefined);
+          return answer(`0x${'5a'.repeat(65)}`);
+        },
         sendSponsoredCalls: async ({ onSent }) => {
           const hash = await answer(`0x${'ef'.repeat(32)}`);
           onSent?.();
@@ -142,7 +160,7 @@ export function SimulatedWallet({
         pulsarTransaction: (params) => ({ adapter: 'solana', ...params }) as unknown as Transaction,
       },
     ];
-  }, [store, balance, balances, decline, sponsor, otherCluster]);
+  }, [store, balance, balances, decline, sponsor, otherCluster, cannotSign, signPending]);
 
   const novaConnect = useMemo(
     () =>

@@ -30,7 +30,7 @@
     "@tuwaio/pulsar-evm": "^0.10.1",
     "@tuwaio/pulsar-react": "^0.7.0",
     "@tuwaio/pulsar-solana": "^0.10.5",
-    "@tuwaio/quasar-sdk": "1.0.0-feat-payments-alpha.11.0dba6c3",
+    "@tuwaio/quasar-sdk": "1.0.0-feat-payments-alpha.26.31ce05b",
     "@tuwaio/satellite-core": "^0.11.2",
     "@tuwaio/satellite-evm": "^0.10.2",
     "@tuwaio/satellite-react": "^0.10.2",

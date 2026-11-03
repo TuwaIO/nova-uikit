@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:398](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L398)
+Defined in: [i18n/types.ts:528](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L528)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -293,9 +293,17 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:342](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L342)
+Defined in: [i18n/types.ts:453](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L453)
 
 The confirm step: the transaction is on its way.
+
+#### afterDeadline
+
+> **afterDeadline**: `string`
+
+Instead of `canClose` once the deadline passed while the payment this page handed over before the deadline is on
+its way and the invoice is still `open` or `underpaid` (Quasar waits for a payment it learned of before the
+deadline); `{merchant}` may be used (default: `Your payment was sent before the deadline and is being confirmed.`)
 
 #### amount
 
@@ -345,6 +353,14 @@ Row of the sender (default: `From`)
 
 Under the heading: `{network}` (default: `Usually under a minute on {network}.`)
 
+#### invoicePayment
+
+> **invoicePayment**: `string`
+
+Instead of `canClose` while a payment of the invoice that this page did not hand over is on its way (the page was
+reopened or reloaded, another tab paid, Quasar found a Solana Pay transfer), before the deadline (default: `A
+payment for this invoice is on its way. Wait until it is confirmed before paying again.`)
+
 #### network
 
 > **network**: `string`
@@ -356,6 +372,15 @@ Row of the network (default: `Network`)
 > **paid**: `string`
 
 Last step (default: `Paid`)
+
+#### pastDeadline
+
+> **pastDeadline**: `string`
+
+Instead of `canClose` once the deadline passed while a payment this page handed over at or after the deadline, or
+at a time it does not know (it was reloaded), is on its way and the invoice is still `open` or `underpaid`:
+`{merchant}` (default: `Your payment is being confirmed. If it arrives after the invoice closes, {merchant}
+accepts it or returns it.`)
 
 #### sent
 
@@ -449,7 +474,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:500](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L500)
+Defined in: [i18n/types.ts:771](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L771)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -661,7 +686,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:437](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L437)
+Defined in: [i18n/types.ts:567](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L567)
 
 The outcomes other than paid.
 
@@ -677,6 +702,14 @@ Its text: `{merchant}`
 
 Heading when the wallet check refused the payer (default: `This wallet can't pay this invoice`)
 
+#### cancelledAfterQr
+
+> **cancelledAfterQr**: `string`
+
+Instead of `cancelledText` when the invoice was cancelled after the checkout showed a QR code, which the buyer may
+have paid with from a phone: `{merchant}` (default: `{merchant} cancelled it. If you paid with the QR code,
+{merchant} accepts the payment when it arrives or returns it.`)
+
 #### cancelledText
 
 > **cancelledText**: `string`
@@ -689,6 +722,14 @@ Its text: `{merchant}` (default: `{merchant} cancelled it; nothing was charged.`
 
 Heading of a cancelled invoice (default: `This invoice was cancelled`)
 
+#### cancelledWhilePaying
+
+> **cancelledWhilePaying**: `string`
+
+Instead of `cancelledText` while a payment may still arrive (on its way, not confirmed yet, read again by Quasar),
+which Quasar records and holds for the seller: `{merchant}` (default: `{merchant} cancelled it. If your payment
+arrives, it is recorded and shown to {merchant}, who accepts it or returns it.`)
+
 #### contact
 
 > **contact**: `string`
@@ -700,6 +741,14 @@ Contacts the seller: `{merchant}` (default: `Contact {merchant}`)
 > **contactSubject**: `string`
 
 Subject of the email to the seller: `{number}` (default: `Invoice {number}`)
+
+#### expiredAfterQr
+
+> **expiredAfterQr**: `string`
+
+Instead of `expiredText` and `expiredNote` when the invoice expired after the checkout showed a QR code, which
+the buyer may have paid with from a phone: `{merchant}` (default: `If you paid with the QR code, {merchant}
+accepts the payment when it arrives or returns it.`)
 
 #### expiredNote
 
@@ -737,6 +786,34 @@ Its text when nothing arrived: `{date}`, `{merchant}`
 
 Heading of an expired invoice (default: `This invoice has expired`)
 
+#### expiredUnconfirmed
+
+> **expiredUnconfirmed**: `string`
+
+Instead of `expiredText` and `expiredNote` when the invoice expired after Quasar could not confirm a payment it
+still reads again (not found, no receipt in time, replaced: the checkout store's `error.rechecked`), or while it
+reports a payment it reads again, which may still arrive: `{merchant}`. Quasar reads such a payment again for up
+to 24 hours after it learned of it (default: `Your payment could not be confirmed yet.
+Check your wallet: if the payment left it, Quasar checks it again for 24 hours. If it arrives, it is recorded and
+shown to {merchant}, who accepts it or returns it.`)
+
+#### expiredWhileConfirming
+
+> **expiredWhileConfirming**: `string`
+
+Instead of `expiredText` and `expiredNote` when the invoice expired while the payment this page sent was still
+confirming: `{merchant}`. Quasar records a payment that arrives after the invoice closed and holds it for the
+seller (default: `The invoice closed while your payment was confirming. If it arrives, it is recorded and shown to
+{merchant}, who accepts it or returns it.`)
+
+#### followingUntil
+
+> **followingUntil**: `string`
+
+On the expired and cancelled outcomes while this page follows a payment on its way (`followingUntil` of the
+checkout store): `{time}` (default: `This page follows the payment until {time}. Later, reload it to see the
+outcome.`)
+
 #### heldLate
 
 > **heldLate**: `string`
@@ -755,11 +832,47 @@ Under it (default: `The seller contacts you if anything is needed.`)
 
 Reason `overpaid`: `{merchant}`
 
+#### heldPayerMismatch
+
+> **heldPayerMismatch**: `string`
+
+Reason `payer_mismatch`: `{merchant}` (default: `The payment came from another wallet than the one that confirmed
+this invoice. {merchant} returns it to the wallet that sent it.`)
+
+#### heldPayerUnconfirmed
+
+> **heldPayerUnconfirmed**: `string`
+
+Reason `payer_unconfirmed`: `{merchant}` (default: `The payment came from a wallet that did not confirm this
+invoice. {merchant} returns it to the wallet that sent it.`)
+
 #### heldQuoteExpired
 
 > **heldQuoteExpired**: `string`
 
 Reason `quote_expired`: `{merchant}` (default: `The payment arrived after the price lock ran out. {merchant} accepts it or returns it.`)
+
+#### heldRefundOnlyNext
+
+> **heldRefundOnlyNext**: `string`
+
+Under it: a held invoice takes no other payment: `{merchant}` (default: `This invoice takes no other payment: ask
+{merchant} for a new invoice and pay it from the confirmed wallet.`)
+
+#### heldRefundOnlyNextUnconfirmed
+
+> **heldRefundOnlyNextUnconfirmed**: `string`
+
+Instead of `heldRefundOnlyNext` for reason `payer_unconfirmed`, where no wallet confirmed the invoice: `{merchant}`
+(default: `This invoice takes no other payment: ask {merchant} for a new invoice, and confirm your wallet on its
+page before paying.`)
+
+#### heldRefundOnlyTitle
+
+> **heldRefundOnlyTitle**: `string`
+
+Heading of a payment held for a refund only (`refundOnly` of the review: Quasar ties it to no invoice):
+`{merchant}` (default: `{merchant} returns this payment`)
 
 #### heldScreening
 
@@ -784,6 +897,14 @@ Opens the new invoice: `{number}` (default: `Open {number}`)
 > **payRest**: `string`
 
 Button that pays the rest (default: `Pay the rest`)
+
+#### payRestFirstWallet
+
+> **payRestFirstWallet**: `string`
+
+Instead of paying the rest when another wallet than the one that paid first is connected, or Quasar refused the
+rest from it (`payer_mismatch`): `{wallet}`, the first wallet's short address (default: `Only the wallet that paid
+first, {wallet}, can pay the rest. Connect that wallet to pay it.`)
 
 #### refundedText
 
@@ -814,6 +935,99 @@ Its text: `{number}` of the new invoice (default: `{number} replaces it. This in
 > **replacedTitle**: `string`
 
 Heading of a corrected invoice: `{merchant}` (default: `{merchant} corrected this invoice`)
+
+#### unconfirmedClosed
+
+> **unconfirmedClosed**: `string`
+
+Instead of `unconfirmedContact` when Quasar closed the payment with no result on chain within 24 hours
+(`unresolved_after_24h`), also on the pay and method steps: `{merchant}` (default: `Quasar did not find this
+payment on the network within 24 hours and no longer checks it. If it left your wallet, contact {merchant} with
+the transaction hash.`)
+
+#### unconfirmedContact
+
+> **unconfirmedContact**: `string`
+
+Under it instead of `unconfirmedNote` when Quasar does not read the payment again (a relay operation lost,
+`transaction_failed`, a Quasar that does not say), and on the expired and cancelled outcomes after such a
+payment, next to its transaction: `{merchant}` (default: `Quasar does not check this payment again. If it left
+your wallet, contact {merchant} with the transaction hash.`)
+
+#### unconfirmedNote
+
+> **unconfirmedNote**: `string`
+
+Under it while Quasar still reads the payment again (the checkout store's `error.rechecked`): `{merchant}`.
+Quasar reads such a payment again for up to 24 hours after it learned of it (default: `Quasar checks your payment
+again for 24 hours. If it arrives, it is recorded and shown to {merchant}.`)
+
+#### unconfirmedNotReceived
+
+> **unconfirmedNotReceived**: `string`
+
+Instead of `unconfirmedContact` when the checkout gave up handing over a transaction the wallet sent (an hour
+without an answer): `{merchant}` (default: `Quasar did not receive this payment. If it left your wallet, contact
+{merchant} with the transaction hash.`)
+
+#### unconfirmedPayAgain
+
+> **unconfirmedPayAgain**: `string`
+
+The button that goes back to the payment once the buyer checked the wallet (default: `The payment did not leave
+my wallet`)
+
+#### unconfirmedRetrying
+
+> **unconfirmedRetrying**: `string`
+
+Under it instead of `unconfirmedNote` while the checkout hands over again a transaction the wallet sent, which
+Quasar has not received yet (default: `This page keeps handing your payment over to Quasar. Keep it open until the
+payment shows here.`)
+
+#### unconfirmedSettlementFailed
+
+> **unconfirmedSettlementFailed**: `string`
+
+Instead of `unconfirmedText` and `unconfirmedNote`, and on the expired and cancelled outcomes, next to its
+transaction, when the network confirmed the payment but Quasar could not record it (`settlement_failed`) and
+does not say that it still tries: the money reached the seller's address, so the checkout offers no payment:
+`{merchant}` (default: `The network confirmed your payment, but Quasar has not recorded it. Do not pay again;
+contact {merchant} with the transaction hash.`)
+
+#### unconfirmedSettlementRetrying
+
+> **unconfirmedSettlementRetrying**: `string`
+
+Instead of `unconfirmedSettlementFailed` while Quasar still settles the payment again daily (`rechecked`, for 30
+days after it learned of it): `{merchant}` (default: `The network confirmed your payment, but Quasar has not
+recorded it yet. Quasar tries again daily, for 30 days after it learned of the payment. Do not pay again; contact
+{merchant} with the transaction hash.`)
+
+#### unconfirmedTakenElsewhere
+
+> **unconfirmedTakenElsewhere**: `string`
+
+Instead of `unconfirmedText` and `unconfirmedNote`, and on the expired and cancelled outcomes, next to its
+transaction, when the page of another invoice handed the transaction over first (EVM invoices share the seller's
+address, so anyone who saw the hash may have done so): Quasar recorded this invoice's claim and credits the
+transaction to the invoice that the wallet that sent it confirmed, and the checkout offers no payment meanwhile:
+`{merchant}` (default: `This transaction was handed over for another invoice first. Quasar credits it to the
+invoice the wallet that sent it confirmed, and this page shows the result while it follows the payment. Do not pay
+again; if your payment does not show here, contact {merchant} with the transaction hash.`)
+
+#### unconfirmedText
+
+> **unconfirmedText**: `string`
+
+Its text (default: `Check your wallet before paying again: your payment may still be on its way.`)
+
+#### unconfirmedTitle
+
+> **unconfirmedTitle**: `string`
+
+Heading when Quasar could not confirm the payment on a payable invoice: it may still arrive, so the checkout offers
+no payment (default: `We could not confirm your payment`)
 
 #### underpaidNote
 
@@ -851,7 +1065,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:373](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L373)
+Defined in: [i18n/types.ts:503](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L503)
 
 The paid outcome.
 
@@ -1044,6 +1258,41 @@ The merchant pays the gas: `{merchant}` (default: `{merchant} pays · you only s
 > **merchantReceives**: `string`
 
 Row of what the merchant receives: `{merchant}` (default: `{merchant} receives`)
+
+#### mismatch
+
+> **mismatch**: `string`
+
+The transaction succeeded on chain but does not pay the invoice (a wrong amount, asset or recipient, no Solana Pay
+reference, sent before the price was locked…): it may have moved money, so never say that it failed or that
+nothing was charged. Also on the method step and on an expired or cancelled invoice: `{merchant}` (default: `This
+transaction does not pay the invoice. If money left your wallet, contact {merchant}.`)
+
+#### mismatchHeldElsewhere
+
+> **mismatchHeldElsewhere**: `string`
+
+Instead of `mismatch` when another invoice of the seller holds the transaction for a refund only
+(`tx_already_used` with `held`): it pays neither invoice, so never say that it pays one: `{merchant}` (default:
+`This transaction is tied to another invoice, which holds it for a refund to the wallet that sent it. It does not
+count for this invoice. If it was your payment for this one, contact {merchant} with the transaction hash.`)
+
+#### mismatchOtherWallet
+
+> **mismatchOtherWallet**: `string`
+
+Instead of `mismatch` for a transfer from a wallet that did not confirm the invoice (`payer_mismatch`,
+`payer_unconfirmed`): it does not pay the invoice, and no hold promises a refund (a held invoice shows its own
+outcome): `{merchant}` (default: `This transfer came from a wallet that did not confirm this invoice, so it does
+not pay it. If money left your wallet, contact {merchant}.`)
+
+#### mismatchTakenElsewhere
+
+> **mismatchTakenElsewhere**: `string`
+
+Instead of `mismatch` when Quasar credited the transaction to another invoice of the seller, the one whose quoted
+wallet sent it (`tx_already_used`): `{merchant}` (default: `This transaction pays another invoice. If it was your
+payment for this one, contact {merchant} with the transaction hash.`)
 
 #### networkFee
 
@@ -1305,11 +1554,188 @@ Above the amount (default: `You send`)
 
 ***
 
+### payerProof
+
+> **payerProof**: `object`
+
+Defined in: [i18n/types.ts:342](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L342)
+
+The step that confirms the paying wallet: right after the wallet and the method, before the price, the wallet signs
+Quasar's message (a free signature that moves no money) for an EVM payment it sends itself; one signature per
+invoice and wallet.
+
+#### amount
+
+> **amount**: `string`
+
+Row of the invoice total (default: `Amount`)
+
+#### confirm
+
+> **confirm**: `string`
+
+The main button, which opens the wallet's signature request: `{wallet}` (default: `Confirm in {wallet}`)
+
+#### confirmToPay
+
+> **confirmToPay**: `string`
+
+The main button of the pay step when the buyer pays the gas (or through the paymaster) of a method the gasless
+relay could pay: the wallet confirms the invoice first (default: `Confirm this wallet to pay`)
+
+#### declined
+
+> **declined**: `string`
+
+The buyer refused the signature: `{wallet}` (default: `You declined the signature in {wallet}. It is free and
+moves no money: sign it to pay from this wallet, or choose another wallet or method.`)
+
+#### failed
+
+> **failed**: `string`
+
+The wallet failed to sign: `{wallet}` (default: `{wallet} did not sign the confirmation. Try again.`)
+
+#### invalid
+
+> **invalid**: `string`
+
+Quasar could not verify the signature (`payer_proof_invalid`)
+
+#### invoice
+
+> **invoice**: `string`
+
+Row of the invoice number (default: `Invoice`)
+
+#### merchant
+
+> **merchant**: `string`
+
+Row of the seller (default: `Seller`)
+
+#### note
+
+> **note**: `string`
+
+Under the buttons (default: `One signature per wallet for this invoice: a new price, token or network needs no
+new one.`)
+
+#### noteSmart
+
+> **noteSmart**: `string`
+
+Instead of `note` for a smart wallet, whose signature counts on its network only (default: `One signature per
+wallet for this invoice: a new price or token needs no new one; another network asks again.`)
+
+#### passkey
+
+> **passkey**: `string`
+
+For a smart wallet: `{wallet}` (default: `{wallet} may ask for your passkey or fingerprint to sign.`)
+
+#### payNote
+
+> **payNote**: `string`
+
+The note above it
+
+#### promptPasskey
+
+> **promptPasskey**: `string`
+
+The same for a smart wallet: `{wallet}`, `{invoice}`, `{merchant}` (default: `Confirm with your passkey in
+{wallet}. It signs the message that confirms this wallet pays invoice {invoice} of {merchant}; it is free and
+moves no money.`)
+
+#### promptText
+
+> **promptText**: `string`
+
+Text of the wallet window: `{invoice}`, `{merchant}` (default: `Sign the message that confirms this wallet pays
+invoice {invoice} of {merchant}. It is free and moves no money.`)
+
+#### signInRequest
+
+> **signInRequest**: `string`
+
+Line in the wallet window: the wallet may present the message as a sign-in: `{wallet}`, `{site}` (default:
+`{wallet} may show it as a sign-in request for {site}.`)
+
+#### site
+
+> **site**: `string`
+
+Row of the site the message names, in the wallet's window (default: `Site`)
+
+#### summary
+
+> **summary**: `string`
+
+Above the summary of the message (default: `What you sign`)
+
+#### text
+
+> **text**: `string`
+
+The one sentence under it (default: `Confirm this wallet — it is free and moves no money.`)
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Confirm your wallet`)
+
+#### tooManyWallets
+
+> **tooManyWallets**: `string`
+
+Too many wallets confirmed the invoice (`too_many_payers`): `{merchant}`
+
+#### unavailable
+
+> **unavailable**: `string`
+
+The network could not check a smart wallet's signature (`payer_proof_unavailable`)
+
+#### unsupported
+
+> **unsupported**: `string`
+
+The wallet cannot sign messages: `{wallet}` (default: `{wallet} can't sign this confirmation. Choose another wallet or method.`)
+
+#### waiting
+
+> **waiting**: `string`
+
+The main button while the request waits in the wallet: `{wallet}` (default: `Waiting for {wallet}…`)
+
+#### wallet
+
+> **wallet**: `string`
+
+Row of the wallet (default: `Wallet`)
+
+#### why
+
+> **why**: `string`
+
+Why it is asked (default: `Payments from this wallet count for this invoice once it signs. Your wallet shows a
+message to sign, not a payment: no fee, nothing leaves the wallet.`)
+
+#### wrongNetwork
+
+> **wrongNetwork**: `string`
+
+The wallet is on another network than the method's (`payer_chain_mismatch`): `{wallet}`, `{network}`
+
+***
+
 ### qr
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:311](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L311)
+Defined in: [i18n/types.ts:422](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L422)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1403,7 +1829,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:572](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L572)
+Defined in: [i18n/types.ts:843](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L843)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -1813,7 +2239,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:515](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L515)
+Defined in: [i18n/types.ts:786](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L786)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -1859,7 +2285,7 @@ Announced a minute before the deadline (default: `1 minute left to pay`)
 
 > **payWithin**: `string`
 
-Above the countdown (default: `Pay within`)
+Above the countdown, which also shows while the payment confirms (default: `Payment deadline`)
 
 #### privacy
 
@@ -1969,7 +2395,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:278](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L278)
+Defined in: [i18n/types.ts:305](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L305)
 
 The window while the wallet asks the buyer.
 

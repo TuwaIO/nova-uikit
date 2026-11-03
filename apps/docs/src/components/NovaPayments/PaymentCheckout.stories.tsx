@@ -593,6 +593,215 @@ export const ScreeningUnavailable: Story = {
   args: { wallet: METAMASK_ON_BASE_SEPOLIA, quoteError: 'screening_unavailable' },
 };
 
+// --- Confirming the paying wallet (owner rule of 2026-10-29) ---
+
+/** The checkout of the stories with USDC on Base Sepolia paid by the buyer's wallet, which confirms the invoice first. */
+const proofCheckout = (invoice: Partial<ReturnType<typeof sampleCheckout>['invoice']> = {}, extra = {}) => {
+  const view = sampleCheckout(extra, invoice);
+  return {
+    ...view,
+    methods: view.methods.map((method) =>
+      method.id === 'ap_usdc_base'
+        ? { ...method, gasless: 'off' as const, payerProof: 'before_quote' as const }
+        : { ...method, payerProof: 'none' as const },
+    ),
+  };
+};
+
+/** Coinbase Smart Wallet on Base Sepolia: a smart account that signs with a passkey. */
+const SMART_WALLET_ON_BASE_SEPOLIA: SimulatedConnection = {
+  ...METAMASK_ON_BASE_SEPOLIA,
+  connectorType: 'evm:coinbase',
+};
+
+/** Continues from the method step to the step that confirms the wallet. */
+async function continueToConfirmWallet(canvasElement: HTMLElement) {
+  const canvas = within(canvasElement);
+  await userEvent.click(await canvas.findByRole('button', { name: 'Continue' }));
+  const heading = await canvas.findByRole('heading', { name: 'Confirm your wallet' });
+  await waitFor(() => expect(heading).toHaveFocus());
+  return canvas;
+}
+
+/**
+ * Right after the wallet and the method, before the price: the wallet confirms the invoice with a free signature that
+ * moves no money. The step says so in one sentence and sums up what the wallet signs; the main button opens the
+ * wallet's request.
+ */
+export const ConfirmWallet: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await expect(canvas.getByText('Confirm this wallet — it is free and moves no money.')).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Confirm in MetaMask' })).toBeEnabled();
+  },
+};
+
+/** The wallet window over the step while the wallet signs: the site, invoice, seller and amount to check. */
+export const ConfirmWalletSigning: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, walletOptions: { signPending: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    const heading = await canvas.findByRole('heading', { name: 'Sign in MetaMask' });
+    await waitFor(() => expect(heading).toHaveFocus());
+    await expect(await canvas.findByText('Site')).toBeVisible();
+  },
+};
+
+/**
+ * The wallet window was closed while the wallet never answered (a lost WalletConnect or mobile request): the button
+ * works again, and the window offers "Try again" (signing again moves no money). The window also says that the wallet
+ * may show the message as a sign-in request for the site.
+ */
+export const ConfirmWalletRetry: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, walletOptions: { signPending: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByText(/^MetaMask may show it as a sign-in request for /)).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    const button = await canvas.findByRole('button', { name: 'Confirm in MetaMask' });
+    await waitFor(() => expect(button).toBeEnabled());
+    await userEvent.click(button);
+    await expect(await canvas.findByRole('button', { name: 'Try again' })).toBeVisible();
+  },
+};
+
+/** The wallet signed: the price is locked and the pay step follows, with the buyer paying the gas. */
+export const ConfirmWalletThenPay: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByRole('button', { name: /^Pay 89\.54 USDC/ }, { timeout: 6000 })).toBeVisible();
+  },
+};
+
+/** The buyer declined the signature: the step stays, with the reason and the same button to try again. */
+export const ConfirmWalletDeclined: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, walletOptions: { decline: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByRole('alert', {}, { timeout: 5000 })).toHaveTextContent(
+      /^You declined the signature in MetaMask\./,
+    );
+    await expect(canvas.getByRole('button', { name: 'Confirm in MetaMask' })).toBeEnabled();
+  },
+};
+
+/** A smart wallet asks for its passkey to sign: the step and the wallet window say so. */
+export const ConfirmSmartWallet: Story = {
+  args: { wallet: SMART_WALLET_ON_BASE_SEPOLIA, walletOptions: { signPending: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await expect(canvas.getByText(/may ask for your passkey or fingerprint to sign/)).toBeVisible();
+    // Its signature counts on its network only
+    await expect(canvas.getByText(/another network asks again\.$/)).toBeVisible();
+  },
+};
+
+/** A wallet that cannot sign messages: another wallet or method. */
+export const ConfirmWalletCannotSign: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, walletOptions: { cannotSign: true }, view: proofCheckout() },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByRole('alert')).toHaveTextContent(
+      "MetaMask can't sign this confirmation. Choose another wallet or method.",
+    );
+  },
+};
+
+/** Quasar cannot check the signature of a smart wallet now (its network does not answer): try again later. */
+export const ConfirmWalletUnavailable: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: proofCheckout(),
+    payerProofError: 'payer_proof_unavailable',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = await continueToConfirmWallet(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Confirm in MetaMask' }));
+    await expect(await canvas.findByRole('alert', {}, { timeout: 5000 })).toHaveTextContent(
+      "The network can't check this wallet's signature right now. Try again in a minute.",
+    );
+  },
+};
+
+/**
+ * A method the gasless relay may pay locks its price at once: the relay's signed authorization confirms the wallet.
+ * When the buyer pays the gas instead, the wallet confirms the invoice first.
+ */
+export const ConfirmBeforePayingGas: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: {
+      ...sampleCheckout(),
+      methods: sampleCheckout().methods.map((method) => ({
+        ...method,
+        payerProof: method.id === 'ap_usdc_base' ? ('unless_relayed' as const) : ('none' as const),
+      })),
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Continue' }));
+    await userEvent.click(await canvas.findByRole('button', { name: 'Pay with gas instead' }));
+    await expect(await canvas.findByRole('button', { name: 'Confirm this wallet to pay' })).toBeVisible();
+  },
+};
+
+/**
+ * A payment from another wallet than the one that confirmed the invoice: Quasar ties it to no invoice, and the seller
+ * returns it to the wallet that sent it. Never "the seller checks your payment".
+ */
+export const HeldRefundOnly: Story = {
+  args: { view: settled({ status: 'held', review: { reason: 'payer_mismatch', refundOnly: true } }) },
+};
+
+/**
+ * The same from a wallet when no wallet confirmed the invoice: the next invoice asks the buyer to confirm the wallet on
+ * its page before paying.
+ */
+export const HeldRefundOnlyUnconfirmed: Story = {
+  args: { view: settled({ status: 'held', review: { reason: 'payer_unconfirmed', refundOnly: true } }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByText(/confirm your wallet on its page before paying\.$/)).toBeVisible();
+  },
+};
+
+/**
+ * Part of the invoice was paid from one wallet and another one is connected now: only the wallet that paid first pays
+ * the rest, and "Pay the rest" asks for it.
+ */
+export const PayRestNewWallet: Story = {
+  args: {
+    wallet: { ...METAMASK_ON_BASE_SEPOLIA, address: '0x3333333333333333333333333333333333333333' },
+    view: proofCheckout({ status: 'underpaid', amountPaid: '80000000' }, { quote: LOCKED }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByText(
+        'Only the wallet that paid first, 0x1111…1111, can pay the rest. Connect that wallet to pay it.',
+      ),
+    ).toBeVisible();
+  },
+};
+
+/** The wallet that paid first pays the rest: the price is what is left, 9.54 of 89.54 USDC. */
+export const PayRest: Story = {
+  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({ status: 'underpaid', amountPaid: '80000000' }) },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
+    await expect(await canvas.findByRole('button', { name: /^Pay 9\.54 USDC/ }, { timeout: 6000 })).toBeVisible();
+  },
+};
+
 // --- Customization ---
 
 /**

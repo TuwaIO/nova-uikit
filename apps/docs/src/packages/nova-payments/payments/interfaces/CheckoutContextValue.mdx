@@ -14,7 +14,7 @@ What the parts of a checkout share: its store and state, the screen, the languag
 
 > **adapterFor**: (`family`) => [`PaymentsAdapter`](?path=/docs/packages-nova-payments-payments-interfaces-paymentsadapter--docs) \| `undefined`
 
-Defined in: [components/checkoutContext.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L55)
+Defined in: [components/checkoutContext.ts:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L67)
 
 The adapter that pays a chain family from the connected wallet.
 
@@ -38,7 +38,7 @@ The adapter of `NovaPaymentsProvider`, if any.
 
 > **autoPay**: `boolean`
 
-Defined in: [components/checkoutContext.ts:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L74)
+Defined in: [components/checkoutContext.ts:104](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L104)
 
 The buyer opened the automatic payments offer after paying a subscription period.
 
@@ -48,7 +48,7 @@ The buyer opened the automatic payments offer after paying a subscription period
 
 > **autoReturnSeconds**: `number`
 
-Defined in: [components/checkoutContext.ts:90](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L90)
+Defined in: [components/checkoutContext.ts:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L120)
 
 Seconds before the paid outcome sends the buyer back to the seller; `0` for no automatic return.
 
@@ -58,7 +58,7 @@ Seconds before the paid outcome sends the buyer back to the seller; `0` for no a
 
 > **backToMethods**: () => `void`
 
-Defined in: [components/checkoutContext.ts:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L65)
+Defined in: [components/checkoutContext.ts:77](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L77)
 
 Goes back to the method step: forgets the locked price and the phone hand-off.
 
@@ -82,7 +82,7 @@ The checkout, once loaded.
 
 > `optional` **close?**: () => `void`
 
-Defined in: [components/checkoutContext.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L29)
+Defined in: [components/checkoutContext.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L41)
 
 Closes the checkout; `undefined` when it cannot be closed (inline without `onClose`).
 
@@ -92,11 +92,22 @@ Closes the checkout; `undefined` when it cannot be closed (inline without `onClo
 
 ***
 
+### confirmWallet
+
+> **confirmWallet**: `boolean`
+
+Defined in: [components/checkoutContext.ts:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L82)
+
+Whether the buyer continued with a wallet that must confirm the invoice before the price: the step that confirms
+it shows while the checkout store waits for the signature (`ConfirmWalletScreen`).
+
+***
+
 ### connectWallet
 
 > **connectWallet**: (`method`) => `boolean`
 
-Defined in: [components/checkoutContext.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L48)
+Defined in: [components/checkoutContext.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L60)
 
 Asks the buyer to connect a wallet of the method's chain family; the price is locked for it once connected.
 
@@ -120,7 +131,7 @@ Whether the page can connect a wallet (Nova Connect or the app's handler).
 
 > **customization**: [`PaymentCheckoutCustomization`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcustomization--docs)
 
-Defined in: [components/checkoutContext.ts:97](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L97)
+Defined in: [components/checkoutContext.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L127)
 
 Class name functions and replacement components of the parts (`customization` of `PaymentCheckout`).
 
@@ -130,10 +141,21 @@ Class name functions and replacement components of the parts (`customization` of
 
 > **display**: [`PaymentCheckoutDisplay`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentcheckoutdisplay--docs)
 
-Defined in: [components/checkoutContext.ts:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L95)
+Defined in: [components/checkoutContext.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L125)
 
 How the checkout shows (`display` of `PaymentCheckout`): a modal belongs to the page under it, so its paid outcome
 closes it instead of sending the buyer back to the seller's page.
+
+***
+
+### handedOverAt
+
+> **handedOverAt**: `number` \| `null`
+
+Defined in: [components/checkoutContext.ts:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L32)
+
+When this page handed its current payment over (the phase became `confirming`), by the clock of the page; `null`
+while no payment of it is confirming, or when it was already confirming as the checkout opened.
 
 ***
 
@@ -141,7 +163,7 @@ closes it instead of sending the buyer back to the seller's page.
 
 > **handoff**: `boolean`
 
-Defined in: [components/checkoutContext.ts:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L57)
+Defined in: [components/checkoutContext.ts:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L69)
 
 The buyer continues on a phone: the QR code of the payment page shows before any price.
 
@@ -167,6 +189,23 @@ The language of the checkout (a BCP 47 tag).
 
 ***
 
+### lockPrice
+
+> **lockPrice**: () => `Promise`\<`void`\>
+
+Defined in: [components/checkoutContext.ts:95](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L95)
+
+Locks the price for the wallet set on the checkout store, or shows the step that confirms the wallet first while
+the store says it must (owner rule of 2026-10-29: before the price).
+
+#### Returns
+
+`Promise`\<`void`\>
+
+Resolves when the price is locked, refused, or the step shows.
+
+***
+
 ### now
 
 > **now**: `number`
@@ -181,7 +220,7 @@ Defined in: [components/checkoutContext.ts:27](https://github.com/TuwaIO/nova-ui
 
 > `optional` **onContact?**: () => `void`
 
-Defined in: [components/checkoutContext.ts:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L88)
+Defined in: [components/checkoutContext.ts:118](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L118)
 
 Replaces the link of "Contact \<seller\>", when the app handles it.
 
@@ -195,7 +234,7 @@ Replaces the link of "Contact \<seller\>", when the app handles it.
 
 > **onPaymentSent**: (`payment`) => `void`
 
-Defined in: [components/checkoutContext.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L72)
+Defined in: [components/checkoutContext.ts:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L102)
 
 Remembers the payment the wallet sent: the checkout tracks it while open, and hands it over to the app's Pulsar
 store when it closes before Quasar settled it.
@@ -218,7 +257,7 @@ The transaction and what it pays.
 
 > **openInvoice**: (`token`) => `void`
 
-Defined in: [components/checkoutContext.ts:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L86)
+Defined in: [components/checkoutContext.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L116)
 
 Opens another invoice in this checkout: the one that replaced a corrected invoice.
 
@@ -236,11 +275,22 @@ Its checkout token.
 
 ***
 
+### paymentSent
+
+> **paymentSent**: `boolean`
+
+Defined in: [components/checkoutContext.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L39)
+
+This page handed a payment of the invoice over, or saw one on its way, and Quasar did not say that it failed for
+good: it may still arrive, also after the store stopped following it.
+
+***
+
 ### payUrl?
 
 > `optional` **payUrl?**: `string` \| `null`
 
-Defined in: [components/checkoutContext.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L41)
+Defined in: [components/checkoutContext.ts:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L53)
 
 The payment page of the invoice (its `payUrl`), for the QR code of an EVM method; `null` without one.
 
@@ -250,9 +300,19 @@ The payment page of the invoice (its `payUrl`), for the QR code of an EVM method
 
 > **payWith**: `"wallet"` \| `"qr"`
 
-Defined in: [components/checkoutContext.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L33)
+Defined in: [components/checkoutContext.ts:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L45)
 
 How the buyer pays: from a wallet in this browser, or with a QR code on a phone.
+
+***
+
+### qrShown
+
+> **qrShown**: `boolean`
+
+Defined in: [components/checkoutContext.ts:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L34)
+
+The checkout showed a QR code for the invoice, which the buyer may have paid with from a phone.
 
 ***
 
@@ -270,7 +330,7 @@ The screen shown.
 
 > **setAutoPay**: (`autoPay`) => `void`
 
-Defined in: [components/checkoutContext.ts:80](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L80)
+Defined in: [components/checkoutContext.ts:110](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L110)
 
 Opens or closes the automatic payments offer.
 
@@ -288,11 +348,33 @@ Whether it shows.
 
 ***
 
+### setConfirmWallet
+
+> **setConfirmWallet**: (`show`) => `void`
+
+Defined in: [components/checkoutContext.ts:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L88)
+
+Shows or leaves the step that confirms the wallet ("Back to methods").
+
+#### Parameters
+
+##### show
+
+`boolean`
+
+Whether it shows.
+
+#### Returns
+
+`void`
+
+***
+
 ### setHandoff
 
 > **setHandoff**: (`handoff`) => `void`
 
-Defined in: [components/checkoutContext.ts:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L63)
+Defined in: [components/checkoutContext.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L75)
 
 Shows or hides the QR code of the payment page.
 
@@ -314,7 +396,7 @@ Whether it shows.
 
 > **setPayWith**: (`payWith`) => `void`
 
-Defined in: [components/checkoutContext.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L39)
+Defined in: [components/checkoutContext.ts:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L51)
 
 Sets how the buyer pays.
 
@@ -356,6 +438,6 @@ The checkout store of the invoice.
 
 > **wallet**: [`CheckoutWallet`](?path=/docs/packages-nova-payments-payments-interfaces-checkoutwallet--docs) \| `null`
 
-Defined in: [components/checkoutContext.ts:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L31)
+Defined in: [components/checkoutContext.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L43)
 
 The wallet connected through Satellite Connect, if any.
