@@ -1107,7 +1107,7 @@ export const KeyboardLanguage: Story = {
     await expect(await canvas.findByRole('listbox')).toHaveFocus();
     await userEvent.keyboard('{ArrowDown}{Enter}');
     await waitFor(() => expect(button).toHaveFocus());
-    await waitFor(() => expect(canvasElement.querySelector('[lang]')).toHaveAttribute('lang', 'zh-CN'));
+    await waitFor(() => expect(canvasElement.querySelector('[lang]')).toHaveAttribute('lang', 'uk'));
 
     await userEvent.keyboard('{ArrowDown}');
     await expect(await canvas.findByRole('listbox')).toHaveFocus();
