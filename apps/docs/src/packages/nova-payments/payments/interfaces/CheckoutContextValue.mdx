@@ -58,7 +58,7 @@ The screen that turns automatic payments off is open (`open`), or they were turn
 
 > **autoReturnSeconds**: `number`
 
-Defined in: [components/checkoutContext.ts:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L137)
+Defined in: [components/checkoutContext.ts:145](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L145)
 
 Seconds before the paid outcome sends the buyer back to the seller; `0` for no automatic return.
 
@@ -165,7 +165,7 @@ Whether the page can connect a wallet (Nova Connect or the app's handler).
 
 > **customization**: [`PaymentCheckoutCustomization`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcustomization--docs)
 
-Defined in: [components/checkoutContext.ts:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L144)
+Defined in: [components/checkoutContext.ts:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L152)
 
 Class name functions and replacement components of the parts (`customization` of `PaymentCheckout`).
 
@@ -175,7 +175,7 @@ Class name functions and replacement components of the parts (`customization` of
 
 > **display**: [`PaymentCheckoutDisplay`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentcheckoutdisplay--docs)
 
-Defined in: [components/checkoutContext.ts:142](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L142)
+Defined in: [components/checkoutContext.ts:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L150)
 
 How the checkout shows (`display` of `PaymentCheckout`): a modal belongs to the page under it, so its paid outcome
 closes it instead of sending the buyer back to the seller's page.
@@ -254,7 +254,7 @@ Defined in: [components/checkoutContext.ts:27](https://github.com/TuwaIO/nova-ui
 
 > `optional` **onContact?**: () => `void`
 
-Defined in: [components/checkoutContext.ts:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L135)
+Defined in: [components/checkoutContext.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L143)
 
 Replaces the link of "Contact \<seller\>", when the app handles it.
 
@@ -301,7 +301,7 @@ Whether the page opened on an invoice already paid: the buyer reads its receipt,
 
 > **openInvoice**: (`token`) => `void`
 
-Defined in: [components/checkoutContext.ts:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L133)
+Defined in: [components/checkoutContext.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L141)
 
 Opens another invoice in this checkout: the one that replaced a corrected invoice.
 
@@ -357,6 +357,16 @@ How the buyer pays: from a wallet in this browser, or with a QR code on a phone.
 Defined in: [components/checkoutContext.ts:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L34)
 
 The checkout showed a QR code for the invoice, which the buyer may have paid with from a phone.
+
+***
+
+### revokeSent
+
+> **revokeSent**: `boolean`
+
+Defined in: [components/checkoutContext.ts:129](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L129)
+
+Whether the wallet has sent the transaction that revokes the permission of this invoice's subscription.
 
 ***
 
@@ -473,6 +483,28 @@ Sets how the buyer pays.
 `"wallet"` \| `"qr"`
 
 `wallet` or `qr`.
+
+#### Returns
+
+`void`
+
+***
+
+### setRevokeSent
+
+> **setRevokeSent**: (`sent`) => `void`
+
+Defined in: [components/checkoutContext.ts:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L135)
+
+Keeps that for as long as the page shows the invoice, so the buyer leaving the screen does not send it twice.
+
+#### Parameters
+
+##### sent
+
+`boolean`
+
+Whether it was sent.
 
 #### Returns
 
