@@ -393,6 +393,7 @@ export const SolanaPayQr: Story = {
         cryptoAmountExpected: '89540000',
         amountDue: '89540000',
         amountToSend: '89540000',
+        rateHeldUntil: null,
         transferFee: null,
         decimals: 6,
         symbol: 'USDC',
@@ -428,6 +429,7 @@ const LOCKED: CheckoutQuote = {
   cryptoAmountExpected: '89540000',
   amountDue: '89540000',
   amountToSend: '89540000',
+  rateHeldUntil: null,
   transferFee: null,
   decimals: 6,
   symbol: 'USDC',
@@ -551,8 +553,8 @@ export const Underpaid: Story = {
 };
 
 /**
- * Part of the payment arrived, and the rest can no longer be paid: the rate of a volatile coin held only as long as the
- * quote that locked it (or the seller turned the method off). The seller can refund what arrived.
+ * Part of the payment arrived, and the rest can no longer be paid here: the seller turned the method off. After the due
+ * date the seller can refund what arrived.
  */
 export const UnderpaidRestClosed: Story = {
   args: {
@@ -561,8 +563,30 @@ export const UnderpaidRestClosed: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(await canvas.findByText(/The rest of this invoice can no longer be paid here/)).toBeVisible();
+    await expect(await canvas.findByText('The rest of this invoice can no longer be paid here.')).toBeVisible();
+    await expect(await canvas.findByText(/can refund what arrived/)).toBeVisible();
     await expect(canvas.queryByRole('button', { name: 'Pay the rest' })).toBeNull();
+  },
+};
+
+/**
+ * The rest in an asset that moves against the invoice currency: it stays payable, and the page says until when the rate
+ * holds. A payment after that waits for the seller to accept or refund it.
+ */
+export const PayRestMovingAsset: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: settled(
+      { status: 'underpaid', amountPaid: '80000000', restPayable: true },
+      { quote: { ...LOCKED, rateHeldUntil: new Date(Date.now() + 5 * 60_000).toISOString() } },
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByText(/This rate holds until/)).toBeVisible();
+    await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
+    await expect(await canvas.findByText('You send the rest', undefined, { timeout: 6000 })).toBeVisible();
+    await expect(await canvas.findByText(/A payment after that waits for Acme Labs to accept it/)).toBeVisible();
   },
 };
 

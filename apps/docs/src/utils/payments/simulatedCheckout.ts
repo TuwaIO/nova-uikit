@@ -69,6 +69,7 @@ export function sampleCheckout(
       cancelUrl: null,
       amountPaid: null,
       restPayable: false,
+      originWallet: null,
       review: null,
       refundedTotalMinor: null,
       replacedBy: null,
@@ -209,7 +210,7 @@ export function simulatedCheckoutApi({
       if (underpaid && method.id !== underpaid.methodId) {
         return refuse('rest_method_mismatch', 409, { methodId: underpaid.methodId });
       }
-      if (underpaid && !current.invoice.restPayable) return refuse('rest_rate_expired', 409);
+      if (underpaid && !current.invoice.restPayable) return refuse('method_not_found', 404);
       // An EVM method the buyer's wallet pays itself takes a price only for a wallet that confirmed the invoice
       const proven = Boolean(payer && confirmed.has(payer.toLowerCase()));
       if (method.payerProof === 'before_quote' && !proven) return refuse('payer_proof_required', 409);
@@ -248,6 +249,7 @@ export function simulatedCheckoutApi({
         cryptoAmountExpected: String(full),
         amountDue: String(due),
         amountToSend: amount,
+        rateHeldUntil: underpaid?.rateHeldUntil ?? null,
         transferFee: transferFeeBps ? { bps: transferFeeBps, maxFee: null, source: 'contract' } : null,
         decimals: method.decimals,
         symbol: method.symbol,
