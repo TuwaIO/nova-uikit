@@ -391,6 +391,7 @@ export const SolanaPayQr: Story = {
         methodId: 'ap_usdc_sol',
         payer: null,
         cryptoAmountExpected: '89540000',
+        amountDue: '89540000',
         amountToSend: '89540000',
         transferFee: null,
         decimals: 6,
@@ -425,6 +426,7 @@ const LOCKED: CheckoutQuote = {
   methodId: 'ap_usdc_base',
   payer: 'eip155:84532:0x1111111111111111111111111111111111111111',
   cryptoAmountExpected: '89540000',
+  amountDue: '89540000',
   amountToSend: '89540000',
   transferFee: null,
   decimals: 6,
@@ -542,7 +544,26 @@ export const SubscriptionAutoPay: Story = {
 
 /** Part of the payment arrived: the rest, from the same wallet, with "Pay the rest". */
 export const Underpaid: Story = {
-  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({ status: 'underpaid', amountPaid: '80000000' }) },
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: settled({ status: 'underpaid', amountPaid: '80000000', restPayable: true }),
+  },
+};
+
+/**
+ * Part of the payment arrived, and the rest can no longer be paid: the rate of a volatile coin held only as long as the
+ * quote that locked it (or the seller turned the method off). The seller can refund what arrived.
+ */
+export const UnderpaidRestClosed: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: settled({ status: 'underpaid', amountPaid: '80000000', restPayable: false }),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByText(/The rest of this invoice can no longer be paid here/)).toBeVisible();
+    await expect(canvas.queryByRole('button', { name: 'Pay the rest' })).toBeNull();
+  },
 };
 
 /** The buyer sent more: the seller reviews the payment. */
@@ -792,7 +813,7 @@ export const HeldTransfer: Story = {
 export const PayRestNewWallet: Story = {
   args: {
     wallet: { ...METAMASK_ON_BASE_SEPOLIA, address: '0x3333333333333333333333333333333333333333' },
-    view: proofCheckout({ status: 'underpaid', amountPaid: '80000000' }, { quote: LOCKED }),
+    view: proofCheckout({ status: 'underpaid', amountPaid: '80000000', restPayable: true }, { quote: LOCKED }),
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -804,13 +825,18 @@ export const PayRestNewWallet: Story = {
   },
 };
 
-/** The wallet that paid first pays the rest: the price is what is left, 9.54 of 89.54 USDC. */
+/** The wallet that paid first pays the rest: the price is what is left, 9.54 of 89.54 USDC at the same rate. */
 export const PayRest: Story = {
-  args: { wallet: METAMASK_ON_BASE_SEPOLIA, view: settled({ status: 'underpaid', amountPaid: '80000000' }) },
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: settled({ status: 'underpaid', amountPaid: '80000000', restPayable: true }),
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
-    await expect(await canvas.findByRole('button', { name: /^Pay 9\.54 USDC/ }, { timeout: 6000 })).toBeVisible();
+    await expect(await canvas.findByText('You send the rest', undefined, { timeout: 6000 })).toBeVisible();
+    await expect(await canvas.findByRole('button', { name: /^Pay 9\.54 USDC/ })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Back' })).toBeVisible();
   },
 };
 

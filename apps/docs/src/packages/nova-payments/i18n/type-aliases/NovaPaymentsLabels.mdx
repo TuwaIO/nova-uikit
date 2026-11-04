@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:535](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L535)
+Defined in: [i18n/types.ts:541](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L541)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -293,7 +293,7 @@ Retry buttons (default: `Try again`)
 
 > **confirm**: `object`
 
-Defined in: [i18n/types.ts:460](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L460)
+Defined in: [i18n/types.ts:466](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L466)
 
 The confirm step: the transaction is on its way.
 
@@ -474,7 +474,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:752](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L752)
+Defined in: [i18n/types.ts:764](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L764)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -686,7 +686,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:574](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L574)
+Defined in: [i18n/types.ts:580](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L580)
 
 The outcomes other than paid.
 
@@ -993,6 +993,14 @@ Its text (default: `Check your wallet before paying again: your payment may stil
 Heading when Quasar could not confirm the payment on a payable invoice: it may still arrive, so the checkout offers
 no payment (default: `We could not confirm your payment`)
 
+#### underpaidClosed
+
+> **underpaidClosed**: `string`
+
+Instead of what is left and until when, once the rest cannot be paid (its method is off or its rate no longer
+holds): `{merchant}` (default: `The rest of this invoice can no longer be paid here. {merchant} can refund what
+arrived.`)
+
 #### underpaidNote
 
 > **underpaidNote**: `string`
@@ -1029,7 +1037,7 @@ Button that connects another wallet (default: `Use another wallet`)
 
 > **paid**: `object`
 
-Defined in: [i18n/types.ts:510](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L510)
+Defined in: [i18n/types.ts:516](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L516)
 
 The paid outcome.
 
@@ -1115,6 +1123,12 @@ The pay step: the wallet, the locked price, the network fee and the main action.
 
 Link back to the method step (default: `Back to methods`)
 
+#### backFromRest
+
+> **backFromRest**: `string`
+
+Button back to the underpaid invoice from the quote of its rest (default: `Back`)
+
 #### change
 
 > **change**: `string`
@@ -1198,6 +1212,12 @@ The buyer pays the gas, estimate unknown (default: `Paid from your wallet`)
 > **getToken**: `string`
 
 The seller's top-up link: `{symbol}` (default: `Get {symbol}`)
+
+#### invoiceRest
+
+> **invoiceRest**: `string`
+
+Instead of the invoice total on the quote of a rest (default: `Rest of the invoice`)
 
 #### invoiceTotal
 
@@ -1525,13 +1545,19 @@ Balance under such a method: `{amount}` (default: `You have {amount}`)
 
 Above the amount (default: `You send`)
 
+#### youSendRest
+
+> **youSendRest**: `string`
+
+Instead of youSend on the quote of the rest of an underpaid invoice (default: `You send the rest`)
+
 ***
 
 ### payerProof
 
 > **payerProof**: `object`
 
-Defined in: [i18n/types.ts:349](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L349)
+Defined in: [i18n/types.ts:355](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L355)
 
 The step that confirms the paying wallet: right after the wallet and the method, before the price, the wallet signs
 Quasar's message (a free signature that moves no money) for an EVM payment it sends itself; one signature per
@@ -1708,7 +1734,7 @@ The wallet is on another network than the method's (`payer_chain_mismatch`): `{w
 
 > **qr**: `object`
 
-Defined in: [i18n/types.ts:429](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L429)
+Defined in: [i18n/types.ts:435](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L435)
 
 The QR code step: Solana Pay, or this checkout on a phone.
 
@@ -1802,7 +1828,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:824](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L824)
+Defined in: [i18n/types.ts:836](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L836)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -2224,7 +2250,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:767](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L767)
+Defined in: [i18n/types.ts:779](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L779)
 
 The order panel: the seller, the deadline, the lines and the total.
 
@@ -2380,7 +2406,7 @@ Under the countdown; `{date}` is the deadline (default: `until {date}`)
 
 > **walletPrompt**: `object`
 
-Defined in: [i18n/types.ts:312](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L312)
+Defined in: [i18n/types.ts:318](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L318)
 
 The window while the wallet asks the buyer.
 

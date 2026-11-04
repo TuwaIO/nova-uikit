@@ -68,6 +68,7 @@ export function sampleCheckout(
       successUrl: null,
       cancelUrl: null,
       amountPaid: null,
+      restPayable: false,
       review: null,
       refundedTotalMinor: null,
       replacedBy: null,
@@ -197,21 +198,24 @@ export function simulatedCheckoutApi({
     quote: async ({ methodId, payer, consentGiven }) => {
       await new Promise((resolve) => setTimeout(resolve, 800));
       if (quoteError) return refuse(quoteError, quoteError === 'payer_blocked' ? 403 : 503);
-      if (current.consent?.required && !consentGiven) return refuse('consent_required', 409);
-      const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
-      // The rest of an underpaid invoice: only the wallet that paid first, for what is left
+      // The rest of an underpaid invoice: only the wallet and the method that paid first, what is left at its rate
       const underpaid = current.invoice.status === 'underpaid' ? current.quote : null;
+      if (!underpaid && current.consent?.required && !consentGiven) return refuse('consent_required', 409);
+      const method = current.methods.find((item) => item.id === methodId) ?? current.methods[0];
       const firstWallet = underpaid?.payer ?? null;
       if (firstWallet && payer && payer.split(':')[2]?.toLowerCase() !== firstWallet.split(':')[2]?.toLowerCase()) {
         return refuse('payer_mismatch', 409, { originWallet: firstWallet });
       }
+      if (underpaid && method.id !== underpaid.methodId) {
+        return refuse('rest_method_mismatch', 409, { methodId: underpaid.methodId });
+      }
+      if (underpaid && !current.invoice.restPayable) return refuse('rest_rate_expired', 409);
       // An EVM method the buyer's wallet pays itself takes a price only for a wallet that confirmed the invoice
       const proven = Boolean(payer && confirmed.has(payer.toLowerCase()));
       if (method.payerProof === 'before_quote' && !proven) return refuse('payer_proof_required', 409);
-      const full = BigInt(EXPECTED[method.symbol] ?? '89540000');
-      const paid = underpaid && underpaid.symbol === method.symbol ? BigInt(current.invoice.amountPaid ?? '0') : 0n;
-      const expected = full > paid ? full - paid : full;
-      const send = expected + (expected * BigInt(transferFeeBps) + 9_999n) / 10_000n;
+      const full = underpaid ? BigInt(underpaid.cryptoAmountExpected) : BigInt(EXPECTED[method.symbol] ?? '89540000');
+      const due = underpaid ? full - BigInt(current.invoice.amountPaid ?? '0') : full;
+      const send = due + (due * BigInt(transferFeeBps) + 9_999n) / 10_000n;
       const amount = String(send);
       const solana = method.chainId.startsWith('solana:');
       const decimal = `${send / 10n ** BigInt(method.decimals)}.${String(send % 10n ** BigInt(method.decimals)).padStart(method.decimals, '0')}`;
@@ -241,7 +245,8 @@ export function simulatedCheckoutApi({
         object: 'checkout_quote',
         methodId: method.id,
         payer: payer ?? null,
-        cryptoAmountExpected: String(expected),
+        cryptoAmountExpected: String(full),
+        amountDue: String(due),
         amountToSend: amount,
         transferFee: transferFeeBps ? { bps: transferFeeBps, maxFee: null, source: 'contract' } : null,
         decimals: method.decimals,
@@ -257,7 +262,7 @@ export function simulatedCheckoutApi({
           : {}),
         instructions,
         gasless:
-          !solana && gasless && method.gasless === 'auto'
+          !solana && gasless && method.gasless === 'auto' && !underpaid
             ? {
                 relay: {
                   typedData: { domain: {}, types: {}, primaryType: 'TransferWithAuthorization', message: {} },
