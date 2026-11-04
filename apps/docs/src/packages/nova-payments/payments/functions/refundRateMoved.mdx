@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-payments/payments/Functions/refundRateMoved" />
+
+# refundRateMoved()
+
+> **refundRateMoved**(`preview`): `boolean`
+
+Defined in: [utils/outcome.ts:308](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L308)
+
+Whether a refund sends a noticeably different number of tokens than its amount took at the rate of the payment: half a
+percent or more, so a stablecoin at par never asks.
+
+## Parameters
+
+### preview
+
+`Pick`\<`RefundPreview`, `"cryptoAmount"` \| `"atPaymentRate"`\>
+
+What the refund would send.
+
+## Returns
+
+`boolean`
+
+Whether the merchant should look first.

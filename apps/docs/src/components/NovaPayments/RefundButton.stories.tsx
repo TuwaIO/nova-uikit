@@ -23,6 +23,8 @@ interface RefundSimulation {
   payer?: boolean;
   /** What happens to the refund transaction: confirmed, failed on-chain, or not taken by Quasar the first time. */
   outcome?: 'confirmed' | 'failed' | 'notTaken';
+  /** The price moved since the payment, so the amount takes another number of tokens. */
+  moved?: boolean;
 }
 
 type StoryProps = RefundSimulation & {
@@ -52,12 +54,32 @@ const PAYMENT = {
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** A refund store on a simulated Quasar: a moment per call, the refund confirmed or failed two seconds after it is sent. */
-function simulatedRefundStore({ chain = 'base', payer = true, outcome = 'confirmed' }: RefundSimulation) {
+function simulatedRefundStore({
+  chain = 'base',
+  payer = true,
+  outcome = 'confirmed',
+  moved = false,
+}: RefundSimulation) {
   const payment = PAYMENT[chain];
   let refund: Refund;
   let sentAt = 0;
   let refused = false;
   return createRefundStore({
+    // The token fell since the payment: the amount takes more of it, and the window shows that before asking
+    preview: async (invoiceId, params) => {
+      await wait(400);
+      const amount = params.amount ?? '20.00';
+      const atPaymentRate = Math.round(Number(amount) * 1_000_000);
+      return {
+        amount,
+        currency: 'USD',
+        cryptoAmount: String(moved ? Math.round(atPaymentRate * 1.3) : atPaymentRate),
+        symbol: 'USDC',
+        decimals: 6,
+        received: '49000000',
+        atPaymentRate: String(atPaymentRate),
+      };
+    },
     request: async (invoiceId, params) => {
       action('request')(invoiceId, params);
       await wait(700);
@@ -134,8 +156,8 @@ function SimulatedRefund({
   connection,
   ...simulation
 }: StoryProps) {
-  const { chain, payer, outcome } = simulation;
-  const store = useMemo(() => simulatedRefundStore({ chain, payer, outcome }), [chain, payer, outcome]);
+  const { chain, payer, outcome, moved } = simulation;
+  const store = useMemo(() => simulatedRefundStore({ chain, payer, outcome, moved }), [chain, payer, outcome, moved]);
   const [open, setOpen] = useState(true);
   const props = {
     store,
@@ -209,6 +231,12 @@ export const Amount: Story = {};
 
 /** The app worked out the refund: the window asks for a wallet of the payment's network at once. */
 export const ConnectWallet: Story = { args: { params: EVERYTHING } };
+
+/**
+ * The price moved since the payment: "Continue" shows how many tokens go out against what came in, before the refund is
+ * asked for, since a requested refund holds its amount.
+ */
+export const PriceMoved: Story = { args: { moved: true, wallet: METAMASK_ON_BASE_SEPOLIA } };
 
 /** What goes where, from which wallet with its balance, and the network fee. */
 export const Confirm: Story = { args: { params: EVERYTHING, wallet: METAMASK_ON_BASE_SEPOLIA } };
