@@ -7,7 +7,7 @@ import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { setChainId } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { ComponentType, JSX } from 'react';
 
 import { NovaTransactionsProviderProps } from '../providers';

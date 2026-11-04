@@ -208,7 +208,6 @@ const preview: Preview = {
           'ConnectButton',
           'Nova Core',
           'Nova Transactions',
-          'Nova Payments',
           'Packages',
           [
             'Overview',
@@ -218,8 +217,6 @@ const preview: Preview = {
             ['Overview', 'connect', ['Overview', '*'], '*', ['Overview', '*']],
             'nova-transactions',
             ['Overview', 'transactions', ['Overview', '*'], '*', ['Overview', '*']],
-            'nova-payments',
-            ['Overview', 'payments', ['Overview', '*'], '*', ['Overview', '*']],
           ],
         ],
       },
