@@ -1872,7 +1872,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:858](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L858)
+Defined in: [i18n/types.ts:863](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L863)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -2309,8 +2309,8 @@ Used when the plural rule of the language does not pick `one` for the count.
 
 > **compactOne**: `string`
 
-On a phone, when the plural rule of the language picks `one` for the number of lines (1; in Ukrainian and
-Russian also 21, 31…); `{count}`, `{tax}` (default: `{count} item · incl. VAT {tax}`)
+On a phone, when the plural rule of the language picks `one` for the number of lines (1; in Ukrainian
+also 21, 31…); `{count}`, `{tax}` (default: `{count} item · incl. VAT {tax}`)
 
 #### help
 
@@ -2353,6 +2353,13 @@ Link to the merchant's privacy notice (default: `Privacy`)
 > **quantity**: `string`
 
 Quantity and unit price of a line: `{quantity}`, `{price}` (default: `{quantity} × {price}`)
+
+#### refundAfter
+
+> **refundAfter**: `string`
+
+Instead of it once the rest of an underpaid invoice cannot be paid: the time still runs until the invoice closes,
+and then the seller can refund what arrived (default: `Refund possible after`)
 
 #### refundPolicy
 
