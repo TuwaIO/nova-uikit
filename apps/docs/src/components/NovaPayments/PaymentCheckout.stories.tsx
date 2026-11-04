@@ -32,6 +32,8 @@ type StoryProps = SimulationOptions & {
   walletOptions?: SimulatedWalletOptions;
   payUrl?: string;
   autoReturnSeconds?: number;
+  /** How often the checkout reads the invoice; the stories read it once a minute unless they follow a payment. */
+  pollMs?: number;
   customization?: PaymentCheckoutCustomization;
   /**
    * Whose wallet connection the checkout uses, shown above it: the app's (the simulated wallet with its Nova Connect),
@@ -70,6 +72,7 @@ function SimulatedCheckout({
   walletOptions,
   payUrl,
   autoReturnSeconds,
+  pollMs = 60_000,
   customization,
   connection,
   ...simulation
@@ -94,7 +97,7 @@ function SimulatedCheckout({
         token="story"
         api={api}
         EventSource={null}
-        pollMs={60_000}
+        pollMs={pollMs}
         display={display}
         open={open}
         onOpenChange={(next) => {
@@ -481,9 +484,20 @@ export const Paid: Story = {
   args: { view: settled({ status: 'paid', amountPaid: '89540000', successUrl: 'https://acme.example/thanks' }) },
 };
 
-/** Paid with a return link: a visible countdown sends the buyer back, unless "Stay here". */
+/**
+ * Just paid, with a return link: a visible countdown sends the buyer back, unless "Stay here". A page opened on an invoice
+ * paid earlier (`Paid`) stays: it is a receipt, and nothing was just paid.
+ */
 export const PaidReturnCountdown: Story = {
-  args: { autoReturnSeconds: 30, view: settled({ status: 'paid', amountPaid: '89540000', successUrl: '#returned' }) },
+  args: {
+    autoReturnSeconds: 30,
+    pollMs: 500,
+    view: settled({ status: 'processing', successUrl: '#returned' }),
+    afterReplace: settled({ status: 'paid', amountPaid: '89540000', successUrl: '#returned' }),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(await within(canvasElement).findByRole('timer', {}, { timeout: 10_000 })).toBeVisible();
+  },
 };
 
 /** Paid, then the seller refunded a part. */

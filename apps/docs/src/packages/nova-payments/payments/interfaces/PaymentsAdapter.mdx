@@ -152,7 +152,7 @@ The balance, in base units.
 
 > `optional` **pulsarTransaction?**: (`params`) => `Transaction`
 
-Defined in: [adapters/types.ts:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L154)
+Defined in: [adapters/types.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L155)
 
 Describes a sent payment as a pending transaction of `@tuwaio/pulsar-core`, so that the app's Pulsar store tracks
 it (and Nova Transactions shows its toast) once the checkout closes.
@@ -216,8 +216,8 @@ and waits until the network includes it. The wallet pays its network fee.
 
 ##### params
 
-The transaction of the checkout's auto-charge offer, its CAIP-2 chain and the account that granted
-the permission.
+The transaction of the checkout's auto-charge offer, its CAIP-2 chain, the account that granted the
+permission and what to call once the wallet has sent it: a failure while waiting must not send it again.
 
 ###### account
 
@@ -226,6 +226,10 @@ the permission.
 ###### chainId
 
 `string`
+
+###### onSent?
+
+() => `void`
 
 ###### revocation
 
@@ -249,7 +253,7 @@ the permission.
 
 > `optional` **sendSponsoredCalls?**: (`params`) => `Promise`\<`string`\>
 
-Defined in: [adapters/types.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L155)
+Defined in: [adapters/types.ts:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/adapters/types.ts#L156)
 
 #### Parameters
 

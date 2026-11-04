@@ -78,6 +78,7 @@ function simulatedRefundStore({
         decimals: 6,
         received: '49000000',
         atPaymentRate: String(atPaymentRate),
+        exactPossible: true,
       };
     },
     request: async (invoiceId, params) => {
