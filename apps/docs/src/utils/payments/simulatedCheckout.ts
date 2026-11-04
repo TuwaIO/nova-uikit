@@ -297,8 +297,15 @@ export function simulatedCheckoutApi({
     // The engine takes the ERC-7715 permission: automatic payments are on
     permission: async () => {
       await new Promise((resolve) => setTimeout(resolve, 600));
-      current = { ...current, autoCharge: { status: 'active', permission: null } };
-      return { permission: null };
+      const autoCharge = { status: 'active' as const, permission: null, revocation: null };
+      current = { ...current, autoCharge };
+      return { permission: null, autoCharge };
+    },
+    // The engine asks the chain: the permission has ended, and the offer is open again
+    permissionRevoked: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      current = { ...current, autoCharge: { status: 'unavailable', reason: 'subscription_not_active' } };
+      return { autoCharge: current.autoCharge };
     },
     // The EIP-4361 message the wallet signs to confirm the invoice, as Quasar writes it
     payerProofMessage: async ({ payer }) => {

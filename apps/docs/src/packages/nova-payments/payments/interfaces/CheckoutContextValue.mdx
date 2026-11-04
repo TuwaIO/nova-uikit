@@ -44,11 +44,21 @@ The buyer opened the automatic payments offer after paying a subscription period
 
 ***
 
+### autoPayOff
+
+> **autoPayOff**: `"open"` \| `"done"` \| `null`
+
+Defined in: [components/checkoutContext.ts:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L112)
+
+The screen that turns automatic payments off is open (`open`), or they were turned off (`done`).
+
+***
+
 ### autoReturnSeconds
 
 > **autoReturnSeconds**: `number`
 
-Defined in: [components/checkoutContext.ts:120](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L120)
+Defined in: [components/checkoutContext.ts:128](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L128)
 
 Seconds before the paid outcome sends the buyer back to the seller; `0` for no automatic return.
 
@@ -131,7 +141,7 @@ Whether the page can connect a wallet (Nova Connect or the app's handler).
 
 > **customization**: [`PaymentCheckoutCustomization`](?path=/docs/packages-nova-payments-payments-interfaces-paymentcheckoutcustomization--docs)
 
-Defined in: [components/checkoutContext.ts:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L127)
+Defined in: [components/checkoutContext.ts:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L135)
 
 Class name functions and replacement components of the parts (`customization` of `PaymentCheckout`).
 
@@ -141,7 +151,7 @@ Class name functions and replacement components of the parts (`customization` of
 
 > **display**: [`PaymentCheckoutDisplay`](?path=/docs/packages-nova-payments-payments-type-aliases-paymentcheckoutdisplay--docs)
 
-Defined in: [components/checkoutContext.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L125)
+Defined in: [components/checkoutContext.ts:133](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L133)
 
 How the checkout shows (`display` of `PaymentCheckout`): a modal belongs to the page under it, so its paid outcome
 closes it instead of sending the buyer back to the seller's page.
@@ -220,7 +230,7 @@ Defined in: [components/checkoutContext.ts:27](https://github.com/TuwaIO/nova-ui
 
 > `optional` **onContact?**: () => `void`
 
-Defined in: [components/checkoutContext.ts:118](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L118)
+Defined in: [components/checkoutContext.ts:126](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L126)
 
 Replaces the link of "Contact \<seller\>", when the app handles it.
 
@@ -257,7 +267,7 @@ The transaction and what it pays.
 
 > **openInvoice**: (`token`) => `void`
 
-Defined in: [components/checkoutContext.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L116)
+Defined in: [components/checkoutContext.ts:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L124)
 
 Opens another invoice in this checkout: the one that replaced a corrected invoice.
 
@@ -341,6 +351,28 @@ Opens or closes the automatic payments offer.
 `boolean`
 
 Whether it shows.
+
+#### Returns
+
+`void`
+
+***
+
+### setAutoPayOff
+
+> **setAutoPayOff**: (`autoPayOff`) => `void`
+
+Defined in: [components/checkoutContext.ts:118](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/components/checkoutContext.ts#L118)
+
+Opens or closes the screen that turns automatic payments off, or says they were turned off.
+
+#### Parameters
+
+##### autoPayOff
+
+`"open"` \| `"done"` \| `null`
+
+The new state.
 
 #### Returns
 

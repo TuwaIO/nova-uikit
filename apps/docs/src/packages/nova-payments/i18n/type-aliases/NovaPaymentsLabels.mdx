@@ -17,7 +17,7 @@ checkout. Pass a partial object as `labels` of `NovaPaymentsProvider` to overrid
 
 > **autoPay**: `object`
 
-Defined in: [i18n/types.ts:552](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L552)
+Defined in: [i18n/types.ts:587](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L587)
 
 The automatic payments offer of a subscription (ERC-7715), after a paid period.
 
@@ -103,7 +103,7 @@ Row of the merchant's wallet the charges are paid to (default: `To`)
 
 > **turnOff**: `string`
 
-Fourth note
+Fourth note, how to turn it off: `{merchant}`
 
 #### unavailable
 
@@ -121,13 +121,107 @@ Row of the expiry (default: `Valid until`)
 
 > **validUntilValue**: `string`
 
-Its value: `{date}` (default: `{date}, or until you cancel`)
+Its value: `{date}` (default: `{date}, or until you turn it off`)
 
 #### walletNote
 
 > **walletNote**: `string`
 
 Under the buttons (default: `Your wallet shows this permission (ERC-7715) before you approve it.`)
+
+***
+
+### autoPayOff
+
+> **autoPayOff**: `object`
+
+Defined in: [i18n/types.ts:556](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L556)
+
+Turning off automatic payments: the wallet that allowed them sends the transaction that revokes the permission.
+
+#### allowed
+
+> **allowed**: `string`
+
+Row of the limit (default: `Allowed now`)
+
+#### checkAgain
+
+> **checkAgain**: `string`
+
+Main button once the wallet sent it (default: `Check again`)
+
+#### confirm
+
+> **confirm**: `string`
+
+Main button: `{wallet}` (default: `Turn off in {wallet}`)
+
+#### connect
+
+> **connect**: `string`
+
+Main button when that wallet is not connected (default: `Connect that wallet`)
+
+#### fee
+
+> **fee**: `string`
+
+Who pays for the transaction: `{network}`
+
+#### inWallet
+
+> **inWallet**: `string`
+
+While the wallet asks: `{wallet}` (default: `Confirm in {wallet}…`)
+
+#### keep
+
+> **keep**: `string`
+
+Goes back (default: `Keep them on`)
+
+#### notYet
+
+> **notYet**: `string`
+
+The network does not show the revocation yet
+
+#### otherWallet
+
+> **otherWallet**: `string`
+
+When that wallet is not connected: `{wallet}`
+
+#### subtitle
+
+> **subtitle**: `string`
+
+What it means: `{merchant}`
+
+#### title
+
+> **title**: `string`
+
+Heading (default: `Turn off automatic payments?`)
+
+#### unsupported
+
+> **unsupported**: `string`
+
+The wallet cannot send it: `{wallet}`
+
+#### waiting
+
+> **waiting**: `string`
+
+While the network confirms (default: `Waiting for the network…`)
+
+#### wallet
+
+> **wallet**: `string`
+
+Row of the wallet (default: `Wallet`)
 
 ***
 
@@ -474,7 +568,7 @@ Title of the menu (default: `Language`)
 
 > **leave**: `object`
 
-Defined in: [i18n/types.ts:786](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L786)
+Defined in: [i18n/types.ts:821](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L821)
 
 The question when the buyer closes the checkout before a transaction is sent.
 
@@ -686,7 +780,7 @@ Badge of the connected wallet's network (default: `Your wallet`)
 
 > **outcome**: `object`
 
-Defined in: [i18n/types.ts:591](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L591)
+Defined in: [i18n/types.ts:626](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L626)
 
 The outcomes other than paid.
 
@@ -1066,11 +1160,23 @@ The paid outcome.
 
 When automatic payments are on (default: `Automatic payments are on.`)
 
+#### autoPayOff
+
+> **autoPayOff**: `string`
+
+Opens the screen that turns them off, beside that text (default: `Turn off`)
+
 #### autoPayOffer
 
 > **autoPayOffer**: `string`
 
 Button of the automatic payments offer of a subscription (default: `Pay the next periods automatically`)
+
+#### autoPayTurnedOff
+
+> **autoPayTurnedOff**: `string`
+
+After they were turned off: `{merchant}`
 
 #### back
 
@@ -1872,7 +1978,7 @@ While waiting (default: `Waiting for the payment…`)
 
 > **refund**: `object`
 
-Defined in: [i18n/types.ts:863](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L863)
+Defined in: [i18n/types.ts:898](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L898)
 
 A refund the merchant sends from a wallet (`RefundButton`).
 
@@ -2294,7 +2400,7 @@ Accessible name of the current step: `{current}`, `{total}`, `{name}` (default: 
 
 > **summary**: `object`
 
-Defined in: [i18n/types.ts:801](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L801)
+Defined in: [i18n/types.ts:836](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/i18n/types.ts#L836)
 
 The order panel: the seller, the deadline, the lines and the total.
 

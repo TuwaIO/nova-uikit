@@ -544,6 +544,38 @@ export const SubscriptionAutoPay: Story = {
   },
 };
 
+/**
+ * Automatic payments are on: "Turn off" opens the screen where the wallet that allowed them sends the transaction that
+ * revokes the permission. Another wallet is asked to connect that one first.
+ */
+export const SubscriptionAutoPayOn: Story = {
+  args: {
+    wallet: METAMASK_ON_BASE_SEPOLIA,
+    view: settled(
+      { status: 'paid', amountPaid: '89540000' },
+      {
+        autoCharge: {
+          status: 'active',
+          permission: {
+            status: 'active',
+            chainId: 'eip155:84532',
+            methodId: 'ap_usdc_base',
+            payer: `eip155:84532:${METAMASK_ON_BASE_SEPOLIA.address}`,
+            tokenAddress: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+            periodAmount: '49000000',
+            periodSeconds: 2_592_000,
+            startsAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 365 * 86_400_000).toISOString(),
+            grantedAt: new Date().toISOString(),
+            revokedAt: null,
+          },
+          revocation: { to: '0xdb9B1e94B5b69Df7e401DDbedE43491141047dB3', data: '0x3ed01015' },
+        },
+      },
+    ),
+  },
+};
+
 /** Part of the payment arrived: the rest, from the same wallet, with "Pay the rest". */
 export const Underpaid: Story = {
   args: {

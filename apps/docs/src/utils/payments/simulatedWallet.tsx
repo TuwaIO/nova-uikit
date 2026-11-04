@@ -144,6 +144,11 @@ export function SimulatedWallet({
             dependencies: [],
           };
         },
+        // The transaction that revokes the permission, included by the network
+        revokePermission: async () => {
+          await wait(1500);
+          if (decline) throw new PaymentWalletError('declined', 'The buyer declined');
+        },
         // The transaction the app's Pulsar store would track after the checkout closed
         pulsarTransaction: (params) => ({ adapter: 'evm', ...params }) as unknown as Transaction,
       },
