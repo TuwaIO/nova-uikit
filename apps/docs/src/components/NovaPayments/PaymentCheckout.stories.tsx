@@ -1121,10 +1121,8 @@ export const KeyboardLanguage: Story = {
     await expect(await canvas.findByRole('listbox')).toHaveFocus();
     await userEvent.keyboard('{ArrowDown}{Enter}');
     await waitFor(() => expect(button).toHaveFocus());
-    // The labels of a language are a file of their own: it arrives over the network
-    await waitFor(() => expect(canvasElement.querySelector('[lang]')).toHaveAttribute('lang', 'uk'), {
-      timeout: 10_000,
-    });
+    // The block of the checkout, not the wrapper of Storybook's own language
+    await waitFor(() => expect(button.closest('[lang]')).toHaveAttribute('lang', 'uk'));
 
     await userEvent.keyboard('{ArrowDown}');
     await expect(await canvas.findByRole('listbox')).toHaveFocus();
