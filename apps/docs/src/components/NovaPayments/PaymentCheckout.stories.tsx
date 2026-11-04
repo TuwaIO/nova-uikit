@@ -587,6 +587,7 @@ export const PayRestMovingAsset: Story = {
     await userEvent.click(await canvas.findByRole('button', { name: 'Pay the rest' }));
     await expect(await canvas.findByText('You send the rest', undefined, { timeout: 6000 })).toBeVisible();
     await expect(await canvas.findByText(/A payment after that waits for Acme Labs to accept it/)).toBeVisible();
+    await expect(await canvas.findByText(/Time left to send/)).toBeVisible();
   },
 };
 

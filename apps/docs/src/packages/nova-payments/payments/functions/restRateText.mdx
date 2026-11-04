@@ -4,9 +4,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # restRateText()
 
-> **restRateText**(`quote`, `now`, `labels`, `merchant`, `locale`): `string` \| `null`
+> **restRateText**(`quote`, `now`, `labels`, `merchant`, `locale`, `ended?`): `string` \| `null`
 
-Defined in: [utils/outcome.ts:251](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L251)
+Defined in: [utils/outcome.ts:252](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-payments/src/utils/outcome.ts#L252)
 
 What the buyer is told about the rate of the rest of an underpaid invoice, in an asset that moves against the invoice
 currency (`rateHeldUntil` of the quote): until when a payment settles by itself, or that the seller now decides.
@@ -42,6 +42,12 @@ The seller's name.
 `string`
 
 The language of the checkout.
+
+### ended?
+
+`string` = `labels.pay.restRateEnded`
+
+What is said past that time; the payment step's `pay.restRateEnded` speaks of the payment being made.
 
 ## Returns
 
