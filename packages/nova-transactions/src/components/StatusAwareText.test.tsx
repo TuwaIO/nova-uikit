@@ -9,10 +9,10 @@ describe('StatusAwareText component', () => {
     const el = StatusAwareText({
       source: 'Transaction Pending',
       variant: 'title',
-    }) as ReactElement<{ children: string; className: string }>;
+    }) as ReactElement<{ children: ReactElement<{ children: ReactElement<{ children: string }> }>; className: string }>;
 
     expect(el).not.toBeNull();
-    expect(el.props.children).toBe('Transaction Pending');
+    expect(el.props.children.props.children).toBe('Transaction Pending');
     expect(el.props.className).toContain('novatx:font-mono');
   });
 
@@ -23,29 +23,29 @@ describe('StatusAwareText component', () => {
       source: statusMessages,
       txStatus: undefined,
       variant: 'description',
-    }) as ReactElement<{ children: string }>;
-    expect(pendingEl.props.children).toBe('Submitting...');
+    }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
+    expect(pendingEl.props.children.props.children).toBe('Submitting...');
 
     const successEl = StatusAwareText({
       source: statusMessages,
       txStatus: TransactionStatus.Success,
       variant: 'description',
-    }) as ReactElement<{ children: string }>;
-    expect(successEl.props.children).toBe('Success!');
+    }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
+    expect(successEl.props.children.props.children).toBe('Success!');
 
     const failedEl = StatusAwareText({
       source: statusMessages,
       txStatus: TransactionStatus.Failed,
       variant: 'description',
-    }) as ReactElement<{ children: string }>;
-    expect(failedEl.props.children).toBe('Failed!');
+    }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
+    expect(failedEl.props.children.props.children).toBe('Failed!');
 
     const replacedEl = StatusAwareText({
       source: statusMessages,
       txStatus: TransactionStatus.Replaced,
       variant: 'description',
-    }) as ReactElement<{ children: string }>;
-    expect(replacedEl.props.children).toBe('Replaced!');
+    }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
+    expect(replacedEl.props.children.props.children).toBe('Replaced!');
   });
 
   it('applies status-specific color class when applyColor is true', () => {
@@ -65,9 +65,9 @@ describe('StatusAwareText component', () => {
     const el = StatusAwareText({
       fallback: 'Fallback Message',
       variant: 'title',
-    }) as ReactElement<{ children: string }>;
+    }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
 
-    expect(el.props.children).toBe('Fallback Message');
+    expect(el.props.children.props.children).toBe('Fallback Message');
   });
 
   it('returns null when no text is resolved', () => {
@@ -76,5 +76,13 @@ describe('StatusAwareText component', () => {
     });
 
     expect(el).toBeNull();
+  });
+
+  it('falls back when the list has no text for the status', () => {
+    const el = StatusAwareText({ source: [], fallback: 'SWAP', variant: 'title' }) as ReactElement<{
+      children: ReactElement<{ children: string }>;
+    }>;
+
+    expect(el.props.children.props.children).toBe('SWAP');
   });
 });

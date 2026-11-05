@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionDetailsProps**\<`T`\> = `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"`\> & `object`
 
-Defined in: [components/TransactionDetails.tsx:387](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L387)
+Defined in: [components/TransactionDetails.tsx:443](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L443)
 
 Props of [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs).
 
@@ -25,6 +25,13 @@ The transaction type of the Pulsar store.
 > `optional` **className?**: `string`
 
 Classes of the view.
+
+### connectedWalletAddress?
+
+> `optional` **connectedWalletAddress?**: `string`
+
+The connected wallet: speed-up and cancel are offered only to the account that sent the transaction, as from another one
+the same transfer would go out a second time.
 
 ### customization?
 
@@ -54,6 +61,25 @@ Called by the back button.
 > `optional` **onClose?**: () => `void`
 
 Called by the close button of the header; without it the header has no close button.
+
+#### Returns
+
+`void`
+
+### onStopTracking?
+
+> `optional` **onStopTracking?**: (`txKey`) => `void`
+
+Stops tracking this transaction and removes it from the pool. With it, a transaction pending for over 10 minutes offers
+to do so: a dropped transaction stays pending until its nonce is spent, which can be never.
+
+#### Parameters
+
+##### txKey
+
+`string`
+
+The key of the transaction.
 
 #### Returns
 

@@ -29,8 +29,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
       delay: Math.random() * 10,
       duration: 5 + Math.random() * 5,
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted]);
+  }, [isMounted, starsCount]);
 
   return (
     <div className="novacore:absolute novacore:inset-0 novacore:z-1 novacore:h-full novacore:w-full novacore:overflow-hidden">
@@ -54,7 +53,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
               @keyframes supernova {
                 0% { 
                   transform: scale(1);
-                  stroke: rgba(var(--tuwa-bg-primary), 0.5);
+                  stroke: color-mix(in srgb, var(--tuwa-text-primary) 50%, transparent);
                   opacity: 0.8;
                 }
                 20% { 
@@ -73,6 +72,8 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
                 animation-name: pulse;
                 animation-timing-function: ease-in-out;
                 animation-iteration-count: infinite;
+                /* In place: the default box is the whole SVG, and a star scaled from its center flies across the panel */
+                transform-box: fill-box;
                 transform-origin: center;
               }
 
@@ -80,6 +81,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
                 animation-name: supernova;
                 animation-timing-function: ease-out;
                 animation-iteration-count: infinite;
+                transform-box: fill-box;
                 transform-origin: center;
                 stroke-width: 2;
               }
@@ -93,7 +95,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
             cx={star.x}
             cy={star.y}
             r={star.r}
-            fill={`rgba(var(--tuwa-bg-primary), 0.7)`}
+            fill="color-mix(in srgb, var(--tuwa-text-primary) 70%, transparent)"
             className={star.isSupernova ? 'supernova' : 'pulsar'}
             style={{
               animationDelay: `${star.delay}s`,

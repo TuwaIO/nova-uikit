@@ -1,0 +1,111 @@
+/**
+ * @file What the interface shows for the state of a transaction: its tone, the share done and its label.
+ */
+
+import type { StatusTone } from '@tuwaio/nova-core';
+import { EvmTransaction, Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+
+import { NovaTransactionsLabels } from '../i18n/types';
+
+/**
+ * The tone of a transaction, for what is colored by status.
+ *
+ * @param tx - The transaction.
+ * @returns `pending` while it is tracked, then `success` or `error`, and `neutral` for a replaced one: its money may well
+ * have moved under the new hash, so red would be false.
+ */
+export function toneOf(tx: Pick<Transaction, 'pending' | 'status' | 'isError'>): StatusTone {
+  if (tx.pending) return 'pending';
+  if (tx.status === TransactionStatus.Success) return 'success';
+  return tx.status === TransactionStatus.Failed || tx.isError ? 'error' : 'neutral';
+}
+
+const SOLANA_STAGES: Record<string, number> = { processed: 1 / 3, confirmed: 2 / 3, finalized: 1 };
+
+/**
+ * The share of a pending transaction that is really known: confirmations out of those required, or the commitment stage on
+ * Solana.
+ *
+ * @param tx - The transaction.
+ * @returns The share from 0 to 1, or `undefined` when nothing says how far it is, as with one confirmation to wait for. The
+ * time since sending is no measure: nobody knows when a transaction lands.
+ */
+export function progressOf(tx: Transaction): number | undefined {
+  const stage = 'confirmationStatus' in tx ? tx.confirmationStatus : undefined;
+  if (stage) return SOLANA_STAGES[stage];
+  const required = Number(tx.requiredConfirmations);
+  const confirmations = Number(tx.confirmations);
+  return required > 1 && confirmations > 0 ? confirmations / required : undefined;
+}
+
+/**
+ * Whether a transaction has confirmations to show. A finalized Solana transaction says `MAX`, and a tick of a tracker can write
+ * `0`, which must not be rendered next to a status.
+ *
+ * @param confirmations - The confirmations of the record.
+ * @returns Whether to show them.
+ */
+export function hasConfirmations(confirmations: Transaction['confirmations']): boolean {
+  return confirmations === 'MAX' || Number(confirmations) > 0;
+}
+
+/**
+ * The label of the status of a transaction.
+ *
+ * @param tx - The transaction.
+ * @param statuses - The status labels.
+ * @returns The label. A replaced transaction says what happened, as "Replaced" alone does not say whether the money moved:
+ * a speed-up went on, a cancel did not.
+ */
+export function statusLabelOf(tx: Transaction, statuses: NovaTransactionsLabels['statuses']): string {
+  if (tx.pending) {
+    // `finalized` too: the Solana tracker can write it while it still waits for the details, and it must not step back
+    const stage = 'confirmationStatus' in tx ? tx.confirmationStatus : undefined;
+    return stage === 'confirmed' || stage === 'finalized' ? statuses.confirmed : statuses.pending;
+  }
+  switch (tx.status) {
+    case TransactionStatus.Success:
+      return statuses.success;
+    case TransactionStatus.Failed:
+      return statuses.failed;
+    case TransactionStatus.Replaced: {
+      const { replacedReason } = tx as unknown as EvmTransaction;
+      if (replacedReason === 'repriced') return statuses.spedUp;
+      return replacedReason === 'cancelled' ? statuses.cancelled : statuses.replaced;
+    }
+    default:
+      return tx.status ?? statuses.unknown;
+  }
+}
+
+/**
+ * Whether a failed transaction failed because its tracker gave up, which says nothing about the chain: it may still land, and
+ * a Retry could send the operation a second time. A revert on the standard EVM tracker has no error of the tracker. Safe and
+ * Gelato write one only on giving up in practice. On Solana what had a commitment has landed, whatever came after.
+ *
+ * @param tx - The transaction.
+ * @returns Whether Retry must not be offered.
+ */
+export function trackerGaveUp(tx: Transaction | undefined): boolean {
+  if (tx?.status !== TransactionStatus.Failed || !tx.error) return false;
+  switch (tx.tracker) {
+    case TransactionTracker.Ethereum:
+    case TransactionTracker.Safe:
+    case TransactionTracker.Gelato:
+      return true;
+    case TransactionTracker.Solana:
+      return 'confirmationStatus' in tx && !!tx.confirmationStatus;
+    default:
+      return false;
+  }
+}
+
+/**
+ * The wallet in a connector type. A record holds `evm:metamask`, and the adapter has a row of its own in the details.
+ *
+ * @param connectorType - The connector type of a transaction.
+ * @returns The wallet part, or the value as it is without an adapter.
+ */
+export function walletPartOf(connectorType?: string): string | undefined {
+  return connectorType?.includes(':') ? connectorType.split(':')[1] : connectorType;
+}

@@ -40,6 +40,10 @@ export type NovaTransactionsLabels = {
     confirmed: string;
     /** Text for a successful transaction. */
     success: string;
+    /** Text for a transaction replaced by a speed-up: the operation goes on under a new hash. */
+    spedUp: string;
+    /** Text for a transaction replaced by a cancel: the operation did not happen. */
+    cancelled: string;
     /** Text for a failed transaction. */
     failed: string;
     /** Text for a reverted transaction. */
@@ -61,6 +65,8 @@ export type NovaTransactionsLabels = {
     erc4337: string;
     /** Label for the original transaction hash (before replacement). */
     original: string;
+    /** Label for the hash a sped-up transaction replaced, shown on the record that goes on. */
+    replaces: string;
     /** Label for the new transaction hash that replaced the original. */
     replaced: string;
     /** Default label for a standard transaction hash. */
@@ -138,9 +144,15 @@ export type NovaTransactionsLabels = {
     failed: string;
     /** Text shown on the button if the transaction replaced to initialize. */
     replaced: string;
+    /** Text shown on the button if the transaction was cancelled in the wallet. */
+    cancelled: string;
   };
   /** Labels for common action buttons/links. */
   actions: {
+    /** Title of the toast when a speed-up or a cancel is refused (default: `Could not replace the transaction`). */
+    replacementFailed: string;
+    /** Text for the action that stops tracking a transaction that never ends. */
+    stopTracking: string;
     /** Text for a "Copy" action (e.g., copy address or hash). */
     copy: string;
     /** Text for a link to view the transaction on a block explorer. */
@@ -208,6 +220,10 @@ export type NovaTransactionsLabels = {
     starknetTitle: string;
     /** Label for the Context section title. */
     contextTitle: string;
+    /** What stopping the tracking of a transaction does, shown next to the action. */
+    stopTrackingHint: string;
+    /** Label for the hash this record replaced after a speed-up. */
+    replaces: string;
     /** Label for the Fee. */
     fee: string;
     /** Label for the Slot. */
@@ -228,7 +244,7 @@ export type NovaTransactionsLabels = {
     errorContext: string;
     /** Label for the Full Payload. */
     fullPayload: string;
-    /** Label for the Replaced Hash. */
+    /** Label for the Replacement Hash. */
     replacedHash: string;
     /** Labels for the sync status indicator. */
     syncStatus: {

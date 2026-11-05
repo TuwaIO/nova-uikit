@@ -3,13 +3,15 @@
  * notification toast.
  */
 
-import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, getChainName, NetworkIcon, StatusEdge, StatusEdgeProps } from '@tuwaio/nova-core';
 import { selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
+import { canReplaceTx, runReplacement } from '../utils/replacement';
+import { hasConfirmations, progressOf, toneOf } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -32,11 +34,13 @@ export type ToastTransactionActionButtonProps = {
 export type ToastTransactionCustomization<T extends Transaction> = {
   /** Components that replace the default parts. */
   components?: {
+    /** The strip and the wash of the status color along the top of the toast. */
+    StatusEdge?: ComponentType<StatusEdgeProps>;
     /** The title and the description. */
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
     /** The hashes of the transaction. */
     TransactionKey?: ComponentType<TransactionKeyProps<T>>;
-    /** The status badge. */
+    /** The status line at the top, which gets `variant="plain"`. */
     StatusBadge?: ComponentType<TransactionStatusBadgeProps<T>>;
     /** The button that opens the transaction in the history modal. */
     TxInfoButton?: ComponentType<ToastTransactionActionButtonProps>;
@@ -45,8 +49,8 @@ export type ToastTransactionCustomization<T extends Transaction> = {
     /** The cancel button. */
     CancelButton?: ComponentType<ToastTransactionActionButtonProps>;
     /**
-     * The badge with the number of confirmations, shown when it is above 0. It also receives `required` (the required
-     * confirmations) and `isSuccess`.
+     * The badge with the number of confirmations, shown next to the status when it is above 0. It also receives `required`
+     * (the required confirmations) and `isSuccess`.
      */
     ConfirmationsBadge?: ComponentType<{ count: number | string; className?: string }>;
   };
@@ -54,6 +58,10 @@ export type ToastTransactionCustomization<T extends Transaction> = {
   classNames?: {
     /** Classes for the toast container */
     container?: string;
+    /** Classes for the strip and the wash of the status color */
+    statusEdge?: string;
+    /** Classes for the status line at the top (status + confirmations) */
+    statusLine?: string;
     /** Classes for the header section (icon + content) */
     header?: string;
     /** Classes for the icon wrapper */
@@ -109,7 +117,7 @@ export type ToastTransactionProps<T extends Transaction> = {
   tx: T;
   /**
    * Opens the transaction history modal. The "open transaction" button is shown only when it is set and the connected
-   * wallet sent the transaction.
+   * wallet sent the transaction, also next to speed-up and cancel.
    *
    * @param txKey - Key of the transaction to open.
    */
@@ -178,7 +186,7 @@ const DefaultConfirmationsBadge = ({
 }) => (
   <div
     className={cn(
-      'novatx:absolute novatx:-left-1 novatx:-top-1 novatx:z-10 novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:shadow-sm novatx:backdrop-blur-sm novatx:transition-colors',
+      'novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:transition-colors novatx:duration-300',
       isSuccess
         ? 'novatx:border-[var(--tuwa-success-icon)]/30 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]'
         : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',
@@ -191,12 +199,14 @@ const DefaultConfirmationsBadge = ({
 );
 
 /**
- * The body of a transaction toast: the network icon, the title and description (colored by status), the hashes with
- * explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent
- * with
- * MetaMask by the connected wallet, it offers speed-up and cancel (when the adapter has `speedUpTxAction` and
- * `cancelTxAction`); otherwise, for transactions of the connected wallet, a button that opens the transaction in the
- * history modal. `NovaTransactionsProvider` shows one for every tracked transaction.
+ * The body of a transaction toast: a strip in the status color along the top (a glint while pending, filling up with the
+ * confirmations when they are counted), the status line with the number of confirmations, the network icon, the title and
+ * description (colored by status), and the hashes with explorer links. A change of status morphs the texts and washes the
+ * top of the toast in the color of the result. For a pending, unconfirmed EVM transaction sent with MetaMask by the
+ * connected wallet, once the tracker has read its nonce and fees, it offers speed-up and cancel (when the adapter has
+ * `speedUpTxAction` and `cancelTxAction`), and a refusal of the action is shown through `useNovaTransactionsError`; for
+ * transactions of the connected wallet, a button opens the transaction in the history modal. `NovaTransactionsProvider` shows
+ * one for every operation.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link ToastTransactionProps}.
@@ -215,25 +225,22 @@ export function ToastTransaction<T extends Transaction>({
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
-  const canBeReplaced = !!(
-    tx.tracker === 'ethereum' &&
-    tx.pending &&
-    (!tx.confirmations || Number(tx.confirmations) < 1) &&
-    foundAdapter?.speedUpTxAction &&
-    foundAdapter?.cancelTxAction &&
-    tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() &&
-    ['metamask'].includes(tx.connectorType.split(':')[1])
-  );
+  const { showPreSubmitErrorToast } = useNovaTransactionsError();
+
+  const canBeReplaced = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
+
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
 
   const handleCancel = () => {
-    if (canBeReplaced) foundAdapter.cancelTxAction!(tx);
+    if (canBeReplaced) void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal);
   };
 
   const handleSpeedUp = () => {
-    if (canBeReplaced) foundAdapter.speedUpTxAction!(tx);
+    if (canBeReplaced) void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal);
   };
 
   const {
+    StatusEdge: CStatusEdge = StatusEdge,
     StatusAwareText: CStatusAwareText = StatusAwareText,
     TransactionKey: CTransactionKey = TransactionKey,
     StatusBadge: CStatusBadge = TransactionStatusBadge,
@@ -245,6 +252,9 @@ export function ToastTransaction<T extends Transaction>({
 
   const classNames = customization?.classNames;
 
+  // Next to speed-up and cancel as well: the details are where a transaction that never ends can be left behind
+  const canOpenDetails = !!openTxInfoModal && tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase();
+
   return (
     <div
       className={cn(
@@ -253,22 +263,43 @@ export function ToastTransaction<T extends Transaction>({
         className,
       )}
     >
-      {tx.confirmations && Number(tx.confirmations) > 0 && (
-        <ConfirmationsBadge
-          count={tx.confirmations}
-          required={tx.requiredConfirmations}
-          isSuccess={tx.status === TransactionStatus.Success}
-          className={classNames?.confirmationsBadge}
+      <CStatusEdge tone={toneOf(tx)} progress={progressOf(tx)} className={classNames?.statusEdge} />
+
+      {/* The close button of the toast sits at the end of this line */}
+      <div
+        className={cn(
+          'novatx:relative novatx:flex novatx:items-center novatx:gap-2 novatx:pr-6',
+          classNames?.statusLine,
+        )}
+      >
+        <CStatusBadge
+          tx={tx}
+          variant="plain"
+          className={classNames?.statusBadge}
+          classNames={{
+            icon: classNames?.statusBadgeIcon,
+            label: classNames?.statusBadgeLabel,
+          }}
         />
-      )}
-      <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
+        {hasConfirmations(tx.confirmations) && (
+          <ConfirmationsBadge
+            count={tx.confirmations as number | string}
+            required={tx.requiredConfirmations}
+            isSuccess={tx.status === TransactionStatus.Success}
+            className={classNames?.confirmationsBadge}
+          />
+        )}
+      </div>
+
+      <div className={cn('novatx:relative novatx:flex novatx:items-center novatx:gap-3', classNames?.header)}>
         <div
           className={cn('novatx:w-[40px] novatx:flex-shrink-0', classNames?.iconWrapper)}
           title={getChainName(setChainId(tx.chainId)).name}
         >
           {icon ?? <NetworkIcon chainId={setChainId(tx.chainId)} />}
         </div>
-        <div className={cn('novatx:flex-1', classNames?.contentWrapper)}>
+        {/* Without min-w-0 a long title widens this box, and its text can no longer tell that it should wrap */}
+        <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
           <CStatusAwareText
             txStatus={tx.status}
             source={tx.title}
@@ -286,7 +317,7 @@ export function ToastTransaction<T extends Transaction>({
         </div>
       </div>
 
-      <div>
+      <div className="novatx:relative">
         <CTransactionKey
           adapter={adapter}
           tx={tx}
@@ -303,34 +334,30 @@ export function ToastTransaction<T extends Transaction>({
             copyButton: classNames?.originalHashCopyButton,
           }}
         />
-        <div className={cn('novatx:mt-3 novatx:flex novatx:items-center novatx:justify-between', classNames?.footer)}>
-          <CStatusBadge
-            tx={tx}
-            className={classNames?.statusBadge}
-            classNames={{
-              icon: classNames?.statusBadgeIcon,
-              label: classNames?.statusBadgeLabel,
-            }}
-          />
-
-          {canBeReplaced ? (
-            <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.actionsContainer)}>
-              <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
-                {actions.speedUp}
-              </SpeedUpButton>
-              <CancelButton onClick={handleCancel} className={classNames?.cancelButton}>
-                {actions.cancel}
-              </CancelButton>
-            </div>
-          ) : (
-            openTxInfoModal &&
-            tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() && (
+        {(canBeReplaced || canOpenDetails) && (
+          <div
+            className={cn(
+              'novatx:mt-3 novatx:flex novatx:flex-wrap novatx:items-center novatx:justify-end novatx:gap-x-4 novatx:gap-y-2',
+              classNames?.footer,
+            )}
+          >
+            {canBeReplaced && (
+              <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.actionsContainer)}>
+                <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
+                  {actions.speedUp}
+                </SpeedUpButton>
+                <CancelButton onClick={handleCancel} className={classNames?.cancelButton}>
+                  {actions.cancel}
+                </CancelButton>
+              </div>
+            )}
+            {canOpenDetails && (
               <TxInfoButton onClick={() => openTxInfoModal(tx.txKey)} className={classNames?.txInfoButton}>
                 {toast.openTransaction}
               </TxInfoButton>
-            )
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

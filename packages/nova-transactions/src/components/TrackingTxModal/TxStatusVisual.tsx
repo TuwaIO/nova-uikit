@@ -3,8 +3,8 @@
  * status.
  */
 
-import { ArrowPathIcon, CheckCircleIcon, ClockIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
 
 /**
@@ -15,7 +15,7 @@ export type TxStatusVisualStatusKey = 'succeed' | 'failed' | 'replaced' | 'proce
 
 /** Class names of the icon of {@link TxStatusVisual}. */
 export type TxStatusVisualClassNames = {
-  /** Base icon className applied to all statuses */
+  /** Base icon className applied to all statuses. It colors the loader of a wait; its size is fixed, as it is drawn for it. */
   icon?: string;
   /** Status-specific icon overrides */
   statusOverrides?: Partial<Record<TxStatusVisualStatusKey, string>>;
@@ -29,7 +29,7 @@ export type TxStatusVisualProps = {
   isSucceed?: boolean;
   /** True if the transaction has failed or was reverted. */
   isFailed?: boolean;
-  /** True if the transaction was replaced (e.g., sped up). */
+  /** True if the transaction was replaced by something else than a speed-up, whose record the modal goes on with. */
   isReplaced?: boolean;
   /** Additional class names for the container */
   className?: string;
@@ -37,38 +37,30 @@ export type TxStatusVisualProps = {
   iconClassNames?: TxStatusVisualClassNames;
 };
 
-const STATUS_VISUAL_CONFIG: Record<
-  TxStatusVisualStatusKey,
+const RESULT_ICONS: Record<
+  Exclude<TxStatusVisualStatusKey, 'processing' | 'initializing'>,
   { Icon: ComponentType<{ className?: string }>; className: string }
 > = {
   succeed: {
-    Icon: CheckCircleIcon,
+    Icon: ({ className }) => <DrawnCheck variant="disc" className={className} />,
     className: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   failed: {
-    Icon: ExclamationCircleIcon,
+    Icon: ({ className }) => <DrawnCross variant="disc" className={className} />,
     className: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   replaced: {
     Icon: ArrowPathIcon,
     className: 'novatx:text-[var(--tuwa-info-icon)]',
   },
-  processing: {
-    Icon: ArrowPathIcon,
-    className: 'novatx:animate-spin novatx:text-[var(--tuwa-text-accent)]',
-  },
-  initializing: {
-    Icon: ClockIcon,
-    className: 'novatx:animate-pulse novatx:text-[var(--tuwa-pending-icon)]',
-  },
 };
 
 /**
- * A component that renders a large, animated icon to visually represent the
- * current state of a transaction within the tracking modal.
+ * The large visual of the state of a transaction in the tracking modal: the Quasar loader in the pending color while it is
+ * being submitted and processed, which then gives way to the icon of the result.
  *
  * @param props - See {@link TxStatusVisualProps}.
- * @returns The icon in its container.
+ * @returns The visual in its container.
  */
 export function TxStatusVisual({
   isProcessing,
@@ -85,12 +77,26 @@ export function TxStatusVisual({
     (isProcessing && 'processing') ||
     'initializing';
 
-  const { Icon, className } = STATUS_VISUAL_CONFIG[statusKey];
   const statusOverride = iconClassNames?.statusOverrides?.[statusKey];
+  const isWaiting = statusKey === 'processing' || statusKey === 'initializing';
+  const result = isWaiting ? null : RESULT_ICONS[statusKey as keyof typeof RESULT_ICONS];
 
   return (
     <div className={cn('novatx:flex novatx:justify-center novatx:py-4', containerClassName)}>
-      <Icon className={cn('novatx:h-16 novatx:w-16', className, iconClassNames?.icon, statusOverride)} />
+      {/* The same key for both waits: the loader must not restart when the wallet signs */}
+      <MorphIcon iconKey={isWaiting ? 'waiting' : statusKey} animateFirst>
+        {result ? (
+          <result.Icon
+            className={cn('novatx:h-16 novatx:w-16', result.className, iconClassNames?.icon, statusOverride)}
+          />
+        ) : (
+          <QuasarLoader
+            size={64}
+            accent="var(--tuwa-pending-icon)"
+            className={cn('novatx:text-[var(--tuwa-text-primary)]', iconClassNames?.icon, statusOverride)}
+          />
+        )}
+      </MorphIcon>
     </div>
   );
 }

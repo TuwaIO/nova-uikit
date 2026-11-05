@@ -1,8 +1,15 @@
 import { SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 
+/**
+ * The history of a connected wallet, for stories. One address cannot own transactions of both families, so the pool holds the
+ * records of the family of the address. The EVM records hold one operation sped up: its old record, and the new one that goes on.
+ *
+ * @param connectedWallet - The address of the wallet.
+ * @returns The pool of transactions by key.
+ */
 export function connectedWalletTransactionsMock(connectedWallet: string) {
-  return {
+  const pool = {
     '4ecrNTNBLwR4L2LNpFsrRCDLvj35aWqhNqdTnaYCmvxsEeLGXCNEYYcNu3evVF2okyNCLaM1BpWV9mnMDq4CaAze': {
       type: 'increment',
       adapter: 'solana',
@@ -19,8 +26,8 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 2,
       },
       withTrackedModal: true,
-      walletType: 'solana:metamask',
-      from: 'AobnbeZ6QB2xdnPzBkaw2Stea5trqhamaoKyVMYenV3u',
+      connectorType: 'solana:phantom',
+      from: connectedWallet,
       tracker: 'solana',
       chainId: SOLANA_CHAIN_IDS.devnet,
       localTimestamp: 1763649492,
@@ -71,7 +78,7 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         contractAddress: 'Gjo85D3vv541jZ2ctK7mMRu4dZUfCExZjb4PKmvNgZ6e',
       },
       withTrackedModal: true,
-      walletType: 'solana:metamask',
+      connectorType: 'solana:phantom',
       from: connectedWallet,
       tracker: 'solana',
       chainId: SOLANA_CHAIN_IDS.devnet,
@@ -250,7 +257,8 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       localTimestamp: 1768740309,
       txKey: '0xb4c039c80585fc44e06f1930f8d0491a5050d7a6aef132359b94b067f5f599d5',
       hash: '0xb4c039c80585fc44e06f1930f8d0491a5050d7a6aef132359b94b067f5f599d5',
-      replacedTxHash: '0xb4c039c80585fc44e06f1930f8d0491a5050d7a6aef132359b94b067f5f599d5',
+      replacedTxHash: '0x7f2a51d09c1e4b8a6d3f0e2c9b7a1f5d8e3c6b4a2d1f0e9c8b7a6f5e4d3c2b1a',
+      replacedReason: 'cancelled',
       pending: false,
       isTrackedModalOpen: false,
       to: '0xae7f46914de82028ecb7e2bf97feb3d3ddcc2bab',
@@ -263,5 +271,84 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       isError: false,
       finishedTimestamp: 1768740324,
     },
+    '0x3b1d6f7e9a2c4d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d1e3f5a7b9c1d2e': {
+      adapter: 'evm',
+      type: 'increment',
+      title: ['Incrementing', 'Incremented', 'Error when increment', 'Increment tx replaced'],
+      description: [
+        'Value after incrementing 820',
+        'Success. Current value is 820',
+        'Something went wrong when increment.',
+        'Transaction replaced. Please take a look details in your wallet.',
+      ],
+      payload: {
+        value: 819,
+        contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
+      },
+      rpcUrl: 11155111,
+      withTrackedModal: true,
+      connectorType: 'evm:metamask',
+      from: connectedWallet,
+      sender: connectedWallet,
+      tracker: 'ethereum',
+      chainId: 11155111,
+      localTimestamp: 1768740400,
+      txKey: '0x3b1d6f7e9a2c4d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d1e3f5a7b9c1d2e',
+      hash: '0x3b1d6f7e9a2c4d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d1e3f5a7b9c1d2e',
+      replacedTxHash: '0x9c4e2a7b1d8f3e6c0a5b9d2f7e1c4a8b6d3f0e5c2a9b7d4f1e8c6a3b0d5f2e7c',
+      replacedReason: 'repriced',
+      pending: false,
+      isTrackedModalOpen: false,
+      to: '0xae7f46914de82028ecb7e2bf97feb3d3ddcc2bab',
+      input: '0xd09de08a',
+      value: '0',
+      nonce: 721,
+      maxFeePerGas: '2949374397',
+      maxPriorityFeePerGas: '1500000000',
+      status: TransactionStatus.Replaced,
+      isError: false,
+      finishedTimestamp: 1768740440,
+    },
+    '0x9c4e2a7b1d8f3e6c0a5b9d2f7e1c4a8b6d3f0e5c2a9b7d4f1e8c6a3b0d5f2e7c': {
+      adapter: 'evm',
+      type: 'increment',
+      title: ['Incrementing', 'Incremented', 'Error when increment', 'Increment tx replaced'],
+      description: [
+        'Value after incrementing 820',
+        'Success. Current value is 820',
+        'Something went wrong when increment.',
+        'Transaction replaced. Please take a look details in your wallet.',
+      ],
+      payload: {
+        value: 819,
+        contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
+      },
+      rpcUrl: 11155111,
+      withTrackedModal: true,
+      connectorType: 'evm:metamask',
+      from: connectedWallet,
+      sender: connectedWallet,
+      tracker: 'ethereum',
+      chainId: 11155111,
+      localTimestamp: 1768740440,
+      txKey: '0x9c4e2a7b1d8f3e6c0a5b9d2f7e1c4a8b6d3f0e5c2a9b7d4f1e8c6a3b0d5f2e7c',
+      hash: '0x9c4e2a7b1d8f3e6c0a5b9d2f7e1c4a8b6d3f0e5c2a9b7d4f1e8c6a3b0d5f2e7c',
+      replaces: '0x3b1d6f7e9a2c4d8e0f1a3b5c7d9e1f2a4b6c8d0e2f4a6b8c0d1e3f5a7b9c1d2e',
+      pending: false,
+      isTrackedModalOpen: false,
+      to: '0xae7f46914de82028ecb7e2bf97feb3d3ddcc2bab',
+      input: '0xd09de08a',
+      value: '0',
+      nonce: 721,
+      maxFeePerGas: '4424061595',
+      maxPriorityFeePerGas: '2250000000',
+      status: TransactionStatus.Success,
+      isError: false,
+      finishedTimestamp: 1768740480,
+    },
   };
+  const isEvmWallet = connectedWallet.startsWith('0x');
+  return Object.fromEntries(Object.entries(pool).filter(([, tx]) => (tx.adapter === 'evm') === isEvmWallet)) as Partial<
+    typeof pool
+  >;
 }

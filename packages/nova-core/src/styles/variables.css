@@ -2,6 +2,8 @@
 @import 'tailwindcss/theme.css' layer(theme) prefix(novacore);
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(novacore);
 @import './fonts.css';
+@import './quasar-loader.css';
+@import './icons.css';
 
 @theme {
   --font-sans: var(

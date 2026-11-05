@@ -164,7 +164,7 @@ export function TransactionHistoryItem<T extends Transaction>({
       )}
     >
       <div className="novatx:flex novatx:items-start novatx:justify-between">
-        <div className="novatx:flex novatx:items-center novatx:gap-4">
+        <div className="novatx:flex novatx:min-w-0 novatx:flex-1 novatx:items-center novatx:gap-4">
           <div
             className={cn(
               'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-bg-muted)]',
@@ -173,7 +173,8 @@ export function TransactionHistoryItem<T extends Transaction>({
           >
             <Icon chainId={tx.chainId} className={classNames?.icon} />
           </div>
-          <div className={classNames?.contentWrapper}>
+          {/* A width of its own: a title that changes must know how much room it has */}
+          <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
             <Title
               txStatus={tx.status}
               source={tx.title}

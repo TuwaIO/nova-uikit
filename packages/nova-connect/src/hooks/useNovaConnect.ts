@@ -8,10 +8,10 @@ import { InitialChains } from '../types';
 import { NovaSiwxWatcherProps } from '../watchers/NovaSiwxWatcher';
 
 /**
- * Status of the latest transaction of the active wallet, shown by the connect button: `loading` while it is pending,
- * then `succeed`, `failed` or `replaced`, and `idle` otherwise.
+ * What the connect button shows about the transactions of the wallet: `idle`, `loading` while one is pending, and for a moment
+ * after a transaction ends, `succeed`, `failed`, `cancelled` or `replaced`. A speed-up is no result: it stays `loading`.
  */
-export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
+export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced' | 'cancelled';
 
 /**
  * Screen of the connect modal: `connectors` (wallet list), `network` (network choice of a multi-network wallet),
@@ -38,8 +38,14 @@ export interface LegalConfig {
  * modals are not rendered.
  */
 export interface NovaConnectProviderProps extends InitialChains {
-  /** Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet */
+  /** Transaction pool of Pulsar: the connect button shows the results and the wait of the transactions of the wallet */
   transactionPool?: TransactionPool<Transaction>;
+  /**
+   * `removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
+   * offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
+   * person acts on when one never ends. An app that shows a pool of its own must remove the record there too.
+   */
+  removeTxFromPool?: (txKey: string) => void;
   /** Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history */
   pulsarAdapter?: TxAdapter<Transaction> | TxAdapter<Transaction>[];
   /** Whether the connect button shows the native balance */
@@ -86,7 +92,7 @@ export interface WalletBalance {
  */
 export interface NovaConnectProviderType extends Omit<
   NovaConnectProviderProps,
-  'pulsarAdapter' | 'children' | 'labels' | 'transactionPool'
+  'pulsarAdapter' | 'children' | 'labels' | 'transactionPool' | 'removeTxFromPool'
 > {
   // Modal states
   /** Whether the connect modal is open */

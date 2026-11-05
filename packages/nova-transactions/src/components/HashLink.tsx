@@ -3,8 +3,7 @@
  * blockchain hashes with copy-to-clipboard and block explorer link functionality.
  */
 
-import { ArrowTopRightOnSquareIcon, CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
-import { cn, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, ExternalLinkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
 
 import { useLabels } from '../providers';
 
@@ -83,7 +82,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
             {/* The visible hash starts the accessible name (WCAG 2.5.3), what the link does follows */}
             {hashContent}
             <span className="novatx:sr-only"> {actions.viewOnExplorer}</span>
-            <ArrowTopRightOnSquareIcon aria-hidden className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
+            <ExternalLinkIcon className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
           </a>
         ) : (
           <span className={cn('novatx:text-[var(--tuwa-text-primary)]', classNames?.link)}>{hashContent}</span>
@@ -98,11 +97,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
           title={isCopied ? txError.copied : actions.copy}
           aria-label={isCopied ? txError.copied : actions.copy}
         >
-          {isCopied ? (
-            <CheckIcon className="novatx:h-4 novatx:w-4 novatx:text-[var(--tuwa-success-icon)]" />
-          ) : (
-            <DocumentDuplicateIcon className="novatx:h-4 novatx:w-4" />
-          )}
+          <CopyIcon copied={isCopied} className="novatx:h-4 novatx:w-4" />
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ToastCloseButton } from '@tuwaio/nova-core';
+import { useState } from 'react';
 
 const meta: Meta<typeof ToastCloseButton> = {
   title: 'Nova Core/Feedback/ToastCloseButton',
@@ -30,15 +31,33 @@ const meta: Meta<typeof ToastCloseButton> = {
   parameters: {
     layout: 'centered',
   },
-  decorators: [
-    // Decorator to provide a context for the absolute positioning of the button
-    (Story) => (
+  // In an app `closeToast` comes from react-toastify. Here it hides the mock toast and is reported in the Actions panel.
+  render: (args) => {
+    const [isOpen, setIsOpen] = useState(true);
+    if (!isOpen) {
+      return (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="cursor-pointer rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] px-3 py-2 text-sm text-[var(--tuwa-text-primary)]"
+        >
+          Show again
+        </button>
+      );
+    }
+    return (
       <div className="relative w-64 h-20 bg-[var(--tuwa-bg-primary)] border border-[var(--tuwa-border-primary)] rounded-[var(--tuwa-rounded-corners)] flex items-center justify-center">
         <span className="text-[var(--tuwa-text-primary)]">Toast Content Here</span>
-        <Story />
+        <ToastCloseButton
+          {...args}
+          closeToast={(event) => {
+            args.closeToast?.(event);
+            setIsOpen(false);
+          }}
+        />
       </div>
-    ),
-  ],
+    );
+  },
 };
 
 export default meta;
@@ -57,6 +76,6 @@ export const CustomTooltip: Story = {
 
 export const CustomStyle: Story = {
   args: {
-    className: 'bg-red-500/10 hover:bg-red-500/20 text-red-500',
+    className: 'bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-500',
   },
 };

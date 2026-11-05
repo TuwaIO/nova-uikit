@@ -56,3 +56,21 @@ describe('TransactionStatusBadge', () => {
     expect(labelOf(TransactionStatusBadge({ tx }))).toBe(defaultLabels.statuses.success);
   });
 });
+
+describe('TransactionStatusBadge on a replaced transaction', () => {
+  const replaced = (replacedReason?: string) =>
+    ({ ...solanaTx({}), pending: false, status: TransactionStatus.Replaced, replacedReason }) as never;
+
+  it('says a speed-up went on', () => {
+    expect(labelOf(TransactionStatusBadge({ tx: replaced('repriced') }))).toBe(defaultLabels.statuses.spedUp);
+  });
+
+  it('says a cancel did not', () => {
+    expect(labelOf(TransactionStatusBadge({ tx: replaced('cancelled') }))).toBe(defaultLabels.statuses.cancelled);
+  });
+
+  it('says Replaced for what it cannot tell: another transaction, or a server that keeps no reason', () => {
+    expect(labelOf(TransactionStatusBadge({ tx: replaced('replaced') }))).toBe(defaultLabels.statuses.replaced);
+    expect(labelOf(TransactionStatusBadge({ tx: replaced() }))).toBe(defaultLabels.statuses.replaced);
+  });
+});

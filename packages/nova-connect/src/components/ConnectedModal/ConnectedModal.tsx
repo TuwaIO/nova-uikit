@@ -114,7 +114,7 @@ export type ConnectedModalHeaderProps = {
  */
 export type ConnectedModalMainContentSlotProps = Pick<
   NovaConnectProviderProps,
-  'transactionPool' | 'pulsarAdapter' | 'pagination'
+  'transactionPool' | 'pulsarAdapter' | 'removeTxFromPool' | 'pagination'
 > & {
   /** Current content type */
   contentType: ConnectedContentType;
@@ -367,12 +367,16 @@ export type ConnectedModalCustomization = {
 
 /**
  * Props for the {@link ConnectedModal} component. `appChains` and `solanaRPCUrls` give the chains of the network
- * screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history.
+ * screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history, whose rows open their
+ * details with `removeTxFromPool`.
  */
 export interface ConnectedModalProps
   extends
     Omit<ConnectButtonProps, 'className' | 'customization'>,
-    Pick<NovaConnectProviderProps, 'transactionPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls' | 'pagination'> {
+    Pick<
+      NovaConnectProviderProps,
+      'transactionPool' | 'removeTxFromPool' | 'pulsarAdapter' | 'appChains' | 'solanaRPCUrls' | 'pagination'
+    > {
   /** Classes added to the dialog content classes (ignored when `classNames.dialogContent` is set) */
   className?: string;
   /** Customization options */
@@ -508,6 +512,7 @@ const DefaultMainContent: React.FC<ConnectedModalMainContentSlotProps> = ({
   ensAvatar,
   chainsList,
   transactionPool,
+  removeTxFromPool,
   pulsarAdapter,
   onChainChange,
   onBack,
@@ -539,6 +544,7 @@ const DefaultMainContent: React.FC<ConnectedModalMainContentSlotProps> = ({
         return (
           <ConnectedModalTxHistory
             transactionPool={transactionPool}
+            removeTxFromPool={removeTxFromPool}
             pulsarAdapter={pulsarAdapter}
             customization={childCustomizations?.txHistory}
             pagination={pagination}
@@ -609,7 +615,19 @@ const DefaultMainContent: React.FC<ConnectedModalMainContentSlotProps> = ({
  * ```
  */
 export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
-  ({ solanaRPCUrls, transactionPool, pulsarAdapter, appChains, className, customization, pagination }, ref) => {
+  (
+    {
+      solanaRPCUrls,
+      transactionPool,
+      removeTxFromPool,
+      pulsarAdapter,
+      appChains,
+      className,
+      customization,
+      pagination,
+    },
+    ref,
+  ) => {
     // Get localized labels for UI text
     const labels = useNovaConnectLabels();
 
@@ -882,6 +900,7 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
           ensAvatar={ensAvatar}
           chainsList={chainsList}
           transactionPool={transactionPool}
+          removeTxFromPool={removeTxFromPool}
           pulsarAdapter={pulsarAdapter}
           onChainChange={handleChainChange}
           onBack={handleBackToMain}

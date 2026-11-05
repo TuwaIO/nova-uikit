@@ -60,13 +60,14 @@ export const DefaultEVM: Story = {
 };
 
 /**
- * Showcases a Solana transaction with slot, confirmations, and recent blockhash details.
+ * A Solana transaction: its signature, linked to the explorer, and its confirmations.
  */
 export const DefaultSolana: Story = {
   name: 'Default (Solana)',
   args: {
     tx: createMockTx(OrbitAdapter.SOLANA, {}),
     adapter: mockSolanaAdapter,
+    confirmations: 3,
   },
 };
 
@@ -109,6 +110,19 @@ export const Replaced: Story = {
 };
 
 /**
+ * The record that goes on after a speed-up: its own hash, and the hash it replaced.
+ */
+export const AfterSpeedUp: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      hash: '0x5555555555555555555555555555555555555555555555555555555555555555',
+      replaces: '0x4444444444444444444444444444444444444444444444444444444444444444',
+    }),
+    adapter: mockEvmAdapter,
+  },
+};
+
+/**
  * The 'history' variant that uses a different container style for the transaction key.
  */
 export const HistoryVariant: Story = {
@@ -130,9 +144,14 @@ export const WithCustomRender: Story = {
     renderHashLink: (props) => (
       <div className="rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/15 px-2 py-1 text-[#0052ff] dark:bg-[#38bdf8]/15 dark:text-[#7dd3fc]">
         Custom ✨{' '}
-        <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
-          {props.label}
-        </a>
+        {props.explorerUrl ? (
+          <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
+            {props.label}
+          </a>
+        ) : (
+          <span>{props.label}</span>
+        )}{' '}
+        <span className="font-mono text-xs">{props.hash.slice(0, 10)}...</span>
       </div>
     ),
     adapter: mockEvmAdapter,

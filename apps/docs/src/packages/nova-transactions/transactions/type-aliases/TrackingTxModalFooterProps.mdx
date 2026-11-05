@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TrackingTxModalFooterProps** = `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:37](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L37)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L56)
 
 Props of the footer of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs) (`customization.components.Footer`).
 
@@ -16,9 +16,10 @@ Props of the footer of [TrackingTxModal](?path=/docs/packages-nova-transactions-
 
 > `optional` **canReplace?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L53)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L75)
 
-Whether the pending transaction can be sped up or canceled.
+Whether this is a wait that may take long: a pending standard EVM transaction not yet in a block, on any wallet. The footer
+can be closed then. `onSpeedUp` and `onCancel` are what decide the buttons of those actions.
 
 ***
 
@@ -26,7 +27,7 @@ Whether the pending transaction can be sped up or canceled.
 
 > `optional` **connectedWalletAddress?**: `string`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L55)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:77](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L77)
 
 Address of the connected wallet.
 
@@ -36,7 +37,7 @@ Address of the connected wallet.
 
 > `optional` **isFailed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L51)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L70)
 
 Whether the submission or the transaction failed.
 
@@ -46,7 +47,7 @@ Whether the submission or the transaction failed.
 
 > `optional` **isProcessing?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L49)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L68)
 
 Whether the transaction is being submitted or is pending.
 
@@ -56,7 +57,7 @@ Whether the transaction is being submitted or is pending.
 
 > `optional` **onCancel?**: () => `void`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L47)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L66)
 
 Cancels the pending transaction; set only when it can be replaced.
 
@@ -70,7 +71,7 @@ Cancels the pending transaction; set only when it can be replaced.
 
 > **onClose**: () => `void`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L39)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L58)
 
 Closes the modal.
 
@@ -84,7 +85,7 @@ Closes the modal.
 
 > **onOpenAllTransactions**: () => `void`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L41)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L60)
 
 Opens the transaction history modal.
 
@@ -98,7 +99,7 @@ Opens the transaction history modal.
 
 > `optional` **onRetry?**: () => `void`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L43)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L62)
 
 Retries the failed submission; set only when retry is possible.
 
@@ -112,7 +113,7 @@ Retries the failed submission; set only when retry is possible.
 
 > `optional` **onSpeedUp?**: () => `void`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L45)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:64](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L64)
 
 Speeds up the pending transaction; set only when it can be replaced.
 

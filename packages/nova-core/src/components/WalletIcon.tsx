@@ -5,6 +5,7 @@ import { cn, formatIconNameForGithub } from '../utils';
 import { Web3IconLazy } from '../web3-icons';
 import { FallbackIcon } from './FallbackIcon';
 import { GithubFallbackIcon } from './GithubFallbackIcon';
+import { iconVariantOf } from './iconVariant';
 import { SvgToImg } from './SvgToImg';
 
 /**
@@ -17,7 +18,8 @@ export interface WalletIconProps {
    */
   walletName: string;
   /**
-   * Visual style variant for the icon.
+   * Visual style variant for the icon. An icon without this style is drawn in a style it has, and a mono icon stays an inline
+   * SVG, so that its `currentColor` follows the theme.
    * @default 'background'
    */
   variant?: 'background' | 'branded' | 'mono';
@@ -34,11 +36,11 @@ const WALLET_ID_MAP: Record<string, string> = {
 };
 
 /**
- * Finds the icon file path of a wallet in the @web3icons/common metadata.
+ * Finds the icon of a wallet in the @web3icons/common metadata.
  * @param id - Normalized wallet ID (e.g., 'metamask', 'wallet-connect')
  */
-function findWalletIconPath(id: string): string | undefined {
-  return wallets.find((w) => w.id === id || w.name?.toLowerCase() === id)?.filePath;
+function findWalletIcon(id: string) {
+  return wallets.find((w) => w.id === id || w.name?.toLowerCase() === id);
 }
 
 /**
@@ -68,7 +70,8 @@ const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: R
  * It handles logic for:
  * 1. Rendering a custom SVG for 'impersonatedwallet' (Watch mode).
  * 2. Normalizing IDs for common wallets (e.g. 'walletconnect' -> 'wallet-connect').
- * 3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`).
+ * 3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`). An icon without the asked style is
+ *    drawn in a style it has, and a mono icon stays an inline SVG, so that its `currentColor` follows the theme.
  *
  * @param props - {@link WalletIconProps}
  * @returns The wallet icon or a fallback UI.
@@ -91,15 +94,25 @@ export function WalletIcon({ walletName, variant = 'background', className }: Wa
   const githubSrc = `wallets/${variant}/${formatIconNameForGithub(libraryId)}`;
 
   // 3. If wallet not found in @web3icons/common metadata, skip the icon library entirely
-  const iconPath = findWalletIconPath(libraryId);
-  if (!iconPath) {
+  const icon = findWalletIcon(libraryId);
+  if (!icon?.filePath) {
     return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} />;
+  }
+  const drawnVariant = iconVariantOf(icon.variants, variant);
+
+  // A mono icon is drawn with `currentColor`, which an `<img>` cannot inherit: it stays inline and follows the theme
+  if (drawnVariant === 'mono') {
+    return (
+      <Suspense fallback={<FallbackIcon animate className={className} />}>
+        <Web3IconLazy filePath={icon.filePath} variant="mono" className={componentClassName} />
+      </Suspense>
+    );
   }
 
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
-      <SvgToImg iconId={`${libraryId}-${variant}`} className={componentClassName}>
-        {(ref) => <Web3IconLazy ref={ref} filePath={iconPath} variant={variant} />}
+      <SvgToImg iconId={`${libraryId}-${drawnVariant}`} className={componentClassName}>
+        {(ref) => <Web3IconLazy ref={ref} filePath={icon.filePath} variant={drawnVariant} />}
       </SvgToImg>
     </Suspense>
   );

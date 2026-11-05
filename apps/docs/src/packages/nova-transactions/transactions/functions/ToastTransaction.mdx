@@ -6,14 +6,16 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ToastTransaction**\<`T`\>(`props`): `Element`
 
-Defined in: [components/ToastTransaction.tsx:205](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L205)
+Defined in: [components/ToastTransaction.tsx:215](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L215)
 
-The body of a transaction toast: the network icon, the title and description (colored by status), the hashes with
-explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent
-with
-MetaMask by the connected wallet, it offers speed-up and cancel (when the adapter has `speedUpTxAction` and
-`cancelTxAction`); otherwise, for transactions of the connected wallet, a button that opens the transaction in the
-history modal. `NovaTransactionsProvider` shows one for every tracked transaction.
+The body of a transaction toast: a strip in the status color along the top (a glint while pending, filling up with the
+confirmations when they are counted), the status line with the number of confirmations, the network icon, the title and
+description (colored by status), and the hashes with explorer links. A change of status morphs the texts and washes the
+top of the toast in the color of the result. For a pending, unconfirmed EVM transaction sent with MetaMask by the
+connected wallet, once the tracker has read its nonce and fees, it offers speed-up and cancel (when the adapter has
+`speedUpTxAction` and `cancelTxAction`), and a refusal of the action is shown through `useNovaTransactionsError`; for
+transactions of the connected wallet, a button opens the transaction in the history modal. `NovaTransactionsProvider` shows
+one for every operation.
 
 ## Type Parameters
 

@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/AnimatedHeight" />
+
+# AnimatedHeight()
+
+> **AnimatedHeight**(`props`): `Element`
+
+Defined in: [components/AnimatedHeight.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/AnimatedHeight.tsx#L30)
+
+A box whose height glides to the height of its content, so that what is under it moves along instead of jumping, and no
+empty space stays behind. It clips its content while the height changes: keep what must not be clipped inside the padding of
+the content. With `prefers-reduced-motion` the height just changes.
+
+Side effects: observes the size of the content with a `ResizeObserver` while mounted.
+
+## Parameters
+
+### props
+
+[`AnimatedHeightProps`](?path=/docs/packages-nova-core-type-aliases-animatedheightprops--docs)
+
+See [AnimatedHeightProps](?path=/docs/packages-nova-core-type-aliases-animatedheightprops--docs).
+
+## Returns
+
+`Element`
+
+The box.

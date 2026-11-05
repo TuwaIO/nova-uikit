@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.5...nova-transactions-v0.11.0) (2026-11-05)
+
+
+### Features
+
+* what changes on screen moves instead of jumping, and every status says the same ([#133](https://github.com/TuwaIO/nova-uikit/issues/133)) ([672117d](https://github.com/TuwaIO/nova-uikit/commit/672117d5e856e1f25c5563be2ed63bdcc20d50a1))
+
 ## [0.10.5](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.4...nova-transactions-v0.10.5) (2026-10-28)
 
 

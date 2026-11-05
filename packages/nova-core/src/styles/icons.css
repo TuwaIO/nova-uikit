@@ -1,0 +1,19 @@
+@layer components {
+  .tuwa-link-arrow {
+    transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  a:hover .tuwa-link-arrow,
+  a:focus-visible .tuwa-link-arrow,
+  button:hover .tuwa-link-arrow,
+  button:focus-visible .tuwa-link-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tuwa-link-arrow {
+      transition: none;
+      transform: none !important;
+    }
+  }
+}

@@ -5,7 +5,6 @@
 
 import {
   ArrowPathIcon,
-  ArrowTopRightOnSquareIcon,
   BoltIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -13,29 +12,48 @@ import {
   CloudIcon,
   CommandLineIcon,
   CpuChipIcon,
-  DocumentDuplicateIcon,
   DocumentTextIcon,
-  ExclamationTriangleIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { CloseIcon, cn, getChainName, NetworkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+import {
+  CloseIcon,
+  cn,
+  CopyIcon,
+  DrawnCheck,
+  DrawnCross,
+  ExternalLinkIcon,
+  getChainName,
+  MorphIcon,
+  MorphText,
+  NetworkIcon,
+  QuasarLoader,
+  StatusEdge,
+  StatusTone,
+  textCenterEllipsis,
+  useCopyToClipboard,
+} from '@tuwaio/nova-core';
 import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   SolanaTransaction,
   StarknetTransaction,
   Transaction,
-  TransactionStatus,
   TransactionTracker,
 } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import { ComponentType, ReactNode, useMemo } from 'react';
+import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
-import { canReplaceTx } from '../utils/canReplaceTx';
+import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
 import { formatUnits } from '../utils/formatUnits';
+import {
+  canReplaceTx,
+  explorerUrlOfHash,
+  explorerUrlOfReplaced,
+  runReplacement,
+  stopTrackingDueIn,
+} from '../utils/replacement';
 import { statusText } from '../utils/statusText';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 
 // --- Sub-components Prop Types ---
@@ -201,11 +219,7 @@ const CopyButton = ({ value, className, dark = false }: { value: string; classNa
       title={isCopied ? txError.copied : actions.copy}
       aria-label={isCopied ? txError.copied : actions.copy}
     >
-      {isCopied ? (
-        <CheckIcon className="novatx:h-3.5 novatx:w-3.5 novatx:text-[var(--tuwa-success-icon)]" />
-      ) : (
-        <DocumentDuplicateIcon className="novatx:h-3.5 novatx:w-3.5" />
-      )}
+      <CopyIcon copied={isCopied} className="novatx:h-3.5 novatx:w-3.5" />
     </button>
   );
 };
@@ -298,13 +312,13 @@ const BADGE_TONES: Record<BadgeTone, string> = {
 
 const Badge = ({
   tone,
-  icon: Icon,
+  icon,
   children,
   title,
   className,
 }: {
   tone: BadgeTone;
-  icon?: ComponentType<{ className?: string }>;
+  icon?: ReactNode;
   children: ReactNode;
   title?: string;
   className?: string;
@@ -317,10 +331,46 @@ const Badge = ({
       className,
     )}
   >
-    {Icon && <Icon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
+    {icon}
     {children}
   </span>
 );
+
+const BADGE_TONE_OF_STATUS: Record<StatusTone, BadgeTone> = {
+  pending: 'pending',
+  success: 'success',
+  error: 'error',
+  neutral: 'info',
+};
+
+/** The mark of a status: the wait in the pending color, and a result that draws itself. */
+const StatusMark = ({ tone }: { tone: StatusTone }) => (
+  <MorphIcon iconKey={tone} animateFirst>
+    {tone === 'pending' ? (
+      <QuasarLoader size={14} accent="var(--tuwa-pending-icon)" />
+    ) : tone === 'success' ? (
+      <DrawnCheck className="novatx:h-3.5 novatx:w-3.5" />
+    ) : tone === 'neutral' ? (
+      <ArrowPathIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
+    ) : (
+      <DrawnCross className="novatx:h-3.5 novatx:w-3.5" />
+    )}
+  </MorphIcon>
+);
+
+/** A hash in a row, shortened and linked to the explorer when there is a link. */
+const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
+  href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={hash}
+      className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
+    >
+      {textCenterEllipsis(hash, 8, 8)}
+    </a>
+  ) : null;
 
 const actionButtonClassName =
   'novatx:inline-flex novatx:h-9 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-2 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:font-mono novatx:text-sm novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:no-underline novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)]';
@@ -361,6 +411,12 @@ export type TransactionDetailsCustomization = {
     executionSection?: string;
     /** The context and payload section. */
     contextSection?: string;
+    /** The block that offers to stop tracking a transaction that may never end. */
+    stopTrackingContainer?: string;
+    /** The text of that block. */
+    stopTrackingHint?: string;
+    /** The button of that block. */
+    stopTrackingButton?: string;
   };
   /** Components that replace the default parts. */
   components?: {
@@ -396,6 +452,18 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
    * {@link TransactionsInfoModal} does. Defaults to `false`.
    */
   hideHeader?: boolean;
+  /**
+   * The connected wallet: speed-up and cancel are offered only to the account that sent the transaction, as from another one
+   * the same transfer would go out a second time.
+   */
+  connectedWalletAddress?: string;
+  /**
+   * Stops tracking this transaction and removes it from the pool. With it, a transaction pending for over 10 minutes offers
+   * to do so: a dropped transaction stays pending until its nonce is spent, which can be never.
+   *
+   * @param txKey - The key of the transaction.
+   */
+  onStopTracking?: (txKey: string) => void;
   /** Classes of the view. */
   className?: string;
   /** Class names and replacement components for the parts of the view. */
@@ -409,15 +477,17 @@ const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, Y
  * transaction is selected, laid out as the transaction page of the Quasar dashboard:
  *
  * - a header with the back button, the title and, with `onClose`, the close button (left out with `hideHeader`);
+ * - the strip of the status color along the top of the body, with a running glint while pending;
  * - a status row with the status, the type and whether the transaction is saved on the server of the Pulsar store
  *   (`syncStatus`); on the right, the explorer link of the adapter's `getExplorerTxUrl`, or, for a pending,
- *   unconfirmed `ethereum`-tracker transaction sent with MetaMask whose adapter has `speedUpTxAction` and
- *   `cancelTxAction`, the speed-up and cancel buttons (the rule of {@link TrackingTxModal});
+ *   unconfirmed `ethereum`-tracker transaction sent with MetaMask by `connectedWalletAddress`, once the tracker has read
+ *   its nonce and fees, whose adapter has `speedUpTxAction` and `cancelTxAction`, the speed-up and cancel buttons (the rule
+ *   of {@link TrackingTxModal}); with `onStopTracking`, the offer to stop tracking a transaction pending for over 10 minutes;
  * - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
- *   tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
- *   ERC-4337);
+ *   tracker, connector, confirmations, the transaction key when it differs from the hash (Gelato, Safe, ERC-4337);
  * - Context & Payload: the title and description of the current status, the error and the payload;
- * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
+ * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, the hash that replaced it, the hash it
+ *   replaced, input data; Solana: fee in
  *   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee).
  *
  * Sections without data are left out. The RPC URL of the transaction is not shown, since it may contain an API key.
@@ -432,11 +502,14 @@ export function TransactionDetails<T extends Transaction>({
   onBack,
   onClose,
   hideHeader = false,
+  connectedWalletAddress,
+  onStopTracking,
   adapter,
   className,
   customization,
 }: TransactionDetailsProps<T>) {
   const { transactionDetails, statuses, actions } = useLabels();
+  const { showPreSubmitErrorToast } = useNovaTransactionsError();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
 
@@ -458,35 +531,50 @@ export function TransactionDetails<T extends Transaction>({
 
   // The on-chain hash: the hash of an EVM transaction (the TX key for the ethereum tracker), the TX key otherwise
   const hash = evmTx ? (evmTx.hash ?? (tx.tracker === TransactionTracker.Ethereum ? tx.txKey : undefined)) : tx.txKey;
-  const explorerUrl = foundAdapter?.getExplorerTxUrl?.(tx);
-  const canReplace = canReplaceTx(tx, foundAdapter);
+  // The link of the hash shown here. The adapter's own link of a replaced record goes to the replacing hash.
+  const explorerUrl = explorerUrlOfHash(foundAdapter, tx, hash);
+  // Only what can really be replaced: from another account the same transfer would be sent a second time
+  const canReplace = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
   const chainId = setChainId(tx.chainId);
+  const tone = toneOf(tx);
 
-  const isConfirmed = tx.pending && 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed';
-  const status: { tone: BadgeTone; icon: ComponentType<{ className?: string }>; label: string } = tx.pending
-    ? isConfirmed
-      ? { tone: 'success', icon: CheckCircleIcon, label: statuses.confirmed }
-      : { tone: 'pending', icon: ClockIcon, label: statuses.pending }
-    : tx.status === TransactionStatus.Success
-      ? { tone: 'success', icon: CheckCircleIcon, label: statuses.success }
-      : tx.status === TransactionStatus.Failed
-        ? { tone: 'error', icon: ExclamationTriangleIcon, label: statuses.failed }
-        : tx.status === TransactionStatus.Replaced
-          ? { tone: 'info', icon: ArrowPathIcon, label: statuses.replaced }
-          : { tone: 'info', icon: ExclamationTriangleIcon, label: tx.status ?? statuses.unknown };
+  // The clock is read into state, so the offer comes up by itself when it is due while this screen stays open
+  const [nowSeconds, setNowSeconds] = useState(() => Date.now() / 1000);
+  const offersStopTracking = !!onStopTracking && tx.pending;
+  const stopTrackingDue = stopTrackingDueIn(tx, nowSeconds);
+  const canStopTracking = offersStopTracking && stopTrackingDue <= 0;
+  useEffect(() => {
+    if (!offersStopTracking || !(stopTrackingDue > 0)) return;
+    const timer = setTimeout(() => setNowSeconds(Date.now() / 1000), stopTrackingDue * 1000);
+    return () => clearTimeout(timer);
+  }, [offersStopTracking, stopTrackingDue]);
 
   const syncBadge =
     tx.syncStatus === 'pending-sync' ? (
-      <Badge tone="pending" icon={CloudArrowUpIcon} title={transactionDetails.syncStatus.pendingTooltip}>
+      <Badge
+        tone="pending"
+        icon={
+          <CloudArrowUpIcon
+            className="novatx:h-3.5 novatx:w-3.5 novatx:animate-pulse novatx:motion-reduce:animate-none"
+            aria-hidden="true"
+          />
+        }
+        title={transactionDetails.syncStatus.pendingTooltip}
+      >
         {transactionDetails.syncStatus.pending}
       </Badge>
     ) : tx.syncStatus === 'synced' ? (
-      <Badge tone="muted" icon={CloudIcon} title={transactionDetails.syncStatus.syncedTooltip}>
+      <Badge
+        tone="muted"
+        icon={<CloudIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
+        title={transactionDetails.syncStatus.syncedTooltip}
+      >
         {transactionDetails.syncStatus.synced}
       </Badge>
     ) : null;
 
-  const showConfirmations = tx.pending && tx.confirmations !== null && tx.confirmations !== undefined;
+  const showConfirmations = hasConfirmations(tx.confirmations);
   const showTxKey = tx.txKey !== hash;
 
   // Execution data of the chain
@@ -502,6 +590,7 @@ export function TransactionDetails<T extends Transaction>({
       evmFees?.maxPriorityFee ||
       evmTx.value !== undefined ||
       evmTx.replacedTxHash ||
+      evmTx.replaces ||
       evmInput)
   );
   const solanaFee = solanaTx ? formatUnits(solanaTx.fee, 9) : undefined;
@@ -553,20 +642,54 @@ export function TransactionDetails<T extends Transaction>({
 
       <div
         className={cn(
-          'novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-4 novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-4 novatx:sm:p-5',
+          'novatx:relative novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-4 novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-4 novatx:sm:p-5',
           classNames?.body,
         )}
       >
+        <StatusEdge tone={tone} progress={progressOf(tx)} />
+
+        {canStopTracking && (
+          <div
+            className={cn(
+              'novatx:relative novatx:flex novatx:flex-col novatx:gap-2 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
+              classNames?.stopTrackingContainer,
+            )}
+          >
+            <p
+              className={cn(
+                'novatx:m-0 novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]',
+                classNames?.stopTrackingHint,
+              )}
+            >
+              {transactionDetails.stopTrackingHint}
+            </p>
+            <button
+              type="button"
+              onClick={() => onStopTracking(tx.txKey)}
+              className={cn(
+                'novatx:cursor-pointer novatx:self-start novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+                classNames?.stopTrackingButton,
+              )}
+            >
+              {actions.stopTracking}
+            </button>
+          </div>
+        )}
+
         {/* ── Status row ── */}
         <div
           className={cn(
-            'novatx:flex novatx:flex-wrap novatx:items-center novatx:justify-between novatx:gap-3',
+            'novatx:relative novatx:flex novatx:flex-wrap novatx:items-center novatx:justify-between novatx:gap-3',
             classNames?.coreInfoCard,
           )}
         >
           <div className="novatx:flex novatx:min-w-0 novatx:flex-wrap novatx:items-center novatx:gap-2">
-            <Badge tone={status.tone} icon={status.icon} className={classNames?.statusIconContainer}>
-              {status.label}
+            <Badge
+              tone={BADGE_TONE_OF_STATUS[tone]}
+              icon={<StatusMark tone={tone} />}
+              className={classNames?.statusIconContainer}
+            >
+              <MorphText>{statusLabelOf(tx, statuses)}</MorphText>
             </Badge>
             <code className="novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-text-secondary)] novatx:[overflow-wrap:anywhere]">
               {tx.type}
@@ -577,7 +700,7 @@ export function TransactionDetails<T extends Transaction>({
             <div className="novatx:flex novatx:flex-wrap novatx:gap-2">
               <button
                 type="button"
-                onClick={() => foundAdapter?.speedUpTxAction?.(tx)}
+                onClick={() => void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal)}
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >
                 <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
@@ -585,7 +708,7 @@ export function TransactionDetails<T extends Transaction>({
               </button>
               <button
                 type="button"
-                onClick={() => foundAdapter?.cancelTxAction?.(tx)}
+                onClick={() => void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal)}
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >
                 <XCircleIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
@@ -600,7 +723,7 @@ export function TransactionDetails<T extends Transaction>({
                 rel="noopener noreferrer"
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >
-                <ArrowTopRightOnSquareIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                <ExternalLinkIcon className="novatx:h-4 novatx:w-4" />
                 {actions.viewOnExplorer}
               </a>
             )
@@ -615,17 +738,7 @@ export function TransactionDetails<T extends Transaction>({
           <dl className="novatx:m-0">
             {hash ? (
               <CCopyableField label={transactionDetails.hash} value={hash}>
-                {explorerUrl ? (
-                  <a
-                    href={explorerUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={hash}
-                    className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
-                  >
-                    {textCenterEllipsis(hash, 8, 8)}
-                  </a>
-                ) : null}
+                <LinkedHash hash={hash} href={explorerUrl} />
               </CCopyableField>
             ) : (
               <CDetailItem label={transactionDetails.hash} value="—" />
@@ -667,7 +780,7 @@ export function TransactionDetails<T extends Transaction>({
               {tx.tracker}
             </CMetadataRow>
             <CMetadataRow icon={CpuChipIcon} label={transactionDetails.connector}>
-              {tx.connectorType}
+              <span className="novatx:capitalize">{walletPartOf(tx.connectorType)}</span>
             </CMetadataRow>
             {showConfirmations && (
               <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.confirmations}>
@@ -710,7 +823,17 @@ export function TransactionDetails<T extends Transaction>({
               )}
               {evmTx.value !== undefined && <CDetailItem label={transactionDetails.value} value={evmTx.value} />}
               {evmTx.replacedTxHash && (
-                <CCopyableField label={transactionDetails.replacedHash} value={evmTx.replacedTxHash} />
+                <CCopyableField label={transactionDetails.replacedHash} value={evmTx.replacedTxHash}>
+                  <LinkedHash
+                    hash={evmTx.replacedTxHash}
+                    href={explorerUrlOfHash(foundAdapter, tx, evmTx.replacedTxHash)}
+                  />
+                </CCopyableField>
+              )}
+              {evmTx.replaces && (
+                <CCopyableField label={transactionDetails.replaces} value={evmTx.replaces}>
+                  <LinkedHash hash={evmTx.replaces} href={explorerUrlOfReplaced(foundAdapter, tx, evmTx.replaces)} />
+                </CCopyableField>
               )}
             </dl>
             {evmInput && <CJsonBlock label={transactionDetails.inputData} data={evmInput} />}

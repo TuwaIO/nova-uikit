@@ -15,10 +15,13 @@ import { defaultLabels } from '../i18n/en';
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useMemo: (fn: () => unknown) => fn(),
+  useEffect: () => {},
+  useState: (initial: () => unknown) => [initial(), () => {}],
 }));
 
 vi.mock('../providers', () => ({
   useLabels: () => defaultLabels,
+  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: () => {} }),
 }));
 
 import { TransactionDetails, TransactionDetailsProps } from './TransactionDetails';
@@ -164,8 +167,17 @@ describe('TransactionDetails', () => {
   it('offers speed-up and cancel for a pending transaction sent with MetaMask, as the tracking modal does', () => {
     const speedUpTxAction = vi.fn();
     const cancelTxAction = vi.fn();
-    const pendingTx = { ...evmTx, pending: true, status: undefined, finishedTimestamp: undefined } as EvmTransaction;
-    const element = renderDetails(pendingTx, {}, { speedUpTxAction, cancelTxAction });
+    const pendingTx = {
+      ...evmTx,
+      pending: true,
+      status: undefined,
+      finishedTimestamp: undefined,
+      nonce: 7,
+      maxFeePerGas: '1000',
+      maxPriorityFeePerGas: '100',
+    } as EvmTransaction;
+    const wallet = { connectedWalletAddress: pendingTx.from };
+    const element = renderDetails(pendingTx, wallet, { speedUpTxAction, cancelTxAction });
 
     findElement(element, byText(defaultLabels.actions.speedUp))?.props.onClick?.();
     findElement(element, byText(defaultLabels.actions.cancel))?.props.onClick?.();
@@ -173,12 +185,19 @@ describe('TransactionDetails', () => {
     expect(cancelTxAction).toHaveBeenCalledWith(pendingTx);
     expect(findElement(element, byText(defaultLabels.actions.viewOnExplorer))).toBeUndefined();
 
-    const walletConnect = renderDetails(
-      { ...pendingTx, connectorType: 'evm:walletConnect' },
-      {},
+    const walletConnect = renderDetails({ ...pendingTx, connectorType: 'evm:walletConnect' }, wallet, {
+      speedUpTxAction,
+      cancelTxAction,
+    });
+    expect(findElement(walletConnect, byText(defaultLabels.actions.speedUp))).toBeUndefined();
+
+    // From another account the same transfer would go out a second time
+    const anotherAccount = renderDetails(
+      pendingTx,
+      { connectedWalletAddress: '0xother' },
       { speedUpTxAction, cancelTxAction },
     );
-    expect(findElement(walletConnect, byText(defaultLabels.actions.speedUp))).toBeUndefined();
+    expect(findElement(anotherAccount, byText(defaultLabels.actions.speedUp))).toBeUndefined();
   });
 
   it('shows the TX key only when it differs from the hash (Safe, Gelato)', () => {
@@ -190,12 +209,15 @@ describe('TransactionDetails', () => {
     expect(containsText(element, '0xsafe')).toBe(true);
   });
 
-  it('shows the confirmations only while the transaction is pending', () => {
+  it('shows the confirmations a transaction has, and no row without any', () => {
     const pending = { ...evmTx, pending: true, status: undefined, confirmations: 1, requiredConfirmations: 3 };
     expect(containsText(renderDetails(pending as EvmTransaction), '1 / 3')).toBe(true);
 
-    const finished = { ...evmTx, confirmations: 5, requiredConfirmations: 3 } as EvmTransaction;
-    expect(containsText(renderDetails(finished), defaultLabels.transactionDetails.confirmations)).toBe(false);
+    const finished = { ...evmTx, confirmations: 'MAX' } as unknown as EvmTransaction;
+    expect(containsText(renderDetails(finished), defaultLabels.transactionDetails.confirmations)).toBe(true);
+
+    const none = { ...evmTx, confirmations: 0 } as EvmTransaction;
+    expect(containsText(renderDetails(none), defaultLabels.transactionDetails.confirmations)).toBe(false);
   });
 
   it('shows the fees of EVM transactions in gwei and of Solana transactions in SOL', () => {
@@ -259,5 +281,71 @@ describe('TransactionDetails', () => {
     expect(metadata).toBeGreaterThanOrEqual(0);
     expect(context).toBeGreaterThan(metadata);
     expect(execution).toBeGreaterThan(context);
+  });
+});
+
+describe('TransactionDetails of a replaced transaction', () => {
+  const OLD = '0x1111111111111111111111111111111111111111111111111111111111111111';
+  const NEW = '0x2222222222222222222222222222222222222222222222222222222222222222';
+  const evmTx = (fields: Partial<EvmTransaction>) =>
+    ({
+      txKey: OLD,
+      hash: OLD,
+      adapter: OrbitAdapter.EVM,
+      tracker: TransactionTracker.Ethereum,
+      chainId: 1,
+      from: '0x1234567890123456789012345678901234567890',
+      pending: false,
+      type: 'TRANSFER',
+      connectorType: 'evm:metamask',
+      localTimestamp: 1,
+      ...fields,
+    }) as EvmTransaction;
+  const adapter = {
+    key: OrbitAdapter.EVM,
+    getExplorerTxUrl: (tx: EvmTransaction) => `https://scan/tx/${tx.replacedTxHash || tx.hash}`,
+  } as unknown as TxAdapter<EvmTransaction>;
+  const render = (tx: EvmTransaction, extra: Record<string, unknown> = {}) =>
+    TransactionDetails({ tx, adapter, onBack: () => {}, ...extra });
+
+  it('links the hash shown to that hash, and the replacing hash to its own', () => {
+    const tree = render(evmTx({ status: TransactionStatus.Replaced, replacedTxHash: NEW }));
+
+    expect(containsText(tree, `https://scan/tx/${OLD}`)).toBe(true);
+    expect(containsText(tree, `https://scan/tx/${NEW}`)).toBe(true);
+  });
+
+  it('the record that goes on names the one it replaced, with a link', () => {
+    const tree = render(evmTx({ txKey: NEW, hash: NEW, pending: true, replaces: OLD }));
+
+    expect(containsText(tree, defaultLabels.transactionDetails.replaces)).toBe(true);
+    expect(containsText(tree, `https://scan/tx/${OLD}`)).toBe(true);
+  });
+
+  const longPending = () => evmTx({ pending: true, localTimestamp: Math.floor(Date.now() / 1000) - 11 * 60 });
+
+  it('offers to stop tracking a transaction pending for a long time', () => {
+    const tree = render(longPending(), { onStopTracking: () => {} });
+
+    expect(containsText(tree, defaultLabels.actions.stopTracking)).toBe(true);
+    expect(containsText(tree, defaultLabels.transactionDetails.stopTrackingHint)).toBe(true);
+  });
+
+  it('does not offer it on a recent one: a slow transaction should simply be waited for', () => {
+    const tree = render(evmTx({ pending: true, localTimestamp: Math.floor(Date.now() / 1000) - 60 }), {
+      onStopTracking: () => {},
+    });
+
+    expect(containsText(tree, defaultLabels.actions.stopTracking)).toBe(false);
+  });
+
+  it('does not offer it on a finished one, or without the action', () => {
+    expect(
+      containsText(
+        render(evmTx({ status: TransactionStatus.Success }), { onStopTracking: () => {} }),
+        defaultLabels.actions.stopTracking,
+      ),
+    ).toBe(false);
+    expect(containsText(render(longPending()), defaultLabels.actions.stopTracking)).toBe(false);
   });
 });

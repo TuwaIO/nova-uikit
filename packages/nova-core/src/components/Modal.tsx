@@ -3,6 +3,7 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 import * as React from 'react';
 
 import { cn, isTouchDevice } from '../utils';
+import { watchDialogAnchor } from './dialogAnchor';
 import { watchDialogFrameHeight } from './dialogFrameHeight';
 
 /**
@@ -105,91 +106,120 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
  * content, even while the page renders no frames (as when a wallet opens its window). No animation with
  * `prefers-reduced-motion: reduce`.
  *
- * Side effects: observes the size of the content with a `ResizeObserver` while open, and the side effects of
- * {@link DialogOverlay}.
+ * A dialog whose height changes while a person works in it, such as with tabs, passes `anchorTop`: its top edge then stays
+ * where it opened, as a centered dialog moves everything in it with every change of height. With `AnimatedHeight` around
+ * what changes and `animateHeight={false}`, the bottom edge glides and nothing jumps.
+ *
+ * Side effects: observes the size of the content with a `ResizeObserver` while open, sets `top` and `translate` on the panel
+ * with `anchorTop`, and the side effects of {@link DialogOverlay}.
  */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     modalAnimation?: Variants;
     backdropAnimation?: Variants;
+    /** Keeps the top edge where the dialog opened while its height changes, on a wide screen. Defaults to `false`. */
+    anchorTop?: boolean;
+    /** Animates the height of the panel when its content changes size. Defaults to `true`. */
+    animateHeight?: boolean;
   }
->(({ className, children, modalAnimation, backdropAnimation, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
-  const [isMobile, setIsMobile] = React.useState(false);
-  // The element that opened the dialog: Radix gives the focus back only to a `Dialog.Trigger`, and the Nova modals are
-  // opened by buttons of the app (WCAG 2.4.3)
-  const opener = React.useRef<HTMLElement | null>(null);
-  // State, not refs: Radix mounts the elements only while the dialog is open
-  const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
-  const [content, setContent] = React.useState<HTMLDivElement | null>(null);
+>(
+  (
+    {
+      className,
+      children,
+      modalAnimation,
+      backdropAnimation,
+      anchorTop = false,
+      animateHeight = true,
+      onOpenAutoFocus,
+      onCloseAutoFocus,
+      ...props
+    },
+    ref,
+  ) => {
+    const [isMobile, setIsMobile] = React.useState(false);
+    // The element that opened the dialog: Radix gives the focus back only to a `Dialog.Trigger`, and the Nova modals are
+    // opened by buttons of the app (WCAG 2.4.3)
+    const opener = React.useRef<HTMLElement | null>(null);
+    // State, not refs: Radix mounts the elements only while the dialog is open
+    const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
+    const [content, setContent] = React.useState<HTMLDivElement | null>(null);
 
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsMobile(isTouchDevice());
-  }, []);
+    React.useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMobile(isTouchDevice());
+    }, []);
 
-  // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
-  // has the new size, which leaves an empty band under the footer
-  React.useEffect(() => {
-    if (!frame || !content) return;
-    return watchDialogFrameHeight({ frame, content });
-  }, [frame, content]);
+    // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
+    // has the new size, which leaves an empty band under the footer
+    React.useEffect(() => {
+      if (!frame || !content || !animateHeight) return;
+      return watchDialogFrameHeight({ frame, content });
+    }, [frame, content, animateHeight]);
 
-  const selectedAnimation = modalAnimation ?? (isMobile ? mobileModalAnimation : defaultModalAnimation);
+    React.useEffect(() => {
+      const dialog = content?.closest<HTMLElement>('[role="dialog"]');
+      if (!dialog || !content || !anchorTop) return;
+      return watchDialogAnchor({ dialog, content });
+    }, [content, anchorTop]);
 
-  return (
-    <DialogPortal>
-      <DialogOverlay backdropAnimation={backdropAnimation} />
+    const selectedAnimation = modalAnimation ?? (isMobile ? mobileModalAnimation : defaultModalAnimation);
 
-      <DialogPrimitive.Content
-        aria-describedby="tuwa:modal-content"
-        ref={ref}
-        onOpenAutoFocus={(event) => {
-          // Called before the focus moves into the dialog
-          const active = document.activeElement;
-          opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
-          onOpenAutoFocus?.(event);
-        }}
-        onCloseAutoFocus={(event) => {
-          onCloseAutoFocus?.(event);
-          if (event.defaultPrevented || !opener.current?.isConnected) return;
-          event.preventDefault();
-          opener.current.focus();
-        }}
-        className={cn(
-          'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
-          className,
-        )}
-        {...props}
-      >
-        <div className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
-          <AnimatePresence>
-            <motion.div
-              variants={selectedAnimation}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-              animate="animate"
-              initial="initial"
-              exit="exit"
-              className="NovaNoScrolling novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
-            >
-              <div ref={setFrame} className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
-                <div
-                  ref={setContent}
-                  className={cn(
-                    'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
-                    'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
-                  )}
-                >
-                  {children}
+    return (
+      <DialogPortal>
+        <DialogOverlay backdropAnimation={backdropAnimation} />
+
+        <DialogPrimitive.Content
+          aria-describedby="tuwa:modal-content"
+          ref={ref}
+          onOpenAutoFocus={(event) => {
+            // Called before the focus moves into the dialog
+            const active = document.activeElement;
+            opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+            onOpenAutoFocus?.(event);
+          }}
+          onCloseAutoFocus={(event) => {
+            onCloseAutoFocus?.(event);
+            if (event.defaultPrevented || !opener.current?.isConnected) return;
+            event.preventDefault();
+            opener.current.focus();
+          }}
+          className={cn(
+            'NovaNoScrolling novacore:fixed novacore:bottom-0 novacore:left-0 novacore:p-0 novacore:sm:bottom-auto novacore:sm:left-[50%] novacore:sm:top-[50%] novacore:sm:translate-x-[-50%] novacore:sm:translate-y-[-50%] novacore:z-50 novacore:sm:p-4 novacore:outline-none',
+            className,
+          )}
+          {...props}
+        >
+          <div className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
+            <AnimatePresence>
+              <motion.div
+                variants={selectedAnimation}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                animate="animate"
+                initial="initial"
+                exit="exit"
+                className="NovaNoScrolling novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
+              >
+                <div ref={setFrame} className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
+                  <div
+                    ref={setContent}
+                    className={cn(
+                      'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
+                      'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
+                    )}
+                  >
+                    {children}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  );
-});
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    );
+  },
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 /**

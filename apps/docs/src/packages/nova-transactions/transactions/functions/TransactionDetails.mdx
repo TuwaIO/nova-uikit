@@ -6,21 +6,23 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionDetails**\<`T`\>(`props`): `Element`
 
-Defined in: [components/TransactionDetails.tsx:430](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L430)
+Defined in: [components/TransactionDetails.tsx:500](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L500)
 
 A detailed view of one transaction, shown by [TransactionsHistory](?path=/docs/packages-nova-transactions-transactions-functions-transactionshistory--docs) and [TransactionsInfoModal](?path=/docs/packages-nova-transactions-transactions-functions-transactionsinfomodal--docs) when a
 transaction is selected, laid out as the transaction page of the Quasar dashboard:
 
 - a header with the back button, the title and, with `onClose`, the close button (left out with `hideHeader`);
+- the strip of the status color along the top of the body, with a running glint while pending;
 - a status row with the status, the type and whether the transaction is saved on the server of the Pulsar store
   (`syncStatus`); on the right, the explorer link of the adapter's `getExplorerTxUrl`, or, for a pending,
-  unconfirmed `ethereum`-tracker transaction sent with MetaMask whose adapter has `speedUpTxAction` and
-  `cancelTxAction`, the speed-up and cancel buttons (the rule of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs));
+  unconfirmed `ethereum`-tracker transaction sent with MetaMask by `connectedWalletAddress`, once the tracker has read
+  its nonce and fees, whose adapter has `speedUpTxAction` and `cancelTxAction`, the speed-up and cancel buttons (the rule
+  of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs)); with `onStopTracking`, the offer to stop tracking a transaction pending for over 10 minutes;
 - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
-  tracker, connector, confirmations while pending, the transaction key when it differs from the hash (Gelato, Safe,
-  ERC-4337);
+  tracker, connector, confirmations, the transaction key when it differs from the hash (Gelato, Safe, ERC-4337);
 - Context & Payload: the title and description of the current status, the error and the payload;
-- the execution data of the chain (EVM: nonce, fees in gwei, value in wei, replaced hash, input data; Solana: fee in
+- the execution data of the chain (EVM: nonce, fees in gwei, value in wei, the hash that replaced it, the hash it
+  replaced, input data; Solana: fee in
   SOL, slot, recent blockhash, instructions; Starknet: contract address, actual fee).
 
 Sections without data are left out. The RPC URL of the transaction is not shown, since it may contain an API key.

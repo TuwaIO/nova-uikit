@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ConnectButton } from '@tuwaio/nova-connect/components';
 
+import { ConnectButtonWithTransactions } from '../utils/ConnectButtonWithTransactions';
 import {
   createStorybookDecorator,
   ExtendedConnectButtonProps,
@@ -27,3 +28,13 @@ type Story = StoryObj<ExtendedConnectButtonProps>;
  * Requires NovaConnectProvider context to function properly.
  */
 export const Default: Story = {};
+
+/**
+ * What the connected button says about the transactions of the wallet: the address morphs into the state and back. Connect through
+ * Impersonate, then press a state: the transaction waits for a moment, then gets its result.
+ */
+export const TransactionStates: Story = {
+  render: ({ className, customization }) => (
+    <ConnectButtonWithTransactions className={className} customization={customization} />
+  ),
+};

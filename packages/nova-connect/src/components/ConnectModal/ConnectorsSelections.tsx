@@ -497,6 +497,18 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
 }
 
 /**
+ * Whether the block of the installed wallets is shown. Its empty state says that nothing is installed, which is wrong when a
+ * group below lists a wallet: a wallet named in a group is taken out of the installed ones.
+ *
+ * @param groups - The wallet groups, by name.
+ * @returns Whether to show the block.
+ * @internal
+ */
+export function showsInstalledBlock(groups: { installed: unknown[] } & Record<string, unknown>): boolean {
+  return groups.installed.length > 0 || !Object.values(groups).some((group) => (group as unknown[]).length > 0);
+}
+
+/**
  * The wallet list of the connect modal: installed wallets, the groups of `customConnectorGroups`, popular wallets
  * (`popularConnectors` of `NovaConnectProvider`, by default WalletConnect, Porto, Coinbase and Gemini) and, with
  * `withImpersonated`, the impersonated wallet. On touch devices the list scrolls horizontally and a wallet disclaimer
@@ -877,19 +889,21 @@ export const ConnectorsSelections = memo(
               aria-label={connectorsAreaAriaLabel}
               selectionsData={selectionsData}
             >
-              <ConnectorsBlock
-                connectors={connectorGroups.installed}
-                title={labels.installed}
-                selectedAdapter={selectedAdapter}
-                onClick={onClick}
-                solanaRPCUrls={solanaRPCUrls}
-                setIsConnected={setIsConnected}
-                setIsOpen={setIsOpen}
-                appChains={appChains}
-                isOnlyOneNetwork={isOnlyOneNetwork}
-                isTitleBold
-                customization={customization?.connectorsBlock?.installed}
-              />
+              {showsInstalledBlock(connectorGroups) && (
+                <ConnectorsBlock
+                  connectors={connectorGroups.installed}
+                  title={labels.installed}
+                  selectedAdapter={selectedAdapter}
+                  onClick={onClick}
+                  solanaRPCUrls={solanaRPCUrls}
+                  setIsConnected={setIsConnected}
+                  setIsOpen={setIsOpen}
+                  appChains={appChains}
+                  isOnlyOneNetwork={isOnlyOneNetwork}
+                  isTitleBold
+                  customization={customization?.connectorsBlock?.installed}
+                />
+              )}
 
               {customConnectorGroups &&
                 Object.keys(customConnectorGroups).map((key) => {

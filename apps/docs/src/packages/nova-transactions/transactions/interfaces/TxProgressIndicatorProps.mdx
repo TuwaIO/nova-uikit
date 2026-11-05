@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # TxProgressIndicatorProps
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L137)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:224](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L224)
 
 Props of [TxProgressIndicator](?path=/docs/packages-nova-transactions-transactions-functions-txprogressindicator--docs).
 
@@ -14,9 +14,19 @@ Props of [TxProgressIndicator](?path=/docs/packages-nova-transactions-transactio
 
 > `optional` **className?**: `string`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L152)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:241](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L241)
 
 Classes of the indicator.
+
+***
+
+### isCancelled?
+
+> `optional` **isCancelled?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:239](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L239)
+
+Whether that replacement was a cancel: the last step then says so.
 
 ***
 
@@ -24,7 +34,7 @@ Classes of the indicator.
 
 > `optional` **isConfirmed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:144](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L144)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:231](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L231)
 
 Whether the transaction reached the `confirmed` commitment (Solana `confirmationStatus` `confirmed` or
 `finalized`): the processing step is completed and labeled as confirmed while the last step waits for the result.
@@ -35,7 +45,7 @@ Whether the transaction reached the `confirmed` commitment (Solana `confirmation
 
 > `optional` **isFailed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L148)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:235](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L235)
 
 Whether the submission or the transaction failed.
 
@@ -45,7 +55,7 @@ Whether the submission or the transaction failed.
 
 > `optional` **isProcessing?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:139](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L139)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:226](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L226)
 
 Whether the transaction is being submitted or is pending.
 
@@ -55,9 +65,9 @@ Whether the transaction is being submitted or is pending.
 
 > `optional` **isReplaced?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L150)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:237](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L237)
 
-Whether the transaction was replaced (sped up or canceled).
+Whether the transaction was replaced by something else than a speed-up, whose record the modal goes on with.
 
 ***
 
@@ -65,7 +75,7 @@ Whether the transaction was replaced (sped up or canceled).
 
 > `optional` **isSucceed?**: `boolean`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:146](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L146)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:233](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L233)
 
 Whether the transaction succeeded.
 
@@ -75,7 +85,7 @@ Whether the transaction succeeded.
 
 > `optional` **stepClassNames?**: [`StepClassNames`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepclassnames--docs)
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L156)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:245](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L245)
 
 ClassNames for step customization
 
@@ -85,6 +95,6 @@ ClassNames for step customization
 
 > `optional` **StepComponent?**: `ComponentType`\<[`StepProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepprops--docs)\>
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L154)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:243](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L243)
 
 Component that renders each step.

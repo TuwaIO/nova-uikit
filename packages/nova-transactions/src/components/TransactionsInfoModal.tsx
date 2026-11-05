@@ -8,6 +8,7 @@ import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination 
 import { ComponentPropsWithoutRef, ComponentType, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { latestRecordOf } from '../utils/replacement';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 import { TransactionDetails } from './TransactionDetails';
 import { TransactionsHistory, TransactionsHistoryProps } from './TransactionsHistory';
@@ -49,7 +50,10 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
   components?: {
     /** The header with the title and the close button. */
     Header?: ComponentType<TransactionsInfoModalHeaderProps>;
-    /** The transaction list. */
+    /**
+     * The transaction list. It gets the whole pool: a speed-up has two records there, and `successorOf` tells the one to hide
+     * so that an operation stays one row, as in the default list.
+     */
     History?: ComponentType<TransactionsHistoryProps<T>>;
   };
 };
@@ -77,6 +81,8 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   pagination?: TxInMemoryPagination;
   /** Optional transaction key to open directly in detail view */
   selectedTxKey?: string | null;
+  /** `removeTxFromPool` of the Pulsar store, forwarded to TransactionsHistory. */
+  removeTxFromPool?: (txKey: string) => void;
 };
 
 type DefaultHeaderClassNames = {
@@ -147,6 +153,7 @@ export function TransactionsInfoModal<T extends Transaction>({
   transactionsPool,
   pagination,
   selectedTxKey,
+  removeTxFromPool,
 }: TransactionsInfoModalProps<T>) {
   const { transactionsModal, transactionDetails } = useLabels();
 
@@ -160,12 +167,14 @@ export function TransactionsInfoModal<T extends Transaction>({
   }
   const showTx = (txKey: string | null) => setView({ isOpen, selectedTxKey, openTxKey: txKey });
 
-  const openTx =
+  const opened =
     openTxKey && connectedWalletAddress
       ? selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress).find(
           (tx) => tx.txKey === openTxKey,
         )
       : undefined;
+  // The details go on with the operation: a speed-up that lands while they are open must not leave them on the old record
+  const openTx = opened && latestRecordOf(opened, transactionsPool);
   const onBack = openTx ? () => showTx(null) : undefined;
 
   const closeModal = () => setIsOpen(false);
@@ -210,6 +219,14 @@ export function TransactionsInfoModal<T extends Transaction>({
               adapter={adapter}
               onBack={() => showTx(null)}
               hideHeader
+              connectedWalletAddress={connectedWalletAddress}
+              onStopTracking={
+                removeTxFromPool &&
+                ((txKey) => {
+                  removeTxFromPool(txKey);
+                  showTx(null);
+                })
+              }
               customization={customization?.historyCustomization?.detailsCustomization}
             />
           ) : CustomHistory ? (
@@ -220,6 +237,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               customization={customization?.historyCustomization}
               pagination={pagination}
               onSelectTx={showTx}
+              removeTxFromPool={removeTxFromPool}
             />
           ) : (
             <TransactionsHistory
@@ -229,6 +247,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               customization={customization?.historyCustomization}
               pagination={pagination}
               onSelectTx={showTx}
+              removeTxFromPool={removeTxFromPool}
             />
           )}
         </div>

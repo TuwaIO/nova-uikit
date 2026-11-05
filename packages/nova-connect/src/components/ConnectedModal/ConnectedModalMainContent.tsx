@@ -2,7 +2,7 @@
  * @file ConnectedModalMainContent component with comprehensive customization options for all child components.
  */
 
-import { cn, standardButtonClasses } from '@tuwaio/nova-core/utils';
+import { cn, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
@@ -21,6 +21,7 @@ import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaC
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
+import { goesOnInNewRecord } from '../ConnectButton/connectedStatus';
 import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
@@ -94,6 +95,8 @@ export type ConnectedModalMainContentAvatarSectionProps = {
   walletName: string;
   /** Number of connectors of all networks in the Satellite store */
   connectorsCount: number;
+  /** Number of wallets connected now: the wallet button opens them */
+  connectedCount: number;
   /** Chains the wallet can switch to */
   chainsList: (string | number)[];
   /** The Nova Connect labels */
@@ -389,7 +392,7 @@ const DefaultLoadingIndicator: React.FC<ConnectedModalMainContentLoadingIndicato
       role="status"
       aria-label={labels.loading}
     >
-      <div className="Toastify__spinner" aria-hidden="true" />
+      <QuasarLoader size={20} />
       <span className="novacon:sr-only">{labels.loading}</span>
     </motion.div>
   );
@@ -400,6 +403,7 @@ const DefaultAvatarSection: React.FC<ConnectedModalMainContentAvatarSectionProps
   ensAvatar,
   walletName,
   connectorsCount,
+  connectedCount,
   chainsList,
   labels,
   onSwitchWallet,
@@ -426,7 +430,7 @@ const DefaultAvatarSection: React.FC<ConnectedModalMainContentAvatarSectionProps
         walletName={walletName}
         items={connectorsCount}
         onClick={onSwitchWallet}
-        aria-label={formatLabel(labels.connectWalletsAvailable, { count: connectorsCount })}
+        aria-label={formatLabel(labels.connectWalletsAvailable, { count: connectedCount })}
         data-testid="switch-wallet-button"
         customization={switchWalletButtonProps?.customization}
       />
@@ -534,7 +538,7 @@ const DefaultTransactionsSection: React.FC<ConnectedModalMainContentTransactions
               role="status"
               aria-label={labels.transactionLoading}
             >
-              <span className="novacon:block Toastify__spinner" aria-hidden="true" />
+              <QuasarLoader size={16} accent="var(--tuwa-pending-icon)" />
               <span className="novacon:sr-only">{labels.transactionLoading}</span>
             </motion.div>
           )}
@@ -684,7 +688,11 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       () =>
         activeAddress && transactionPool
           ? Object.values(transactionPool).filter(
-              (tx) => tx?.from && tx.from.toLowerCase() === activeAddress.toLowerCase(),
+              (tx, _, all) =>
+                tx?.from &&
+                tx.from.toLowerCase() === activeAddress.toLowerCase() &&
+                // A sped-up record is no row of the history, and the count is read out next to that list
+                !goesOnInNewRecord(tx, all),
             )
           : [],
       [activeAddress, transactionPool],
@@ -699,6 +707,9 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
      * Get number of available connectors for the current wallet type
      */
     const connectorsCount = activeConnection ? Object.values(connectors)?.flat().length || 0 : 0;
+
+    /** The connected wallets, which the wallet button opens. */
+    const connections = useSatelliteConnectStore((store) => store.connections);
 
     /**
      * Get wallet name from wallet type for display
@@ -794,6 +805,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           ensAvatar={ensAvatar}
           walletName={walletName}
           connectorsCount={connectorsCount}
+          connectedCount={Object.keys(connections ?? {}).length}
           chainsList={chainsList}
           labels={labels}
           onSwitchWallet={handleSwitchWallet}

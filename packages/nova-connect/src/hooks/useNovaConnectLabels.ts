@@ -104,7 +104,7 @@ export type LabelCategory = {
     'connectWallet' | 'disconnect' | 'connecting' | 'connected' | 'tryAgain' | 'back' | 'connect'
   >;
   /** State texts such as `success` and `loading` */
-  states: Extract<keyof NovaConnectLabels, 'success' | 'error' | 'replaced' | 'loading'>;
+  states: Extract<keyof NovaConnectLabels, 'success' | 'error' | 'replaced' | 'cancelled' | 'loading'>;
   /** ARIA labels such as `closeModal` */
   accessibility: Extract<
     keyof NovaConnectLabels,
@@ -141,7 +141,7 @@ export const useLabelsByCategory = <T extends keyof LabelCategory>(
 
   const categoryKeys: Record<keyof LabelCategory, (keyof NovaConnectLabels)[]> = {
     actions: ['connectWallet', 'disconnect', 'connecting', 'connected', 'tryAgain', 'back', 'connect'],
-    states: ['success', 'error', 'replaced', 'loading'],
+    states: ['success', 'error', 'replaced', 'cancelled', 'loading'],
     accessibility: ['chainSelector', 'closeModal', 'selectChain', 'walletControls', 'openWalletModal'],
     transactions: ['transactionLoading', 'transactionSuccess', 'transactionError', 'transactionReplaced', 'recent'],
   };

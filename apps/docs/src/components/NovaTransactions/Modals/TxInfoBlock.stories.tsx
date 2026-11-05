@@ -82,7 +82,7 @@ export const GelatoTransaction: Story = {
 };
 
 /**
- * A transaction on a different network (Sepolia) to demonstrate correct chain info display.
+ * A transaction on a test network (Monad Testnet). Testnet icons are recolored with `--tuwa-testnet-icons`.
  */
 export const DifferentNetwork: Story = {
   args: {
@@ -94,7 +94,7 @@ export const DifferentNetwork: Story = {
 };
 
 /**
- * A transaction on a different network (Sepolia) to demonstrate correct chain info display.
+ * A transaction on Monad mainnet.
  */
 export const DifferentNetworkMonad: Story = {
   args: {
@@ -106,7 +106,7 @@ export const DifferentNetworkMonad: Story = {
 };
 
 /**
- * An example of customizing the `InfoRow` and `transactionKey` components via render props.
+ * An example of customizing the `InfoRow` component: the rows of the network and the time. The hash row stays the default.
  */
 export const WithCustomization: Story = {
   args: {
@@ -114,7 +114,7 @@ export const WithCustomization: Story = {
     customization: {
       components: {
         InfoRow: ({ label, value }) => (
-          <div className="flex items-center justify-between rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/10 p-2 dark:bg-[#38bdf8]/10">
+          <div className="flex items-center justify-between gap-4 rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/10 p-2 dark:bg-[#38bdf8]/10">
             <div className="flex items-center gap-2 font-medium text-[#0052ff] dark:text-[#38bdf8]">
               <SparklesIcon className="h-4 w-4" />
               {label}

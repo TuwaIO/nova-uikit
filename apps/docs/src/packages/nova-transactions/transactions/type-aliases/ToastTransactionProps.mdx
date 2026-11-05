@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ToastTransactionProps**\<`T`\> = `object` & `Pick`\<[`NovaTransactionsProviderProps`](?path=/docs/packages-nova-transactions-providers-type-aliases-novatransactionsproviderprops--docs)\<`T`\>, `"adapter"` \| `"connectedWalletAddress"`\>
 
-Defined in: [components/ToastTransaction.tsx:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L107)
+Defined in: [components/ToastTransaction.tsx:115](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L115)
 
 Props of [ToastTransaction](?path=/docs/packages-nova-transactions-transactions-functions-toasttransaction--docs).
 
@@ -49,7 +49,7 @@ Icon shown on the left. Defaults to the icon of the transaction's network.
 > `optional` **openTxInfoModal?**: (`txKey?`) => `void`
 
 Opens the transaction history modal. The "open transaction" button is shown only when it is set and the connected
-wallet sent the transaction.
+wallet sent the transaction, also next to speed-up and cancel.
 
 #### Parameters
 

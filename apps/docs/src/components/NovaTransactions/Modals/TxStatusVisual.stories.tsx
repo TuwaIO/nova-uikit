@@ -18,7 +18,7 @@ const meta: Meta<typeof TxStatusVisual> = {
   argTypes: {
     isProcessing: {
       control: 'boolean',
-      description: 'True if the transaction is currently being processed (in the mempool).',
+      description: 'True if the transaction is being submitted or is pending.',
     },
     isSucceed: {
       control: 'boolean',
@@ -30,7 +30,7 @@ const meta: Meta<typeof TxStatusVisual> = {
     },
     isReplaced: {
       control: 'boolean',
-      description: 'True if the transaction was replaced (e.g., sped up or cancelled).',
+      description: 'True if the transaction was replaced by something else than a speed-up, as by a cancel.',
     },
   },
 };
@@ -42,7 +42,8 @@ type Story = StoryObj<typeof meta>;
 // --- Stories ---
 
 /**
- * An interactive story that allows you to toggle between all possible states of the visual indicator.
+ * An interactive story that allows you to toggle between all possible states of the visual indicator. Initializing and
+ * Processing look the same on purpose: the loader does not restart when the wallet has signed.
  */
 export const Interactive: Story = {
   render: (args) => {
@@ -57,13 +58,23 @@ export const Interactive: Story = {
     };
 
     return (
-      <div className="w-96 space-y-4">
+      <div className="w-[min(24rem,calc(100vw-2rem))] space-y-4">
         <div className="flex justify-center rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-secondary)] p-4">
           <TxStatusVisual {...args} {...states[status].props} />
         </div>
         <div className="flex flex-wrap justify-center gap-2 rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-muted)] p-2">
           {Object.entries(states).map(([key, { label }]) => (
-            <button key={key} onClick={() => setStatus(key as keyof typeof states)}>
+            <button
+              key={key}
+              type="button"
+              aria-pressed={status === key}
+              onClick={() => setStatus(key as keyof typeof states)}
+              className={`cursor-pointer rounded-[var(--tuwa-rounded-corners)] border px-2 py-1 text-xs ${
+                status === key
+                  ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-bg-primary)] font-semibold text-[var(--tuwa-text-accent)]'
+                  : 'border-[var(--tuwa-border-primary)] text-[var(--tuwa-text-primary)]'
+              }`}
+            >
               {label}
             </button>
           ))}
@@ -77,6 +88,7 @@ export const Interactive: Story = {
  * A side-by-side comparison of all available states for easy visual reference.
  */
 export const AllStates: Story = {
+  parameters: { controls: { disable: true } },
   render: () => {
     const states = [
       { label: 'Initializing', props: {} },
@@ -100,14 +112,14 @@ export const AllStates: Story = {
 };
 
 /**
- * The default state, shown when a transaction is created but not yet processing (e.g., waiting for signature).
+ * The state with no flags set: the same loader as Processing, as nothing has a result yet.
  */
 export const Initializing: Story = {
   name: 'State: Initializing',
 };
 
 /**
- * The state when the transaction is actively being processed on-chain.
+ * The state while the transaction is being submitted or is pending: the wallet signs, or it waits for a block.
  */
 export const Processing: Story = {
   name: 'State: Processing',
