@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.6...nova-core-v0.11.0) (2026-11-05)
+
+
+### Features
+
+* what changes on screen moves instead of jumping, and every status says the same ([#133](https://github.com/TuwaIO/nova-uikit/issues/133)) ([672117d](https://github.com/TuwaIO/nova-uikit/commit/672117d5e856e1f25c5563be2ed63bdcc20d50a1))
+
 ## [0.10.6](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.10.5...nova-core-v0.10.6) (2026-10-28)
 
 
