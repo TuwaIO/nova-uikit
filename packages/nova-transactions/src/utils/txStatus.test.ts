@@ -2,7 +2,7 @@ import { Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/puls
 import { describe, expect, it } from 'vitest';
 
 import { defaultLabels } from '../i18n/en';
-import { hasConfirmations, progressOf, statusLabelOf, toneOf, trackerGaveUp } from './txStatus';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf, trackerGaveUp, walletPartOf } from './txStatus';
 
 const tx = (fields: Record<string, unknown>) => fields as unknown as Transaction;
 
@@ -100,5 +100,17 @@ describe('hasConfirmations', () => {
     expect(hasConfirmations(0)).toBe(false);
     expect(hasConfirmations(null)).toBe(false);
     expect(hasConfirmations(undefined)).toBe(false);
+  });
+});
+
+describe('walletPartOf', () => {
+  it('takes the wallet out of a connector type: a record holds evm:metamask, and the row would read Evm:metamask', () => {
+    expect(walletPartOf('evm:metamask')).toBe('metamask');
+    expect(walletPartOf('solana:phantom')).toBe('phantom');
+  });
+
+  it('keeps a value without an adapter, and nothing stays nothing', () => {
+    expect(walletPartOf('injected')).toBe('injected');
+    expect(walletPartOf(undefined)).toBeUndefined();
   });
 });

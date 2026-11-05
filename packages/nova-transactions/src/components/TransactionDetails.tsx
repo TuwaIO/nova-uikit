@@ -37,7 +37,7 @@ import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { explorerUrlOfHash, explorerUrlOfReplaced, stopTrackingDueIn } from '../utils/replacement';
-import { hasConfirmations, progressOf, statusLabelOf, toneOf } from '../utils/txStatus';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
 
 // --- Sub-components Prop Types ---
 
@@ -736,7 +736,7 @@ export function TransactionDetails<T extends Transaction>({
             <span className="novatx:capitalize">{tx.tracker}</span>
           </CMetadataRow>
           <CMetadataRow icon={LinkIcon} label={transactionDetails.connector}>
-            <span className="novatx:capitalize">{tx.connectorType}</span>
+            <span className="novatx:capitalize">{walletPartOf(tx.connectorType)}</span>
           </CMetadataRow>
           {hasConfirmations(tx.confirmations) && (
             <CMetadataRow icon={CheckBadgeIcon} label={transactionDetails.confirmations}>

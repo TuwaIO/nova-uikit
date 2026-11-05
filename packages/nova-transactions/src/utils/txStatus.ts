@@ -99,3 +99,13 @@ export function trackerGaveUp(tx: Transaction | undefined): boolean {
       return false;
   }
 }
+
+/**
+ * The wallet in a connector type. A record holds `evm:metamask`, and the adapter has a row of its own in the details.
+ *
+ * @param connectorType - The connector type of a transaction.
+ * @returns The wallet part, or the value as it is without an adapter.
+ */
+export function walletPartOf(connectorType?: string): string | undefined {
+  return connectorType?.includes(':') ? connectorType.split(':')[1] : connectorType;
+}
