@@ -604,7 +604,7 @@ const ChainTriggerButton: React.FC<ChainTriggerButtonProps> = ({
 
   const innerContentClasses = customization?.classNames?.innerContent
     ? customization.classNames.innerContent({ isMobile, isOpen: isChainsListOpen })
-    : 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 sm:novacon:px-4 novacon:min-w-[60px]';
+    : 'novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-2 novacon:sm:px-4 novacon:min-w-[60px]';
 
   const arrowWrapperClasses = customization?.classNames?.arrowWrapper
     ? customization.classNames.arrowWrapper({ isMobile })

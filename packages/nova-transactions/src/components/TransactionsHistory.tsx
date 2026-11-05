@@ -53,7 +53,7 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
     placeholderMessage?: string;
     /** Classes for the infinite scroll loader container */
     loaderContainer?: string;
-    /** Classes for the infinite scroll loader icon (spinner) */
+    /** Classes for the infinite scroll loader */
     loaderIcon?: string;
     /** Classes for the error indicator container */
     errorContainer?: string;
@@ -141,6 +141,8 @@ const ERROR_DISPLAY_DURATION = 2500;
  * Default loader component rendered at the bottom of the list during pagination loading.
  */
 function DefaultLoader({ className, iconClassName }: TransactionsHistoryLoaderProps) {
+  const { trackedTxButton } = useLabels();
+
   return (
     <div
       className={cn('novatx:flex novatx:items-center novatx:justify-center novatx:py-4', className)}
@@ -148,6 +150,7 @@ function DefaultLoader({ className, iconClassName }: TransactionsHistoryLoaderPr
       aria-live="polite"
     >
       <QuasarLoader size={20} className={iconClassName} />
+      <span className="novatx:sr-only">{trackedTxButton.loading}</span>
     </div>
   );
 }
@@ -307,7 +310,8 @@ export function TransactionsHistory<T extends Transaction>({
     observer.observe(sentinelRef.current);
 
     return () => observer.disconnect();
-  }, [pagination?.hasMore, handleIntersection]);
+    // `selectedTxKey` too: the details take the list and its sentinel away, and Back brings a new one to observe
+  }, [pagination?.hasMore, handleIntersection, selectedTxKey]);
 
   const {
     Placeholder = HistoryPlaceholder,

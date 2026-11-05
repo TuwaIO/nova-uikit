@@ -6,6 +6,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 import { cn } from '../utils';
+import { stripFill } from './statusEdgeFill';
 
 /** The state a {@link StatusEdge} shows. `neutral` is a result that is neither a success nor an error. */
 export type StatusTone = 'pending' | 'success' | 'error' | 'neutral';
@@ -16,21 +17,6 @@ const TONE_COLOR: Record<StatusTone, string> = {
   error: 'var(--tuwa-error-icon)',
   neutral: 'var(--tuwa-info-icon)',
 };
-
-/**
- * How much of the strip is filled.
- *
- * @internal
- * @param tone - The state.
- * @param progress - The share done, if it is known.
- * @param reduceMotion - Whether the viewer asked for less motion: then the glint cannot say that work goes on.
- * @returns The share of the strip to fill, from 0 to 1.
- */
-export function stripFill(tone: StatusTone, progress: number | undefined, reduceMotion: boolean): number {
-  if (tone !== 'pending') return 1;
-  if (progress !== undefined) return Math.min(1, Math.max(0, progress));
-  return reduceMotion ? 1 : 0;
-}
 
 /** Props of {@link StatusEdge}. */
 export type StatusEdgeProps = {
@@ -79,7 +65,7 @@ export function StatusEdge({ tone, progress, className, classNames }: StatusEdge
             key={tone}
             className={cn('novacore:absolute novacore:inset-x-0 novacore:top-0 novacore:h-20', classNames?.wash)}
             style={{
-              background: `linear-gradient(to bottom, color-mix(in srgb, ${color} 16%, transparent), transparent)`,
+              background: `linear-gradient(to bottom, color-mix(in srgb, ${color} 12%, transparent), transparent)`,
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

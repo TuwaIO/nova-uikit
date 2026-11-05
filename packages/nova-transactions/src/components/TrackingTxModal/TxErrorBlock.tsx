@@ -2,8 +2,8 @@
  * @file This file contains the `TxErrorBlock` component for displaying transaction error messages.
  */
 
-import { CheckIcon, DocumentDuplicateIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { useMemo } from 'react';
 
@@ -95,11 +95,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
             classNames?.copyButton,
           )}
         >
-          {isCopied ? (
-            <CheckIcon className="novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-success-icon)]" />
-          ) : (
-            <DocumentDuplicateIcon className="novatx:h-5 novatx:w-5" />
-          )}
+          <CopyIcon copied={isCopied} className="novatx:h-5 novatx:w-5" />
         </button>
       </div>
 
@@ -112,7 +108,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
       >
         <p
           className={cn(
-            'novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-error-text)] novatx:break-all',
+            'novatx:font-mono novatx:text-xs novatx:text-[var(--tuwa-error-text)] novatx:[overflow-wrap:anywhere]',
             classNames?.messageText,
           )}
         >

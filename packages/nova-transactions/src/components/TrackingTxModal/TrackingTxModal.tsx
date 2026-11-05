@@ -68,7 +68,10 @@ export type TrackingTxModalFooterProps = {
   isProcessing?: boolean;
   /** Whether the submission or the transaction failed. */
   isFailed?: boolean;
-  /** Whether the pending transaction can be sped up or canceled. */
+  /**
+   * Whether this is a wait that may take long: a pending standard EVM transaction not yet in a block, on any wallet. The footer
+   * can be closed then. `onSpeedUp` and `onCancel` are what decide the buttons of those actions.
+   */
   canReplace?: boolean;
   /** Address of the connected wallet. */
   connectedWalletAddress?: string;
@@ -244,12 +247,11 @@ export function TrackingTxModal<T extends Transaction>({
     !trackerGaveUp(activeTx) &&
     txToDisplay &&
     initialTx?.actionFunction &&
+    typeof foundAdapter?.retryTxAction === 'function' &&
     executeTxAction
   );
   // Whether the wait is one that may take long: the footer can be closed then, whichever wallet sent the transaction
   const canReplace = !!(
-    foundAdapter?.speedUpTxAction &&
-    foundAdapter?.cancelTxAction &&
     activeTx?.pending &&
     (!activeTx.confirmations || Number(activeTx.confirmations) < 1) &&
     activeTx.tracker === TransactionTracker.Ethereum
@@ -308,7 +310,12 @@ export function TrackingTxModal<T extends Transaction>({
           {...customization?.motionProps}
           className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}
         >
-          <CStatusEdge tone={tone} progress={activeTx && progressOf(activeTx)} className={classNames?.statusEdge} />
+          {/* Above the sticky header, which is opaque: under it no strip or wash would ever show */}
+          <CStatusEdge
+            tone={tone}
+            progress={activeTx && progressOf(activeTx)}
+            className={cn('novatx:z-12', classNames?.statusEdge)}
+          />
           {CustomHeader ? (
             <CustomHeader
               onClose={() => onClose(activeTx?.txKey)}
@@ -347,6 +354,7 @@ export function TrackingTxModal<T extends Transaction>({
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}
+                isCancelled={isCancelled}
               />
             ) : (
               <TxProgressIndicator
@@ -430,7 +438,8 @@ const DefaultHeader = ({
   const { actions } = useLabels();
   return (
     <DialogHeader className={classNames?.header}>
-      <DialogTitle className={classNames?.headerTitle}>{title}</DialogTitle>
+      {/* A width of its own: a title that changes must know how much room it has */}
+      <DialogTitle className={cn('novatx:min-w-0 novatx:flex-1', classNames?.headerTitle)}>{title}</DialogTitle>
       <DialogClose asChild>
         <button
           type="button"

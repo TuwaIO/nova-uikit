@@ -26,7 +26,7 @@ CSS color of the moving parts and the core, such as `var(--tuwa-pending-icon)`. 
 
 > `optional` **className?**: `string`
 
-Defined in: [components/QuasarLoader.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L24)
+Defined in: [components/QuasarLoader.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L28)
 
 Classes of the loader. The still parts take the text color.
 
@@ -36,9 +36,11 @@ Classes of the loader. The still parts take the text color.
 
 > `optional` **label?**: `string`
 
-Defined in: [components/QuasarLoader.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L22)
+Defined in: [components/QuasarLoader.tsx:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L26)
 
-What is being waited for, for screen readers. With it the loader has `role="status"`; without it, it is decorative.
+What is being waited for, for screen readers: with it the loader is a `role="status"` region with that text; without it, it
+is decorative. A region announces what changes after it is on the page, so one that mounts with the loader is found by
+browsing, not announced.
 
 ***
 

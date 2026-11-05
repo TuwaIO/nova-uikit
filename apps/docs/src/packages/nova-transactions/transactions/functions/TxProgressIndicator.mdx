@@ -6,11 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TxProgressIndicator**(`props`): `Element`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:169](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L169)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:257](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L257)
 
 Three steps of the transaction lifecycle, used by the tracking modal: "created" (always completed), "processing"
 (active while processing, completed after, and labeled "confirmed" once the transaction is confirmed) and a final
-step that shows success, failure or replacement.
+step that shows success, failure or replacement, active once the transaction is confirmed. One step is waited for at a
+time: an arc runs around it, and one glint runs along the line from the last step passed to the end.
 
 ## Parameters
 

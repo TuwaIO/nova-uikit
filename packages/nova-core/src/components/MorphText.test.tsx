@@ -7,12 +7,20 @@ vi.mock('framer-motion', async (importOriginal) => ({
   useReducedMotion: () => reduceMotion.value,
 }));
 
+const state = vi.hoisted(() => ({ settled: undefined as string | undefined }));
+
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
-  useState: (initial: unknown) => [initial, vi.fn()],
+  useState: (initial: unknown) => [typeof initial === 'string' ? (state.settled ?? initial) : initial, vi.fn()],
+  useRef: () => ({ current: null }),
+  useEffect: vi.fn(),
 }));
 
-import { morphLetters, MorphText } from './MorphText';
+import { morphLetters } from './morphLetters';
+import { MorphText } from './MorphText';
+
+type Node = { type: string; props: { children: [Node, unknown, unknown]; className?: string } };
+const textOf = (tree: Node) => tree.props.children[0];
 
 describe('morphLetters', () => {
   it('gives the n-th copy of a letter the same key in both versions, so that it glides', () => {
@@ -42,15 +50,33 @@ describe('morphLetters', () => {
 });
 
 describe('MorphText', () => {
-  it('is a plain span at rest: a list of statuses must not cost a motion element per letter', () => {
+  it('is plain text at rest: a list of statuses must not cost a motion element per letter', () => {
     reduceMotion.value = false;
-    const tree = MorphText({ children: 'Pending', className: 'label' }) as unknown as {
-      type: string;
-      props: { children: string; className: string };
-    };
+    state.settled = undefined;
+    const tree = MorphText({ children: 'Pending', className: 'label' }) as unknown as Node;
 
     expect(tree.type).toBe('span');
-    expect(tree.props.children).toBe('Pending');
     expect(tree.props.className).toBe('label');
+    expect(textOf(tree).props.children).toBe('Pending');
+    expect(tree.props.children[1]).toBe(false);
+  });
+
+  it('keeps the new text in the one element a screen reader reads, while the letters change on top of it', () => {
+    reduceMotion.value = false;
+    state.settled = 'Pending';
+    const tree = MorphText({ children: 'Success' }) as unknown as Node;
+
+    expect(textOf(tree).type).toBe('span');
+    expect(textOf(tree).props.children).toBe('Success');
+    expect(tree.props.children[1]).toBeTruthy();
+  });
+
+  it('just changes the text with prefers-reduced-motion', () => {
+    reduceMotion.value = true;
+    state.settled = 'Pending';
+    const tree = MorphText({ children: 'Success' }) as unknown as Node;
+
+    expect(textOf(tree).props.children).toBe('Success');
+    expect(tree.props.children[1]).toBe(false);
   });
 });

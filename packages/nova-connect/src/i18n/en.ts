@@ -198,7 +198,7 @@ export const defaultLabels: NovaConnectLabels = {
   disconnectAllDescription: 'Disconnect all wallets and close the modal',
   explorerLinkDescription: 'Opens in a new tab: the wallet address {address} on the blockchain explorer',
   explorerNotAvailable: 'Blockchain explorer is not available for this network',
-  connectWalletsAvailable: 'Connect Wallet - {count} wallets available',
+  connectWalletsAvailable: 'Connected Wallets - {count} connected',
   switchNetworkNetworksAvailable: 'Switch network - {count} networks available',
   transactionsInAppCount: 'Transactions in app - {count} transactions',
   transactionsAvailable: '{count} transactions available',

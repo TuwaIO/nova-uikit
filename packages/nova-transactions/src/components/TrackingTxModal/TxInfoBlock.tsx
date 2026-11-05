@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../../providers';
+import { hasConfirmations } from '../../utils/txStatus';
 import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
@@ -168,7 +169,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         </>
       )}
 
-      {'confirmations' in tx && Number(tx.confirmations) > 0 && (
+      {'confirmations' in tx && hasConfirmations(tx.confirmations) && (
         <InfoRow label={statuses.confirmationsLabel} value={tx.confirmations} classNames={rowClassNames} />
       )}
 

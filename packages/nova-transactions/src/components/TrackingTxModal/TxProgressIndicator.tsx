@@ -2,8 +2,9 @@
  * @file This file contains the `TxProgressIndicator` component, a visual step-by-step progress bar for transactions.
  */
 
-import { ArrowPathIcon, CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, MorphIcon, MorphText } from '@tuwaio/nova-core';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText } from '@tuwaio/nova-core';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ComponentType } from 'react';
 
 import { useLabels } from '../../providers';
@@ -39,53 +40,147 @@ export type StepProps = {
   classNames?: StepClassNames;
 };
 
-const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; border: string; fill: string; pulse?: string }> = {
+const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; circle: string }> = {
   completed: {
     line: 'novatx:bg-[var(--tuwa-success-icon)]',
-    border: 'novatx:border-[var(--tuwa-success-icon)]',
-    fill: 'novatx:bg-[var(--tuwa-success-icon)]',
+    circle: 'novatx:bg-[var(--tuwa-success-icon)]',
   },
   error: {
     line: 'novatx:bg-[var(--tuwa-error-icon)]',
-    border: 'novatx:border-[var(--tuwa-error-icon)]',
-    fill: 'novatx:bg-[var(--tuwa-error-icon)]',
+    circle: 'novatx:bg-[var(--tuwa-error-icon)]',
   },
   replaced: {
     line: 'novatx:bg-[var(--tuwa-info-icon)]',
-    border: 'novatx:border-[var(--tuwa-info-icon)]',
-    fill: 'novatx:bg-[var(--tuwa-info-icon)]',
+    circle: 'novatx:bg-[var(--tuwa-info-icon)]',
   },
+  // The line behind the circle stops at its edge
   active: {
     line: 'novatx:bg-[var(--tuwa-pending-icon)]',
-    border: 'novatx:border-[var(--tuwa-pending-icon)]',
-    fill: 'novatx:bg-transparent',
-    pulse: 'novatx:bg-[var(--tuwa-pending-icon)]',
+    circle: 'novatx:bg-[var(--tuwa-bg-primary)]',
   },
   inactive: {
     line: 'novatx:bg-[var(--tuwa-border-primary)]',
-    border: 'novatx:border-[var(--tuwa-border-primary)]',
-    fill: 'novatx:bg-transparent',
+    circle: 'novatx:bg-[var(--tuwa-bg-primary)] novatx:border-[1.5px] novatx:border-[var(--tuwa-border-primary)]',
   },
 };
+
+/** The step being waited for: an arc runs around a dot that breathes, and a halo goes out from it. */
+function ActiveMark() {
+  const reduceMotion = useReducedMotion();
+  return (
+    <span className="novatx:relative novatx:block novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-pending-icon)]">
+      {!reduceMotion && (
+        <motion.span
+          className="novatx:absolute novatx:inset-0 novatx:rounded-full novatx:bg-current"
+          animate={{ scale: [0.8, 1.7], opacity: [0.3, 0] }}
+          transition={{ duration: 1.6, ease: 'easeOut', repeat: Infinity }}
+        />
+      )}
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        aria-hidden="true"
+        className="novatx:absolute novatx:inset-0 novatx:h-5 novatx:w-5 novatx:animate-spin novatx:motion-reduce:animate-none novatx:[animation-duration:1.4s]"
+      >
+        <circle cx={10} cy={10} r={8.75} stroke="currentColor" strokeOpacity={0.22} strokeWidth={2} />
+        <circle
+          cx={10}
+          cy={10}
+          r={8.75}
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeDasharray="14 41"
+        />
+      </svg>
+      <motion.span
+        className="novatx:absolute novatx:inset-[6.5px] novatx:rounded-full novatx:bg-current"
+        animate={reduceMotion ? undefined : { scale: [1, 0.72, 1] }}
+        transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
+      />
+    </span>
+  );
+}
+
+/** The mark inside the circle of a step. */
+function StepMark({ status }: { status: StepStatus }) {
+  switch (status) {
+    case 'completed':
+      return <DrawnCheck className="novatx:h-3.5 novatx:w-3.5 novatx:text-white" />;
+    case 'error':
+      return <DrawnCross className="novatx:h-3.5 novatx:w-3.5 novatx:text-white" />;
+    case 'replaced':
+      return <ArrowPathIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
+    case 'active':
+      return <ActiveMark />;
+    default:
+      return (
+        <span className="novatx:block novatx:h-1 novatx:w-1 novatx:rounded-full novatx:bg-[var(--tuwa-border-primary)]" />
+      );
+  }
+}
+
+/** The line that leads to a step: it fills up in the color of a result. */
+function StepLine({ status, className }: { status: StepStatus; className?: string }) {
+  const reduceMotion = useReducedMotion();
+  const isResult = status === 'completed' || status === 'error' || status === 'replaced';
+  const isWaiting = status === 'active';
+
+  return (
+    <div
+      className={cn(
+        'novatx:absolute novatx:right-1/2 novatx:top-[9px] novatx:h-0.5 novatx:w-full novatx:overflow-hidden novatx:bg-[var(--tuwa-border-primary)]',
+        !isResult && !isWaiting && className,
+      )}
+    >
+      <motion.div
+        className={cn(
+          'novatx:h-full novatx:w-full novatx:origin-left novatx:transition-colors novatx:duration-300',
+          STEP_STYLE_CONFIG[status].line,
+          (isResult || isWaiting) && className,
+        )}
+        initial={reduceMotion ? false : { scaleX: 0 }}
+        // Without motion no glint can say that the wait goes on, so the line itself says it
+        animate={{ scaleX: isResult || (isWaiting && reduceMotion) ? 1 : 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.4, ease: [0.2, 0, 0, 1] }}
+      />
+    </div>
+  );
+}
+
+/**
+ * One glint for the whole wait: it runs from the last step passed to the end of the line, behind the circles, and not a glint of
+ * its own on each line.
+ *
+ * @param props - Where it starts.
+ * @param props.fromConfirmed - Whether the processing step is passed already.
+ * @returns The glint, or nothing with `prefers-reduced-motion`.
+ */
+function WaitGlint({ fromConfirmed }: { fromConfirmed: boolean }) {
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      // The centers of the first and the middle of three equal columns, and of the last one
+      className={cn(
+        'novatx:pointer-events-none novatx:absolute novatx:right-[16.667%] novatx:top-[9px] novatx:h-0.5 novatx:overflow-hidden',
+        fromConfirmed ? 'novatx:left-1/2' : 'novatx:left-[16.667%]',
+      )}
+    >
+      <motion.div
+        className={cn('novatx:h-full novatx:w-1/3', STEP_STYLE_CONFIG.active.line)}
+        animate={{ x: ['-100%', '300%'] }}
+        transition={{ duration: fromConfirmed ? 1.2 : 1.8, ease: 'easeInOut', repeat: Infinity }}
+      />
+    </div>
+  );
+}
 
 function Step({ status, label, isFirst = false, classNames }: StepProps) {
   const styles = STEP_STYLE_CONFIG[status];
   const statusOverride = classNames?.statusOverrides?.[status];
-
-  const renderIcon = () => {
-    switch (status) {
-      case 'completed':
-        return <CheckIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
-      case 'error':
-        return <ExclamationTriangleIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
-      case 'replaced':
-        return <ArrowPathIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
-      case 'active':
-        return <div className={cn('novatx:h-2 novatx:w-2 novatx:animate-pulse novatx:rounded-full', styles.pulse)} />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div
@@ -94,27 +189,19 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
         classNames?.container,
       )}
     >
-      {!isFirst && (
-        <div
-          className={cn(
-            'novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full novatx:transition-colors novatx:duration-300',
-            styles.line,
-            classNames?.line,
-            statusOverride?.line,
-          )}
-        />
-      )}
+      {!isFirst && <StepLine status={status} className={cn(classNames?.line, statusOverride?.line)} />}
 
       <div
         className={cn(
-          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border-2 novatx:transition-colors novatx:duration-300',
-          styles.border,
-          styles.fill,
+          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:transition-colors novatx:duration-300',
+          styles.circle,
           classNames?.circle,
           statusOverride?.circle,
         )}
       >
-        <MorphIcon iconKey={status}>{renderIcon()}</MorphIcon>
+        <MorphIcon iconKey={status} animateFirst={status !== 'inactive'}>
+          <StepMark status={status} />
+        </MorphIcon>
       </div>
 
       <span
@@ -161,7 +248,8 @@ export interface TxProgressIndicatorProps {
 /**
  * Three steps of the transaction lifecycle, used by the tracking modal: "created" (always completed), "processing"
  * (active while processing, completed after, and labeled "confirmed" once the transaction is confirmed) and a final
- * step that shows success, failure or replacement.
+ * step that shows success, failure or replacement, active once the transaction is confirmed. One step is waited for at a
+ * time: an arc runs around it, and one glint runs along the line from the last step passed to the end.
  *
  * @param props - See {@link TxProgressIndicatorProps}.
  * @returns The indicator.
@@ -189,7 +277,8 @@ export function TxProgressIndicator({
       if (isSucceed) return 'completed';
       if (isFailed) return 'error';
       if (isReplaced) return 'replaced';
-      if (isProcessing) return 'active';
+      // One step is being waited for at a time: the last one once the processing step is passed
+      if (isProcessing && isConfirmed) return 'active';
     }
     return 'inactive';
   };
@@ -210,10 +299,13 @@ export function TxProgressIndicator({
   ];
 
   return (
-    <div className={cn('novatx:flex novatx:w-full novatx:items-start novatx:px-4 novatx:pt-2 novatx:pb-1', className)}>
-      {steps.map((stepProps, index) => (
-        <StepComponent key={index} {...stepProps} />
-      ))}
+    <div className={cn('novatx:w-full novatx:px-4 novatx:pt-2 novatx:pb-1', className)}>
+      <div className="novatx:relative novatx:flex novatx:w-full novatx:items-start">
+        {steps.map((stepProps, index) => (
+          <StepComponent key={index} {...stepProps} />
+        ))}
+        {isProcessing && StepComponent === Step && <WaitGlint fromConfirmed={!!isConfirmed} />}
+      </div>
     </div>
   );
 }

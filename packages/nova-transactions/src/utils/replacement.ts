@@ -187,9 +187,16 @@ export function trackedButtonStep<T extends Transaction>(tx: T, pool: Transactio
  *
  * @param tx - The transaction.
  * @param pool - The transaction pool.
+ * @param known - The ids seen so far by record: the first record of a chain may leave the pool before the last.
  * @returns The id of its toast.
  */
-export function toastIdOf<T extends Transaction>(tx: T, pool: TransactionPool<T>): string {
+export function toastIdOf<T extends Transaction>(
+  tx: T,
+  pool: TransactionPool<T>,
+  known?: ReadonlyMap<string, string>,
+): string {
+  const remembered = known?.get(tx.txKey);
+  if (remembered) return remembered;
   const seen = new Set([tx.txKey]);
   let first = tx;
   for (
@@ -200,7 +207,7 @@ export function toastIdOf<T extends Transaction>(tx: T, pool: TransactionPool<T>
     seen.add(previous.txKey);
     first = previous;
   }
-  return first.txKey;
+  return known?.get(first.txKey) ?? first.txKey;
 }
 
 /** What {@link toastStepFor} tells the provider to do. */
@@ -213,19 +220,24 @@ export type ToastStep = { kind: 'skip' } | { kind: 'show'; toastId: string };
  * @param prevTx - The transaction as it was, if it was in the pool.
  * @param pool - The transaction pool.
  * @param isToastActive - Whether a toast with this id is on screen.
- * @returns The next step.
+ * @param known - The ids seen so far by record.
+ * @returns The next step. A toast a person closed comes back for a change of state, not for any write to the record, as
+ * trackers write several times while a transaction waits.
  */
 export function toastStepFor<T extends Transaction>(
   tx: T,
   prevTx: T | undefined,
   pool: TransactionPool<T>,
   isToastActive: (toastId: string) => boolean,
+  known?: ReadonlyMap<string, string>,
 ): ToastStep {
   // The record that goes on speaks for the operation from here
   if (successorOf(tx, pool)) return { kind: 'skip' };
-  const toastId = toastIdOf(tx, pool);
+  const toastId = toastIdOf(tx, pool, known);
   if (!prevTx) return tx.pending || isToastActive(toastId) ? { kind: 'show', toastId } : { kind: 'skip' };
-  return JSON.stringify(prevTx) === JSON.stringify(tx) ? { kind: 'skip' } : { kind: 'show', toastId };
+  if (JSON.stringify(prevTx) === JSON.stringify(tx)) return { kind: 'skip' };
+  const isNewState = prevTx.pending !== tx.pending || prevTx.status !== tx.status;
+  return isNewState || isToastActive(toastId) ? { kind: 'show', toastId } : { kind: 'skip' };
 }
 
 /**
@@ -234,27 +246,35 @@ export function toastStepFor<T extends Transaction>(
  *
  * @param prevPool - The pool before the change.
  * @param pool - The pool now.
+ * @param known - The ids seen so far by record.
  * @returns The ids of the toasts to close.
  */
 export function toastsOfRemoved<T extends Transaction>(
   prevPool: TransactionPool<T>,
   pool: TransactionPool<T>,
+  known?: ReadonlyMap<string, string>,
 ): string[] {
   return Object.values(prevPool)
     .filter((tx) => !pool[tx.txKey] && !successorOf(tx, prevPool))
-    .map((tx) => toastIdOf(tx, prevPool));
+    .map((tx) => toastIdOf(tx, prevPool, known));
 }
 
+/** How many transactions still pending when a page opens get a toast. */
+const PENDING_TOASTS_AT_LOAD = 3;
+
 /**
- * The pool as the toasts should find it when the page opens: without what is pending, so that a transaction still pending
- * after a reload gets a toast, and with it the way to speed it up or stop tracking it. A toast for every finished record would
- * be noise.
+ * The transactions of a wallet to show toasts for when the page opens: those still pending, the newest few. Any other wallet
+ * cannot act on them, and a toast for every finished record would be noise.
  *
- * @param pool - The pool when the page opens.
- * @returns The pool of what has finished.
+ * @param pool - The pool.
+ * @param wallet - The connected wallet, in lower case.
+ * @returns The transactions, newest first.
  */
-export function settledRecordsOf<T extends Transaction>(pool: TransactionPool<T>): TransactionPool<T> {
-  return Object.fromEntries(Object.entries(pool).filter(([, tx]) => !tx.pending));
+export function pendingOfWallet<T extends Transaction>(pool: TransactionPool<T>, wallet: string): T[] {
+  return Object.values(pool)
+    .filter((tx) => tx.pending && tx.from?.toLowerCase() === wallet)
+    .sort((a, b) => Number(b.localTimestamp) - Number(a.localTimestamp))
+    .slice(0, PENDING_TOASTS_AT_LOAD);
 }
 
 /**
@@ -265,6 +285,8 @@ export function settledRecordsOf<T extends Transaction>(pool: TransactionPool<T>
  * @param click.walletNow - The wallet now.
  * @param click.keyBefore - The last transaction key before the action.
  * @param click.keyAfter - The last transaction key after it.
+ * @param click.sentAfterClick - Whether the record under that key was sent after the click, as a Safe proposal sent again has
+ * the same key.
  * @returns `track` to follow the new transaction; `idle` when the action added none, as when an app catches a rejection and
  * returns nothing, as the button would otherwise wait for good or show the result of an older transaction; `ignore` when the
  * wallet changed meanwhile, as the result belongs to the other wallet.
@@ -274,9 +296,11 @@ export function afterTrackedAction(click: {
   walletNow?: string;
   keyBefore?: string;
   keyAfter?: string;
+  sentAfterClick?: boolean;
 }): 'track' | 'idle' | 'ignore' {
   if (click.walletAtClick !== click.walletNow) return 'ignore';
-  return click.keyAfter && click.keyAfter !== click.keyBefore ? 'track' : 'idle';
+  if (!click.keyAfter) return 'idle';
+  return click.keyAfter !== click.keyBefore || click.sentAfterClick ? 'track' : 'idle';
 }
 
 /**

@@ -5,6 +5,7 @@ import { cn, formatIconNameForGithub, getChainName, isSolanaDev } from '../utils
 import { Web3IconLazy } from '../web3-icons';
 import { FallbackIcon } from './FallbackIcon';
 import { GithubFallbackIcon } from './GithubFallbackIcon';
+import { iconVariantOf } from './iconVariant';
 import { SvgToImg } from './SvgToImg';
 
 /**
@@ -17,7 +18,10 @@ export interface NetworkIconProps {
    * color under their genesis-hash chain IDs and their names.
    */
   chainId: number | string;
-  /** Icon style of `@web3icons/react`. Defaults to `'background'`. */
+  /**
+   * Icon style of `@web3icons/react`. Defaults to `'background'`. An icon without this style is drawn in a style it has, and a
+   * mono icon stays an inline SVG, so that its `currentColor` follows the theme.
+   */
   variant?: 'background' | 'branded' | 'mono';
   /** Classes merged with the default classes (full size of the parent, rounded). */
   className?: string;
@@ -56,7 +60,8 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
 
   // If network not found in @web3icons/common metadata, skip the icon library entirely
   // This avoids the async flash from the dynamic component for icons we know don't exist
-  const iconPath = networks.find((network) => network.id === chainInfo.id)?.filePath;
+  const icon = networks.find((network) => network.id === chainInfo.id);
+  const iconPath = icon?.filePath;
   const isUnknownNetwork = chainInfo.name === 'Unknown';
 
   if (isUnknownNetwork || !iconPath) {
@@ -68,10 +73,25 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
     return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />;
   }
 
+  const drawnVariant = iconVariantOf(icon.variants, variant);
+
+  // A mono icon is drawn with `currentColor`, which an `<img>` cannot inherit: it stays inline and follows the theme
+  if (drawnVariant === 'mono') {
+    return (
+      <Suspense fallback={<FallbackIcon animate className={className} />}>
+        <Web3IconLazy
+          filePath={iconPath}
+          variant="mono"
+          className={cn(componentClassName, isTestnet && 'novacore:text-[var(--tuwa-testnet-icons)]')}
+        />
+      </Suspense>
+    );
+  }
+
   return (
     <Suspense fallback={<FallbackIcon animate className={className} />}>
-      <SvgToImg iconId={`${chainId}-${variant}`} className={componentClassName} firstPathFill={testnetFill}>
-        {(ref) => <Web3IconLazy ref={ref} filePath={iconPath} variant={variant} />}
+      <SvgToImg iconId={`${chainId}-${drawnVariant}`} className={componentClassName} firstPathFill={testnetFill}>
+        {(ref) => <Web3IconLazy ref={ref} filePath={iconPath} variant={drawnVariant} />}
       </SvgToImg>
     </Suspense>
   );

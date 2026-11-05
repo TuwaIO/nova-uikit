@@ -15,7 +15,7 @@ const meta: Meta<typeof StatusEdge> = {
   args: { tone: 'pending' },
   argTypes: {
     tone: { control: 'select', options: ['pending', 'success', 'error', 'neutral'] },
-    progress: { control: { type: 'range', min: 0, max: 1, step: 0.05 } },
+    progress: { control: { type: 'range', min: 0, max: 1, step: 0.05 }, if: { arg: 'tone', eq: 'pending' } },
   },
   render: (args) => (
     <Card>
@@ -44,6 +44,7 @@ export const Neutral: Story = { args: { tone: 'neutral' } };
 
 /** The colors crossfade from one state to the next. */
 export const Lifecycle: Story = {
+  parameters: { controls: { disable: true } },
   render: () => {
     const tones: StatusTone[] = ['pending', 'success', 'pending', 'error', 'pending', 'neutral'];
     const [index, setIndex] = useState(0);

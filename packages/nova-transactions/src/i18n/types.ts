@@ -240,7 +240,7 @@ export type NovaTransactionsLabels = {
     errorContext: string;
     /** Label for the Full Payload. */
     fullPayload: string;
-    /** Label for the Replaced Hash. */
+    /** Label for the Replacement Hash. */
     replacedHash: string;
     /** Labels for the sync status indicator. */
     syncStatus: {

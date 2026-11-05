@@ -68,6 +68,8 @@ export type LocalTxPagination = {
 export type LocalTransactionsHistoryCustomization = {
   /** Custom title for the transactions history section */
   title?: string;
+  /** Customization of the details of a row, which open with `removeTxFromPool` (`TransactionDetailsCustomization`) */
+  detailsCustomization?: Record<string, unknown>;
   /** Custom class name generators */
   classNames?: {
     /** Classes for the outer container */
@@ -84,7 +86,7 @@ export type LocalTransactionsHistoryCustomization = {
     placeholderMessage?: string;
     /** Classes for the infinite scroll loader container */
     loaderContainer?: string;
-    /** Classes for the infinite scroll loader icon (spinner) */
+    /** Classes for the infinite scroll loader */
     loaderIcon?: string;
     /** Classes for the error indicator container */
     errorContainer?: string;
@@ -639,7 +641,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
 /**
  * The transaction history screen of the connected modal: the `TransactionsHistory` of `@tuwaio/nova-transactions`
- * for the active address (loaded with a dynamic import, without the details view). Shows a loading state while the
+ * for the active address (loaded with a dynamic import; its rows open the details view when the app passes
+ * `removeTxFromPool`, which that view needs to stop tracking). Shows a loading state while the
  * package loads, an error state when it cannot be loaded, a "Pulsar adapter required" state without
  * `transactionPool` and `pulsarAdapter`, and a message without a connected wallet.
  *

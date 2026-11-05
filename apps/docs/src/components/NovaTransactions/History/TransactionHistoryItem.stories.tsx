@@ -16,11 +16,6 @@ const meta: Meta<typeof TransactionHistoryItem> = {
   parameters: {
     layout: 'padded',
   },
-  // The render function automatically creates the transactionsPool based on the tx arg.
-  // This simplifies individual story definitions.
-  render: (args) => {
-    return <TransactionHistoryItem {...args} />;
-  },
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
@@ -57,7 +52,7 @@ export const Success: Story = {
 };
 
 /**
- * A pending transaction, showing the spinning icon in the status badge.
+ * A pending transaction: the status badge shows the Quasar loader in the pending colors.
  */
 export const Pending: Story = {
   args: {
@@ -100,14 +95,22 @@ export const AfterSpeedUp: Story = {
 };
 
 /**
- * A transaction replaced by something else than a speed-up, such as a cancel: a sped-up record has no row of its own.
- * The `TransactionKey` component will display both the original and replacing hashes.
+ * A cancelled transaction: replaced by something else than a speed-up, as a sped-up record has no row of its own.
+ * The `TransactionKey` component displays both the original and the replacing hash.
  */
 export const Replaced: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Replaced,
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
+      replacedReason: 'cancelled',
+      title: ['Swapping tokens...', 'Swap successful!', 'Swap failed', 'Swap cancelled'],
+      description: [
+        'Processing your token swap',
+        'Your tokens have been swapped',
+        'Token swap failed',
+        'The swap was cancelled',
+      ],
     }),
     adapter: [mockEvmAdapter],
   },
@@ -138,7 +141,7 @@ export const Solana: Story = {
 };
 
 /**
- * A transaction with a custom title and description, replacing the default components.
+ * A transaction with a custom title and timestamp, replacing the default components.
  */
 export const WithCustomization: Story = {
   name: 'With Custom Components',

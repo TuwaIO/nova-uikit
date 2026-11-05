@@ -14,11 +14,13 @@ const meta: Meta<typeof TxProgressIndicator> = {
     isSucceed: false,
     isFailed: false,
     isReplaced: false,
+    isConfirmed: false,
+    isCancelled: false,
   },
   argTypes: {
     isProcessing: {
       control: 'boolean',
-      description: 'True if the transaction is currently being processed (in the mempool).',
+      description: 'True if the transaction is being submitted or is pending.',
     },
     isSucceed: {
       control: 'boolean',
@@ -31,6 +33,14 @@ const meta: Meta<typeof TxProgressIndicator> = {
     isReplaced: {
       control: 'boolean',
       description: 'True if the transaction was replaced by something else than a speed-up, as by a cancel.',
+    },
+    isConfirmed: {
+      control: 'boolean',
+      description: 'True if the transaction is in a block, and it still waits for finality (Solana).',
+    },
+    isCancelled: {
+      control: 'boolean',
+      description: 'True if the replacement was a cancel: the last step then reads Cancelled.',
     },
     StepComponent: {
       control: false,
@@ -55,17 +65,29 @@ export const Interactive: Story = {
     const states = {
       created: { label: 'Created', props: {} },
       processing: { label: 'Processing', props: { isProcessing: true } },
+      confirmed: { label: 'Confirmed', props: { isProcessing: true, isConfirmed: true } },
       succeed: { label: 'Succeed', props: { isSucceed: true } },
       failed: { label: 'Failed', props: { isFailed: true } },
       replaced: { label: 'Replaced', props: { isReplaced: true } },
+      cancelled: { label: 'Cancelled', props: { isReplaced: true, isCancelled: true } },
     };
 
     return (
-      <div className="w-96 space-y-4">
+      <div className="w-[min(24rem,calc(100vw-2rem))] space-y-4">
         <TxProgressIndicator {...args} {...states[status].props} />
         <div className="flex flex-wrap justify-center gap-2 rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-bg-muted)] p-2">
           {Object.entries(states).map(([key, { label }]) => (
-            <button key={key} onClick={() => setStatus(key as keyof typeof states)}>
+            <button
+              key={key}
+              type="button"
+              aria-pressed={status === key}
+              onClick={() => setStatus(key as keyof typeof states)}
+              className={`cursor-pointer rounded-[var(--tuwa-rounded-corners)] border px-2 py-1 text-xs ${
+                status === key
+                  ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-bg-primary)] font-semibold text-[var(--tuwa-text-accent)]'
+                  : 'border-[var(--tuwa-border-primary)] text-[var(--tuwa-text-primary)]'
+              }`}
+            >
               {label}
             </button>
           ))}
@@ -76,14 +98,14 @@ export const Interactive: Story = {
 };
 
 /**
- * The default state of the indicator, shown when a transaction is first created but not yet processing.
+ * With no flags set: only the first step is complete. The tracking modal is already in Processing while the wallet signs.
  */
 export const Default: Story = {
   name: 'State: Created',
 };
 
 /**
- * The state when the transaction is actively being processed on-chain.
+ * The state while the transaction is being submitted or is pending: only the step in progress is active.
  */
 export const Processing: Story = {
   name: 'State: Processing',
@@ -113,13 +135,35 @@ export const Failed: Story = {
 };
 
 /**
+ * Solana: the transaction is in a block and waits for finality.
+ */
+export const Confirmed: Story = {
+  name: 'State: Confirmed',
+  args: {
+    isProcessing: true,
+    isConfirmed: true,
+  },
+};
+
+/**
+ * The final state for a cancelled transaction. The last step says so.
+ */
+export const Cancelled: Story = {
+  name: 'State: Cancelled',
+  args: {
+    isReplaced: true,
+    isCancelled: true,
+  },
+};
+
+/**
  * An example of replacing the default `Step` component with a completely custom implementation.
  */
 export const WithCustomStep: Story = {
   args: {
     ...Processing.args,
     StepComponent: ({ status, label }: StepProps) => (
-      <div className="flex flex-1 flex-col items-center gap-2">
+      <div className="flex min-w-[80px] flex-1 flex-col items-center gap-2">
         <div
           className={`h-4 w-4 rounded-full ${
             status === 'completed' ? 'bg-green-500' : status === 'active' ? 'bg-blue-500 animate-pulse' : 'bg-gray-300'

@@ -3,8 +3,8 @@
  * Exported for use in ConnectedModal and external applications for displaying token balances.
  */
 
-import { ArrowPathIcon, CheckIcon } from '@heroicons/react/24/solid';
-import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, QuasarLoader } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useState } from 'react';
 
@@ -237,7 +237,7 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <CheckIcon className="novacon:w-4 novacon:h-4" />
+            <DrawnCheck className="novacon:w-4 novacon:h-4" />
           </motion.div>
         ) : (
           <motion.div

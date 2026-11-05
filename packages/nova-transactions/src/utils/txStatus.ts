@@ -39,6 +39,17 @@ export function progressOf(tx: Transaction): number | undefined {
 }
 
 /**
+ * Whether a transaction has confirmations to show. A finalized Solana transaction says `MAX`, and a tick of a tracker can write
+ * `0`, which must not be rendered next to a status.
+ *
+ * @param confirmations - The confirmations of the record.
+ * @returns Whether to show them.
+ */
+export function hasConfirmations(confirmations: Transaction['confirmations']): boolean {
+  return confirmations === 'MAX' || Number(confirmations) > 0;
+}
+
+/**
  * The label of the status of a transaction.
  *
  * @param tx - The transaction.
@@ -48,7 +59,9 @@ export function progressOf(tx: Transaction): number | undefined {
  */
 export function statusLabelOf(tx: Transaction, statuses: NovaTransactionsLabels['statuses']): string {
   if (tx.pending) {
-    return 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed' ? statuses.confirmed : statuses.pending;
+    // `finalized` too: the Solana tracker can write it while it still waits for the details, and it must not step back
+    const stage = 'confirmationStatus' in tx ? tx.confirmationStatus : undefined;
+    return stage === 'confirmed' || stage === 'finalized' ? statuses.confirmed : statuses.pending;
   }
   switch (tx.status) {
     case TransactionStatus.Success:

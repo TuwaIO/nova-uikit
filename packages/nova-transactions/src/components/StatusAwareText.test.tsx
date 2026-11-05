@@ -77,4 +77,12 @@ describe('StatusAwareText component', () => {
 
     expect(el).toBeNull();
   });
+
+  it('falls back when the list has no text for the status', () => {
+    const el = StatusAwareText({ source: [], fallback: 'SWAP', variant: 'title' }) as ReactElement<{
+      children: ReactElement<{ children: string }>;
+    }>;
+
+    expect(el.props.children.props.children).toBe('SWAP');
+  });
 });

@@ -9,17 +9,10 @@ const meta: Meta<typeof StarsBackground> = {
     starsCount: {
       control: { type: 'number', min: 50, max: 1000, step: 50 },
       description: 'Number of stars to render.',
-      defaultValue: 200,
     },
   },
   parameters: {
     layout: 'fullscreen',
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-    backgrounds: {
-      default: 'dark', // Best viewed on dark background
-    },
   },
   // Wrapper to give it some height in Storybook
   decorators: [

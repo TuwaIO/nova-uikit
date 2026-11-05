@@ -20,6 +20,12 @@ const meta: Meta<typeof TransactionDetails> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        component:
+          'The back button in the header reports `onBack` in the Actions panel. The way from a list and back is in the Default story of TransactionsInfoModal.',
+      },
+    },
   },
   decorators: [
     (Story) => (
@@ -86,13 +92,11 @@ const mockEvmSuccessTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   type: 'Staking Deposit',
   from: '0x8b99f36611f7c8b07043818e69248496bc120935',
   to: '0x5e3ef299fddf15eaa0432e6e66473ace8c13d908',
-  contractAddress: '0x5e3ef299fddf15eaa0432e6e66473ace8c13d908',
   value: '1000000000000000000000',
-  blockNumber: 58940123,
-  blockHash: '0xa41b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b',
-  gasUsed: '142850',
-  effectiveGasPrice: '32000000000',
-  cumulativeGasUsed: '8401920',
+  nonce: 118,
+  maxFeePerGas: '42000000000',
+  maxPriorityFeePerGas: '30000000000',
+  input: '0xa694fc3a00000000000000000000000000000000000000000000003635c9adc5dea00000',
 } as any) as EvmTransaction;
 
 const mockEvmFailedTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
@@ -126,7 +130,7 @@ const mockSolanaPendingTx: SolanaTransaction = {
   } as any),
   fee: 5000,
   slot: 284910294,
-  recentBlockhash: '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN',
+  recentBlockhash: 'Bq3Nf8vT2mK6xY9rL4wC1sD7hJ5pG0aE3uZ8nR6tV2cX',
 } as unknown as SolanaTransaction;
 
 const mockSolanaSuccessTx: SolanaTransaction = {
@@ -142,12 +146,12 @@ const mockSolanaSuccessTx: SolanaTransaction = {
   fee: 12000,
   slot: 284915830,
   recentBlockhash: '9Px7mR2vK4nL8wQ0sB3vC1dE5fG9hJ2kL6mN4pQ8rT0v',
-  confirmations: 32,
+  confirmations: 'MAX',
 } as unknown as SolanaTransaction;
 
 const mockStarknetSuccessTx: StarknetTransaction = {
   adapter: OrbitAdapter.Starknet,
-  tracker: TransactionTracker.Ethereum,
+  tracker: 'starknet' as TransactionTracker,
   txKey: '0x04a912840a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d',
   hash: '0x04a912840a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d',
   title: 'Starknet Account Deployment',
@@ -155,15 +159,22 @@ const mockStarknetSuccessTx: StarknetTransaction = {
   pending: false,
   status: TransactionStatus.Success,
   type: 'Contract Deployment',
-  chainId: '0x534e5f4d41494e',
+  chainId: 'starknet:SN_MAIN',
   localTimestamp: Math.floor(Date.now() / 1000) - 3600,
-  walletType: 'argentX',
+  from: '0x03a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1',
+  connectorType: 'starknet:argentx',
   contractAddress: '0x07f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1',
   actualFee: {
     amount: '0.00042',
     unit: 'ETH',
   },
 } as unknown as StarknetTransaction;
+
+const mockStarknetAdapter = {
+  key: OrbitAdapter.Starknet,
+  getExplorerTxUrl: (tx: { hash?: string; txKey: string }) => `https://starkscan.co/tx/${tx.hash ?? tx.txKey}`,
+  getExplorerUrl: (path = '') => `https://starkscan.co${path}`,
+} as any;
 
 // --- Stories ---
 
@@ -178,7 +189,7 @@ export const Default: Story = {
 };
 
 /**
- * Successful EVM transaction detailing block number, gas metrics, and contract execution metadata.
+ * Successful EVM transaction with its execution data: nonce, fees, value and input.
  */
 export const EvmSuccess: Story = {
   args: {
@@ -208,7 +219,7 @@ export const SolanaPending: Story = {
 };
 
 /**
- * Confirmed Solana transaction displaying fee, slot, blockhash, and confirmations count.
+ * Finalized Solana transaction displaying fee, slot, blockhash, and confirmations (`MAX` once it is finalized).
  */
 export const SolanaSuccess: Story = {
   args: {
@@ -223,12 +234,12 @@ export const SolanaSuccess: Story = {
 export const StarknetSuccess: Story = {
   args: {
     tx: mockStarknetSuccessTx,
-    adapter: [mockEvmAdapter],
+    adapter: [mockStarknetAdapter],
   },
 };
 
 /**
- * Demonstrates custom sub-component styling and layout overrides via the `customization` prop.
+ * Custom colors of the header, title and network badge via the `customization` prop.
  */
 export const WithCustomization: Story = {
   args: {

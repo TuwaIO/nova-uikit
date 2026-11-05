@@ -12,15 +12,15 @@ import {
   CloudArrowUpIcon,
   CloudIcon,
   CpuChipIcon,
-  DocumentDuplicateIcon,
-  ExclamationTriangleIcon,
   GlobeAltIcon,
   KeyIcon,
   LinkIcon,
 } from '@heroicons/react/24/outline';
-import { CheckIcon } from '@heroicons/react/24/solid';
 import {
   cn,
+  CopyIcon,
+  DrawnCheck,
+  DrawnCross,
   getChainName,
   MorphIcon,
   MorphText,
@@ -37,7 +37,7 @@ import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
 import { explorerUrlOfHash, explorerUrlOfReplaced, stopTrackingDueIn } from '../utils/replacement';
-import { progressOf, statusLabelOf, toneOf } from '../utils/txStatus';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf } from '../utils/txStatus';
 
 // --- Sub-components Prop Types ---
 
@@ -169,7 +169,7 @@ const SectionCard = ({ children, className }: { children: ReactNode; className?:
 const SectionHeading = ({ children, className }: { children: ReactNode; className?: string }) => (
   <h4
     className={cn(
-      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] sm:novatx:mb-4 sm:novatx:pb-4',
+      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] novatx:sm:mb-4 novatx:sm:pb-4',
       className,
     )}
   >
@@ -206,11 +206,7 @@ const CopyButton = ({ value, className, size = 'md' }: { value: string; classNam
       title={isCopied ? txError.copied : actions.copy}
       aria-label={isCopied ? txError.copied : actions.copy}
     >
-      {isCopied ? (
-        <CheckIcon className={cn(iconSize, 'novatx:text-[var(--tuwa-success-icon)]')} />
-      ) : (
-        <DocumentDuplicateIcon className={iconSize} />
-      )}
+      <CopyIcon copied={isCopied} className={iconSize} />
     </button>
   );
 };
@@ -400,7 +396,7 @@ const EvmExecutionData = ({
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2 lg:novatx:grid-cols-3">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     <DetailItem label={labels.nonce} value={tx.nonce} />
     <DetailItem label={labels.maxFee} value={tx.maxFeePerGas} />
     <DetailItem label={labels.maxPriorityFee} value={tx.maxPriorityFeePerGas} />
@@ -457,7 +453,7 @@ const SolanaExecutionData = ({
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     <DetailItem label={labels.fee} value={tx.fee} />
     <DetailItem label={labels.slot} value={tx.slot} />
     {tx.recentBlockhash && <CopyableField label={labels.recentBlockhash} value={tx.recentBlockhash} />}
@@ -476,7 +472,7 @@ const StarknetExecutionData = ({
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     {tx.contractAddress && <CopyableField label={labels.contractAddress} value={tx.contractAddress} />}
     <DetailItem
       label={labels.actualFee}
@@ -615,15 +611,15 @@ export function TransactionDetails<T extends Transaction>({
                 classNames?.statusIconContainer,
               )}
             >
-              <MorphIcon iconKey={tone}>
+              <MorphIcon iconKey={tone} animateFirst>
                 {tone === 'pending' ? (
                   <QuasarLoader size={24} accent="var(--tuwa-pending-icon)" />
                 ) : tone === 'success' ? (
-                  <CheckCircleIcon className="novatx:h-6 novatx:w-6" />
+                  <DrawnCheck variant="disc" className="novatx:h-6 novatx:w-6" />
                 ) : tone === 'neutral' ? (
                   <ArrowPathIcon className="novatx:h-6 novatx:w-6" />
                 ) : (
-                  <ExclamationTriangleIcon className="novatx:h-6 novatx:w-6" />
+                  <DrawnCross variant="disc" className="novatx:h-6 novatx:w-6" />
                 )}
               </MorphIcon>
             </div>
@@ -644,10 +640,10 @@ export function TransactionDetails<T extends Transaction>({
           {/* Sync Status Badge */}
           {tx.syncStatus === 'pending-sync' && (
             <div
-              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-amber-500/10 novatx:px-2.5 novatx:py-1.5 novatx:text-amber-500"
+              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-pending-bg)] novatx:px-2.5 novatx:py-1.5 novatx:text-[var(--tuwa-pending-text)]"
               title={transactionDetails.syncStatus.pendingTooltip}
             >
-              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse" />
+              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse novatx:motion-reduce:animate-none" />
               <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
                 {transactionDetails.syncStatus.pending}
               </span>
@@ -668,7 +664,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {/* Body */}
         <div className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 sm:novatx:grid-cols-2">
+          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 novatx:sm:grid-cols-2">
             <CCopyableField
               label={transactionDetails.hash}
               value={evmTx?.hash || tx.txKey}
@@ -710,7 +706,7 @@ export function TransactionDetails<T extends Transaction>({
             </div>
           </div>
 
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-8 sm:novatx:grid-cols-2">
+          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 novatx:sm:grid-cols-2">
             <CCopyableField label={transactionDetails.from} value={tx.from} />
             {evmTx?.to ? (
               <CCopyableField label={transactionDetails.to} value={evmTx.to} />
@@ -742,7 +738,7 @@ export function TransactionDetails<T extends Transaction>({
           <CMetadataRow icon={LinkIcon} label={transactionDetails.connector}>
             <span className="novatx:capitalize">{tx.connectorType}</span>
           </CMetadataRow>
-          {tx.confirmations && Number(tx.confirmations) > 0 && (
+          {hasConfirmations(tx.confirmations) && (
             <CMetadataRow icon={CheckBadgeIcon} label={transactionDetails.confirmations}>
               {tx.confirmations}
               {tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}

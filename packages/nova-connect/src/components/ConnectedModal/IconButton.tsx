@@ -16,7 +16,7 @@ const DEFAULT_BUTTON_ANIMATION_VARIANTS: Variants = {
   idle: { scale: 1, rotate: 0 },
   hover: { scale: 1.05, transition: { duration: 0.2 } },
   tap: { scale: 0.95, transition: { duration: 0.1 } },
-  loading: { rotate: 360, transition: { duration: 2, repeat: Infinity, ease: 'linear' } },
+  loading: { rotate: 0 },
 };
 
 // --- Types for Customization ---
@@ -62,7 +62,7 @@ export type IconButtonChevronContainerProps = {
 };
 
 /**
- * Props for a custom loading overlay (the default one shows a spinner while `loading` is `true`).
+ * Props for a custom loading overlay (the default one shows the Quasar loader while `loading` is `true`).
  */
 export type IconButtonLoadingOverlayProps = {
   /** The `loading` prop */
@@ -390,7 +390,8 @@ const DefaultLoadingOverlay: React.FC<IconButtonLoadingOverlayProps> = ({ loadin
       )}
       aria-hidden="true"
     >
-      <QuasarLoader size={12} />
+      {/* The size the button forces on an SVG in it */}
+      <QuasarLoader size={24} />
     </div>
   );
 };

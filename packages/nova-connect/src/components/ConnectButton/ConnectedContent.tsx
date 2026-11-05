@@ -240,7 +240,7 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: Connected
   return (
     <div
       className={cn(
-        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
+        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite novacon:motion-reduce:after:animate-none",
         className,
       )}
       aria-hidden="true"
@@ -345,6 +345,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       setConnectedButtonStatus('idle');
     }, [activeConnection?.address, setConnectedButtonStatus]);
 
+    const prevAddressRef = useRef(activeConnection?.address);
+
     // Monitor transaction pool changes
     useEffect(() => {
       if (!activeConnection || !activeConnection?.isConnected) {
@@ -358,8 +360,14 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];
-      // Goes to idle when nothing is pending any more, for example as the tracking of the last transaction was stopped
-      setConnectedButtonStatus(nextConnectedStatus(connectedButtonStatus, connectedStatusFor(currentPool, prevPool)));
+      // Another wallet: what is shown now is of the old one, and the reset above must stand
+      if (prevAddressRef.current === activeConnection.address) {
+        // Goes to idle when nothing is pending any more, for example as the tracking of the last transaction was stopped
+        setConnectedButtonStatus(nextConnectedStatus(connectedButtonStatus, connectedStatusFor(currentPool, prevPool)));
+      } else if (currentPool.some((tx) => tx.pending)) {
+        setConnectedButtonStatus('loading');
+      }
+      prevAddressRef.current = activeConnection.address;
 
       prevTxPoolRef.current = currentPool;
       // eslint-disable-next-line react-hooks/exhaustive-deps

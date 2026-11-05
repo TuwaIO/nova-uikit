@@ -111,8 +111,9 @@ Custom content to display when the action or transaction fails.
 
 > **getLastTxKey**: () => `string` \| `undefined`
 
-Selector function that returns the key of the last transaction added to the pool.
-Used to track the result of the submitted transaction.
+Selector function that returns the key of the last transaction added to the pool, such as `getLastTxKey` of the Pulsar
+store. It is read before and after the action: a key that has not changed means the action added no transaction, and the
+button goes back to idle.
 
 #### Returns
 

@@ -16,12 +16,6 @@ const meta: Meta<typeof TransactionsHistory> = {
   parameters: {
     layout: 'padded',
   },
-  // The render function automatically creates the transactionsPool based on the tx arg.
-  // This simplifies individual story definitions.
-  render: (args) => {
-    const transactionsPool = args.transactionsPool;
-    return <TransactionsHistory {...args} transactionsPool={transactionsPool} />;
-  },
   args: {
     connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     transactionsPool: {
@@ -97,16 +91,32 @@ export const Default: Story = {
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(15, 'minutes').unix(),
         }),
-        createMockTx(OrbitAdapter.SOLANA, {
-          txKey: '0x_solana_tx_5',
-          hash: '0x_solana_tx_5',
-          syncStatus: 'synced',
-          from: 'mockedSolanaWalletAddress',
-          localTimestamp: dayjs().subtract(5, 'minutes').unix(),
-        }),
       ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
     },
-    adapter: [mockEvmAdapter, mockSolanaAdapter],
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * The history of a Solana wallet: the list holds only the transactions of the connected address.
+ */
+export const SolanaWallet: Story = {
+  args: {
+    connectedWalletAddress: '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN',
+    transactionsPool: [
+      createMockTx(OrbitAdapter.SOLANA, {
+        txKey: '5VERv8NMvzbJMEkV8xnrLkEaWRtSz9CosKDYjCJjBRnbJLgp8uirBgmQpjKhoR4tjF3ZpRzrFmBV6UjKdiSZkQUW',
+        status: TransactionStatus.Success,
+        confirmations: 'MAX',
+        localTimestamp: dayjs().subtract(5, 'minutes').unix(),
+      }),
+      createMockTx(OrbitAdapter.SOLANA, {
+        txKey: '4ecrNTNBLwR4L2LNpFsrRCDLvj35aWqhNqdTnaYCmvxsEeLGXCNEYYcNu3evVF2okyNCLaM1BpWV9mnMDq4CaAaB',
+        confirmations: 0,
+        localTimestamp: dayjs().subtract(30, 'seconds').unix(),
+      }),
+    ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
+    adapter: [mockSolanaAdapter],
   },
 };
 

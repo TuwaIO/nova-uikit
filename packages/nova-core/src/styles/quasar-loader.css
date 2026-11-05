@@ -93,6 +93,15 @@
     .tuwa-ql-dash {
       stroke-dashoffset: -12;
     }
+
+    /* Their opacity comes from the animations alone: without one the glow would be a solid disc, and the beams lit */
+    .tuwa-ql-glow {
+      opacity: 0.2;
+    }
+
+    .tuwa-ql-beam {
+      opacity: 0;
+    }
   }
 }
 

@@ -9,8 +9,8 @@ import {
   explorerUrlOfReplaced,
   isUserRejection,
   latestRecordOf,
+  pendingOfWallet,
   runReplacement,
-  settledRecordsOf,
   STOP_TRACKING_AFTER_SECONDS,
   stopTrackingDueIn,
   successorOf,
@@ -264,6 +264,16 @@ describe('toastStepFor', () => {
     expect(toastStepFor(done, pending, pool(done), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
   });
 
+  it('a toast a person closed comes back for a change of state, not for any write to the record', () => {
+    const pending = tx();
+    const ticked = tx({ confirmations: 1 });
+    const done = tx({ pending: false, status: TransactionStatus.Success });
+
+    expect(toastStepFor(ticked, pending, pool(ticked), active())).toEqual({ kind: 'skip' });
+    expect(toastStepFor(ticked, pending, pool(ticked), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
+    expect(toastStepFor(done, pending, pool(done), active())).toEqual({ kind: 'show', toastId: OLD });
+  });
+
   it('a reorganization that brings the first record back stays on the same toast', () => {
     const reopened = tx();
     const reorged = tx({
@@ -288,8 +298,12 @@ describe('toastIdOf', () => {
     expect(toastIdOf(third, pool(spedUp, next, third))).toBe(OLD);
   });
 
-  it('is the key of the record itself when the first has left the pool', () => {
+  it('is the key of the record itself when the first has left the pool and nothing remembers it', () => {
     expect(toastIdOf(next, pool(next))).toBe(NEW);
+  });
+
+  it('stays the id seen before when the first record has left the pool: a second toast would open, and the first stay stuck', () => {
+    expect(toastIdOf(next, pool(next), new Map([[NEW, OLD]]))).toBe(OLD);
   });
 
   it('does not run forever on records that replace each other', () => {
@@ -318,12 +332,19 @@ describe('toastsOfRemoved', () => {
   });
 });
 
-describe('settledRecordsOf', () => {
-  it('leaves out what is pending, so that a reload shows its toast, and keeps the rest quiet', () => {
-    const pending = tx();
+describe('pendingOfWallet', () => {
+  it('keeps what is pending of that wallet: another wallet cannot act on it, and finished records are noise', () => {
+    const mine = tx({ txKey: '0xmine' });
+    const other = tx({ txKey: '0xother', from: '0x0000000000000000000000000000000000000001' });
     const done = tx({ txKey: '0xdone', pending: false, status: TransactionStatus.Success });
 
-    expect(settledRecordsOf(pool(pending, done))).toEqual(pool(done));
+    expect(pendingOfWallet(pool(mine, other, done), WALLET.toLowerCase())).toEqual([mine]);
+  });
+
+  it('keeps only the newest few: nothing limits how many a pool can hold', () => {
+    const many = [1, 2, 3, 4, 5].map((n) => tx({ txKey: `0x${n}`, localTimestamp: n }));
+
+    expect(pendingOfWallet(pool(...many), WALLET.toLowerCase()).map((t) => t.localTimestamp)).toEqual([5, 4, 3]);
   });
 });
 
@@ -337,6 +358,10 @@ describe('afterTrackedAction', () => {
   it('goes back to idle when the action added none: it must not wait for good or show an older result', () => {
     expect(afterTrackedAction({ ...click, keyAfter: OLD })).toBe('idle');
     expect(afterTrackedAction({ walletAtClick: WALLET, walletNow: WALLET })).toBe('idle');
+  });
+
+  it('follows a record sent again under the same key, as a Safe proposal', () => {
+    expect(afterTrackedAction({ ...click, keyAfter: OLD, sentAfterClick: true })).toBe('track');
   });
 
   it('ignores the result when the wallet changed meanwhile: it belongs to the other wallet', () => {

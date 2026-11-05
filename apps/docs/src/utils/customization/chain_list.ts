@@ -27,7 +27,7 @@ export const chain_list_customization: ChainSelectorCustomization = {
         SHARED_STYLES.bgBase,
         'border-[var(--tuwa-border-primary)]',
         SHARED_STYLES.textForeground,
-        '[&_h2]:text-[var(--tuwa-text-primary)] [&_h2]:font-[DM_Mono] [&_h2]:font-medium',
+        '[&_h2]:text-[var(--tuwa-text-primary)] [&_h2]:font-[family-name:DM_Mono] [&_h2]:font-medium',
       ),
   },
 
@@ -47,7 +47,7 @@ export const chain_list_customization: ChainSelectorCustomization = {
       button: ({ isOpen }) =>
         cn(
           BUTTON_STYLES.ghost,
-          'text-md',
+          'text-md min-h-[44px] px-2',
           SHARED_STYLES.focusWithOffset('var(--tuwa-bg-primary)'),
           isOpen ? cn(SHARED_STYLES.borderAccent, 'ring-1 ring-[var(--tuwa-text-accent)]') : '',
         ),
@@ -73,6 +73,7 @@ export const chain_list_customization: ChainSelectorCustomization = {
 
   chainListRenderer: {
     classNames: {
+      activeIndicator: () => 'bg-[var(--tuwa-text-on-accent)]',
       container: () => cn(SHARED_STYLES.bgBase, 'rounded-[6px]'),
       item: ({ isActive }) => getItemStyles(isActive),
     },

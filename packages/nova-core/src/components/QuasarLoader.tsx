@@ -18,7 +18,11 @@ export type QuasarLoaderProps = {
   variant?: 'full' | 'compact';
   /** CSS color of the moving parts and the core, such as `var(--tuwa-pending-icon)`. Defaults to `--tuwa-text-accent`. */
   accent?: string;
-  /** What is being waited for, for screen readers. With it the loader has `role="status"`; without it, it is decorative. */
+  /**
+   * What is being waited for, for screen readers: with it the loader is a `role="status"` region with that text; without it, it
+   * is decorative. A region announces what changes after it is on the page, so one that mounts with the loader is found by
+   * browsing, not announced.
+   */
   label?: string;
   /** Classes of the loader. The still parts take the text color. */
   className?: string;
@@ -47,8 +51,9 @@ export function QuasarLoader({ size = 40, variant, accent, label, className }: Q
     <span
       className={cn('tuwa-quasar-loader', isCompact && 'tuwa-quasar-loader--compact', className)}
       style={style}
-      {...(label ? { role: 'status', 'aria-label': label } : { 'aria-hidden': true })}
+      {...(label ? { role: 'status' } : { 'aria-hidden': true })}
     >
+      {label && <span className="novacore:sr-only">{label}</span>}
       <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
         <defs>
           <clipPath id={`${id}-far`}>

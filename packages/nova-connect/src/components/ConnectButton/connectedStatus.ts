@@ -45,8 +45,11 @@ export function connectedStatusFor(current: Transaction[], previous: Transaction
   for (const tx of current) {
     const before = previous.find((prev) => prev.txKey === tx.txKey);
     // A new record of a speed-up can arrive already finished: it was pending as the record it replaced. Only if that record
-    // was in the list: after a switch of wallet every old record of the new wallet looks new here, and nothing has happened.
-    const wasPending = before ? before.pending : previous.some((prev) => prev.txKey === asEvm(tx).replaces);
+    // was pending in the list: after a switch of wallet every old record of the new wallet looks new here, and a page of a
+    // history can bring the new record of an old one. Nothing has happened in either case.
+    const wasPending = before
+      ? before.pending
+      : previous.some((prev) => prev.txKey === asEvm(tx).replaces && prev.pending);
     if (!wasPending || !tx.status || tx.status === before?.status) continue;
 
     if (tx.status === TransactionStatus.Success) result = 'succeed';

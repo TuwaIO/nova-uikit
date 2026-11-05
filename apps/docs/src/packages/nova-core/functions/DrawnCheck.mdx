@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/DrawnCheck" />
+
+# DrawnCheck()
+
+> **DrawnCheck**(`props`): `Element`
+
+Defined in: [components/DrawnCheck.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L68)
+
+The check mark of the Nova components: it draws itself when it appears, so a success is seen happening. Inside an
+`AnimatePresence` with `initial={false}`, such as a `MorphIcon` without `animateFirst`, one that is already there when the
+page opens is simply shown, so that a list of old results does not draw all at once. With `prefers-reduced-motion` it is just
+shown. Decorative: the text next to it says what happened.
+
+## Parameters
+
+### props
+
+[`DrawnMarkProps`](?path=/docs/packages-nova-core-type-aliases-drawnmarkprops--docs)
+
+See [DrawnMarkProps](?path=/docs/packages-nova-core-type-aliases-drawnmarkprops--docs).
+
+## Returns
+
+`Element`
+
+The icon.

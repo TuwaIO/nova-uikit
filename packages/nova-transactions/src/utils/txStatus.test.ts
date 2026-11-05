@@ -2,7 +2,7 @@ import { Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/puls
 import { describe, expect, it } from 'vitest';
 
 import { defaultLabels } from '../i18n/en';
-import { progressOf, statusLabelOf, toneOf, trackerGaveUp } from './txStatus';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf, trackerGaveUp } from './txStatus';
 
 const tx = (fields: Record<string, unknown>) => fields as unknown as Transaction;
 
@@ -58,6 +58,7 @@ describe('statusLabelOf', () => {
 
   it('shows the confirmed stage of Solana while it is still pending', () => {
     expect(statusLabelOf(tx({ pending: true, confirmationStatus: 'confirmed' }), statuses)).toBe(statuses.confirmed);
+    expect(statusLabelOf(tx({ pending: true, confirmationStatus: 'finalized' }), statuses)).toBe(statuses.confirmed);
     expect(statusLabelOf(tx({ pending: true, confirmationStatus: 'processed' }), statuses)).toBe(statuses.pending);
   });
 });
@@ -85,5 +86,19 @@ describe('trackerGaveUp', () => {
   it('nothing else counts', () => {
     expect(trackerGaveUp(undefined)).toBe(false);
     expect(trackerGaveUp(tx({ status: TransactionStatus.Success, error: 'x' }))).toBe(false);
+  });
+});
+
+describe('hasConfirmations', () => {
+  it('shows a count, and the MAX of a finalized Solana transaction', () => {
+    expect(hasConfirmations(3)).toBe(true);
+    expect(hasConfirmations('2')).toBe(true);
+    expect(hasConfirmations('MAX')).toBe(true);
+  });
+
+  it('hides nothing to show: a 0 would be rendered next to the status', () => {
+    expect(hasConfirmations(0)).toBe(false);
+    expect(hasConfirmations(null)).toBe(false);
+    expect(hasConfirmations(undefined)).toBe(false);
   });
 });

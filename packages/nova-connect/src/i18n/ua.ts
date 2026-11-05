@@ -198,7 +198,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   disconnectAllDescription: 'Відключити всі гаманці й закрити вікно',
   explorerLinkDescription: 'Відкриває в новій вкладці адресу гаманця {address} в оглядачі блокчейну',
   explorerNotAvailable: 'Оглядач блокчейну недоступний для цієї мережі',
-  connectWalletsAvailable: 'Підключити гаманець: доступно гаманців — {count}',
+  connectWalletsAvailable: 'Підключені гаманці: підключено {count}',
   switchNetworkNetworksAvailable: 'Змінити мережу: доступно мереж — {count}',
   transactionsInAppCount: 'Транзакції в застосунку: {count}',
   transactionsAvailable: 'Доступно транзакцій: {count}',

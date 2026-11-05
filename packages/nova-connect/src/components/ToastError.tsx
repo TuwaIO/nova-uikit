@@ -2,8 +2,7 @@
  * @file This file contains the `ToastError` component, a customizable error toast with full styling control.
  */
 
-import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
-import { cn, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo, useState } from 'react';
 
@@ -163,17 +162,9 @@ export interface ToastErrorProps extends Omit<ComponentPropsWithoutRef<'div'>, '
 }
 
 // --- Default Sub-Components ---
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DefaultIcon = ({ isCopied, className, ...props }: ToastErrorIconProps) => {
-  return (
-    <DocumentDuplicateIcon
-      className={cn(
-        'novacon:w-4 novacon:h-4 novacon:transition-colors',
-        isCopied && 'novacon:text-[var(--tuwa-success-text)]',
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <CopyIcon copied={isCopied} className={cn('novacon:w-4 novacon:h-4', className)} />;
 };
 
 const DefaultTitle = ({ title, titleId, className }: ToastErrorTitleProps) => {

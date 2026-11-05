@@ -710,7 +710,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
      */
     const animationWrapperClasses =
       customization?.classNames?.animationWrapper?.() ??
-      cn('novacon:relative novacon:z-2 novacon:w-full novacon:h-full', 'novacon:px-2 md:novacon:px-4');
+      cn('novacon:relative novacon:z-2 novacon:w-full novacon:h-full', 'novacon:px-2 novacon:md:px-4');
 
     /**
      * Memoized content section classes

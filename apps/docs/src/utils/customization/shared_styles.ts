@@ -9,8 +9,8 @@ export const SHARED_STYLES = {
   // ─────────────────────────────────────────────────────────────────────────────
   // Typography
   // ─────────────────────────────────────────────────────────────────────────────
-  fontMono: 'font-[DM_Mono] font-light',
-  fontMonoMedium: 'font-[DM_Mono] font-medium',
+  fontMono: 'font-[family-name:DM_Mono] font-light',
+  fontMonoMedium: 'font-[family-name:DM_Mono] font-medium',
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Colors - Text
@@ -42,19 +42,19 @@ export const SHARED_STYLES = {
   // Focus States
   // ─────────────────────────────────────────────────────────────────────────────
   baseFocus:
-    'focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
+    'focus:outline-none focus:ring-[length:var(--tuwa-ring-width)] focus:ring-offset-[length:var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
   focusWithOffset: (offset: string) =>
-    `focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-offset-[${offset}]`,
+    `focus:outline-none focus:ring-[length:var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[length:var(--tuwa-ring-width)] focus:ring-offset-[${offset}]`,
 
   // Focus-visible variant for buttons
   focusVisible:
-    'focus-visible:outline-none focus-visible:ring-[var(--tuwa-ring-width)] focus-visible:ring-offset-[var(--tuwa-ring-width)] focus-visible:ring-[var(--tuwa-text-accent)] focus-visible:ring-offset-[var(--tuwa-border-secondary)]',
+    'focus-visible:outline-none focus-visible:ring-[length:var(--tuwa-ring-width)] focus-visible:ring-offset-[length:var(--tuwa-ring-width)] focus-visible:ring-[var(--tuwa-text-accent)] focus-visible:ring-offset-[var(--tuwa-border-secondary)]',
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Interactive States
   // ─────────────────────────────────────────────────────────────────────────────
   itemInteractive:
-    'transition-all duration-200 ease-out focus:outline-none focus:ring-[var(--tuwa-ring-width)] focus:ring-offset-[var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
+    'transition-all duration-200 ease-out focus:outline-none focus:ring-[length:var(--tuwa-ring-width)] focus:ring-offset-[length:var(--tuwa-ring-width)] focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-border-secondary)]',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(novacore);
 @import './fonts.css';
 @import './quasar-loader.css';
+@import './icons.css';
 
 @theme {
   --font-sans: var(
@@ -82,9 +83,9 @@
   --tuwa-error-text: theme('colors.red.700');
   --tuwa-error-icon: theme('colors.red.500');
 
-  --tuwa-pending-bg: theme('colors.orange.100');
-  --tuwa-pending-text: theme('colors.orange.800');
-  --tuwa-pending-icon: theme('colors.orange.600');
+  --tuwa-pending-bg: theme('colors.yellow.100');
+  --tuwa-pending-text: theme('colors.yellow.800');
+  --tuwa-pending-icon: theme('colors.yellow.600');
 
   --tuwa-info-bg: theme('colors.gray.100');
   --tuwa-info-text: theme('colors.gray.600');
@@ -154,9 +155,9 @@ html[lang^='uk'],
   --tuwa-error-text: theme('colors.red.300');
   --tuwa-error-icon: theme('colors.red.400');
 
-  --tuwa-pending-bg: theme('colors.orange.900');
-  --tuwa-pending-text: theme('colors.orange.300');
-  --tuwa-pending-icon: theme('colors.orange.400');
+  --tuwa-pending-bg: theme('colors.yellow.900');
+  --tuwa-pending-text: theme('colors.yellow.300');
+  --tuwa-pending-icon: theme('colors.yellow.400');
 
   --tuwa-info-bg: theme('colors.gray.700');
   --tuwa-info-text: theme('colors.gray.300');

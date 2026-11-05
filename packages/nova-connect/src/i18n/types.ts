@@ -370,7 +370,7 @@ export type NovaConnectLabels = {
    * for this network`)
    */
   explorerNotAvailable: string;
-  /** ARIA label of the wallet button of the connected modal (default: `Connect Wallet - {count} wallets available`) */
+  /** ARIA label of the wallet button of the connected modal, which opens the connected wallets (default: `Connected Wallets - {count} connected`) */
   connectWalletsAvailable: string;
   /**
    * ARIA label of the network button of the connected modal (default: `Switch network - {count} networks available`)

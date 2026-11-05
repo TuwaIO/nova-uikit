@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { stripFill } from './StatusEdge';
+import { stripFill } from './statusEdgeFill';
 
 describe('stripFill', () => {
   it('fills the strip for any result', () => {

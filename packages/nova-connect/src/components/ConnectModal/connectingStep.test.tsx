@@ -1,3 +1,4 @@
+import { AnimatedHeight } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -123,20 +124,8 @@ describe('the connecting step', () => {
     expect(heading(tree)).toBe('Connecting to Trust Wallet Extension...');
   });
 
-  // The modal on the wallet list, with a `ResizeObserver` that reports when a test asks
+  // The modal on the wallet list
   const openModal = () => {
-    const observed: Array<() => void> = [];
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        constructor(private readonly callback: () => void) {}
-        // A real observer reports later, when the page renders a frame
-        observe() {
-          observed.push(this.callback);
-        }
-        disconnect() {}
-      },
-    );
     state.modal = {
       isConnectModalOpen: true,
       connectModalContentType: 'connectors',
@@ -150,16 +139,7 @@ describe('the connecting step', () => {
     };
     const modal = (ConnectModal as unknown as { type: (props: object) => unknown }).type;
     const tree = render(modal, {});
-    return { modal, tree, observed };
-  };
-
-  // Shows the wallet list, `height` px high, to the modal
-  const showList = (tree: unknown, modal: (props: object) => unknown, height: number) => {
-    const list = { offsetHeight: height };
-    const setRef = named(tree, 'DefaultModalContainer')?.props.ref as (element: object | null) => void;
-    setRef(list);
-    render(modal, {});
-    return { list, setRef };
+    return { modal, tree };
   };
 
   const show = (modal: (props: object) => unknown, screen: Record<string, unknown>) => {
@@ -167,112 +147,36 @@ describe('the connecting step', () => {
     return render(modal, {});
   };
 
-  const keptHeight = (tree: unknown) => {
-    const container = named(tree, 'DefaultModalContainer');
-    const className = String(container?.props.className ?? '');
-    if (!className.includes('novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]')) return null;
-    return (container?.props.style as Record<string, string> | undefined)?.['--novacon-connect-list-height'] ?? null;
-  };
-
   it('has no layout animation around its screens: the window is never stretched for a frame after a size change', () => {
     const { tree } = openModal();
 
     expect(elements(tree).filter((element) => 'layout' in element.props)).toEqual([]);
     const wrapper = elements(tree).find((element) => element.type === motion.div);
-    // A layout root: the layout animations inside it (the network tabs) ignore the move of the centered window
+    // A layout root: what the indicator of the network tabs measures against in a fixed window
     expect(wrapper?.props.layoutRoot).toBe(true);
     expect(wrapper?.props.transition).toBeUndefined();
   });
 
-  it('keeps the height of the wallet list on the network step too, so it resizes neither there nor when connecting', () => {
-    const { modal, tree } = openModal();
-    showList(tree, modal, 480);
+  it.each(['connectors', 'network', 'connecting'])(
+    'takes the height of its content on the %s screen: no empty space stays in the window',
+    (screen) => {
+      const { modal } = openModal();
+      const tree = show(modal, { connectModalContentType: screen, activeConnector: 'metamask' });
 
-    let next = show(modal, { connectModalContentType: 'network', activeConnector: 'phantom' });
-    expect(keptHeight(next)).toBe('480px');
-    // The footer at the bottom, the network list at the top
-    expect(named(next, 'DefaultMainContent')?.props.className).toContain('novacon:flex-1');
-    expect(named(next, 'DefaultMainContent')?.props.className).not.toContain('novacon:justify-center');
+      expect(String(named(tree, 'DefaultModalContainer')?.props.className)).not.toContain('min-h-');
+      expect(named(tree, 'DefaultModalContainer')?.props.style).toBeUndefined();
+      expect(String(named(tree, 'DefaultMainContent')?.props.className)).not.toContain('flex-1');
+    },
+  );
 
-    next = show(modal, { connectModalContentType: 'connecting', selectedAdapter: OrbitAdapter.SOLANA });
-    expect(keptHeight(next)).toBe('480px');
-  });
+  it('keeps its top edge in place and lets the body glide: nothing jumps when the height changes', () => {
+    const { tree } = openModal();
 
-  it('forgets the height of the wallet list when the modal closes', () => {
-    const { modal, tree } = openModal();
-    showList(tree, modal, 480);
+    const dialog = elements(tree).find((element) => 'anchorTop' in element.props);
+    expect(dialog?.props.anchorTop).toBe(true);
+    expect(dialog?.props.animateHeight).toBe(false);
 
-    show(modal, { isConnectModalOpen: false });
-    // Opened again straight on the connecting screen (the reset to the wallet list comes after the render)
-    const next = show(modal, {
-      isConnectModalOpen: true,
-      connectModalContentType: 'connecting',
-      activeConnector: 'metamask',
-    });
-    expect(keptHeight(next)).toBeNull();
-  });
-
-  it('forgets the height of the wallet list when its element is removed', () => {
-    const { modal, tree } = openModal();
-    const { setRef } = showList(tree, modal, 480);
-
-    setRef(null);
-    render(modal, {});
-    const next = show(modal, { connectModalContentType: 'connecting', activeConnector: 'metamask' });
-    expect(keptHeight(next)).toBeNull();
-  });
-
-  it('keeps the height of the wallet list (at most the window height), the status centered, the footer at the bottom', () => {
-    const observed: Array<() => void> = [];
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        constructor(private readonly callback: () => void) {}
-        // A real observer reports later, when the page renders a frame
-        observe() {
-          observed.push(this.callback);
-        }
-        disconnect() {}
-      },
-    );
-    const modal = (ConnectModal as unknown as { type: (props: object) => unknown }).type;
-    state.modal = {
-      isConnectModalOpen: true,
-      connectModalContentType: 'connectors',
-      selectedAdapter: OrbitAdapter.EVM,
-      setIsConnectModalOpen: vi.fn(),
-      setConnectModalContentType: vi.fn(),
-      setActiveConnector: vi.fn(),
-      setImpersonatedAddress: vi.fn(),
-      setIsConnected: vi.fn(),
-      setSelectedAdapter: vi.fn(),
-    };
-
-    // The wallet list is on screen, 480 px high, then 520 px once another wallet is listed
-    let tree = render(modal, {});
-    const list = { offsetHeight: 480 };
-    (named(tree, 'DefaultModalContainer')?.props.ref as (element: object | null) => void)(list);
-    render(modal, {});
-    list.offsetHeight = 520;
-    observed.forEach((report) => report());
-    render(modal, {});
-
-    // A wallet is chosen: the modal does not shrink to the spinner, and never grows past the window
-    state.modal = { ...state.modal, connectModalContentType: 'connecting', activeConnector: 'metamask' };
-    tree = render(modal, {});
-    const container = named(tree, 'DefaultModalContainer');
-    expect(container?.props.className).toContain(
-      'novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]',
-    );
-    expect((container?.props.style as Record<string, string>)['--novacon-connect-list-height']).toBe('520px');
-    const main = named(tree, 'DefaultMainContent');
-    expect(main?.props.className).toContain('novacon:flex-1');
-    expect(main?.props.className).toContain('novacon:justify-center');
-
-    // Back on the wallet list, the modal takes the height of its content again
-    state.modal = { ...state.modal, connectModalContentType: 'connectors' };
-    tree = render(modal, {});
-    expect(named(tree, 'DefaultModalContainer')?.props.style).toBeUndefined();
-    expect(named(tree, 'DefaultModalContainer')?.props.className).not.toContain('min-h-');
+    const body = elements(tree).find((element) => element.type === AnimatedHeight);
+    expect(named(body?.props.children, 'DefaultMainContent')).toBeDefined();
   });
 });

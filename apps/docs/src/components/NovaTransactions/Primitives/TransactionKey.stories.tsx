@@ -60,13 +60,14 @@ export const DefaultEVM: Story = {
 };
 
 /**
- * Showcases a Solana transaction with slot, confirmations, and recent blockhash details.
+ * A Solana transaction: its signature, linked to the explorer, and its confirmations.
  */
 export const DefaultSolana: Story = {
   name: 'Default (Solana)',
   args: {
     tx: createMockTx(OrbitAdapter.SOLANA, {}),
     adapter: mockSolanaAdapter,
+    confirmations: 3,
   },
 };
 
@@ -143,9 +144,14 @@ export const WithCustomRender: Story = {
     renderHashLink: (props) => (
       <div className="rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/15 px-2 py-1 text-[#0052ff] dark:bg-[#38bdf8]/15 dark:text-[#7dd3fc]">
         Custom ✨{' '}
-        <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
-          {props.label}
-        </a>
+        {props.explorerUrl ? (
+          <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
+            {props.label}
+          </a>
+        ) : (
+          <span>{props.label}</span>
+        )}{' '}
+        <span className="font-mono text-xs">{props.hash.slice(0, 10)}...</span>
       </div>
     ),
     adapter: mockEvmAdapter,

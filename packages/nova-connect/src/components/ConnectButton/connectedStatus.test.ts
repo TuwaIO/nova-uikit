@@ -54,6 +54,12 @@ describe('connectedStatusFor', () => {
     expect(connectedStatusFor([old, next], [tx('of-the-other-wallet')])).toBe('idle');
   });
 
+  it('a page of a history that brings the new record of an old speed-up is no result', () => {
+    const old = done('old', TransactionStatus.Replaced, { replacedTxHash: 'new' as never, replacedReason: 'repriced' });
+    const next = done('new', TransactionStatus.Success, { replaces: 'old' as never });
+    expect(connectedStatusFor([old, next], [old])).toBe('idle');
+  });
+
   it('nothing has happened when nothing changed', () => {
     const finished = done('a', TransactionStatus.Success);
     expect(connectedStatusFor([finished], [finished])).toBe('idle');

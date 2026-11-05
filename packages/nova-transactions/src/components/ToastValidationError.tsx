@@ -6,7 +6,7 @@
  */
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, JSX, ReactNode } from 'react';
 import { ToastContentProps } from 'react-toastify';
 
@@ -217,7 +217,7 @@ const DefaultCopyContent = ({ icon, isCopied, copyLabel, copiedLabel }: ToastVal
   <>
     {icon}
     <span className="novatx:select-none novatx:transition-colors" aria-live="polite" role="status">
-      {isCopied ? copiedLabel : copyLabel}
+      <MorphText>{isCopied ? copiedLabel : copyLabel}</MorphText>
     </span>
   </>
 );
@@ -298,15 +298,7 @@ export function ToastValidationError({
       },
     );
 
-  const iconElement = (
-    <ExclamationTriangleIcon
-      className={cn(
-        'novatx:h-4 novatx:w-4 novatx:transition-colors',
-        isCopied && 'novatx:text-[var(--tuwa-success-text)]',
-      )}
-      aria-hidden
-    />
-  );
+  const iconElement = <CopyIcon copied={isCopied} className="novatx:h-4 novatx:w-4" />;
 
   return (
     <div

@@ -2,14 +2,17 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
+import { ArrowLeftStartOnRectangleIcon, ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
 import {
-  ArrowLeftStartOnRectangleIcon,
-  ArrowsRightLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  DocumentDuplicateIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
-import { cn, NetworkIcon, QuasarLoader, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+  cn,
+  CopyIcon,
+  ExternalLinkIcon,
+  MorphText,
+  NetworkIcon,
+  QuasarLoader,
+  textCenterEllipsis,
+  useCopyToClipboard,
+} from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -28,6 +31,7 @@ import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon } from '../WalletIcon';
+import { connectorDisplayName } from './connectorName';
 
 // --- Types for Customization ---
 
@@ -490,7 +494,7 @@ export type ConnectionsContentCustomization = {
      */
     recentRowConnectButton?: (params: { isConnecting: boolean }) => string;
     /**
-     * Returns classes added to the spinner of the connect button.
+     * Returns classes added to the loader of the connect button.
      *
      * @returns The classes.
      */
@@ -708,16 +712,18 @@ interface RecentlyConnectedRowProps {
 
 // --- Helper Functions ---
 
-const getFormattedConnectorName = (connectorType: string): string => {
-  function capitalizeFirstLetter(str: string) {
-    if (typeof str !== 'string' || str.length === 0) {
-      return ''; // Handle empty strings or non-string inputs
-    }
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-  // Remove adapter prefix (e.g., "EVM:METAMASK" -> "METAMASK")
-  const nameWithoutAdapter = connectorType.includes(':') ? connectorType.split(':')[1] : connectorType;
-  return capitalizeFirstLetter(formatConnectorName(nameWithoutAdapter));
+/**
+ * The name of a wallet from the connectors of the store.
+ *
+ * @returns A function from a connector type to the name to show.
+ */
+const useConnectorName = () => {
+  const connectors = useWalletConnectors();
+  return useCallback(
+    (connectorType: string) =>
+      connectorDisplayName(connectorType, connectors as unknown as Record<string, unknown[]> | undefined),
+    [connectors],
+  );
 };
 
 /**
@@ -871,6 +877,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
     },
     ref,
   ) => {
+    const connectorName = useConnectorName();
     const labels = useNovaConnectLabels();
     const { copy, isCopied } = useCopyToClipboard();
 
@@ -930,7 +937,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
             <span
               className={cn('novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
-              {getFormattedConnectorName(connectorType)}
+              {connectorName(connectorType)}
             </span>
 
             {/* Actions Row */}
@@ -948,8 +955,8 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                 )}
                 title={labels.copyAddress}
               >
-                <DocumentDuplicateIcon className={cn('novacon:h-3 novacon:w-3', classNames?.copyIcon)} />
-                {isCopied ? labels.copied : labels.copy}
+                <CopyIcon copied={isCopied} className={cn('novacon:h-3 novacon:w-3', classNames?.copyIcon)} />
+                <MorphText>{isCopied ? labels.copied : labels.copy}</MorphText>
               </button>
               {explorerLink && (
                 <button
@@ -960,7 +967,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                   )}
                   title={labels.viewOnExplorer}
                 >
-                  <ArrowTopRightOnSquareIcon className={cn('novacon:h-3 novacon:w-3', classNames?.explorerIcon)} />
+                  <ExternalLinkIcon className={cn('novacon:h-3 novacon:w-3', classNames?.explorerIcon)} />
                   {labels.explorer}
                 </button>
               )}
@@ -986,6 +993,7 @@ DefaultActiveConnectorRow.displayName = 'DefaultActiveConnectorRow';
 
 const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
   ({ connectorType, address, chainId, onSwitch, onDisconnect, className, icon, classNames }, ref) => {
+    const connectorName = useConnectorName();
     const labels = useNovaConnectLabels();
 
     return (
@@ -1038,7 +1046,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             <span
               className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
-              {getFormattedConnectorName(connectorType)}
+              {connectorName(connectorType)}
             </span>
           </div>
         </div>
@@ -1063,6 +1071,7 @@ DefaultConnectedConnectorRow.displayName = 'DefaultConnectedConnectorRow';
 
 const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnectedRowProps>(
   ({ connectorType, address, onConnect, onRemove, className, icon, isConnecting = false, classNames }, ref) => {
+    const connectorName = useConnectorName();
     const labels = useNovaConnectLabels();
 
     return (
@@ -1096,7 +1105,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
             <span
               className={cn('novacon:text-[10px] novacon:text-[var(--tuwa-text-secondary)]', classNames?.connectorName)}
             >
-              {getFormattedConnectorName(connectorType)}
+              {connectorName(connectorType)}
             </span>
           </div>
         </div>
@@ -1131,7 +1140,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
               classNames?.removeButton,
             )}
-            aria-label={formatLabel(labels.removeFromRecent, { name: getFormattedConnectorName(connectorType) })}
+            aria-label={formatLabel(labels.removeFromRecent, { name: connectorName(connectorType) })}
           >
             <TrashIcon className={cn('novacon:h-4 novacon:w-4', classNames?.removeIcon)} />
           </button>
@@ -1168,6 +1177,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   const labels = useNovaConnectLabels();
   const { setIsConnectModalOpen, appChains, solanaRPCUrls } = useNovaConnect();
   const connections = useSatelliteConnectStore((store) => store.connections);
+  const connectorName = useConnectorName();
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
   const switchConnection = useSatelliteConnectStore((store) => store.switchConnection);
   const disconnect = useSatelliteConnectStore((store) => store.disconnect);
@@ -1274,7 +1284,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         await switchConnection(connectorType);
 
         // Announce to screen readers
-        const walletName = getFormattedConnectorName(connectorType);
+        const walletName = connectorName(connectorType);
         const announcement =
           customization?.labels?.switchAnnouncement?.(walletName) ??
           formatLabel(labels.switchedToWallet, { name: walletName });
@@ -1292,7 +1302,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         }
       }
     },
-    [switchConnection, customization, labels],
+    [switchConnection, customization, labels, connectorName],
   );
 
   /**
@@ -1313,7 +1323,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         disconnect(connectorType);
 
         // Announce to screen readers
-        const walletName = getFormattedConnectorName(connectorType);
+        const walletName = connectorName(connectorType);
         const announcement =
           customization?.labels?.disconnectAnnouncement?.(walletName) ??
           formatLabel(labels.disconnectedWallet, { name: walletName });
@@ -1331,7 +1341,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         }
       }
     },
-    [disconnect, customization, labels],
+    [disconnect, customization, labels, connectorName],
   );
 
   /**
@@ -1356,7 +1366,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           appChains,
           solanaRPCUrls,
         });
-        const walletName = getFormattedConnectorName(connectorType);
+        const walletName = connectorName(connectorType);
         if (walletName === 'Impersonatedwallet') {
           impersonatedHelpers.setImpersonated(address.trim());
           await connect({ connectorType, chainId });
@@ -1384,7 +1394,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         setConnectingRecent(null);
       }
     },
-    [connect, customization, labels, appChains, solanaRPCUrls],
+    [connect, customization, labels, appChains, solanaRPCUrls, connectorName],
   );
 
   /**

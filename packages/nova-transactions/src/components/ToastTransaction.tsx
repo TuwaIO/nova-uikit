@@ -11,7 +11,7 @@ import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
 import { canReplaceTx, runReplacement } from '../utils/replacement';
-import { progressOf, toneOf } from '../utils/txStatus';
+import { hasConfirmations, progressOf, toneOf } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -281,9 +281,9 @@ export function ToastTransaction<T extends Transaction>({
             label: classNames?.statusBadgeLabel,
           }}
         />
-        {tx.confirmations && Number(tx.confirmations) > 0 && (
+        {hasConfirmations(tx.confirmations) && (
           <ConfirmationsBadge
-            count={tx.confirmations}
+            count={tx.confirmations as number | string}
             required={tx.requiredConfirmations}
             isSuccess={tx.status === TransactionStatus.Success}
             className={classNames?.confirmationsBadge}

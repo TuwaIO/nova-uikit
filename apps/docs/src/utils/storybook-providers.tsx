@@ -226,7 +226,8 @@ export const sharedArgTypes: Meta<ExtendedConnectButtonProps>['argTypes'] = {
   },
   popularConnectors: {
     control: 'object',
-    description: 'Popular connectors to show in the connect modal (e.g. ["Wallet Connect"])',
+    description:
+      'Names of configured or installed wallets to list under Popular (e.g. ["MetaMask"], with that wallet installed). This Storybook has no WalletConnect connector.',
     table: { category: 'NovaConnectProvider' },
   },
   withBalance: {
@@ -268,9 +269,22 @@ export const sharedArgs: Meta<ExtendedConnectButtonProps>['args'] = {
   withImpersonated: true,
 };
 
+/** The real setup: the args of these stories are read by the decorator, and `ConnectButton` itself takes few props. */
+export const CONNECT_BUTTON_SOURCE = `<NovaConnectProvider
+  appChains={appEVMChains}
+  solanaRPCUrls={solanaRPCUrls}
+  transactionPool={transactionPool}
+  pulsarAdapter={pulsarAdapter}
+  withBalance
+  withChain
+>
+  <ConnectButton />
+</NovaConnectProvider>`;
+
 export const sharedParameters: Meta<ExtendedConnectButtonProps>['parameters'] = {
   layout: 'centered',
   docs: {
+    source: { code: CONNECT_BUTTON_SOURCE },
     description: {
       component:
         'Main wallet connection button. Handles connect/disconnect states automatically via NovaConnectProvider context.',

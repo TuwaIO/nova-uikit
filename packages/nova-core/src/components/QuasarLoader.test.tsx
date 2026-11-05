@@ -34,7 +34,7 @@ describe('QuasarLoader', () => {
     const plain = QuasarLoader({}) as unknown as Element;
 
     expect(labelled.props.role).toBe('status');
-    expect(labelled.props['aria-label']).toBe('Loading');
+    expect(elements(labelled).some((element) => element.props.children === 'Loading')).toBe(true);
     expect(plain.props.role).toBeUndefined();
     expect(plain.props['aria-hidden']).toBe(true);
   });
@@ -57,5 +57,9 @@ describe('QuasarLoader', () => {
     expect(css).toMatch(
       /prefers-reduced-motion: reduce\) \{\s*\.tuwa-quasar-loader \* \{\s*animation: none !important;/,
     );
+    // The opacity of these comes from their animations alone: without one the glow is a solid disc over the mark
+    const still = css.slice(css.indexOf('prefers-reduced-motion'));
+    expect(still).toMatch(/\.tuwa-ql-glow \{\s*opacity: 0\.2;/);
+    expect(still).toMatch(/\.tuwa-ql-beam \{\s*opacity: 0;/);
   });
 });

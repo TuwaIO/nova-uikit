@@ -2,8 +2,7 @@
  * @file Connecting component with comprehensive customization options and connection status display.
  */
 
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphText } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 
@@ -435,7 +434,6 @@ const DefaultSpinner = forwardRef<HTMLDivElement, ConnectingSpinnerProps>(({ cla
   const labels = useNovaConnectLabels();
   return (
     <div ref={ref} className={className} {...restProps}>
-      <QuasarLoader size={20} accent="var(--tuwa-pending-icon)" />
       <span className="novacon:sr-only">{labels.loading}...</span>
     </div>
   );
@@ -445,11 +443,14 @@ DefaultSpinner.displayName = 'DefaultSpinner';
 const DefaultStatusIcon = forwardRef<HTMLDivElement, ConnectingStatusIconProps>(
   ({ className, statusData, ...props }, ref) => {
     const isSuccess = statusData.state === 'success';
-    const IconComponent = isSuccess ? CheckCircleIcon : ExclamationCircleIcon;
 
     return (
       <div ref={ref} className={className} {...props}>
-        <IconComponent className="novacon:w-6 novacon:h-6 novacon:text-white" aria-hidden="true" />
+        {isSuccess ? (
+          <DrawnCheck className="novacon:w-5 novacon:h-5 novacon:text-white" />
+        ) : (
+          <DrawnCross className="novacon:w-5 novacon:h-5 novacon:text-white" />
+        )}
       </div>
     );
   },
@@ -803,8 +804,13 @@ export const Connecting = memo(
               <CustomSpinner
                 className={
                   customization?.classNames?.spinner?.({ statusData }) ??
-                  // In the corner where the result comes up, which is what it gives way to
-                  'novacon:absolute novacon:-top-2 novacon:-right-2 novacon:z-10 novacon:flex novacon:h-8 novacon:w-8 novacon:items-center novacon:justify-center novacon:rounded-full novacon:bg-[var(--tuwa-pending-bg)] novacon:text-[var(--tuwa-pending-text)]'
+                  // The one wait that stays a ring and not the Quasar loader: it runs around the circle of the wallet
+                  cn(
+                    'novacon:absolute novacon:animate-spin novacon:motion-reduce:animate-none novacon:rounded-full novacon:-inset-[2px]',
+                    'novacon:w-[calc(100%_+_4px)] novacon:h-[calc(100%_+_4px)]',
+                    'novacon:border-2 novacon:border-[var(--tuwa-pending-text)]',
+                    'novacon:border-t-transparent',
+                  )
                 }
                 role="progressbar"
                 aria-label={customConfig?.ariaLabels?.spinner ?? labels.connecting}
@@ -859,7 +865,7 @@ export const Connecting = memo(
           <CustomMessageContainer
             className={
               customization?.classNames?.messageContainer?.({ statusData }) ??
-              cn('novacon:text-center novacon:space-y-2 novacon:max-w-md')
+              cn('novacon:w-full novacon:text-center novacon:space-y-2 novacon:max-w-md')
             }
             statusData={statusData}
           >

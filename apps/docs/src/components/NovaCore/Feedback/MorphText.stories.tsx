@@ -1,6 +1,5 @@
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof MorphText> = {
@@ -22,9 +21,10 @@ function useCycle<T>(values: readonly T[], everyMs = 1800) {
   return values[index];
 }
 
-const STATUSES = ['Pending', 'Sped up', 'Pending', 'Success', 'Failed', 'Cancelled'] as const;
-const UKRAINIAN = ['В очікуванні', 'Прискорено', 'Успішно', 'Помилка', 'Скасовано'] as const;
-const CHINESE = ['处理中', '已加速', '成功', '失败', '已取消'] as const;
+// The status labels of Nova Transactions, in the same order, so that the three lines always say the same
+const STATUSES = ['Pending', 'Sped up', 'Success', 'Failed', 'Cancelled'] as const;
+const UKRAINIAN = ['В обробці', 'Прискорено', 'Успішно', 'Помилка', 'Скасовано'] as const;
+const CHINESE = ['处理中', '已加速', '已完成', '交易失败', '已取消'] as const;
 
 /** The letters both versions share glide to their new places, the others fade. Change `children` to try your own. */
 export const Default: Story = {};
@@ -70,19 +70,19 @@ export const MayWrap: Story = {
   },
 };
 
-/** The icon beside the text swaps with a small pop. */
+/** The icon beside the text swaps with a small pop, and the check or cross draws itself. */
 export const WithIcon: Story = {
   render: () => {
     const status = useCycle(['Pending', 'Success', 'Pending', 'Failed'] as const);
     return (
       <div className="flex items-center gap-2 font-mono text-xl font-semibold text-[var(--tuwa-text-primary)]">
-        <MorphIcon iconKey={status}>
+        <MorphIcon iconKey={status} animateFirst>
           {status === 'Pending' ? (
             <QuasarLoader size={24} accent="var(--tuwa-pending-icon)" />
           ) : status === 'Success' ? (
-            <CheckCircleIcon className="h-6 w-6 text-[var(--tuwa-success-icon)]" />
+            <DrawnCheck variant="disc" className="h-6 w-6 text-[var(--tuwa-success-icon)]" />
           ) : (
-            <XCircleIcon className="h-6 w-6 text-[var(--tuwa-error-icon)]" />
+            <DrawnCross variant="disc" className="h-6 w-6 text-[var(--tuwa-error-icon)]" />
           )}
         </MorphIcon>
         <MorphText>{status}</MorphText>

@@ -2,12 +2,15 @@
  * @file This file contains the `TransactionStatusBadge` component for visually displaying a transaction's status.
  */
 
-import { ArrowPathIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import { cn, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
 import { useLabels } from '../providers';
 import { statusLabelOf } from '../utils/txStatus';
+
+const SuccessIcon = ({ className }: { className?: string }) => <DrawnCheck variant="disc" className={className} />;
+const FailedIcon = ({ className }: { className?: string }) => <DrawnCross variant="disc" className={className} />;
 
 const VISUALS = {
   pending: {
@@ -17,19 +20,19 @@ const VISUALS = {
     iconColor: 'novatx:text-[var(--tuwa-pending-icon)]',
   },
   confirmed: {
-    Icon: CheckCircleIcon,
+    Icon: SuccessIcon,
     color: 'novatx:text-[var(--tuwa-success-text)]',
     background: 'novatx:bg-[var(--tuwa-success-bg)]',
     iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Success]: {
-    Icon: CheckCircleIcon,
+    Icon: SuccessIcon,
     color: 'novatx:text-[var(--tuwa-success-text)]',
     background: 'novatx:bg-[var(--tuwa-success-bg)]',
     iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Failed]: {
-    Icon: XCircleIcon,
+    Icon: FailedIcon,
     color: 'novatx:text-[var(--tuwa-error-text)]',
     background: 'novatx:bg-[var(--tuwa-error-bg)]',
     iconColor: 'novatx:text-[var(--tuwa-error-icon)]',
@@ -89,7 +92,8 @@ export function TransactionStatusBadge<T extends Transaction>({
     !isPlain && 'novatx:rounded-full novatx:px-2 novatx:py-1',
   );
 
-  const isConfirmed = 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed';
+  const isConfirmed =
+    'confirmationStatus' in tx && (tx.confirmationStatus === 'confirmed' || tx.confirmationStatus === 'finalized');
   const visualKey = tx.pending ? (isConfirmed ? 'confirmed' : 'pending') : tx.status;
   const visual = visualKey ? VISUALS[visualKey as keyof typeof VISUALS] : null;
   const label = statusLabelOf(tx, statuses);
@@ -114,7 +118,8 @@ export function TransactionStatusBadge<T extends Transaction>({
 
   return (
     <div className={cn(baseClasses, color, !isPlain && background, classNames?.container, className)}>
-      <MorphIcon iconKey={visualKey as string}>
+      {/* A row of a list is simply shown when the list opens: old results must not all draw at once */}
+      <MorphIcon iconKey={visualKey as string} animateFirst={isPlain}>
         {Icon ? (
           <Icon className={cn('novatx:h-4 novatx:w-4', iconColor, classNames?.icon)} />
         ) : (

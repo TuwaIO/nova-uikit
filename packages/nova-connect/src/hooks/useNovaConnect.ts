@@ -8,8 +8,8 @@ import { InitialChains } from '../types';
 import { NovaSiwxWatcherProps } from '../watchers/NovaSiwxWatcher';
 
 /**
- * Status of the latest transaction of the active wallet, shown by the connect button: `loading` while it is pending,
- * then `succeed`, `failed` or `replaced`, and `idle` otherwise.
+ * What the connect button shows about the transactions of the wallet: `idle`, `loading` while one is pending, and for a moment
+ * after a transaction ends, `succeed`, `failed`, `cancelled` or `replaced`. A speed-up is no result: it stays `loading`.
  */
 export type ButtonTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced' | 'cancelled';
 

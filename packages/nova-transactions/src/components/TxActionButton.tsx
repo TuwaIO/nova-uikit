@@ -2,8 +2,8 @@
  * @file This file contains the `TxActionButton`, a stateful button for initiating and tracking transactions.
  */
 
-import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
@@ -17,8 +17,8 @@ const ICON_CLASSES = 'novatx:h-4 novatx:w-4';
 
 const STATUS_ICONS = {
   loading: <QuasarLoader size={16} accent="currentColor" />,
-  succeed: <CheckCircleIcon className={ICON_CLASSES} />,
-  failed: <ExclamationCircleIcon className={ICON_CLASSES} />,
+  succeed: <DrawnCheck variant="disc" className={ICON_CLASSES} />,
+  failed: <DrawnCross variant="disc" className={ICON_CLASSES} />,
   replaced: <ArrowPathIcon className={ICON_CLASSES} />,
 };
 
@@ -40,8 +40,9 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
    */
   action: () => Promise<void>;
   /**
-   * Selector function that returns the key of the last transaction added to the pool.
-   * Used to track the result of the submitted transaction.
+   * Selector function that returns the key of the last transaction added to the pool, such as `getLastTxKey` of the Pulsar
+   * store. It is read before and after the action: a key that has not changed means the action added no transaction, and the
+   * button goes back to idle.
    */
   getLastTxKey: () => string | undefined;
   /** The live transaction pool from the Pulsar store. */
@@ -122,6 +123,7 @@ export function TxActionButton<T extends Transaction>({
   const [wasCancelled, setWasCancelled] = useState(false);
   const seenTrackedTxKey = useRef<string | undefined>(undefined);
   const latestWallet = useRef(walletAddress);
+  const latestPool = useRef(transactionsPool);
 
   useEffect(() => {
     latestWallet.current = walletAddress;
@@ -129,6 +131,10 @@ export function TxActionButton<T extends Transaction>({
     setStatus('idle');
     setTrackedTxKey(undefined);
   }, [walletAddress]);
+
+  useEffect(() => {
+    latestPool.current = transactionsPool;
+  }, [transactionsPool]);
 
   useEffect(() => {
     if (!trackedTxKey) return;
@@ -168,11 +174,19 @@ export function TxActionButton<T extends Transaction>({
   const handleClick = async () => {
     const walletAtClick = walletAddress;
     const keyBefore = getLastTxKey();
+    const clickedAt = Math.floor(Date.now() / 1000);
     setStatus('loading');
     try {
       await action();
       const keyAfter = getLastTxKey();
-      const next = afterTrackedAction({ walletAtClick, walletNow: latestWallet.current, keyBefore, keyAfter });
+      const sentAt = keyAfter ? latestPool.current[keyAfter]?.localTimestamp : undefined;
+      const next = afterTrackedAction({
+        walletAtClick,
+        walletNow: latestWallet.current,
+        keyBefore,
+        keyAfter,
+        sentAfterClick: Number(sentAt) >= clickedAt,
+      });
       if (next === 'track') setTrackedTxKey(keyAfter);
       else if (next === 'idle') setStatus('idle');
     } catch (error) {
@@ -183,10 +197,9 @@ export function TxActionButton<T extends Transaction>({
   };
 
   const renderContent = () => {
-    if (status === 'idle') return typeof children === 'string' ? <MorphText>{children}</MorphText> : children;
-
     const replacedOrCancelled = wasCancelled ? (cancelledContent ?? replacedContent) : replacedContent;
     const custom = {
+      idle: typeof children === 'string' ? undefined : children,
       loading: loadingContent,
       succeed: succeedContent,
       failed: failedContent,
@@ -194,12 +207,21 @@ export function TxActionButton<T extends Transaction>({
     }[status];
     if (custom) return custom;
 
-    const label = status === 'replaced' && wasCancelled ? trackedTxButton.cancelled : trackedTxButton[status];
+    const label =
+      status === 'idle'
+        ? (children as string)
+        : status === 'replaced' && wasCancelled
+          ? trackedTxButton.cancelled
+          : trackedTxButton[status];
+
+    // One tree in all states, so that the label morphs from the first click to the way back
     return (
       <>
-        <MorphIcon iconKey={status} animateFirst className={classNames?.icon}>
-          {STATUS_ICONS[status]}
-        </MorphIcon>
+        {status !== 'idle' && (
+          <MorphIcon iconKey={status} animateFirst className={classNames?.icon}>
+            {STATUS_ICONS[status]}
+          </MorphIcon>
+        )}
         <span className={classNames?.label}>
           <MorphText>{label}</MorphText>
         </span>

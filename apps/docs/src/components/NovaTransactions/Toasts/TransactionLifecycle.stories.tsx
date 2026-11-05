@@ -8,6 +8,7 @@ import {
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 import { useEffect, useState } from 'react';
+import { action } from 'storybook/actions';
 
 import { mockEvmAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
@@ -16,7 +17,15 @@ const WALLET = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 const OLD_HASH = '0x1111111111111111111111111111111111111111111111111111111111111111';
 const NEW_HASH = '0x2222222222222222222222222222222222222222222222222222222222222222';
 
-const base = { from: WALLET, sender: WALLET, nonce: 7, maxFeePerGas: '1000', maxPriorityFeePerGas: '100' };
+// MetaMask, with the nonce and the fees: the toast of an unconfirmed step offers Speed up and Cancel
+const base = {
+  from: WALLET,
+  sender: WALLET,
+  connectorType: 'evm:metamask',
+  nonce: 7,
+  maxFeePerGas: '1000',
+  maxPriorityFeePerGas: '100',
+};
 
 /** The scenarios a toast can live through, as what the Pulsar store holds at each step. */
 const SCENARIOS = {
@@ -45,6 +54,13 @@ const SCENARIOS = {
       status: TransactionStatus.Replaced,
       replacedTxHash: NEW_HASH,
       replacedReason: 'cancelled',
+      title: ['Swapping tokens...', 'Swap successful!', 'Swap failed', 'Swap cancelled'],
+      description: [
+        'Processing your token swap',
+        'Your tokens have been swapped',
+        'Token swap failed',
+        'The swap was cancelled',
+      ],
     },
   ],
 } as const;
@@ -77,7 +93,7 @@ function Lifecycle({ scenario, everyMs }: { scenario: ScenarioName; everyMs: num
           tx={tx}
           adapter={[mockEvmAdapter]}
           connectedWalletAddress={WALLET}
-          openTxInfoModal={() => {}}
+          openTxInfoModal={action('openTxInfoModal')}
         />
       </div>
       <div className="flex w-full max-w-[380px] flex-col gap-4">
@@ -87,6 +103,7 @@ function Lifecycle({ scenario, everyMs }: { scenario: ScenarioName; everyMs: num
           isSucceed={isSucceed}
           isFailed={isFailed}
           isReplaced={isReplaced}
+          isCancelled={isReplaced && tx.replacedReason === 'cancelled'}
         />
         <div>
           <TransactionStatusBadge tx={tx} />

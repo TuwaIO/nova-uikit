@@ -61,7 +61,7 @@ export function StatusAwareText({
   } else if (Array.isArray(source)) {
     const statusKey = txStatus || 'default';
     const config = STATUS_CONFIG[statusKey] ?? STATUS_CONFIG.default;
-    displayText = source[config.index];
+    displayText = source[config.index] || fallback;
     if (applyColor) {
       colorClass = config.colorClass;
     }

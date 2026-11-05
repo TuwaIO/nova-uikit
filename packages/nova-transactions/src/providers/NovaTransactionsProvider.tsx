@@ -29,7 +29,7 @@ import {
 } from '../components';
 import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
-import { settledRecordsOf, successorOf, toastIdOf, toastsOfRemoved, toastStepFor } from '../utils/replacement';
+import { pendingOfWallet, successorOf, toastIdOf, toastsOfRemoved, toastStepFor } from '../utils/replacement';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
 import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
 
@@ -137,7 +137,10 @@ export function NovaTransactionsProvider<T extends Transaction>({
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
   const [selectedTxKey, setSelectedTxKey] = useState<string | null>(null);
-  const prevTransactionsRef = useRef<TransactionPool<T>>(settledRecordsOf(transactionsPool));
+  const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
+  // The id of the toast of each operation, kept once seen: the first record of a chain may leave the pool before the last
+  const toastIdsRef = useRef(new Map<string, string>());
+  const walletsSeenRef = useRef(new Set<string>());
 
   const toastContainerId = 'nova-transactions';
 
@@ -259,23 +262,55 @@ export function NovaTransactionsProvider<T extends Transaction>({
     const prevPool = prevTransactionsRef.current;
 
     Object.values(transactionsPool).forEach((currentTx) => {
-      const step = toastStepFor(currentTx, prevPool[currentTx.txKey], transactionsPool, (toastId) =>
-        toast.isActive(toastId, toastContainerId),
+      const step = toastStepFor(
+        currentTx,
+        prevPool[currentTx.txKey],
+        transactionsPool,
+        (toastId) => toast.isActive(toastId, toastContainerId),
+        toastIdsRef.current,
       );
-      if (step.kind === 'show') showOrUpdateToast(currentTx, step.toastId);
+      if (step.kind === 'show') {
+        toastIdsRef.current.set(currentTx.txKey, step.toastId);
+        showOrUpdateToast(currentTx, step.toastId);
+      }
     });
 
-    toastsOfRemoved(prevPool, transactionsPool).forEach((id) => toast.dismiss({ id, containerId: toastContainerId }));
+    toastsOfRemoved(prevPool, transactionsPool, toastIdsRef.current).forEach((id) =>
+      toast.dismiss({ id, containerId: toastContainerId }),
+    );
 
     prevTransactionsRef.current = transactionsPool;
   }, [transactionsPool, showOrUpdateToast]);
+
+  // StrictMode runs the effects twice on mount, and a toast of the first pass can be lost with the first subscription of the
+  // container. The toast ID is stable, so the second pass cannot show it twice.
+  useEffect(
+    () => () => {
+      walletsSeenRef.current.clear();
+    },
+    [],
+  );
+
+  // A transaction still pending when the page opens gets a toast, and with it a way to speed it up or stop tracking it. Only of
+  // the wallet that can act on it, once per wallet, and only the newest few: nothing limits how many a pool can hold.
+  useEffect(() => {
+    const wallet = connectedWalletAddress?.toLowerCase();
+    if (!wallet || walletsSeenRef.current.has(wallet)) return;
+    walletsSeenRef.current.add(wallet);
+    pendingOfWallet(transactionsPool, wallet).forEach((tx) => {
+      const toastId = toastIdOf(tx, transactionsPool, toastIdsRef.current);
+      toastIdsRef.current.set(tx.txKey, toastId);
+      showOrUpdateToast(tx, toastId);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectedWalletAddress]);
 
   // Effect 2: Handles toast UPDATES when the connected wallet address change.
   useEffect(() => {
     // This ensures that visible toasts re-render to show/hide wallet-specific actions
     // like "Speed Up", even for completed transactions.
     Object.values(transactionsPool).forEach((tx) => {
-      const toastId = toastIdOf(tx, transactionsPool);
+      const toastId = toastIdOf(tx, transactionsPool, toastIdsRef.current);
       if (toast.isActive(toastId, toastContainerId) && !successorOf(tx, transactionsPool)) {
         showOrUpdateToast(tx, toastId);
       }
@@ -285,8 +320,8 @@ export function NovaTransactionsProvider<T extends Transaction>({
   const isTrackingModalOpen =
     !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
 
-  const shouldShowToasts =
-    enabledFeatures.toasts && (!isMobile || (!isTrackingModalOpen && !isTransactionsInfoModalOpen));
+  // Hidden, not unmounted: an unmounted container forgets its toasts, and the ones of a pending transaction would not come back
+  const hidesToasts = isMobile && (isTrackingModalOpen || isTransactionsInfoModalOpen);
 
   // Create customized close button component
   const CustomizedCloseButton = useMemo(() => {
@@ -310,7 +345,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   return (
     <NovaTransactionsLabelsProvider labels={mergedLabels}>
       <NovaTransactionsErrorContext.Provider value={errorContextValue}>
-        {shouldShowToasts && (
+        {enabledFeatures.toasts && (
           <ToastContainer
             position="bottom-right"
             stacked
@@ -322,6 +357,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
             containerId={toastContainerId}
             toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
             {...toastProps}
+            style={hidesToasts ? { ...toastProps.style, display: 'none' } : toastProps.style}
           />
         )}
 

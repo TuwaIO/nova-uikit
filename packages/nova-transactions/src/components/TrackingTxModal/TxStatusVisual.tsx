@@ -3,8 +3,8 @@
  * status.
  */
 
-import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn, MorphIcon, QuasarLoader } from '@tuwaio/nova-core';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
 
 /**
@@ -15,7 +15,7 @@ export type TxStatusVisualStatusKey = 'succeed' | 'failed' | 'replaced' | 'proce
 
 /** Class names of the icon of {@link TxStatusVisual}. */
 export type TxStatusVisualClassNames = {
-  /** Base icon className applied to all statuses */
+  /** Base icon className applied to all statuses. It colors the loader of a wait; its size is fixed, as it is drawn for it. */
   icon?: string;
   /** Status-specific icon overrides */
   statusOverrides?: Partial<Record<TxStatusVisualStatusKey, string>>;
@@ -42,11 +42,11 @@ const RESULT_ICONS: Record<
   { Icon: ComponentType<{ className?: string }>; className: string }
 > = {
   succeed: {
-    Icon: CheckCircleIcon,
+    Icon: ({ className }) => <DrawnCheck variant="disc" className={className} />,
     className: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   failed: {
-    Icon: ExclamationCircleIcon,
+    Icon: ({ className }) => <DrawnCross variant="disc" className={className} />,
     className: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   replaced: {
@@ -84,7 +84,7 @@ export function TxStatusVisual({
   return (
     <div className={cn('novatx:flex novatx:justify-center novatx:py-4', containerClassName)}>
       {/* The same key for both waits: the loader must not restart when the wallet signs */}
-      <MorphIcon iconKey={isWaiting ? 'waiting' : statusKey}>
+      <MorphIcon iconKey={isWaiting ? 'waiting' : statusKey} animateFirst>
         {result ? (
           <result.Icon
             className={cn('novatx:h-16 novatx:w-16', result.className, iconClassNames?.icon, statusOverride)}

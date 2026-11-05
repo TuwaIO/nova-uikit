@@ -613,14 +613,14 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
         const delay = immediate ? 0 : validationConfig.debounceDelay;
 
+        // No check of `hasInteracted` here: it is still `false` in this closure for the first change, and an address set in one go
+        // would never be validated, which keeps Connect disabled.
         validationTimeoutRef.current = setTimeout(async () => {
-          if (hasInteracted || immediate) {
-            const error = await validateValue(value);
-            if (error) {
-              setConnectionError(normalizeError(new Error(error)));
-            } else {
-              resetConnectionError();
-            }
+          const error = await validateValue(value);
+          if (error) {
+            setConnectionError(normalizeError(new Error(error)));
+          } else {
+            resetConnectionError();
           }
         }, delay);
       },
@@ -628,7 +628,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         clearValidationTimeout,
         validationConfig.validateOnChange,
         validationConfig.debounceDelay,
-        hasInteracted,
         validateValue,
         setConnectionError,
         resetConnectionError,

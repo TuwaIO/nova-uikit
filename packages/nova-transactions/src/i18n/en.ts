@@ -41,7 +41,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     erc4337: 'UserOp Hash',
     original: 'Original Tx Hash',
     replaces: 'Sped up from',
-    replaced: 'Replaced Tx Hash',
+    replaced: 'Replacement Tx Hash',
     default: 'Tx Hash',
     recentBlockhash: 'Recent Blockhash',
     solana: 'Signature',
@@ -125,7 +125,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     descriptionContext: 'Description Context',
     errorContext: 'Error Context',
     fullPayload: 'Full Payload',
-    replacedHash: 'Replaced Hash',
+    replacedHash: 'Replacement Hash',
     replaces: 'Replaces',
     stopTrackingHint:
       'The transaction stays on the network and may still go through. This only removes it from this list.',
