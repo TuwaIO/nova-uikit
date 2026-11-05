@@ -29,7 +29,7 @@ import {
 } from '../components';
 import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
-import { successorOf, toastStepFor } from '../utils/replacement';
+import { settledRecordsOf, successorOf, toastIdOf, toastsOfRemoved, toastStepFor } from '../utils/replacement';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
 import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
 
@@ -72,7 +72,8 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
     /**
      * Enables the top-center pre-submission error toast.
      * This fires when `executeTxAction` throws before the transaction reaches the pool
-     * (validation failures, `beforeTxProcess` rejections, missing adapter, etc.).
+     * (validation failures, `beforeTxProcess` rejections, missing adapter, etc.), and when a wallet or a node refuses a
+     * speed-up or a cancel, which nothing else tells the person.
      * @defaultValue `true`
      */
     validationErrorToast?: boolean;
@@ -136,7 +137,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
   const [selectedTxKey, setSelectedTxKey] = useState<string | null>(null);
-  const prevTransactionsRef = useRef<TransactionPool<T>>(transactionsPool);
+  const prevTransactionsRef = useRef<TransactionPool<T>>(settledRecordsOf(transactionsPool));
 
   const toastContainerId = 'nova-transactions';
 
@@ -216,7 +217,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
 
   // Memoized function to show or update a transaction progress toast.
   const showOrUpdateToast = useCallback(
-    (tx: T, movedFrom?: string) => {
+    (tx: T, toastId: string) => {
       if (!enabledFeatures.toasts) return;
 
       const type = tx.pending ? 'info' : (STATUS_TO_TOAST_TYPE[tx.status!] ?? 'info');
@@ -243,13 +244,10 @@ export function NovaTransactionsProvider<T extends Transaction>({
         />
       );
 
-      if (movedFrom) {
-        // One toast carries one operation: on a speed-up it goes on under the new hash
-        toast.update(movedFrom, { render: content, type, containerId: toastContainerId, toastId: tx.txKey });
-      } else if (toast.isActive(tx.txKey)) {
-        toast.update(tx.txKey, { render: content, type, containerId: toastContainerId });
+      if (toast.isActive(toastId, toastContainerId)) {
+        toast.update(toastId, { render: content, type, containerId: toastContainerId });
       } else {
-        toast(content, { toastId: tx.txKey, type, closeOnClick: false, containerId: toastContainerId });
+        toast(content, { toastId, type, closeOnClick: false, containerId: toastContainerId });
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -261,12 +259,13 @@ export function NovaTransactionsProvider<T extends Transaction>({
     const prevPool = prevTransactionsRef.current;
 
     Object.values(transactionsPool).forEach((currentTx) => {
-      const step = toastStepFor(currentTx, prevPool[currentTx.txKey], transactionsPool, (txKey) =>
-        toast.isActive(txKey),
+      const step = toastStepFor(currentTx, prevPool[currentTx.txKey], transactionsPool, (toastId) =>
+        toast.isActive(toastId, toastContainerId),
       );
-      if (step.kind === 'move') showOrUpdateToast(currentTx, step.from);
-      else if (step.kind === 'show') showOrUpdateToast(currentTx);
+      if (step.kind === 'show') showOrUpdateToast(currentTx, step.toastId);
     });
+
+    toastsOfRemoved(prevPool, transactionsPool).forEach((id) => toast.dismiss({ id, containerId: toastContainerId }));
 
     prevTransactionsRef.current = transactionsPool;
   }, [transactionsPool, showOrUpdateToast]);
@@ -276,8 +275,9 @@ export function NovaTransactionsProvider<T extends Transaction>({
     // This ensures that visible toasts re-render to show/hide wallet-specific actions
     // like "Speed Up", even for completed transactions.
     Object.values(transactionsPool).forEach((tx) => {
-      if (toast.isActive(tx.txKey, toastContainerId) && !successorOf(tx, transactionsPool)) {
-        showOrUpdateToast(tx);
+      const toastId = toastIdOf(tx, transactionsPool);
+      if (toast.isActive(toastId, toastContainerId) && !successorOf(tx, transactionsPool)) {
+        showOrUpdateToast(tx, toastId);
       }
     });
   }, [connectedWalletAddress, showOrUpdateToast, transactionsPool]);

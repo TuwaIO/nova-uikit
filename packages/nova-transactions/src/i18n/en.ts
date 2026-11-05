@@ -81,6 +81,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     cancelled: 'Cancelled',
   },
   actions: {
+    replacementFailed: 'Could not replace the transaction',
     stopTracking: 'Stop tracking',
     copy: 'Copy address',
     viewOnExplorer: 'View on explorer',

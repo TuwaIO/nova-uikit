@@ -6,14 +6,15 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > `const` **ConnectedContent**: `ForwardRefExoticComponent`\<[`ConnectedContentProps`](?path=/docs/packages-nova-connect-components-interfaces-connectedcontentprops--docs) & `RefAttributes`\<`HTMLDivElement`\>\>
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:289](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L289)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx:294](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectedContent.tsx#L294)
 
 The content of the connect button while a wallet is connected: the native balance with three decimals (with
 `withBalance`, from the `sm` breakpoint), the avatar and the ENS or SNS name (or shortened address) of the active
-wallet. While a transaction
-of the wallet in `transactionPool` is pending it shows a loading animation; when a pending transaction finishes it
-shows the result (succeeded, failed, replaced) for `customization.config.statusResetTimeout` milliseconds. The status
-is kept in `connectedButtonStatus` of `NovaConnectProvider`.
+wallet. While a transaction of the wallet in `transactionPool` is pending it shows a loading animation; when a
+transaction finishes it shows the result (succeeded, failed, cancelled, replaced) for
+`customization.config.statusResetTimeout` milliseconds, even while another transaction is still pending, and then goes back
+to the animation. A speed-up is no result: the button stays busy until the record of the new hash has one. A change of name
+morphs the text. The status is kept in `connectedButtonStatus` of `NovaConnectProvider`.
 
 Props: [ConnectedContentProps](?path=/docs/packages-nova-connect-components-interfaces-connectedcontentprops--docs); the ref is forwarded to the container.
 

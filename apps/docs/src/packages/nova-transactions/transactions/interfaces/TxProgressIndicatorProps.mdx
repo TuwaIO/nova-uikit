@@ -14,9 +14,19 @@ Props of [TxProgressIndicator](?path=/docs/packages-nova-transactions-transactio
 
 > `optional` **className?**: `string`
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L152)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L154)
 
 Classes of the indicator.
+
+***
+
+### isCancelled?
+
+> `optional` **isCancelled?**: `boolean`
+
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L152)
+
+Whether that replacement was a cancel: the last step then says so.
 
 ***
 
@@ -57,7 +67,7 @@ Whether the transaction is being submitted or is pending.
 
 Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:150](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L150)
 
-Whether the transaction was replaced (sped up or canceled).
+Whether the transaction was replaced by something else than a speed-up, whose record the modal goes on with.
 
 ***
 
@@ -75,7 +85,7 @@ Whether the transaction succeeded.
 
 > `optional` **stepClassNames?**: [`StepClassNames`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepclassnames--docs)
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L156)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:158](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L158)
 
 ClassNames for step customization
 
@@ -85,6 +95,6 @@ ClassNames for step customization
 
 > `optional` **StepComponent?**: `ComponentType`\<[`StepProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-stepprops--docs)\>
 
-Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:154](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L154)
+Defined in: [components/TrackingTxModal/TxProgressIndicator.tsx:156](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TxProgressIndicator.tsx#L156)
 
 Component that renders each step.

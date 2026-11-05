@@ -47,7 +47,13 @@ function elements(node: unknown): Element[] {
 }
 
 const text = (node: unknown): string =>
-  Array.isArray(node) ? node.map(text).join('') : typeof node === 'string' ? node : '';
+  Array.isArray(node)
+    ? node.map(text).join('')
+    : typeof node === 'string'
+      ? node
+      : node && typeof node === 'object' && 'props' in node
+        ? text((node.props as { children?: unknown }).children)
+        : '';
 
 const named = (tree: unknown, name: string) =>
   elements(tree).find((element) => (element.type as { displayName?: string })?.displayName === name);

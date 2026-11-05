@@ -4,14 +4,14 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaConnectProviderType
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:87](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L87)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L93)
 
 State of `NovaConnectProvider`, returned by [useNovaConnect](?path=/docs/packages-nova-connect-connect-functions-usenovaconnect--docs): the provider props (without `siwx` and
 `pagination`, which are not set) and the UI state of the modals, kept in React state of the provider.
 
 ## Extends
 
-- `Omit`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"pulsarAdapter"` \| `"children"` \| `"labels"` \| `"transactionPool"`\>
+- `Omit`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"pulsarAdapter"` \| `"children"` \| `"labels"` \| `"transactionPool"` \| `"removeTxFromPool"`\>
 
 ## Properties
 
@@ -19,7 +19,7 @@ State of `NovaConnectProvider`, returned by [useNovaConnect](?path=/docs/package
 
 > **activeConnector**: `string` \| `undefined`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:173](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L173)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:179](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L179)
 
 Wallet selected in the connect modal, as `formatConnectorName` of `@tuwaio/orbit-core` returns it
 
@@ -43,7 +43,7 @@ EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectApp
 
 > **connectedButtonStatus**: [`ButtonTxStatus`](?path=/docs/packages-nova-connect-connect-type-aliases-buttontxstatus--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:129](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L129)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L135)
 
 Status of the latest transaction shown by the connect button
 
@@ -53,7 +53,7 @@ Status of the latest transaction shown by the connect button
 
 > **connectedModalContentType**: [`ConnectedContentType`](?path=/docs/packages-nova-connect-connect-type-aliases-connectedcontenttype--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:147](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L147)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:153](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L153)
 
 Screen of the connected modal
 
@@ -63,7 +63,7 @@ Screen of the connected modal
 
 > **connectModalContentType**: [`ConnectContentType`](?path=/docs/packages-nova-connect-connect-type-aliases-connectcontenttype--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L155)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L161)
 
 Screen of the connect modal
 
@@ -73,7 +73,7 @@ Screen of the connect modal
 
 > `optional` **customConnectorGroups?**: `Record`\<`string`, `string`[]\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L54)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L60)
 
 Extra wallet groups of the wallet list: group title → wallet names, in order
 
@@ -87,7 +87,7 @@ Extra wallet groups of the wallet list: group title → wallet names, in order
 
 > **impersonatedAddress**: `string`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:183](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L183)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:189](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L189)
 
 Address entered in the impersonation form
 
@@ -97,7 +97,7 @@ Address entered in the impersonation form
 
 > **isChainsListOpen**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:111](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L111)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L117)
 
 Whether the chain list of `ChainSelector` is open (desktop)
 
@@ -107,7 +107,7 @@ Whether the chain list of `ChainSelector` is open (desktop)
 
 > **isChainsListOpenMobile**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L119)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L125)
 
 Whether the chain dialog of `ChainSelector` is open (mobile)
 
@@ -117,7 +117,7 @@ Whether the chain dialog of `ChainSelector` is open (mobile)
 
 > **isConnected**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:137](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L137)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L143)
 
 Whether a wallet has just connected in the connect modal (`true` for 500 ms before the modal closes)
 
@@ -127,7 +127,7 @@ Whether a wallet has just connected in the connect modal (`true` for 500 ms befo
 
 > **isConnectedModalOpen**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:101](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L101)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L107)
 
 Whether the connected modal is open
 
@@ -137,7 +137,7 @@ Whether the connected modal is open
 
 > **isConnectModalOpen**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L93)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L99)
 
 Whether the connect modal is open
 
@@ -147,7 +147,7 @@ Whether the connect modal is open
 
 > `optional` **legal?**: [`LegalConfig`](?path=/docs/packages-nova-connect-connect-interfaces-legalconfig--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:193](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L193)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:199](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L199)
 
 The `legal` prop
 
@@ -161,7 +161,7 @@ The `legal` prop
 
 > `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L72)
 
 Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
 Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
@@ -176,7 +176,7 @@ Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency)
 
 > `optional` **popularConnectors?**: `string`[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L52)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L58)
 
 Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini)
 
@@ -190,7 +190,7 @@ Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Co
 
 > **selectedAdapter**: `OrbitAdapter` \| `undefined`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:165](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L165)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L171)
 
 Network selected in the connect modal (`undefined` for all networks)
 
@@ -200,7 +200,7 @@ Network selected in the connect modal (`undefined` for all networks)
 
 > **setActiveConnector**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:179](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L179)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:185](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L185)
 
 Selects a wallet in the connect modal.
 
@@ -222,7 +222,7 @@ The formatted wallet name.
 
 > **setConnectedButtonStatus**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:135](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L135)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L141)
 
 Sets the transaction status of the connect button.
 
@@ -244,7 +244,7 @@ The status.
 
 > **setConnectedModalContentType**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:153](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L153)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:159](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L159)
 
 Shows a screen of the connected modal.
 
@@ -266,7 +266,7 @@ The screen.
 
 > **setConnectModalContentType**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:161](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L161)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:167](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L167)
 
 Shows a screen of the connect modal.
 
@@ -288,7 +288,7 @@ The screen.
 
 > **setImpersonatedAddress**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:189](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L189)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:195](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L195)
 
 Sets the impersonated address of the connect modal (it is saved to `localStorage` only on connect).
 
@@ -310,7 +310,7 @@ The address.
 
 > **setIsChainsListOpen**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:117](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L117)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:123](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L123)
 
 Opens or closes the chain list of `ChainSelector` (desktop).
 
@@ -332,7 +332,7 @@ Whether the list is open.
 
 > **setIsChainsListOpenMobile**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:125](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L125)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L131)
 
 Opens or closes the chain dialog of `ChainSelector` (mobile).
 
@@ -354,7 +354,7 @@ Whether the dialog is open.
 
 > **setIsConnected**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:143](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L143)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:149](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L149)
 
 Sets the "just connected" state of the connect modal.
 
@@ -376,7 +376,7 @@ The state.
 
 > **setIsConnectedModalOpen**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:107](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L107)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:113](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L113)
 
 Opens or closes the connected modal (opening shows the main screen).
 
@@ -398,7 +398,7 @@ Whether the modal is open.
 
 > **setIsConnectModalOpen**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L99)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L105)
 
 Opens or closes the connect modal (opening resets it to the wallet list).
 
@@ -420,7 +420,7 @@ Whether the modal is open.
 
 > **setSelectedAdapter**: (`value`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:171](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L171)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:177](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L177)
 
 Selects a network in the connect modal.
 
@@ -442,7 +442,7 @@ The network, or `undefined` for all networks.
 
 > `optional` **siwx?**: [`NovaSiwxWatcherProps`](?path=/docs/packages-nova-connect-connect-interfaces-novasiwxwatcherprops--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L61)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L67)
 
 SIWX sign-in of the connected wallet (see `NovaSiwxWatcher`). Without it, Nova Connect does not sign in and does
 not touch the SIWX session.
@@ -472,7 +472,7 @@ Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.dev
 
 > `optional` **withBalance?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:46](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L46)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L52)
 
 Whether the connect button shows the native balance
 
@@ -486,7 +486,7 @@ Whether the connect button shows the native balance
 
 > `optional` **withChain?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L54)
 
 Whether the connect button shows a chain selector
 
@@ -500,7 +500,7 @@ Whether the connect button shows a chain selector
 
 > `optional` **withImpersonated?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L56)
 
 Whether the wallet list offers the impersonated wallet (a read-only address, for development)
 

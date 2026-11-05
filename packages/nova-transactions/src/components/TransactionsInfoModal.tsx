@@ -41,7 +41,10 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
   components?: {
     /** The header with the title and the close button. */
     Header?: ComponentType<TransactionsInfoModalHeaderProps>;
-    /** The transaction list. */
+    /**
+     * The transaction list. It gets the whole pool: a speed-up has two records there, and `successorOf` tells the one to hide
+     * so that an operation stays one row, as in the default list.
+     */
     History?: ComponentType<TransactionsHistoryProps<T>>;
   };
 };

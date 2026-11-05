@@ -74,6 +74,7 @@ export const chineseLabels: NovaTransactionsLabels = {
     cancelled: '已取消',
   },
   actions: {
+    replacementFailed: '无法替换交易',
     stopTracking: '停止追踪',
     copy: '复制地址',
     viewOnExplorer: '在区块浏览器中查看',

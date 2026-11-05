@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TrackingTxModalCustomization**\<`T`\> = `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L69)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L82)
 
 Props, class names and replacement components for the parts of [TrackingTxModal](?path=/docs/packages-nova-transactions-transactions-functions-trackingtxmodal--docs).
 
@@ -24,7 +24,7 @@ The transaction type of the Pulsar store.
 
 > `optional` **classNames?**: `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:93](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L93)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:108](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L108)
 
 Granular classNames for all sub-elements
 
@@ -106,13 +106,19 @@ Classes for the Retry button
 
 Classes for the SpeedUp button
 
+#### statusEdge?
+
+> `optional` **statusEdge?**: `string`
+
+Classes for the strip and the wash of the status color
+
 ***
 
 ### components?
 
 > `optional` **components?**: `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:78](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L78)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L91)
 
 Components that replace the default parts.
 
@@ -146,6 +152,12 @@ The block with the network, time and hashes of the transaction.
 
 The steps of the transaction lifecycle.
 
+#### StatusEdge?
+
+> `optional` **StatusEdge?**: `ComponentType`\<[`StatusEdgeProps`](?path=/docs/packages-nova-core-type-aliases-statusedgeprops--docs)\>
+
+The strip and the wash of the status color along the top.
+
 #### StatusVisual?
 
 > `optional` **StatusVisual?**: `ComponentType`\<[`TxStatusVisualProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-txstatusvisualprops--docs)\>
@@ -158,7 +170,7 @@ The large status icon.
 
 > `optional` **errorBlockCustomization?**: `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:138](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L138)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:155](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L155)
 
 Customization for TxErrorBlock
 
@@ -180,7 +192,7 @@ Granular classNames
 
 > `optional` **infoBlockCustomization?**: [`TxInfoBlockCustomization`](?path=/docs/packages-nova-transactions-transactions-type-aliases-txinfoblockcustomization--docs)\<`T`\>
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:122](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L122)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:139](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L139)
 
 Customization for TxInfoBlock
 
@@ -190,7 +202,7 @@ Customization for TxInfoBlock
 
 > `optional` **modalProps?**: `Partial`\<`ComponentPropsWithoutRef`\<*typeof* [`DialogContent`](?path=/docs/packages-nova-core-variables-dialogcontent--docs)\>\>
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:71](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L71)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L84)
 
 Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`).
 
@@ -200,7 +212,7 @@ Props passed to the dialog panel (`DialogContent` from `@tuwaio/nova-core`).
 
 > `optional` **motionProps?**: `MotionProps`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L76)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:89](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L89)
 
 `framer-motion` props of the content container inside the dialog panel (for example `initial`, `animate` and
 `transition`). The panel itself animates with `modalAnimation` of `modalProps`.
@@ -211,7 +223,7 @@ Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:76](https://github.c
 
 > `optional` **progressIndicatorCustomization?**: `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:124](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L124)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:141](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L141)
 
 Customization for TxProgressIndicator
 
@@ -233,7 +245,7 @@ Step classNames
 
 > `optional` **statusVisualCustomization?**: `object`
 
-Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L131)
+Defined in: [components/TrackingTxModal/TrackingTxModal.tsx:148](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TrackingTxModal/TrackingTxModal.tsx#L148)
 
 Customization for TxStatusVisual
 

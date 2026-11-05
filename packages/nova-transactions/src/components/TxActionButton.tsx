@@ -3,49 +3,24 @@
  */
 
 import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
-import { trackedButtonStep } from '../utils/replacement';
+import { afterTrackedAction, trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
-const getDefaultContent = (labels: NovaTransactionsLabels['trackedTxButton']) => ({
-  replaced: (
-    <>
-      <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.replaced}</span>
-    </>
-  ),
-  cancelled: (
-    <>
-      <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.cancelled}</span>
-    </>
-  ),
-  loading: (
-    <>
-      <ArrowPathIcon className="novatx:h-4 novatx:w-4 novatx:animate-spin" />
-      <span>{labels.loading}</span>
-    </>
-  ),
-  succeed: (
-    <>
-      <CheckCircleIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.succeed}</span>
-    </>
-  ),
-  failed: (
-    <>
-      <ExclamationCircleIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.failed}</span>
-    </>
-  ),
-});
+const ICON_CLASSES = 'novatx:h-4 novatx:w-4';
+
+const STATUS_ICONS = {
+  loading: <QuasarLoader size={16} accent="currentColor" />,
+  succeed: <CheckCircleIcon className={ICON_CLASSES} />,
+  failed: <ExclamationCircleIcon className={ICON_CLASSES} />,
+  replaced: <ArrowPathIcon className={ICON_CLASSES} />,
+};
 
 /**
  * Props for the `TxActionButton` component.
@@ -79,8 +54,13 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
   succeedContent?: ReactNode;
   /** Custom content to display when the action or transaction fails. */
   failedContent?: ReactNode;
-  /** Custom content to display when the transaction is replaced. */
+  /**
+   * Custom content to display when the transaction is replaced by something else than a speed-up: after a speed-up the button
+   * stays busy with the record that goes on.
+   */
   replacedContent?: ReactNode;
+  /** Custom content to display when the transaction is cancelled. Defaults to `replacedContent`, then to the label. */
+  cancelledContent?: ReactNode;
   /**
    * Duration in milliseconds before the button resets to idle after reaching
    * a terminal state (`succeed`, `failed`, `replaced`).
@@ -129,6 +109,7 @@ export function TxActionButton<T extends Transaction>({
   succeedContent,
   failedContent,
   replacedContent,
+  cancelledContent,
   resetTimeout = 2500,
   className,
   classNames,
@@ -140,10 +121,10 @@ export function TxActionButton<T extends Transaction>({
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
   const [wasCancelled, setWasCancelled] = useState(false);
   const seenTrackedTxKey = useRef<string | undefined>(undefined);
-
-  const defaultContent = getDefaultContent(trackedTxButton);
+  const latestWallet = useRef(walletAddress);
 
   useEffect(() => {
+    latestWallet.current = walletAddress;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus('idle');
     setTrackedTxKey(undefined);
@@ -185,36 +166,52 @@ export function TxActionButton<T extends Transaction>({
   }, [status, resetTimeout]);
 
   const handleClick = async () => {
+    const walletAtClick = walletAddress;
+    const keyBefore = getLastTxKey();
     setStatus('loading');
     try {
       await action();
-      setTrackedTxKey(getLastTxKey());
+      const keyAfter = getLastTxKey();
+      const next = afterTrackedAction({ walletAtClick, walletNow: latestWallet.current, keyBefore, keyAfter });
+      if (next === 'track') setTrackedTxKey(keyAfter);
+      else if (next === 'idle') setStatus('idle');
     } catch (error) {
+      if (walletAtClick !== latestWallet.current) return;
       showPreSubmitErrorToast(error);
       setStatus('failed');
     }
   };
 
   const renderContent = () => {
-    switch (status) {
-      case 'loading':
-        return loadingContent ?? defaultContent.loading;
-      case 'succeed':
-        return succeedContent ?? defaultContent.succeed;
-      case 'failed':
-        return failedContent ?? defaultContent.failed;
-      case 'replaced':
-        return replacedContent ?? (wasCancelled ? defaultContent.cancelled : defaultContent.replaced);
-      default:
-        return children;
-    }
+    if (status === 'idle') return typeof children === 'string' ? <MorphText>{children}</MorphText> : children;
+
+    const replacedOrCancelled = wasCancelled ? (cancelledContent ?? replacedContent) : replacedContent;
+    const custom = {
+      loading: loadingContent,
+      succeed: succeedContent,
+      failed: failedContent,
+      replaced: replacedOrCancelled,
+    }[status];
+    if (custom) return custom;
+
+    const label = status === 'replaced' && wasCancelled ? trackedTxButton.cancelled : trackedTxButton[status];
+    return (
+      <>
+        <MorphIcon iconKey={status} animateFirst className={classNames?.icon}>
+          {STATUS_ICONS[status]}
+        </MorphIcon>
+        <span className={classNames?.label}>
+          <MorphText>{label}</MorphText>
+        </span>
+      </>
+    );
   };
 
   // Default state-specific classes
   const defaultStateClasses = {
     idle: 'novatx:bg-[var(--tuwa-button-gradient-from)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
-    loading: 'novatx:bg-gray-400 novatx:text-white',
-    replaced: 'novatx:bg-gray-500 novatx:text-white',
+    loading: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
+    replaced: 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
     succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
     failed: 'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
   };

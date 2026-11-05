@@ -30,7 +30,7 @@ const meta: Meta<typeof TxStatusVisual> = {
     },
     isReplaced: {
       control: 'boolean',
-      description: 'True if the transaction was replaced (e.g., sped up or cancelled).',
+      description: 'True if the transaction was replaced by something else than a speed-up, as by a cancel.',
     },
   },
 };

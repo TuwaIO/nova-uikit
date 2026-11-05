@@ -9,7 +9,7 @@ import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
-import { explorerUrlOfHash } from '../utils/replacement';
+import { explorerUrlOfHash, explorerUrlOfReplaced } from '../utils/replacement';
 import { HashLink, HashLinkProps } from './HashLink';
 
 /**
@@ -118,7 +118,7 @@ export function TransactionKey<T extends Transaction>({
             renderHash({
               label: hashLabels.replaced,
               hash: replacedHash,
-              explorerUrl: foundAdapter.getExplorerTxUrl(tx),
+              explorerUrl: explorerUrlOfHash(foundAdapter, tx, replacedHash),
             })}
         </>
       );
@@ -139,7 +139,7 @@ export function TransactionKey<T extends Transaction>({
               label: hashLabels.replaces,
               hash: replaces,
               variant: 'compact',
-              explorerUrl: explorerUrlOfHash(foundAdapter, tx, replaces),
+              explorerUrl: explorerUrlOfReplaced(foundAdapter, tx, replaces),
             },
             originalHashLinkClassNames,
           )}

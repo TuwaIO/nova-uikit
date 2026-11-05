@@ -3,44 +3,44 @@
  */
 
 import { ArrowPathIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
-import { EvmTransaction, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import { cn, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
-import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
+import { statusLabelOf } from '../utils/txStatus';
 
-const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
-  Pending: {
-    label: labels.pending,
-    Icon: ArrowPathIcon,
-    badgeClasses: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
-    iconClasses: 'novatx:animate-spin novatx:text-[var(--tuwa-pending-icon)]',
+const VISUALS = {
+  pending: {
+    Icon: null,
+    color: 'novatx:text-[var(--tuwa-pending-text)]',
+    background: 'novatx:bg-[var(--tuwa-pending-bg)]',
+    iconColor: 'novatx:text-[var(--tuwa-pending-icon)]',
   },
-  Confirmed: {
-    label: labels.confirmed,
+  confirmed: {
     Icon: CheckCircleIcon,
-    badgeClasses: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
-    iconClasses: 'novatx:text-[var(--tuwa-success-icon)]',
+    color: 'novatx:text-[var(--tuwa-success-text)]',
+    background: 'novatx:bg-[var(--tuwa-success-bg)]',
+    iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Success]: {
-    label: labels.success,
     Icon: CheckCircleIcon,
-    badgeClasses: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
-    iconClasses: 'novatx:text-[var(--tuwa-success-icon)]',
+    color: 'novatx:text-[var(--tuwa-success-text)]',
+    background: 'novatx:bg-[var(--tuwa-success-bg)]',
+    iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Failed]: {
-    label: labels.failed,
     Icon: XCircleIcon,
-    badgeClasses: 'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
-    iconClasses: 'novatx:text-[var(--tuwa-error-icon)]',
+    color: 'novatx:text-[var(--tuwa-error-text)]',
+    background: 'novatx:bg-[var(--tuwa-error-bg)]',
+    iconColor: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   [TransactionStatus.Replaced]: {
-    label: labels.replaced,
     Icon: ArrowPathIcon,
-    badgeClasses: 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
-    iconClasses: 'novatx:text-[var(--tuwa-info-icon)]',
+    color: 'novatx:text-[var(--tuwa-info-text)]',
+    background: 'novatx:bg-[var(--tuwa-info-bg)]',
+    iconColor: 'novatx:text-[var(--tuwa-info-icon)]',
   },
-});
+} as const;
 
 /**
  * Props of {@link TransactionStatusBadge}.
@@ -50,6 +50,8 @@ const getStatusConfig = (labels: NovaTransactionsLabels['statuses']) => ({
 export type TransactionStatusBadgeProps<T extends Transaction> = {
   /** The transaction whose status is shown. */
   tx: T;
+  /** `badge` is a colored pill. `plain` is the icon and label alone, for the status line of a card. Defaults to `badge`. */
+  variant?: 'badge' | 'plain';
   /** Classes of the badge. */
   className?: string;
   /** Granular class names for sub-elements */
@@ -64,9 +66,10 @@ export type TransactionStatusBadgeProps<T extends Transaction> = {
 };
 
 /**
- * A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), confirmed (still
- * pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar sets it about a second after
- * sending), success, failed, sped up, cancelled or replaced, or a neutral badge when the status is not set.
+ * The icon and the label of the transaction status, colored by it: pending (while `tx.pending`, with the Quasar loader in
+ * the pending color), confirmed (still pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar
+ * sets it about a second after sending), success, failed, sped up, cancelled or replaced, or a neutral badge when the status
+ * is not set. A change of status morphs the label and swaps the icon.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionStatusBadgeProps}.
@@ -74,49 +77,53 @@ export type TransactionStatusBadgeProps<T extends Transaction> = {
  */
 export function TransactionStatusBadge<T extends Transaction>({
   tx,
+  variant = 'badge',
   className,
   classNames,
 }: TransactionStatusBadgeProps<T>) {
   const { statuses } = useLabels();
 
-  const statusConfig = getStatusConfig(statuses);
-
-  const baseClasses =
-    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:rounded-full novatx:px-2 novatx:py-1 novatx:text-xs novatx:font-mono novatx:font-medium';
+  const isPlain = variant === 'plain';
+  const baseClasses = cn(
+    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:text-xs novatx:font-mono novatx:font-medium novatx:transition-colors novatx:duration-300',
+    !isPlain && 'novatx:rounded-full novatx:px-2 novatx:py-1',
+  );
 
   const isConfirmed = 'confirmationStatus' in tx && tx.confirmationStatus === 'confirmed';
-  const statusKey = tx.pending ? (isConfirmed ? 'Confirmed' : 'Pending') : tx.status;
-  const config = statusKey ? statusConfig[statusKey as keyof typeof statusConfig] : null;
+  const visualKey = tx.pending ? (isConfirmed ? 'confirmed' : 'pending') : tx.status;
+  const visual = visualKey ? VISUALS[visualKey as keyof typeof VISUALS] : null;
+  const label = statusLabelOf(tx, statuses);
 
-  if (!config) {
+  if (!visual) {
     return (
       <div
         className={cn(
           baseClasses,
-          'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
+          'novatx:text-[var(--tuwa-info-text)]',
+          !isPlain && 'novatx:bg-[var(--tuwa-info-bg)]',
           classNames?.container,
           className,
         )}
       >
-        <span className={classNames?.label}>{tx.status ?? statuses.unknown}</span>
+        <span className={classNames?.label}>{label}</span>
       </div>
     );
   }
 
-  const { Icon, badgeClasses, iconClasses } = config;
-  // "Replaced" alone does not say whether the money moved: a speed-up went on, a cancel did not
-  const { replacedReason } = tx as unknown as EvmTransaction;
-  const label =
-    statusKey === TransactionStatus.Replaced && replacedReason === 'repriced'
-      ? statuses.spedUp
-      : statusKey === TransactionStatus.Replaced && replacedReason === 'cancelled'
-        ? statuses.cancelled
-        : config.label;
+  const { Icon, color, background, iconColor } = visual;
 
   return (
-    <div className={cn(baseClasses, badgeClasses, classNames?.container, className)}>
-      <Icon className={cn('novatx:h-4 novatx:w-4', iconClasses, classNames?.icon)} />
-      <span className={classNames?.label}>{label}</span>
+    <div className={cn(baseClasses, color, !isPlain && background, classNames?.container, className)}>
+      <MorphIcon iconKey={visualKey as string}>
+        {Icon ? (
+          <Icon className={cn('novatx:h-4 novatx:w-4', iconColor, classNames?.icon)} />
+        ) : (
+          <QuasarLoader size={16} accent="var(--tuwa-pending-icon)" className={cn(iconColor, classNames?.icon)} />
+        )}
+      </MorphIcon>
+      <span className={classNames?.label}>
+        <MorphText>{label}</MorphText>
+      </span>
     </div>
   );
 }

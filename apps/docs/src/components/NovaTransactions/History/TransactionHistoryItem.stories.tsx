@@ -100,7 +100,7 @@ export const AfterSpeedUp: Story = {
 };
 
 /**
- * A transaction that was replaced (e.g., sped up or cancelled).
+ * A transaction replaced by something else than a speed-up, such as a cancel: a sped-up record has no row of its own.
  * The `TransactionKey` component will display both the original and replacing hashes.
  */
 export const Replaced: Story = {

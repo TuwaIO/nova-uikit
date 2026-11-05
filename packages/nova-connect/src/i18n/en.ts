@@ -30,11 +30,13 @@ export const defaultLabels: NovaConnectLabels = {
   success: 'Success',
   error: 'Error',
   replaced: 'Replaced',
+  cancelled: 'Cancelled',
   recent: 'Recent',
   transactionLoading: 'Transaction loading',
   transactionSuccess: 'Transaction successful',
   transactionError: 'Transaction failed',
   transactionReplaced: 'Transaction replaced',
+  transactionCancelled: 'Transaction cancelled',
 
   // Modal titles - Headers for different modal dialogs
   aboutWallets: 'About wallets',

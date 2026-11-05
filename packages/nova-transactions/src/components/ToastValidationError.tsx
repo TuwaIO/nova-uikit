@@ -146,6 +146,8 @@ export type ToastValidationErrorProps = {
    * Omit for generic pre-flight errors (`beforeTxProcess` rejections).
    */
   fieldName?: string;
+  /** The title of the toast. Defaults to the `validationError.title` label. */
+  title?: string;
   /** Optional additional CSS class on the outermost container. */
   className?: string;
   /**
@@ -261,6 +263,7 @@ export function ToastValidationError({
   message,
   rawError,
   fieldName,
+  title,
   className,
   customization,
 }: ToastValidationErrorProps): JSX.Element {
@@ -321,7 +324,7 @@ export function ToastValidationError({
       <div className={cn('novatx:flex novatx:items-center novatx:gap-2', cls.header)}>
         <div className={cn('novatx:flex novatx:items-center novatx:gap-2', cls.titleWrapper)}>
           <Icon isCopied={isCopied} className={cls.icon} aria-hidden />
-          <Title title={labels.title} className={cls.title} />
+          <Title title={title ?? labels.title} className={cls.title} />
         </div>
       </div>
 

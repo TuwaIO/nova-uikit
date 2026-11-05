@@ -149,6 +149,8 @@ export type NovaTransactionsLabels = {
   };
   /** Labels for common action buttons/links. */
   actions: {
+    /** Title of the toast when a speed-up or a cancel is refused (default: `Could not replace the transaction`). */
+    replacementFailed: string;
     /** Text for the action that stops tracking a transaction that never ends. */
     stopTracking: string;
     /** Text for a "Copy" action (e.g., copy address or hash). */

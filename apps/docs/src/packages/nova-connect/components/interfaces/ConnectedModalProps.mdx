@@ -4,15 +4,16 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # ConnectedModalProps
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:372](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L372)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:373](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L373)
 
 Props for the [ConnectedModal](?path=/docs/packages-nova-connect-components-variables-connectedmodal--docs) component. `appChains` and `solanaRPCUrls` give the chains of the network
-screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history.
+screen; `transactionPool`, `pulsarAdapter` and `pagination` (Pulsar) feed the transaction history, whose rows open their
+details with `removeTxFromPool`.
 
 ## Extends
 
 - `Omit`\<[`ConnectButtonProps`](?path=/docs/packages-nova-connect-components-type-aliases-connectbuttonprops--docs), `"className"` \| `"customization"`\>
-- `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"pulsarAdapter"` \| `"appChains"` \| `"solanaRPCUrls"` \| `"pagination"`\>
+- `Pick`\<[`NovaConnectProviderProps`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderprops--docs), `"transactionPool"` \| `"removeTxFromPool"` \| `"pulsarAdapter"` \| `"appChains"` \| `"solanaRPCUrls"` \| `"pagination"`\>
 
 ## Properties
 
@@ -34,7 +35,7 @@ EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectApp
 
 > `optional` **className?**: `string`
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:377](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L377)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:381](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L381)
 
 Classes added to the dialog content classes (ignored when `classNames.dialogContent` is set)
 
@@ -44,7 +45,7 @@ Classes added to the dialog content classes (ignored when `classNames.dialogCont
 
 > `optional` **customization?**: [`ConnectedModalCustomization`](?path=/docs/packages-nova-connect-components-type-aliases-connectedmodalcustomization--docs)
 
-Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:379](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L379)
+Defined in: [packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx:383](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectedModal/ConnectedModal.tsx#L383)
 
 Customization options
 
@@ -54,7 +55,7 @@ Customization options
 
 > `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L72)
 
 Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
 Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
@@ -69,13 +70,39 @@ Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency)
 
 > `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L44)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
 
 Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
 
 #### Inherited from
 
 [`NovaConnectProviderPropsWithCustomization`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs).[`pulsarAdapter`](?path=/docs/packages-nova-connect-connect-interfaces-novaconnectproviderpropswithcustomization--docs#pulsaradapter)
+
+***
+
+### removeTxFromPool?
+
+> `optional` **removeTxFromPool?**: (`txKey`) => `void`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+
+`removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
+offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
+person acts on when one never ends. An app that shows a pool of its own must remove the record there too.
+
+#### Parameters
+
+##### txKey
+
+`string`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+`Pick.removeTxFromPool`
 
 ***
 
@@ -100,7 +127,7 @@ Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.dev
 
 Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
 
-Transaction pool of Pulsar: the connect button shows the status of the latest transaction of the wallet
+Transaction pool of Pulsar: the connect button shows the results and the wait of the transactions of the wallet
 
 #### Inherited from
 

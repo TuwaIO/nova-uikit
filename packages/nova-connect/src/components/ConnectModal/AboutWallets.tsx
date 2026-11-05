@@ -2,7 +2,7 @@
  * @file AboutWallets component with comprehensive customization options and touch support.
  */
 
-import { cn, StarsBackground } from '@tuwaio/nova-core';
+import { cn, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -563,7 +563,7 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
                 style={{ width: 250, height: 250 }}
                 aria-hidden="true"
               >
-                <div className="novacon:w-12 novacon:h-12 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent novacon:rounded-full novacon:animate-spin" />
+                <QuasarLoader size={48} className="novacon:text-[var(--tuwa-text-primary)]" />
               </div>
             )}
           </div>

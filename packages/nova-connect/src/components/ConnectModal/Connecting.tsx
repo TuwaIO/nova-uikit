@@ -3,7 +3,7 @@
  */
 
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 
@@ -435,6 +435,7 @@ const DefaultSpinner = forwardRef<HTMLDivElement, ConnectingSpinnerProps>(({ cla
   const labels = useNovaConnectLabels();
   return (
     <div ref={ref} className={className} {...restProps}>
+      <QuasarLoader size={20} accent="var(--tuwa-pending-icon)" />
       <span className="novacon:sr-only">{labels.loading}...</span>
     </div>
   );
@@ -802,12 +803,8 @@ export const Connecting = memo(
               <CustomSpinner
                 className={
                   customization?.classNames?.spinner?.({ statusData }) ??
-                  cn(
-                    'novacon:absolute novacon:animate-spin novacon:rounded-full novacon:-inset-[2px]',
-                    'novacon:w-[calc(100%_+_4px)] novacon:h-[calc(100%_+_4px)]',
-                    'novacon:border-2 novacon:border-[var(--tuwa-pending-text)]',
-                    'novacon:border-t-transparent',
-                  )
+                  // In the corner where the result comes up, which is what it gives way to
+                  'novacon:absolute novacon:-top-2 novacon:-right-2 novacon:z-10 novacon:flex novacon:h-8 novacon:w-8 novacon:items-center novacon:justify-center novacon:rounded-full novacon:bg-[var(--tuwa-pending-bg)] novacon:text-[var(--tuwa-pending-text)]'
                 }
                 role="progressbar"
                 aria-label={customConfig?.ariaLabels?.spinner ?? labels.connecting}
@@ -883,7 +880,7 @@ export const Connecting = memo(
               aria-level={2}
               statusData={statusData}
             >
-              {displayMessage}
+              <MorphText wrap>{displayMessage}</MorphText>
             </CustomStatusMessage>
 
             {/* Error Details */}

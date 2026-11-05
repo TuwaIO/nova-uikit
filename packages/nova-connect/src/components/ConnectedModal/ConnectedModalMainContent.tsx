@@ -21,6 +21,7 @@ import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaC
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
+import { goesOnInNewRecord } from '../ConnectButton/connectedStatus';
 import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
 import {
   ConnectedModalNameAndBalance,
@@ -684,7 +685,11 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       () =>
         activeAddress && transactionPool
           ? Object.values(transactionPool).filter(
-              (tx) => tx?.from && tx.from.toLowerCase() === activeAddress.toLowerCase(),
+              (tx, _, all) =>
+                tx?.from &&
+                tx.from.toLowerCase() === activeAddress.toLowerCase() &&
+                // A sped-up record is no row of the history, and the count is read out next to that list
+                !goesOnInNewRecord(tx, all),
             )
           : [],
       [activeAddress, transactionPool],

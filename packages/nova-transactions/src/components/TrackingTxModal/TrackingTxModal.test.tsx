@@ -214,11 +214,17 @@ describe('TrackingTxModal actions', () => {
   it('offers speed-up and cancel only to the account that sent it', () => {
     const pending = { pending: true, nonce: 7, maxFeePerGas: '1000', maxPriorityFeePerGas: '100' };
 
-    expect(footerProps(render(pending)).canReplace).toBe(true);
-    expect(footerProps(render(pending, '0x9999999999999999999999999999999999999999')).canReplace).toBe(false);
+    expect(footerProps(render(pending)).onSpeedUp).toBeDefined();
+    expect(footerProps(render(pending)).onCancel).toBeDefined();
+    expect(footerProps(render(pending, '0x9999999999999999999999999999999999999999')).onSpeedUp).toBeUndefined();
+  });
+
+  it('lets the footer close during a long wait, whichever wallet sent the transaction: it may never end', () => {
+    expect(footerProps(render({ pending: true })).canReplace).toBe(true);
+    expect(footerProps(render({ pending: true, confirmations: 1 })).canReplace).toBe(false);
   });
 
   it('does not offer them before the tracker has read the nonce', () => {
-    expect(footerProps(render({ pending: true })).canReplace).toBe(false);
+    expect(footerProps(render({ pending: true })).onSpeedUp).toBeUndefined();
   });
 });

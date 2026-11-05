@@ -3,12 +3,12 @@
  * Supports infinite scrolling when `pagination` props are provided.
  */
 
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, QuasarLoader } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
-import { successorOf } from '../utils/replacement';
+import { latestRecordOf, successorOf } from '../utils/replacement';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
@@ -147,12 +147,7 @@ function DefaultLoader({ className, iconClassName }: TransactionsHistoryLoaderPr
       role="status"
       aria-live="polite"
     >
-      <div
-        className={cn(
-          'novatx:h-5 novatx:w-5 novatx:animate-spin novatx:rounded-full novatx:border-2 novatx:border-[var(--tuwa-text-secondary)] novatx:border-t-transparent',
-          iconClassName,
-        )}
-      />
+      <QuasarLoader size={20} className={iconClassName} />
     </div>
   );
 }
@@ -335,7 +330,10 @@ export function TransactionsHistory<T extends Transaction>({
       );
     }
 
-    if (sortedTransactions.length > 0) {
+    // One row for one operation: a sped-up record is shown in the details of the record that goes on
+    const shownTransactions = sortedTransactions.filter((tx) => !successorOf(tx, transactionsPool));
+
+    if (shownTransactions.length > 0) {
       // Extract item classNames from customization
       const itemClassNames = {
         container: customization?.classNames?.itemContainer,
@@ -364,19 +362,16 @@ export function TransactionsHistory<T extends Transaction>({
             customization?.classNames?.listWrapper,
           )}
         >
-          {/* One row for one operation: a sped-up record is shown in the details of the record that goes on */}
-          {sortedTransactions
-            .filter((tx) => !successorOf(tx, transactionsPool))
-            .map((tx) => (
-              <HistoryItem
-                key={tx.txKey}
-                tx={tx}
-                adapter={adapter}
-                canViewDetails={canViewDetails}
-                customization={{ classNames: itemClassNames }}
-                onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
-              />
-            ))}
+          {shownTransactions.map((tx) => (
+            <HistoryItem
+              key={tx.txKey}
+              tx={tx}
+              adapter={adapter}
+              canViewDetails={canViewDetails}
+              customization={{ classNames: itemClassNames }}
+              onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
+            />
+          ))}
 
           {/* Infinite scroll sentinel — observed by IntersectionObserver */}
           {pagination?.hasMore && <div ref={sentinelRef} className="novatx:h-px" aria-hidden="true" />}
@@ -414,7 +409,9 @@ export function TransactionsHistory<T extends Transaction>({
   };
 
   if (selectedTxKey) {
-    const selectedTx = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
+    const opened = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
+    // The details go on with the operation: a speed-up that lands while they are open must not leave them on the old record
+    const selectedTx = opened && latestRecordOf(opened, transactionsPool);
     if (selectedTx) {
       return (
         <TransactionDetails

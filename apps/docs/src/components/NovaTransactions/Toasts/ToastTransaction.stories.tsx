@@ -56,8 +56,8 @@ export const Success: Story = {
 };
 
 /**
- * A pending EVM transaction that can be sped up or cancelled. These actions are visible
- * because the transaction tracker is 'ethereum' and it belongs to the `connectedWalletAddress`.
+ * A pending EVM transaction that can be sped up or cancelled: its tracker is 'ethereum', MetaMask sent it from the
+ * `connectedWalletAddress`, and the tracker has read its nonce and fees.
  */
 export const PendingWithActions: Story = {
   args: {
@@ -65,6 +65,12 @@ export const PendingWithActions: Story = {
       pending: true,
       status: undefined,
       tracker: TransactionTracker.Ethereum,
+      connectorType: 'evm:metamask',
+      from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      nonce: 7,
+      maxFeePerGas: '1000',
+      maxPriorityFeePerGas: '100',
     }),
   },
 };
@@ -100,7 +106,7 @@ export const Failed: Story = {
 };
 
 /**
- * A transaction that was replaced (e.g., by a speed-up).
+ * A transaction replaced by something else than a speed-up, whose toast goes on with the record of the new hash.
  */
 export const Replaced: Story = {
   args: {

@@ -30,11 +30,13 @@ export const ukrainianLabels: NovaConnectLabels = {
   success: 'Успіх',
   error: 'Помилка',
   replaced: 'Замінено',
+  cancelled: 'Скасовано',
   recent: 'Останні',
   transactionLoading: 'Завантаження транзакції',
   transactionSuccess: 'Транзакція успішна',
   transactionError: 'Транзакція не вдалась',
   transactionReplaced: 'Транзакція замінена',
+  transactionCancelled: 'Транзакцію скасовано',
 
   // Заголовки модальних вікон - Заголовки для різних модальних діалогів
   aboutWallets: 'Про гаманці',

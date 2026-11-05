@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/StatusEdge" />
+
+# StatusEdge()
+
+> **StatusEdge**(`props`): `Element`
+
+Defined in: [components/StatusEdge.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L63)
+
+Put it first in a card with `position: relative` (it fills the card and takes its corners). While pending, a glint in
+the pending color runs along the top; a result fills the strip and washes the top of the card in the status color, with
+a crossfade. With `prefers-reduced-motion` nothing moves and the colors just change.
+
+## Parameters
+
+### props
+
+[`StatusEdgeProps`](?path=/docs/packages-nova-core-type-aliases-statusedgeprops--docs)
+
+See [StatusEdgeProps](?path=/docs/packages-nova-core-type-aliases-statusedgeprops--docs).
+
+## Returns
+
+`Element`
+
+The edge, hidden from screen readers: the status text is what tells them.

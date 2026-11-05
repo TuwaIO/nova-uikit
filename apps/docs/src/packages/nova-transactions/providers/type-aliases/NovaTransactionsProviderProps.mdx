@@ -118,7 +118,8 @@ Enables the full-screen transaction history modal.
 
 Enables the top-center pre-submission error toast.
 This fires when `executeTxAction` throws before the transaction reaches the pool
-(validation failures, `beforeTxProcess` rejections, missing adapter, etc.).
+(validation failures, `beforeTxProcess` rejections, missing adapter, etc.), and when a wallet or a node refuses a
+speed-up or a cancel, which nothing else tells the person.
 
 ##### Default Value
 

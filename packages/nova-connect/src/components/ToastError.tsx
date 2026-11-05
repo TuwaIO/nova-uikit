@@ -3,7 +3,7 @@
  */
 
 import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
-import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback, useMemo, useState } from 'react';
 
@@ -214,7 +214,7 @@ const DefaultButtonContent = ({ icon, isCopied, copyLabel, copiedLabel }: ToastE
     <>
       {icon}
       <span className="novacon:select-none novacon:transition-colors" aria-live="polite" role="status">
-        {isCopied ? copiedLabel : copyLabel}
+        <MorphText>{isCopied ? copiedLabel : copyLabel}</MorphText>
       </span>
     </>
   );

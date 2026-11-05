@@ -6,11 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TransactionStatusBadge**\<`T`\>(`props`): `Element`
 
-Defined in: [components/TransactionStatusBadge.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L75)
+Defined in: [components/TransactionStatusBadge.tsx:78](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionStatusBadge.tsx#L78)
 
-A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), confirmed (still
-pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar sets it about a second after
-sending), success, failed, sped up, cancelled or replaced, or a neutral badge when the status is not set.
+The icon and the label of the transaction status, colored by it: pending (while `tx.pending`, with the Quasar loader in
+the pending color), confirmed (still pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar
+sets it about a second after sending), success, failed, sped up, cancelled or replaced, or a neutral badge when the status
+is not set. A change of status morphs the label and swaps the icon.
 
 ## Type Parameters
 

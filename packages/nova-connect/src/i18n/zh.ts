@@ -30,11 +30,13 @@ export const chineseLabels: NovaConnectLabels = {
   success: '成功',
   error: '错误',
   replaced: '已替换',
+  cancelled: '已取消',
   recent: '最近使用',
   transactionLoading: '交易处理中',
   transactionSuccess: '交易成功',
   transactionError: '交易失败',
   transactionReplaced: '交易已替换',
+  transactionCancelled: '交易已取消',
 
   // Modal titles - Headers for different modal dialogs
   aboutWallets: '关于钱包',

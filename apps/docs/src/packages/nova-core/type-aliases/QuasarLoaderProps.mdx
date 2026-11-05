@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Type Aliases/QuasarLoaderProps" />
+
+# QuasarLoaderProps
+
+> **QuasarLoaderProps** = `object`
+
+Defined in: [components/QuasarLoader.tsx:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L11)
+
+Props of [QuasarLoader](?path=/docs/packages-nova-core-functions-quasarloader--docs).
+
+## Properties
+
+### accent?
+
+> `optional` **accent?**: `string`
+
+Defined in: [components/QuasarLoader.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L20)
+
+CSS color of the moving parts and the core, such as `var(--tuwa-pending-icon)`. Defaults to `--tuwa-text-accent`.
+
+***
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [components/QuasarLoader.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L24)
+
+Classes of the loader. The still parts take the text color.
+
+***
+
+### label?
+
+> `optional` **label?**: `string`
+
+Defined in: [components/QuasarLoader.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L22)
+
+What is being waited for, for screen readers. With it the loader has `role="status"`; without it, it is decorative.
+
+***
+
+### size?
+
+> `optional` **size?**: `number`
+
+Defined in: [components/QuasarLoader.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L13)
+
+Width and height in pixels. Defaults to `40`.
+
+***
+
+### variant?
+
+> `optional` **variant?**: `"full"` \| `"compact"`
+
+Defined in: [components/QuasarLoader.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L18)
+
+`full` is the whole mark, for 40–72 px. `compact` is a rounder disk and the core, bolder, for 12–24 px: buttons and
+lines of text. Defaults to `compact` below 28 px and to `full` from there.

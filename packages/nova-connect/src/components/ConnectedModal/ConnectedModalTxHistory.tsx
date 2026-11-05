@@ -3,7 +3,7 @@
  */
 
 import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, QuasarLoader } from '@tuwaio/nova-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
   Component,
@@ -416,7 +416,7 @@ export type ConnectedModalTxHistoryCustomization = {
  */
 export interface ConnectedModalTxHistoryProps extends Pick<
   NovaConnectProviderProps,
-  'transactionPool' | 'pulsarAdapter'
+  'transactionPool' | 'pulsarAdapter' | 'removeTxFromPool'
 > {
   /** Classes added to the default container classes (ignored when `classNames.container` is set) */
   className?: string;
@@ -448,12 +448,7 @@ const DefaultLoadingContainer: React.FC<ConnectedModalTxHistoryLoadingContainerP
       role="status"
       aria-live="polite"
     >
-      <div
-        className={cn(
-          'novacon:animate-spin novacon:rounded-full novacon:h-8 novacon:w-8 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent',
-          classNames?.spinner,
-        )}
-      />
+      <QuasarLoader size={40} className={cn('novacon:text-[var(--tuwa-text-primary)]', classNames?.spinner)} />
       <p className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', classNames?.text)}>
         {labels.loading} {labels.transactionsInApp.toLowerCase()}...
       </p>
@@ -675,7 +670,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
  */
 export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModalTxHistoryProps>(
   (
-    { transactionPool, pulsarAdapter, className, 'aria-label': ariaLabel, customization, pagination, ...props },
+    {
+      transactionPool,
+      pulsarAdapter,
+      removeTxFromPool,
+      className,
+      'aria-label': ariaLabel,
+      customization,
+      pagination,
+      ...props
+    },
     ref,
   ) => {
     const labels = useNovaConnectLabels();
@@ -820,7 +824,8 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   className="novacon:w-full"
                   customization={customization?.transactionsHistory}
                   pagination={pagination}
-                  canViewDetails={false}
+                  canViewDetails={!!removeTxFromPool}
+                  removeTxFromPool={removeTxFromPool}
                 />
               </TransactionsHistoryWrapper>
             </ErrorBoundary>

@@ -2,9 +2,21 @@
  * @file This file contains the `TrackingTxModal`, the main UI for displaying the detailed lifecycle of a single
  * transaction.
  */
-import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
+import {
+  CloseIcon,
+  cn,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  MorphText,
+  StatusEdge,
+  StatusEdgeProps,
+} from '@tuwaio/nova-core';
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import {
+  EvmTransaction,
   InitialTransaction,
   InitialTransactionParams,
   Transaction,
@@ -15,7 +27,8 @@ import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../../providers';
-import { canReplaceTx, runReplacement } from '../../utils/replacement';
+import { canReplaceTx, latestRecordOf, runReplacement } from '../../utils/replacement';
+import { progressOf, trackerGaveUp } from '../../utils/txStatus';
 import {
   TxErrorBlock,
   TxErrorBlockClassNames,
@@ -76,6 +89,8 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   motionProps?: MotionProps;
   /** Components that replace the default parts. */
   components?: {
+    /** The strip and the wash of the status color along the top. */
+    StatusEdge?: ComponentType<StatusEdgeProps>;
     /** The header with the title and the close button. */
     Header?: ComponentType<TrackingTxModalHeaderProps>;
     /** The footer with the action buttons. */
@@ -93,6 +108,8 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   classNames?: {
     /** Classes for the outer container */
     container?: string;
+    /** Classes for the strip and the wash of the status color */
+    statusEdge?: string;
     /** Classes for the header section */
     header?: string;
     /** Classes for the header title */
@@ -168,12 +185,14 @@ export type TrackingTxModalProps<T extends Transaction> = Pick<
 
 /**
  * A modal that follows the latest submitted transaction step by step: it shows `initialTx` of the Pulsar store while
- * the transaction is being submitted, then the transaction of the pool that `initialTx.lastTxKey` points to. It is
- * open while `initialTx.withTrackedModal` is set and the transaction is not yet in the pool, and then while the
- * transaction's `isTrackedModalOpen` is `true`. It shows the status, the lifecycle steps, the network, time and hashes,
- * and the error, and offers speed-up and cancel (pending, unconfirmed EVM transactions sent with MetaMask, when the
- * adapter has `speedUpTxAction` and `cancelTxAction`) and retry (after a failure, while `initialTx` has its
- * `actionFunction`, through the adapter's `retryTxAction`). `NovaTransactionsProvider` renders it.
+ * the transaction is being submitted, then the transaction of the pool that `initialTx.lastTxKey` points to, and after a
+ * speed-up the record that goes on. It is open while `initialTx.withTrackedModal` is set and the transaction is not yet in the
+ * pool, and then while the transaction's `isTrackedModalOpen` is `true`. It shows the status, the lifecycle steps, the network,
+ * time and hashes, and the error, with the state in the strip along the top and in the large visual. It offers speed-up and
+ * cancel (pending, unconfirmed EVM transactions sent with MetaMask by `connectedWalletAddress`, once the tracker has read the
+ * nonce and fees, when the adapter has `speedUpTxAction` and `cancelTxAction`) and retry (after a failure, while `initialTx`
+ * has its `actionFunction`, through the adapter's `retryTxAction`, and not after a tracker gave up, which says nothing about
+ * the chain). `NovaTransactionsProvider` renders it.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TrackingTxModalProps}.
@@ -191,10 +210,16 @@ export function TrackingTxModal<T extends Transaction>({
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
   const { showPreSubmitErrorToast } = useNovaTransactionsError();
-  const activeTx = initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined;
+  const { actions } = useLabels();
+  const followedTx = initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined;
+  // Another tab may have added the record of a speed-up first, and the store then does not move `lastTxKey` to it
+  const activeTx = followedTx && latestRecordOf(followedTx, transactionsPool);
 
   const txToDisplay = activeTx ?? initialTx;
-  const isOpen = (initialTx?.withTrackedModal && !activeTx) || (activeTx?.isTrackedModalOpen ?? false);
+  const isOpen =
+    (initialTx?.withTrackedModal && !activeTx) ||
+    (activeTx?.isTrackedModalOpen ?? false) ||
+    (followedTx?.isTrackedModalOpen ?? false);
 
   const txStatus = activeTx?.status;
   const isInitializing = initialTx?.isInitializing ?? false;
@@ -208,18 +233,27 @@ export function TrackingTxModal<T extends Transaction>({
   const isSucceed = txStatus === TransactionStatus.Success;
   const isFailed = activeTx?.isError || !!initialTx?.error;
   const isReplaced = txStatus === TransactionStatus.Replaced;
+  const isCancelled = isReplaced && (activeTx as unknown as EvmTransaction).replacedReason === 'cancelled';
 
   const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
 
   // A tracker that gave up says nothing about the chain, and a Retry there could send the operation a second time. Retry only
-  // what surely did not go through: a revert, which has no error of the tracker, or a refusal before sending.
-  const trackerGaveUp =
-    activeTx?.status === TransactionStatus.Failed &&
-    activeTx.tracker === TransactionTracker.Ethereum &&
-    !!activeTx.error;
-  const canRetry = !!(isFailed && !trackerGaveUp && txToDisplay && initialTx?.actionFunction && executeTxAction);
-  // The footer keeps its Close button enabled and its actions only for what can really be replaced
-  const canReplace = canReplaceTx(activeTx, foundAdapter, connectedWalletAddress);
+  // what surely did not go through: a revert, or a refusal before sending.
+  const canRetry = !!(
+    isFailed &&
+    !trackerGaveUp(activeTx) &&
+    txToDisplay &&
+    initialTx?.actionFunction &&
+    executeTxAction
+  );
+  // Whether the wait is one that may take long: the footer can be closed then, whichever wallet sent the transaction
+  const canReplace = !!(
+    foundAdapter?.speedUpTxAction &&
+    foundAdapter?.cancelTxAction &&
+    activeTx?.pending &&
+    (!activeTx.confirmations || Number(activeTx.confirmations) < 1) &&
+    activeTx.tracker === TransactionTracker.Ethereum
+  );
 
   const handleRetry = () => {
     if (!canRetry || !foundAdapter?.retryTxAction) return;
@@ -239,16 +273,20 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
-  const isWithActions = canReplace && activeTx;
+  // Only what can really be replaced: from another account the same transfer would be sent a second time
+  const isWithActions = canReplaceTx(activeTx, foundAdapter, connectedWalletAddress) && activeTx;
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
 
   const handleCancel = () => {
-    if (isWithActions) void runReplacement(foundAdapter!.cancelTxAction!, activeTx, showPreSubmitErrorToast);
+    if (isWithActions) void runReplacement(foundAdapter!.cancelTxAction!, activeTx, reportRefusal);
   };
 
   const handleSpeedUp = () => {
-    if (isWithActions) void runReplacement(foundAdapter!.speedUpTxAction!, activeTx, showPreSubmitErrorToast);
+    if (isWithActions) void runReplacement(foundAdapter!.speedUpTxAction!, activeTx, reportRefusal);
   };
 
+  const CStatusEdge = customization?.components?.StatusEdge ?? StatusEdge;
+  const tone = isSucceed ? 'success' : isFailed ? 'error' : isReplaced ? 'neutral' : 'pending';
   const CustomHeader = customization?.components?.Header;
   const CustomFooter = customization?.components?.Footer;
   const CustomStatusVisual = customization?.components?.StatusVisual;
@@ -270,6 +308,7 @@ export function TrackingTxModal<T extends Transaction>({
           {...customization?.motionProps}
           className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}
         >
+          <CStatusEdge tone={tone} progress={activeTx && progressOf(activeTx)} className={classNames?.statusEdge} />
           {CustomHeader ? (
             <CustomHeader
               onClose={() => onClose(activeTx?.txKey)}
@@ -316,6 +355,7 @@ export function TrackingTxModal<T extends Transaction>({
                 isSucceed={isSucceed}
                 isFailed={isFailed}
                 isReplaced={isReplaced}
+                isCancelled={isCancelled}
                 className={customization?.progressIndicatorCustomization?.className}
                 stepClassNames={customization?.progressIndicatorCustomization?.stepClassNames}
               />
@@ -519,7 +559,7 @@ const DefaultFooter = ({
             classNames?.closeModalButton,
           )}
         >
-          {isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}
+          <MorphText>{isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}</MorphText>
         </button>
       </div>
     </footer>

@@ -74,6 +74,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     cancelled: 'Скасовано',
   },
   actions: {
+    replacementFailed: 'Не вдалося замінити транзакцію',
     stopTracking: 'Припинити відстеження',
     copy: 'Скопіювати адресу',
     viewOnExplorer: 'В експлорері',

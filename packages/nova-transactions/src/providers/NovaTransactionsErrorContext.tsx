@@ -109,12 +109,12 @@ export const NovaTransactionsErrorContext = createContext<NovaTransactionsErrorC
  * ```
  */
 export function useNovaTransactionsError(): {
-  showPreSubmitErrorToast: (error: unknown) => void;
+  showPreSubmitErrorToast: (error: unknown, options?: { title?: string }) => void;
 } {
   const { customization, enabled } = useContext(NovaTransactionsErrorContext);
 
   const showPreSubmitErrorToast = useCallback(
-    (error: unknown) => {
+    (error: unknown, options?: { title?: string }) => {
       if (!enabled) return;
 
       const message = error instanceof Error ? error.message : String(error);
@@ -129,6 +129,7 @@ export function useNovaTransactionsError(): {
             message={message}
             rawError={rawError}
             fieldName={fieldName}
+            title={options?.title}
             customization={customization}
           />
         ),

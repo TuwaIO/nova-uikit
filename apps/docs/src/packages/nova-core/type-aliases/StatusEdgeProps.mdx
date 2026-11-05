@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Type Aliases/StatusEdgeProps" />
+
+# StatusEdgeProps
+
+> **StatusEdgeProps** = `object`
+
+Defined in: [components/StatusEdge.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L36)
+
+Props of [StatusEdge](?path=/docs/packages-nova-core-functions-statusedge--docs).
+
+## Properties
+
+### className?
+
+> `optional` **className?**: `string`
+
+Defined in: [components/StatusEdge.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L45)
+
+Classes of the edge, which fills its parent.
+
+***
+
+### classNames?
+
+> `optional` **classNames?**: `object`
+
+Defined in: [components/StatusEdge.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L47)
+
+Classes of the parts.
+
+#### strip?
+
+> `optional` **strip?**: `string`
+
+Classes of the strip along the top.
+
+#### wash?
+
+> `optional` **wash?**: `string`
+
+Classes of the wash under it.
+
+***
+
+### progress?
+
+> `optional` **progress?**: `number`
+
+Defined in: [components/StatusEdge.tsx:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L43)
+
+The share done, from 0 to 1, when it is really known, as confirmations out of those required. Without it a pending
+strip shows only the glint: a bar that fills by the clock would promise an end nobody knows.
+
+***
+
+### tone
+
+> **tone**: [`StatusTone`](?path=/docs/packages-nova-core-type-aliases-statustone--docs)
+
+Defined in: [components/StatusEdge.tsx:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StatusEdge.tsx#L38)
+
+The state of the operation.

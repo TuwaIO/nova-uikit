@@ -3,7 +3,7 @@
  */
 
 import { ArrowPathIcon, CheckIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, MorphIcon, MorphText } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
 
 import { useLabels } from '../../providers';
@@ -97,7 +97,7 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
       {!isFirst && (
         <div
           className={cn(
-            'novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full',
+            'novatx:absolute novatx:right-1/2 novatx:top-[10px] novatx:h-0.5 novatx:w-full novatx:transition-colors novatx:duration-300',
             styles.line,
             classNames?.line,
             statusOverride?.line,
@@ -107,14 +107,14 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
 
       <div
         className={cn(
-          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border-2',
+          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border-2 novatx:transition-colors novatx:duration-300',
           styles.border,
           styles.fill,
           classNames?.circle,
           statusOverride?.circle,
         )}
       >
-        {renderIcon()}
+        <MorphIcon iconKey={status}>{renderIcon()}</MorphIcon>
       </div>
 
       <span
@@ -127,7 +127,7 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
           statusOverride?.label,
         )}
       >
-        {label}
+        <MorphText>{label}</MorphText>
       </span>
     </div>
   );
@@ -146,8 +146,10 @@ export interface TxProgressIndicatorProps {
   isSucceed?: boolean;
   /** Whether the submission or the transaction failed. */
   isFailed?: boolean;
-  /** Whether the transaction was replaced (sped up or canceled). */
+  /** Whether the transaction was replaced by something else than a speed-up, whose record the modal goes on with. */
   isReplaced?: boolean;
+  /** Whether that replacement was a cancel: the last step then says so. */
+  isCancelled?: boolean;
   /** Classes of the indicator. */
   className?: string;
   /** Component that renders each step. */
@@ -170,6 +172,7 @@ export function TxProgressIndicator({
   isSucceed,
   isFailed,
   isReplaced,
+  isCancelled,
   className,
   StepComponent = Step,
   stepClassNames,
@@ -195,6 +198,7 @@ export function TxProgressIndicator({
     if (stepIndex === 1) return trackingModal.progressIndicator.created;
     if (stepIndex === 2) return isConfirmed ? statuses.confirmed : trackingModal.progressIndicator.processing;
     if (isFailed) return statuses.failed;
+    if (isCancelled) return statuses.cancelled;
     if (isReplaced) return statuses.replaced;
     return trackingModal.progressIndicator.succeed;
   };

@@ -3,13 +3,19 @@ import { EvmTransaction, TransactionPool, TransactionStatus, TransactionTracker,
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  afterTrackedAction,
   canReplaceTx,
   explorerUrlOfHash,
+  explorerUrlOfReplaced,
   isUserRejection,
+  latestRecordOf,
   runReplacement,
+  settledRecordsOf,
   STOP_TRACKING_AFTER_SECONDS,
   stopTrackingDueIn,
   successorOf,
+  toastIdOf,
+  toastsOfRemoved,
   toastStepFor,
   trackedButtonStep,
 } from './replacement';
@@ -58,6 +64,33 @@ describe('successorOf', () => {
   it('a cancel is not continued, whatever the pool holds under its hash', () => {
     const cancel = { ...spedUp, replacedReason: 'cancelled' as const };
     expect(successorOf(cancel, pool(cancel, next))).toBeUndefined();
+  });
+
+  it('another transaction in the same nonce is not the same operation', () => {
+    const replaced = { ...spedUp, replacedReason: 'replaced' as const };
+    expect(successorOf(replaced, pool(replaced, next))).toBeUndefined();
+  });
+
+  it('a Safe proposal is not continued by the other proposal that was executed', () => {
+    const safe = tx({
+      tracker: TransactionTracker.Safe,
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedTxHash: NEW,
+    });
+    expect(successorOf(safe, pool(safe, next))).toBeUndefined();
+  });
+
+  it('two records replaced by each other are not a chain: both stay shown after a reorganization', () => {
+    const back = tx({
+      txKey: NEW,
+      hash: NEW,
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedTxHash: OLD,
+      replacedReason: 'repriced',
+    });
+    expect(successorOf(spedUp, pool(spedUp, back))).toBeUndefined();
   });
 
   it('nothing goes on from a transaction that was not replaced', () => {
@@ -131,12 +164,47 @@ describe('isUserRejection', () => {
 });
 
 describe('explorerUrlOfHash', () => {
-  it('links to the hash shown, not to the newest one', () => {
-    const adapter = {
-      getExplorerTxUrl: (t: EvmTransaction) => `https://scan/tx/${t.replacedTxHash || t.hash}`,
-    } as unknown as TxAdapter<EvmTransaction>;
+  const adapter = {
+    getExplorerTxUrl: (t: EvmTransaction) =>
+      t.tracker === TransactionTracker.Safe
+        ? `https://safe/${t.txKey}`
+        : t.tracker === TransactionTracker.EIP5792 && !t.hash
+          ? ''
+          : `https://scan/tx/${t.replacedTxHash || t.hash}`,
+  } as unknown as TxAdapter<EvmTransaction>;
 
+  it('links to the hash shown, not to the newest one', () => {
     expect(explorerUrlOfHash(adapter, spedUp, OLD)).toBe('https://scan/tx/0xold');
+  });
+
+  it('gives no link to a batch without a hash: its ID is no transaction an explorer knows', () => {
+    const batch = tx({ tracker: TransactionTracker.EIP5792, hash: undefined });
+    expect(explorerUrlOfHash(adapter, batch, undefined)).toBeUndefined();
+  });
+
+  it('links the replacing proposal of a Safe record to that proposal, not to the old one', () => {
+    const safe = tx({ tracker: TransactionTracker.Safe, replacedTxHash: NEW });
+    expect(explorerUrlOfHash(adapter, safe, NEW)).toBe('https://safe/0xnew');
+    expect(explorerUrlOfHash(adapter, safe, OLD)).toBe('https://safe/0xold');
+  });
+
+  it('gives no link to a hash of zeros, which a Safe service gives when it knows none', () => {
+    expect(explorerUrlOfHash(adapter, spedUp, `0x${'0'.repeat(64)}`)).toBeUndefined();
+  });
+});
+
+describe('explorerUrlOfReplaced', () => {
+  const adapter = {
+    getExplorerTxUrl: (t: EvmTransaction) => `https://scan/tx/${t.hash}`,
+  } as unknown as TxAdapter<EvmTransaction>;
+
+  it('links a transaction hash', () => {
+    const hash = `0x${'a'.repeat(64)}`;
+    expect(explorerUrlOfReplaced(adapter, next, hash)).toBe(`https://scan/tx/${hash}`);
+  });
+
+  it('gives no link to a batch ID', () => {
+    expect(explorerUrlOfReplaced(adapter, next, 'batch-id')).toBeUndefined();
   });
 });
 
@@ -165,35 +233,135 @@ describe('toastStepFor', () => {
     (key: string) =>
       keys.includes(key);
 
-  it('moves the toast of the old record to the new one: one toast for one operation', () => {
-    expect(toastStepFor(next, undefined, pool(spedUp, next), active(OLD))).toEqual({ kind: 'move', from: OLD });
+  it('keeps one toast for one operation: the new record speaks through the toast of the first', () => {
+    expect(toastStepFor(next, undefined, pool(spedUp, next), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
   });
 
-  it('moves it even if the new record has already finished in the same render', () => {
+  it('does so even if the new record has already finished in the same render', () => {
     const done = { ...next, pending: false, status: TransactionStatus.Success };
-    expect(toastStepFor(done, undefined, pool(spedUp, done), active(OLD))).toEqual({ kind: 'move', from: OLD });
+    expect(toastStepFor(done, undefined, pool(spedUp, done), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
   });
 
-  it('shows no toast of its own for a record that goes on in a new one', () => {
+  it('shows nothing for a record that goes on in a new one', () => {
     expect(toastStepFor(spedUp, tx(), pool(spedUp, next), active(OLD))).toEqual({ kind: 'skip' });
   });
 
-  it('shows a new toast when the person closed the old one', () => {
-    expect(toastStepFor(next, undefined, pool(spedUp, next), active())).toEqual({ kind: 'show' });
+  it('shows the toast again when the person closed it', () => {
+    expect(toastStepFor(next, undefined, pool(spedUp, next), active())).toEqual({ kind: 'show', toastId: OLD });
   });
 
   it('shows a cancel on its own toast', () => {
     const cancel = { ...spedUp, replacedReason: 'cancelled' as const };
-    expect(toastStepFor(cancel, tx(), pool(cancel), active(OLD))).toEqual({ kind: 'show' });
+    expect(toastStepFor(cancel, tx(), pool(cancel), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
   });
 
   it('keeps the old rules for everything else', () => {
     const pending = tx();
     const done = tx({ pending: false, status: TransactionStatus.Success });
-    expect(toastStepFor(pending, undefined, pool(pending), active())).toEqual({ kind: 'show' });
+    expect(toastStepFor(pending, undefined, pool(pending), active())).toEqual({ kind: 'show', toastId: OLD });
     expect(toastStepFor(done, undefined, pool(done), active())).toEqual({ kind: 'skip' });
-    expect(toastStepFor(done, pending, pool(done), active())).toEqual({ kind: 'show' });
-    expect(toastStepFor(done, done, pool(done), active())).toEqual({ kind: 'skip' });
+    expect(toastStepFor(pending, pending, pool(pending), active(OLD))).toEqual({ kind: 'skip' });
+    expect(toastStepFor(done, pending, pool(done), active(OLD))).toEqual({ kind: 'show', toastId: OLD });
+  });
+
+  it('a reorganization that brings the first record back stays on the same toast', () => {
+    const reopened = tx();
+    const reorged = tx({
+      txKey: NEW,
+      hash: NEW,
+      replaces: OLD,
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedTxHash: OLD,
+      replacedReason: 'repriced',
+    });
+    const reorgPool = pool(reopened, reorged);
+
+    expect(toastStepFor(reorged, next, reorgPool, active(OLD))).toEqual({ kind: 'skip' });
+    expect(toastStepFor(reopened, spedUp, reorgPool, active(OLD))).toEqual({ kind: 'show', toastId: OLD });
+  });
+});
+
+describe('toastIdOf', () => {
+  it('is the key of the first record, through every speed-up', () => {
+    const third = tx({ txKey: '0xthird', hash: '0xthird', replaces: NEW });
+    expect(toastIdOf(third, pool(spedUp, next, third))).toBe(OLD);
+  });
+
+  it('is the key of the record itself when the first has left the pool', () => {
+    expect(toastIdOf(next, pool(next))).toBe(NEW);
+  });
+
+  it('does not run forever on records that replace each other', () => {
+    const a = tx({ replaces: NEW });
+    const b = tx({ txKey: NEW, hash: NEW, replaces: OLD });
+    expect([OLD, NEW]).toContain(toastIdOf(a, pool(a, b)));
+  });
+});
+
+describe('toastsOfRemoved', () => {
+  it('closes the toast of a transaction whose tracking was stopped: it would stay on Pending for good', () => {
+    const pending = tx();
+    expect(toastsOfRemoved(pool(pending), pool())).toEqual([OLD]);
+  });
+
+  it('closes the toast of the operation when its newest record is removed', () => {
+    expect(toastsOfRemoved(pool(spedUp, next), pool(spedUp))).toEqual([OLD]);
+  });
+
+  it('leaves the toasts of what is still in the pool', () => {
+    expect(toastsOfRemoved(pool(spedUp, next), pool(spedUp, next))).toEqual([]);
+  });
+
+  it('leaves the toast of an operation that goes on when its old record is dropped', () => {
+    expect(toastsOfRemoved(pool(spedUp, next), pool(next))).toEqual([]);
+  });
+});
+
+describe('settledRecordsOf', () => {
+  it('leaves out what is pending, so that a reload shows its toast, and keeps the rest quiet', () => {
+    const pending = tx();
+    const done = tx({ txKey: '0xdone', pending: false, status: TransactionStatus.Success });
+
+    expect(settledRecordsOf(pool(pending, done))).toEqual(pool(done));
+  });
+});
+
+describe('afterTrackedAction', () => {
+  const click = { walletAtClick: WALLET, walletNow: WALLET, keyBefore: OLD };
+
+  it('follows a new transaction', () => {
+    expect(afterTrackedAction({ ...click, keyAfter: NEW })).toBe('track');
+  });
+
+  it('goes back to idle when the action added none: it must not wait for good or show an older result', () => {
+    expect(afterTrackedAction({ ...click, keyAfter: OLD })).toBe('idle');
+    expect(afterTrackedAction({ walletAtClick: WALLET, walletNow: WALLET })).toBe('idle');
+  });
+
+  it('ignores the result when the wallet changed meanwhile: it belongs to the other wallet', () => {
+    expect(afterTrackedAction({ ...click, walletNow: '0xother', keyAfter: NEW })).toBe('ignore');
+  });
+});
+
+describe('latestRecordOf', () => {
+  it('follows every speed-up to where the operation stands', () => {
+    const second = tx({
+      txKey: NEW,
+      hash: NEW,
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedTxHash: '0xthird',
+      replacedReason: 'repriced',
+    });
+    const third = tx({ txKey: '0xthird', hash: '0xthird', replaces: NEW });
+
+    expect(latestRecordOf(spedUp, pool(spedUp, second, third))).toBe(third);
+  });
+
+  it('stays on a record that nothing follows', () => {
+    const pending = tx();
+    expect(latestRecordOf(pending, pool(pending))).toBe(pending);
   });
 });
 
