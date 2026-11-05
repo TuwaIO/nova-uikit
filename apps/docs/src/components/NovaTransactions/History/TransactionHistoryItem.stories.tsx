@@ -85,6 +85,21 @@ export const Failed: Story = {
 };
 
 /**
+ * The record that goes on after a speed-up, with the hash it replaced.
+ */
+export const AfterSpeedUp: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Success,
+      hash: '0x5555555555555555555555555555555555555555555555555555555555555555',
+      replaces: '0x4444444444444444444444444444444444444444444444444444444444444444',
+    }),
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
  * A transaction that was replaced (e.g., sped up or cancelled).
  * The `TransactionKey` component will display both the original and replacing hashes.
  */

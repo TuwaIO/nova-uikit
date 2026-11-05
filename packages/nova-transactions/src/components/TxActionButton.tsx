@@ -4,12 +4,13 @@
 
 import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core/utils';
-import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
-import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
 import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
@@ -18,6 +19,12 @@ const getDefaultContent = (labels: NovaTransactionsLabels['trackedTxButton']) =>
     <>
       <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
       <span>{labels.replaced}</span>
+    </>
+  ),
+  cancelled: (
+    <>
+      <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
+      <span>{labels.cancelled}</span>
     </>
   ),
   loading: (
@@ -103,7 +110,8 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
 
 /**
  * A stateful button that orchestrates the full transaction lifecycle:
- * idle → loading → succeed / failed / replaced → idle (after `resetTimeout`).
+ * idle → loading → succeed / failed / replaced → idle (after `resetTimeout`). After a speed-up it goes on with the new
+ * record and stays busy until that has a result; a record that is removed sends it back to idle.
  *
  * When rendered inside a `NovaTransactionsProvider`, any error thrown by `action()`
  * before the transaction reaches the pool is automatically surfaced as a
@@ -130,6 +138,8 @@ export function TxActionButton<T extends Transaction>({
   const { showPreSubmitErrorToast } = useNovaTransactionsError();
   const [status, setStatus] = useState<ButtonStatus>('idle');
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
+  const [wasCancelled, setWasCancelled] = useState(false);
+  const seenTrackedTxKey = useRef<string | undefined>(undefined);
 
   const defaultContent = getDefaultContent(trackedTxButton);
 
@@ -144,19 +154,23 @@ export function TxActionButton<T extends Transaction>({
 
     const trackedTx = transactionsPool[trackedTxKey];
 
-    if (trackedTx) {
-      switch (trackedTx.status) {
-        case TransactionStatus.Success:
-          // eslint-disable-next-line react-hooks/set-state-in-effect
-          setStatus('succeed');
-          break;
-        case TransactionStatus.Replaced:
-          setStatus('replaced');
-          break;
-        case TransactionStatus.Failed:
-          setStatus('failed');
-          break;
+    if (!trackedTx) {
+      // Removed after it was seen, for example as its tracking was stopped. A pool can also lag behind the key at first.
+      if (seenTrackedTxKey.current === trackedTxKey) {
+        setStatus('idle');
+        setTrackedTxKey(undefined);
       }
+      return;
+    }
+    seenTrackedTxKey.current = trackedTxKey;
+
+    const step = trackedButtonStep(trackedTx, transactionsPool);
+    if (step.kind === 'follow') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTrackedTxKey(step.txKey);
+    } else if (step.kind === 'show') {
+      setStatus(step.status);
+      setWasCancelled((trackedTx as unknown as EvmTransaction).replacedReason === 'cancelled');
     }
   }, [transactionsPool, trackedTxKey, walletAddress]);
 
@@ -190,7 +204,7 @@ export function TxActionButton<T extends Transaction>({
       case 'failed':
         return failedContent ?? defaultContent.failed;
       case 'replaced':
-        return replacedContent ?? defaultContent.replaced;
+        return replacedContent ?? (wasCancelled ? defaultContent.cancelled : defaultContent.replaced);
       default:
         return children;
     }

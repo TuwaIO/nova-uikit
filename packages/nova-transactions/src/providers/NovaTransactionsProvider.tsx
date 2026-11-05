@@ -29,6 +29,7 @@ import {
 } from '../components';
 import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
+import { successorOf, toastStepFor } from '../utils/replacement';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
 import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
 
@@ -94,6 +95,11 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
   };
   /** Pagination state for infinite scroll, forwarded to TransactionsInfoModal and TransactionsHistory. */
   pagination?: TxInMemoryPagination;
+  /**
+   * `removeTxFromPool` of the Pulsar store. With it, the details of a transaction pending for a long time offer to stop
+   * tracking it: a dropped transaction stays pending until its nonce is spent, which can be never.
+   */
+  removeTxFromPool?: (txKey: string) => void;
 } & Pick<ITxTrackingStore<T>, 'closeTxTrackedModal' | 'executeTxAction' | 'initialTx'> &
   Omit<ToastContainerProps, 'containerId'>;
 
@@ -125,6 +131,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   features,
   customization,
   pagination,
+  removeTxFromPool,
   ...toastProps
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
@@ -209,7 +216,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
 
   // Memoized function to show or update a transaction progress toast.
   const showOrUpdateToast = useCallback(
-    (tx: T) => {
+    (tx: T, movedFrom?: string) => {
       if (!enabledFeatures.toasts) return;
 
       const type = tx.pending ? 'info' : (STATUS_TO_TOAST_TYPE[tx.status!] ?? 'info');
@@ -236,7 +243,10 @@ export function NovaTransactionsProvider<T extends Transaction>({
         />
       );
 
-      if (toast.isActive(tx.txKey)) {
+      if (movedFrom) {
+        // One toast carries one operation: on a speed-up it goes on under the new hash
+        toast.update(movedFrom, { render: content, type, containerId: toastContainerId, toastId: tx.txKey });
+      } else if (toast.isActive(tx.txKey)) {
         toast.update(tx.txKey, { render: content, type, containerId: toastContainerId });
       } else {
         toast(content, { toastId: tx.txKey, type, closeOnClick: false, containerId: toastContainerId });
@@ -251,18 +261,11 @@ export function NovaTransactionsProvider<T extends Transaction>({
     const prevPool = prevTransactionsRef.current;
 
     Object.values(transactionsPool).forEach((currentTx) => {
-      const prevTx = prevPool[currentTx.txKey];
-
-      // Case 1: A new transaction is added and is pending.
-      if (!prevTx && currentTx.pending) {
-        showOrUpdateToast(currentTx);
-        return;
-      }
-
-      // Case 2: An existing transaction has been updated.
-      if (prevTx && JSON.stringify(prevTx) !== JSON.stringify(currentTx)) {
-        showOrUpdateToast(currentTx);
-      }
+      const step = toastStepFor(currentTx, prevPool[currentTx.txKey], transactionsPool, (txKey) =>
+        toast.isActive(txKey),
+      );
+      if (step.kind === 'move') showOrUpdateToast(currentTx, step.from);
+      else if (step.kind === 'show') showOrUpdateToast(currentTx);
     });
 
     prevTransactionsRef.current = transactionsPool;
@@ -273,7 +276,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
     // This ensures that visible toasts re-render to show/hide wallet-specific actions
     // like "Speed Up", even for completed transactions.
     Object.values(transactionsPool).forEach((tx) => {
-      if (toast.isActive(tx.txKey, toastContainerId)) {
+      if (toast.isActive(tx.txKey, toastContainerId) && !successorOf(tx, transactionsPool)) {
         showOrUpdateToast(tx);
       }
     });
@@ -336,6 +339,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
             connectedAdapterType={connectedAdapterType}
             transactionsPool={transactionsPool}
             pagination={pagination}
+            removeTxFromPool={removeTxFromPool}
           />
         )}
 

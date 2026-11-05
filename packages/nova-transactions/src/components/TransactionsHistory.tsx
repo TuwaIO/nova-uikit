@@ -8,6 +8,7 @@ import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination 
 import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { successorOf } from '../utils/replacement';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
@@ -126,6 +127,11 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   initialTxKey?: string | null;
   /** Whether transaction details can be viewed by clicking on history items. Defaults to true. */
   canViewDetails?: boolean;
+  /**
+   * `removeTxFromPool` of the Pulsar store. With it, the details of a transaction pending for a long time offer to stop
+   * tracking it.
+   */
+  removeTxFromPool?: (txKey: string) => void;
 };
 
 /** Duration (ms) for the error indicator to stay visible before fading out. */
@@ -229,6 +235,7 @@ export function TransactionsHistory<T extends Transaction>({
   pagination,
   initialTxKey,
   canViewDetails = true,
+  removeTxFromPool,
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -357,16 +364,19 @@ export function TransactionsHistory<T extends Transaction>({
             customization?.classNames?.listWrapper,
           )}
         >
-          {sortedTransactions.map((tx) => (
-            <HistoryItem
-              key={tx.txKey}
-              tx={tx}
-              adapter={adapter}
-              canViewDetails={canViewDetails}
-              customization={{ classNames: itemClassNames }}
-              onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
-            />
-          ))}
+          {/* One row for one operation: a sped-up record is shown in the details of the record that goes on */}
+          {sortedTransactions
+            .filter((tx) => !successorOf(tx, transactionsPool))
+            .map((tx) => (
+              <HistoryItem
+                key={tx.txKey}
+                tx={tx}
+                adapter={adapter}
+                canViewDetails={canViewDetails}
+                customization={{ classNames: itemClassNames }}
+                onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
+              />
+            ))}
 
           {/* Infinite scroll sentinel — observed by IntersectionObserver */}
           {pagination?.hasMore && <div ref={sentinelRef} className="novatx:h-px" aria-hidden="true" />}
@@ -412,6 +422,13 @@ export function TransactionsHistory<T extends Transaction>({
           adapter={adapter}
           onBack={() => setSelectedTxKey(null)}
           customization={customization?.detailsCustomization}
+          onStopTracking={
+            removeTxFromPool &&
+            ((txKey) => {
+              removeTxFromPool(txKey);
+              setSelectedTxKey(null);
+            })
+          }
         />
       );
     }

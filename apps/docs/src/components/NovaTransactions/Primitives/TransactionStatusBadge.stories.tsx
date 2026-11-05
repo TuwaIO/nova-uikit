@@ -79,3 +79,29 @@ export const Replaced: Story = {
     tx: createMockTx(OrbitAdapter.EVM, { pending: false, status: TransactionStatus.Replaced }),
   },
 };
+
+/**
+ * A speed-up: the operation goes on under a new hash, in a record of its own.
+ */
+export const SpedUp: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedReason: 'repriced',
+    }),
+  },
+};
+
+/**
+ * A cancel: the operation did not happen.
+ */
+export const Cancelled: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedReason: 'cancelled',
+    }),
+  },
+};

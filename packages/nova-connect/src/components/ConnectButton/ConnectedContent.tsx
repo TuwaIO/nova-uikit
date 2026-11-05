@@ -4,7 +4,7 @@
  */
 
 import { ChevronArrowWithAnim, cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -25,6 +25,7 @@ import {
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
+import { connectedStatusFor } from './connectedStatus';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
@@ -352,37 +353,13 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];
-      let newStatus: ButtonTxStatus = 'idle';
+      const newStatus = connectedStatusFor(currentPool, prevPool);
 
-      const isAnyTxLoading = currentPool.some((tx) => tx.pending);
-
-      if (isAnyTxLoading) {
-        newStatus = 'loading';
-      } else {
-        for (const currentTx of currentPool) {
-          const prevTx = prevPool.find((tx) => tx.txKey === currentTx.txKey);
-
-          // Only trigger status change if the transaction was previously pending
-          const wasPending = prevTx?.pending;
-
-          if (wasPending && currentTx.status && currentTx.status !== prevTx?.status) {
-            switch (currentTx.status) {
-              case TransactionStatus.Success:
-                newStatus = 'succeed';
-                break;
-              case TransactionStatus.Replaced:
-                newStatus = 'replaced';
-                break;
-              case TransactionStatus.Failed:
-                newStatus = 'failed';
-                break;
-            }
-          }
-        }
-      }
-
-      if (newStatus === 'loading' || newStatus !== 'idle') {
+      if (newStatus !== 'idle') {
         setConnectedButtonStatus(newStatus);
+      } else if (connectedButtonStatus === 'loading') {
+        // Nothing is pending any more, for example as the tracking of the last transaction was stopped
+        setConnectedButtonStatus('idle');
       }
 
       prevTxPoolRef.current = currentPool;
@@ -393,7 +370,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     useEffect(() => {
       if (['succeed', 'failed', 'replaced'].includes(connectedButtonStatus)) {
         const timer = setTimeout(() => {
-          setConnectedButtonStatus('idle');
+          // Back to busy if another transaction is still pending, which a result does not end
+          setConnectedButtonStatus(prevTxPoolRef.current?.some((tx) => tx.pending) ? 'loading' : 'idle');
         }, statusResetTimeout);
         return () => clearTimeout(timer);
       }

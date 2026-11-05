@@ -109,6 +109,19 @@ export const Replaced: Story = {
 };
 
 /**
+ * The record that goes on after a speed-up: its own hash, and the hash it replaced.
+ */
+export const AfterSpeedUp: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      hash: '0x5555555555555555555555555555555555555555555555555555555555555555',
+      replaces: '0x4444444444444444444444444444444444444444444444444444444444444444',
+    }),
+    adapter: mockEvmAdapter,
+  },
+};
+
+/**
  * The 'history' variant that uses a different container style for the transaction key.
  */
 export const HistoryVariant: Story = {

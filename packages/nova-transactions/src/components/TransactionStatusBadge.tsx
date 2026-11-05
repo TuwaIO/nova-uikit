@@ -4,7 +4,7 @@
 
 import { ArrowPathIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { cn } from '@tuwaio/nova-core/utils';
-import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import { EvmTransaction, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
 import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
@@ -66,7 +66,7 @@ export type TransactionStatusBadgeProps<T extends Transaction> = {
 /**
  * A colored badge with an icon and the label of the transaction status: pending (while `tx.pending`), confirmed (still
  * pending, but with `confirmationStatus: 'confirmed'`, as the Solana tracker of Pulsar sets it about a second after
- * sending), success, failed or replaced, or a neutral badge when the status is not set.
+ * sending), success, failed, sped up, cancelled or replaced, or a neutral badge when the status is not set.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionStatusBadgeProps}.
@@ -103,7 +103,15 @@ export function TransactionStatusBadge<T extends Transaction>({
     );
   }
 
-  const { label, Icon, badgeClasses, iconClasses } = config;
+  const { Icon, badgeClasses, iconClasses } = config;
+  // "Replaced" alone does not say whether the money moved: a speed-up went on, a cancel did not
+  const { replacedReason } = tx as unknown as EvmTransaction;
+  const label =
+    statusKey === TransactionStatus.Replaced && replacedReason === 'repriced'
+      ? statuses.spedUp
+      : statusKey === TransactionStatus.Replaced && replacedReason === 'cancelled'
+        ? statuses.cancelled
+        : config.label;
 
   return (
     <div className={cn(baseClasses, badgeClasses, classNames?.container, className)}>

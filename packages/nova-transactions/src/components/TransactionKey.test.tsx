@@ -140,3 +140,53 @@ describe('TransactionKey component', () => {
     expect(renderedProps[1]?.explorerUrl).toBe('https://sepolia.etherscan.io/tx/0xonChainMinedHash');
   });
 });
+
+describe('TransactionKey around a speed-up', () => {
+  const OLD = '0x1111111111111111111111111111111111111111111111111111111111111111';
+  const NEW = '0x2222222222222222222222222222222222222222222222222222222222222222';
+  const adapter = {
+    key: OrbitAdapter.EVM,
+    getExplorerUrl: (url?: string) => url,
+    getExplorerTxUrl: (tx: EvmTransaction) => `https://scan/tx/${tx.replacedTxHash || tx.hash}`,
+  } as unknown as TxAdapter<EvmTransaction>;
+  const tx = (fields: Partial<EvmTransaction>) =>
+    ({
+      txKey: OLD,
+      adapter: OrbitAdapter.EVM,
+      tracker: TransactionTracker.Ethereum,
+      chainId: 1,
+      from: '0x1234567890123456789012345678901234567890',
+      pending: true,
+      type: 'TRANSFER',
+      connectorType: 'injected',
+      localTimestamp: 1,
+      ...fields,
+    }) as EvmTransaction;
+  const hashesOf = (tree: unknown) => {
+    const found: { label: string; hash: string; explorerUrl?: string }[] = [];
+    const walk = (node: unknown) => {
+      if (Array.isArray(node)) return node.forEach(walk);
+      if (!node || typeof node !== 'object' || !('props' in node)) return;
+      const props = (node as { props: Record<string, unknown> }).props;
+      if (typeof props.hash === 'string') found.push(props as never);
+      walk(props.children);
+    };
+    walk(tree);
+    return found;
+  };
+
+  it('the new record shows its hash and the one it replaced, both with their own link', () => {
+    const rows = hashesOf(TransactionKey({ adapter, tx: tx({ txKey: NEW, hash: NEW, replaces: OLD }) }));
+
+    expect(rows.map((row) => row.label)).toEqual([defaultLabels.hashLabels.default, defaultLabels.hashLabels.replaces]);
+    expect(rows[1].hash).toBe(OLD);
+    expect(rows[1].explorerUrl).toBe(`https://scan/tx/${OLD}`);
+  });
+
+  it('the old record links its own hash, not only the replacing one', () => {
+    const rows = hashesOf(TransactionKey({ adapter, tx: tx({ hash: OLD, replacedTxHash: NEW, pending: false }) }));
+
+    expect(rows[0].explorerUrl).toBe(`https://scan/tx/${OLD}`);
+    expect(rows[1].explorerUrl).toBe(`https://scan/tx/${NEW}`);
+  });
+});

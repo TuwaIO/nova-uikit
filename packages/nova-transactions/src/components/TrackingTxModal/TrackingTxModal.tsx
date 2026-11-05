@@ -4,11 +4,18 @@
  */
 import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
 import { selectAdapterByKey } from '@tuwaio/orbit-core';
-import { InitialTransaction, InitialTransactionParams, Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import {
+  InitialTransaction,
+  InitialTransactionParams,
+  Transaction,
+  TransactionStatus,
+  TransactionTracker,
+} from '@tuwaio/pulsar-core';
 import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../../providers';
+import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../../providers';
+import { canReplaceTx, runReplacement } from '../../utils/replacement';
 import {
   TxErrorBlock,
   TxErrorBlockClassNames,
@@ -183,6 +190,7 @@ export function TrackingTxModal<T extends Transaction>({
   initialTx,
   connectedWalletAddress,
 }: TrackingTxModalProps<T>) {
+  const { showPreSubmitErrorToast } = useNovaTransactionsError();
   const activeTx = initialTx?.lastTxKey ? transactionsPool[initialTx.lastTxKey] : undefined;
 
   const txToDisplay = activeTx ?? initialTx;
@@ -203,14 +211,15 @@ export function TrackingTxModal<T extends Transaction>({
 
   const foundAdapter = txToDisplay ? selectAdapterByKey({ adapterKey: txToDisplay.adapter, adapter }) : undefined;
 
-  const canRetry = !!(isFailed && txToDisplay && initialTx?.actionFunction && executeTxAction);
-  const canReplace = !!(
-    foundAdapter?.speedUpTxAction &&
-    foundAdapter?.cancelTxAction &&
-    activeTx?.pending &&
-    (!activeTx.confirmations || Number(activeTx.confirmations) < 1) &&
-    activeTx.tracker === 'ethereum'
-  );
+  // A tracker that gave up says nothing about the chain, and a Retry there could send the operation a second time. Retry only
+  // what surely did not go through: a revert, which has no error of the tracker, or a refusal before sending.
+  const trackerGaveUp =
+    activeTx?.status === TransactionStatus.Failed &&
+    activeTx.tracker === TransactionTracker.Ethereum &&
+    !!activeTx.error;
+  const canRetry = !!(isFailed && !trackerGaveUp && txToDisplay && initialTx?.actionFunction && executeTxAction);
+  // The footer keeps its Close button enabled and its actions only for what can really be replaced
+  const canReplace = canReplaceTx(activeTx, foundAdapter, connectedWalletAddress);
 
   const handleRetry = () => {
     if (!canRetry || !foundAdapter?.retryTxAction) return;
@@ -230,14 +239,14 @@ export function TrackingTxModal<T extends Transaction>({
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
   };
 
-  const isWithActions = canReplace && activeTx && ['metamask'].includes(activeTx?.connectorType.split(':')[1]);
+  const isWithActions = canReplace && activeTx;
 
   const handleCancel = () => {
-    if (isWithActions) foundAdapter.cancelTxAction!(activeTx);
+    if (isWithActions) void runReplacement(foundAdapter!.cancelTxAction!, activeTx, showPreSubmitErrorToast);
   };
 
   const handleSpeedUp = () => {
-    if (isWithActions) foundAdapter.speedUpTxAction!(activeTx);
+    if (isWithActions) void runReplacement(foundAdapter!.speedUpTxAction!, activeTx, showPreSubmitErrorToast);
   };
 
   const CustomHeader = customization?.components?.Header;

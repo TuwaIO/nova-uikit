@@ -28,9 +28,10 @@ import {
   TransactionStatus,
 } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import { ComponentType, ReactNode, useMemo } from 'react';
+import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { explorerUrlOfHash, stopTrackingDueIn } from '../utils/replacement';
 
 // --- Sub-components Prop Types ---
 
@@ -343,15 +344,26 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
   className?: string;
   /** Class names and replacement components for the parts of the view. */
   customization?: TransactionDetailsCustomization;
+  /**
+   * Stops tracking this transaction and removes it from the pool. With it, a transaction pending for over 10 minutes offers
+   * to do so: a dropped transaction stays pending until its nonce is spent, which can be never.
+   *
+   * @param txKey - The key of the transaction.
+   */
+  onStopTracking?: (txKey: string) => void;
 };
+
+/** How long a transaction is pending before stopping its tracking is offered: a slow one should simply be waited for. */
 
 const EvmExecutionData = ({
   tx,
   labels,
+  linkOf,
   components: { DetailItem, CopyableField },
 }: {
   tx: EvmTransaction;
   labels: ReturnType<typeof useLabels>['transactionDetails'];
+  linkOf: (hash: string) => string | undefined;
   components: {
     DetailItem: ComponentType<DetailItemProps>;
     CopyableField: ComponentType<CopyableFieldProps>;
@@ -362,8 +374,44 @@ const EvmExecutionData = ({
     <DetailItem label={labels.maxFee} value={tx.maxFeePerGas} />
     <DetailItem label={labels.maxPriorityFee} value={tx.maxPriorityFeePerGas} />
     <DetailItem label={labels.value} value={tx.value} />
-    {tx.replacedTxHash && <CopyableField label={labels.replacedHash} value={tx.replacedTxHash} />}
+    {tx.replacedTxHash && (
+      <HashField
+        CopyableField={CopyableField}
+        label={labels.replacedHash}
+        hash={tx.replacedTxHash}
+        href={linkOf(tx.replacedTxHash)}
+      />
+    )}
+    {tx.replaces && (
+      <HashField CopyableField={CopyableField} label={labels.replaces} hash={tx.replaces} href={linkOf(tx.replaces)} />
+    )}
   </div>
+);
+
+const HashField = ({
+  CopyableField,
+  label,
+  hash,
+  href,
+}: {
+  CopyableField: ComponentType<CopyableFieldProps>;
+  label: string;
+  hash: string;
+  href?: string;
+}) => (
+  <CopyableField label={label} value={hash}>
+    {href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="novatx:block novatx:min-w-0 novatx:flex-1 novatx:truncate novatx:font-mono novatx:text-sm novatx:text-[var(--tuwa-text-accent)] novatx:hover:underline"
+        title={hash}
+      >
+        {hash}
+      </a>
+    ) : null}
+  </CopyableField>
 );
 
 const SolanaExecutionData = ({
@@ -411,7 +459,7 @@ const StarknetExecutionData = ({
  * hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
  * recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
  * the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
- * (EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
+ * (EVM: nonce, fees, value, replaced hash, the hash it replaced, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
  * contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
  * Pulsar store (`syncStatus`). Values can be copied to the clipboard.
  *
@@ -425,6 +473,7 @@ export function TransactionDetails<T extends Transaction>({
   adapter,
   className,
   customization,
+  onStopTracking,
 }: TransactionDetailsProps<T>) {
   const { transactionDetails, statuses, actions } = useLabels();
 
@@ -432,7 +481,20 @@ export function TransactionDetails<T extends Transaction>({
 
   const status = tx.pending ? 'pending' : tx.status === TransactionStatus.Success ? 'success' : 'error';
 
-  const explorerUrl = foundAdapter?.getExplorerTxUrl?.(tx);
+  const shownHash = (tx as unknown as EvmTransaction).hash || tx.txKey;
+  // The link of the hash shown here. The adapter's own link of a replaced record goes to the replacing hash.
+  const explorerUrl = explorerUrlOfHash(foundAdapter, tx, shownHash);
+
+  // The clock is read into state, so the offer comes up by itself when it is due while this screen stays open
+  const [nowSeconds, setNowSeconds] = useState(() => Date.now() / 1000);
+  const offersStopTracking = !!onStopTracking && tx.pending;
+  const stopTrackingDue = stopTrackingDueIn(tx, nowSeconds);
+  const canStopTracking = offersStopTracking && stopTrackingDue <= 0;
+  useEffect(() => {
+    if (!offersStopTracking || !(stopTrackingDue > 0)) return;
+    const timer = setTimeout(() => setNowSeconds(Date.now() / 1000), stopTrackingDue * 1000);
+    return () => clearTimeout(timer);
+  }, [offersStopTracking, stopTrackingDue]);
 
   // Components from customization or defaults
   const {
@@ -452,6 +514,21 @@ export function TransactionDetails<T extends Transaction>({
 
   return (
     <div className={cn('novatx:flex novatx:flex-col novatx:gap-6 novatx:p-4', className, classNames?.container)}>
+      {canStopTracking && (
+        <div className="novatx:flex novatx:flex-col novatx:gap-2 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:p-3">
+          <p className="novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]">
+            {transactionDetails.stopTrackingHint}
+          </p>
+          <button
+            type="button"
+            onClick={() => onStopTracking(tx.txKey)}
+            className="novatx:cursor-pointer novatx:self-start novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:hover:underline"
+          >
+            {actions.stopTracking}
+          </button>
+        </div>
+      )}
+
       {/* ── Header ── */}
       <div className={cn('novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div className="novatx:flex novatx:items-center novatx:gap-3">
@@ -655,6 +732,7 @@ export function TransactionDetails<T extends Transaction>({
             <EvmExecutionData
               tx={evmTx}
               labels={transactionDetails}
+              linkOf={(hash) => explorerUrlOfHash(foundAdapter, tx, hash)}
               components={{ DetailItem: CDetailItem, CopyableField: CCopyableField }}
             />
           )}

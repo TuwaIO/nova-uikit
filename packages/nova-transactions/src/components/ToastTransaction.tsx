@@ -9,7 +9,8 @@ import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
+import { canReplaceTx, runReplacement } from '../utils/replacement';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -192,10 +193,9 @@ const DefaultConfirmationsBadge = ({
 
 /**
  * The body of a transaction toast: the network icon, the title and description (colored by status), the hashes with
- * explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent
- * with
- * MetaMask by the connected wallet, it offers speed-up and cancel (when the adapter has `speedUpTxAction` and
- * `cancelTxAction`); otherwise, for transactions of the connected wallet, a button that opens the transaction in the
+ * explorer links, the status badge and the number of confirmations. For a pending, unconfirmed EVM transaction sent with
+ * MetaMask by the connected wallet, once the tracker has read its nonce and fees, it offers speed-up and cancel (when the
+ * adapter has `speedUpTxAction` and `cancelTxAction`), and an error of the action is shown; otherwise, for transactions of the connected wallet, a button that opens the transaction in the
  * history modal. `NovaTransactionsProvider` shows one for every tracked transaction.
  *
  * @typeParam T - The transaction type of the Pulsar store.
@@ -215,22 +215,16 @@ export function ToastTransaction<T extends Transaction>({
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
-  const canBeReplaced = !!(
-    tx.tracker === 'ethereum' &&
-    tx.pending &&
-    (!tx.confirmations || Number(tx.confirmations) < 1) &&
-    foundAdapter?.speedUpTxAction &&
-    foundAdapter?.cancelTxAction &&
-    tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase() &&
-    ['metamask'].includes(tx.connectorType.split(':')[1])
-  );
+  const { showPreSubmitErrorToast } = useNovaTransactionsError();
+
+  const canBeReplaced = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
 
   const handleCancel = () => {
-    if (canBeReplaced) foundAdapter.cancelTxAction!(tx);
+    if (canBeReplaced) void runReplacement(foundAdapter!.cancelTxAction!, tx, showPreSubmitErrorToast);
   };
 
   const handleSpeedUp = () => {
-    if (canBeReplaced) foundAdapter.speedUpTxAction!(tx);
+    if (canBeReplaced) void runReplacement(foundAdapter!.speedUpTxAction!, tx, showPreSubmitErrorToast);
   };
 
   const {

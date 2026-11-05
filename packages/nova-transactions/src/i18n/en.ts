@@ -27,6 +27,8 @@ export const defaultLabels: NovaTransactionsLabels = {
     pending: 'Pending',
     confirmed: 'Confirmed',
     success: 'Success',
+    spedUp: 'Sped up',
+    cancelled: 'Cancelled',
     failed: 'Failed',
     reverted: 'Reverted',
     replaced: 'Replaced',
@@ -38,6 +40,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     safe: 'Safe Tx Hash',
     erc4337: 'UserOp Hash',
     original: 'Original Tx Hash',
+    replaces: 'Sped up from',
     replaced: 'Replaced Tx Hash',
     default: 'Tx Hash',
     recentBlockhash: 'Recent Blockhash',
@@ -75,8 +78,10 @@ export const defaultLabels: NovaTransactionsLabels = {
     succeed: 'Success',
     failed: 'Failed',
     replaced: 'Replaced',
+    cancelled: 'Cancelled',
   },
   actions: {
+    stopTracking: 'Stop tracking',
     copy: 'Copy address',
     viewOnExplorer: 'View on explorer',
     close: 'Close',
@@ -120,6 +125,9 @@ export const defaultLabels: NovaTransactionsLabels = {
     errorContext: 'Error Context',
     fullPayload: 'Full Payload',
     replacedHash: 'Replaced Hash',
+    replaces: 'Replaces',
+    stopTrackingHint:
+      'The transaction stays on the network and may still go through. This only removes it from this list.',
     syncStatus: {
       pending: 'Pending Sync',
       pendingTooltip: 'Queued for Cloud Sync',
