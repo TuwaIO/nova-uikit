@@ -3,9 +3,21 @@
  * blockchain hashes with copy-to-clipboard and block explorer link functionality.
  */
 
-import { cn, CopyIcon, ExternalLinkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, ExternalLinkIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 
 import { useLabels } from '../providers';
+
+/**
+ * The short form of a hash or address, the same one next to the addresses of the checkout and the dashboard: `0xAd9A…Ac0C`, and
+ * for a Solana signature or address `5VER…kQUW`. Two forms of one thing on one screen read as two different things.
+ *
+ * @param hash - The full hash or address.
+ * @returns Its short form.
+ */
+export function shortHash(hash: string): string {
+  const head = hash.startsWith('0x') ? 6 : 4;
+  return hash.length <= head + 5 ? hash : `${hash.slice(0, head)}…${hash.slice(-4)}`;
+}
 
 /** Props of {@link HashLink}. */
 export type HashLinkProps = {
@@ -62,7 +74,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
     classNames?.label,
   );
 
-  const hashContent = <span className={cn('', classNames?.hash)}>{textCenterEllipsis(hash, 5, 5)}</span>;
+  const hashContent = <span className={cn('', classNames?.hash)}>{shortHash(hash)}</span>;
 
   return (
     <div className={containerClasses}>
