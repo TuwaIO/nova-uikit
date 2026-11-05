@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [providers/NovaTransactionsProvider.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L49)
+Defined in: [providers/NovaTransactionsProvider.tsx:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L50)
 
 Defines the props for the `NovaTransactionsProvider` component.
 
@@ -118,7 +118,8 @@ Enables the full-screen transaction history modal.
 
 Enables the top-center pre-submission error toast.
 This fires when `executeTxAction` throws before the transaction reaches the pool
-(validation failures, `beforeTxProcess` rejections, missing adapter, etc.).
+(validation failures, `beforeTxProcess` rejections, missing adapter, etc.), and when a wallet or a node refuses a
+speed-up or a cancel, which nothing else tells the person.
 
 ##### Default Value
 
@@ -135,6 +136,23 @@ Partial label overrides for i18n. Merged with the built-in English defaults.
 > `optional` **pagination?**: `TxInMemoryPagination`
 
 Pagination state for infinite scroll, forwarded to TransactionsInfoModal and TransactionsHistory.
+
+### removeTxFromPool?
+
+> `optional` **removeTxFromPool?**: (`txKey`) => `void`
+
+`removeTxFromPool` of the Pulsar store. With it, the details of a transaction pending for a long time offer to stop
+tracking it: a dropped transaction stays pending until its nonce is spent, which can be never.
+
+#### Parameters
+
+##### txKey
+
+`string`
+
+#### Returns
+
+`void`
 
 ### transactionsPool
 

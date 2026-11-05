@@ -2,8 +2,7 @@
  * @file Connecting component with comprehensive customization options and connection status display.
  */
 
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, DrawnCheck, DrawnCross, MorphText } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 
@@ -444,11 +443,14 @@ DefaultSpinner.displayName = 'DefaultSpinner';
 const DefaultStatusIcon = forwardRef<HTMLDivElement, ConnectingStatusIconProps>(
   ({ className, statusData, ...props }, ref) => {
     const isSuccess = statusData.state === 'success';
-    const IconComponent = isSuccess ? CheckCircleIcon : ExclamationCircleIcon;
 
     return (
       <div ref={ref} className={className} {...props}>
-        <IconComponent className="novacon:w-6 novacon:h-6 novacon:text-white" aria-hidden="true" />
+        {isSuccess ? (
+          <DrawnCheck className="novacon:w-5 novacon:h-5 novacon:text-white" />
+        ) : (
+          <DrawnCross className="novacon:w-5 novacon:h-5 novacon:text-white" />
+        )}
       </div>
     );
   },
@@ -802,8 +804,9 @@ export const Connecting = memo(
               <CustomSpinner
                 className={
                   customization?.classNames?.spinner?.({ statusData }) ??
+                  // The one wait that stays a ring and not the Quasar loader: it runs around the circle of the wallet
                   cn(
-                    'novacon:absolute novacon:animate-spin novacon:rounded-full novacon:-inset-[2px]',
+                    'novacon:absolute novacon:animate-spin novacon:motion-reduce:animate-none novacon:rounded-full novacon:-inset-[2px]',
                     'novacon:w-[calc(100%_+_4px)] novacon:h-[calc(100%_+_4px)]',
                     'novacon:border-2 novacon:border-[var(--tuwa-pending-text)]',
                     'novacon:border-t-transparent',
@@ -862,7 +865,7 @@ export const Connecting = memo(
           <CustomMessageContainer
             className={
               customization?.classNames?.messageContainer?.({ statusData }) ??
-              cn('novacon:text-center novacon:space-y-2 novacon:max-w-md')
+              cn('novacon:w-full novacon:text-center novacon:space-y-2 novacon:max-w-md')
             }
             statusData={statusData}
           >
@@ -883,7 +886,7 @@ export const Connecting = memo(
               aria-level={2}
               statusData={statusData}
             >
-              {displayMessage}
+              <MorphText wrap>{displayMessage}</MorphText>
             </CustomStatusMessage>
 
             {/* Error Details */}

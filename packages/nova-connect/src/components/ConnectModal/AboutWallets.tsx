@@ -2,21 +2,22 @@
  * @file AboutWallets component with comprehensive customization options and touch support.
  */
 
-import { cn, StarsBackground } from '@tuwaio/nova-core';
+import { cn, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { formatLabel } from '../../i18n/formatLabel';
+import { AboutWalletsArt, hasArt } from './AboutWalletsArt';
 
 // --- Types ---
 /**
  * A slide of {@link AboutWallets}.
  */
 export type AboutWalletsSlideConfig = {
-  /** Unique ID. Slides `1` and `2` without `image` get the built-in images (loaded with a dynamic import). */
+  /** Unique ID. Slides `1` and `2` without `image` get the built-in illustrations. */
   id: number;
-  /** Image URL (an empty string shows a placeholder until the built-in image loads) */
+  /** Image URL. An empty string shows the built-in illustration of slides `1` and `2`, and a placeholder on any other. */
   image: string;
   /** Key of the Nova Connect labels with the slide title (for example `keyToNewInternet`) */
   titleKey: keyof Record<string, string>;
@@ -321,13 +322,13 @@ export type AboutWalletsStatusProps = {
 const DEFAULT_SLIDES_CONFIG: AboutWalletsSlideConfig[] = [
   {
     id: 1,
-    image: '', // Loaded dynamically
+    image: '',
     titleKey: 'keyToNewInternet',
     descriptionKey: 'keyToNewInternetDescription',
   },
   {
     id: 2,
-    image: '', // Loaded dynamically
+    image: '',
     titleKey: 'logInWithoutHassle',
     descriptionKey: 'logInWithoutHassleDescription',
   },
@@ -518,6 +519,9 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
   // Compute custom image class if provided
   const imageClassName = classNames?.image?.({ slideIndex, imageLoaded });
 
+  // The carousel draws the built-in picture itself, above the slides: it goes on from one slide to the next
+  if (!slide.image && hasArt(slide.id)) return null;
+
   return (
     <div
       className={cn(
@@ -536,20 +540,20 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
           transition={imageTransition}
           className="novacon:relative"
         >
-          <div className="novacon:relative" style={{ width: 250, height: 250 }}>
+          <div className="novacon:relative" style={{ width: 200, height: 200 }}>
             {slide.image && (
               <img
                 src={slide.image}
                 alt={labels[slide.titleKey as string]}
-                width={250}
-                height={250}
+                width={200}
+                height={200}
                 className={cn(
                   'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
                   'novacon:object-cover',
                   imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
                   imageClassName,
                 )}
-                style={{ width: 250, height: 250 }}
+                style={{ width: 200, height: 200 }}
                 onLoad={onImageLoad}
                 onError={onImageError}
                 loading="eager"
@@ -560,10 +564,10 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
             {!imageLoaded && (
               <div
                 className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center"
-                style={{ width: 250, height: 250 }}
+                style={{ width: 200, height: 200 }}
                 aria-hidden="true"
               >
-                <div className="novacon:w-12 novacon:h-12 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent novacon:rounded-full novacon:animate-spin" />
+                <QuasarLoader size={48} className="novacon:text-[var(--tuwa-text-primary)]" />
               </div>
             )}
           </div>
@@ -742,8 +746,8 @@ const DefaultStatus: React.FC<AboutWalletsStatusProps> = ({
 /**
  * The "About wallets" carousel of the connect modal: slides explaining wallets, with Framer Motion transitions,
  * indicators, swipes, keyboard navigation and auto-play (paused after the user changes the slide, resumed after
- * `animation.resumeDelay`). The built-in slide images are base64 modules of the package, loaded with a dynamic import
- * (no external host). Texts come from the Nova Connect labels.
+ * `animation.resumeDelay`). The built-in slide illustrations are inline SVG in the manner of the TUWA mark, which follow the
+ * theme (no external host). Texts come from the Nova Connect labels.
  *
  * Props: {@link AboutWalletsProps}; the ref is forwarded to the carousel section.
  *
@@ -771,41 +775,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   const inputSlidesConfig = customization?.slidesConfig ?? DEFAULT_SLIDES_CONFIG;
   const customClassNames = customization?.classNames;
 
-  // State for dynamically loaded default images
-  const [defaultImages, setDefaultImages] = useState<Record<number, string>>({});
-
-  useEffect(() => {
-    // Only load if we are using defaults or have missing images for default IDs
-    const needsLoading = inputSlidesConfig.some((slide) => (slide.id === 1 || slide.id === 2) && !slide.image);
-
-    if (!needsLoading) return;
-
-    const loadDefaultImages = async () => {
-      try {
-        const [passportModule, walletModule] = await Promise.all([
-          import('./images/digitalPassportImage'),
-          import('./images/walletImage'),
-        ]);
-        setDefaultImages({
-          1: passportModule.digitalPassportImage,
-          2: walletModule.walletImage,
-        });
-      } catch (error) {
-        console.warn('Failed to load default images', error);
-      }
-    };
-    loadDefaultImages();
-  }, [inputSlidesConfig]);
-
-  const slidesConfig = inputSlidesConfig.map((slide) => {
-    // If image is present, use it
-    if (slide.image) return slide;
-    // Otherwise try to use loaded default
-    return {
-      ...slide,
-      image: defaultImages[slide.id] || '',
-    };
-  });
+  const slidesConfig = inputSlidesConfig;
 
   const slideVariants = customization?.variants?.slide ?? DEFAULT_SLIDE_VARIANTS;
   const imageVariants = customization?.variants?.image ?? DEFAULT_IMAGE_VARIANTS;
@@ -1013,6 +983,12 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   }, []);
 
   const currentSlideData = slidesConfig[currentSlide];
+  // Only under the default slide, whose image section gives it the place; a custom slide or image section draws its own
+  const drawsArt =
+    !customization?.components?.Slide &&
+    !customization?.components?.ImageSection &&
+    !currentSlideData?.image &&
+    hasArt(currentSlideData?.id);
 
   // Prepare components object for Slide
   const slideComponents = useMemo(
@@ -1077,6 +1053,22 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
             }));
           }}
         >
+          {/* Above the slides and not in them: it goes on from one slide to the next, one drawing turning into the other */}
+          {drawsArt && (
+            <div
+              className={cn(
+                'novacon:flex novacon:justify-center novacon:relative novacon:pt-4',
+                customClassNames?.imageSection?.({ slideIndex: currentSlide }),
+              )}
+            >
+              <div style={{ width: 200, height: 200 }}>
+                <AboutWalletsArt
+                  slideId={currentSlideData.id}
+                  label={(labels as unknown as Record<string, string>)[currentSlideData.titleKey as string]}
+                />
+              </div>
+            </div>
+          )}
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <CustomSlide
               key={currentSlide}

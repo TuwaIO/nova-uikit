@@ -5,32 +5,39 @@
 
 import {
   ArrowLeftIcon,
+  ArrowPathIcon,
   CheckBadgeIcon,
   CheckCircleIcon,
   ClockIcon,
   CloudArrowUpIcon,
   CloudIcon,
   CpuChipIcon,
-  DocumentDuplicateIcon,
-  ExclamationTriangleIcon,
   GlobeAltIcon,
   KeyIcon,
   LinkIcon,
 } from '@heroicons/react/24/outline';
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { cn, getChainName, NetworkIcon, useCopyToClipboard } from '@tuwaio/nova-core';
-import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import {
-  EvmTransaction,
-  SolanaTransaction,
-  StarknetTransaction,
-  Transaction,
-  TransactionStatus,
-} from '@tuwaio/pulsar-core';
+  cn,
+  CopyIcon,
+  DrawnCheck,
+  DrawnCross,
+  getChainName,
+  MorphIcon,
+  MorphText,
+  NetworkIcon,
+  QuasarLoader,
+  StatusEdge,
+  StatusTone,
+  useCopyToClipboard,
+} from '@tuwaio/nova-core';
+import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
+import { EvmTransaction, SolanaTransaction, StarknetTransaction, Transaction } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
-import { ComponentType, ReactNode, useMemo } from 'react';
+import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { explorerUrlOfHash, explorerUrlOfReplaced, stopTrackingDueIn } from '../utils/replacement';
+import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
 
 // --- Sub-components Prop Types ---
 
@@ -129,6 +136,25 @@ export type JsonBlockProps = {
 
 // --- Default Sub-components ---
 
+const STATUS_CLASSES: Record<StatusTone, { icon: string; label: string }> = {
+  pending: {
+    icon: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-text-primary)]',
+    label: 'novatx:text-[var(--tuwa-pending-text)]',
+  },
+  success: {
+    icon: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-icon)]',
+    label: 'novatx:text-[var(--tuwa-success-text)]',
+  },
+  error: {
+    icon: 'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-icon)]',
+    label: 'novatx:text-[var(--tuwa-error-text)]',
+  },
+  neutral: {
+    icon: 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-icon)]',
+    label: 'novatx:text-[var(--tuwa-info-text)]',
+  },
+};
+
 const SectionCard = ({ children, className }: { children: ReactNode; className?: string }) => (
   <div
     className={cn(
@@ -143,7 +169,7 @@ const SectionCard = ({ children, className }: { children: ReactNode; className?:
 const SectionHeading = ({ children, className }: { children: ReactNode; className?: string }) => (
   <h4
     className={cn(
-      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] sm:novatx:mb-4 sm:novatx:pb-4',
+      'novatx:mb-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:pb-2 novatx:text-[10px] novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-widest novatx:text-[var(--tuwa-text-primary)] novatx:sm:mb-4 novatx:sm:pb-4',
       className,
     )}
   >
@@ -180,11 +206,7 @@ const CopyButton = ({ value, className, size = 'md' }: { value: string; classNam
       title={isCopied ? txError.copied : actions.copy}
       aria-label={isCopied ? txError.copied : actions.copy}
     >
-      {isCopied ? (
-        <CheckIcon className={cn(iconSize, 'novatx:text-[var(--tuwa-success-icon)]')} />
-      ) : (
-        <DocumentDuplicateIcon className={iconSize} />
-      )}
+      <CopyIcon copied={isCopied} className={iconSize} />
     </button>
   );
 };
@@ -289,6 +311,12 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
 export type TransactionDetailsCustomization = {
   /** Classes added to the parts of the view. */
   classNames?: {
+    /** Classes of the block that offers to stop tracking a transaction that may never end */
+    stopTrackingContainer?: string;
+    /** Classes of its text */
+    stopTrackingHint?: string;
+    /** Classes of its button */
+    stopTrackingButton?: string;
     /** The whole view. */
     container?: string;
     /** The header row with the back button and the title. */
@@ -343,27 +371,74 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
   className?: string;
   /** Class names and replacement components for the parts of the view. */
   customization?: TransactionDetailsCustomization;
+  /**
+   * Stops tracking this transaction and removes it from the pool. With it, a transaction pending for over 10 minutes offers
+   * to do so: a dropped transaction stays pending until its nonce is spent, which can be never.
+   *
+   * @param txKey - The key of the transaction.
+   */
+  onStopTracking?: (txKey: string) => void;
 };
+
+/** How long a transaction is pending before stopping its tracking is offered: a slow one should simply be waited for. */
 
 const EvmExecutionData = ({
   tx,
   labels,
+  linkOf,
   components: { DetailItem, CopyableField },
 }: {
   tx: EvmTransaction;
   labels: ReturnType<typeof useLabels>['transactionDetails'];
+  linkOf: (hash: string) => string | undefined;
   components: {
     DetailItem: ComponentType<DetailItemProps>;
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2 lg:novatx:grid-cols-3">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     <DetailItem label={labels.nonce} value={tx.nonce} />
     <DetailItem label={labels.maxFee} value={tx.maxFeePerGas} />
     <DetailItem label={labels.maxPriorityFee} value={tx.maxPriorityFeePerGas} />
     <DetailItem label={labels.value} value={tx.value} />
-    {tx.replacedTxHash && <CopyableField label={labels.replacedHash} value={tx.replacedTxHash} />}
+    {tx.replacedTxHash && (
+      <HashField
+        CopyableField={CopyableField}
+        label={labels.replacedHash}
+        hash={tx.replacedTxHash}
+        href={linkOf(tx.replacedTxHash)}
+      />
+    )}
+    {tx.replaces && (
+      <HashField CopyableField={CopyableField} label={labels.replaces} hash={tx.replaces} href={linkOf(tx.replaces)} />
+    )}
   </div>
+);
+
+const HashField = ({
+  CopyableField,
+  label,
+  hash,
+  href,
+}: {
+  CopyableField: ComponentType<CopyableFieldProps>;
+  label: string;
+  hash: string;
+  href?: string;
+}) => (
+  <CopyableField label={label} value={hash}>
+    {href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="novatx:block novatx:min-w-0 novatx:flex-1 novatx:truncate novatx:font-mono novatx:text-sm novatx:text-[var(--tuwa-text-accent)] novatx:hover:underline"
+        title={hash}
+      >
+        {hash}
+      </a>
+    ) : null}
+  </CopyableField>
 );
 
 const SolanaExecutionData = ({
@@ -378,7 +453,7 @@ const SolanaExecutionData = ({
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     <DetailItem label={labels.fee} value={tx.fee} />
     <DetailItem label={labels.slot} value={tx.slot} />
     {tx.recentBlockhash && <CopyableField label={labels.recentBlockhash} value={tx.recentBlockhash} />}
@@ -397,7 +472,7 @@ const StarknetExecutionData = ({
     CopyableField: ComponentType<CopyableFieldProps>;
   };
 }) => (
-  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 sm:novatx:grid-cols-2">
+  <div className="novatx:grid novatx:grid-cols-1 novatx:gap-6 novatx:sm:grid-cols-2">
     {tx.contractAddress && <CopyableField label={labels.contractAddress} value={tx.contractAddress} />}
     <DetailItem
       label={labels.actualFee}
@@ -411,7 +486,7 @@ const StarknetExecutionData = ({
  * hash (linked to the explorer URL of the adapter's `getExplorerTxUrl`, when there is one), network, sender and
  * recipient; the metadata (adapter, submission and finish times, tracker, connector, confirmations, transaction key;
  * the RPC URL of the transaction is not shown, since it may contain an API key); and the execution data of the chain
- * (EVM: nonce, fees, value, replaced hash, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
+ * (EVM: nonce, fees, value, replaced hash, the hash it replaced, input data; Solana: fee, slot, recent blockhash, instructions; Starknet:
  * contract address, actual fee), the payload and the error, and whether the transaction is saved on the server of the
  * Pulsar store (`syncStatus`). Values can be copied to the clipboard.
  *
@@ -425,14 +500,27 @@ export function TransactionDetails<T extends Transaction>({
   adapter,
   className,
   customization,
+  onStopTracking,
 }: TransactionDetailsProps<T>) {
   const { transactionDetails, statuses, actions } = useLabels();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
 
-  const status = tx.pending ? 'pending' : tx.status === TransactionStatus.Success ? 'success' : 'error';
+  const tone = toneOf(tx);
 
-  const explorerUrl = foundAdapter?.getExplorerTxUrl?.(tx);
+  // The link of the hash shown here. The adapter's own link of a replaced record goes to the replacing hash.
+  const explorerUrl = explorerUrlOfHash(foundAdapter, tx, (tx as unknown as EvmTransaction).hash);
+
+  // The clock is read into state, so the offer comes up by itself when it is due while this screen stays open
+  const [nowSeconds, setNowSeconds] = useState(() => Date.now() / 1000);
+  const offersStopTracking = !!onStopTracking && tx.pending;
+  const stopTrackingDue = stopTrackingDueIn(tx, nowSeconds);
+  const canStopTracking = offersStopTracking && stopTrackingDue <= 0;
+  useEffect(() => {
+    if (!offersStopTracking || !(stopTrackingDue > 0)) return;
+    const timer = setTimeout(() => setNowSeconds(Date.now() / 1000), stopTrackingDue * 1000);
+    return () => clearTimeout(timer);
+  }, [offersStopTracking, stopTrackingDue]);
 
   // Components from customization or defaults
   const {
@@ -452,6 +540,29 @@ export function TransactionDetails<T extends Transaction>({
 
   return (
     <div className={cn('novatx:flex novatx:flex-col novatx:gap-6 novatx:p-4', className, classNames?.container)}>
+      {canStopTracking && (
+        <div
+          className={cn(
+            'novatx:flex novatx:flex-col novatx:gap-2 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:p-3',
+            classNames?.stopTrackingContainer,
+          )}
+        >
+          <p className={cn('novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]', classNames?.stopTrackingHint)}>
+            {transactionDetails.stopTrackingHint}
+          </p>
+          <button
+            type="button"
+            onClick={() => onStopTracking(tx.txKey)}
+            className={cn(
+              'novatx:cursor-pointer novatx:self-start novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+              classNames?.stopTrackingButton,
+            )}
+          >
+            {actions.stopTracking}
+          </button>
+        </div>
+      )}
+
       {/* ── Header ── */}
       <div className={cn('novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div className="novatx:flex novatx:items-center novatx:gap-3">
@@ -490,26 +601,27 @@ export function TransactionDetails<T extends Transaction>({
       {/* ── Core Transaction Card ── */}
       <CSectionCard className={classNames?.coreInfoCard}>
         {/* Status Header */}
-        <div className="novatx:flex novatx:gap-2 novatx:flex-wrap novatx:items-center novatx:justify-between novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-4">
-          <div className="novatx:flex novatx:items-center novatx:gap-3">
+        <div className="novatx:relative novatx:flex novatx:gap-2 novatx:flex-wrap novatx:items-center novatx:justify-between novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-4">
+          <StatusEdge tone={tone} progress={progressOf(tx)} />
+          <div className="novatx:relative novatx:flex novatx:items-center novatx:gap-3">
             <div
               className={cn(
-                'novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-corners)]',
-                status === 'success'
-                  ? 'novatx:bg-emerald-500/10 novatx:text-emerald-500'
-                  : status === 'pending'
-                    ? 'novatx:bg-amber-500/10 novatx:text-amber-500'
-                    : 'novatx:bg-rose-500/10 novatx:text-rose-500',
+                'novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-corners)] novatx:transition-colors novatx:duration-300',
+                STATUS_CLASSES[tone].icon,
                 classNames?.statusIconContainer,
               )}
             >
-              {status === 'success' ? (
-                <CheckCircleIcon className="novatx:h-6 novatx:w-6" />
-              ) : status === 'pending' ? (
-                <ClockIcon className="novatx:h-6 novatx:w-6" />
-              ) : (
-                <ExclamationTriangleIcon className="novatx:h-6 novatx:w-6" />
-              )}
+              <MorphIcon iconKey={tone} animateFirst>
+                {tone === 'pending' ? (
+                  <QuasarLoader size={24} accent="var(--tuwa-pending-icon)" />
+                ) : tone === 'success' ? (
+                  <DrawnCheck variant="disc" className="novatx:h-6 novatx:w-6" />
+                ) : tone === 'neutral' ? (
+                  <ArrowPathIcon className="novatx:h-6 novatx:w-6" />
+                ) : (
+                  <DrawnCross variant="disc" className="novatx:h-6 novatx:w-6" />
+                )}
+              </MorphIcon>
             </div>
             <div>
               <h3 className="novatx:text-lg novatx:font-black novatx:font-mono novatx:uppercase novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)]">
@@ -517,25 +629,21 @@ export function TransactionDetails<T extends Transaction>({
               </h3>
               <p
                 className={cn(
-                  'novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest',
-                  status === 'success'
-                    ? 'novatx:text-emerald-500'
-                    : status === 'pending'
-                      ? 'novatx:text-amber-500'
-                      : 'novatx:text-rose-500',
+                  'novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest novatx:transition-colors novatx:duration-300',
+                  STATUS_CLASSES[tone].label,
                 )}
               >
-                {tx.pending ? statuses.pending : (tx.status ?? statuses.failed)}
+                <MorphText>{statusLabelOf(tx, statuses)}</MorphText>
               </p>
             </div>
           </div>
           {/* Sync Status Badge */}
           {tx.syncStatus === 'pending-sync' && (
             <div
-              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-amber-500/10 novatx:px-2.5 novatx:py-1.5 novatx:text-amber-500"
+              className="novatx:ml-auto novatx:flex novatx:items-center novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-pending-bg)] novatx:px-2.5 novatx:py-1.5 novatx:text-[var(--tuwa-pending-text)]"
               title={transactionDetails.syncStatus.pendingTooltip}
             >
-              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse" />
+              <CloudArrowUpIcon className="novatx:h-4 novatx:w-4 novatx:animate-pulse novatx:motion-reduce:animate-none" />
               <span className="novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest">
                 {transactionDetails.syncStatus.pending}
               </span>
@@ -556,7 +664,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {/* Body */}
         <div className="novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4">
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 sm:novatx:grid-cols-2">
+          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 novatx:sm:grid-cols-2">
             <CCopyableField
               label={transactionDetails.hash}
               value={evmTx?.hash || tx.txKey}
@@ -598,7 +706,7 @@ export function TransactionDetails<T extends Transaction>({
             </div>
           </div>
 
-          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-8 sm:novatx:grid-cols-2">
+          <div className="novatx:grid novatx:grid-cols-1 novatx:gap-4 novatx:sm:grid-cols-2">
             <CCopyableField label={transactionDetails.from} value={tx.from} />
             {evmTx?.to ? (
               <CCopyableField label={transactionDetails.to} value={evmTx.to} />
@@ -628,9 +736,9 @@ export function TransactionDetails<T extends Transaction>({
             <span className="novatx:capitalize">{tx.tracker}</span>
           </CMetadataRow>
           <CMetadataRow icon={LinkIcon} label={transactionDetails.connector}>
-            <span className="novatx:capitalize">{tx.connectorType}</span>
+            <span className="novatx:capitalize">{walletPartOf(tx.connectorType)}</span>
           </CMetadataRow>
-          {tx.confirmations && Number(tx.confirmations) > 0 && (
+          {hasConfirmations(tx.confirmations) && (
             <CMetadataRow icon={CheckBadgeIcon} label={transactionDetails.confirmations}>
               {tx.confirmations}
               {tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}
@@ -655,6 +763,11 @@ export function TransactionDetails<T extends Transaction>({
             <EvmExecutionData
               tx={evmTx}
               labels={transactionDetails}
+              linkOf={(hash) =>
+                hash === (tx as unknown as EvmTransaction).replaces
+                  ? explorerUrlOfReplaced(foundAdapter, tx, hash)
+                  : explorerUrlOfHash(foundAdapter, tx, hash)
+              }
               components={{ DetailItem: CDetailItem, CopyableField: CCopyableField }}
             />
           )}

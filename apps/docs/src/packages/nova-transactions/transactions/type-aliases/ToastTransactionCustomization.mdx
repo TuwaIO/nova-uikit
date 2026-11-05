@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ToastTransactionCustomization**\<`T`\> = `object`
 
-Defined in: [components/ToastTransaction.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L32)
+Defined in: [components/ToastTransaction.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L34)
 
 Class names and replacement components for the parts of [ToastTransaction](?path=/docs/packages-nova-transactions-transactions-functions-toasttransaction--docs).
 
@@ -24,7 +24,7 @@ The transaction type of the Pulsar store.
 
 > `optional` **classNames?**: `object`
 
-Defined in: [components/ToastTransaction.tsx:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L54)
+Defined in: [components/ToastTransaction.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L58)
 
 Granular classNames for all sub-elements
 
@@ -142,6 +142,18 @@ Classes for the status badge icon
 
 Classes for the status badge label
 
+#### statusEdge?
+
+> `optional` **statusEdge?**: `string`
+
+Classes for the strip and the wash of the status color
+
+#### statusLine?
+
+> `optional` **statusLine?**: `string`
+
+Classes for the status line at the top (status + confirmations)
+
 #### title?
 
 > `optional` **title?**: `string`
@@ -166,7 +178,7 @@ Classes for the TxInfo button
 
 > `optional` **components?**: `object`
 
-Defined in: [components/ToastTransaction.tsx:34](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L34)
+Defined in: [components/ToastTransaction.tsx:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/ToastTransaction.tsx#L36)
 
 Components that replace the default parts.
 
@@ -180,8 +192,8 @@ The cancel button.
 
 > `optional` **ConfirmationsBadge?**: `ComponentType`\<\{ `className?`: `string`; `count`: `number` \| `string`; \}\>
 
-The badge with the number of confirmations, shown when it is above 0. It also receives `required` (the required
-confirmations) and `isSuccess`.
+The badge with the number of confirmations, shown next to the status when it is above 0. It also receives `required`
+(the required confirmations) and `isSuccess`.
 
 #### SpeedUpButton?
 
@@ -199,7 +211,13 @@ The title and the description.
 
 > `optional` **StatusBadge?**: `ComponentType`\<[`TransactionStatusBadgeProps`](?path=/docs/packages-nova-transactions-transactions-type-aliases-transactionstatusbadgeprops--docs)\<`T`\>\>
 
-The status badge.
+The status line at the top, which gets `variant="plain"`.
+
+#### StatusEdge?
+
+> `optional` **StatusEdge?**: `ComponentType`\<[`StatusEdgeProps`](?path=/docs/packages-nova-core-type-aliases-statusedgeprops--docs)\>
+
+The strip and the wash of the status color along the top of the toast.
 
 #### TransactionKey?
 

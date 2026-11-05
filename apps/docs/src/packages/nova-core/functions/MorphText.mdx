@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/MorphText" />
+
+# MorphText()
+
+> **MorphText**(`props`): `Element`
+
+Defined in: [components/MorphText.tsx:128](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/MorphText.tsx#L128)
+
+A text that morphs when it changes, as a status from "Pending" to "Success". At rest it is a plain text in a `span`, so lists
+stay light and the text wraps and copies as usual; only the change is split into letters. One element holds the text
+throughout, so a live region around it announces a change once. With `prefers-reduced-motion` the text just changes.
+
+## Parameters
+
+### props
+
+[`MorphTextProps`](?path=/docs/packages-nova-core-type-aliases-morphtextprops--docs)
+
+See [MorphTextProps](?path=/docs/packages-nova-core-type-aliases-morphtextprops--docs).
+
+## Returns
+
+`Element`
+
+The text.

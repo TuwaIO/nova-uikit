@@ -16,6 +16,12 @@
   --tuwa-docs-via: #1d4ed8;
   --tuwa-docs-secondary: #0284c7;
   --tuwa-docs-gradient: linear-gradient(135deg, #0052ff 0%, #1d4ed8 50%, #0284c7 100%);
+  /* The page furniture has tokens of its own: the theme of a customized story sets --tuwa-* for the whole document */
+  --tuwa-docs-text: #111827;
+  --tuwa-docs-text-secondary: #6b7280;
+  --tuwa-docs-text-tertiary: #9ca3af;
+  --tuwa-docs-border: #e5e7eb;
+  --tuwa-docs-surface: #f9fafb;
 }
 
 .dark {
@@ -23,6 +29,11 @@
   --tuwa-docs-via: #3b82f6;
   --tuwa-docs-secondary: #7dd3fc;
   --tuwa-docs-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #7dd3fc 100%);
+  --tuwa-docs-text: #f9fafb;
+  --tuwa-docs-text-secondary: #9ca3af;
+  --tuwa-docs-text-tertiary: #6b7280;
+  --tuwa-docs-border: #374151;
+  --tuwa-docs-surface: #1f2937;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -74,10 +85,10 @@
 .tuwa-docs-footer {
   margin-top: 64px;
   padding-top: 24px;
-  border-top: 1px solid var(--tuwa-border-primary);
+  border-top: 1px solid var(--tuwa-docs-border);
   font-size: 12px;
   line-height: 1.5;
-  color: var(--tuwa-text-secondary);
+  color: var(--tuwa-docs-text-secondary);
 }
 
 .tuwa-docs-footer__row {
@@ -91,7 +102,7 @@
 .tuwa-docs-footer__divided {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--tuwa-border-primary);
+  border-top: 1px solid var(--tuwa-docs-border);
 }
 
 .tuwa-docs-footer__row.tuwa-docs-footer__divided {
@@ -138,7 +149,7 @@
 }
 
 .tuwa-docs-footer__link {
-  color: var(--tuwa-text-secondary);
+  color: var(--tuwa-docs-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -180,7 +191,7 @@
 
 .tuwa-docs-footer__description {
   font-size: 13px;
-  color: var(--tuwa-text-primary);
+  color: var(--tuwa-docs-text);
 }
 
 .tuwa-docs-footer .tuwa-docs-footer__license {
@@ -189,7 +200,7 @@
 
 .tuwa-docs-footer__copyright {
   text-align: center;
-  color: var(--tuwa-text-tertiary);
+  color: var(--tuwa-docs-text-tertiary);
 }
 
 @media (max-width: 640px) {
@@ -220,11 +231,11 @@
 .tuwa-docs-note {
   margin: 0 0 24px;
   padding: 10px 14px;
-  border: 1px solid var(--tuwa-border-primary);
+  border: 1px solid var(--tuwa-docs-border);
   border-left: 3px solid var(--tuwa-docs-primary);
   border-radius: var(--tuwa-rounded-corners);
-  background: var(--tuwa-bg-secondary);
-  color: var(--tuwa-text-secondary);
+  background: var(--tuwa-docs-surface);
+  color: var(--tuwa-docs-text-secondary);
   font-size: 13px;
   line-height: 1.5;
 }

@@ -6,10 +6,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **TxActionButton**\<`T`\>(`__namedParameters`): `Element`
 
-Defined in: [components/TxActionButton.tsx:114](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TxActionButton.tsx#L114)
+Defined in: [components/TxActionButton.tsx:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TxActionButton.tsx#L103)
 
 A stateful button that orchestrates the full transaction lifecycle:
-idle → loading → succeed / failed / replaced → idle (after `resetTimeout`).
+idle → loading → succeed / failed / replaced → idle (after `resetTimeout`). After a speed-up it goes on with the new
+record and stays busy until that has a result; a record that is removed sends it back to idle.
 
 When rendered inside a `NovaTransactionsProvider`, any error thrown by `action()`
 before the transaction reaches the pool is automatically surfaced as a

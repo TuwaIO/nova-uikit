@@ -272,6 +272,7 @@ export function NovaConnectProvider({
   appChains,
   solanaRPCUrls,
   transactionPool,
+  removeTxFromPool,
   pulsarAdapter,
   withImpersonated,
   withBalance,
@@ -411,6 +412,7 @@ export function NovaConnectProvider({
         solanaRPCUrls={solanaRPCUrls}
         appChains={appChains}
         transactionPool={transactionPool}
+        removeTxFromPool={removeTxFromPool}
         pulsarAdapter={pulsarAdapter}
         customization={customization?.modals?.connectedModal}
         pagination={pagination}

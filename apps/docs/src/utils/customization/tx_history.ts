@@ -57,7 +57,7 @@ export const transactions_history_customization: TransactionsHistoryCustomizatio
       'flex items-center gap-x-1',
       SHARED_STYLES.textAccent,
       'hover:underline transition-colors',
-      '[&_span]:font-[DM_Mono]',
+      '[&_span]:font-[family-name:DM_Mono]',
     ),
     itemHashCopyButton: cn('cursor-pointer', ICON_BUTTON_STYLES.copy),
 

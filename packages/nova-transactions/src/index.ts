@@ -10,3 +10,4 @@ export * from './i18n/en';
 export * from './i18n/types';
 export * from './i18n/ua';
 export * from './i18n/zh';
+export { successorOf } from './utils/replacement';

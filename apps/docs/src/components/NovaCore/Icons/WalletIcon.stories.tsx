@@ -29,6 +29,7 @@ const meta: Meta<typeof WalletIcon> = {
 export default meta;
 type Story = StoryObj<typeof WalletIcon>;
 
+/** MetaMask has no mono icon: asked for one, it is drawn in a style it has. */
 export const Metamask: Story = {
   args: {
     walletName: 'metamask',
@@ -54,6 +55,7 @@ export const WalletConnect: Story = {
 };
 
 export const Impersonated: Story = {
+  argTypes: { variant: { control: false } },
   args: {
     walletName: 'impersonatedwallet',
     className: 'w-10 h-10',
@@ -61,6 +63,7 @@ export const Impersonated: Story = {
 };
 
 export const Fallback: Story = {
+  argTypes: { variant: { control: false } },
   args: {
     walletName: 'unknown-wallet-xyz',
     className: 'w-10 h-10',

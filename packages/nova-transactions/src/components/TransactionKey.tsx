@@ -9,6 +9,7 @@ import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { explorerUrlOfHash, explorerUrlOfReplaced } from '../utils/replacement';
 import { HashLink, HashLinkProps } from './HashLink';
 
 /**
@@ -96,6 +97,7 @@ export function TransactionKey<T extends Transaction>({
     const txRecord = tx as Record<string, unknown>;
     const onChainHash = typeof txRecord.hash === 'string' ? txRecord.hash : undefined;
     const replacedHash = typeof txRecord.replacedTxHash === 'string' ? txRecord.replacedTxHash : undefined;
+    const replaces = typeof txRecord.replaces === 'string' ? txRecord.replaces : undefined;
 
     if (!onChainHash && !replacedHash) return null;
 
@@ -108,6 +110,7 @@ export function TransactionKey<T extends Transaction>({
                 label: hashLabels.original,
                 hash: onChainHash,
                 variant: 'compact',
+                explorerUrl: explorerUrlOfHash(foundAdapter, tx, onChainHash),
               },
               originalHashLinkClassNames,
             )}
@@ -115,20 +118,32 @@ export function TransactionKey<T extends Transaction>({
             renderHash({
               label: hashLabels.replaced,
               hash: replacedHash,
-              explorerUrl: foundAdapter.getExplorerTxUrl(tx),
+              explorerUrl: explorerUrlOfHash(foundAdapter, tx, replacedHash),
             })}
         </>
       );
     }
 
     return (
-      onChainHash &&
-      typeof foundAdapter.getExplorerTxUrl !== 'undefined' &&
-      renderHash({
-        label: hashLabels.default,
-        hash: onChainHash,
-        explorerUrl: foundAdapter.getExplorerTxUrl(tx),
-      })
+      <>
+        {onChainHash &&
+          typeof foundAdapter.getExplorerTxUrl !== 'undefined' &&
+          renderHash({
+            label: hashLabels.default,
+            hash: onChainHash,
+            explorerUrl: foundAdapter.getExplorerTxUrl(tx),
+          })}
+        {replaces &&
+          renderHash(
+            {
+              label: hashLabels.replaces,
+              hash: replaces,
+              variant: 'compact',
+              explorerUrl: explorerUrlOfReplaced(foundAdapter, tx, replaces),
+            },
+            originalHashLinkClassNames,
+          )}
+      </>
     );
   })();
 

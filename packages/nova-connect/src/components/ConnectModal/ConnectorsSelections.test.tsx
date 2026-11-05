@@ -32,7 +32,7 @@ vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) => selector({ getAdapter }),
 }));
 
-import { ConnectorsSelections, type ConnectorsSelectionsProps } from './ConnectorsSelections';
+import { ConnectorsSelections, type ConnectorsSelectionsProps, showsInstalledBlock } from './ConnectorsSelections';
 
 const connectors = [
   { name: 'Safe', adapters: [OrbitAdapter.EVM], connectors: [] },
@@ -54,6 +54,17 @@ const renderInstalled = (): string[] => {
   ) as { props: { selectionsData: { connectorGroups: { installed: { name: string }[] } } } };
   return element.props.selectionsData.connectorGroups.installed.map((group) => group.name);
 };
+
+describe('showsInstalledBlock', () => {
+  it('hides the empty block when a group below lists a wallet, as it would say that nothing is installed', () => {
+    expect(showsInstalledBlock({ installed: [], Custom: [{}], popular: [] })).toBe(false);
+  });
+
+  it('shows the block with wallets, and its empty state when no group has any', () => {
+    expect(showsInstalledBlock({ installed: [{}], popular: [{}] })).toBe(true);
+    expect(showsInstalledBlock({ installed: [], popular: [] })).toBe(true);
+  });
+});
 
 describe('ConnectorsSelections', () => {
   afterEach(() => unmount());

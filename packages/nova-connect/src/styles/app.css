@@ -38,3 +38,92 @@
 div[data-radix-popper-content-wrapper] {
   z-index: 101 !important;
 }
+
+/* The slow motion of the picture of the "About wallets" slides, after it has drawn itself */
+.novacon-art-flow {
+  stroke-dasharray: 5 95;
+  stroke-dashoffset: 5;
+  opacity: 0;
+  animation: novacon-art-flow var(--art-seconds, 9s) linear var(--art-delay, 2s) infinite;
+}
+
+.novacon-art-twinkle {
+  opacity: 0.2;
+  animation: novacon-art-twinkle 7s ease-in-out var(--art-delay, 0s) infinite;
+}
+
+.novacon-art-breathe {
+  opacity: 0.18;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: novacon-art-breathe 5s ease-in-out infinite;
+}
+
+.novacon-art-float {
+  animation: novacon-art-float 8s ease-in-out infinite;
+}
+
+@keyframes novacon-art-flow {
+  0% {
+    stroke-dashoffset: 5;
+    opacity: 0;
+  }
+
+  8%,
+  58% {
+    opacity: var(--art-opacity, 1);
+  }
+
+  66%,
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0;
+  }
+}
+
+@keyframes novacon-art-twinkle {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+
+  50% {
+    opacity: 0.42;
+  }
+}
+
+@keyframes novacon-art-breathe {
+  0%,
+  100% {
+    transform: scale(0.86);
+    opacity: 0.12;
+  }
+
+  50% {
+    transform: scale(1.14);
+    opacity: 0.26;
+  }
+}
+
+@keyframes novacon-art-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .novacon-art-flow {
+    display: none;
+  }
+
+  .novacon-art-breathe,
+  .novacon-art-float,
+  .novacon-art-twinkle {
+    animation: none;
+  }
+}

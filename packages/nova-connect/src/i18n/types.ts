@@ -48,6 +48,8 @@ export type NovaConnectLabels = {
   error: string;
   /** Transaction status in the connect button (default: `Replaced`) */
   replaced: string;
+  /** Transaction status in the connect button (default: `Cancelled`) */
+  cancelled: string;
   /** Badge of the last used wallet and title of the recent wallets section (default: `Recent`) */
   recent: string;
   /** Status of a pending transaction in the connect button and the connected modal (default: `Transaction loading`) */
@@ -58,6 +60,8 @@ export type NovaConnectLabels = {
   transactionError: string;
   /** Status of a replaced transaction in the connect button (default: `Transaction replaced`) */
   transactionReplaced: string;
+  /** Status of a cancelled transaction in the connect button (default: `Transaction cancelled`) */
+  transactionCancelled: string;
 
   // Modal titles - Headers for different modal dialogs
   /** Title of the "About wallets" screen and label of its info button (default: `About wallets`) */
@@ -366,7 +370,7 @@ export type NovaConnectLabels = {
    * for this network`)
    */
   explorerNotAvailable: string;
-  /** ARIA label of the wallet button of the connected modal (default: `Connect Wallet - {count} wallets available`) */
+  /** ARIA label of the wallet button of the connected modal, which opens the connected wallets (default: `Connected Wallets - {count} connected`) */
   connectWalletsAvailable: string;
   /**
    * ARIA label of the network button of the connected modal (default: `Switch network - {count} networks available`)

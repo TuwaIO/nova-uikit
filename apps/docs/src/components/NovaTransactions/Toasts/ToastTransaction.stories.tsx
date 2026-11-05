@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ToastTransaction } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { action } from 'storybook/actions';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
@@ -22,7 +23,7 @@ const meta: Meta<typeof ToastTransaction> = {
     }),
     adapter: [mockEvmAdapter],
     connectedWalletAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-    openTxInfoModal: () => console.log('openWalletInfoModal called'),
+    openTxInfoModal: action('openTxInfoModal'),
   },
   argTypes: {
     tx: {
@@ -56,8 +57,8 @@ export const Success: Story = {
 };
 
 /**
- * A pending EVM transaction that can be sped up or cancelled. These actions are visible
- * because the transaction tracker is 'ethereum' and it belongs to the `connectedWalletAddress`.
+ * A pending EVM transaction that can be sped up or cancelled: its tracker is 'ethereum', MetaMask sent it from the
+ * `connectedWalletAddress`, and the tracker has read its nonce and fees.
  */
 export const PendingWithActions: Story = {
   args: {
@@ -65,6 +66,12 @@ export const PendingWithActions: Story = {
       pending: true,
       status: undefined,
       tracker: TransactionTracker.Ethereum,
+      connectorType: 'evm:metamask',
+      from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      nonce: 7,
+      maxFeePerGas: '1000',
+      maxPriorityFeePerGas: '100',
     }),
   },
 };
@@ -100,13 +107,15 @@ export const Failed: Story = {
 };
 
 /**
- * A transaction that was replaced (e.g., by a speed-up).
+ * A transaction replaced by something else than a speed-up. The toast stays on its record and shows both hashes: only after a
+ * speed-up it goes on with the record of the new hash.
  */
 export const Replaced: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Replaced,
       replacedTxHash: '0x5555555555555555555555555555555555555555555555555555555555555555',
+      replacedReason: 'replaced',
     }),
   },
 };
@@ -118,6 +127,7 @@ export const Solana: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.SOLANA, { pending: true, status: undefined }),
     adapter: [mockSolanaAdapter],
+    connectedWalletAddress: '7Kx5wQ8P3nZ29vL1mY4x6tR0sB8vC3dE9fG1hJ2kL3mN',
   },
 };
 
@@ -135,12 +145,20 @@ export const WithCustomIcon: Story = {
 };
 
 /**
- * An example of extensive customization, replacing all major sub-components of the toast.
+ * An example of customization: the status badge, the Open transaction button and the Speed up button are replaced.
  */
 export const FullyCustomized: Story = {
   name: 'With Full Customization',
   args: {
-    tx: createMockTx(OrbitAdapter.EVM, { pending: true, tracker: TransactionTracker.Ethereum }),
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: true,
+      tracker: TransactionTracker.Ethereum,
+      connectorType: 'evm:metamask',
+      sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      nonce: 7,
+      maxFeePerGas: '1000',
+      maxPriorityFeePerGas: '100',
+    }),
     customization: {
       components: {
         StatusBadge: () => (

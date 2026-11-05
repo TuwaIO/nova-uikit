@@ -1,5 +1,6 @@
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import {
+  AnimatedHeight,
   CloseIcon,
   cn,
   Dialog,
@@ -30,7 +31,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
@@ -110,23 +110,11 @@ export interface BottomButtonConfig {
 
 // --- Component Props Types ---
 /**
- * Props for a custom container of the modal content (`customization.components.ModalContainer`). To keep the height of
- * the wallet list on the network and connecting screens, a custom container forwards `ref` to its element (the modal
- * measures it on the wallet list), passes `className` and `style` to it and is a flex column; a custom `MainContent` is a
- * flex container. Without `ref`, these screens take the height of their content.
+ * Props for a custom container of the modal content (`customization.components.ModalContainer`).
  */
 export type ConnectModalContainerProps = {
-  /**
-   * Classes from `classNames.modalContainer`; on the `network` and `connecting` screens, preceded by
-   * `novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]`, which keeps the height of the wallet
-   * list (at most the height of the window less 2rem)
-   */
+  /** Classes from `classNames.modalContainer` */
   className?: string;
-  /**
-   * On the `network` and `connecting` screens, the `--novacon-connect-list-height` variable: the height of the wallet
-   * list shown before them, in pixels
-   */
-  style?: React.CSSProperties;
   /** The header, main content and footer */
   children: React.ReactNode;
   /** State of the modal */
@@ -859,31 +847,6 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const CustomDialogContent = components.DialogContent || DialogContent;
   const CustomMotionDiv = components.MotionDiv || motion.div;
 
-  // The network and connecting screens keep the height of the wallet list, so choosing a wallet, its network (and
-  // Back) do not resize the modal. `DialogContent` of nova-core takes a smaller height at once and animates a larger
-  // one, so a screen taller than the list (a wallet family of one or two, an error with details) only grows
-  const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  const [listHeight, setListHeight] = useState<number | null>(null);
-  useEffect(() => {
-    if (!isConnectModalOpen || !container) {
-      // Forgotten when the modal closes or its element is removed, so a modal opened later straight on the connecting
-      // screen does not take the height of an old list
-
-      setListHeight(null);
-      return;
-    }
-    if (connectModalContentType !== 'connectors' || typeof ResizeObserver === 'undefined') return;
-    // `offsetHeight` is the height of the layout, without the scale of the opening animation. Measured at once too: the
-    // observer reports only when the page renders a frame
-    const measure = () => setListHeight(container.offsetHeight);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, [isConnectModalOpen, container, connectModalContentType]);
-  const keepsListHeight =
-    (connectModalContentType === 'network' || connectModalContentType === 'connecting') && listHeight !== null;
-
   /**
    * Gets the appropriate title for the current modal content
    */
@@ -1154,6 +1117,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       case 'impersonate':
         return {
           title: labels.connect,
+          // A click on an empty field would do nothing, and say nothing
+          disabled: !handlers.onActionClick?.impersonate && !impersonatedAddress.trim(),
           onClick: async () => {
             if (handlers.onActionClick?.impersonate) {
               await handlers.onActionClick.impersonate(modalData);
@@ -1223,24 +1188,12 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
 
   return (
     <CustomDialog open={isConnectModalOpen} onOpenChange={handleOpenChange}>
-      <CustomDialogContent className={cn('novacon:w-full novacon:sm:max-w-md')}>
+      {/* The top edge stays and the body glides: a centered window would move the tabs with every change of height */}
+      <CustomDialogContent className={cn('novacon:w-full novacon:sm:max-w-md')} anchorTop animateHeight={false}>
         {/* No `layout`: a layout animation follows a size change from the old box, which stretches the window for a
-            frame. A layout root keeps the layout animations inside it (the network tabs) relative to it, so they do
-            not follow the window when it moves to stay centered */}
+            frame. A layout root is what the indicator of the network tabs measures against in a fixed window */}
         <CustomMotionDiv layoutRoot>
-          <ModalContainer
-            ref={setContainer}
-            className={cn(
-              keepsListHeight && 'novacon:min-h-[min(var(--novacon-connect-list-height),calc(100dvh_-_2rem))]',
-              classNames.modalContainer?.({ modalData }),
-            )}
-            style={
-              keepsListHeight
-                ? ({ '--novacon-connect-list-height': `${listHeight}px` } as React.CSSProperties)
-                : undefined
-            }
-            modalData={modalData}
-          >
+          <ModalContainer className={cn(classNames.modalContainer?.({ modalData }))} modalData={modalData}>
             <ModalHeader className={classNames.header?.({ modalData })} modalData={modalData}>
               <Title className={classNames.title?.({ modalData })} modalData={modalData}>
                 {connectModalContentType === 'connectors' && (
@@ -1264,17 +1217,12 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
               />
             </ModalHeader>
 
-            <MainContent
-              className={cn(
-                // The footer at the bottom of the kept height, the status of the connecting screen in the middle
-                (connectModalContentType === 'network' || connectModalContentType === 'connecting') && 'novacon:flex-1',
-                connectModalContentType === 'connecting' && 'novacon:justify-center',
-                classNames.mainContent?.({ modalData }),
-              )}
-              modalData={modalData}
-            >
-              {renderMainContent()}
-            </MainContent>
+            {/* The height glides to each screen and tab, and what is under it moves along */}
+            <AnimatedHeight>
+              <MainContent className={classNames.mainContent?.({ modalData })} modalData={modalData}>
+                {renderMainContent()}
+              </MainContent>
+            </AnimatedHeight>
 
             <Footer className={classNames.footer?.({ modalData })} modalData={modalData}>
               <div className="novacon:flex novacon:items-center novacon:gap-4">

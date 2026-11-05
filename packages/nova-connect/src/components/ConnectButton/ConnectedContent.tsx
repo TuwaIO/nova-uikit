@@ -3,8 +3,8 @@
  * customization options.
  */
 
-import { ChevronArrowWithAnim, cn } from '@tuwaio/nova-core';
-import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
+import { ChevronArrowWithAnim, cn, MorphText } from '@tuwaio/nova-core';
+import { Transaction } from '@tuwaio/pulsar-core';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -25,6 +25,7 @@ import {
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
+import { connectedStatusFor, nextConnectedStatus } from './connectedStatus';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
@@ -220,7 +221,11 @@ const DefaultMainContent = ({
     >
       {statusDisplay.avatarIcon}
       <span className="novacon:text-[var(--tuwa-text-primary)] novacon:font-medium novacon:hidden novacon:min-[480px]:block">
-        {statusDisplay.displayName}
+        {typeof statusDisplay.displayName === 'string' ? (
+          <MorphText>{statusDisplay.displayName}</MorphText>
+        ) : (
+          statusDisplay.displayName
+        )}
       </span>
       <div aria-hidden="true">
         <ChevronArrowWithAnim isOpen={isConnectedModalOpen} className="novacon:xs:hidden" />
@@ -235,7 +240,7 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: Connected
   return (
     <div
       className={cn(
-        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite",
+        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite novacon:motion-reduce:after:animate-none",
         className,
       )}
       aria-hidden="true"
@@ -258,10 +263,11 @@ const DefaultBalanceDivider = ({ className }: ConnectedContentBalanceDividerProp
 /**
  * The content of the connect button while a wallet is connected: the native balance with three decimals (with
  * `withBalance`, from the `sm` breakpoint), the avatar and the ENS or SNS name (or shortened address) of the active
- * wallet. While a transaction
- * of the wallet in `transactionPool` is pending it shows a loading animation; when a pending transaction finishes it
- * shows the result (succeeded, failed, replaced) for `customization.config.statusResetTimeout` milliseconds. The status
- * is kept in `connectedButtonStatus` of `NovaConnectProvider`.
+ * wallet. While a transaction of the wallet in `transactionPool` is pending it shows a loading animation; when a
+ * transaction finishes it shows the result (succeeded, failed, cancelled, replaced) for
+ * `customization.config.statusResetTimeout` milliseconds, even while another transaction is still pending, and then goes back
+ * to the animation. A speed-up is no result: the button stays busy until the record of the new hash has one. A change of name
+ * morphs the text. The status is kept in `connectedButtonStatus` of `NovaConnectProvider`.
  *
  * Props: {@link ConnectedContentProps}; the ref is forwarded to the container.
  *
@@ -339,6 +345,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       setConnectedButtonStatus('idle');
     }, [activeConnection?.address, setConnectedButtonStatus]);
 
+    const prevAddressRef = useRef(activeConnection?.address);
+
     // Monitor transaction pool changes
     useEffect(() => {
       if (!activeConnection || !activeConnection?.isConnected) {
@@ -352,38 +360,14 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];
-      let newStatus: ButtonTxStatus = 'idle';
-
-      const isAnyTxLoading = currentPool.some((tx) => tx.pending);
-
-      if (isAnyTxLoading) {
-        newStatus = 'loading';
-      } else {
-        for (const currentTx of currentPool) {
-          const prevTx = prevPool.find((tx) => tx.txKey === currentTx.txKey);
-
-          // Only trigger status change if the transaction was previously pending
-          const wasPending = prevTx?.pending;
-
-          if (wasPending && currentTx.status && currentTx.status !== prevTx?.status) {
-            switch (currentTx.status) {
-              case TransactionStatus.Success:
-                newStatus = 'succeed';
-                break;
-              case TransactionStatus.Replaced:
-                newStatus = 'replaced';
-                break;
-              case TransactionStatus.Failed:
-                newStatus = 'failed';
-                break;
-            }
-          }
-        }
+      // Another wallet: what is shown now is of the old one, and the reset above must stand
+      if (prevAddressRef.current === activeConnection.address) {
+        // Goes to idle when nothing is pending any more, for example as the tracking of the last transaction was stopped
+        setConnectedButtonStatus(nextConnectedStatus(connectedButtonStatus, connectedStatusFor(currentPool, prevPool)));
+      } else if (currentPool.some((tx) => tx.pending)) {
+        setConnectedButtonStatus('loading');
       }
-
-      if (newStatus === 'loading' || newStatus !== 'idle') {
-        setConnectedButtonStatus(newStatus);
-      }
+      prevAddressRef.current = activeConnection.address;
 
       prevTxPoolRef.current = currentPool;
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -391,9 +375,10 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     // Auto-reset status after showing success/error states
     useEffect(() => {
-      if (['succeed', 'failed', 'replaced'].includes(connectedButtonStatus)) {
+      if (['succeed', 'failed', 'replaced', 'cancelled'].includes(connectedButtonStatus)) {
         const timer = setTimeout(() => {
-          setConnectedButtonStatus('idle');
+          // Back to busy if another transaction is still pending, which a result does not end
+          setConnectedButtonStatus(prevTxPoolRef.current?.some((tx) => tx.pending) ? 'loading' : 'idle');
         }, statusResetTimeout);
         return () => clearTimeout(timer);
       }
@@ -409,6 +394,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
             return labels.transactionError;
           case 'replaced':
             return labels.transactionReplaced;
+          case 'cancelled':
+            return labels.transactionCancelled;
           case 'loading':
             return labels.transactionLoading;
           default:
@@ -456,13 +443,16 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
             ariaLabel: baseAriaLabel,
           };
         case 'replaced':
+        case 'cancelled':
           return {
-            displayName: labels.replaced,
+            displayName: connectedButtonStatus === 'cancelled' ? labels.cancelled : labels.replaced,
             avatarIcon: (
               <StatusIcon
                 txStatus="replaced"
                 colorVar="text"
-                aria-label={labels.transactionReplaced}
+                aria-label={
+                  connectedButtonStatus === 'cancelled' ? labels.transactionCancelled : labels.transactionReplaced
+                }
                 customization={customization?.childCustomizations?.statusIcon?.replaced}
               >
                 M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0

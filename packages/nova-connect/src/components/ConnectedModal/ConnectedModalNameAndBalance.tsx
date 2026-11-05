@@ -3,10 +3,9 @@
  * display.
  */
 
-import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/solid';
-import { cn, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
-import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
+import { type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
@@ -20,18 +19,6 @@ const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
   exit: { opacity: 0, y: -8, transition: { duration: 0.2, ease: 'easeIn' } },
-};
-
-const DEFAULT_COPY_ICON_ANIMATION_VARIANTS: Variants = {
-  initial: { scale: 0.6, opacity: 0, rotate: 90 },
-  animate: { scale: 1, opacity: 1, rotate: 0, transition: { duration: 0.2, ease: 'easeInOut' } },
-  exit: { scale: 0.6, opacity: 0, rotate: -90, transition: { duration: 0.2, ease: 'easeInOut' } },
-};
-
-const DEFAULT_CHECK_ICON_ANIMATION_VARIANTS: Variants = {
-  initial: { scale: 0.6, opacity: 0, rotate: -90 },
-  animate: { scale: 1, opacity: 1, rotate: 0, transition: { duration: 0.2, ease: 'easeInOut' } },
-  exit: { scale: 0.6, opacity: 0, rotate: 90, transition: { duration: 0.2, ease: 'easeInOut' } },
 };
 
 // --- Types for Customization ---
@@ -344,30 +331,7 @@ const DefaultCopyButton: React.FC<ConnectedModalNameAndBalanceCopyButtonProps> =
       disabled={disabled}
       data-testid="copy-address-button"
     >
-      {/* Animated Icon Transition */}
-      <AnimatePresence mode="wait" initial={false}>
-        {isCopied ? (
-          <motion.div
-            key="check-icon"
-            variants={DEFAULT_CHECK_ICON_ANIMATION_VARIANTS}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <CheckIcon className="novacon:w-5 novacon:h-5" aria-hidden="true" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="copy-icon"
-            variants={DEFAULT_COPY_ICON_ANIMATION_VARIANTS}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <DocumentDuplicateIcon className="novacon:w-5 novacon:h-5" aria-hidden="true" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <CopyIcon copied={isCopied} className="novacon:w-5 novacon:h-5" />
     </button>
   );
 };

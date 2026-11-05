@@ -2,43 +2,25 @@
  * @file This file contains the `TxActionButton`, a stateful button for initiating and tracking transactions.
  */
 
-import { ArrowPathIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import { cn } from '@tuwaio/nova-core/utils';
-import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
-import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
+import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { NovaTransactionsLabels } from '../i18n/types';
 import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { afterTrackedAction, trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
-const getDefaultContent = (labels: NovaTransactionsLabels['trackedTxButton']) => ({
-  replaced: (
-    <>
-      <ArrowPathIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.replaced}</span>
-    </>
-  ),
-  loading: (
-    <>
-      <ArrowPathIcon className="novatx:h-4 novatx:w-4 novatx:animate-spin" />
-      <span>{labels.loading}</span>
-    </>
-  ),
-  succeed: (
-    <>
-      <CheckCircleIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.succeed}</span>
-    </>
-  ),
-  failed: (
-    <>
-      <ExclamationCircleIcon className="novatx:h-4 novatx:w-4" />
-      <span>{labels.failed}</span>
-    </>
-  ),
-});
+const ICON_CLASSES = 'novatx:h-4 novatx:w-4';
+
+const STATUS_ICONS = {
+  loading: <QuasarLoader size={16} accent="currentColor" />,
+  succeed: <DrawnCheck variant="disc" className={ICON_CLASSES} />,
+  failed: <DrawnCross variant="disc" className={ICON_CLASSES} />,
+  replaced: <ArrowPathIcon className={ICON_CLASSES} />,
+};
 
 /**
  * Props for the `TxActionButton` component.
@@ -58,8 +40,9 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
    */
   action: () => Promise<void>;
   /**
-   * Selector function that returns the key of the last transaction added to the pool.
-   * Used to track the result of the submitted transaction.
+   * Selector function that returns the key of the last transaction added to the pool, such as `getLastTxKey` of the Pulsar
+   * store. It is read before and after the action: a key that has not changed means the action added no transaction, and the
+   * button goes back to idle.
    */
   getLastTxKey: () => string | undefined;
   /** The live transaction pool from the Pulsar store. */
@@ -72,8 +55,13 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
   succeedContent?: ReactNode;
   /** Custom content to display when the action or transaction fails. */
   failedContent?: ReactNode;
-  /** Custom content to display when the transaction is replaced. */
+  /**
+   * Custom content to display when the transaction is replaced by something else than a speed-up: after a speed-up the button
+   * stays busy with the record that goes on.
+   */
   replacedContent?: ReactNode;
+  /** Custom content to display when the transaction is cancelled. Defaults to `replacedContent`, then to the label. */
+  cancelledContent?: ReactNode;
   /**
    * Duration in milliseconds before the button resets to idle after reaching
    * a terminal state (`succeed`, `failed`, `replaced`).
@@ -103,7 +91,8 @@ export type TxActionButtonProps<T extends Transaction> = Omit<ButtonHTMLAttribut
 
 /**
  * A stateful button that orchestrates the full transaction lifecycle:
- * idle → loading → succeed / failed / replaced → idle (after `resetTimeout`).
+ * idle → loading → succeed / failed / replaced → idle (after `resetTimeout`). After a speed-up it goes on with the new
+ * record and stays busy until that has a result; a record that is removed sends it back to idle.
  *
  * When rendered inside a `NovaTransactionsProvider`, any error thrown by `action()`
  * before the transaction reaches the pool is automatically surfaced as a
@@ -121,6 +110,7 @@ export function TxActionButton<T extends Transaction>({
   succeedContent,
   failedContent,
   replacedContent,
+  cancelledContent,
   resetTimeout = 2500,
   className,
   classNames,
@@ -130,33 +120,44 @@ export function TxActionButton<T extends Transaction>({
   const { showPreSubmitErrorToast } = useNovaTransactionsError();
   const [status, setStatus] = useState<ButtonStatus>('idle');
   const [trackedTxKey, setTrackedTxKey] = useState<string | undefined>(undefined);
-
-  const defaultContent = getDefaultContent(trackedTxButton);
+  const [wasCancelled, setWasCancelled] = useState(false);
+  const seenTrackedTxKey = useRef<string | undefined>(undefined);
+  const latestWallet = useRef(walletAddress);
+  const latestPool = useRef(transactionsPool);
 
   useEffect(() => {
+    latestWallet.current = walletAddress;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus('idle');
     setTrackedTxKey(undefined);
   }, [walletAddress]);
 
   useEffect(() => {
+    latestPool.current = transactionsPool;
+  }, [transactionsPool]);
+
+  useEffect(() => {
     if (!trackedTxKey) return;
 
     const trackedTx = transactionsPool[trackedTxKey];
 
-    if (trackedTx) {
-      switch (trackedTx.status) {
-        case TransactionStatus.Success:
-          // eslint-disable-next-line react-hooks/set-state-in-effect
-          setStatus('succeed');
-          break;
-        case TransactionStatus.Replaced:
-          setStatus('replaced');
-          break;
-        case TransactionStatus.Failed:
-          setStatus('failed');
-          break;
+    if (!trackedTx) {
+      // Removed after it was seen, for example as its tracking was stopped. A pool can also lag behind the key at first.
+      if (seenTrackedTxKey.current === trackedTxKey) {
+        setStatus('idle');
+        setTrackedTxKey(undefined);
       }
+      return;
+    }
+    seenTrackedTxKey.current = trackedTxKey;
+
+    const step = trackedButtonStep(trackedTx, transactionsPool);
+    if (step.kind === 'follow') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTrackedTxKey(step.txKey);
+    } else if (step.kind === 'show') {
+      setStatus(step.status);
+      setWasCancelled((trackedTx as unknown as EvmTransaction).replacedReason === 'cancelled');
     }
   }, [transactionsPool, trackedTxKey, walletAddress]);
 
@@ -171,36 +172,68 @@ export function TxActionButton<T extends Transaction>({
   }, [status, resetTimeout]);
 
   const handleClick = async () => {
+    const walletAtClick = walletAddress;
+    const keyBefore = getLastTxKey();
+    const clickedAt = Math.floor(Date.now() / 1000);
     setStatus('loading');
     try {
       await action();
-      setTrackedTxKey(getLastTxKey());
+      const keyAfter = getLastTxKey();
+      const sentAt = keyAfter ? latestPool.current[keyAfter]?.localTimestamp : undefined;
+      const next = afterTrackedAction({
+        walletAtClick,
+        walletNow: latestWallet.current,
+        keyBefore,
+        keyAfter,
+        sentAfterClick: Number(sentAt) >= clickedAt,
+      });
+      if (next === 'track') setTrackedTxKey(keyAfter);
+      else if (next === 'idle') setStatus('idle');
     } catch (error) {
+      if (walletAtClick !== latestWallet.current) return;
       showPreSubmitErrorToast(error);
       setStatus('failed');
     }
   };
 
   const renderContent = () => {
-    switch (status) {
-      case 'loading':
-        return loadingContent ?? defaultContent.loading;
-      case 'succeed':
-        return succeedContent ?? defaultContent.succeed;
-      case 'failed':
-        return failedContent ?? defaultContent.failed;
-      case 'replaced':
-        return replacedContent ?? defaultContent.replaced;
-      default:
-        return children;
-    }
+    const replacedOrCancelled = wasCancelled ? (cancelledContent ?? replacedContent) : replacedContent;
+    const custom = {
+      idle: typeof children === 'string' ? undefined : children,
+      loading: loadingContent,
+      succeed: succeedContent,
+      failed: failedContent,
+      replaced: replacedOrCancelled,
+    }[status];
+    if (custom) return custom;
+
+    const label =
+      status === 'idle'
+        ? (children as string)
+        : status === 'replaced' && wasCancelled
+          ? trackedTxButton.cancelled
+          : trackedTxButton[status];
+
+    // One tree in all states, so that the label morphs from the first click to the way back
+    return (
+      <>
+        {status !== 'idle' && (
+          <MorphIcon iconKey={status} animateFirst className={classNames?.icon}>
+            {STATUS_ICONS[status]}
+          </MorphIcon>
+        )}
+        <span className={classNames?.label}>
+          <MorphText>{label}</MorphText>
+        </span>
+      </>
+    );
   };
 
   // Default state-specific classes
   const defaultStateClasses = {
     idle: 'novatx:bg-[var(--tuwa-button-gradient-from)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
-    loading: 'novatx:bg-gray-400 novatx:text-white',
-    replaced: 'novatx:bg-gray-500 novatx:text-white',
+    loading: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
+    replaced: 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
     succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',
     failed: 'novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
   };

@@ -2,7 +2,7 @@
  * @file IconButton component with comprehensive customization options for wallet and chain interactions.
  */
 
-import { ChevronArrowWithAnim, cn, NetworkIcon } from '@tuwaio/nova-core';
+import { ChevronArrowWithAnim, cn, NetworkIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { formatConnectorChainId, OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
@@ -16,7 +16,7 @@ const DEFAULT_BUTTON_ANIMATION_VARIANTS: Variants = {
   idle: { scale: 1, rotate: 0 },
   hover: { scale: 1.05, transition: { duration: 0.2 } },
   tap: { scale: 0.95, transition: { duration: 0.1 } },
-  loading: { rotate: 360, transition: { duration: 2, repeat: Infinity, ease: 'linear' } },
+  loading: { rotate: 0 },
 };
 
 // --- Types for Customization ---
@@ -62,7 +62,7 @@ export type IconButtonChevronContainerProps = {
 };
 
 /**
- * Props for a custom loading overlay (the default one shows a spinner while `loading` is `true`).
+ * Props for a custom loading overlay (the default one shows the Quasar loader while `loading` is `true`).
  */
 export type IconButtonLoadingOverlayProps = {
   /** The `loading` prop */
@@ -390,7 +390,8 @@ const DefaultLoadingOverlay: React.FC<IconButtonLoadingOverlayProps> = ({ loadin
       )}
       aria-hidden="true"
     >
-      <div className="novacon:w-3 novacon:h-3 novacon:border-2 novacon:border-[var(--tuwa-text-accent)] novacon:border-t-transparent novacon:rounded-full novacon:animate-spin" />
+      {/* The size the button forces on an SVG in it */}
+      <QuasarLoader size={24} />
     </div>
   );
 };

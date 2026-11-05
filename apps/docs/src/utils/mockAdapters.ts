@@ -1,7 +1,18 @@
-import { OrbitAdapter } from '@tuwaio/orbit-core';
+import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { EvmTransaction, Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { action } from 'storybook/actions';
 import { zeroAddress } from 'viem';
+import { mainnet, monad, monadTestnet, polygon, sepolia } from 'viem/chains';
+
+const EVM_CHAINS = [mainnet, monad, monadTestnet, polygon, sepolia];
+
+/** The explorer of a chain the stories use. Etherscan for other chains. */
+const evmExplorerOf = (chainId?: number | string) =>
+  EVM_CHAINS.find((chain) => chain.id === Number(chainId))?.blockExplorers?.default.url ?? 'https://etherscan.io';
+
+/** The query of a Solana explorer link: a devnet signature does not exist on mainnet. */
+const solanaClusterOf = (chainId?: number | string) =>
+  chainId === SOLANA_CHAIN_IDS.devnet || chainId === 'devnet' ? '?cluster=devnet' : '';
 
 /**
  * A mock EVM adapter with a full set of default implementations for all possible methods.
@@ -16,7 +27,7 @@ export const mockEvmAdapter = {
    */
   getExplorerTxUrl: (tx: Transaction): string => {
     const hash = (tx.adapter === OrbitAdapter.EVM ? (tx as unknown as EvmTransaction)?.hash : undefined) || tx.txKey;
-    return `https://etherscan.io/tx/${hash}`;
+    return `${evmExplorerOf(tx.chainId)}/tx/${hash}`;
   },
 
   /**
@@ -50,23 +61,23 @@ export const mockEvmAdapter = {
   },
 
   /**
-   * Returns a URL pointing to the chain explorer's home page.
+   * Returns a URL of the explorer of the chain, with an optional path.
    */
-  getExplorerUrl: () => 'https://etherscan.io',
+  getExplorerUrl: (path = '', chainId?: number | string) => `${evmExplorerOf(chainId)}${path}`,
 
   /**
-   * Mock method to handle speeding up a transaction.
+   * Mock method to handle speeding up a transaction: the call is reported in the Actions panel.
    */
   speedUpTxAction: async (tx: Transaction) => {
-    console.log('Speed Up Transaction:', tx);
+    action('speedUpTxAction')(tx);
     return '0x_mock_speed_up_hash';
   },
 
   /**
-   * Mock method to handle canceling a transaction.
+   * Mock method to handle canceling a transaction: the call is reported in the Actions panel.
    */
   cancelTxAction: async (tx: Transaction) => {
-    console.log('Cancel Transaction:', tx);
+    action('cancelTxAction')(tx);
     return '0x_mock_cancel_hash';
   },
 
@@ -91,14 +102,12 @@ export const mockSolanaAdapter = {
    * Returns the explorer URL for a specific transaction based on the pool.
    * @template T The specific transaction type.
    */
-  getExplorerTxUrl: (tx: Transaction): string => {
-    return `https://solscan.io/tx/${tx.adapter === OrbitAdapter.EVM ? tx?.hash : tx.txKey}`;
-  },
+  getExplorerTxUrl: (tx: Transaction): string => `https://solscan.io/tx/${tx.txKey}${solanaClusterOf(tx.chainId)}`,
 
   /**
-   * Returns the explorer root URL for the Solana blockchain.
+   * Returns a URL of the explorer, with an optional path.
    */
-  getExplorerUrl: () => 'https://solscan.io',
+  getExplorerUrl: (path = '', chainId?: number | string) => `https://solscan.io${path}${solanaClusterOf(chainId)}`,
 
   /**
    * Mock method to fetch basic wallet information (address).
@@ -139,15 +148,13 @@ export const mockSolanaAdapter = {
     return undefined;
   },
 
-  // Solana-specific mock methods.
-  getSlotUrl: (slot: number) => `https://solscan.io/block/${slot}`,
   speedUpTxAction: async (tx: Transaction) => {
-    console.log('Speeding up Solana transaction:', tx);
+    action('speedUpTxAction')(tx);
     return 'mock_sol_speed_up_tx_hash';
   },
 
   cancelTxAction: async (tx: Transaction) => {
-    console.log('Canceling Solana transaction:', tx);
+    action('cancelTxAction')(tx);
     return 'mock_sol_cancel_tx_hash';
   },
 } as any;

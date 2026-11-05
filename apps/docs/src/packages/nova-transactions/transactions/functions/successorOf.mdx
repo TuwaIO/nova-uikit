@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-transactions/transactions/Functions/successorOf" />
+
+# successorOf()
+
+> **successorOf**\<`T`\>(`tx`, `pool`): `T` \| `undefined`
+
+Defined in: [utils/replacement.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/utils/replacement.ts#L27)
+
+The record that goes on after a replaced one: Pulsar adds one for a speed-up, under the new hash. A cancel, or another
+transaction in the same nonce, is not the same operation, so a record the wallet happens to have under that hash does not
+continue it. The same goes for a Safe record, whose replaced hash is the other proposal that was executed. A server row may
+say no reason at all, and then the record of its new hash is taken to go on.
+
+## Type Parameters
+
+### T
+
+`T` *extends* `Transaction`
+
+## Parameters
+
+### tx
+
+`T`
+
+The replaced transaction.
+
+### pool
+
+`TransactionPool`\<`T`\>
+
+The transaction pool.
+
+## Returns
+
+`T` \| `undefined`
+
+The record of the new hash, or `undefined` when nothing goes on after this one.

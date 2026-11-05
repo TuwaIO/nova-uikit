@@ -14,6 +14,7 @@ import { defaultLabels } from '../../i18n/en';
 
 vi.mock('../../providers', () => ({
   useLabels: () => defaultLabels,
+  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: vi.fn() }),
 }));
 
 import { TrackingTxModal } from './TrackingTxModal';
@@ -146,5 +147,84 @@ describe('TrackingTxModal', () => {
         tx: expect.objectContaining({ desiredChainID: 1, actionFunction, rpcUrl: undefined }),
       }),
     );
+  });
+});
+
+describe('TrackingTxModal actions', () => {
+  const WALLET = '0x1234567890123456789012345678901234567890';
+  const OLD = '0xold';
+  const base = {
+    txKey: OLD,
+    adapter: OrbitAdapter.EVM,
+    tracker: TransactionTracker.Ethereum,
+    chainId: 1,
+    from: WALLET,
+    type: 'SWAP',
+    connectorType: 'evm:metamask',
+    localTimestamp: 1,
+    isTrackedModalOpen: true,
+  };
+  const adapter = {
+    key: OrbitAdapter.EVM,
+    speedUpTxAction: vi.fn(),
+    cancelTxAction: vi.fn(),
+    retryTxAction: vi.fn(),
+    getExplorerUrl: () => undefined,
+  } as unknown as TxAdapter<EvmTransaction>;
+  const initialTx = {
+    lastTxKey: OLD,
+    withTrackedModal: true,
+    actionFunction: async () => OLD,
+    adapter: OrbitAdapter.EVM,
+    desiredChainID: 1,
+    type: 'SWAP',
+    localTimestamp: 1,
+    isInitializing: false,
+  } as unknown as InitialTransaction;
+  const render = (tx: Partial<EvmTransaction>, connectedWalletAddress = WALLET) =>
+    TrackingTxModal({
+      adapter,
+      initialTx,
+      connectedWalletAddress,
+      transactionsPool: { [OLD]: { ...base, ...tx } } as never,
+      executeTxAction: vi.fn(),
+      onClose: vi.fn(),
+      onOpenAllTransactions: vi.fn(),
+    });
+  const footerProps = (tree: ReactNode) =>
+    (findElement(tree, (props) => 'canReplace' in props) as ReactElement<Record<string, unknown>>).props;
+
+  it('offers no Retry when the tracker only gave up: it could send the operation a second time', () => {
+    const tree = render({
+      pending: false,
+      status: TransactionStatus.Failed,
+      isError: true,
+      error: { message: 'x' } as never,
+    });
+
+    expect(findRetryHandler(tree)).toBeUndefined();
+  });
+
+  it('offers Retry for a revert, which surely did not go through', () => {
+    const tree = render({ pending: false, status: TransactionStatus.Failed, isError: true });
+
+    expect(findRetryHandler(tree)).toEqual(expect.any(Function));
+  });
+
+  it('offers speed-up and cancel only to the account that sent it', () => {
+    const pending = { pending: true, nonce: 7, maxFeePerGas: '1000', maxPriorityFeePerGas: '100' };
+
+    expect(footerProps(render(pending)).onSpeedUp).toBeDefined();
+    expect(footerProps(render(pending)).onCancel).toBeDefined();
+    expect(footerProps(render(pending, '0x9999999999999999999999999999999999999999')).onSpeedUp).toBeUndefined();
+  });
+
+  it('lets the footer close during a long wait, whichever wallet sent the transaction: it may never end', () => {
+    expect(footerProps(render({ pending: true })).canReplace).toBe(true);
+    expect(footerProps(render({ pending: true, confirmations: 1 })).canReplace).toBe(false);
+  });
+
+  it('does not offer them before the tracker has read the nonce', () => {
+    expect(footerProps(render({ pending: true })).onSpeedUp).toBeUndefined();
   });
 });

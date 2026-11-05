@@ -41,7 +41,10 @@ export type TransactionsInfoModalCustomization<T extends Transaction> = {
   components?: {
     /** The header with the title and the close button. */
     Header?: ComponentType<TransactionsInfoModalHeaderProps>;
-    /** The transaction list. */
+    /**
+     * The transaction list. It gets the whole pool: a speed-up has two records there, and `successorOf` tells the one to hide
+     * so that an operation stays one row, as in the default list.
+     */
     History?: ComponentType<TransactionsHistoryProps<T>>;
   };
 };
@@ -69,6 +72,8 @@ export type TransactionsInfoModalProps<T extends Transaction> = Pick<
   pagination?: TxInMemoryPagination;
   /** Optional transaction key to open directly in detail view */
   selectedTxKey?: string | null;
+  /** `removeTxFromPool` of the Pulsar store, forwarded to TransactionsHistory. */
+  removeTxFromPool?: (txKey: string) => void;
 };
 
 type DefaultHeaderClassNames = {
@@ -122,6 +127,7 @@ export function TransactionsInfoModal<T extends Transaction>({
   transactionsPool,
   pagination,
   selectedTxKey,
+  removeTxFromPool,
 }: TransactionsInfoModalProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -163,6 +169,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               connectedWalletAddress={connectedWalletAddress}
               customization={customization?.historyCustomization}
               pagination={pagination}
+              removeTxFromPool={removeTxFromPool}
             />
           ) : (
             <TransactionsHistory
@@ -172,6 +179,7 @@ export function TransactionsInfoModal<T extends Transaction>({
               customization={customization?.historyCustomization}
               pagination={pagination}
               initialTxKey={selectedTxKey}
+              removeTxFromPool={removeTxFromPool}
             />
           )}
         </div>

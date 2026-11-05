@@ -40,6 +40,13 @@ export const Default: Story = {};
  * of the text area.
  */
 export const LongError: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-96">
+        <Story />
+      </div>
+    ),
+  ],
   args: {
     error:
       'Error: Transaction failed with the following details: The smart contract execution reverted with error code 0x08c379a0 and message "SafeMath: subtraction overflow". This error typically occurs when attempting to subtract a larger number from a smaller one in Solidity. The transaction was attempting to transfer 1000.5 tokens from address 0x123... to 0x987..., but the sender only had 500.25 tokens available. Gas limit was set to 21000 but execution used 18743 gas before reverting. Block number: 18450123.',
@@ -48,7 +55,7 @@ export const LongError: Story = {
 
 /**
  * This story demonstrates the interactive copy functionality. Click the copy icon
- * to see it change to a checkmark.
+ * to see it morph into a check.
  */
 export const InteractiveCopy: Story = {
   name: 'Interactive (Copy)',

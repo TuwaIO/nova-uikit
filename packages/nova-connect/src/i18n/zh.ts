@@ -30,11 +30,13 @@ export const chineseLabels: NovaConnectLabels = {
   success: '成功',
   error: '错误',
   replaced: '已替换',
+  cancelled: '已取消',
   recent: '最近使用',
   transactionLoading: '交易处理中',
   transactionSuccess: '交易成功',
   transactionError: '交易失败',
   transactionReplaced: '交易已替换',
+  transactionCancelled: '交易已取消',
 
   // Modal titles - Headers for different modal dialogs
   aboutWallets: '关于钱包',
@@ -186,7 +188,7 @@ export const chineseLabels: NovaConnectLabels = {
   disconnectAllDescription: '断开所有已连接钱包并关闭面板',
   explorerLinkDescription: '在区块链浏览器中查看该地址',
   explorerNotAvailable: '该网络暂未配置区块链浏览器',
-  connectWalletsAvailable: '连接钱包 - {count} 个可用钱包',
+  connectWalletsAvailable: '已连接的钱包 - 已连接 {count} 个',
   switchNetworkNetworksAvailable: '切换网络 - {count} 个可用网络',
   transactionsInAppCount: '应用内交易 - {count} 笔交易',
   transactionsAvailable: '{count} 笔可用交易',

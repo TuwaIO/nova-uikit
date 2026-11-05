@@ -3,7 +3,7 @@
  * status.
  */
 
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, MorphText } from '@tuwaio/nova-core';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
@@ -39,7 +39,8 @@ export type StatusAwareTextProps = {
 
 /**
  * A component that renders text conditionally based on a transaction's status.
- * It's designed to work with the `title` and `description` fields of a transaction object.
+ * It's designed to work with the `title` and `description` fields of a transaction object. A change of status morphs the
+ * text and crossfades its color.
  *
  * @param props - See {@link StatusAwareTextProps}.
  * @returns The text, or `null` when there is neither `source` nor `fallback`.
@@ -60,7 +61,7 @@ export function StatusAwareText({
   } else if (Array.isArray(source)) {
     const statusKey = txStatus || 'default';
     const config = STATUS_CONFIG[statusKey] ?? STATUS_CONFIG.default;
-    displayText = source[config.index];
+    displayText = source[config.index] || fallback;
     if (applyColor) {
       colorClass = config.colorClass;
     }
@@ -77,5 +78,9 @@ export function StatusAwareText({
       ? 'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
       : 'novatx:mt-1 novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]';
 
-  return <div className={cn(baseClasses, colorClass, className)}>{displayText}</div>;
+  return (
+    <div className={cn(baseClasses, 'novatx:transition-colors novatx:duration-300', colorClass, className)}>
+      <MorphText wrap>{displayText}</MorphText>
+    </div>
+  );
 }

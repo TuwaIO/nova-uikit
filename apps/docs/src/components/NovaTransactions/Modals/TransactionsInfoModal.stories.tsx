@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsInfoModal } from '@tuwaio/nova-transactions';
 import { useState } from 'react';
+import { useArgs } from 'storybook/preview-api';
 
 import { connectedWalletTransactionsMock } from '../../../utils/connectedWalletTransactionsMock';
-import { mockEvmAdapter } from '../../../utils/mockAdapters';
+import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 
 const meta: Meta<typeof TransactionsInfoModal> = {
   title: 'Nova Transactions/Modals/TransactionsInfoModal',
@@ -27,45 +28,79 @@ const meta: Meta<typeof TransactionsInfoModal> = {
 export default meta;
 type Story = StoryObj<typeof TransactionsInfoModal>;
 
+const OPEN_BUTTON_CLASSES =
+  'cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-[var(--tuwa-rounded-corners)] hover:bg-blue-600 transition-colors';
+
+/** The modal and the button that opens it. */
+const WithOpenButton = ({
+  args,
+  isOpen,
+  setIsOpen,
+  walletAddress,
+}: {
+  args: Story['args'];
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  walletAddress: string;
+}) => (
+  <>
+    <button onClick={() => setIsOpen(true)} className={OPEN_BUTTON_CLASSES}>
+      Open Modal
+    </button>
+    <TransactionsInfoModal
+      {...args}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      connectedWalletAddress={walletAddress}
+      // @ts-expect-error - types from mock not exactly correct
+      transactionsPool={connectedWalletTransactionsMock(walletAddress)}
+      adapter={args?.adapter ?? [mockEvmAdapter]}
+    />
+  </>
+);
+
+/** The history of an EVM wallet. A sped-up operation is one row, opened on its latest record. The `isOpen` control and the button change the same state. */
 export const Default: Story = {
+  argTypes: { transactionsPool: { control: false }, connectedWalletAddress: { control: false } },
   render: (args) => {
-    const [isOpen, setIsOpen] = useState(args.isOpen);
-
-    // Mock transactions
-    const transactionsPool = Object.values(args.transactionsPool).length
-      ? args.transactionsPool
-      : connectedWalletTransactionsMock('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-
+    // Storybook allows its hooks only in the story function itself
+    const [{ isOpen }, updateArgs] = useArgs<{ isOpen: boolean }>();
     return (
-      <>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-500 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
-        >
-          Open Modal
-        </button>
-        <TransactionsInfoModal
-          {...args}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          connectedWalletAddress={args.connectedWalletAddress}
-          // @ts-expect-error - types from mock not exactly correct
-          transactionsPool={transactionsPool}
-        />
-      </>
+      <WithOpenButton
+        args={args}
+        isOpen={isOpen}
+        setIsOpen={(open) => updateArgs({ isOpen: open })}
+        walletAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+      />
     );
   },
 };
 
+/** The history of a Solana wallet. */
+export const SolanaWallet: Story = {
+  args: { adapter: [mockSolanaAdapter] },
+  argTypes: { transactionsPool: { control: false }, connectedWalletAddress: { control: false } },
+  render: (args) => {
+    const [{ isOpen }, updateArgs] = useArgs<{ isOpen: boolean }>();
+    return (
+      <WithOpenButton
+        args={args}
+        isOpen={isOpen}
+        setIsOpen={(open) => updateArgs({ isOpen: open })}
+        walletAddress="AobnbeZ6QB2xdnPzBkaw2Stea5trqhamaoKyVMYenV3u"
+      />
+    );
+  },
+};
+
+/** A wallet without transactions. */
 export const Empty: Story = {
+  argTypes: { isOpen: { control: false }, transactionsPool: { control: false } },
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-500 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
-        >
+        <button onClick={() => setIsOpen(true)} className={OPEN_BUTTON_CLASSES}>
           Open Modal
         </button>
 

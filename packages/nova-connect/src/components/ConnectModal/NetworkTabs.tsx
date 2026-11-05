@@ -5,7 +5,7 @@
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
 import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -17,7 +17,7 @@ import { formatLabel } from '../../i18n/formatLabel';
  * Animation settings of {@link NetworkTabs} (`config.animation`).
  */
 export interface AnimationConfig {
-  /** Duration of the fade of the tab name, in seconds (default: `0.2`) */
+  /** Duration of the change of the tab name, its fade and its width, in seconds (default: `0.2`) */
   textDuration: number;
   /** Delay before the name of the selected tab appears, in seconds (default: `0`) */
   textDelay?: number;
@@ -46,7 +46,7 @@ export interface NetworkTabData {
 
 // --- Component Props Types ---
 /**
- * Props for a custom container (a `motion.div` with a layout animation by default).
+ * Props for a custom container (a `div` by default).
  */
 export type NetworkTabsContainerProps = {
   /** Classes from `classNames.container` or the `className` prop */
@@ -322,98 +322,62 @@ const defaultAnimationConfig: AnimationConfig = {
  * Default animation variants for tab text transitions
  */
 const getTextVariant = (config: AnimationConfig): Variants => ({
+  // The width is what moves the other tabs along, on one line. The margin takes back the gap of the button.
   active: {
     opacity: 1,
-    zIndex: 2,
+    width: 'auto',
+    marginLeft: 0,
     x: 0,
-    position: 'relative',
     transition: {
       duration: config.textDuration,
       delay: config.textDelay,
+      ease: [0.2, 0, 0, 1],
     },
   },
   inactive: {
     opacity: 0,
-    zIndex: -1,
+    width: 0,
+    marginLeft: '-0.5rem',
     x: -10,
-    position: 'absolute',
     transition: {
       duration: config.textDuration,
+      ease: [0.2, 0, 0, 1],
     },
   },
 });
 
 // --- Default Sub-Components ---
+// No `layout` on the tabs: they sit in a window centered on the screen, and a layout animation follows any move of it, so a
+// window that re-centered took the tabs up and down for half a second. Only the indicator slides, between the tabs.
 const DefaultContainer = forwardRef<HTMLDivElement, NetworkTabsContainerProps>(
   ({ children, className, ...props }, ref) => (
-    <motion.div
-      ref={ref}
-      className={className}
-      layout
-      transition={{
-        layout: {
-          duration: 0.6,
-          ease: [0.1, 0.1, 0.2, 1],
-        },
-      }}
-      {...props}
-    >
+    <div ref={ref} className={className} {...props}>
       {children}
-    </motion.div>
+    </div>
   ),
 );
 DefaultContainer.displayName = 'DefaultContainer';
 
 const DefaultTabList = forwardRef<HTMLDivElement, NetworkTabsTabListProps>(({ children, className }, ref) => (
-  <motion.div
-    ref={ref}
-    className={className}
-    layout
-    transition={{
-      layout: {
-        duration: 0.0001,
-      },
-    }}
-  >
+  <div ref={ref} className={className}>
     {children}
-  </motion.div>
+  </div>
 ));
 DefaultTabList.displayName = 'DefaultTabList';
 
 const DefaultTab = forwardRef<HTMLDivElement, NetworkTabsTabProps>(({ children, className, ...props }, ref) => (
-  <motion.div
-    ref={ref}
-    className={className}
-    layout
-    transition={{
-      layout: {
-        duration: 0.6,
-        ease: [0.1, 0.1, 0.2, 1],
-      },
-    }}
-    {...props}
-  >
+  <div ref={ref} className={className} {...props}>
     {children}
-  </motion.div>
+  </div>
 ));
 DefaultTab.displayName = 'DefaultTab';
 
 const DefaultTabButton = forwardRef<HTMLButtonElement, NetworkTabsTabButtonProps>(
   // eslint-disable-next-line
   ({ children, className, tabData: _, ...props }, ref) => (
-    <motion.button
-      ref={ref}
-      className={className}
-      layout
-      transition={{
-        layout: {
-          duration: 0.0001,
-        },
-      }}
-      {...props}
-    >
+    <button ref={ref} className={className} {...props}>
       {children}
-    </motion.button>
+    </button>
   ),
 );
 DefaultTabButton.displayName = 'DefaultTabButton';
@@ -448,7 +412,7 @@ DefaultIndicator.displayName = 'DefaultIndicator';
 
 /**
  * The network tabs of the connect modal: an "All" tab and a tab for each network, with the network icon and the name
- * of the selected tab, animated with Framer Motion. Renders nothing when there is only one network.
+ * of the selected tab, whose width moves the other tabs along. Renders nothing when there is only one network.
  *
  * Props: {@link NetworkTabsProps}; the ref is forwarded to the container.
  *
@@ -499,9 +463,11 @@ export const NetworkTabs = memo(
       /**
        * Memoized animation configuration with customization
        */
+      const reduceMotion = useReducedMotion();
       const animationConfig: AnimationConfig = {
         ...defaultAnimationConfig,
         ...customConfig?.animation,
+        ...(reduceMotion && { textDuration: 0, textDelay: 0 }),
       };
 
       /**
@@ -620,7 +586,7 @@ export const NetworkTabs = memo(
                 customization?.classNames?.tabText?.({
                   isSelected: tabData.isSelected,
                   tabData,
-                }) ?? 'novacon:block';
+                }) ?? 'novacon:block novacon:overflow-hidden novacon:whitespace-nowrap';
 
               const indicatorClasses =
                 customization?.classNames?.indicator?.({ tabData }) ??

@@ -3,11 +3,12 @@
  * Supports infinite scrolling when `pagination` props are provided.
  */
 
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, QuasarLoader } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { latestRecordOf, successorOf } from '../utils/replacement';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
 
@@ -52,7 +53,7 @@ export type TransactionsHistoryCustomization<T extends Transaction> = {
     placeholderMessage?: string;
     /** Classes for the infinite scroll loader container */
     loaderContainer?: string;
-    /** Classes for the infinite scroll loader icon (spinner) */
+    /** Classes for the infinite scroll loader */
     loaderIcon?: string;
     /** Classes for the error indicator container */
     errorContainer?: string;
@@ -126,6 +127,11 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   initialTxKey?: string | null;
   /** Whether transaction details can be viewed by clicking on history items. Defaults to true. */
   canViewDetails?: boolean;
+  /**
+   * `removeTxFromPool` of the Pulsar store. With it, the details of a transaction pending for a long time offer to stop
+   * tracking it.
+   */
+  removeTxFromPool?: (txKey: string) => void;
 };
 
 /** Duration (ms) for the error indicator to stay visible before fading out. */
@@ -135,18 +141,16 @@ const ERROR_DISPLAY_DURATION = 2500;
  * Default loader component rendered at the bottom of the list during pagination loading.
  */
 function DefaultLoader({ className, iconClassName }: TransactionsHistoryLoaderProps) {
+  const { trackedTxButton } = useLabels();
+
   return (
     <div
       className={cn('novatx:flex novatx:items-center novatx:justify-center novatx:py-4', className)}
       role="status"
       aria-live="polite"
     >
-      <div
-        className={cn(
-          'novatx:h-5 novatx:w-5 novatx:animate-spin novatx:rounded-full novatx:border-2 novatx:border-[var(--tuwa-text-secondary)] novatx:border-t-transparent',
-          iconClassName,
-        )}
-      />
+      <QuasarLoader size={20} className={iconClassName} />
+      <span className="novatx:sr-only">{trackedTxButton.loading}</span>
     </div>
   );
 }
@@ -229,6 +233,7 @@ export function TransactionsHistory<T extends Transaction>({
   pagination,
   initialTxKey,
   canViewDetails = true,
+  removeTxFromPool,
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
 
@@ -305,7 +310,8 @@ export function TransactionsHistory<T extends Transaction>({
     observer.observe(sentinelRef.current);
 
     return () => observer.disconnect();
-  }, [pagination?.hasMore, handleIntersection]);
+    // `selectedTxKey` too: the details take the list and its sentinel away, and Back brings a new one to observe
+  }, [pagination?.hasMore, handleIntersection, selectedTxKey]);
 
   const {
     Placeholder = HistoryPlaceholder,
@@ -328,7 +334,10 @@ export function TransactionsHistory<T extends Transaction>({
       );
     }
 
-    if (sortedTransactions.length > 0) {
+    // One row for one operation: a sped-up record is shown in the details of the record that goes on
+    const shownTransactions = sortedTransactions.filter((tx) => !successorOf(tx, transactionsPool));
+
+    if (shownTransactions.length > 0) {
       // Extract item classNames from customization
       const itemClassNames = {
         container: customization?.classNames?.itemContainer,
@@ -357,7 +366,7 @@ export function TransactionsHistory<T extends Transaction>({
             customization?.classNames?.listWrapper,
           )}
         >
-          {sortedTransactions.map((tx) => (
+          {shownTransactions.map((tx) => (
             <HistoryItem
               key={tx.txKey}
               tx={tx}
@@ -404,7 +413,9 @@ export function TransactionsHistory<T extends Transaction>({
   };
 
   if (selectedTxKey) {
-    const selectedTx = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
+    const opened = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
+    // The details go on with the operation: a speed-up that lands while they are open must not leave them on the old record
+    const selectedTx = opened && latestRecordOf(opened, transactionsPool);
     if (selectedTx) {
       return (
         <TransactionDetails
@@ -412,6 +423,13 @@ export function TransactionsHistory<T extends Transaction>({
           adapter={adapter}
           onBack={() => setSelectedTxKey(null)}
           customization={customization?.detailsCustomization}
+          onStopTracking={
+            removeTxFromPool &&
+            ((txKey) => {
+              removeTxFromPool(txKey);
+              setSelectedTxKey(null);
+            })
+          }
         />
       );
     }

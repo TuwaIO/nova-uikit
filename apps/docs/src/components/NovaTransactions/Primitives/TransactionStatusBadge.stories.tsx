@@ -72,10 +72,41 @@ export const Failed: Story = {
 };
 
 /**
- * The `Replaced` state is shown when a transaction has been replaced (e.g., sped up or cancelled).
+ * The `Replaced` state is shown when a transaction was replaced by something the record does not name. A speed-up and a cancel
+ * have labels of their own: see the next two stories.
  */
 export const Replaced: Story = {
   args: {
-    tx: createMockTx(OrbitAdapter.EVM, { pending: false, status: TransactionStatus.Replaced }),
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedReason: 'replaced',
+    }),
+  },
+};
+
+/**
+ * A speed-up: the operation goes on under a new hash, in a record of its own.
+ */
+export const SpedUp: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedReason: 'repriced',
+    }),
+  },
+};
+
+/**
+ * A cancel: the operation did not happen.
+ */
+export const Cancelled: Story = {
+  args: {
+    tx: createMockTx(OrbitAdapter.EVM, {
+      pending: false,
+      status: TransactionStatus.Replaced,
+      replacedReason: 'cancelled',
+    }),
   },
 };
