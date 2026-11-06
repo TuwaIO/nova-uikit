@@ -60,6 +60,14 @@ describe('showsInstalledBlock', () => {
     expect(showsInstalledBlock({ installed: [], Custom: [{}], popular: [] })).toBe(false);
   });
 
+  // The groups hold the impersonated wallet too, which is no list, and is undefined without one: with no wallet in the browser
+  // this read its length, and the whole page went down with "Cannot read properties of undefined"
+  it('reads only the lists among the groups', () => {
+    expect(showsInstalledBlock({ installed: [], popular: [], impersonated: undefined })).toBe(true);
+    expect(showsInstalledBlock({ installed: [], popular: [], impersonated: { name: 'Impersonated' } })).toBe(true);
+    expect(showsInstalledBlock({ installed: [], popular: [{}], impersonated: undefined })).toBe(false);
+  });
+
   it('shows the block with wallets, and its empty state when no group has any', () => {
     expect(showsInstalledBlock({ installed: [{}], popular: [{}] })).toBe(true);
     expect(showsInstalledBlock({ installed: [], popular: [] })).toBe(true);
@@ -68,6 +76,24 @@ describe('showsInstalledBlock', () => {
 
 describe('ConnectorsSelections', () => {
   afterEach(() => unmount());
+
+  // Seen on tuwa.io in a browser with no wallet: the only connector is Safe, listed only inside Safe{Wallet}, so the list is not
+  // empty and every group is. Every other test here lists a wallet, or none at all, which ends earlier
+  it('renders when the only connector of the app is one it does not list', () => {
+    getSafeConnectorChainId = vi.fn(async () => undefined);
+    const element = render(
+      (ConnectorsSelections as unknown as { type: { render: (p: ConnectorsSelectionsProps) => unknown } }).type.render,
+      {
+        selectedAdapter: OrbitAdapter.EVM,
+        connectors: connectors.slice(0, 1),
+        onClick: vi.fn(),
+        setIsConnected: vi.fn(),
+        setIsOpen: vi.fn(),
+        setContentType: vi.fn(),
+      },
+    ) as { props: { selectionsData: { connectorGroups: { installed: unknown[] } } } };
+    expect(element.props.selectionsData.connectorGroups.installed).toEqual([]);
+  });
 
   it('lists the Safe connector when the EVM adapter of Satellite detects Safe{Wallet}', async () => {
     getSafeConnectorChainId = vi.fn(async () => 1);
