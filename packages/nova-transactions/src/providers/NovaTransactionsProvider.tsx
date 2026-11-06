@@ -29,7 +29,15 @@ import {
 } from '../components';
 import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
-import { pendingOfWallet, successorOf, toastIdOf, toastsOfRemoved, toastStepFor } from '../utils/replacement';
+import { closedToasts, rememberClosedToast } from '../utils/closedToasts';
+import {
+  latestRecordOf,
+  pendingOfWallet,
+  successorOf,
+  toastIdOf,
+  toastsOfRemoved,
+  toastStepFor,
+} from '../utils/replacement';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
 import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
 
@@ -250,7 +258,20 @@ export function NovaTransactionsProvider<T extends Transaction>({
       if (toast.isActive(toastId, toastContainerId)) {
         toast.update(toastId, { render: content, type, containerId: toastContainerId });
       } else {
-        toast(content, { toastId, type, closeOnClick: false, containerId: toastContainerId });
+        toast(content, {
+          toastId,
+          type,
+          closeOnClick: false,
+          containerId: toastContainerId,
+          // Toasts here close by the cross alone. One whose transaction goes on waiting stays closed after a page load: it came
+          // back each time, for a transaction a person had seen and put away. A change of its state opens it again
+          onClose: () => {
+            const pool = prevTransactionsRef.current;
+            const current = pool[tx.txKey];
+            const latest = current && latestRecordOf(current, pool);
+            if (latest?.pending) rememberClosedToast(latest.txKey);
+          },
+        });
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,6 +281,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   // Effect 1: Handles toasts for NEW or CHANGED transactions.
   useEffect(() => {
     const prevPool = prevTransactionsRef.current;
+    const closed = closedToasts();
 
     Object.values(transactionsPool).forEach((currentTx) => {
       const step = toastStepFor(
@@ -268,6 +290,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
         transactionsPool,
         (toastId) => toast.isActive(toastId, toastContainerId),
         toastIdsRef.current,
+        closed,
       );
       if (step.kind === 'show') {
         toastIdsRef.current.set(currentTx.txKey, step.toastId);
@@ -297,7 +320,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
     const wallet = connectedWalletAddress?.toLowerCase();
     if (!wallet || walletsSeenRef.current.has(wallet)) return;
     walletsSeenRef.current.add(wallet);
-    pendingOfWallet(transactionsPool, wallet).forEach((tx) => {
+    pendingOfWallet(transactionsPool, wallet, closedToasts()).forEach((tx) => {
       const toastId = toastIdOf(tx, transactionsPool, toastIdsRef.current);
       toastIdsRef.current.set(tx.txKey, toastId);
       showOrUpdateToast(tx, toastId);

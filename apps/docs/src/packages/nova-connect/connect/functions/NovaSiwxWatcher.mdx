@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaSiwxWatcher**(`props`): `null`
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L49)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L68)
 
 Signs the connected wallet in with SIWX. `NovaConnectProvider` renders it with its `siwx` prop, so apps do not
 render it themselves. It renders nothing.
@@ -14,7 +14,8 @@ render it themselves. It renders nothing.
 - When a wallet connects (or the account changes), it asks the wallet to sign a SIWX message once per address
   (`signIn` of `useSiwx` from `@tuwaio/siwx-react`: a wallet prompt, then `getNonce` and `verifier` requests to your
   backend). A rejected or failed sign-in disconnects that wallet (if it is still the active one) and calls
-  `onError`. Without `verifier` it logs a warning and does not sign in.
+  `onError`. Without `verifier` it logs a warning and does not sign in. A backend that could not answer
+  ([NovaSiwxServiceError](?path=/docs/packages-nova-connect-connect-classes-novasiwxserviceerror--docs)) is no failed sign-in: the wallet stays, no session ends, and it tries again every 15 seconds.
 - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until
   Satellite Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by
   `@tuwaio/siwx-react` is kept.
