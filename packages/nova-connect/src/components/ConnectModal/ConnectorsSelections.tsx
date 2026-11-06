@@ -505,7 +505,11 @@ function createCustomSort<T>(items: T[], getKey: (item: T) => string, desiredOrd
  * @internal
  */
 export function showsInstalledBlock(groups: { installed: unknown[] } & Record<string, unknown>): boolean {
-  return groups.installed.length > 0 || !Object.values(groups).some((group) => (group as unknown[]).length > 0);
+  // Only the lists: the groups hold the impersonated wallet too, undefined without one. Its length took down every page with no
+  // connector to list, as a wallet in the browser ends this before it gets there
+  return (
+    groups.installed.length > 0 || !Object.values(groups).some((group) => Array.isArray(group) && group.length > 0)
+  );
 }
 
 /**
