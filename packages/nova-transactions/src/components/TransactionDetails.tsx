@@ -141,6 +141,10 @@ const STATUS_CLASSES: Record<StatusTone, { icon: string; label: string }> = {
     icon: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-text-primary)]',
     label: 'novatx:text-[var(--tuwa-pending-text)]',
   },
+  warning: {
+    icon: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-text-primary)]',
+    label: 'novatx:text-[var(--tuwa-pending-text)]',
+  },
   success: {
     icon: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-icon)]',
     label: 'novatx:text-[var(--tuwa-success-text)]',

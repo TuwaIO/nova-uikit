@@ -8,14 +8,18 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { cn } from '../utils';
 import { stripFill } from './statusEdgeFill';
 
-/** The state a {@link StatusEdge} shows. `neutral` is a result that is neither a success nor an error. */
-export type StatusTone = 'pending' | 'success' | 'error' | 'neutral';
+/**
+ * The state a {@link StatusEdge} shows. `neutral` is a result that is neither a success nor an error. `warning` has the color of
+ * `pending` and stands still: something needs a person's attention, and a running glint would say that work goes on by itself.
+ */
+export type StatusTone = 'pending' | 'success' | 'error' | 'neutral' | 'warning';
 
 const TONE_COLOR: Record<StatusTone, string> = {
   pending: 'var(--tuwa-pending-icon)',
   success: 'var(--tuwa-success-icon)',
   error: 'var(--tuwa-error-icon)',
   neutral: 'var(--tuwa-info-icon)',
+  warning: 'var(--tuwa-pending-icon)',
 };
 
 /** Props of {@link StatusEdge}. */
