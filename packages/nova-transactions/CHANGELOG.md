@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.11.0...nova-transactions-v0.12.0) (2026-11-06)
+
+
+### Features
+
+* a closed toast stays closed, a SIWX backend away keeps the wallet, a warning tone, visible testnet icons ([#137](https://github.com/TuwaIO/nova-uikit/issues/137)) ([fed0431](https://github.com/TuwaIO/nova-uikit/commit/fed043119a5733f12e053bdd476b3ab321322a9f))
+
 ## [0.11.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.10.5...nova-transactions-v0.11.0) (2026-11-05)
 
 
