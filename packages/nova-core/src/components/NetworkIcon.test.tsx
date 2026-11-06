@@ -60,19 +60,24 @@ function path(fill?: string): SvgPathLike & { fill: string | null } {
 // Showcase review, 2026-10-29: Base Sepolia showed an empty square. The Base icon is a white square on a blue
 // background; recoloring only the background left a white square on grey, which reads as an empty checkbox
 describe('recolorTestnetPaths', () => {
+  // Live, 2026-11-06: the Solana background is a gradient, and the white mark that took it became a gradient mark on grey. The
+  // owner: on a testnet the Solana mark stays plain white, as it was. Only a solid color moves to the mark
+  it('leaves a white mark white when the background is a gradient', () => {
+    const background = path('url(#solana__b)');
+    const mark = path('#fff');
+    recolorTestnetPaths([background, mark], '#6b655e');
+    expect(background.fill).toBe('#6b655e');
+    expect(mark.fill).toBe('#fff');
+  });
+
   it('gives the background the testnet color and the white mark the color the background had', () => {
     const base = [path('#00F'), path('#fff')];
     recolorTestnetPaths(base, '#c4bfb8');
     expect(base.map((item) => item.fill)).toEqual(['#c4bfb8', '#00F']);
 
-    const solana = [path('url(#solana__b)'), path('#FFF'), path('white'), path('#ffffff')];
-    recolorTestnetPaths(solana, '#c4bfb8');
-    expect(solana.map((item) => item.fill)).toEqual([
-      '#c4bfb8',
-      'url(#solana__b)',
-      'url(#solana__b)',
-      'url(#solana__b)',
-    ]);
+    const allWhites = [path('#123456'), path('#FFF'), path('white'), path('#ffffff')];
+    recolorTestnetPaths(allWhites, '#c4bfb8');
+    expect(allWhites.map((item) => item.fill)).toEqual(['#c4bfb8', '#123456', '#123456', '#123456']);
   });
 
   it('keeps a mark that has colors of its own (Ethereum on Sepolia)', () => {

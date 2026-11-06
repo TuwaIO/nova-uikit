@@ -48,7 +48,8 @@ const WHITE_FILL = /^\s*(?:#f{3}|#f{4}|#f{6}|#f{8}|white)\s*$/i;
  * Recolors the drawn paths of an icon for a testnet: the first one, the background, takes `fillColor`, and the white
  * paths over it (the mark) take the fill the background had, so the mark keeps the brand color on the new background.
  * Without that, a mark that is a plain shape reads as something else: the white square of Base on a grey background
- * looked like an empty checkbox. A mark with colors of its own (the Ethereum diamond) keeps them.
+ * looked like an empty checkbox. A mark with colors of its own (the Ethereum diamond) keeps them, and so does a white one
+ * over a gradient (the Solana bars stay white): only a solid color moves to the mark.
  *
  * @param paths - The drawn `<path>` elements in document order, without those of `<defs>`, `<clipPath>` or `<mask>`.
  * @param fillColor - The fill of the background.
@@ -59,7 +60,7 @@ export function recolorTestnetPaths(paths: readonly SvgPathLike[], fillColor: st
   if (!background) return;
   const brandFill = background.getAttribute('fill');
   background.setAttribute('fill', fillColor);
-  if (!brandFill || brandFill === 'none') return;
+  if (!brandFill || brandFill === 'none' || brandFill.startsWith('url(')) return;
   for (const path of rest) {
     if (WHITE_FILL.test(path.getAttribute('fill') ?? '')) path.setAttribute('fill', brandFill);
   }
@@ -67,8 +68,9 @@ export function recolorTestnetPaths(paths: readonly SvgPathLike[], fillColor: st
 
 /**
  * Recolors a network icon for a testnet: the first drawn `<path>` (the background) takes the color, and the white paths
- * over it (the mark) take the color the background had, so the mark keeps its brand color (the Base square stays blue
- * on grey instead of reading as an empty white box); a mark with colors of its own keeps them. Paths of `<defs>`,
+ * over it (the mark) take a solid color the background had, so the mark keeps its brand color (the Base square stays blue
+ * on grey instead of reading as an empty white box); over a gradient it stays white, and a mark with colors of its own keeps
+ * them. Paths of `<defs>`,
  * `<clipPath>` and `<mask>` are left alone. Uses DOMParser for safe XML manipulation, so call it in the browser. Automatically resolves CSS variables (e.g., `var(--color)`) to their computed values with
  * {@link resolveCssVariable}.
  *

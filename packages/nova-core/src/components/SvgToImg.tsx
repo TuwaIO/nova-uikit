@@ -21,7 +21,7 @@ export interface SvgToImgProps extends Omit<ComponentProps<'img'>, 'ref' | 'src'
   iconId: string | number;
   /**
    * Optional fill color of the first `<path>` element, the background of a network icon, for testnets and the Solana
-   * devnet and testnet: the white mark over it takes the color the background had (`applyFirstPathFill`).
+   * devnet and testnet: the white mark over it takes a solid color the background had (`applyFirstPathFill`).
    * @example "var(--tuwa-testnet-icons)"
    */
   firstPathFill?: string;
