@@ -9,6 +9,21 @@ import { useEffect, useEffectEvent, useRef } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
 
+/** How long a sign-in waits for a backend that could not answer before it tries again. */
+const SERVICE_RETRY_MS = 15_000;
+
+/**
+ * Thrown by `getNonce` or `verifier` when your backend could not answer (a 5xx, the network): it says nothing of the wallet
+ * or the person, so the wallet stays connected, no session ends, and the sign-in is tried again a little later, with
+ * `onError` called once however long that lasts. Anything else they throw counts as a failed sign-in.
+ */
+export class NovaSiwxServiceError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'NovaSiwxServiceError';
+  }
+}
+
 /**
  * Props of {@link NovaSiwxWatcher} (the `siwx` prop of `NovaConnectProvider`): the sign-in callbacks and the SIWX
  * message fields of `getSatelliteSiwxFields` from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
@@ -16,9 +31,12 @@ import { useSatelliteConnectStore } from '../satellite';
 export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
   /** Whether to ask connected wallets to sign in (default: `true`) */
   enabled?: boolean;
-  /** Fetches the nonce of the SIWX message from your backend */
+  /** Fetches the nonce of the SIWX message from your backend. Throw {@link NovaSiwxServiceError} when it cannot answer. */
   getNonce?: () => Promise<string>;
-  /** Verifies the signed message on your backend (required for the sign-in) */
+  /**
+   * Verifies the signed message on your backend (required for the sign-in). Throw {@link NovaSiwxServiceError} when it cannot
+   * answer: `null`, or any other error, says the signature was refused and disconnects the wallet.
+   */
   verifier?: UseSiwxSignInOptions['verifier'];
   /**
    * Optional callback triggered when the wallet disconnects or when `signOut` is called.
@@ -38,7 +56,8 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  * - When a wallet connects (or the account changes), it asks the wallet to sign a SIWX message once per address
  *   (`signIn` of `useSiwx` from `@tuwaio/siwx-react`: a wallet prompt, then `getNonce` and `verifier` requests to your
  *   backend). A rejected or failed sign-in disconnects that wallet (if it is still the active one) and calls
- *   `onError`. Without `verifier` it logs a warning and does not sign in.
+ *   `onError`. Without `verifier` it logs a warning and does not sign in. A backend that could not answer
+ *   ({@link NovaSiwxServiceError}) is no failed sign-in: the wallet stays, no session ends, and it tries again every 15 seconds.
  * - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until
  *   Satellite Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by
  *   `@tuwaio/siwx-react` is kept.
@@ -74,6 +93,11 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
 
   const lastPromptedAddress = useRef<string | null>(null);
   const isSigningLock = useRef<boolean>(false);
+  // `signIn` turns what `getNonce` and `verifier` throw into text: this says what it was
+  const serviceFailed = useRef<boolean>(false);
+  const serviceFailureTold = useRef<boolean>(false);
+  const serviceRetry = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const askAgain = useRef<() => void>(() => undefined);
 
   // Callbacks and message fields are read through Effect Events: the `siwx` prop is often a new object on every render,
   // which must not re-run the effects
@@ -103,6 +127,9 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
     (connectorType: string, address: string) =>
       activeConnection?.connectorType === connectorType && activeConnection.address === address,
   );
+
+  // The session of the latest render: `signIn` keeps it while it asks
+  const getSession = useEffectEvent(() => session);
 
   const signInActiveConnection = useEffectEvent(() => {
     if (!activeConnection?.isConnected || !activeConnection.address || !activeConnection.signMessage) return;
@@ -146,8 +173,43 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       }
 
       const { connectorType, address } = activeConnection;
+      const noteServiceFailure =
+        <A extends unknown[], R>(call: (...args: A) => Promise<R>) =>
+        async (...args: A): Promise<R> => {
+          try {
+            return await call(...args);
+          } catch (error) {
+            // By name: two copies of this package in an app would not share the class
+            if ((error as Error | null)?.name === 'NovaSiwxServiceError') serviceFailed.current = true;
+            throw error;
+          }
+        };
       const handleFailure = (err: unknown) => {
         const errMessage = err instanceof Error ? err.message : String(err);
+
+        // A Redis away behind the sign-in said nothing of this wallet, yet it was disconnected, and with it went all the page
+        // showed of it. `signIn` has left the store in `error`: the session, or no session, gets its status back
+        if (serviceFailed.current) {
+          const currentSession = getSession();
+          console.warn('[NovaSiwxWatcher] The SIWX backend could not answer, trying again later:', errMessage);
+          useSiwxSessionStore.setState({
+            status: currentSession ? 'authenticated' : 'idle',
+            session: currentSession ?? null,
+            error: null,
+          });
+          if (!serviceFailureTold.current) {
+            serviceFailureTold.current = true;
+            onError?.(errMessage);
+          }
+          if (serviceRetry.current) clearTimeout(serviceRetry.current);
+          serviceRetry.current = setTimeout(() => {
+            serviceRetry.current = null;
+            lastPromptedAddress.current = null;
+            if (!isSigningLock.current) askAgain.current();
+          }, SERVICE_RETRY_MS);
+          return;
+        }
+        serviceFailureTold.current = false;
         console.warn('[NovaSiwxWatcher] SIWX authentication rejected or failed:', errMessage);
 
         // Disconnect the wallet that was asked to sign in only while it is still the active one (the user may have
@@ -160,13 +222,17 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       };
 
       isSigningLock.current = true;
+      serviceFailed.current = false;
 
       signIn({
         signer: activeConnection.signMessage,
-        verifier,
-        getNonce,
+        verifier: noteServiceFailure(verifier),
+        getNonce: getNonce && noteServiceFailure(getNonce),
         fields,
-        onSuccess,
+        onSuccess: (signedIn) => {
+          serviceFailureTold.current = false;
+          return onSuccess?.(signedIn);
+        },
         onError: handleFailure,
       })
         .catch(handleFailure)
@@ -177,6 +243,14 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
       console.warn('[NovaSiwxWatcher] Failed to build SIWX fields:', err);
     }
   });
+
+  useEffect(() => {
+    // Through a ref, as an Effect Event cannot name itself. It reads the props of the latest render whenever the timer fires
+    askAgain.current = () => signInActiveConnection();
+    return () => {
+      if (serviceRetry.current) clearTimeout(serviceRetry.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!enabled || !activeConnection?.isConnected || !activeConnection?.address || !activeConnection?.chainId) {

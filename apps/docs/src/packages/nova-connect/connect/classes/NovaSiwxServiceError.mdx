@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Classes/NovaSiwxServiceError" />
+
+# NovaSiwxServiceError
+
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L20)
+
+Thrown by `getNonce` or `verifier` when your backend could not answer (a 5xx, the network): it says nothing of the wallet
+or the person, so the wallet stays connected, no session ends, and the sign-in is tried again a little later, with
+`onError` called once however long that lasts. Anything else they throw counts as a failed sign-in.
+
+## Extends
+
+- `Error`
+
+## Constructors
+
+### Constructor
+
+> **new NovaSiwxServiceError**(`message?`): `NovaSiwxServiceError`
+
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L21)
+
+#### Parameters
+
+##### message?
+
+`string`
+
+#### Returns
+
+`NovaSiwxServiceError`
+
+#### Overrides
+
+`Error.constructor`
