@@ -227,6 +227,43 @@ describe('trackedButtonStep', () => {
   });
 });
 
+// A toast closed with the cross came back at every page load, for a transaction still pending
+describe('a toast a person closed', () => {
+  const pending = (txKey: string, localTimestamp: number) =>
+    ({ txKey, pending: true, from: '0xabc', localTimestamp: String(localTimestamp) }) as never;
+
+  it('stays closed when the pool reads its transaction at load', () => {
+    const tx = pending('0xa', 1);
+    const pool = { '0xa': tx };
+    expect(toastStepFor(tx, undefined, pool, () => false)).toEqual({ kind: 'show', toastId: '0xa' });
+    expect(toastStepFor(tx, undefined, pool, () => false, undefined, new Set(['0xa']))).toEqual({ kind: 'skip' });
+  });
+
+  it('comes back when its transaction changes state', () => {
+    const before = pending('0xa', 1) as { txKey: string; pending: boolean };
+    const after = { ...before, pending: false, status: 'Success' } as never;
+    expect(toastStepFor(after, before as never, { '0xa': after }, () => false, undefined, new Set(['0xa']))).toEqual({
+      kind: 'show',
+      toastId: '0xa',
+    });
+  });
+
+  it('is left out of what a page opens with, and takes no place of the newest few', () => {
+    const pool = {
+      '0xa': pending('0xa', 4),
+      '0xb': pending('0xb', 3),
+      '0xc': pending('0xc', 2),
+      '0xd': pending('0xd', 1),
+    };
+    expect(pendingOfWallet(pool as never, '0xabc').map(({ txKey }) => txKey)).toEqual(['0xa', '0xb', '0xc']);
+    expect(pendingOfWallet(pool as never, '0xabc', new Set(['0xa'])).map(({ txKey }) => txKey)).toEqual([
+      '0xb',
+      '0xc',
+      '0xd',
+    ]);
+  });
+});
+
 describe('toastStepFor', () => {
   const active =
     (...keys: string[]) =>

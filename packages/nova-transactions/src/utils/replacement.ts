@@ -221,6 +221,7 @@ export type ToastStep = { kind: 'skip' } | { kind: 'show'; toastId: string };
  * @param pool - The transaction pool.
  * @param isToastActive - Whether a toast with this id is on screen.
  * @param known - The ids seen so far by record.
+ * @param closed - The transactions whose toast a person closed: what the pool reads at a page load does not open it again.
  * @returns The next step. A toast a person closed comes back for a change of state, not for any write to the record, as
  * trackers write several times while a transaction waits.
  */
@@ -230,11 +231,15 @@ export function toastStepFor<T extends Transaction>(
   pool: TransactionPool<T>,
   isToastActive: (toastId: string) => boolean,
   known?: ReadonlyMap<string, string>,
+  closed?: ReadonlySet<string>,
 ): ToastStep {
   // The record that goes on speaks for the operation from here
   if (successorOf(tx, pool)) return { kind: 'skip' };
   const toastId = toastIdOf(tx, pool, known);
-  if (!prevTx) return tx.pending || isToastActive(toastId) ? { kind: 'show', toastId } : { kind: 'skip' };
+  if (!prevTx) {
+    if (closed?.has(tx.txKey)) return { kind: 'skip' };
+    return tx.pending || isToastActive(toastId) ? { kind: 'show', toastId } : { kind: 'skip' };
+  }
   if (JSON.stringify(prevTx) === JSON.stringify(tx)) return { kind: 'skip' };
   const isNewState = prevTx.pending !== tx.pending || prevTx.status !== tx.status;
   return isNewState || isToastActive(toastId) ? { kind: 'show', toastId } : { kind: 'skip' };
@@ -268,11 +273,16 @@ const PENDING_TOASTS_AT_LOAD = 3;
  *
  * @param pool - The pool.
  * @param wallet - The connected wallet, in lower case.
+ * @param closed - The transactions whose toast a person closed: left out, and in no one's place among the newest few.
  * @returns The transactions, newest first.
  */
-export function pendingOfWallet<T extends Transaction>(pool: TransactionPool<T>, wallet: string): T[] {
+export function pendingOfWallet<T extends Transaction>(
+  pool: TransactionPool<T>,
+  wallet: string,
+  closed?: ReadonlySet<string>,
+): T[] {
   return Object.values(pool)
-    .filter((tx) => tx.pending && tx.from?.toLowerCase() === wallet)
+    .filter((tx) => tx.pending && tx.from?.toLowerCase() === wallet && !closed?.has(tx.txKey))
     .sort((a, b) => Number(b.localTimestamp) - Number(a.localTimestamp))
     .slice(0, PENDING_TOASTS_AT_LOAD);
 }

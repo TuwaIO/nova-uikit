@@ -338,6 +338,7 @@ const Badge = ({
 
 const BADGE_TONE_OF_STATUS: Record<StatusTone, BadgeTone> = {
   pending: 'pending',
+  warning: 'pending',
   success: 'success',
   error: 'error',
   neutral: 'info',

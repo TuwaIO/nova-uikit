@@ -20,4 +20,9 @@ describe('stripFill', () => {
   it('stays visible without motion, when no glint can run', () => {
     expect(stripFill('pending', undefined, true)).toBe(1);
   });
+
+  // A warning screen ran the glint of a payment under way, under a text asking the buyer to check the wallet
+  it('fills the strip of a warning, which stands still', () => {
+    expect(stripFill('warning', undefined, false)).toBe(1);
+  });
 });
