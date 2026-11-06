@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.11.0...nova-connect-v0.11.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* no wallets modal ([#135](https://github.com/TuwaIO/nova-uikit/issues/135)) ([c6ea0ad](https://github.com/TuwaIO/nova-uikit/commit/c6ea0ad2e451eebf09ee320607da264732540ccb))
+
 ## [0.11.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.10.7...nova-connect-v0.11.0) (2026-11-05)
 
 
