@@ -45,6 +45,7 @@ import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
 import {
   canReplaceTx,
+  canSpeedUpTx,
   explorerUrlOfHash,
   explorerUrlOfReplaced,
   runReplacement,
@@ -357,7 +358,7 @@ const StatusMark = ({ tone }: { tone: StatusTone }) => (
   </MorphIcon>
 );
 
-/** A hash in a row, shortened and linked to the explorer when there is a link. */
+/** A hash in a row, shortened and linked to the explorer when there is a link. Without one the hash is still shown. */
 const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
   href ? (
     <a
@@ -369,7 +370,14 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
     >
       {shortAddress(hash, 8, 8)}
     </a>
-  ) : null;
+  ) : (
+    <span
+      title={hash}
+      className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-primary)]"
+    >
+      {shortAddress(hash, 8, 8)}
+    </span>
+  );
 
 const actionButtonClassName =
   'novatx:inline-flex novatx:h-9 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-2 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:font-mono novatx:text-sm novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:no-underline novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)]';
@@ -697,14 +705,16 @@ export function TransactionDetails<T extends Transaction>({
           </div>
           {canReplace ? (
             <div className="novatx:flex novatx:flex-wrap novatx:gap-2">
-              <button
-                type="button"
-                onClick={() => void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal)}
-                className={cn(actionButtonClassName, classNames?.actionButton)}
-              >
-                <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
-                {actions.speedUp}
-              </button>
+              {canSpeedUpTx(tx) && (
+                <button
+                  type="button"
+                  onClick={() => void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal)}
+                  className={cn(actionButtonClassName, classNames?.actionButton)}
+                >
+                  <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                  {actions.speedUp}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal)}

@@ -12,9 +12,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { defaultLabels } from '../../i18n/en';
 
+const { showPreSubmitErrorToast } = vi.hoisted(() => ({ showPreSubmitErrorToast: vi.fn() }));
+
 vi.mock('../../providers', () => ({
   useLabels: () => defaultLabels,
-  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: vi.fn() }),
+  useNovaTransactionsError: () => ({ showPreSubmitErrorToast }),
 }));
 
 import { TrackingTxModal } from './TrackingTxModal';
@@ -160,6 +162,64 @@ describe('TrackingTxModal', () => {
       }),
     );
   });
+
+  const retryThatFails = (error: unknown) => {
+    const adapter = {
+      key: OrbitAdapter.EVM,
+      retryTxAction: vi.fn().mockRejectedValue(error),
+    } as unknown as TxAdapter<EvmTransaction>;
+    const failedTx = {
+      txKey: '0xabc',
+      adapter: OrbitAdapter.EVM,
+      tracker: TransactionTracker.Ethereum,
+      chainId: 1,
+      from: '0x1234567890123456789012345678901234567890',
+      pending: false,
+      isError: true,
+      status: TransactionStatus.Failed,
+      type: 'TRANSFER',
+      connectorType: 'evm:metamask',
+      localTimestamp: 1,
+      isTrackedModalOpen: true,
+    } as unknown as EvmTransaction;
+    const initialTx = {
+      adapter: OrbitAdapter.EVM,
+      type: 'TRANSFER',
+      desiredChainID: 1,
+      actionFunction: vi.fn(),
+      lastTxKey: '0xabc',
+      localTimestamp: 1,
+      withTrackedModal: true,
+    } as unknown as InitialTransaction;
+    return findRetryHandler(
+      TrackingTxModal({
+        adapter,
+        initialTx,
+        executeTxAction: vi.fn(),
+        transactionsPool: { '0xabc': failedTx },
+        onClose: vi.fn(),
+        onOpenAllTransactions: vi.fn(),
+      }),
+    )!;
+  };
+
+  // An unhandled rejection, and on Solana the person saw nothing when the wallet was no longer connected
+  it('tells what stopped a Retry', async () => {
+    showPreSubmitErrorToast.mockClear();
+    const error = new Error('Retry failed: A wallet must be connected.');
+
+    retryThatFails(error)();
+    await vi.waitFor(() => expect(showPreSubmitErrorToast).toHaveBeenCalledWith(error));
+  });
+
+  it('says nothing when the person rejected the Retry in the wallet', async () => {
+    showPreSubmitErrorToast.mockClear();
+
+    retryThatFails(Object.assign(new Error('rejected'), { code: 4001 }))();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(showPreSubmitErrorToast).not.toHaveBeenCalled();
+  });
 });
 
 describe('TrackingTxModal actions', () => {
@@ -171,6 +231,7 @@ describe('TrackingTxModal actions', () => {
     tracker: TransactionTracker.Ethereum,
     chainId: 1,
     from: WALLET,
+    to: '0x0000000000000000000000000000000000000002',
     type: 'SWAP',
     connectorType: 'evm:metamask',
     localTimestamp: 1,

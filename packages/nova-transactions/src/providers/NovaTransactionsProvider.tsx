@@ -31,7 +31,9 @@ import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
 import { closedToasts, rememberClosedToast } from '../utils/closedToasts';
 import {
+  isUserRejection,
   latestRecordOf,
+  mayOpenNewToast,
   pendingOfWallet,
   successorOf,
   toastIdOf,
@@ -167,6 +169,8 @@ export function NovaTransactionsProvider<T extends Transaction>({
   const mergedLabels = useMemo(() => deepMerge(defaultLabels, labels || {}), [labels]);
   useOfferLabels(mergedLabels);
 
+  const toldPreSubmitErrors = useRef(new WeakSet<object>());
+
   /**
    * Fires a top-center error toast for any error that occurs before the transaction
    * enters the store pool (i.e., while `initialTx` is still `undefined`).
@@ -174,6 +178,11 @@ export function NovaTransactionsProvider<T extends Transaction>({
   const showPreSubmitErrorToast = useCallback(
     (error: unknown) => {
       if (!enabledFeatures.validationErrorToast) return;
+      // A failed Retry comes here from the provider and from the modal around it, which alone sees what fails before it
+      if (typeof error === 'object' && error !== null) {
+        if (toldPreSubmitErrors.current.has(error)) return;
+        toldPreSubmitErrors.current.add(error);
+      }
 
       const message = error instanceof Error ? error.message : String(error);
       const rawError =
@@ -218,7 +227,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
         // If initialTx has a lastTxKey the transaction was already submitted — that
         // error path is handled by the tracking modal's own error UI.
         const wasPreSubmit = !initialTx?.lastTxKey;
-        if (wasPreSubmit) {
+        if (wasPreSubmit && !isUserRejection(e)) {
           showPreSubmitErrorToast(e);
         }
         throw e;
@@ -275,16 +284,19 @@ export function NovaTransactionsProvider<T extends Transaction>({
         });
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [transactionsPool, enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
+
+    [enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
   );
 
   // Effect 1: Handles toasts for NEW or CHANGED transactions.
   useEffect(() => {
     const prevPool = prevTransactionsRef.current;
-    const closed = closedToasts();
+    const records = Object.values(transactionsPool);
+    // Read from `localStorage`, and asked of new records alone
+    const closed = records.some((tx) => !prevPool[tx.txKey]) ? closedToasts() : undefined;
+    let openedNew = 0;
 
-    Object.values(transactionsPool).forEach((currentTx) => {
+    records.forEach((currentTx) => {
       const step = toastStepFor(
         currentTx,
         prevPool[currentTx.txKey],
@@ -294,6 +306,10 @@ export function NovaTransactionsProvider<T extends Transaction>({
         closed,
       );
       if (step.kind === 'show') {
+        if (!prevPool[currentTx.txKey] && !toast.isActive(step.toastId, toastContainerId)) {
+          if (!mayOpenNewToast(currentTx, connectedWalletAddress, openedNew)) return;
+          openedNew += 1;
+        }
         toastIdsRef.current.set(currentTx.txKey, step.toastId);
         showOrUpdateToast(currentTx, step.toastId);
       }
@@ -304,6 +320,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
     );
 
     prevTransactionsRef.current = transactionsPool;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionsPool, showOrUpdateToast]);
 
   // StrictMode runs the effects twice on mount, and a toast of the first pass can be lost with the first subscription of the
@@ -318,7 +335,8 @@ export function NovaTransactionsProvider<T extends Transaction>({
   // A transaction still pending when the page opens gets a toast, and with it a way to speed it up or stop tracking it. Only of
   // the wallet that can act on it, once per wallet, and only the newest few: nothing limits how many a pool can hold.
   useEffect(() => {
-    const wallet = connectedWalletAddress?.toLowerCase();
+    // As it is: lower-cased, a Solana address is another account, and its wallet had no toast at all
+    const wallet = connectedWalletAddress;
     if (!wallet || walletsSeenRef.current.has(wallet)) return;
     walletsSeenRef.current.add(wallet);
     pendingOfWallet(transactionsPool, wallet, closedToasts()).forEach((tx) => {
@@ -339,7 +357,9 @@ export function NovaTransactionsProvider<T extends Transaction>({
         showOrUpdateToast(tx, toastId);
       }
     });
-  }, [connectedWalletAddress, showOrUpdateToast, transactionsPool]);
+    // Not on the pool: Effect 1 has updated what changed, and each write updated every open toast again
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectedWalletAddress, showOrUpdateToast]);
 
   const isTrackingModalOpen =
     !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;

@@ -48,8 +48,10 @@ export type ToastValidationErrorFieldProps = {
 export type ToastValidationErrorMessageProps = {
   /** The error message string. */
   message: string;
-  /** Optional additional CSS classes. */
+  /** Optional additional CSS classes of the text. */
   className?: string;
+  /** Optional additional CSS classes of the scrollable box around the text. */
+  containerClassName?: string;
 };
 
 /** Props forwarded to a custom copy-button content component. */
@@ -196,10 +198,11 @@ const DefaultFieldBadge = ({ fieldLabel, fieldName, className }: ToastValidation
   </div>
 );
 
-const DefaultMessage = ({ message, className }: ToastValidationErrorMessageProps) => (
+const DefaultMessage = ({ message, className, containerClassName }: ToastValidationErrorMessageProps) => (
   <div
     className={cn(
       'novatx:mt-2 novatx:max-h-20 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-2',
+      containerClassName,
     )}
   >
     <p
@@ -324,7 +327,7 @@ export function ToastValidationError({
       {fieldName && <FieldBadge fieldLabel={labels.field} fieldName={fieldName} className={cls.fieldBadge} />}
 
       {/* Message body */}
-      <Message message={message} className={cls.messageText} />
+      <Message message={message} className={cls.messageText} containerClassName={cls.messageContainer} />
 
       {/* Copy button */}
       <button

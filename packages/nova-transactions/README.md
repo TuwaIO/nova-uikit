@@ -104,7 +104,7 @@ A toast closed with the cross while its transaction is pending stays closed afte
 
 ## 🌐 External Services
 
-The package sends no network requests. Explorer links are built by the Pulsar adapters and opened by the browser only when clicked; the RPC requests of the trackers are made by Pulsar. The package does not use `localStorage` (the Pulsar store persists the transactions).
+The package sends no network requests. Explorer links are built by the Pulsar adapters and opened by the browser only when clicked; the RPC requests of the trackers are made by Pulsar.
 
 ---
 

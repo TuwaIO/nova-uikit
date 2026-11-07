@@ -10,7 +10,7 @@ import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
-import { canReplaceTx, runReplacement } from '../utils/replacement';
+import { canReplaceTx, canSpeedUpTx, runReplacement } from '../utils/replacement';
 import {
   hasConfirmations,
   isTxOfWallet,
@@ -349,9 +349,11 @@ export function ToastTransaction<T extends Transaction>({
           >
             {canBeReplaced && (
               <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.actionsContainer)}>
-                <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
-                  {actions.speedUp}
-                </SpeedUpButton>
+                {canSpeedUpTx(tx) && (
+                  <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
+                    {actions.speedUp}
+                  </SpeedUpButton>
+                )}
                 <CancelButton onClick={handleCancel} className={classNames?.cancelButton}>
                   {actions.cancel}
                 </CancelButton>

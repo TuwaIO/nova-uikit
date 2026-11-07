@@ -27,7 +27,7 @@ import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../../providers';
-import { canReplaceTx, latestRecordOf, runReplacement } from '../../utils/replacement';
+import { canReplaceTx, canSpeedUpTx, isUserRejection, latestRecordOf, runReplacement } from '../../utils/replacement';
 import { progressOf, trackerGaveUp, txTitleSource } from '../../utils/txStatus';
 import {
   TxErrorBlock,
@@ -275,7 +275,12 @@ export function TrackingTxModal<T extends Transaction>({
       pimlicoApiKey: initialTx?.pimlicoApiKey,
       withTrackedModal: 'withTrackedModal' in txToDisplay ? txToDisplay.withTrackedModal : false,
     };
-    foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });
+    // It rejects with what stopped the Retry: on Solana a wallet no longer connected, which nothing else told
+    Promise.resolve(
+      foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction }),
+    ).catch((error: unknown) => {
+      if (!isUserRejection(error)) showPreSubmitErrorToast(error);
+    });
   };
 
   // Only what can really be replaced: from another account the same transfer would be sent a second time
@@ -395,7 +400,7 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onSpeedUp={isWithActions && canSpeedUpTx(activeTx) ? handleSpeedUp : undefined}
               onCancel={isWithActions ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
             />
@@ -407,7 +412,7 @@ export function TrackingTxModal<T extends Transaction>({
               isFailed={isFailed}
               canReplace={canReplace}
               onRetry={canRetry ? handleRetry : undefined}
-              onSpeedUp={isWithActions ? handleSpeedUp : undefined}
+              onSpeedUp={isWithActions && canSpeedUpTx(activeTx) ? handleSpeedUp : undefined}
               onCancel={isWithActions ? handleCancel : undefined}
               connectedWalletAddress={connectedWalletAddress}
               classNames={classNames}
@@ -527,29 +532,29 @@ const DefaultFooter = ({
       )}
     >
       <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.footerActions)}>
-        {canReplace && onSpeedUp && onCancel && (
-          <>
-            <button
-              type="button"
-              onClick={onSpeedUp}
-              className={cn(
-                'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
-                classNames?.speedUpButton,
-              )}
-            >
-              {actions.speedUp}
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className={cn(
-                'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
-                classNames?.cancelButton,
-              )}
-            >
-              {actions.cancel}
-            </button>
-          </>
+        {canReplace && onSpeedUp && (
+          <button
+            type="button"
+            onClick={onSpeedUp}
+            className={cn(
+              'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+              classNames?.speedUpButton,
+            )}
+          >
+            {actions.speedUp}
+          </button>
+        )}
+        {canReplace && onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className={cn(
+              'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+              classNames?.cancelButton,
+            )}
+          >
+            {actions.cancel}
+          </button>
         )}
       </div>
       <div className={cn('novatx:flex novatx:items-center novatx:gap-3', classNames?.footerButtons)}>

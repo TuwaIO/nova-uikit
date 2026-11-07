@@ -9,7 +9,7 @@ import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 're
 
 import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
-import { afterTrackedAction, trackedButtonStep } from '../utils/replacement';
+import { afterTrackedAction, isUserRejection, trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
@@ -191,6 +191,11 @@ export function TxActionButton<T extends Transaction>({
       else if (next === 'idle') setStatus('idle');
     } catch (error) {
       if (walletAtClick !== latestWallet.current) return;
+      // A person who pressed reject in the wallet needs neither a red toast nor a Failed button
+      if (isUserRejection(error)) {
+        setStatus('idle');
+        return;
+      }
       showPreSubmitErrorToast(error);
       setStatus('failed');
     }

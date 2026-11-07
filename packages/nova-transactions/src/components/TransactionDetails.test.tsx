@@ -164,7 +164,7 @@ describe('TransactionDetails', () => {
     expect(findElement(element, byText(defaultLabels.actions.speedUp))).toBeUndefined();
   });
 
-  it('offers speed-up and cancel for a pending transaction sent with MetaMask, as the tracking modal does', () => {
+  it('offers speed-up and cancel for a pending transaction sent with MetaMask, as the tracking modal does', async () => {
     const speedUpTxAction = vi.fn();
     const cancelTxAction = vi.fn();
     const pendingTx = {
@@ -173,6 +173,7 @@ describe('TransactionDetails', () => {
       status: undefined,
       finishedTimestamp: undefined,
       nonce: 7,
+      to: '0x0000000000000000000000000000000000000002',
       maxFeePerGas: '1000',
       maxPriorityFeePerGas: '100',
     } as EvmTransaction;
@@ -180,6 +181,8 @@ describe('TransactionDetails', () => {
     const element = renderDetails(pendingTx, wallet, { speedUpTxAction, cancelTxAction });
 
     findElement(element, byText(defaultLabels.actions.speedUp))?.props.onClick?.();
+    // One at a time: the wallet has to answer the first
+    await new Promise((resolve) => setTimeout(resolve, 0));
     findElement(element, byText(defaultLabels.actions.cancel))?.props.onClick?.();
     expect(speedUpTxAction).toHaveBeenCalledWith(pendingTx);
     expect(cancelTxAction).toHaveBeenCalledWith(pendingTx);

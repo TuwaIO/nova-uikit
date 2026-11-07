@@ -185,8 +185,8 @@ export function TransactionsInfoModal<T extends Transaction>({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
       <DialogContent
-        className={cn('novatx:w-full novatx:sm:max-w-2xl', customization?.modalProps?.className)}
         {...customization?.modalProps}
+        className={cn('novatx:w-full novatx:sm:max-w-2xl', customization?.modalProps?.className)}
       >
         <div
           className={cn(

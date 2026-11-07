@@ -84,6 +84,17 @@ export function canReplaceTx<T extends Transaction>(
   );
 }
 
+/**
+ * Whether speed-up can be offered, on a transaction {@link canReplaceTx} allows: `speedUpTxAction` needs `to`, so it is
+ * refused on a contract creation, where cancel still works.
+ *
+ * @param tx - The transaction.
+ * @returns `true` when it has a recipient.
+ */
+export function canSpeedUpTx<T extends Transaction>(tx: T | undefined): boolean {
+  return !!tx && !!asEvm(tx).to;
+}
+
 /** A person pressing "reject" in the wallet needs no message about it. */
 export function isUserRejection(error: unknown): boolean {
   for (const current of errorChain(error)) {
@@ -95,6 +106,8 @@ export function isUserRejection(error: unknown): boolean {
   return false;
 }
 
+const replacementsRunning = new Set<string>();
+
 /**
  * Runs speed-up or cancel, whose error nothing else would show: a replacement refused as underpriced, or a nonce already
  * spent, would otherwise look like a button that does nothing.
@@ -102,17 +115,24 @@ export function isUserRejection(error: unknown): boolean {
  * @param action - `speedUpTxAction` or `cancelTxAction` of the adapter.
  * @param tx - The transaction to replace.
  * @param report - Shows an error to the person.
- * @returns A promise that resolves when the wallet has answered. It never rejects.
+ * @returns A promise that resolves when the wallet has answered. It never rejects. While one runs for a transaction, a
+ * second call for it does nothing.
  */
 export async function runReplacement<T extends Transaction>(
   action: (tx: T) => Promise<string>,
   tx: T,
   report: (error: unknown) => void,
 ): Promise<void> {
+  // The buttons stay active behind the wallet prompt. A double click opened two prompts with the same fees, and the second,
+  // refused as underpriced, said the replacement failed while the first was on its way. Here, as three surfaces call this
+  if (replacementsRunning.has(tx.txKey)) return;
+  replacementsRunning.add(tx.txKey);
   try {
     await action(tx);
   } catch (error) {
     if (!isUserRejection(error)) report(error);
+  } finally {
+    replacementsRunning.delete(tx.txKey);
   }
 }
 
@@ -238,6 +258,8 @@ export function toastStepFor<T extends Transaction>(
   known?: ReadonlyMap<string, string>,
   closed?: ReadonlySet<string>,
 ): ToastStep {
+  // The same object: nothing changed. Most records of a write, and a record can carry 10 KB to serialize below
+  if (prevTx === tx) return { kind: 'skip' };
   // The record that goes on speaks for the operation from here
   if (successorOf(tx, pool)) return { kind: 'skip' };
   const toastId = toastIdOf(tx, pool, known);
@@ -269,8 +291,21 @@ export function toastsOfRemoved<T extends Transaction>(
     .map((tx) => toastIdOf(tx, prevPool, known));
 }
 
-/** How many transactions still pending when a page opens get a toast. */
+/** How many transactions still pending when a page opens get a toast, and how many that appear at once later. */
 const PENDING_TOASTS_AT_LOAD = 3;
+
+/**
+ * Whether a record that has just appeared in the pool may open a new toast: only one of the connected wallet, and only the
+ * first few of one change. A history read from a server, or another tab of another wallet, opened one for each.
+ *
+ * @param tx - The record.
+ * @param wallet - The connected wallet, which without one limits nothing but the number.
+ * @param opened - How many this change has opened so far.
+ * @returns `true` when it may.
+ */
+export function mayOpenNewToast<T extends Transaction>(tx: T, wallet: string | undefined, opened: number): boolean {
+  return opened < PENDING_TOASTS_AT_LOAD && (!wallet || isTxOfWallet(tx, wallet));
+}
 
 /**
  * The transactions of a wallet to show toasts for when the page opens: those still pending, the newest few. Any other wallet
