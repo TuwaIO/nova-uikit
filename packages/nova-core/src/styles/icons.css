@@ -5,8 +5,8 @@
 
   a:hover .tuwa-link-arrow,
   a:focus-visible .tuwa-link-arrow,
-  button:hover .tuwa-link-arrow,
-  button:focus-visible .tuwa-link-arrow {
+  button:not(:disabled):hover .tuwa-link-arrow,
+  button:not(:disabled):focus-visible .tuwa-link-arrow {
     transform: translate(2px, -2px);
   }
 
@@ -16,8 +16,8 @@
 
   a:hover .tuwa-exit-arrow,
   a:focus-visible .tuwa-exit-arrow,
-  button:hover .tuwa-exit-arrow,
-  button:focus-visible .tuwa-exit-arrow {
+  button:not(:disabled):hover .tuwa-exit-arrow,
+  button:not(:disabled):focus-visible .tuwa-exit-arrow {
     transform: translateX(-3px);
   }
 

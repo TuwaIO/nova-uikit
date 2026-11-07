@@ -27,6 +27,7 @@ function testnetMarkOf(chainId: number | string) {
   const mark = suspense.props.children as Element;
   return {
     className: circle.props.className as string,
+    scaleClassName: scale.props.className as string,
     variant: mark.props.variant,
     filePath: mark.props.filePath as string,
   };
@@ -35,6 +36,13 @@ function testnetMarkOf(chainId: number | string) {
 // The networks of the checkout presets and of the Cosmos playground. Owner, 2026-11-07: each testnet brought the shape and the
 // color of its mainnet's background, so they are one white mark on one grey circle now
 describe('NetworkIcon of a testnet', () => {
+  // Owner, 2026-11-07: a button that sets the size of every svg in it, as the Isometric keys do, pulled the mark to a corner
+  it('keeps the mark in the middle of the circle, whatever size a host gives the svg', () => {
+    const { scaleClassName } = testnetMarkOf(11155111);
+    expect(scaleClassName).toContain('novacore:items-center');
+    expect(scaleClassName).toContain('novacore:justify-center');
+  });
+
   it.each([
     ['Base Sepolia', 84532, 'network:base'],
     ['Sepolia', 11155111, 'network:ethereum'],

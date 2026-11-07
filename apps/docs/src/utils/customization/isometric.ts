@@ -300,6 +300,11 @@ export const isoConnect: NovaConnectProviderCustomization = {
           },
         },
         connectorsSelections: {
+          disclaimer: {
+            classNames: {
+              button: ({ isPrimary }) => cn(isPrimary ? button.primary : button.outline, 'min-h-9 px-3 py-1.5'),
+            },
+          },
           connectorsBlock: {
             installed: { classNames: { title: () => cn(sectionTitle, text.primary) }, connectCard },
             popular: { classNames: { title: () => sectionTitle }, connectCard },
@@ -438,7 +443,8 @@ export const isoConnectButton: ConnectButtonCustomization = {
           arrowWrapper: () => '[&_svg]:text-[var(--tuwa-text-primary)]',
         },
       },
-      selectContent: { contentClassName: cn('p-1', drawing, surface.base, surface.border, faces) },
+      // On the frame of Nova's list: the scroll buttons are inside it
+      selectContent: { className: cn('w-[210px] ring-0!', drawing, surface.base, surface.border, faces) },
       chainListRenderer: chainList,
     },
   },

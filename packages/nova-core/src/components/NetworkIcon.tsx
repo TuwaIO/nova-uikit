@@ -85,7 +85,8 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
           'novacore:block novacore:overflow-hidden novacore:bg-[var(--tuwa-testnet-icons)] novacore:text-white',
         )}
       >
-        <span className="novacore:block novacore:h-full novacore:w-full novacore:scale-[0.68]">
+        {/* Centered: a host that sets the size of every svg in its button (`[&_svg]:h-5`) would pull the mark to a corner */}
+        <span className="novacore:flex novacore:h-full novacore:w-full novacore:scale-[0.68] novacore:items-center novacore:justify-center">
           <Suspense fallback={null}>
             <Web3IconLazy
               filePath={iconPath}

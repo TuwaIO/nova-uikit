@@ -2,21 +2,15 @@
  * @file ConnectedModalFooter component with comprehensive customization options and wallet control actions.
  */
 
-import { ExitIcon } from '@tuwaio/nova-core';
+import { ExitIcon, ExternalLinkIcon } from '@tuwaio/nova-core';
 import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import { motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---
-const DEFAULT_PATH_ANIMATION_VARIANTS: Variants = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: { pathLength: 1, opacity: 1 },
-};
-
 // --- Types for Customization ---
 /**
  * Props for a custom disconnect button.
@@ -241,9 +235,6 @@ const DefaultExplorerLink: React.FC<
   type,
   ...props
 }) => {
-  const iconPath =
-    'M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25';
-
   if (isValidUrl) {
     return (
       <a
@@ -258,7 +249,7 @@ const DefaultExplorerLink: React.FC<
       >
         <span className="novacon:flex novacon:items-center novacon:gap-2">
           {labels.viewOnExplorer}
-          <DefaultFooterIcon pathData={iconPath} className="novacon:w-4 novacon:h-4" />
+          <ExternalLinkIcon className="novacon:w-4 novacon:h-4" />
         </span>
         <span id={ariaDescribedBy} className="novacon:sr-only">
           {formatLabel(labels.explorerLinkDescription, { address: walletAddress })}
@@ -277,7 +268,7 @@ const DefaultExplorerLink: React.FC<
     >
       <span className="novacon:flex novacon:items-center novacon:gap-2">
         {labels.viewOnExplorer}
-        <DefaultFooterIcon pathData={iconPath} className="novacon:w-4 novacon:h-4" isAnimated={false} />
+        <ExternalLinkIcon className="novacon:w-4 novacon:h-4" />
       </span>
       <span id={ariaDescribedBy} className="novacon:sr-only">
         {labels.explorerNotAvailable}
@@ -285,37 +276,6 @@ const DefaultExplorerLink: React.FC<
     </button>
   );
 };
-
-// Icon of the default buttons: an SVG path, drawn with an animation unless `isAnimated` is `false`
-const DefaultFooterIcon: React.FC<{ pathData: string; className: string; isAnimated?: boolean }> = ({
-  pathData,
-  className,
-  isAnimated = true,
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-    aria-hidden="true"
-  >
-    {isAnimated ? (
-      <motion.path
-        d={pathData}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        variants={DEFAULT_PATH_ANIMATION_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5, ease: 'easeInOut', delay: 0 }}
-      />
-    ) : (
-      <path d={pathData} strokeLinecap="round" strokeLinejoin="round" />
-    )}
-  </svg>
-);
 
 const DefaultFooterContent: React.FC<Pick<ConnectedModalFooterContentProps, 'disconnectButton' | 'explorerLink'>> = ({
   disconnectButton,

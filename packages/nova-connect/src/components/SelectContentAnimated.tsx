@@ -16,7 +16,7 @@ import { ToTopButton, ToTopButtonCustomization } from './ToTopButton';
  * (`position` defaults to `popper`; `style` overrides the `maxHeight` style) and these options.
  */
 export interface SelectContentAnimatedProps extends ComponentPropsWithoutRef<typeof Select.Content> {
-  /** Classes added to the default classes of `Select.Content` */
+  /** Classes added to the default classes of `Select.Content`, which draws the frame of the list and its scroll buttons */
   className?: string;
   /** Classes added to the default classes of the animated panel around the items */
   contentClassName?: string;
@@ -121,16 +121,17 @@ export const SelectContentAnimated = forwardRef<
     // Memoize content container classes (additive approach)
     const contentClasses = cn(
       // Default styles always applied
-      'novacon:p-1 novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:shadow-xl',
-      'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)] novacon:overflow-hidden',
+      'novacon:p-1',
       // Custom classes added to defaults
       contentClassName,
     );
 
     // Select content classes (additive approach)
     const selectContentClasses = cn(
-      // Default styles always applied
-      'novacon:overflow-hidden',
+      // Default styles always applied. The frame is here, not on the list: the scroll buttons are next to the list, and a
+      // frame around the list alone left them outside it
+      'novacon:overflow-hidden novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:shadow-xl',
+      'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
       'novacon:w-[--radix-select-trigger-width]',
       'novacon:data-[state=open]:animate-in novacon:data-[state=closed]:animate-out',
       'novacon:data-[state=closed]:fade-out-0 novacon:data-[state=open]:fade-in-0',
