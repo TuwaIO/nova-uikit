@@ -786,7 +786,10 @@ export function ChainSelector({
   const selectValue = String(currentFormattedChainId);
   const chainName = getChainName(currentFormattedChainId).name;
 
-  if (chainsList.length <= 1) {
+  // By what the list offers, not its length: a one-chain app had no way back when the wallet moved to another network
+  const hasOtherChain = chainsList.some((chain) => String(getChainData(chain).formattedChainId) !== selectValue);
+
+  if (!hasOtherChain) {
     return (
       <SingleChainDisplay
         chainId={currentFormattedChainId}
@@ -814,7 +817,7 @@ export function ChainSelector({
             onToggle={() => setIsChainsListOpen(!isChainsListOpen)}
             selectValue={selectValue}
             isMobile={false}
-            hasMultipleChains={chainsList.length > 1}
+            hasMultipleChains={hasOtherChain}
             customization={customization?.triggerButton}
           />
           <SelectContentAnimated className="novacon:w-[210px]" {...customization?.selectContent}>
@@ -838,7 +841,7 @@ export function ChainSelector({
           onToggle={() => setIsChainsListOpenMobile(true)}
           selectValue={selectValue}
           isMobile={true}
-          hasMultipleChains={chainsList.length > 1}
+          hasMultipleChains={hasOtherChain}
           customization={customization?.triggerButton}
         />
 

@@ -2,10 +2,11 @@
  * @file Main NovaConnect provider component with comprehensive customization capabilities.
  */
 
+import { NovaSoundsProvider } from '@tuwaio/nova-core';
 import { deepMerge } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
-import { ComponentType, ReactNode, useMemo, useState } from 'react';
+import { ComponentType, ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { ConnectedModal, ConnectedModalCustomization } from '../components/ConnectedModal/ConnectedModal';
 import { ConnectModal, ConnectModalCustomization } from '../components/ConnectModal/ConnectModal';
@@ -19,6 +20,7 @@ import {
 } from '../hooks';
 import { defaultLabels, NovaConnectLabels } from '../i18n';
 import { useSatelliteConnectStore } from '../satellite';
+import { NovaConnectSounds } from '../watchers/NovaConnectSounds';
 import { NovaSiwxWatcher } from '../watchers/NovaSiwxWatcher';
 import { ErrorsProvider, ErrorsProviderCustomization } from './ErrorsProvider';
 import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
@@ -281,6 +283,7 @@ export function NovaConnectProvider({
   customConnectorGroups,
   legal,
   siwx,
+  sounds,
   customization,
   pagination,
 }: NovaConnectProviderPropsWithCustomization) {
@@ -305,7 +308,13 @@ export function NovaConnectProvider({
   }, [labels, customLabelsMerge]);
 
   // State management - all existing state
-  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  const [isConnectModalOpen, setConnectModalOpen] = useState(false);
+  const [connectModalAdapter, setConnectModalAdapter] = useState<OrbitAdapter | undefined>(undefined);
+  // Opening on one chain family is remembered until the modal closes; the modal starts on its wallets
+  const setIsConnectModalOpen = useCallback((value: boolean, options?: { adapter?: OrbitAdapter }) => {
+    setConnectModalAdapter(value ? options?.adapter : undefined);
+    setConnectModalOpen(value);
+  }, []);
   const [isConnectedModalOpen, setIsConnectedModalOpen] = useState(false);
   const [isChainsListOpen, setIsChainsListOpen] = useState(false);
   const [isChainsListOpenMobile, setIsChainsListOpenMobile] = useState(false);
@@ -315,40 +324,82 @@ export function NovaConnectProvider({
   const [activeConnector, setActiveConnector] = useState<string | undefined>(undefined);
   const [impersonatedAddress, setImpersonatedAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [isWaitingForSignature, setIsWaitingForSignature] = useState(false);
   const [connectedModalContentType, setConnectedModalContentType] = useState<ConnectedContentType>('main');
 
-  const defaultContextValue: NovaConnectProviderType = {
-    appChains,
-    solanaRPCUrls,
-    withImpersonated,
-    popularConnectors,
-    customConnectorGroups,
-    withBalance,
-    withChain,
-    isConnectModalOpen,
-    setIsConnectModalOpen,
-    isConnectedModalOpen,
-    setIsConnectedModalOpen,
-    isChainsListOpen,
-    setIsChainsListOpen,
-    isChainsListOpenMobile,
-    setIsChainsListOpenMobile,
-    connectedButtonStatus,
-    setConnectedButtonStatus,
-    connectedModalContentType,
-    setConnectedModalContentType,
-    connectModalContentType,
-    setConnectModalContentType,
-    selectedAdapter,
-    setSelectedAdapter,
-    activeConnector,
-    setActiveConnector,
-    impersonatedAddress,
-    setImpersonatedAddress,
-    isConnected,
-    setIsConnected,
-    legal,
-  };
+  // Memoized: every consumer of `useNovaConnect` rendered again with each render of this provider
+  const defaultContextValue = useMemo<NovaConnectProviderType>(
+    () => ({
+      appChains,
+      solanaRPCUrls,
+      withImpersonated,
+      popularConnectors,
+      customConnectorGroups,
+      withBalance,
+      withChain,
+      isConnectModalOpen,
+      setIsConnectModalOpen,
+      connectModalAdapter,
+      isConnectedModalOpen,
+      setIsConnectedModalOpen,
+      isChainsListOpen,
+      setIsChainsListOpen,
+      isChainsListOpenMobile,
+      setIsChainsListOpenMobile,
+      connectedButtonStatus,
+      setConnectedButtonStatus,
+      connectedModalContentType,
+      setConnectedModalContentType,
+      connectModalContentType,
+      setConnectModalContentType,
+      selectedAdapter,
+      setSelectedAdapter,
+      activeConnector,
+      setActiveConnector,
+      impersonatedAddress,
+      setImpersonatedAddress,
+      isConnected,
+      setIsConnected,
+      isWaitingForSignature,
+      setIsWaitingForSignature,
+      legal,
+    }),
+    [
+      appChains,
+      solanaRPCUrls,
+      withImpersonated,
+      popularConnectors,
+      customConnectorGroups,
+      withBalance,
+      withChain,
+      isConnectModalOpen,
+      setIsConnectModalOpen,
+      connectModalAdapter,
+      isConnectedModalOpen,
+      setIsConnectedModalOpen,
+      isChainsListOpen,
+      setIsChainsListOpen,
+      isChainsListOpenMobile,
+      setIsChainsListOpenMobile,
+      connectedButtonStatus,
+      setConnectedButtonStatus,
+      connectedModalContentType,
+      setConnectedModalContentType,
+      connectModalContentType,
+      setConnectModalContentType,
+      selectedAdapter,
+      setSelectedAdapter,
+      activeConnector,
+      setActiveConnector,
+      impersonatedAddress,
+      setImpersonatedAddress,
+      isConnected,
+      setIsConnected,
+      isWaitingForSignature,
+      setIsWaitingForSignature,
+      legal,
+    ],
+  );
 
   // Create provider context for custom handlers
   const providerContext = useMemo(
@@ -451,7 +502,12 @@ export function NovaConnectProvider({
     providerContext,
   );
 
-  return <>{finalProviderTree}</>;
+  return (
+    <NovaSoundsProvider sounds={sounds}>
+      {sounds ? <NovaConnectSounds /> : null}
+      {finalProviderTree}
+    </NovaSoundsProvider>
+  );
 }
 
 // Add display name for better debugging

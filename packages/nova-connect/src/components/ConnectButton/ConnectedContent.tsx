@@ -4,7 +4,8 @@
  */
 
 import { ChevronArrowWithAnim, cn, MorphText } from '@tuwaio/nova-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import { isSameAdapterAddress } from '@tuwaio/orbit-core';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -25,7 +26,7 @@ import {
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
-import { connectedStatusFor, nextConnectedStatus } from './connectedStatus';
+import { connectedStatusFor, isTxResult, nextConnectedStatus } from './connectedStatus';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
@@ -41,7 +42,7 @@ export type ConnectedContentStatusDisplayData = {
 
 /** Props of the balance of {@link ConnectedContent} (`customization.components.BalanceContainer`). */
 export type ConnectedContentBalanceContainerProps = {
-  /** Native balance of the active wallet with three decimals, without the symbol (`'0.000'` when unknown). */
+  /** Native balance of the active wallet with three decimals, without the symbol (`'—'` when unknown). */
   formattedBalance: string;
   /** The labels of Nova Connect. */
   labels: Record<string, string>;
@@ -182,6 +183,9 @@ export interface ConnectedContentProps extends Pick<NovaConnectProviderProps, 't
 }
 
 // --- Default Sub-Components ---
+/** What the button shows for a balance that is not known, as `BalanceDisplay` does. */
+const UNKNOWN_BALANCE = '—';
+
 const DefaultBalanceContainer = ({
   formattedBalance,
   labels,
@@ -195,10 +199,19 @@ const DefaultBalanceContainer = ({
         className,
       )}
       role="text"
-      aria-label={`${labels.walletBalance}: ${formattedBalance}`}
+      aria-label={
+        formattedBalance === UNKNOWN_BALANCE
+          ? labels.noBalanceAvailable
+          : `${labels.walletBalance}: ${formattedBalance}`
+      }
       {...props}
     >
-      <span className="novacon:font-semibold novacon:mr-1" aria-hidden="true">
+      {/* The place of `0.000` whatever is in it: from a dash to a number the button grew by 34 px on every change of network,
+          and the row around it moved */}
+      <span
+        className="novacon:mr-1 novacon:inline-block novacon:min-w-[5ch] novacon:text-center novacon:font-semibold"
+        aria-hidden="true"
+      >
         {formattedBalance}
       </span>
     </div>
@@ -305,20 +318,20 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       retryDelay: 3000,
     });
 
-    const { balance } = useWalletNativeBalance();
+    const { balance, refetch: refetchBalance } = useWalletNativeBalance({ enabled: Boolean(withBalance) });
 
-    const formattedBalance = (() => {
-      if (!balance?.value) return '0.000';
-      const parsed = parseFloat(balance.value);
-      return Number.isFinite(parsed) ? parsed.toFixed(3) : '0.000';
-    })();
+    // Not `0.000`: an RPC that does not answer says nothing of a wallet holding 5 ETH
+    const parsedBalance = balance?.value ? parseFloat(balance.value) : NaN;
+    const formattedBalance = Number.isFinite(parsedBalance) ? parsedBalance.toFixed(3) : UNKNOWN_BALANCE;
 
-    const prevTxPoolRef = useRef<Transaction[]>(
-      Object.values(transactionPool ?? {}).filter(
+    // Once, not on every render: the pool can be long
+    const prevTxPoolRef = useRef<Transaction[] | null>(null);
+    if (prevTxPoolRef.current === null) {
+      prevTxPoolRef.current = Object.values(transactionPool ?? {}).filter(
         (tx) =>
-          tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
-      ),
-    );
+          tx?.from && activeConnection?.address && isSameAdapterAddress(tx.adapter, tx.from, activeConnection.address),
+      );
+    }
 
     // Extract custom components and config
     const {
@@ -356,14 +369,19 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       const currentPool =
         Object.values(transactionPool ?? {}).filter(
           (tx) =>
-            tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
+            tx?.from &&
+            activeConnection?.address &&
+            isSameAdapterAddress(tx.adapter, tx.from, activeConnection.address),
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];
       // Another wallet: what is shown now is of the old one, and the reset above must stand
       if (prevAddressRef.current === activeConnection.address) {
+        const computedStatus = connectedStatusFor(currentPool, prevPool);
         // Goes to idle when nothing is pending any more, for example as the tracking of the last transaction was stopped
-        setConnectedButtonStatus(nextConnectedStatus(connectedButtonStatus, connectedStatusFor(currentPool, prevPool)));
+        setConnectedButtonStatus(nextConnectedStatus(connectedButtonStatus, computedStatus));
+        // The wallet paid: for a value, or only the fee of a transaction that failed
+        if (isTxResult(computedStatus)) refetchBalance();
       } else if (currentPool.some((tx) => tx.pending)) {
         setConnectedButtonStatus('loading');
       }

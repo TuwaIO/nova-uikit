@@ -3,13 +3,12 @@
  * display.
  */
 
-import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, formatLabel, useCopyToClipboard } from '@tuwaio/nova-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { BalanceDisplay as BalanceDisplayComponent, type BalanceDisplayCustomization } from '../BalanceDisplay';
 import { ConnectedModalMainContentProps } from './ConnectedModalMainContent';

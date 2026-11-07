@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/playNovaSound" />
+
+# playNovaSound()
+
+> **playNovaSound**(`name`, `config`): `void`
+
+Defined in: [utils/sounds.ts:317](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/sounds.ts#L317)
+
+Plays a sound, if `config` asks for it. It plays nothing on a server, in a tab that is not visible (with two tabs open it
+would play twice), and before the person has used the page, as browsers do not start audio earlier. It never throws.
+
+Side effects: creates one `AudioContext` on the first sound, and uses the audio output of the device. No files and no
+network requests.
+
+## Parameters
+
+### name
+
+[`NovaSoundName`](?path=/docs/packages-nova-core-type-aliases-novasoundname--docs)
+
+The sound.
+
+### config
+
+[`NovaSoundsConfig`](?path=/docs/packages-nova-core-type-aliases-novasoundsconfig--docs) \| `undefined`
+
+See [NovaSoundsConfig](?path=/docs/packages-nova-core-type-aliases-novasoundsconfig--docs). Without it, nothing plays.
+
+## Returns
+
+`void`

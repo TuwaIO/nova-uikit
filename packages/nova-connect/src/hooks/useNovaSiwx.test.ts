@@ -20,9 +20,11 @@ vi.mock('../satellite', () => ({
   ),
 }));
 
+const { siwxSignIn } = vi.hoisted(() => ({ siwxSignIn: vi.fn() }));
+
 vi.mock('@tuwaio/siwx-react', () => ({
   useSiwx: () => ({
-    signIn: vi.fn().mockResolvedValue({ success: true }),
+    signIn: siwxSignIn.mockResolvedValue({ success: true }),
     signOut: vi.fn(),
   }),
   getSatelliteSiwxFields: vi.fn().mockReturnValue({
@@ -49,6 +51,18 @@ describe('useNovaSiwx', () => {
 
     const result = await signIn();
     expect(result).toEqual({ success: true });
+  });
+
+  // The nonce was made in the browser, so a backend that issues nonces refused a signature the person had already given
+  it('passes getNonce and the callbacks on to the sign-in', async () => {
+    const getNonce = vi.fn().mockResolvedValue('nonce');
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+    const { signIn } = useNovaSiwx({ verifier: vi.fn(), getNonce, onSuccess, onError });
+
+    await signIn();
+
+    expect(siwxSignIn).toHaveBeenLastCalledWith(expect.objectContaining({ getNonce, onSuccess, onError }));
   });
 
   it('triggers destroyer callback on signOut', async () => {

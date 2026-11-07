@@ -3,7 +3,7 @@
  */
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -14,7 +14,6 @@ import {
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
 import { Disclaimer, DisclaimerCustomization } from './Disclaimer';
@@ -594,10 +593,7 @@ export const NetworkSelections = memo(
         if (!networkData || !activeConnector) return;
 
         const originalHandler = (selectedNetwork: OrbitAdapter) => {
-          onClick(
-            selectedNetwork,
-            getConnectorTypeFromName(selectedNetwork, formatConnectorName(activeConnector)) as ConnectorType,
-          );
+          onClick(selectedNetwork, getConnectorTypeFromName(selectedNetwork, activeConnector));
         };
 
         if (customHandlers?.onNetworkClick) {

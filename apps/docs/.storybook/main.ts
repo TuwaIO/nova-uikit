@@ -13,6 +13,9 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-onboarding',
     '@storybook/addon-themes',
+    // axe on every story (the Accessibility panel), and the stories as Vitest tests (`pnpm test:stories`)
+    '@storybook/addon-a11y',
+    '@storybook/addon-vitest',
   ],
   framework: {
     name: '@storybook/react-vite',

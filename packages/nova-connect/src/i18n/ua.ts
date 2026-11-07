@@ -17,7 +17,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   all: 'Всі',
   active: 'Активний',
   connectors: 'Конектори',
-  connectNewWallet: 'Підключити новий гаманець',
+  connectNewWallet: 'Підключити ще один гаманець',
 
   // Стани підключення - Статусні повідомлення для процесу підключення гаманця
   connectionError: 'Помилка підключення',
@@ -46,6 +46,8 @@ export const ukrainianLabels: NovaConnectLabels = {
   switchNetwork: 'Змінити мережу',
   switchNetworks: 'Змінити Мережі',
   connectingEllipsis: 'Підключення...',
+  signMessageInWallet: 'Підпишіть повідомлення в гаманці',
+  checkWalletRequest: 'Перевірте гаманець: запит може чекати там.',
   connectedWallets: 'Підключені Гаманці',
 
   // Секції гаманців - Категорії для групування з'єднувачів гаманців
@@ -202,6 +204,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: 'Змінити мережу: доступно мереж — {count}',
   transactionsInAppCount: 'Транзакції в застосунку: {count}',
   transactionsAvailable: 'Доступно транзакцій: {count}',
+  transactionsPendingCount: 'Транзакцій в очікуванні: {count}',
   noTransactionsForWallet: 'Для цього гаманця транзакцій не знайдено',
   walletName: "Ім'я гаманця: {name}",
   loadingWalletName: 'Завантаження імені гаманця',

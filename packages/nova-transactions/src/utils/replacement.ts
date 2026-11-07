@@ -3,6 +3,7 @@
  * was, and whether speed-up and cancel can be offered.
  */
 
+import { errorChain, getWalletFromConnectorType } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   Transaction,
@@ -11,6 +12,8 @@ import {
   TransactionTracker,
   TxAdapter,
 } from '@tuwaio/pulsar-core';
+
+import { isTxOfWallet } from './txStatus';
 
 const asEvm = (tx: Transaction) => tx as unknown as EvmTransaction;
 
@@ -73,7 +76,7 @@ export function canReplaceTx<T extends Transaction>(
     tx.pending &&
     (!tx.confirmations || Number(tx.confirmations) < 1) &&
     tx.tracker === 'ethereum' &&
-    tx.connectorType?.split(':')[1] === 'metamask' &&
+    getWalletFromConnectorType(tx.connectorType) === 'metamask' &&
     nonce !== undefined &&
     !!maxFeePerGas &&
     !!maxPriorityFeePerGas &&
@@ -81,14 +84,29 @@ export function canReplaceTx<T extends Transaction>(
   );
 }
 
+/**
+ * Whether speed-up can be offered, on a transaction {@link canReplaceTx} allows: `speedUpTxAction` needs `to`, so it is
+ * refused on a contract creation, where cancel still works.
+ *
+ * @param tx - The transaction.
+ * @returns `true` when it has a recipient.
+ */
+export function canSpeedUpTx<T extends Transaction>(tx: T | undefined): boolean {
+  return !!tx && !!asEvm(tx).to;
+}
+
 /** A person pressing "reject" in the wallet needs no message about it. */
 export function isUserRejection(error: unknown): boolean {
-  for (let current = error; current instanceof Error; current = current.cause) {
+  for (const current of errorChain(error)) {
+    // Only errors: a raw `{ code: 4001 }` still reports, as this asks a person to see what happened
+    if (!(current instanceof Error)) return false;
     const { name, message, code } = current as Error & { code?: number };
     if (name === 'UserRejectedRequestError' || code === 4001 || /user rejected|user denied/i.test(message)) return true;
   }
   return false;
 }
+
+const replacementsRunning = new Set<string>();
 
 /**
  * Runs speed-up or cancel, whose error nothing else would show: a replacement refused as underpriced, or a nonce already
@@ -97,17 +115,24 @@ export function isUserRejection(error: unknown): boolean {
  * @param action - `speedUpTxAction` or `cancelTxAction` of the adapter.
  * @param tx - The transaction to replace.
  * @param report - Shows an error to the person.
- * @returns A promise that resolves when the wallet has answered. It never rejects.
+ * @returns A promise that resolves when the wallet has answered. It never rejects. While one runs for a transaction, a
+ * second call for it does nothing.
  */
 export async function runReplacement<T extends Transaction>(
   action: (tx: T) => Promise<string>,
   tx: T,
   report: (error: unknown) => void,
 ): Promise<void> {
+  // The buttons stay active behind the wallet prompt. A double click opened two prompts with the same fees, and the second,
+  // refused as underpriced, said the replacement failed while the first was on its way. Here, as three surfaces call this
+  if (replacementsRunning.has(tx.txKey)) return;
+  replacementsRunning.add(tx.txKey);
   try {
     await action(tx);
   } catch (error) {
     if (!isUserRejection(error)) report(error);
+  } finally {
+    replacementsRunning.delete(tx.txKey);
   }
 }
 
@@ -233,6 +258,8 @@ export function toastStepFor<T extends Transaction>(
   known?: ReadonlyMap<string, string>,
   closed?: ReadonlySet<string>,
 ): ToastStep {
+  // The same object: nothing changed. Most records of a write, and a record can carry 10 KB to serialize below
+  if (prevTx === tx) return { kind: 'skip' };
   // The record that goes on speaks for the operation from here
   if (successorOf(tx, pool)) return { kind: 'skip' };
   const toastId = toastIdOf(tx, pool, known);
@@ -264,15 +291,28 @@ export function toastsOfRemoved<T extends Transaction>(
     .map((tx) => toastIdOf(tx, prevPool, known));
 }
 
-/** How many transactions still pending when a page opens get a toast. */
+/** How many transactions still pending when a page opens get a toast, and how many that appear at once later. */
 const PENDING_TOASTS_AT_LOAD = 3;
+
+/**
+ * Whether a record that has just appeared in the pool may open a new toast: only one of the connected wallet, and only the
+ * first few of one change. A history read from a server, or another tab of another wallet, opened one for each.
+ *
+ * @param tx - The record.
+ * @param wallet - The connected wallet, which without one limits nothing but the number.
+ * @param opened - How many this change has opened so far.
+ * @returns `true` when it may.
+ */
+export function mayOpenNewToast<T extends Transaction>(tx: T, wallet: string | undefined, opened: number): boolean {
+  return opened < PENDING_TOASTS_AT_LOAD && (!wallet || isTxOfWallet(tx, wallet));
+}
 
 /**
  * The transactions of a wallet to show toasts for when the page opens: those still pending, the newest few. Any other wallet
  * cannot act on them, and a toast for every finished record would be noise.
  *
  * @param pool - The pool.
- * @param wallet - The connected wallet, in lower case.
+ * @param wallet - The connected wallet.
  * @param closed - The transactions whose toast a person closed: left out, and in no one's place among the newest few.
  * @returns The transactions, newest first.
  */
@@ -282,7 +322,7 @@ export function pendingOfWallet<T extends Transaction>(
   closed?: ReadonlySet<string>,
 ): T[] {
   return Object.values(pool)
-    .filter((tx) => tx.pending && tx.from?.toLowerCase() === wallet && !closed?.has(tx.txKey))
+    .filter((tx) => tx.pending && isTxOfWallet(tx, wallet) && !closed?.has(tx.txKey))
     .sort((a, b) => Number(b.localTimestamp) - Number(a.localTimestamp))
     .slice(0, PENDING_TOASTS_AT_LOAD);
 }

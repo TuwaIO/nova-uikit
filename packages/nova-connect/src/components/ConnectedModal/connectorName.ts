@@ -1,4 +1,4 @@
-import { formatConnectorName } from '@tuwaio/orbit-core';
+import { formatConnectorName, getWalletFromConnectorType, IMPERSONATED_CONNECTOR_ID } from '@tuwaio/orbit-core';
 
 /**
  * The name of a wallet to show: the name of its connector, which the rest of the modal shows too, and the normalized ID of the
@@ -10,11 +10,22 @@ import { formatConnectorName } from '@tuwaio/orbit-core';
  */
 export function connectorDisplayName(connectorType: string, connectors?: Record<string, unknown[]>): string {
   // Remove adapter prefix (e.g., "EVM:METAMASK" -> "METAMASK")
-  const nameWithoutAdapter = connectorType.includes(':') ? connectorType.split(':')[1] : connectorType;
+  const nameWithoutAdapter = getWalletFromConnectorType(connectorType) ?? connectorType;
   const id = formatConnectorName(nameWithoutAdapter);
   const match = Object.values(connectors ?? {})
     .flat()
     .find((connector) => formatConnectorName(((connector ?? {}) as { name?: string }).name ?? '') === id) as
     { name: string } | undefined;
   return match?.name ?? id.charAt(0).toUpperCase() + id.slice(1);
+}
+
+/**
+ * Whether a connector type is the impersonated wallet. By the type and not by a display name: a listed connector shows its
+ * own name, `Impersonated Connector`, so reconnecting it from the recent wallets lost the address it impersonates.
+ *
+ * @param connectorType - The connector type, such as `evm:impersonatedwallet`.
+ * @returns `true` for the impersonated wallet.
+ */
+export function isImpersonatedConnector(connectorType: string): boolean {
+  return getWalletFromConnectorType(connectorType) === IMPERSONATED_CONNECTOR_ID;
 }

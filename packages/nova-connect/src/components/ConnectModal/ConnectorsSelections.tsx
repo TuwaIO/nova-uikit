@@ -4,7 +4,13 @@
 
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
-import { formatConnectorName, isInSecureIframe, OrbitAdapter } from '@tuwaio/orbit-core';
+import {
+  formatConnectorName,
+  IMPERSONATED_CONNECTOR_ID,
+  isInSecureIframe,
+  OrbitAdapter,
+  SAFE_CONNECTOR_ID,
+} from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
@@ -74,6 +80,8 @@ export type ConnectorsSelectionsContainerProps = {
   children: React.ReactNode;
   /** `region` */
   role?: string;
+  /** `network-panel-<selected adapter or all>`: the panel the selected tab of `NetworkTabs` controls */
+  id?: string;
   /** `config.ariaLabels.container` or the `connectWallet` label */
   'aria-label'?: string;
   /** State of the wallet list */
@@ -150,6 +158,8 @@ export type ConnectorsSelectionsEmptyStateProps = {
   children: React.ReactNode;
   /** `alert` */
   role?: string;
+  /** `network-panel-<selected adapter>`: the panel the selected tab of `NetworkTabs` controls */
+  id?: string;
   /** `polite` */
   'aria-live'?: 'polite' | 'assertive' | 'off';
   /** Calls `handlers.onEmptyStateAction`, when set */
@@ -633,7 +643,7 @@ export const ConnectorsSelections = memo(
         const installedConnectorsInitial = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
           return (
-            formattedName !== 'impersonatedwallet' &&
+            formattedName !== IMPERSONATED_CONNECTOR_ID &&
             !popularDesiredOrder.includes(formattedName) &&
             !customGroupsConnectorsNames.includes(formattedName)
           );
@@ -641,7 +651,7 @@ export const ConnectorsSelections = memo(
 
         const installedConnectors = isSafeVisible
           ? installedConnectorsInitial
-          : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== 'safe');
+          : installedConnectorsInitial.filter((group) => formatConnectorName(group.name) !== SAFE_CONNECTOR_ID);
 
         const popularConnectors = connectors.filter((group) => {
           const formattedName = formatConnectorName(group.name);
@@ -649,7 +659,7 @@ export const ConnectorsSelections = memo(
         });
 
         const impersonatedConnector = connectors.find(
-          (group) => formatConnectorName(group.name) === 'impersonatedwallet',
+          (group) => formatConnectorName(group.name) === IMPERSONATED_CONNECTOR_ID,
         );
 
         const customGroups: Record<string, GroupedConnector[]> = {};
@@ -845,6 +855,7 @@ export const ConnectorsSelections = memo(
             ref={ref}
             className={cssClasses.emptyState}
             role="alert"
+            id={`network-panel-${selectedAdapter}`}
             aria-live="polite"
             selectionsData={selectionsData}
             onClick={
@@ -876,6 +887,8 @@ export const ConnectorsSelections = memo(
           ref={ref}
           className={cssClasses.container}
           role="region"
+          // The panel of the selected network tab (`aria-controls` of NetworkTabs)
+          id={`network-panel-${selectedAdapter ?? 'all'}`}
           aria-label={containerAriaLabel}
           selectionsData={selectionsData}
         >
@@ -958,7 +971,7 @@ export const ConnectorsSelections = memo(
                     {labels.impersonate}
                   </CustomImpersonateTitle>
                   <ConnectCard
-                    icon={<WalletIcon name="impersonatedwallet" />}
+                    icon={<WalletIcon name={IMPERSONATED_CONNECTOR_ID} />}
                     adapters={!selectedAdapter ? [OrbitAdapter.EVM] : undefined}
                     onClick={handleImpersonateClickWrapper}
                     title={labels.impersonate}

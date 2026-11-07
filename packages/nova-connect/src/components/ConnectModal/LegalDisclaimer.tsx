@@ -35,7 +35,7 @@ export type LegalDisclaimerContainerProps = {
   children: ReactNode;
   /** The links */
   disclaimerData: LegalDisclaimerData;
-  /** `contentinfo` */
+  /** `note`: legal text beside the wallet list (a `contentinfo` landmark cannot sit inside the modal's main content) */
   role?: string;
   /** `config.ariaLabels.container` or the `legalInformation` label */
   'aria-label'?: string;
@@ -248,14 +248,30 @@ DefaultText.displayName = 'DefaultText';
 const DefaultTermsLink = (props: LegalDisclaimerTermsLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
-  return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
+  return (
+    <a
+      target={target}
+      data-nova-external-link={target === '_blank' ? '' : undefined}
+      rel={rel}
+      onClick={onClick}
+      {...restProps}
+    />
+  );
 };
 DefaultTermsLink.displayName = 'DefaultTermsLink';
 
 const DefaultPrivacyLink = (props: LegalDisclaimerPrivacyLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
-  return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
+  return (
+    <a
+      target={target}
+      data-nova-external-link={target === '_blank' ? '' : undefined}
+      rel={rel}
+      onClick={onClick}
+      {...restProps}
+    />
+  );
 };
 DefaultPrivacyLink.displayName = 'DefaultPrivacyLink';
 
@@ -381,7 +397,7 @@ export function LegalDisclaimer({ customization }: LegalDisclaimerProps) {
     <CustomContainer
       className={cssClasses.container}
       disclaimerData={disclaimerData}
-      role="contentinfo"
+      role="note"
       aria-label={ariaLabel}
     >
       <CustomText className={cssClasses.text} disclaimerData={disclaimerData}>

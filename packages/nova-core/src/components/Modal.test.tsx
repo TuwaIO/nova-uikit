@@ -1,13 +1,21 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+const { play, effects } = vi.hoisted(() => ({ play: vi.fn(), effects: [] as Array<() => void | (() => void)> }));
 
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useState: (initial: unknown) => [initial, vi.fn()],
-  useEffect: vi.fn(),
+  useRef: (initial: unknown) => ({ current: initial }),
+  useEffect: (effect: () => void | (() => void)) => {
+    effects.push(effect);
+  },
 }));
 
+vi.mock('../hooks/useNovaSounds', () => ({ useNovaSounds: () => play }));
+
 import { watchDialogFrameHeight } from './dialogFrameHeight';
-import { DialogContent } from './Modal';
+import { DialogContent, isInsideToast } from './Modal';
 
 type Element = { type: unknown; props: Record<string, unknown> & { children?: unknown } };
 
@@ -19,13 +27,49 @@ function elements(node: unknown): Element[] {
   return [element, ...elements(element.props.children)];
 }
 
+const isDialogSounds = (element: Element | null | undefined) =>
+  (element?.type as { name?: string } | undefined)?.name === 'DialogSounds';
+
 describe('DialogContent', () => {
+  // Owner, 2026-11-07: a dialog opens and closes with a muffled sound. `DialogContent` itself stays mounted with the `Dialog`: an
+  // effect of its own ran once, with the page, and no dialog made a sound
+  it('plays a sound when it opens and another when it closes, from what Radix mounts only while it is open', () => {
+    const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
+    const tree = elements(render({ children: 'content' }, null));
+    const content = tree.find((element) =>
+      [element.props.children].flat().some((child) => isDialogSounds(child as Element)),
+    );
+    expect(content?.type).toBe(DialogPrimitive.Content);
+
+    effects.length = 0;
+    play.mockClear();
+    (elements(content?.props.children).find(isDialogSounds)?.type as () => unknown)();
+
+    const cleanups = effects.map((effect) => effect());
+    expect(play).toHaveBeenCalledExactlyOnceWith('modalOpen');
+
+    cleanups.forEach((cleanup) => cleanup?.());
+    expect(play).toHaveBeenLastCalledWith('modalClose');
+  });
+
   it('never scales its frame with a layout animation (the scale left an empty band under shrinking content)', () => {
     const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
     const tree = render({ children: 'content' }, null);
 
     expect(elements(tree).filter((element) => 'layout' in element.props)).toEqual([]);
     expect(elements(tree).some((element) => element.props.children === 'content')).toBe(true);
+  });
+});
+
+describe('isInsideToast', () => {
+  // A press on a toast closed the dialog under it, or opened the leave question of a checkout
+  it('tells a toast from the rest of the page', () => {
+    expect(isInsideToast({ closest: (selector: string) => (selector === '.Toastify' ? {} : null) } as never)).toBe(
+      true,
+    );
+    expect(isInsideToast({ closest: () => null } as never)).toBe(false);
+    expect(isInsideToast(null)).toBe(false);
+    expect(isInsideToast({} as never)).toBe(false);
   });
 });
 

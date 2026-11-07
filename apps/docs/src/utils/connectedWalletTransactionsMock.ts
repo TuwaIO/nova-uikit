@@ -13,7 +13,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '4ecrNTNBLwR4L2LNpFsrRCDLvj35aWqhNqdTnaYCmvxsEeLGXCNEYYcNu3evVF2okyNCLaM1BpWV9mnMDq4CaAze': {
       type: 'increment',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Incrementing', 'Incremented', 'Error', 'Replaced'],
       description: [
         'New value will be 3',
@@ -65,7 +64,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '28en6B5ECdS3APe4JXf7FiFkQsGa9QAR5UkgY9CeYCGCQmt6s1HLf8EnDowoWEz5QYEs5M6VqsYVz4r1PPrx8tUS': {
       type: 'decrement',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Decrementing', 'Decremented', 'Error', 'Replaced'],
       description: [
         'New value will be 2',
@@ -114,6 +112,38 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
       isError: false,
       finishedTimestamp: 1763649605,
     },
+    // Open: the wallet window says so under its "View transactions" button
+    '0x71a9c4e2d6b83f05a1c7e94d2b6f80a3c5e7d19b4f2a68c0e3d5b7f91a2c4e60': {
+      type: 'increment',
+      adapter: 'evm',
+      title: ['Incrementing', 'Incremented', 'Error when increment', 'Increment tx replaced'],
+      description: [
+        'Value after incrementing 844',
+        'Success. Current value is 844',
+        'Something went wrong when increment.',
+        'Transaction replaced. Please take a look details in your wallet.',
+      ],
+      payload: {
+        value: 843,
+        contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
+      },
+      withTrackedModal: true,
+      connectorType: 'evm:metamask',
+      from: connectedWallet,
+      tracker: 'ethereum',
+      chainId: 11155111,
+      localTimestamp: Math.floor(Date.now() / 1000) - 45,
+      txKey: '0x71a9c4e2d6b83f05a1c7e94d2b6f80a3c5e7d19b4f2a68c0e3d5b7f91a2c4e60',
+      hash: '0x71a9c4e2d6b83f05a1c7e94d2b6f80a3c5e7d19b4f2a68c0e3d5b7f91a2c4e60',
+      pending: true,
+      isTrackedModalOpen: false,
+      to: '0xae7f46914de82028ecb7e2bf97feb3d3ddcc2bab',
+      input: '0xd09de08a',
+      value: '0',
+      nonce: 722,
+      maxFeePerGas: '1500000011',
+      maxPriorityFeePerGas: '1500000000',
+    },
     '0x60277dbf4ef22811d954e73ff4dd3493d8e2d20235138a8daf42fa202869bb29': {
       adapter: 'evm',
       type: 'increment',
@@ -128,7 +158,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 817,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,
@@ -186,7 +215,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '54DP5G1Xozw4wwrzXPmSz6ULS32SYo1GkvRo7XY9aNLfd9eUxr9w84U6yDWatWRmeoRYfXuAbznzQaqnxSECH1zD': {
       type: 'increment',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Incrementing', 'Incremented', 'Error', 'Replaced'],
       description: [
         'New value will be 12',
@@ -285,7 +313,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 819,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,
@@ -323,7 +350,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 819,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,

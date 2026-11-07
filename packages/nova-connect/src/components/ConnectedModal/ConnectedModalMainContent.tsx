@@ -2,8 +2,9 @@
  * @file ConnectedModalMainContent component with comprehensive customization options for all child components.
  */
 
-import { cn, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import { cn, formatLabel, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
+import { getWalletFromConnectorType, isSameAdapterAddress } from '@tuwaio/orbit-core';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, {
@@ -19,7 +20,6 @@ import React, {
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { goesOnInNewRecord } from '../ConnectButton/connectedStatus';
 import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
@@ -500,13 +500,12 @@ const DefaultTransactionsSection: React.FC<ConnectedModalMainContentTransactions
 }) => {
   if (walletTransactions.length === 0) return null;
 
+  const pendingCount = walletTransactions.filter((tx) => tx.pending).length;
+
   return (
     <motion.div
       variants={DEFAULT_TRANSACTIONS_ANIMATION_VARIANTS}
-      className={cn(
-        'novacon:relative novacon:flex novacon:items-center novacon:justify-center novacon:gap-2',
-        className,
-      )}
+      className={cn('novacon:flex novacon:flex-col novacon:items-center', className)}
       role="group"
       aria-label={formatLabel(labels.transactionsInAppCount, { count: walletTransactions.length })}
     >
@@ -521,25 +520,26 @@ const DefaultTransactionsSection: React.FC<ConnectedModalMainContentTransactions
 
         <span id="transaction-count" className="novacon:sr-only">
           {formatLabel(labels.transactionsAvailable, { count: walletTransactions.length })}
-          {hasPendingTransactions && `, ${labels.transactionLoading}`}
         </span>
       </button>
 
-      {/* Pending Transactions Indicator */}
+      {/* Says what it is, under the button and not in it: the button is not loading, the wallet has open transactions */}
       {showPendingIndicators && (
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {hasPendingTransactions && (
             <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.6, opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              className="novacon:block novacon:absolute novacon:left-[110%] novacon:w-4 novacon:h-4"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="novacon:overflow-hidden"
               role="status"
-              aria-label={labels.transactionLoading}
+              data-testid="pending-transactions-indicator"
             >
-              <QuasarLoader size={16} accent="var(--tuwa-pending-icon)" />
-              <span className="novacon:sr-only">{labels.transactionLoading}</span>
+              <span className="novacon:flex novacon:items-center novacon:justify-center novacon:gap-1.5 novacon:pt-1.5 novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]">
+                <QuasarLoader size={14} accent="var(--tuwa-pending-icon)" />
+                {formatLabel(labels.transactionsPendingCount, { count: pendingCount })}
+              </span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -690,7 +690,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           ? Object.values(transactionPool).filter(
               (tx, _, all) =>
                 tx?.from &&
-                tx.from.toLowerCase() === activeAddress.toLowerCase() &&
+                isSameAdapterAddress(tx.adapter, tx.from, activeAddress) &&
                 // A sped-up record is no row of the history, and the count is read out next to that list
                 !goesOnInNewRecord(tx, all),
             )
@@ -714,7 +714,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
     /**
      * Get wallet name from wallet type for display
      */
-    const walletName = activeConnection?.connectorType?.split(':')[1] || labels.unknownWallet;
+    const walletName = getWalletFromConnectorType(activeConnection?.connectorType) || labels.unknownWallet;
 
     /**
      * State calculations

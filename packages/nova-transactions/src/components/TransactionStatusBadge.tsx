@@ -6,7 +6,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import { statusLabelOf } from '../utils/txStatus';
 
 const SuccessIcon = ({ className }: { className?: string }) => <DrawnCheck variant="disc" className={className} />;
@@ -89,7 +89,7 @@ export function TransactionStatusBadge<T extends Transaction>({
   const isPlain = variant === 'plain';
   const baseClasses = cn(
     'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:text-xs novatx:font-mono novatx:font-medium novatx:transition-colors novatx:duration-300',
-    !isPlain && 'novatx:rounded-full novatx:px-2 novatx:py-1',
+    !isPlain && 'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-2 novatx:py-1',
   );
 
   const isConfirmed =

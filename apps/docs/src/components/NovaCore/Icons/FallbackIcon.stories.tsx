@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FallbackIcon } from '@tuwaio/nova-core';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
+
 const meta: Meta<typeof FallbackIcon> = {
   title: 'Nova Core/Icons/FallbackIcon',
   component: FallbackIcon,
@@ -65,9 +68,10 @@ export const WithContent: Story = {
  * Custom styled fallback.
  */
 export const CustomStyle: Story = {
+  decorators: [withIsometricTheme],
   args: {
     animate: false,
     content: '!',
-    className: 'w-12 h-12 bg-red-900 text-white',
+    className: `h-12 w-12 ${iso.framed} ${iso.text.primary}`,
   },
 };

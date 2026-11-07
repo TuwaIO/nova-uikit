@@ -2,7 +2,7 @@
  * @file ConnectorsBlock component with comprehensive customization options and connector group display.
  */
 
-import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel, isTouchDevice } from '@tuwaio/nova-core/utils';
 import {
   ConnectorType,
   delay,
@@ -16,9 +16,9 @@ import {
 import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
+import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { ConnectCard, ConnectCardCustomization } from './ConnectCard';
 import { GroupedConnector } from './ConnectModal';
@@ -571,7 +571,8 @@ export const ConnectorsBlock = memo(
               chainId: getConnectChainId({ appChains, selectedAdapter: targetAdapter, solanaRPCUrls }),
             });
 
-            await waitFor(() => store?.getState().activeConnection?.isConnected);
+            if (!store || !isConnectedAfterAttempt(store.getState(), connectorType)) return;
+            await waitFor(() => store.getState().activeConnection?.isConnected);
             setIsConnected(true);
             const modalCloseTime = setTimeout(() => setIsOpen(false), 400);
             const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);

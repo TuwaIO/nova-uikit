@@ -4,12 +4,11 @@
 
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { cn, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { RecentBadge, RecentBadgeCustomization } from './RecentBadge';
 
 // --- Types ---
@@ -1007,6 +1006,7 @@ export const ConnectCard = memo(
               onClick={handleInfoClick}
               href={infoLink}
               target="_blank"
+              data-nova-external-link=""
               rel="noopener noreferrer"
               aria-label={
                 customConfig?.ariaLabels?.infoLink

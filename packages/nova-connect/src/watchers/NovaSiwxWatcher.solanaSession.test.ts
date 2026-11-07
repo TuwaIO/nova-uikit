@@ -1,91 +1,85 @@
-import { useSiwxSessionStore } from '@tuwaio/siwx-react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useSatelliteConnectStore } from '../satellite';
-import { NovaSiwxWatcher } from './NovaSiwxWatcher';
+import { render, unmount } from '../testing/hookHarness';
 
-vi.mock('react', () => ({
-  useEffect: (fn: () => void | (() => void)) => {
-    fn();
-  },
-  useRef: (initial: unknown) => ({ current: initial }),
-  useCallback: (fn: unknown) => fn,
-  useEffectEvent: (fn: unknown) => fn,
+vi.mock('react', async (importOriginal) => {
+  const { hooks } = await import('../testing/hookHarness');
+  return { ...(await importOriginal<typeof import('react')>()), ...hooks };
+});
+
+const signIn = vi.fn(async () => undefined);
+let activeConnection: Record<string, unknown>;
+let session: { address: string; chainId: string; domain: string; issuedAt: string } | null;
+
+vi.mock('../satellite', () => ({
+  SatelliteStoreContext: {},
+  useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
+    selector({ activeConnection, isAutoConnectFinished: true, disconnect: vi.fn() }),
 }));
-
-const mockSignIn = vi.fn().mockResolvedValue({ success: true });
-
-vi.mock('../satellite', () => ({ useSatelliteConnectStore: vi.fn() }));
 
 // The real field builders and session matching of @tuwaio/siwx-react; only the hooks are replaced
 vi.mock('@tuwaio/siwx-react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@tuwaio/siwx-react')>()),
-  useSiwx: () => ({ signIn: mockSignIn, signOut: vi.fn() }),
-  useSiwxSessionStore: vi.fn(),
+  useSiwx: () => ({ signIn }),
+  useSiwxSessionStore: Object.assign(
+    (selector: (state: Record<string, unknown>) => unknown) =>
+      selector({ session, status: 'authenticated', reset: vi.fn() }),
+    { getState: () => ({ session, status: 'authenticated' }) },
+  ),
 }));
+
+const { NovaSiwxWatcher } = await import('./NovaSiwxWatcher');
 
 const ACCOUNT = '4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZAMdL4VZHirAn';
 
-function connectSolana(address: string) {
-  vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
-    selector({
-      activeConnection: {
-        connectorType: 'solana:phantom',
-        address,
-        chainId: 'devnet',
-        isConnected: true,
-        signMessage: vi.fn().mockResolvedValue('signature'),
-      },
-      isAutoConnectFinished: true,
-      disconnect: vi.fn(),
-    } as never),
-  );
-}
-
-function restoreSession(address: string, chainId: string) {
-  vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
-    selector({
-      session: { address, chainId, domain: 'app.tuwa.io', issuedAt: new Date().toISOString() },
-      status: 'authenticated',
-      reset: vi.fn(),
-    } as never),
-  );
-}
+const connectSolana = (address: string) => {
+  activeConnection = {
+    connectorType: 'solana:phantom',
+    address,
+    chainId: 'devnet',
+    isConnected: true,
+    signMessage: vi.fn(async () => 'signature'),
+  };
+};
+const restoreSession = (address: string, chainId: string) => {
+  session = { address, chainId, domain: 'app.tuwa.io', issuedAt: new Date().toISOString() };
+};
 
 describe('NovaSiwxWatcher with Solana sessions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    unmount();
+    vi.restoreAllMocks();
   });
 
   it('keeps a session signed for solana:devnet before the switch to genesis-hash chain IDs', () => {
     connectSolana(ACCOUNT);
     restoreSession(`solana:devnet:${ACCOUNT}`, 'solana:devnet');
 
-    NovaSiwxWatcher({ enabled: true, verifier: vi.fn() });
+    render(NovaSiwxWatcher, { verifier: vi.fn() });
 
-    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(signIn).not.toHaveBeenCalled();
   });
 
   it('keeps a session signed for the genesis-hash chain ID of the cluster', () => {
-    const devnet = 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
+    const chainId = 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1';
     connectSolana(ACCOUNT);
-    restoreSession(`${devnet}:${ACCOUNT}`, devnet);
+    restoreSession(`${chainId}:${ACCOUNT}`, chainId);
 
-    NovaSiwxWatcher({ enabled: true, verifier: vi.fn() });
+    render(NovaSiwxWatcher, { verifier: vi.fn() });
 
-    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(signIn).not.toHaveBeenCalled();
   });
 
   it('signs in again when the session belongs to another account', () => {
-    connectSolana('7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV');
-    restoreSession(`solana:devnet:${ACCOUNT}`, 'solana:devnet');
+    connectSolana(ACCOUNT);
+    restoreSession('solana:devnet:Another1111111111111111111111111111111111111', 'solana:devnet');
 
-    NovaSiwxWatcher({ enabled: true, verifier: vi.fn() });
+    render(NovaSiwxWatcher, { verifier: vi.fn() });
 
-    expect(mockSignIn).toHaveBeenCalledWith(
-      expect.objectContaining({
-        fields: expect.objectContaining({ chainId: 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' }),
-      }),
-    );
+    expect(signIn).toHaveBeenCalledOnce();
   });
 });

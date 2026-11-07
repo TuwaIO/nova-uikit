@@ -17,7 +17,7 @@ This type defines structured labels for wallet modals, transaction statuses, toa
 
 > **actions**: `object`
 
-Defined in: [i18n/types.ts:151](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L151)
+Defined in: [i18n/types.ts:165](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L165)
 
 Labels for common action buttons/links.
 
@@ -69,7 +69,7 @@ Text for a link to view the transaction on a block explorer.
 
 > **hashLabels**: `object`
 
-Defined in: [i18n/types.ts:59](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L59)
+Defined in: [i18n/types.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L75)
 
 Labels for different types of transaction hashes/keys.
 
@@ -84,12 +84,6 @@ Default label for a standard transaction hash.
 > **erc4337**: `string`
 
 Label for an ERC-4337 UserOperation Hash.
-
-#### gelato
-
-> **gelato**: `string`
-
-Label for a Gelato Task ID.
 
 #### original
 
@@ -134,7 +128,7 @@ Special label for the Solana signature. This is used for the "Signature" field i
 
 > **statuses**: `object`
 
-Defined in: [i18n/types.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L33)
+Defined in: [i18n/types.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L49)
 
 Standard labels for transaction statuses.
 
@@ -205,7 +199,7 @@ Text for an unknown or indeterminate status.
 
 > **toast**: `object`
 
-Defined in: [i18n/types.ts:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L28)
+Defined in: [i18n/types.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L44)
 
 Labels related to toast notifications.
 
@@ -221,7 +215,7 @@ Text for the button/link within a toast to open the wallet modal.
 
 > **trackedTxButton**: `object`
 
-Defined in: [i18n/types.ts:138](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L138)
+Defined in: [i18n/types.ts:152](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L152)
 
 Labels for the main transaction action button.
 
@@ -261,7 +255,7 @@ Text shown on the button after the transaction succeeds.
 
 > **trackingModal**: `object`
 
-Defined in: [i18n/types.ts:116](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L116)
+Defined in: [i18n/types.ts:130](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L130)
 
 Labels for the detailed transaction tracking modal.
 
@@ -321,11 +315,57 @@ The main title of the tracking modal.
 
 ***
 
+### transaction
+
+> **transaction**: `object`
+
+Defined in: [i18n/types.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L12)
+
+What a transaction shows when the app gave it no title or description.
+
+#### defaultDescription
+
+> **defaultDescription**: `object`
+
+The description of a transaction with none, by its status, in the toast.
+
+##### defaultDescription.failed
+
+> **failed**: `string`
+
+When it failed.
+
+##### defaultDescription.pending
+
+> **pending**: `string`
+
+While it waits.
+
+##### defaultDescription.replaced
+
+> **replaced**: `string`
+
+When another transaction took its place.
+
+##### defaultDescription.success
+
+> **success**: `string`
+
+When it succeeded.
+
+#### defaultTitle
+
+> **defaultTitle**: `string`
+
+The title of a transaction with none.
+
+***
+
 ### transactionDetails
 
 > **transactionDetails**: `object`
 
-Defined in: [i18n/types.ts:168](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L168)
+Defined in: [i18n/types.ts:182](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L182)
 
 Labels for the detailed transaction view.
 
@@ -340,6 +380,12 @@ Label for the Actual Fee.
 > **adapter**: `string`
 
 Label for the adapter type.
+
+#### back
+
+> **back**: `string`
+
+Accessible name of the button that goes back to the transaction list.
 
 #### confirmations
 
@@ -382,6 +428,12 @@ Label for the Description Context.
 > **errorContext**: `string`
 
 Label for the Error Context.
+
+#### evmTitle
+
+> **evmTitle**: `string`
+
+Label for the EVM section title.
 
 #### executionData
 
@@ -593,7 +645,7 @@ Label for the raw value.
 
 > **transactionsModal**: `object`
 
-Defined in: [i18n/types.ts:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L12)
+Defined in: [i18n/types.ts:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L28)
 
 Labels for the main wallet information modal.
 
@@ -639,7 +691,7 @@ The title for the transaction history section.
 
 > **txError**: `object`
 
-Defined in: [i18n/types.ts:94](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L94)
+Defined in: [i18n/types.ts:108](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L108)
 
 Labels for the transaction error block.
 
@@ -661,7 +713,7 @@ The title for the error details section.
 
 > **txInfo**: `object`
 
-Defined in: [i18n/types.ts:85](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L85)
+Defined in: [i18n/types.ts:99](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L99)
 
 Labels for the transaction information block.
 
@@ -689,7 +741,7 @@ Label indicating when the transaction was started.
 
 > **validationError**: `object`
 
-Defined in: [i18n/types.ts:105](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L105)
+Defined in: [i18n/types.ts:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L119)
 
 Labels for the pre-submission validation error toast.
 This toast fires when `executeTxAction` throws before the transaction

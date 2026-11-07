@@ -8,6 +8,22 @@
  * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
 export type NovaTransactionsLabels = {
+  /** What a transaction shows when the app gave it no title or description. */
+  transaction: {
+    /** The title of a transaction with none. */
+    defaultTitle: string;
+    /** The description of a transaction with none, by its status, in the toast. */
+    defaultDescription: {
+      /** While it waits. */
+      pending: string;
+      /** When it succeeded. */
+      success: string;
+      /** When it failed. */
+      failed: string;
+      /** When another transaction took its place. */
+      replaced: string;
+    };
+  };
   /** Labels for the main wallet information modal. */
   transactionsModal: {
     /** Labels of the transaction history. */
@@ -57,8 +73,6 @@ export type NovaTransactionsLabels = {
   };
   /** Labels for different types of transaction hashes/keys. */
   hashLabels: {
-    /** Label for a Gelato Task ID. */
-    gelato: string;
     /** Label for a Safe Transaction Hash. */
     safe: string;
     /** Label for an ERC-4337 UserOperation Hash. */
@@ -170,6 +184,8 @@ export type NovaTransactionsLabels = {
     title: string;
     /** Subtitle for the detailed view. */
     subtitle: string;
+    /** Accessible name of the button that goes back to the transaction list. */
+    back: string;
     /** Label for the metadata section. */
     metadata: string;
     /** Label for the execution data section. */
@@ -210,6 +226,8 @@ export type NovaTransactionsLabels = {
     maxFee: string;
     /** Label for the max priority fee per gas. */
     maxPriorityFee: string;
+    /** Label for the EVM section title. */
+    evmTitle: string;
     /** Label for the Solana section title. */
     solanaTitle: string;
     /** Label for the Starknet section title. */

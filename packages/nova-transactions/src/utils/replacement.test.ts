@@ -5,10 +5,12 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   afterTrackedAction,
   canReplaceTx,
+  canSpeedUpTx,
   explorerUrlOfHash,
   explorerUrlOfReplaced,
   isUserRejection,
   latestRecordOf,
+  mayOpenNewToast,
   pendingOfWallet,
   runReplacement,
   STOP_TRACKING_AFTER_SECONDS,
@@ -131,7 +133,83 @@ describe('canReplaceTx', () => {
   });
 });
 
+describe('canSpeedUpTx', () => {
+  it('needs a recipient: on a contract creation the action is always refused', () => {
+    expect(canSpeedUpTx(tx({ to: '0xabc' }))).toBe(true);
+    expect(canSpeedUpTx(tx({ to: undefined }))).toBe(false);
+    expect(canSpeedUpTx(undefined)).toBe(false);
+  });
+});
+
+describe('mayOpenNewToast', () => {
+  const solana = { ...tx(), adapter: OrbitAdapter.SOLANA, from: 'AbC' } as unknown as EvmTransaction;
+
+  it('lets a record of the connected wallet open one', () => {
+    expect(mayOpenNewToast(tx(), WALLET, 0)).toBe(true);
+    expect(mayOpenNewToast(tx(), WALLET.toLowerCase(), 0)).toBe(true);
+    expect(mayOpenNewToast(solana, 'AbC', 0)).toBe(true);
+  });
+
+  // Another tab of another wallet opened a toast here, without buttons, as a person cannot act on it
+  it('leaves out a record of another wallet', () => {
+    expect(mayOpenNewToast(tx(), '0x0000000000000000000000000000000000000001', 0)).toBe(false);
+    expect(mayOpenNewToast(solana, 'abc', 0)).toBe(false);
+  });
+
+  // Eight pending rows from another device opened eight toasts
+  it('stops after a few in one change', () => {
+    expect(mayOpenNewToast(tx(), WALLET, 2)).toBe(true);
+    expect(mayOpenNewToast(tx(), WALLET, 3)).toBe(false);
+  });
+
+  it('does not ask for a wallet an app has not told it', () => {
+    expect(mayOpenNewToast(tx(), undefined, 0)).toBe(true);
+    expect(mayOpenNewToast(tx(), undefined, 3)).toBe(false);
+  });
+});
+
 describe('runReplacement', () => {
+  // The buttons stay active behind the wallet prompt: two prompts with the same fees, and the second, refused as
+  // underpriced, said the replacement failed while the first was on its way
+  it('does nothing while one runs for the same transaction, and can run again after it', async () => {
+    const report = vi.fn();
+    let answer: (hash: string) => void = () => undefined;
+    const action = vi.fn(() => new Promise<string>((resolve) => (answer = resolve)));
+
+    const first = runReplacement(action, tx(), report);
+    await runReplacement(action, tx(), report);
+    expect(action).toHaveBeenCalledTimes(1);
+
+    answer('0xnew');
+    await first;
+    const again = runReplacement(action, tx(), report);
+    expect(action).toHaveBeenCalledTimes(2);
+    answer('0xnew');
+    await again;
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it('is free again after a refusal', async () => {
+    const action = vi.fn().mockRejectedValueOnce(new Error('underpriced')).mockResolvedValueOnce('0xnew');
+
+    await runReplacement(action, tx(), vi.fn());
+    await runReplacement(action, tx(), vi.fn());
+
+    expect(action).toHaveBeenCalledTimes(2);
+  });
+
+  it('runs for another transaction meanwhile', async () => {
+    let answer: (hash: string) => void = () => undefined;
+    const first = runReplacement(() => new Promise<string>((resolve) => (answer = resolve)), tx(), vi.fn());
+    const other = vi.fn().mockResolvedValue('0xnew');
+
+    await runReplacement(other, tx({ txKey: '0xother' }), vi.fn());
+    answer('0xnew');
+    await first;
+
+    expect(other).toHaveBeenCalledTimes(1);
+  });
+
   it('shows the error of a refused replacement: otherwise it is a button that does nothing', async () => {
     const report = vi.fn();
     const error = new Error('replacement transaction underpriced');
@@ -265,6 +343,17 @@ describe('a toast a person closed', () => {
 });
 
 describe('toastStepFor', () => {
+  // A record can carry 10 KB, and every write of the pool compared all of them as JSON
+  it('does not read a record that is the same object', () => {
+    const same = tx();
+    const stringify = vi.spyOn(JSON, 'stringify');
+
+    expect(toastStepFor(same, same, pool(same), () => true)).toEqual({ kind: 'skip' });
+    expect(stringify).not.toHaveBeenCalled();
+
+    stringify.mockRestore();
+  });
+
   const active =
     (...keys: string[]) =>
     (key: string) =>
@@ -370,6 +459,14 @@ describe('toastsOfRemoved', () => {
 });
 
 describe('pendingOfWallet', () => {
+  // The provider lower-cased the address: a Solana wallet had no toast for what it had pending
+  it('finds a Solana wallet only by its exact address', () => {
+    const mine = { ...tx(), adapter: OrbitAdapter.SOLANA, from: 'AbC' } as unknown as EvmTransaction;
+
+    expect(pendingOfWallet(pool(mine), 'AbC')).toEqual([mine]);
+    expect(pendingOfWallet(pool(mine), 'abc')).toEqual([]);
+  });
+
   it('keeps what is pending of that wallet: another wallet cannot act on it, and finished records are noise', () => {
     const mine = tx({ txKey: '0xmine' });
     const other = tx({ txKey: '0xother', from: '0x0000000000000000000000000000000000000001' });

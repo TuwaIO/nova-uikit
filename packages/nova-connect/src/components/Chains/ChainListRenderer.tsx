@@ -304,7 +304,11 @@ const DefaultChainIcon: React.FC<ChainListRendererChainIconProps> = ({ chainId, 
  */
 const DefaultChainContent: React.FC<ChainListRendererChainContentProps> = ({ icon, children }) => (
   <div className="novacon:flex novacon:items-center novacon:space-x-3">
-    <div className="novacon:[&_svg]:w-6 novacon:[&_svg]:h-6 novacon:w-6 novacon:h-6" aria-hidden="true">
+    {/* Does not give way: a name in two lines, as with `Arbitrum Sepolia Testnet`, squeezed the icon into an oval */}
+    <div
+      className="novacon:[&_svg]:w-6 novacon:[&_svg]:h-6 novacon:w-6 novacon:h-6 novacon:shrink-0"
+      aria-hidden="true"
+    >
       {icon}
     </div>
     {children}

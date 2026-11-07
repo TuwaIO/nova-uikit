@@ -1,6 +1,6 @@
-// Writes src/utils/web3IconImports.ts: a lazy import of every icon that NetworkIcon and WalletIcon can render, that is
-// the icons named by the `filePath` of the networks and wallets in the metadata of @web3icons/common (some networks use
-// a token icon). The `dynamicIconImports` map of @web3icons/react lists all of its more than 2,000 icons, mostly tokens,
+// Writes src/utils/web3IconImports.ts: a lazy import of every icon that NetworkIcon, WalletIcon and TokenIcon can render,
+// that is the icons named by the `filePath` of the networks and wallets in the metadata of @web3icons/common (some
+// networks use a token icon) and the tokens of scripts/web3IconTokens.mjs. The `dynamicIconImports` map of @web3icons/react lists all of its more than 2,000 icons, mostly tokens,
 // and every `import()` in a map is a chunk that the bundler of an app builds, once for the browser and once for server
 // rendering. Run it after updating @web3icons/react or @web3icons/common (`pnpm generate:web3-icons`).
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -8,8 +8,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { networks } from '@web3icons/common/metadata/networks';
+import { tokens } from '@web3icons/common/metadata/tokens';
 import { wallets } from '@web3icons/common/metadata/wallets';
 import { format, resolveConfig } from 'prettier';
+
+import { PAYMENT_TOKENS, POPULAR_TOKENS } from './web3IconTokens.mjs';
 
 // The devDependencies, linked into the package (the package.json of @web3icons/react is not in its `exports`)
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,16 +38,51 @@ const files = new Map(
   ].map(([, key, file]) => [key, file]),
 );
 
+// Token icons of the library that draw something else under their name, seen by eye in the gallery of Storybook: the mark
+// of the network stands in. Look again after an update of @web3icons/react
+const WRONG_TOKEN_ICONS = {
+  TokenARB: 'networks/NetworkArbitrumOne',
+  TokenCORE: 'networks/NetworkCore',
+  TokenTAO: 'networks/NetworkBittensor',
+};
+
+// Tokens whose icon in the library is the mark of their network, with no file of their own: TON, INJ, HYPE and others
+const NETWORK_TOKEN_ICONS = Object.fromEntries(
+  tokens
+    .filter((token) => token.filePath.startsWith('network:') && !files.has(`Token${token.symbol.toUpperCase()}`))
+    .map((token) => [`Token${token.symbol.toUpperCase()}`, files.get(getWeb3IconKey(token.filePath))]),
+);
+const tokenIconFiles = { ...NETWORK_TOKEN_ICONS, ...WRONG_TOKEN_ICONS };
+
 const keys = [
   ...new Set(
     [...networks, ...wallets]
       .map((item) => item.filePath)
       .filter(Boolean)
+      .concat([...PAYMENT_TOKENS, ...POPULAR_TOKENS].map((symbol) => `token:${symbol}`))
       .map(getWeb3IconKey),
   ),
 ]
   .filter((key) => files.has(key))
+  .concat(Object.keys(NETWORK_TOKEN_ICONS))
   .sort();
+
+// The styles of the token icons above that do not have all three: `@web3icons/react` draws nothing for a style an icon
+// does not have, and the metadata is too long to load in a browser. Those drawn with a network mark have what it has
+const networkVariants = new Map(
+  networks.map((network) => [`networks/${getWeb3IconKey(network.filePath)}`, network.variants]),
+);
+const tokenVariants = Object.fromEntries(
+  tokens
+    .map((token) => [
+      getWeb3IconKey(`token:${token.filePath.startsWith('token:') ? token.filePath.slice(6) : token.symbol}`),
+      token.variants,
+    ])
+    .filter(([key]) => keys.includes(key))
+    .map(([key, variants]) => [key, networkVariants.get(WRONG_TOKEN_ICONS[key]) ?? variants])
+    .filter(([, variants]) => variants.length < 3)
+    .sort(([a], [b]) => a.localeCompare(b)),
+);
 
 const output = path.join(root, 'src', 'utils', 'web3IconImports.ts');
 const source = `/**
@@ -54,15 +92,23 @@ const source = `/**
  */
 
 /**
- * A lazy import of every icon of \`@web3icons/react\` that \`NetworkIcon\` and \`WalletIcon\` can render (the icons named
- * by the networks and wallets of the \`@web3icons/common\` metadata), by component name (\`NetworkEthereum\`,
- * \`WalletMetamask\`, \`TokenFLOW\`). Unlike \`dynamicIconImports\` of \`@web3icons/react\`, it leaves out the other token
- * and exchange icons, so the bundler of an app builds ${keys.length} icon chunks instead of more than 2,000.
+ * A lazy import of every icon of \`@web3icons/react\` that \`NetworkIcon\`, \`WalletIcon\` and \`TokenIcon\` can render (the
+ * icons named by the networks and wallets of the \`@web3icons/common\` metadata and the popular tokens), by component
+ * name (\`NetworkEthereum\`, \`WalletMetamask\`, \`TokenUSDC\`). Unlike \`dynamicIconImports\` of \`@web3icons/react\`, it
+ * leaves out the other token and exchange icons, so the bundler of an app builds ${keys.length} icon chunks instead of
+ * more than 2,000.
  * @internal
  */
 export const web3IconImports: Readonly<Record<string, () => Promise<{ default: unknown }>>> = {
-${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${files.get(key)}'),`).join('\n')}
+${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${tokenIconFiles[key] ?? files.get(key)}'),`).join('\n')}
 };
+
+/**
+ * The styles of the token icons of {@link web3IconImports} that do not have all three, by component name. \`@web3icons/react\`
+ * draws nothing for a style an icon does not have.
+ * @internal
+ */
+export const web3TokenIconVariants: Readonly<Record<string, readonly string[]>> = ${JSON.stringify(tokenVariants)};
 `;
 
 writeFileSync(output, await format(source, { ...(await resolveConfig(output)), filepath: output }));

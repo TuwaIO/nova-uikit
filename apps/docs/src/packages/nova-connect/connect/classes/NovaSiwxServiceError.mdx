@@ -4,11 +4,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaSiwxServiceError
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L20)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L29)
 
 Thrown by `getNonce` or `verifier` when your backend could not answer (a 5xx, the network): it says nothing of the wallet
-or the person, so the wallet stays connected, no session ends, and the sign-in is tried again a little later, with
-`onError` called once however long that lasts. Anything else they throw counts as a failed sign-in.
+or the person. The call is tried again with what the wallet has signed, so the wallet is not asked again. While a wallet
+connects, after a few tries the connection fails with a Try again, and no session ends. A wallet already connected stays
+connected and it goes on trying, with `onError` called once however long that lasts. Anything else they throw counts as
+a failed sign-in.
 
 ## Extends
 
@@ -20,7 +22,7 @@ or the person, so the wallet stays connected, no session ends, and the sign-in i
 
 > **new NovaSiwxServiceError**(`message?`): `NovaSiwxServiceError`
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L21)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L30)
 
 #### Parameters
 

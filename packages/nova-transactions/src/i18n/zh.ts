@@ -4,6 +4,15 @@ import { NovaTransactionsLabels } from './types';
  * Chinese Simplified (zh-CN) localization for Nova Transactions modals, toasts, and history.
  */
 export const chineseLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: '交易',
+    defaultDescription: {
+      pending: '正在等待网络确认。',
+      success: '已由网络确认。',
+      failed: '交易未成功。',
+      replaced: '已被另一笔交易替换。',
+    },
+  },
   transactionsModal: {
     history: {
       title: '交易历史',
@@ -29,7 +38,6 @@ export const chineseLabels: NovaTransactionsLabels = {
     confirmationsLabel: '区块确认数',
   },
   hashLabels: {
-    gelato: 'Gelato 任务 ID',
     safe: 'Safe 交易哈希',
     erc4337: 'UserOp 哈希',
     original: '初始交易哈希',
@@ -85,6 +93,7 @@ export const chineseLabels: NovaTransactionsLabels = {
   transactionDetails: {
     title: '交易详情',
     subtitle: '查看完整的执行指标和链上状态。',
+    back: '返回历史记录',
     metadata: '元数据',
     executionData: '执行数据',
     adapter: '适配器',
@@ -105,6 +114,7 @@ export const chineseLabels: NovaTransactionsLabels = {
     value: '交易金额 (Raw Value)',
     maxFee: '最大 Gas 费用',
     maxPriorityFee: '最大优先费用 (Tip)',
+    evmTitle: 'EVM 执行数据',
     solanaTitle: 'Solana 执行数据',
     starknetTitle: 'Starknet 执行数据',
     contextTitle: '上下文与载荷',

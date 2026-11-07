@@ -1,5 +1,7 @@
 import { ConnectButton, type ConnectButtonProps } from '@tuwaio/nova-connect/components';
 import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { useNovaSounds } from '@tuwaio/nova-core';
+import type { NovaSoundName } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
 import { useEffect, useRef, useState } from 'react';
@@ -74,6 +76,15 @@ const SCENARIOS: Record<string, (from: string) => { waiting: unknown[]; result: 
   },
 };
 
+/** What a person hears of each operation: while it waits, and at its result, as in `NovaTransactionsProvider`. */
+const SOUNDS: Record<string, { waiting: NovaSoundName; result: NovaSoundName }> = {
+  Success: { waiting: 'txPending', result: 'txSuccess' },
+  Failed: { waiting: 'txPending', result: 'txError' },
+  Replaced: { waiting: 'txPending', result: 'txReplaced' },
+  Cancelled: { waiting: 'txPending', result: 'txReplaced' },
+  'Sped up': { waiting: 'txReplaced', result: 'txSuccess' },
+};
+
 const poolOf = (records: unknown[]) =>
   Object.fromEntries(
     records.map((record) => {
@@ -96,15 +107,22 @@ export function ConnectButtonWithTransactions(props: ConnectButtonProps) {
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
+  const playSound = useNovaSounds();
+
   const play = (name: string) => {
     if (!address) return;
     const { waiting, result } = SCENARIOS[name](address);
     clearTimeout(timer.current);
     setPool(poolOf(waiting));
-    timer.current = setTimeout(() => setPool(poolOf(result)), 2500);
+    playSound(SOUNDS[name].waiting);
+    timer.current = setTimeout(() => {
+      setPool(poolOf(result));
+      playSound(SOUNDS[name].result);
+    }, 2500);
   };
 
   return (
+    // The row below keeps its own colors: a customized story sets the --tuwa-* colors for its own surface
     <div className="flex flex-col items-center gap-4">
       <ConnectButton {...props} transactionPool={pool} />
       {address ? (
@@ -114,14 +132,14 @@ export function ConnectButtonWithTransactions(props: ConnectButtonProps) {
               key={name}
               type="button"
               onClick={() => play(name)}
-              className="cursor-pointer rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] px-2 py-1 text-xs text-[var(--tuwa-text-primary)]"
+              className="cursor-pointer rounded border border-gray-400 px-2 py-1 text-xs text-gray-900 dark:text-gray-100"
             >
               {name}
             </button>
           ))}
         </div>
       ) : (
-        <p className="text-xs text-[var(--tuwa-text-secondary)]">
+        <p className="text-xs text-gray-600 dark:text-gray-300">
           Connect first: Connect Wallet, then Impersonate, with any address.
         </p>
       )}

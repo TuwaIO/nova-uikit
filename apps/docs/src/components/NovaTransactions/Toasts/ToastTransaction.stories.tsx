@@ -4,6 +4,8 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import { action } from 'storybook/actions';
 
+import { iso, isoTransactions } from '../../../utils/customization/isometric';
+import { IsoCube, withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -77,24 +79,6 @@ export const PendingWithActions: Story = {
 };
 
 /**
- * A pending Gelato transaction. The "Speed Up" and "Cancel" actions are correctly hidden
- * because the tracker is not 'ethereum'.
- */
-export const PendingGelato: Story = {
-  name: 'Pending (Gelato)',
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      pending: true,
-      status: undefined,
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_12345',
-      hash: undefined,
-      title: 'Processing Gasless Tx...',
-    }),
-  },
-};
-
-/**
  * A failed EVM transaction, showing error styling.
  */
 export const Failed: Story = {
@@ -135,12 +119,9 @@ export const Solana: Story = {
  * A transaction with a custom icon provided, overriding the default chain icon.
  */
 export const WithCustomIcon: Story = {
+  decorators: [withIsometricTheme],
   args: {
-    icon: (
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-[#0052ff] via-[#1d4ed8] to-[#0284c7] font-bold text-white dark:from-[#2563eb] dark:via-[#3b82f6] dark:to-[#38bdf8]">
-        🦄
-      </div>
-    ),
+    icon: <IsoCube className={`h-10 w-10 ${iso.text.primary}`} />,
   },
 };
 
@@ -149,33 +130,29 @@ export const WithCustomIcon: Story = {
  */
 export const FullyCustomized: Story = {
   name: 'With Full Customization',
+  decorators: [withIsometricTheme],
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       pending: true,
       tracker: TransactionTracker.Ethereum,
       connectorType: 'evm:metamask',
       sender: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      to: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
       nonce: 7,
       maxFeePerGas: '1000',
       maxPriorityFeePerGas: '100',
     }),
     customization: {
+      ...isoTransactions.toast,
       components: {
-        StatusBadge: () => (
-          <div className="rounded-full bg-[#0052ff] px-3 py-1 text-xs font-bold text-white dark:bg-[#2563eb]">
-            CUSTOM
-          </div>
-        ),
+        StatusBadge: () => <span className={`px-2 py-1 ${iso.surface.border} ${iso.sectionTitle}`}>Waiting</span>,
         TxInfoButton: ({ onClick, children }) => (
-          <button
-            onClick={onClick}
-            className="rounded-[var(--tuwa-rounded-corners)] bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
-          >
+          <button type="button" onClick={onClick} className={iso.button.outline}>
             {children}
           </button>
         ),
         SpeedUpButton: ({ onClick, children }) => (
-          <button onClick={onClick} className="font-bold text-green-500">
+          <button type="button" onClick={onClick} className={iso.button.primary}>
             {children}
           </button>
         ),

@@ -17,7 +17,7 @@ export const defaultLabels: NovaConnectLabels = {
   all: 'All',
   active: 'Active',
   connectors: 'Connectors',
-  connectNewWallet: 'Connect new wallet',
+  connectNewWallet: 'Connect another wallet',
 
   // Connection states - Status messages for wallet connection flow
   connectionError: 'Connection error',
@@ -46,6 +46,8 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetwork: 'Switch network',
   switchNetworks: 'Switch Networks',
   connectingEllipsis: 'Connecting...',
+  signMessageInWallet: 'Sign the message in your wallet',
+  checkWalletRequest: 'Check your wallet: the request may be waiting there.',
   connectedWallets: 'Connected Wallets',
 
   // Wallet sections - Categories for wallet connector grouping
@@ -202,6 +204,7 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: 'Switch network - {count} networks available',
   transactionsInAppCount: 'Transactions in app - {count} transactions',
   transactionsAvailable: '{count} transactions available',
+  transactionsPendingCount: 'Transactions pending: {count}',
   noTransactionsForWallet: 'No transactions found for this wallet',
   walletName: 'Wallet name: {name}',
   loadingWalletName: 'Loading wallet name',

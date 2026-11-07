@@ -4,6 +4,15 @@ import { NovaTransactionsLabels } from './types';
  * Ukrainian (uk) translations for Nova Transactions modals, toasts, and history.
  */
 export const ukrainianLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: 'Транзакція',
+    defaultDescription: {
+      pending: 'Очікуємо на підтвердження мережі.',
+      success: 'Підтверджено мережею.',
+      failed: 'Не вдалося виконати.',
+      replaced: 'Її замінила інша транзакція.',
+    },
+  },
   transactionsModal: {
     history: {
       title: 'Історія транзакцій',
@@ -29,7 +38,6 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     confirmationsLabel: 'Підтвердження',
   },
   hashLabels: {
-    gelato: 'ID завдання Gelato',
     safe: 'Хеш транзакції Safe',
     erc4337: 'Хеш UserOp',
     original: 'Початковий хеш',
@@ -85,6 +93,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
   transactionDetails: {
     title: 'Деталі транзакції',
     subtitle: 'Повні дані виконання та статус у мережі.',
+    back: 'Назад до історії',
     metadata: 'Метадані',
     executionData: 'Дані виконання',
     adapter: 'Адаптер',
@@ -97,7 +106,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     from: 'Від (відправник)',
     to: 'Кому (отримувач)',
     hash: 'Хеш транзакції',
-    network: 'Мережа',
+    network: 'Мережа / ланцюг',
     inputData: 'Вхідні дані',
     payload: 'Корисне навантаження',
     context: 'Контекст',
@@ -105,6 +114,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     value: 'Сума (raw)',
     maxFee: 'Макс. комісія за газ',
     maxPriorityFee: 'Макс. пріоритетна комісія за газ',
+    evmTitle: 'Дані виконання EVM',
     solanaTitle: 'Дані виконання Solana',
     starknetTitle: 'Дані виконання Starknet',
     contextTitle: 'Контекст і навантаження',

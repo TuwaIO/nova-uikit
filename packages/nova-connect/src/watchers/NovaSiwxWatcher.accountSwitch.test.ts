@@ -15,34 +15,44 @@ type Connection = {
   signMessage: () => void;
 };
 
+// The wallet that answers when the test says so
+let answerWallet: Record<string, (error: Error) => void> = {};
 const connection = (address: string): Connection => ({
   connectorType: 'evm:metamask',
   address,
   chainId: 1,
   isConnected: true,
-  signMessage: vi.fn(),
+  signMessage: () =>
+    new Promise((_, reject) => {
+      answerWallet[address] = reject;
+    }),
 });
 
 let activeConnection: Connection;
 const disconnect = vi.fn();
 const reset = vi.fn();
-let rejectSignIn: (error: Error) => void;
-const signIn = vi.fn(
-  () =>
-    new Promise((_, reject) => {
-      rejectSignIn = reject;
-    }),
-);
+// As `signIn` of `@tuwaio/siwx-react`: it asks the wallet, and what it catches reaches `onError` as text
+const signIn = vi.fn(async (options: { signer: () => Promise<string>; onError?: (message: string) => void }) => {
+  try {
+    await options.signer();
+  } catch (error) {
+    options.onError?.((error as Error).message);
+  }
+});
 
 vi.mock('../satellite', () => ({
+  SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({ activeConnection, disconnect, isAutoConnectFinished: true }),
 }));
 
 vi.mock('@tuwaio/siwx-react', () => ({
   useSiwx: () => ({ signIn }),
-  useSiwxSessionStore: (selector: (state: Record<string, unknown>) => unknown) =>
-    selector({ session: null, status: 'idle', reset }),
+  useSiwxSessionStore: Object.assign(
+    (selector: (state: Record<string, unknown>) => unknown) => selector({ session: null, status: 'idle', reset }),
+    { getState: () => ({ session: null, status: 'idle' }) },
+  ),
+  isSessionMatchingConnection: () => false,
   getSatelliteSiwxFields: (minimalConnection: { address: string }) => ({
     address: `eip155:1:${minimalConnection.address}`,
   }),
@@ -56,6 +66,7 @@ const flush = () => new Promise((resolve) => setTimeout(resolve));
 describe('NovaSiwxWatcher: a failed sign-in', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    answerWallet = {};
     vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
   afterEach(() => {
@@ -68,7 +79,8 @@ describe('NovaSiwxWatcher: a failed sign-in', () => {
     render(NovaSiwxWatcher, props);
     expect(signIn).toHaveBeenCalledTimes(1);
 
-    rejectSignIn(new Error('User rejected'));
+    await flush();
+    answerWallet['0xaaaa'](new Error('User rejected'));
     await flush();
     expect(disconnect).toHaveBeenCalledWith('evm:metamask');
     expect(reset).toHaveBeenCalled();
@@ -78,12 +90,15 @@ describe('NovaSiwxWatcher: a failed sign-in', () => {
     activeConnection = connection('0xaaaa');
     render(NovaSiwxWatcher, props);
 
+    await flush();
     activeConnection = connection('0xbbbb');
     render(NovaSiwxWatcher, props);
+    await flush();
 
-    rejectSignIn(new Error('User rejected'));
+    // The answer of the account that is gone: the prompt of the new one is what counts now
+    answerWallet['0xaaaa'](new Error('User rejected'));
     await flush();
     expect(disconnect).not.toHaveBeenCalled();
-    expect(reset).toHaveBeenCalled();
+    expect(reset).not.toHaveBeenCalled();
   });
 });

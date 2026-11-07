@@ -1,5 +1,6 @@
-import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
+import type { NovaSoundsConfig } from '@tuwaio/nova-core/utils';
+import { globalSingleton, OrbitAdapter } from '@tuwaio/orbit-core';
+import type { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
 import { createContext, useContext } from 'react';
 
 import { LocalTxPagination } from '../components';
@@ -52,6 +53,14 @@ export interface NovaConnectProviderProps extends InitialChains {
   withBalance?: boolean;
   /** Whether the connect button shows a chain selector */
   withChain?: boolean;
+  /**
+   * The sounds of Nova Connect, off without it: a wallet connected and disconnected, an error of a connection, a change of
+   * network, a copy, a balance refreshed by hand, a recent wallet removed, a dialog opened and closed, a link to another site,
+   * Connect another wallet, the Get a wallet and About wallets screens, and the Remember this wallet checkbox. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and
+   * sets the volume. They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of
+   * `@tuwaio/nova-core/utils` for when they stay silent.
+   */
+  sounds?: NovaSoundsConfig;
   /** Whether the wallet list offers the impersonated wallet (a read-only address, for development) */
   withImpersonated?: boolean;
   /** Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini) */
@@ -101,8 +110,12 @@ export interface NovaConnectProviderType extends Omit<
    * Opens or closes the connect modal (opening resets it to the wallet list).
    *
    * @param value - Whether the modal is open.
+   * @param options - `adapter`: open on the wallets of one chain family, for example when a payment needs a Solana
+   *   wallet (the user can still switch the family in the modal).
    */
-  setIsConnectModalOpen: (value: boolean) => void;
+  setIsConnectModalOpen: (value: boolean, options?: { adapter?: OrbitAdapter }) => void;
+  /** The chain family the connect modal was opened on with `setIsConnectModalOpen`; `undefined` for all wallets */
+  connectModalAdapter: OrbitAdapter | undefined;
   /** Whether the connected modal is open */
   isConnectedModalOpen: boolean;
   /**
@@ -141,6 +154,14 @@ export interface NovaConnectProviderType extends Omit<
   setConnectedButtonStatus: (value: ButtonTxStatus) => void;
   /** Whether a wallet has just connected in the connect modal (`true` for 500 ms before the modal closes) */
   isConnected: boolean;
+  /** Whether the wallet of a connection is asked to sign in, with `siwx`: the connect window then says so */
+  isWaitingForSignature: boolean;
+  /**
+   * Set by the SIWX watcher while a wallet is asked to sign in.
+   *
+   * @param value - Whether it is asked.
+   */
+  setIsWaitingForSignature: (value: boolean) => void;
   /**
    * Sets the "just connected" state of the connect modal.
    *
@@ -214,8 +235,14 @@ export class NovaConnectProviderError extends Error {
 
 /**
  * React context of `NovaConnectProvider` (`undefined` outside the provider). Read it with {@link useNovaConnect}.
+ *
+ * The context object is created once and saved on `globalThis` (`Symbol.for('tuwaio.nova-connect.context')`), so
+ * packages that bundle or resolve their own copy of `@tuwaio/nova-connect` (such as `@tuwaio/nova-payments`, which
+ * opens the app's connect modal) share the same context.
  */
-export const NovaConnectProviderContext = createContext<NovaConnectProviderType | undefined>(undefined);
+export const NovaConnectProviderContext = globalSingleton('tuwaio.nova-connect.context', () =>
+  createContext<NovaConnectProviderType | undefined>(undefined),
+);
 
 /**
  * Returns the state of `NovaConnectProvider`: the modal states and their setters, the selected network and wallet,

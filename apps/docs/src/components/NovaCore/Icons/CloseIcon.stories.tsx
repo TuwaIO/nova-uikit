@@ -25,7 +25,7 @@ export const Default: Story = {
 
 export const CustomColor: Story = {
   args: {
-    className: 'text-red-500',
+    className: 'text-[var(--tuwa-error-icon)]',
   },
 };
 

@@ -1,6 +1,6 @@
 /**
  * @file This file contains the `TransactionKey` component, which is responsible for displaying
- * the various identifiers associated with a transaction (e.g., hash, Gelato Task ID).
+ * the various identifiers associated with a transaction (e.g., hash, Safe transaction hash).
  */
 
 import { cn } from '@tuwaio/nova-core/utils';
@@ -8,7 +8,8 @@ import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { explorerUrlOfHash, explorerUrlOfReplaced } from '../utils/replacement';
 import { HashLink, HashLinkProps } from './HashLink';
 
@@ -41,7 +42,7 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsPr
 
 /**
  * The identifiers of a transaction: the key of its tracker when it differs from the on-chain hash (Safe transaction
- * hash, Gelato task ID, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
+ * hash, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
  * transaction, the original and the replacing hash. Hashes link to the explorer URL of the adapter's
  * `getExplorerTxUrl` when there is one.
  *
@@ -155,7 +156,7 @@ export function TransactionKey<T extends Transaction>({
       {shouldShowTrackerKey && trackerKeyElement}
       {onChainHashesElement}
       {typeof confirmations === 'number' && confirmations > 0 && (
-        <p className="novatx:text-xs novatx:text-[var(--tuwa-text-tertiary)]">
+        <p className="novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]">
           {statuses.confirmationsLabel}: {confirmations}
         </p>
       )}

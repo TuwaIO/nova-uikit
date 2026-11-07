@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
+import { iso, isoHistory } from '../../../utils/customization/isometric';
+import { IsoCube, withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -85,12 +87,6 @@ export const Default: Story = {
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(1, 'hour').unix(),
         }),
-        createMockTx(OrbitAdapter.EVM, {
-          tracker: TransactionTracker.Gelato,
-          txKey: 'gelato_task_123',
-          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
-          localTimestamp: dayjs().subtract(15, 'minutes').unix(),
-        }),
       ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
     },
     adapter: [mockEvmAdapter],
@@ -169,15 +165,16 @@ export const WithScrolling: Story = {
  * An example of customizing the placeholder component for the "Connect Wallet" state.
  */
 export const WithCustomPlaceholder: Story = {
+  decorators: [withIsometricTheme],
   args: {
     ...NoWalletConnected.args,
     customization: {
       components: {
         Placeholder: ({ title, message }) => (
-          <div className="rounded-[var(--tuwa-rounded-corners)] border-2 border-dashed border-[#0052ff]/30 bg-gradient-to-r from-[#0052ff]/10 via-[#1d4ed8]/10 to-[#0284c7]/10 p-12 text-center dark:border-[#38bdf8]/30 dark:from-[#2563eb]/15 dark:via-[#3b82f6]/15 dark:to-[#38bdf8]/15">
-            <div className="mb-4 text-6xl">🔗</div>
-            <h4 className="mb-2 text-xl font-bold text-[#0052ff] dark:text-[#38bdf8]">{title}</h4>
-            <p className="italic text-[#0284c7] dark:text-[#7dd3fc]">{message}</p>
+          <div className={`flex flex-col items-center gap-3 p-8 text-center ${iso.box}`}>
+            <IsoCube className={`h-12 w-12 ${iso.text.primary}`} />
+            <h4 className={`text-base ${iso.text.strong} ${iso.text.primary}`}>{title}</h4>
+            <p className={`text-sm ${iso.text.secondary}`}>{message}</p>
           </div>
         ),
       },
@@ -190,13 +187,18 @@ export const WithCustomPlaceholder: Story = {
  * An example of replacing the default `TransactionHistoryItem` with a completely custom component.
  */
 export const WithCustomHistoryItem: Story = {
+  decorators: [withIsometricTheme],
   args: {
     ...Default.args,
     customization: {
+      ...isoHistory,
       components: {
         HistoryItem: ({ tx }) => (
-          <div className="m-2 rounded-r-[var(--tuwa-rounded-corners)] border-l-4 border-green-500 bg-gradient-to-r from-green-500/10 to-blue-500/10 p-4">
-            <div className="font-semibold text-green-700">Custom Item: {tx.type}</div>
+          <div
+            className={`m-3 flex items-center justify-between gap-3 p-3 ${iso.surface.base} ${iso.surface.border} ${iso.faces}`}
+          >
+            <span className={`text-sm ${iso.text.strong} ${iso.text.primary}`}>{tx.type}</span>
+            <span className={iso.sectionTitle}>{tx.status ?? 'Pending'}</span>
           </div>
         ),
       },

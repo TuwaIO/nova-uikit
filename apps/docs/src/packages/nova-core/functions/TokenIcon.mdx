@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/TokenIcon" />
+
+# TokenIcon()
+
+> **TokenIcon**(`props`): `Element`
+
+Defined in: [components/TokenIcon.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/TokenIcon.tsx#L29)
+
+The icon of a token by its symbol, loaded on demand one icon at a time (a [FallbackIcon](?path=/docs/packages-nova-core-functions-fallbackicon--docs) meanwhile), for about
+1,850 tokens. The tokens of Payments and the popular ones (`web3IconImports`) come from `@web3icons/react` through your
+bundler. Any other is fetched once from `raw.githubusercontent.com`, so that they cost your build nothing. A token the
+repository does not have, or a request that fails, shows the first letter of its symbol.
+
+Side effect: a token outside the map sends one request to `raw.githubusercontent.com`, cached until the page reloads.
+
+## Parameters
+
+### props
+
+[`TokenIconProps`](?path=/docs/packages-nova-core-interfaces-tokeniconprops--docs)
+
+See [TokenIconProps](?path=/docs/packages-nova-core-interfaces-tokeniconprops--docs).
+
+## Returns
+
+`Element`
+
+The icon element.

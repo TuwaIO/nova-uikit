@@ -1,16 +1,8 @@
+import { isRecord } from '@tuwaio/orbit-core';
+
 /**
  * @file This file contains a utility for performing a deep (recursive) merge of two objects.
  */
-
-/**
- * Checks if the provided item is a plain object (i.e., not null and not an array).
- *
- * @param {any} item - The item to check.
- * @returns {item is Record<string, any>} True if the item is a plain object, otherwise false.
- */
-const isObject = (item: unknown): item is Record<string, unknown> => {
-  return typeof item === 'object' && item !== null && !Array.isArray(item);
-};
 
 /**
  * Recursively merges the properties of a source object into a target object.
@@ -31,14 +23,17 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
   // Start with a shallow copy of the target to avoid mutation.
   const output = { ...target };
 
-  if (isObject(target) && isObject(source)) {
+  if (isRecord(target) && isRecord(source)) {
     // Iterate over the keys in the source object.
     Object.keys(source).forEach((key) => {
       const targetValue = target[key as keyof T];
       const sourceValue = source[key as keyof T];
 
+      // `undefined` says nothing: `{ title: maybeTitle }` erased the default label, which then rendered as nothing
+      if (sourceValue === undefined) return;
+
       // If the value is an object in both target and source, merge them recursively.
-      if (isObject(targetValue) && isObject(sourceValue)) {
+      if (isRecord(targetValue) && isRecord(sourceValue)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         (output as Record<string, unknown>)[key] = deepMerge(targetValue, sourceValue);

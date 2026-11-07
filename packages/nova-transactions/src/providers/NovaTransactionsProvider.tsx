@@ -4,7 +4,14 @@
  * to orchestrate modals, toasts, and internationalization.
  */
 
-import { deepMerge, ToastCloseButton, ToastCloseButtonProps, useMediaQuery } from '@tuwaio/nova-core';
+import {
+  deepMerge,
+  NovaSoundsProvider,
+  ToastCloseButton,
+  ToastCloseButtonProps,
+  useMediaQuery,
+} from '@tuwaio/nova-core';
+import { type NovaSoundsConfig, playNovaSound } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import {
   ITxTrackingStore,
@@ -31,15 +38,18 @@ import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
 import { closedToasts, rememberClosedToast } from '../utils/closedToasts';
 import {
+  isUserRejection,
   latestRecordOf,
+  mayOpenNewToast,
   pendingOfWallet,
   successorOf,
   toastIdOf,
   toastsOfRemoved,
   toastStepFor,
 } from '../utils/replacement';
+import { txSoundsOf } from '../utils/txSounds';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
-import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
+import { NovaTransactionsLabelsProvider, useOfferLabels } from './NovaTransactionsLabelsProvider';
 
 /**
  * Maps a transaction's final status to the corresponding toast type for visual feedback.
@@ -86,6 +96,14 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
      */
     validationErrorToast?: boolean;
   };
+  /**
+   * The sounds of the transactions, off without it: a transaction in the pool, its success, failure and replacement, an error before it
+   * reached the pool, a copy, a dialog opened
+   * and closed, and a link to the explorer. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and sets the volume.
+   * They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of `@tuwaio/nova-core/utils` for
+   * when they stay silent.
+   */
+  sounds?: NovaSoundsConfig;
   /** Customization overrides for individual UI sub-systems. */
   customization?: {
     /** Overrides for the bottom-right transaction progress toast body. */
@@ -141,6 +159,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   customization,
   pagination,
   removeTxFromPool,
+  sounds,
   ...toastProps
 }: NovaTransactionsProviderProps<T>) {
   const [isTransactionsInfoModalOpen, setIsTransactionsInfoModalOpen] = useState(false);
@@ -165,6 +184,14 @@ export function NovaTransactionsProvider<T extends Transaction>({
   );
 
   const mergedLabels = useMemo(() => deepMerge(defaultLabels, labels || {}), [labels]);
+  useOfferLabels(mergedLabels);
+
+  const toldPreSubmitErrors = useRef(new WeakSet<object>());
+  // Read when something happens: an object written in place of the prop must not renew what the modals are given
+  const soundsRef = useRef(sounds);
+  useEffect(() => {
+    soundsRef.current = sounds;
+  }, [sounds]);
 
   /**
    * Fires a top-center error toast for any error that occurs before the transaction
@@ -172,6 +199,12 @@ export function NovaTransactionsProvider<T extends Transaction>({
    */
   const showPreSubmitErrorToast = useCallback(
     (error: unknown) => {
+      // A failed Retry comes here from the provider and from the modal around it, which alone sees what fails before it
+      if (typeof error === 'object' && error !== null) {
+        if (toldPreSubmitErrors.current.has(error)) return;
+        toldPreSubmitErrors.current.add(error);
+      }
+      playNovaSound('error', soundsRef.current);
       if (!enabledFeatures.validationErrorToast) return;
 
       const message = error instanceof Error ? error.message : String(error);
@@ -217,7 +250,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
         // If initialTx has a lastTxKey the transaction was already submitted — that
         // error path is handled by the tracking modal's own error UI.
         const wasPreSubmit = !initialTx?.lastTxKey;
-        if (wasPreSubmit) {
+        if (wasPreSubmit && !isUserRejection(e)) {
           showPreSubmitErrorToast(e);
         }
         throw e;
@@ -274,16 +307,23 @@ export function NovaTransactionsProvider<T extends Transaction>({
         });
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [transactionsPool, enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
+
+    [enabledFeatures, customization?.toast, adapter, connectedWalletAddress],
   );
 
   // Effect 1: Handles toasts for NEW or CHANGED transactions.
   useEffect(() => {
     const prevPool = prevTransactionsRef.current;
-    const closed = closedToasts();
+    const records = Object.values(transactionsPool);
+    // Read from `localStorage`, and asked of new records alone
+    const closed = records.some((tx) => !prevPool[tx.txKey]) ? closedToasts() : undefined;
+    let openedNew = 0;
 
-    Object.values(transactionsPool).forEach((currentTx) => {
+    for (const sound of txSoundsOf(transactionsPool, prevPool, Date.now() / 1000)) {
+      playNovaSound(sound, soundsRef.current);
+    }
+
+    records.forEach((currentTx) => {
       const step = toastStepFor(
         currentTx,
         prevPool[currentTx.txKey],
@@ -293,6 +333,10 @@ export function NovaTransactionsProvider<T extends Transaction>({
         closed,
       );
       if (step.kind === 'show') {
+        if (!prevPool[currentTx.txKey] && !toast.isActive(step.toastId, toastContainerId)) {
+          if (!mayOpenNewToast(currentTx, connectedWalletAddress, openedNew)) return;
+          openedNew += 1;
+        }
         toastIdsRef.current.set(currentTx.txKey, step.toastId);
         showOrUpdateToast(currentTx, step.toastId);
       }
@@ -303,6 +347,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
     );
 
     prevTransactionsRef.current = transactionsPool;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionsPool, showOrUpdateToast]);
 
   // StrictMode runs the effects twice on mount, and a toast of the first pass can be lost with the first subscription of the
@@ -317,7 +362,8 @@ export function NovaTransactionsProvider<T extends Transaction>({
   // A transaction still pending when the page opens gets a toast, and with it a way to speed it up or stop tracking it. Only of
   // the wallet that can act on it, once per wallet, and only the newest few: nothing limits how many a pool can hold.
   useEffect(() => {
-    const wallet = connectedWalletAddress?.toLowerCase();
+    // As it is: lower-cased, a Solana address is another account, and its wallet had no toast at all
+    const wallet = connectedWalletAddress;
     if (!wallet || walletsSeenRef.current.has(wallet)) return;
     walletsSeenRef.current.add(wallet);
     pendingOfWallet(transactionsPool, wallet, closedToasts()).forEach((tx) => {
@@ -338,7 +384,9 @@ export function NovaTransactionsProvider<T extends Transaction>({
         showOrUpdateToast(tx, toastId);
       }
     });
-  }, [connectedWalletAddress, showOrUpdateToast, transactionsPool]);
+    // Not on the pool: Effect 1 has updated what changed, and each write updated every open toast again
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectedWalletAddress, showOrUpdateToast]);
 
   const isTrackingModalOpen =
     !!initialTx?.withTrackedModal && transactionsPool[initialTx?.lastTxKey ?? '']?.isTrackedModalOpen;
@@ -366,69 +414,71 @@ export function NovaTransactionsProvider<T extends Transaction>({
   );
 
   return (
-    <NovaTransactionsLabelsProvider labels={mergedLabels}>
-      <NovaTransactionsErrorContext.Provider value={errorContextValue}>
-        {enabledFeatures.toasts && (
-          <ToastContainer
-            position="bottom-right"
-            stacked
-            autoClose={false}
-            hideProgressBar
-            closeOnClick={false}
-            icon={false}
-            closeButton={CustomizedCloseButton}
-            containerId={toastContainerId}
-            toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
-            {...toastProps}
-            style={hidesToasts ? { ...toastProps.style, display: 'none' } : toastProps.style}
-          />
-        )}
+    <NovaSoundsProvider sounds={sounds}>
+      <NovaTransactionsLabelsProvider labels={mergedLabels}>
+        <NovaTransactionsErrorContext.Provider value={errorContextValue}>
+          {enabledFeatures.toasts && (
+            <ToastContainer
+              position="bottom-right"
+              stacked
+              autoClose={false}
+              hideProgressBar
+              closeOnClick={false}
+              icon={false}
+              closeButton={CustomizedCloseButton}
+              containerId={toastContainerId}
+              toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
+              {...toastProps}
+              style={hidesToasts ? { ...toastProps.style, display: 'none' } : toastProps.style}
+            />
+          )}
 
-        {enabledFeatures.transactionsModal && (
-          <TransactionsInfoModal
-            isOpen={isTransactionsInfoModalOpen}
-            setIsOpen={(open) => {
-              setIsTransactionsInfoModalOpen(open);
-              if (!open) setSelectedTxKey(null);
-            }}
-            selectedTxKey={selectedTxKey}
-            customization={customization?.transactionsInfoModal}
-            adapter={adapter}
-            connectedWalletAddress={connectedWalletAddress}
-            connectedAdapterType={connectedAdapterType}
-            transactionsPool={transactionsPool}
-            pagination={pagination}
-            removeTxFromPool={removeTxFromPool}
-          />
-        )}
+          {enabledFeatures.transactionsModal && (
+            <TransactionsInfoModal
+              isOpen={isTransactionsInfoModalOpen}
+              setIsOpen={(open) => {
+                setIsTransactionsInfoModalOpen(open);
+                if (!open) setSelectedTxKey(null);
+              }}
+              selectedTxKey={selectedTxKey}
+              customization={customization?.transactionsInfoModal}
+              adapter={adapter}
+              connectedWalletAddress={connectedWalletAddress}
+              connectedAdapterType={connectedAdapterType}
+              transactionsPool={transactionsPool}
+              pagination={pagination}
+              removeTxFromPool={removeTxFromPool}
+            />
+          )}
 
-        {enabledFeatures.validationErrorToast && (
-          <ToastContainer
-            containerId={VALIDATION_ERROR_CONTAINER_ID}
-            position="top-center"
-            autoClose={6000}
-            pauseOnHover
-            hideProgressBar={false}
-            closeOnClick={false}
-            icon={false}
-            closeButton={CustomizedCloseButton}
-            toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
-          />
-        )}
+          {enabledFeatures.validationErrorToast && (
+            <ToastContainer
+              containerId={VALIDATION_ERROR_CONTAINER_ID}
+              position="top-center"
+              autoClose={6000}
+              pauseOnHover
+              hideProgressBar={false}
+              closeOnClick={false}
+              icon={false}
+              closeButton={CustomizedCloseButton}
+              toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
+            />
+          )}
 
-        {enabledFeatures.trackingTxModal && (
-          <TrackingTxModal
-            initialTx={initialTx}
-            onClose={closeTxTrackedModal}
-            onOpenAllTransactions={() => setIsTransactionsInfoModalOpen(true)}
-            transactionsPool={transactionsPool}
-            customization={customization?.trackingTxModal}
-            executeTxAction={wrappedExecuteTxAction}
-            adapter={adapter}
-            connectedWalletAddress={connectedWalletAddress}
-          />
-        )}
-      </NovaTransactionsErrorContext.Provider>
-    </NovaTransactionsLabelsProvider>
+          {enabledFeatures.trackingTxModal && (
+            <TrackingTxModal
+              initialTx={initialTx}
+              onClose={closeTxTrackedModal}
+              onOpenAllTransactions={() => setIsTransactionsInfoModalOpen(true)}
+              transactionsPool={transactionsPool}
+              customization={customization?.trackingTxModal}
+              executeTxAction={wrappedExecuteTxAction}
+              adapter={adapter}
+              connectedWalletAddress={connectedWalletAddress}
+            />
+          )}
+        </NovaTransactionsErrorContext.Provider>
+      </NovaTransactionsLabelsProvider>
+    </NovaSoundsProvider>
   );
 }

@@ -11,6 +11,15 @@ import { NovaTransactionsLabels } from './types';
  * for creating other language translations.
  */
 export const defaultLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: 'Transaction',
+    defaultDescription: {
+      pending: 'Waiting for the network to confirm it.',
+      success: 'Confirmed by the network.',
+      failed: 'It did not go through.',
+      replaced: 'Another transaction took its place.',
+    },
+  },
   transactionsModal: {
     history: {
       title: 'Transactions History',
@@ -36,7 +45,6 @@ export const defaultLabels: NovaTransactionsLabels = {
     confirmationsLabel: 'Confirmations',
   },
   hashLabels: {
-    gelato: 'Gelato Task ID',
     safe: 'Safe Tx Hash',
     erc4337: 'UserOp Hash',
     original: 'Original Tx Hash',
@@ -92,6 +100,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   transactionDetails: {
     title: 'Transaction Details',
     subtitle: 'View full execution metrics and on-chain status.',
+    back: 'Back to history',
     metadata: 'Metadata',
     executionData: 'Execution Data',
     adapter: 'Adapter',
@@ -104,7 +113,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     from: 'From (Origin)',
     to: 'To (Recipient)',
     hash: 'Transaction Hash',
-    network: 'Network',
+    network: 'Network / Chain',
     inputData: 'Input Data',
     payload: 'Payload Data',
     context: 'Context',
@@ -112,6 +121,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     value: 'Value (Raw)',
     maxFee: 'Max Fee per Gas',
     maxPriorityFee: 'Max Priority Fee per Gas',
+    evmTitle: 'EVM Execution Data',
     solanaTitle: 'Solana Execution Data',
     starknetTitle: 'Starknet Execution Data',
     contextTitle: 'Context & Payload',

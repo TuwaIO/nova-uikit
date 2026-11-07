@@ -45,4 +45,33 @@ describe('BalanceDisplay', () => {
     expect(showSuccess({ isLoading: false, customization: { config: { successDuration: 2000 } } })).toBe(false);
     expect(showSuccess({ isLoading: false, customization: { config: { successDuration: 2000 } } })).toBe(false);
   });
+
+  // A failed refresh drew a check, as if it had worked
+  it('shows no success after a refresh that left no balance', () => {
+    showSuccess({ isLoading: true, balance: { value: '1.5', symbol: 'ETH' } });
+    const after = { isLoading: false, balance: null };
+    render(BalanceDisplay as (p: BalanceDisplayProps) => unknown, { onRefetch: vi.fn(), ...after });
+
+    expect(showSuccess({ isLoading: false })).toBe(false);
+  });
+
+  // The loader in a line of its own made the button taller for as long as it ran, and it looked bigger than the icon
+  it('keeps one size for the icon and the loader of the refresh button', () => {
+    const buttonWhen = (isLoading: boolean) => {
+      const tree = render(BalanceDisplay as (p: BalanceDisplayProps) => unknown, {
+        balance: { value: '0', symbol: 'BNB' },
+        isLoading,
+        onRefetch: vi.fn(),
+      }) as ReactElement<{ children: unknown[] }>;
+      const button = tree.props.children.filter(isValidElement)[1] as ReactElement & {
+        type: (props: unknown) => unknown;
+      };
+      return JSON.stringify(button.type(button.props));
+    };
+
+    expect(buttonWhen(false)).toContain('novacon:flex novacon:h-4 novacon:w-4');
+    const loading = buttonWhen(true);
+    expect(loading).toContain('novacon:flex novacon:h-4 novacon:w-4');
+    expect(loading).toContain('"size":14');
+  });
 });

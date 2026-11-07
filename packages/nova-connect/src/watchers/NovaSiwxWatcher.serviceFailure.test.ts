@@ -1,157 +1,212 @@
-import { useSiwxSessionStore } from '@tuwaio/siwx-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useSatelliteConnectStore } from '../satellite';
-import { NovaSiwxServiceError, NovaSiwxWatcher } from './NovaSiwxWatcher';
+import { SatelliteStoreContext } from '../satellite';
+import { provideContext, render, unmount } from '../testing/hookHarness';
 
-vi.mock('react', () => ({
-  useEffect: (fn: () => void | (() => void)) => {
-    fn();
-  },
-  useRef: (initial: unknown) => ({ current: initial }),
-  useCallback: (fn: unknown) => fn,
-  useEffectEvent: (fn: unknown) => fn,
-}));
-
-const mockDisconnect = vi.fn();
-const mockResetSession = vi.fn();
-const mockSetState = vi.fn();
-const mockSignIn = vi.fn();
-
-vi.mock('../satellite', () => ({ useSatelliteConnectStore: vi.fn() }));
-
-vi.mock('@tuwaio/siwx-react', () => ({
-  useSiwx: () => ({ signIn: mockSignIn, signOut: vi.fn() }),
-  useSiwxSessionStore: Object.assign(vi.fn(), { setState: (state: unknown) => mockSetState(state) }),
-  isSessionMatchingConnection: vi.fn(() => false),
-  getSatelliteSiwxFields: vi.fn().mockReturnValue({
-    domain: 'app.tuwa.io',
-    address: 'eip155:1:0x1234567890123456789012345678901234567890',
-    uri: 'https://app.tuwa.io',
-    chainId: 'eip155:1',
-    statement: 'Sign in to TUWA.',
-  }),
-}));
+vi.mock('react', async (importOriginal) => {
+  const { hooks } = await import('../testing/hookHarness');
+  return { ...(await importOriginal<typeof import('react')>()), ...hooks };
+});
 
 const ADDRESS = '0x1234567890123456789012345678901234567890';
+
+type Options = {
+  signer: (message: string) => Promise<string>;
+  verifier: (payload: object) => Promise<unknown>;
+  getNonce: () => Promise<string>;
+  onSuccess?: (session: unknown) => void;
+  onError?: (message: string) => void;
+};
+
+const setState = vi.fn();
+const reset = vi.fn();
+const disconnect = vi.fn();
+let session: { address: string; chainId?: string } | null = null;
+let activeConnection: Record<string, unknown> | undefined;
+let connecting = false;
+
+// In the order of `signIn` of `@tuwaio/siwx-react`: what it catches reaches `onError` as text
+const signIn = vi.fn(async ({ signer, verifier, getNonce, onSuccess, onError }: Options) => {
+  try {
+    await getNonce();
+    const signature = await signer('message');
+    const verified = await verifier({ signature });
+    onSuccess?.(verified);
+  } catch (error) {
+    onError?.((error as Error).message);
+  }
+});
+
+vi.mock('../satellite', () => ({
+  SatelliteStoreContext: {},
+  useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
+    selector({ activeConnection, connecting, disconnect, isAutoConnectFinished: true }),
+}));
+
+vi.mock('@tuwaio/siwx-react', () => ({
+  useSiwx: () => ({ signIn }),
+  useSiwxSessionStore: Object.assign(
+    (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status: 'idle', reset }),
+    { getState: () => ({ session, status: 'idle' }), setState: (state: unknown) => setState(state) },
+  ),
+  isSessionMatchingConnection: () => false,
+  getSatelliteSiwxFields: () => ({ domain: 'app.tuwa.io', address: `eip155:1:${ADDRESS}`, chainId: 'eip155:1' }),
+}));
+
+const { NovaSiwxServiceError, NovaSiwxWatcher } = await import('./NovaSiwxWatcher');
+
+const wallet = (signMessage = vi.fn(async () => 'signature')) => ({
+  connectorType: 'evm:metamask',
+  address: ADDRESS,
+  chainId: 1,
+  isConnected: true,
+  signMessage,
+});
+const away = () => Promise.reject(new NovaSiwxServiceError('The service is away'));
 
 // A Redis away behind the sign-in said nothing of the wallet or the person, yet the wallet was disconnected, and with it went
 // what the page showed of it: live on the dashboard, `verify` answering for a store that was down
 describe('NovaSiwxWatcher when the backend of the sign-in cannot answer', () => {
-  const session = { address: `eip155:1:${ADDRESS}` };
-  const signInAs = (failing: 'getNonce' | 'verifier') =>
-    mockSignIn.mockImplementationOnce(
-      async ({
-        getNonce,
-        verifier,
-        onError,
-      }: {
-        getNonce: () => Promise<string>;
-        verifier: (payload: object) => Promise<unknown>;
-        onError: (error: string) => void;
-      }) => {
-        // As `signIn` of `@tuwaio/siwx-react`: what it catches reaches `onError` as text
-        try {
-          if (failing === 'getNonce') await getNonce();
-          else await verifier({});
-        } catch (error) {
-          onError((error as Error).message);
-        }
-      },
-    );
-  const failed = () => Promise.reject(new NovaSiwxServiceError('The service is away'));
-  const withStore = (current: unknown) =>
-    vi
-      .mocked(useSiwxSessionStore)
-      .mockImplementation((selector: (state: never) => unknown) =>
-        selector({ session: current, status: 'idle', reset: mockResetSession } as never),
-      );
-
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
     vi.spyOn(console, 'warn').mockImplementation(() => {});
-    vi.mocked(useSatelliteConnectStore).mockImplementation((selector: (state: never) => unknown) =>
-      selector({
-        activeConnection: {
-          connectorType: 'evm:metamask',
-          address: ADDRESS,
-          chainId: 1,
-          isConnected: true,
-          signMessage: vi.fn(),
-        },
-        disconnect: mockDisconnect,
-      } as never),
-    );
-    withStore(null);
+    session = null;
+    activeConnection = undefined;
+    connecting = false;
   });
-
   afterEach(() => {
+    unmount();
     vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
-  it.each(['getNonce', 'verifier'] as const)('keeps the wallet and ends no session when %s fails', async (failing) => {
-    withStore(session);
-    signInAs(failing);
-    NovaSiwxWatcher({ getNonce: failed, verifier: failed });
-    await vi.advanceTimersByTimeAsync(0);
+  describe('while a wallet connects', () => {
+    type Gate = (connection: unknown, context: { isRestore: boolean }) => Promise<void>;
+    let gate: Gate;
+    const mount = (props: Parameters<typeof NovaSiwxWatcher>[0]) => {
+      provideContext(SatelliteStoreContext as object, {
+        getState: () => ({
+          setConnectionGate: (next: Gate) => {
+            gate = next;
+          },
+        }),
+      });
+      render(NovaSiwxWatcher, props);
+    };
 
-    expect(mockDisconnect).not.toHaveBeenCalled();
-    expect(mockResetSession).not.toHaveBeenCalled();
-    expect(mockSetState).toHaveBeenCalledWith({ status: 'authenticated', session, error: null });
-  });
+    it('tries the same signature again a few times, then fails with no second prompt', async () => {
+      const signMessage = vi.fn(async () => 'signature');
+      const verifier = vi.fn(away);
+      const onError = vi.fn();
+      mount({ verifier: verifier as never, getNonce: async () => 'nonce', onError });
 
-  it('goes back to no session at all when there was none, without clearing anything', async () => {
-    signInAs('getNonce');
-    NovaSiwxWatcher({ getNonce: failed, verifier: failed });
-    await vi.advanceTimersByTimeAsync(0);
+      let refusal: string | undefined;
+      void gate(wallet(signMessage), { isRestore: false }).catch((error: Error) => {
+        refusal = error.message;
+      });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(verifier).toHaveBeenCalledTimes(1);
 
-    expect(mockResetSession).not.toHaveBeenCalled();
-    expect(mockSetState).toHaveBeenCalledWith({ status: 'idle', session: null, error: null });
-  });
+      await vi.advanceTimersByTimeAsync(5_000);
+      expect(verifier).toHaveBeenCalledTimes(2);
+      expect(refusal).toBeUndefined();
 
-  it('tries again later, and says so once however long the service is away', async () => {
-    const onError = vi.fn();
-    signInAs('getNonce');
-    NovaSiwxWatcher({ getNonce: failed, verifier: failed, onError });
-    await vi.advanceTimersByTimeAsync(0);
-    expect(mockSignIn).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(15_000);
+      expect(verifier).toHaveBeenCalledTimes(3);
+      expect(refusal).toBe('The service is away');
 
-    signInAs('getNonce');
-    await vi.advanceTimersByTimeAsync(15_000);
-    expect(mockSignIn).toHaveBeenCalledTimes(2);
-
-    signInAs('getNonce');
-    await vi.advanceTimersByTimeAsync(15_000);
-    expect(mockSignIn).toHaveBeenCalledTimes(3);
-
-    expect(onError).toHaveBeenCalledOnce();
-    expect(mockDisconnect).not.toHaveBeenCalled();
-  });
-
-  it('stops trying once a sign-in went through', async () => {
-    signInAs('getNonce');
-    NovaSiwxWatcher({ getNonce: failed, verifier: failed });
-    await vi.advanceTimersByTimeAsync(0);
-
-    mockSignIn.mockResolvedValueOnce(undefined);
-    await vi.advanceTimersByTimeAsync(15_000);
-    expect(mockSignIn).toHaveBeenCalledTimes(2);
-
-    await vi.advanceTimersByTimeAsync(60_000);
-    expect(mockSignIn).toHaveBeenCalledTimes(2);
-  });
-
-  it('still disconnects for anything else: the person said no, or the signature is wrong', async () => {
-    mockSignIn.mockImplementationOnce(async ({ onError }: { onError: (error: string) => void }) => {
-      onError('User rejected the request');
+      expect(signMessage).toHaveBeenCalledOnce();
+      expect(signIn).toHaveBeenCalledOnce();
+      expect(onError).toHaveBeenCalledOnce();
     });
-    NovaSiwxWatcher({ getNonce: failed, verifier: failed });
-    await vi.advanceTimersByTimeAsync(0);
 
-    expect(mockDisconnect).toHaveBeenCalledWith('evm:metamask');
-    await vi.advanceTimersByTimeAsync(60_000);
-    expect(mockSignIn).toHaveBeenCalledOnce();
+    it('goes on when the backend answers again', async () => {
+      const verifier = vi
+        .fn()
+        .mockImplementationOnce(away)
+        .mockResolvedValueOnce({ address: `eip155:1:${ADDRESS}` });
+      mount({ verifier, getNonce: async () => 'nonce' });
+
+      let isPassed = false;
+      void gate(wallet(), { isRestore: false }).then(() => {
+        isPassed = true;
+      });
+      await vi.advanceTimersByTimeAsync(5_000);
+
+      expect(isPassed).toBe(true);
+    });
+
+    it('ends no session that was there before', async () => {
+      const destroyer = vi.fn(async () => undefined);
+      session = { address: `eip155:1:${ADDRESS}` };
+      connecting = true;
+      mount({ verifier: vi.fn(away) as never, getNonce: async () => 'nonce', destroyer });
+
+      void gate(wallet(), { isRestore: false }).catch(() => undefined);
+      await vi.advanceTimersByTimeAsync(20_000);
+
+      expect(setState).toHaveBeenCalledWith({ status: 'authenticated', session, error: null });
+      expect(reset).not.toHaveBeenCalled();
+      expect(destroyer).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('with a wallet already connected', () => {
+    it('keeps the wallet and goes on trying, and says so once however long it lasts', async () => {
+      const signMessage = vi.fn(async () => 'signature');
+      const verifier = vi.fn(away);
+      const onError = vi.fn();
+      activeConnection = wallet(signMessage);
+      render(NovaSiwxWatcher, { verifier: verifier as never, getNonce: async () => 'nonce', onError });
+
+      await vi.advanceTimersByTimeAsync(0);
+      expect(verifier).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(45_000);
+      expect(verifier).toHaveBeenCalledTimes(4);
+
+      expect(signIn).toHaveBeenCalledOnce();
+      expect(signMessage).toHaveBeenCalledOnce();
+      expect(onError).toHaveBeenCalledOnce();
+      expect(disconnect).not.toHaveBeenCalled();
+      expect(reset).not.toHaveBeenCalled();
+    });
+
+    it('stops trying once the backend has answered', async () => {
+      const verifier = vi
+        .fn()
+        .mockImplementationOnce(away)
+        .mockResolvedValue({ address: `eip155:1:${ADDRESS}` });
+      activeConnection = wallet();
+      render(NovaSiwxWatcher, { verifier, getNonce: async () => 'nonce' });
+
+      await vi.advanceTimersByTimeAsync(15_000);
+      expect(verifier).toHaveBeenCalledTimes(2);
+
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(verifier).toHaveBeenCalledTimes(2);
+    });
+
+    it('stops trying for a watcher that is gone', async () => {
+      const verifier = vi.fn(away);
+      activeConnection = wallet();
+      render(NovaSiwxWatcher, { verifier: verifier as never, getNonce: async () => 'nonce' });
+      await vi.advanceTimersByTimeAsync(0);
+      expect(verifier).toHaveBeenCalledTimes(1);
+
+      unmount();
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(verifier).toHaveBeenCalledTimes(1);
+    });
+
+    it('still disconnects for anything else: the person said no, or the signature is wrong', async () => {
+      activeConnection = wallet(vi.fn(async () => Promise.reject(new Error('User rejected the request'))));
+      render(NovaSiwxWatcher, { verifier: vi.fn(away) as never, getNonce: async () => 'nonce' });
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(disconnect).toHaveBeenCalledWith('evm:metamask');
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(signIn).toHaveBeenCalledOnce();
+    });
   });
 });

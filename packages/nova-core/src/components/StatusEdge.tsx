@@ -93,11 +93,10 @@ export function StatusEdge({ tone, progress, className, classNames }: StatusEdge
           transition={{ duration: seconds, ease: [0.2, 0, 0, 1] }}
         />
         {tone === 'pending' && !reduceMotion && (
-          <motion.div
-            className="novacore:absolute novacore:inset-y-0 novacore:left-0 novacore:w-1/3"
+          // In CSS, not `framer-motion`: a pending transaction can wait for an hour, with a JavaScript loop on every frame
+          <div
+            className="tuwa-status-glint novacore:absolute novacore:inset-y-0 novacore:left-0 novacore:w-1/3"
             style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }}
-            animate={{ x: ['-100%', '300%'] }}
-            transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
           />
         )}
       </div>

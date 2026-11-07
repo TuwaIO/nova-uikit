@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StepProps, TxProgressIndicator } from '@tuwaio/nova-transactions';
 import { useState } from 'react';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
+
 const meta: Meta<typeof TxProgressIndicator> = {
   title: 'Nova Transactions/Modals/TxProgressIndicator',
   component: TxProgressIndicator,
@@ -160,16 +163,23 @@ export const Cancelled: Story = {
  * An example of replacing the default `Step` component with a completely custom implementation.
  */
 export const WithCustomStep: Story = {
+  decorators: [withIsometricTheme],
   args: {
     ...Processing.args,
     StepComponent: ({ status, label }: StepProps) => (
       <div className="flex min-w-[80px] flex-1 flex-col items-center gap-2">
         <div
-          className={`h-4 w-4 rounded-full ${
-            status === 'completed' ? 'bg-green-500' : status === 'active' ? 'bg-blue-500 animate-pulse' : 'bg-gray-300'
+          className={`h-4 w-4 ${iso.surface.border} ${
+            status === 'completed'
+              ? iso.surface.ink
+              : status === 'active'
+                ? `${iso.surface.base} ${iso.faces}`
+                : iso.surface.base
           }`}
         />
-        <span className={`text-xs ${status !== 'inactive' ? 'font-bold text-blue-700' : 'text-gray-500'}`}>
+        <span
+          className={`text-xs ${status === 'inactive' ? iso.text.secondary : `${iso.text.strong} ${iso.text.primary}`}`}
+        >
           {label}
         </span>
       </div>

@@ -7,7 +7,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  ExternalLinkIcon,
   standardButtonClasses,
+  useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
   ConnectorType,
@@ -15,6 +17,7 @@ import {
   formatConnectorName,
   getConnectorTypeFromName,
   getNetworkData,
+  IMPERSONATED_CONNECTOR_ID,
   impersonatedHelpers,
   isAddress,
   OrbitAdapter,
@@ -31,6 +34,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
@@ -38,6 +42,7 @@ import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors } from '../../utils';
+import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
@@ -106,6 +111,8 @@ export interface BottomButtonConfig {
   disabled?: boolean;
   /** Shows `Loading...` and disables the button (not set by the modal) */
   loading?: boolean;
+  /** Whether it opens another site: the button shows the icon of an external link */
+  isExternal?: boolean;
 }
 
 // --- Component Props Types ---
@@ -724,6 +731,9 @@ export interface ConnectModalProps extends InitialChains {
   customization?: ConnectModalCustomization;
 }
 
+/** The screens of one choice of a wallet: Back from them is back to the list as it was. */
+const SCREENS_OF_A_CHOICE: readonly ConnectContentType[] = ['network', 'connecting', 'impersonate'];
+
 /**
  * The connect modal: wallet list with network tabs, network choice for multi-network wallets, connection progress
  * with retry, "About wallets", "Get a wallet" and the impersonation form. Open it with `setIsConnectModalOpen(true)`
@@ -731,10 +741,8 @@ export interface ConnectModalProps extends InitialChains {
  *
  * Opening the modal resets it to the wallet list. A wallet connects through `connect` of the Satellite store to the
  * first chain of `appChains` (EVM) or the first cluster of `solanaRPCUrls` (Solana), and the modal closes 400 ms after
- * the wallet reports the connection (it waits up to 10 seconds). The network and connecting screens keep the height of
- * the wallet list (measured with a `ResizeObserver` while the list is shown and forgotten when the modal closes; at most
- * the height of the window less 2rem), with the footer at the bottom and the connection status in the middle, so
- * choosing a wallet, its network and going back do not resize the modal. Texts
+ * that wallet has become the active one. While the wallet has not answered the modal waits, and after 20 seconds it says to
+ * check the wallet. The top edge of the window stays where it opened and its height follows the content. Texts
  * come from the Nova Connect labels, except a few English accessibility texts.
  *
  * Props: {@link ConnectModalProps}.
@@ -768,6 +776,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
     connectModalContentType,
     selectedAdapter,
     setSelectedAdapter,
+    connectModalAdapter,
     isConnected,
     activeConnector,
     impersonatedAddress,
@@ -778,7 +787,11 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
   const labels = useNovaConnectLabels();
+  const play = useNovaSounds();
   const store = useContext(SatelliteStoreContext);
+  const resetConnectionError = useSatelliteConnectStore((state) => state.resetConnectionError);
+  // The tab of the list when a wallet was chosen
+  const tabBeforeChoice = useRef<OrbitAdapter | undefined>(undefined);
 
   // The wallets of the store while the modal is open, updated when wallets are added after it opened
   const connectors = useWalletConnectors({ enabled: isConnectModalOpen });
@@ -820,7 +833,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   useEffect(() => {
     if (isConnectModalOpen) {
       setConnectModalContentType('connectors');
-      setSelectedAdapter(undefined);
+      setSelectedAdapter(connectModalAdapter);
       setActiveConnector(undefined);
       setImpersonatedAddress('');
       setIsConnected(false);
@@ -884,6 +897,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
    */
   const handleOpenChange = useCallback(
     (open: boolean) => {
+      // Told by now, and left in the store it hid what came later
+      if (!open) resetConnectionError();
       if (handlers?.onOpenChange) {
         handlers.onOpenChange(open, modalData);
       } else {
@@ -891,14 +906,21 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handlers?.onOpenChange, modalData, setIsConnectModalOpen],
+    [handlers?.onOpenChange, modalData, setIsConnectModalOpen, resetConnectionError],
   );
 
   /**
    * Handle back navigation with custom handler
    */
   const handleBack = useCallback(() => {
-    const originalHandler = () => setConnectModalContentType(goBackContentType());
+    const originalHandler = () => {
+      const previous = goBackContentType();
+      // `selectedAdapter` is also the wallet's own chain family: Back left the list narrowed to it, with the tab of All gone
+      if (previous === 'connectors' && SCREENS_OF_A_CHOICE.includes(connectModalContentType)) {
+        setSelectedAdapter(tabBeforeChoice.current);
+      }
+      setConnectModalContentType(previous);
+    };
 
     if (handlers?.onBack) {
       handlers.onBack(modalData, originalHandler);
@@ -906,7 +928,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       originalHandler();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType]);
+  }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType, connectModalContentType]);
 
   /**
    * Handle info button click
@@ -931,7 +953,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       });
 
       try {
-        await waitFor(() => store?.getState().activeConnection?.isConnected);
+        if (!store || !isConnectedAfterAttempt(store.getState(), connectorType)) return;
+        await waitFor(() => store.getState().activeConnection?.isConnected);
         setIsConnected(true);
         const modalCloseTime = setTimeout(() => setIsConnectModalOpen(false), 400);
         const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);
@@ -965,16 +988,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const handleConnectorClick = useCallback(
     (connector: GroupedConnector) => {
       setActiveConnector(formatConnectorName(connector.name));
+      tabBeforeChoice.current = selectedAdapter;
       if (connector.adapters.length === 1) {
         setSelectedAdapter(connector.adapters[0]);
         setConnectModalContentType(
-          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+          formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID ? 'impersonate' : 'connecting',
         );
-      } else if (selectedAdapter) {
-        setConnectModalContentType(
-          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
-        );
-      } else if (formatConnectorName(connector.name) === 'impersonatedwallet') {
+      } else if (formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID) {
         setConnectModalContentType('impersonate');
       } else {
         setConnectModalContentType('network');
@@ -999,7 +1019,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
           />
         );
       case 'connectors':
-        return connectors ? (
+        return connectors && Object.values(connectors).some((wallets) => wallets.length > 0) ? (
           <>
             <NetworkTabs
               networks={Object.keys(connectors) as OrbitAdapter[]}
@@ -1087,10 +1107,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       case 'getWallet':
         return {
           title: labels.choseWallet,
+          // A host that replaces the action decides where it leads
+          isExternal: !handlers.onActionClick?.getWallet,
           onClick: () => {
             if (handlers.onActionClick?.getWallet) {
               handlers.onActionClick.getWallet(modalData);
             } else {
+              play('externalLink');
               window.open(
                 getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
                 '_blank',
@@ -1102,10 +1125,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       case 'about':
         return {
           title: labels.learnMore,
+          // A host that replaces the action decides where it leads
+          isExternal: !handlers.onActionClick?.about,
           onClick: () => {
             if (handlers.onActionClick?.about) {
               handlers.onActionClick.about(modalData);
             } else {
+              play('externalLink');
               window.open(
                 getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
                 '_blank',
@@ -1249,6 +1275,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
                     buttonConfig={bottomButtonConfig}
                   >
                     {bottomButtonConfig.title}
+                    {bottomButtonConfig.isExternal && <ExternalLinkIcon className="novacon:h-4 novacon:w-4" />}
                   </ActionButton>
                   <ActionDescription
                     id="bottom-action-description"

@@ -94,4 +94,16 @@ describe('ChainListRenderer (desktop)', () => {
     expect(enter.preventDefault).toHaveBeenCalled();
     expect(handleValueChange).toHaveBeenCalledWith('137');
   });
+
+  // A name in two lines, as with `Arbitrum Sepolia Testnet`, squeezed the icon into an oval
+  it('keeps the size of the icon however long the name of the chain', () => {
+    const { other } = renderDesktopList({});
+    const findContent = (element: Element): Element | undefined =>
+      'icon' in element.props ? element : childrenOf(element).map(findContent).find(Boolean);
+    const content = findContent(renderSelectItem(other))!;
+
+    const drawn = (content.type as (props: unknown) => Element)(content.props);
+
+    expect(JSON.stringify(drawn)).toContain('novacon:shrink-0');
+  });
 });

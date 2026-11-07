@@ -10,7 +10,9 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { ComponentType, JSX } from 'react';
 
-import { NovaTransactionsProviderProps } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
+import { txTitleSource } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -138,6 +140,7 @@ export function TransactionHistoryItem<T extends Transaction>({
   onSelectTx,
   canViewDetails = true,
 }: TransactionHistoryItemProps<T>): JSX.Element {
+  const { transaction } = useLabels();
   const {
     Icon = DefaultIcon,
     Title = StatusAwareText,
@@ -167,7 +170,8 @@ export function TransactionHistoryItem<T extends Transaction>({
         <div className="novatx:flex novatx:min-w-0 novatx:flex-1 novatx:items-center novatx:gap-4">
           <div
             className={cn(
-              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-bg-muted)]',
+              // A line, not a fill: the band of the muted color was thick, and on a light theme it could hardly be seen
+              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:border-[color-mix(in_srgb,var(--tuwa-text-tertiary)_55%,transparent)]',
               classNames?.iconWrapper,
             )}
           >
@@ -177,8 +181,7 @@ export function TransactionHistoryItem<T extends Transaction>({
           <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
             <Title
               txStatus={tx.status}
-              source={tx.title}
-              fallback={tx.type}
+              source={txTitleSource(tx, transaction)}
               variant="title"
               applyColor
               className={classNames?.title}

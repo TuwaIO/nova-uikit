@@ -6,9 +6,9 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **CopyableFieldProps** = `object`
 
-Defined in: [components/TransactionDetails.tsx:45](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L45)
+Defined in: [components/TransactionDetails.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L63)
 
-Props of a field with a copy button in [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs) (hash, sender, recipient, replaced hash).
+Props of a row with a copy button in [TransactionDetails](?path=/docs/packages-nova-transactions-transactions-functions-transactiondetails--docs) (hash, sender, recipient, TX key, blockhash).
 
 ## Properties
 
@@ -16,7 +16,7 @@ Props of a field with a copy button in [TransactionDetails](?path=/docs/packages
 
 > `optional` **children?**: `ReactNode`
 
-Defined in: [components/TransactionDetails.tsx:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L55)
+Defined in: [components/TransactionDetails.tsx:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L73)
 
 Content shown instead of the value (the copy button still copies `value`); used for the explorer link.
 
@@ -26,9 +26,9 @@ Content shown instead of the value (the copy button still copies `value`); used 
 
 > `optional` **className?**: `string`
 
-Defined in: [components/TransactionDetails.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L53)
+Defined in: [components/TransactionDetails.tsx:71](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L71)
 
-Classes of the field.
+Classes of the row.
 
 ***
 
@@ -36,9 +36,9 @@ Classes of the field.
 
 > `optional` **classNames?**: `object`
 
-Defined in: [components/TransactionDetails.tsx:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L57)
+Defined in: [components/TransactionDetails.tsx:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L75)
 
-Classes of the parts of the field.
+Classes of the parts of the row.
 
 #### code?
 
@@ -50,7 +50,7 @@ The value.
 
 > `optional` **container?**: `string`
 
-The row with the value and the copy button.
+The value with the copy button.
 
 #### copyButton?
 
@@ -70,9 +70,9 @@ The label.
 
 > **label**: `string`
 
-Defined in: [components/TransactionDetails.tsx:47](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L47)
+Defined in: [components/TransactionDetails.tsx:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L65)
 
-Label shown above the field.
+Label shown on the left.
 
 ***
 
@@ -80,7 +80,7 @@ Label shown above the field.
 
 > `optional` **mono?**: `boolean`
 
-Defined in: [components/TransactionDetails.tsx:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L51)
+Defined in: [components/TransactionDetails.tsx:69](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L69)
 
 Whether the value uses a monospace font. Defaults to `true`.
 
@@ -90,6 +90,6 @@ Whether the value uses a monospace font. Defaults to `true`.
 
 > **value**: `string`
 
-Defined in: [components/TransactionDetails.tsx:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L49)
+Defined in: [components/TransactionDetails.tsx:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/components/TransactionDetails.tsx#L67)
 
-Value shown in the field and copied to the clipboard by the copy button.
+Value copied to the clipboard by the copy button; the default row shows it shortened, in full on hover.

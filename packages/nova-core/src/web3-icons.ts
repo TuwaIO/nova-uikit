@@ -4,4 +4,5 @@
  * `getChainName` stops at this client boundary instead of compiling the 2,222 icons of `dynamicIconImports`.
  * @internal
  */
+export { TokenIconLazy } from './components/TokenIconLazy';
 export { Web3IconLazy } from './components/Web3IconLazy';

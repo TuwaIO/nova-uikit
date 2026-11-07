@@ -2,7 +2,17 @@ import { Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/puls
 import { describe, expect, it } from 'vitest';
 
 import { defaultLabels } from '../i18n/en';
-import { hasConfirmations, progressOf, statusLabelOf, toneOf, trackerGaveUp, walletPartOf } from './txStatus';
+import { ukrainianLabels } from '../i18n/ua';
+import {
+  hasConfirmations,
+  progressOf,
+  statusLabelOf,
+  toneOf,
+  trackerGaveUp,
+  txDescriptionSource,
+  txTitleSource,
+  walletPartOf,
+} from './txStatus';
 
 const tx = (fields: Record<string, unknown>) => fields as unknown as Transaction;
 
@@ -71,7 +81,7 @@ describe('trackerGaveUp', () => {
     expect(trackerGaveUp(tx({ status: TransactionStatus.Failed, tracker: TransactionTracker.Ethereum }))).toBe(false);
   });
 
-  it.each([TransactionTracker.Ethereum, TransactionTracker.Safe, TransactionTracker.Gelato])(
+  it.each([TransactionTracker.Ethereum, TransactionTracker.Safe, 'gelato' as TransactionTracker])(
     'an error of the %s tracker says nothing about the chain: no Retry, it could send a second time',
     (tracker) => {
       expect(trackerGaveUp(failed({ tracker }))).toBe(true);
@@ -112,5 +122,32 @@ describe('walletPartOf', () => {
   it('keeps a value without an adapter, and nothing stays nothing', () => {
     expect(walletPartOf('injected')).toBe('injected');
     expect(walletPartOf(undefined)).toBeUndefined();
+  });
+});
+
+describe('a transaction with no title or description', () => {
+  const labels = defaultLabels.transaction;
+
+  it('shows the default title of the labels, in the language of the app', () => {
+    expect(txTitleSource({}, labels)).toBe('Transaction');
+    expect(txTitleSource({ title: '' }, labels)).toBe('Transaction');
+    expect(txTitleSource({ title: 'Swap' }, labels)).toBe('Swap');
+    const byStatus = ['Swapping', 'Swapped', 'Failed', 'Replaced'];
+    expect(txTitleSource({ title: byStatus }, labels)).toBe(byStatus);
+    expect(txTitleSource({}, ukrainianLabels.transaction)).toBe('Транзакція');
+    // The type in brackets says what kind of transaction it is
+    expect(txTitleSource({ type: 'increment' }, ukrainianLabels.transaction)).toBe('Транзакція (increment)');
+    expect(txTitleSource({ type: 'increment', title: 'Swap' }, labels)).toBe('Swap');
+  });
+
+  // In the order `statusText` reads: pending, success, failed, replaced
+  it('describes its status in the toast', () => {
+    expect(txDescriptionSource({}, labels)).toEqual([
+      'Waiting for the network to confirm it.',
+      'Confirmed by the network.',
+      'It did not go through.',
+      'Another transaction took its place.',
+    ]);
+    expect(txDescriptionSource({ description: 'Paid' }, labels)).toBe('Paid');
   });
 });

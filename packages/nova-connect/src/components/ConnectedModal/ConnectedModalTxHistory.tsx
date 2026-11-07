@@ -3,22 +3,23 @@
  */
 
 import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, formatLabel, QuasarLoader } from '@tuwaio/nova-core';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
   Component,
   ComponentPropsWithoutRef,
   ComponentType,
   forwardRef,
-  lazy,
   ReactNode,
   Suspense,
   useCallback,
+  useState,
 } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
+import { retryableLazy } from '../../utils/retryableLazy';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -431,8 +432,13 @@ export interface ConnectedModalTxHistoryProps extends Pick<
 }
 
 // Loaded on the first render of the history, in a chunk of its own
-const TransactionsHistory = lazy(() =>
-  import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsHistory })),
+const getTransactionsHistory = retryableLazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => module.TransactionsHistory),
+);
+
+// The details of a transaction open here, over the wallet window: inside it they read as a second header under its own
+const getTransactionsInfoModal = retryableLazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => module.TransactionsInfoModal),
 );
 
 // --- Default Sub-Components ---
@@ -551,7 +557,7 @@ function PulsarAdapterRequired({
     'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center novacon:gap-4 novacon:p-6';
   const iconContainerClasses =
     customization?.classNames?.pulsarRequiredIconContainer?.() ??
-    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-gradient-to-r novacon:from-[var(--tuwa-button-gradient-from)] novacon:to-[var(--tuwa-button-gradient-to)] novacon:text-[var(--tuwa-text-on-accent)]';
+    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-button-primary-bg)] novacon:text-[var(--tuwa-text-on-accent)]';
   const iconClasses = customization?.classNames?.pulsarRequiredIcon?.() ?? 'novacon:w-full novacon:h-full';
   const contentClasses = customization?.classNames?.pulsarRequiredContent?.() ?? 'novacon:space-y-2';
   const titleClasses =
@@ -687,6 +693,10 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
   ) => {
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+    const [openedTxKey, setOpenedTxKey] = useState<string | null>(null);
+    // Per mount of the screen: leaving it and coming back tries a failed load again
+    const [TransactionsHistory] = useState(getTransactionsHistory);
+    const [TransactionsInfoModal] = useState(getTransactionsInfoModal);
 
     // Extract custom components and config
     const {
@@ -827,7 +837,20 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   className="novacon:w-full"
                   customization={customization?.transactionsHistory}
                   pagination={pagination}
-                  canViewDetails={!!removeTxFromPool}
+                  onSelectTx={setOpenedTxKey}
+                  removeTxFromPool={removeTxFromPool}
+                />
+                <TransactionsInfoModal
+                  isOpen={openedTxKey !== null}
+                  setIsOpen={(isOpen) => {
+                    if (!isOpen) setOpenedTxKey(null);
+                  }}
+                  selectedTxKey={openedTxKey}
+                  transactionsPool={transactionPool}
+                  adapter={pulsarAdapter}
+                  connectedWalletAddress={activeConnection!.address}
+                  connectedAdapterType={getAdapterFromConnectorType(activeConnection!.connectorType)}
+                  pagination={pagination}
                   removeTxFromPool={removeTxFromPool}
                 />
               </TransactionsHistoryWrapper>

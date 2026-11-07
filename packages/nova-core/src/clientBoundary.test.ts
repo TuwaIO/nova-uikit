@@ -35,10 +35,11 @@ function reach(entry: string, files = new Set<string>(), packages = new Set<stri
 }
 
 describe('client boundary of the web3icons loader', () => {
-  it('lets only the web3-icons entry import Web3IconLazy, the loader and the icon map', () => {
+  it('lets only the web3-icons entry and its components import the loader and the icon map', () => {
     const allowed = [
       path.join('src', 'web3-icons.ts'),
       path.join('components', 'Web3IconLazy.tsx'),
+      path.join('components', 'TokenIconLazy.tsx'),
       path.join('utils', 'web3IconLoader.ts'),
     ];
     const offenders = sourceFiles(src)

@@ -1,12 +1,11 @@
-// Customization CSS - only loaded for this story file
-import '../utils/customization/style.css';
+// The theme of the drawing - only loaded for this story file
+import '../utils/customization/isometric.css';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ConnectButton } from '@tuwaio/nova-connect/components';
 
 import { ConnectButtonWithTransactions } from '../utils/ConnectButtonWithTransactions';
-import { connect_button_customization } from '../utils/customization/connect_button';
-import { nova_connect_provider_customization } from '../utils/customization/nova_connect_provider';
+import { isoConnect, isoConnectButton } from '../utils/customization/isometric';
 import {
   CONNECT_BUTTON_SOURCE,
   createStorybookDecorator,
@@ -34,23 +33,22 @@ const meta: Meta<ExtendedConnectButtonProps> = {
       },
       description: {
         component:
-          'ConnectButton with custom styling. This story demonstrates how to apply custom CSS variables and component customization.',
+          'ConnectButton in the Isometric style of the playground of the docs: its CSS variables and the `customization` props of every part.',
       },
     },
   },
-  decorators: [createStorybookDecorator(nova_connect_provider_customization)],
+  decorators: [createStorybookDecorator(isoConnect)],
 };
 
 export default meta;
 type Story = StoryObj<ExtendedConnectButtonProps>;
 
 /**
- * Customized ConnectButton with custom theme applied.
- * Uses CSS variables from style.css and component customization props.
+ * ConnectButton in the Isometric style, and with it the windows it opens: a line drawing, where a button presses in.
  */
 export const Customized: Story = {
   args: {
-    customization: connect_button_customization,
+    customization: isoConnectButton,
   },
 };
 
@@ -60,7 +58,7 @@ export const Customized: Story = {
  */
 export const TransactionStates: Story = {
   args: {
-    customization: connect_button_customization,
+    customization: isoConnectButton,
   },
   render: ({ customization }) => <ConnectButtonWithTransactions customization={customization} />,
 };

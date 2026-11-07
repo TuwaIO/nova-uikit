@@ -7,9 +7,9 @@ import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '
 import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
-import { afterTrackedAction, trackedButtonStep } from '../utils/replacement';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import { afterTrackedAction, isUserRejection, trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';
 
@@ -191,6 +191,11 @@ export function TxActionButton<T extends Transaction>({
       else if (next === 'idle') setStatus('idle');
     } catch (error) {
       if (walletAtClick !== latestWallet.current) return;
+      // A person who pressed reject in the wallet needs neither a red toast nor a Failed button
+      if (isUserRejection(error)) {
+        setStatus('idle');
+        return;
+      }
       showPreSubmitErrorToast(error);
       setStatus('failed');
     }
@@ -231,7 +236,7 @@ export function TxActionButton<T extends Transaction>({
 
   // Default state-specific classes
   const defaultStateClasses = {
-    idle: 'novatx:bg-[var(--tuwa-button-gradient-from)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:opacity-90',
+    idle: 'novatx:bg-[var(--tuwa-button-primary-bg)] novatx:text-[var(--tuwa-text-on-accent)] novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
     loading: 'novatx:bg-[var(--tuwa-pending-bg)] novatx:text-[var(--tuwa-pending-text)]',
     replaced: 'novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
     succeed: 'novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]',

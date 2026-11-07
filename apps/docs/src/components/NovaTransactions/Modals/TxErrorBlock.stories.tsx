@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxErrorBlock } from '@tuwaio/nova-transactions';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
+
 const meta: Meta<typeof TxErrorBlock> = {
   title: 'Nova Transactions/Modals/TxErrorBlock',
   component: TxErrorBlock,
@@ -68,7 +71,8 @@ export const InteractiveCopy: Story = {
  * An example of applying custom styling to the component's container.
  */
 export const WithCustomStyling: Story = {
+  decorators: [withIsometricTheme],
   args: {
-    className: 'border-2 border-orange-400 bg-orange-100 shadow-lg',
+    className: iso.framed,
   },
 };

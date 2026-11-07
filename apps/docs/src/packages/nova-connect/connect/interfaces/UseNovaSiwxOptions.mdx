@@ -19,13 +19,43 @@ from `@tuwaio/siwx-react` (`domain`, `uri`, `statement`, and so on).
 
 > `optional` **destroyer?**: () => `Promise`\<`void`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L19)
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L25)
 
 Called by `signOut` after the session is cleared, for example to call a `/logout` endpoint of your backend
 
 #### Returns
 
 `Promise`\<`void`\>
+
+***
+
+### getNonce?
+
+> `optional` **getNonce?**: `UseSiwxSignInOptions`\[`"getNonce"`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L19)
+
+Fetches the nonce of the SIWX message from your backend. Without it the nonce is generated in the browser, which a backend that issues nonces refuses.
+
+***
+
+### onError?
+
+> `optional` **onError?**: `UseSiwxSignInOptions`\[`"onError"`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L23)
+
+Called when the sign-in fails.
+
+***
+
+### onSuccess?
+
+> `optional` **onSuccess?**: `UseSiwxSignInOptions`\[`"onSuccess"`\]
+
+Defined in: [packages/nova-connect/src/hooks/useNovaSiwx.ts:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaSiwx.ts#L21)
+
+Called after a successful sign-in.
 
 ***
 

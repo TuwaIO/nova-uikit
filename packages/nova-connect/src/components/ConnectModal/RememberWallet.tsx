@@ -3,6 +3,7 @@
  */
 
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { useNovaSounds } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
 import { ComponentType, ReactNode, useEffect, useId, useRef, useState } from 'react';
@@ -128,7 +129,12 @@ const RIPPLE_VARIANTS: Variants = {
 export function RememberWallet({ customization }: { customization?: RememberWalletCustomization }) {
   const labels = useNovaConnectLabels();
   const rememberWallet = useSatelliteConnectStore((store) => store.rememberWallet);
-  const setRememberWallet = useSatelliteConnectStore((store) => store.setRememberWallet);
+  const setStoreRememberWallet = useSatelliteConnectStore((store) => store.setRememberWallet);
+  const play = useNovaSounds();
+  const setRememberWallet = (remember: boolean) => {
+    play('checkbox');
+    setStoreRememberWallet(remember);
+  };
   const reduceMotion = useReducedMotion() ?? false;
   const hintId = useId();
   const tooltipId = useId();

@@ -15,6 +15,12 @@ import { useSatelliteConnectStore } from '../satellite';
 export interface UseNovaSiwxOptions extends SatelliteSiwxFieldOptions {
   /** Sends the signed message to your backend for verification (required unless passed to `signIn`) */
   verifier?: UseSiwxSignInOptions['verifier'];
+  /** Fetches the nonce of the SIWX message from your backend. Without it the nonce is generated in the browser, which a backend that issues nonces refuses. */
+  getNonce?: UseSiwxSignInOptions['getNonce'];
+  /** Called after a successful sign-in. */
+  onSuccess?: UseSiwxSignInOptions['onSuccess'];
+  /** Called when the sign-in fails. */
+  onError?: UseSiwxSignInOptions['onError'];
   /** Called by `signOut` after the session is cleared, for example to call a `/logout` endpoint of your backend */
   destroyer?: () => Promise<void>;
 }
@@ -79,6 +85,9 @@ export function useNovaSiwx(options?: UseNovaSiwxOptions) {
         signer: connection.signMessage,
         verifier,
         fields,
+        getNonce: options?.getNonce,
+        onSuccess: options?.onSuccess,
+        onError: options?.onError,
       });
     },
     [activeConnection, signIn, options],

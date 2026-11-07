@@ -2,36 +2,51 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { ArrowLeftStartOnRectangleIcon, ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import {
   cn,
   CopyIcon,
+  ExitIcon,
   ExternalLinkIcon,
+  formatLabel,
   MorphText,
   NetworkIcon,
   QuasarLoader,
-  textCenterEllipsis,
+  TrashIcon,
   useCopyToClipboard,
+  useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
   ConnectorType,
-  formatConnectorName,
   getAdapterFromConnectorType,
+  getConnectorTypeFromName,
   getNetworkData,
+  getWalletFromConnectorType,
   impersonatedHelpers,
   RecentlyConnectedConnectorData,
   recentlyConnectedConnectorsListHelpers,
   setChainId,
+  shortAddress,
 } from '@tuwaio/orbit-core';
-import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ComponentType,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
-import { formatLabel } from '../../i18n/formatLabel';
-import { useSatelliteConnectStore } from '../../satellite';
+import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
+import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { WalletIcon } from '../WalletIcon';
-import { connectorDisplayName } from './connectorName';
+import { connectorDisplayName, isImpersonatedConnector } from './connectorName';
 
 // --- Types for Customization ---
 
@@ -763,7 +778,12 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
       className={cn('novacon:relative novacon:flex-shrink-0', wrapperClassName)}
       style={{ width: size, height: size }}
     >
-      <WalletIcon name={connectorType.split(':')[1]} icon={icon} size={size} className={imageClassName} />
+      <WalletIcon
+        name={getWalletFromConnectorType(connectorType) ?? ''}
+        icon={icon}
+        size={size}
+        className={imageClassName}
+      />
       <div
         className={cn(
           'novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]',
@@ -906,7 +926,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <div className="novacon:absolute novacon:top-2 novacon:right-2">
           <span
             className={cn(
-              'novacon:rounded-full novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
+              'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
               classNames?.badge,
             )}
           >
@@ -1061,7 +1081,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
         >
-          <ArrowLeftStartOnRectangleIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
+          <ExitIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>
       </div>
     );
@@ -1184,6 +1204,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   const connect = useSatelliteConnectStore((store) => store.connect);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
   const connecting = useSatelliteConnectStore((store) => store.connecting);
+  const store = useContext(SatelliteStoreContext);
   // The wallets of the store, updated when wallets are added after the modal opened
   const allConnectors = useWalletConnectors() ?? {};
 
@@ -1198,6 +1219,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // ARIA live region for announcements
   const [announcement, setAnnouncement] = useState<string>('');
+  // A recent wallet that could not connect: `connect` does not reject, and while a wallet is connected no toast tells it
+  const [connectFailed, setConnectFailed] = useState<boolean>(false);
 
   // Extract customization options
   const {
@@ -1367,12 +1390,20 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           solanaRPCUrls,
         });
         const walletName = connectorName(connectorType);
-        if (walletName === 'Impersonatedwallet') {
-          impersonatedHelpers.setImpersonated(address.trim());
-          await connect({ connectorType, chainId });
-        } else {
-          await connect({ connectorType, chainId });
+        if (isImpersonatedConnector(connectorType)) impersonatedHelpers.setImpersonated(address.trim());
+        setConnectFailed(false);
+        await connect({ connectorType, chainId });
+
+        const state = store?.getState();
+        if (state?.connectionError) {
+          setConnectFailed(true);
+          setAnnouncement(labels.connectionError);
+          setTimeout(() => setAnnouncement(''), 3000);
+          customization?.handlers?.onConnectError?.(connectorType, new Error(state.connectionError.message));
+          return;
         }
+        // Another wallet was chosen meanwhile: this one is not the one to announce
+        if (!state || !isConnectedAfterAttempt(state, connectorType)) return;
 
         // Announce to screen readers
         const announcement =
@@ -1394,19 +1425,21 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         setConnectingRecent(null);
       }
     },
-    [connect, customization, labels, appChains, solanaRPCUrls, connectorName],
+    [connect, store, customization, labels, appChains, solanaRPCUrls, connectorName],
   );
 
   /**
    * Handle removing a recent wallet from history
    */
+  const play = useNovaSounds();
   const handleRemoveRecent = useCallback(
     (connectorType: ConnectorType, event: React.MouseEvent) => {
       event.stopPropagation();
       recentlyConnectedConnectorsListHelpers.removeConnector(connectorType);
       updateRecentList(); // Manually update state to reflect changes immediately
+      play('remove');
     },
-    [updateRecentList],
+    [updateRecentList, play],
   );
 
   /**
@@ -1512,7 +1545,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           {activeConnection?.connectorType && (
             <ActiveConnectorRow
               connectorType={activeConnection.connectorType}
-              address={textCenterEllipsis(activeConnection.address, 6, 4)}
+              address={shortAddress(activeConnection.address ?? '')}
               fullAddress={activeConnection.address}
               displayName={ensNameAbbreviated}
               chainId={activeConnection.chainId}
@@ -1548,7 +1581,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               <ConnectedConnectorRow
                 key={connection.connectorType}
                 connectorType={connection.connectorType}
-                address={textCenterEllipsis(connection.address, 6, 4)}
+                address={shortAddress(connection.address ?? '')}
                 chainId={connection.chainId}
                 isActive={false}
                 onSwitch={() => handleSwitch(connection.connectorType)}
@@ -1587,7 +1620,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               // Safely check if c is a valid object with a name property
               if (c && typeof c === 'object' && 'name' in c && typeof (c as { name: unknown }).name === 'string') {
                 return (
-                  `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName((c as { name: string }).name)}` ===
+                  getConnectorTypeFromName(getAdapterFromConnectorType(connectorType), (c as { name: string }).name) ===
                   connectorType
                 );
               }
@@ -1597,7 +1630,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               <RecentlyConnectedRow
                 key={connectorType}
                 connectorType={connectorType}
-                address={textCenterEllipsis(data.address, 6, 4)}
+                address={shortAddress(data.address ?? '')}
                 timestamp={data.disconnectedTimestamp}
                 onConnect={isAvailable ? () => handleConnectRecent(data.address, connectorType) : undefined}
                 onRemove={(e) => handleRemoveRecent(connectorType, e)}
@@ -1629,18 +1662,37 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         </RecentlyConnectedSection>
       )}
 
+      {connectFailed && (
+        <p role="alert" className="novacon:mt-2 novacon:text-sm novacon:text-[var(--tuwa-error-text)]">
+          {labels.connectionError}
+        </p>
+      )}
+
       {showAddWalletButton && (
         <button
           type="button"
           onClick={() => {
+            play('addWallet');
             setIsConnectModalOpen(true);
           }}
           className={cn(
-            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
+            'tuwa-add-wallet novacon:relative novacon:mt-2 novacon:flex novacon:w-full novacon:cursor-pointer novacon:items-center novacon:gap-3 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-3 novacon:text-left novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
             customization?.classNames?.addWalletButton?.(),
           )}
         >
-          + {labels.connectNewWallet}
+          <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="novacon:h-8 novacon:w-8 novacon:shrink-0">
+            <circle className="tuwa-add-wallet-ring" cx="16" cy="16" r="15" />
+            <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
+          </svg>
+          <span className="novacon:min-w-0 novacon:flex-1">{labels.connectNewWallet}</span>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+          >
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
         </button>
       )}
     </Container>

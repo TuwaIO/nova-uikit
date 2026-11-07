@@ -34,7 +34,8 @@ const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
  * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand one
  * icon at a time (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
  * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
- * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet are recolored with `--tuwa-testnet-icons`.
+ * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet draw the mark of their mainnet in white on a
+ * `--tuwa-testnet-icons` circle. An icon without a `mono` style keeps its own drawing on that background instead.
  *
  * Side effect: a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common` does not list.
  *
@@ -71,6 +72,31 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
       return <FallbackIcon content="?" className={className} />;
     }
     return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />;
+  }
+
+  // In the shape of a circle and one color, whatever the mark: each network brought the shape and the color of its background,
+  // a square here and an octagon there. Not an `<img>`: a mono icon draws in `currentColor`. Scaled, as some parents force the
+  // size of an SVG in them
+  if (isTestnet && variant !== 'mono' && icon.variants?.includes('mono')) {
+    return (
+      <span
+        className={cn(
+          componentClassName,
+          'novacore:block novacore:overflow-hidden novacore:bg-[var(--tuwa-testnet-icons)] novacore:text-white',
+        )}
+      >
+        {/* Centered: a host that sets the size of every svg in its button (`[&_svg]:h-5`) would pull the mark to a corner */}
+        <span className="novacore:flex novacore:h-full novacore:w-full novacore:scale-[0.68] novacore:items-center novacore:justify-center">
+          <Suspense fallback={null}>
+            <Web3IconLazy
+              filePath={iconPath}
+              variant="mono"
+              className="novacore:block novacore:h-full novacore:w-full"
+            />
+          </Suspense>
+        </span>
+      </span>
+    );
   }
 
   const drawnVariant = iconVariantOf(icon.variants, variant);

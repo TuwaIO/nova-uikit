@@ -3,6 +3,7 @@
  */
 
 import type { StatusTone } from '@tuwaio/nova-core';
+import { getWalletFromConnectorType, isSameAdapterAddress } from '@tuwaio/orbit-core';
 import { EvmTransaction, Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 
 import { NovaTransactionsLabels } from '../i18n/types';
@@ -80,8 +81,8 @@ export function statusLabelOf(tx: Transaction, statuses: NovaTransactionsLabels[
 
 /**
  * Whether a failed transaction failed because its tracker gave up, which says nothing about the chain: it may still land, and
- * a Retry could send the operation a second time. A revert on the standard EVM tracker has no error of the tracker. Safe and
- * Gelato write one only on giving up in practice. On Solana what had a commitment has landed, whatever came after.
+ * a Retry could send the operation a second time. A revert on the standard EVM tracker has no error of the tracker. Safe
+ * writes one only on giving up in practice, as a saved record of the Gelato relay did. On Solana what had a commitment has landed, whatever came after.
  *
  * @param tx - The transaction.
  * @returns Whether Retry must not be offered.
@@ -91,12 +92,12 @@ export function trackerGaveUp(tx: Transaction | undefined): boolean {
   switch (tx.tracker) {
     case TransactionTracker.Ethereum:
     case TransactionTracker.Safe:
-    case TransactionTracker.Gelato:
       return true;
     case TransactionTracker.Solana:
       return 'confirmationStatus' in tx && !!tx.confirmationStatus;
     default:
-      return false;
+      // A record saved when the Gelato relay was followed: a relay may have run it, so a Retry could send it twice
+      return (tx.tracker as string) === 'gelato';
   }
 }
 
@@ -107,5 +108,54 @@ export function trackerGaveUp(tx: Transaction | undefined): boolean {
  * @returns The wallet part, or the value as it is without an adapter.
  */
 export function walletPartOf(connectorType?: string): string | undefined {
-  return connectorType?.includes(':') ? connectorType.split(':')[1] : connectorType;
+  return getWalletFromConnectorType(connectorType) ?? connectorType;
+}
+
+/**
+ * Whether a transaction was sent by a wallet: an EVM address in any case, a Solana address exactly, as base58 in
+ * another case is another account.
+ *
+ * @param tx - The transaction.
+ * @param wallet - The address of the wallet.
+ * @returns `true` when it is the sender.
+ */
+export function isTxOfWallet(tx: Pick<Transaction, 'adapter' | 'from'>, wallet: string | undefined): boolean {
+  if (!tx.from || !wallet) return false;
+  return isSameAdapterAddress(tx.adapter, tx.from, wallet);
+}
+
+/**
+ * The title a transaction shows: the one the app gave it, otherwise the default of the labels with its type in brackets,
+ * which says what kind of transaction it is. A saved text would freeze one language, so the default is read here and never
+ * written to the record.
+ *
+ * @param tx - The transaction.
+ * @param tx.title - Its title, by status or one for all.
+ * @param tx.type - Its type, from the app.
+ * @param labels - The labels of a transaction.
+ * @returns What to pass to `StatusAwareText` as `source`.
+ */
+export function txTitleSource(
+  tx: { title?: string | readonly string[]; type?: string },
+  labels: NovaTransactionsLabels['transaction'],
+): string | readonly string[] {
+  if (tx.title?.length) return tx.title;
+  return tx.type ? `${labels.defaultTitle} (${tx.type})` : labels.defaultTitle;
+}
+
+/**
+ * The description a toast shows: the one the app gave the transaction, otherwise a sentence about its status.
+ *
+ * @param tx - The transaction.
+ * @param tx.description - Its description, by status or one for all.
+ * @param labels - The labels of a transaction.
+ * @returns What to pass to `StatusAwareText` as `source`, in the order pending, success, failed, replaced.
+ */
+export function txDescriptionSource(
+  tx: { description?: string | readonly string[] },
+  labels: NovaTransactionsLabels['transaction'],
+): string | readonly string[] {
+  if (tx.description?.length) return tx.description;
+  const { pending, success, failed, replaced } = labels.defaultDescription;
+  return [pending, success, failed, replaced];
 }

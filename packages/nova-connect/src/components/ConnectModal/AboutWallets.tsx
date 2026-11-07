@@ -2,12 +2,11 @@
  * @file AboutWallets component with comprehensive customization options and touch support.
  */
 
-import { cn, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
+import { cn, formatLabel, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { AboutWalletsArt, hasArt } from './AboutWalletsArt';
 
 // --- Types ---
@@ -494,9 +493,9 @@ DefaultSection.displayName = 'DefaultSection';
 
 const DefaultSlideContainer: React.FC<AboutWalletsSlideContainerProps> = ({ children, className, ...props }) => (
   <div className={cn('novacon:relative novacon:z-1 novacon:overflow-hidden novacon:h-full', className)} {...props}>
-    <StarsBackground starsCount={50} />
+    <StarsBackground starsCount={16} />
     <div
-      className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]"
+      className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,82,255,0.12),rgba(255,255,255,0))]"
       aria-hidden="true"
     />
 
@@ -800,6 +799,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   const [currentSlide, setCurrentSlide] = useState(initialSlide);
   const [direction, setDirection] = useState<AboutWalletsSlideDirection>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(!disableAutoPlay);
+  const pausedByUser = useRef(false);
   const [userInteracted, setUserInteracted] = useState(false);
   const [imageLoadedStates, setImageLoadedStates] = useState<Record<number, boolean>>({});
   const [touchState, setTouchState] = useState<TouchState>({
@@ -873,17 +873,19 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
           goToSlide(slidesConfig.length - 1);
           break;
         case ' ':
-        case 'Enter':
+        case 'Enter': {
+          // The section itself: from a button inside it this cancelled the press, so an indicator could not be used
+          if (event.target !== event.currentTarget) break;
           event.preventDefault();
-          setIsAutoPlaying((prev) => {
-            const newValue = !prev;
-            customHandlers?.onAutoPlayChange?.(newValue);
-            return newValue;
-          });
+          const next = !isAutoPlaying;
+          pausedByUser.current = !next;
+          setIsAutoPlaying(next);
+          customHandlers?.onAutoPlayChange?.(next);
           break;
+        }
       }
     },
-    [goToPreviousSlide, goToNextSlide, goToSlide, slidesConfig.length, customHandlers],
+    [goToPreviousSlide, goToNextSlide, goToSlide, slidesConfig.length, customHandlers, isAutoPlaying],
   );
 
   /**
@@ -957,7 +959,8 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
 
     resumeTimeoutRef.current = window.setTimeout(() => {
       setUserInteracted(false);
-      setIsAutoPlaying(true);
+      // A pause the person asked for lasts: changing the slide brought the auto-play back 10 seconds later
+      if (!pausedByUser.current) setIsAutoPlaying(true);
     }, animationConfig.resumeDelay);
 
     return () => {

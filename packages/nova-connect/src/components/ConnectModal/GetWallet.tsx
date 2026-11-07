@@ -2,12 +2,11 @@
  * @file GetWallet component with comprehensive customization options and staggered animations.
  */
 
-import { cn, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, StarsBackground, useNovaSounds, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 
@@ -462,7 +461,7 @@ const DefaultStarsBackground: React.FC<GetWalletStarsBackgroundProps> = ({ class
   <>
     {show && (
       <div className={className} {...props}>
-        <StarsBackground starsCount={50} />
+        <StarsBackground starsCount={16} />
       </div>
     )}
   </>
@@ -623,6 +622,12 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
     ref,
   ) => {
     // Get localized labels for UI text
+    // Each time the screen opens
+    const play = useNovaSounds();
+    useEffect(() => {
+      play('getWallet');
+    }, [play]);
+
     const labels = useNovaConnectLabels();
 
     // Extract customization options
@@ -699,7 +704,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
       customization?.classNames?.gradientOverlay?.() ??
       cn(
         'novacon:absolute novacon:inset-0 novacon:z-1',
-        'novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]',
+        'novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,82,255,0.12),rgba(255,255,255,0))]',
       );
 
     /**

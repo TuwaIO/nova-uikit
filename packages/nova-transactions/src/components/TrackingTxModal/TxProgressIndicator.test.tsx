@@ -2,9 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { defaultLabels } from '../../i18n/en';
 
-vi.mock('../../providers', () => ({
-  useLabels: () => defaultLabels,
-}));
+vi.mock('../../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
 
 import { TxProgressIndicator } from './TxProgressIndicator';
 

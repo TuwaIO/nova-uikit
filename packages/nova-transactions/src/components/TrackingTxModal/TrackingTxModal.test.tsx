@@ -12,9 +12,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { defaultLabels } from '../../i18n/en';
 
-vi.mock('../../providers', () => ({
-  useLabels: () => defaultLabels,
-  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: vi.fn() }),
+const { showPreSubmitErrorToast } = vi.hoisted(() => ({ showPreSubmitErrorToast: vi.fn() }));
+
+vi.mock('../../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
+vi.mock('../../providers/NovaTransactionsErrorContext', () => ({
+  useNovaTransactionsError: () => ({ showPreSubmitErrorToast }),
 }));
 
 import { TrackingTxModal } from './TrackingTxModal';
@@ -126,6 +128,10 @@ describe('TrackingTxModal', () => {
       lastTxKey: '0xabc',
       localTimestamp: 1,
       withTrackedModal: true,
+      tracker: TransactionTracker.ERC4337,
+      requiredConfirmations: 3,
+      bundlerUrl: 'https://bundler.example',
+      pimlicoApiKey: 'key',
     } as unknown as InitialTransaction;
 
     const element = TrackingTxModal({
@@ -144,9 +150,75 @@ describe('TrackingTxModal', () => {
       expect.objectContaining({
         txKey: '0xabc',
         executeTxAction,
-        tx: expect.objectContaining({ desiredChainID: 1, actionFunction, rpcUrl: undefined }),
+        // Without these a retried UserOperation went through the wrong tracker and lost its bundler
+        tx: expect.objectContaining({
+          desiredChainID: 1,
+          actionFunction,
+          tracker: TransactionTracker.ERC4337,
+          requiredConfirmations: 3,
+          bundlerUrl: 'https://bundler.example',
+          pimlicoApiKey: 'key',
+        }),
       }),
     );
+  });
+
+  const retryThatFails = (error: unknown) => {
+    const adapter = {
+      key: OrbitAdapter.EVM,
+      retryTxAction: vi.fn().mockRejectedValue(error),
+    } as unknown as TxAdapter<EvmTransaction>;
+    const failedTx = {
+      txKey: '0xabc',
+      adapter: OrbitAdapter.EVM,
+      tracker: TransactionTracker.Ethereum,
+      chainId: 1,
+      from: '0x1234567890123456789012345678901234567890',
+      pending: false,
+      isError: true,
+      status: TransactionStatus.Failed,
+      type: 'TRANSFER',
+      connectorType: 'evm:metamask',
+      localTimestamp: 1,
+      isTrackedModalOpen: true,
+    } as unknown as EvmTransaction;
+    const initialTx = {
+      adapter: OrbitAdapter.EVM,
+      type: 'TRANSFER',
+      desiredChainID: 1,
+      actionFunction: vi.fn(),
+      lastTxKey: '0xabc',
+      localTimestamp: 1,
+      withTrackedModal: true,
+    } as unknown as InitialTransaction;
+    return findRetryHandler(
+      TrackingTxModal({
+        adapter,
+        initialTx,
+        executeTxAction: vi.fn(),
+        transactionsPool: { '0xabc': failedTx },
+        onClose: vi.fn(),
+        onOpenAllTransactions: vi.fn(),
+      }),
+    )!;
+  };
+
+  // An unhandled rejection, and on Solana the person saw nothing when the wallet was no longer connected
+  it('tells what stopped a Retry', async () => {
+    showPreSubmitErrorToast.mockClear();
+    const error = new Error('Retry failed: A wallet must be connected.');
+
+    retryThatFails(error)();
+    await vi.waitFor(() => expect(showPreSubmitErrorToast).toHaveBeenCalledWith(error));
+  });
+
+  it('says nothing when the person rejected the Retry in the wallet', async () => {
+    showPreSubmitErrorToast.mockClear();
+
+    retryThatFails(Object.assign(new Error('rejected'), { code: 4001 }))();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(showPreSubmitErrorToast).not.toHaveBeenCalled();
   });
 });
 
@@ -159,6 +231,7 @@ describe('TrackingTxModal actions', () => {
     tracker: TransactionTracker.Ethereum,
     chainId: 1,
     from: WALLET,
+    to: '0x0000000000000000000000000000000000000002',
     type: 'SWAP',
     connectorType: 'evm:metamask',
     localTimestamp: 1,

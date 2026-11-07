@@ -2,11 +2,10 @@
  * @file Disclaimer component with comprehensive customization options.
  */
 
-import { cn, standardButtonClasses } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useEffectEvent, useId } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 /**
@@ -347,6 +346,7 @@ const DefaultLinkButton: React.FC<DisclaimerButtonProps> = ({
     <a
       href={action}
       target="_blank"
+      data-nova-external-link=""
       rel="noopener noreferrer"
       className={className}
       aria-label={ariaLabel || `${children} (${labels.learnMore})`}

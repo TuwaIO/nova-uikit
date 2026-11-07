@@ -49,4 +49,14 @@ describe('deepMerge utility', () => {
 
     expect(result).toEqual({ items: [4, 5] });
   });
+
+  // `{ title: maybeTitle }` erased the default label, which then rendered as nothing
+  it('keeps the value of the target for an explicit undefined', () => {
+    expect(
+      deepMerge({ title: 'Default', nested: { a: 1 } }, { title: undefined, nested: { a: undefined } } as never),
+    ).toEqual({
+      title: 'Default',
+      nested: { a: 1 },
+    });
+  });
 });

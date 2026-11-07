@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [providers/NovaTransactionsProvider.tsx:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L58)
+Defined in: [providers/NovaTransactionsProvider.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L68)
 
 Defines the props for the `NovaTransactionsProvider` component.
 
@@ -153,6 +153,16 @@ tracking it: a dropped transaction stays pending until its nonce is spent, which
 #### Returns
 
 `void`
+
+### sounds?
+
+> `optional` **sounds?**: `NovaSoundsConfig`
+
+The sounds of the transactions, off without it: a transaction in the pool, its success, failure and replacement, an error before it
+reached the pool, a copy, a dialog opened
+and closed, and a link to the explorer. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and sets the volume.
+They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of `@tuwaio/nova-core/utils` for
+when they stay silent.
 
 ### transactionsPool
 

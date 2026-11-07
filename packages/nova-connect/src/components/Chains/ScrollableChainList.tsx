@@ -338,6 +338,7 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
   const [showTopButton, setShowTopButton] = useState(false);
   const [showBottomButton, setShowBottomButton] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const isScrollingRef = useRef(false);
   const [hasScrollableContent, setHasScrollableContent] = useState(false);
   const [scrollContext, setScrollContext] = useState<ScrollableChainListScrollButtonContext>({
     showTopButton: false,
@@ -403,14 +404,16 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
       customization.handlers.onScroll(() => {}, new Event('scroll'), {
         showTopButton: scrollTop > 0,
         showBottomButton: scrollTop + clientHeight < scrollHeight - 1,
-        isScrolling,
+        // Through a ref: with the state here the effect below ran again on each change, and its cleanup cancelled the timer
+        // that ends the scrolling
+        isScrolling: isScrollingRef.current,
         scrollTop,
         scrollHeight,
         clientHeight,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buttonConfig.hideWhenContentFits, customization?.handlers?.onScroll, isScrolling]);
+  }, [buttonConfig.hideWhenContentFits, customization?.handlers?.onScroll]);
 
   // Update context after button states change
   useEffect(() => {
@@ -425,11 +428,13 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
     let scrollTimeout: ReturnType<typeof setTimeout>;
 
     const handleScroll = () => {
+      isScrollingRef.current = true;
       setIsScrolling(true);
       updateScrollButtons();
 
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
+        isScrollingRef.current = false;
         setIsScrolling(false);
       }, 150);
     };

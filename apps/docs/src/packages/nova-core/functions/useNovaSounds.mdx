@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/useNovaSounds" />
+
+# useNovaSounds()
+
+> **useNovaSounds**(): (`name`) => `void`
+
+Defined in: [hooks/useNovaSounds.ts:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useNovaSounds.ts#L38)
+
+Returns a function that plays a sound with the `sounds` of the closest `NovaSoundsProvider`. See `playNovaSound` of
+`@tuwaio/nova-core/utils` for when it stays silent. Without a provider nothing plays.
+
+## Returns
+
+The function; it takes the name of the sound.
+
+(`name`) => `void`
+
+## Example
+
+```tsx
+import { useNovaSounds } from '@tuwaio/nova-core';
+
+export function SaveButton() {
+  const play = useNovaSounds();
+  return (
+    <button type="button" onClick={() => play('txSuccess')}>
+      Save
+    </button>
+  );
+}
+```

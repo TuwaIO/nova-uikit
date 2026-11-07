@@ -3,6 +3,8 @@ import { TransactionKey } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionTracker } from '@tuwaio/pulsar-core';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -72,19 +74,6 @@ export const DefaultSolana: Story = {
 };
 
 /**
- * Showcases Gelato transaction details with both Task ID and on-chain hash.
- */
-export const Gelato: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-    }),
-    adapter: mockEvmAdapter,
-  },
-};
-
-/**
  * Displays the Safe transaction hash combined with the on-chain hash.
  */
 export const Safe: Story = {
@@ -136,22 +125,31 @@ export const HistoryVariant: Story = {
  * Customizes the rendering of the hash link to showcase additional styling or content.
  */
 export const WithCustomRender: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-[420px]">
+        <Story />
+      </div>
+    ),
+    withIsometricTheme,
+  ],
   args: {
+    // The boxes draw the frame: the line that sets the key apart from a toast is not needed here
+    className: 'border-t-0! pt-0!',
     tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
+      tracker: TransactionTracker.Safe,
+      txKey: '0xsafe_transaction_hash_abcdef123456',
     }),
     renderHashLink: (props) => (
-      <div className="rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/15 px-2 py-1 text-[#0052ff] dark:bg-[#38bdf8]/15 dark:text-[#7dd3fc]">
-        Custom ✨{' '}
+      <div className={`flex items-center justify-between gap-3 px-2 py-1 text-sm ${iso.box}`}>
         {props.explorerUrl ? (
-          <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer">
+          <a href={props.explorerUrl} target="_blank" rel="noopener noreferrer" className={iso.button.link}>
             {props.label}
           </a>
         ) : (
-          <span>{props.label}</span>
-        )}{' '}
-        <span className="font-mono text-xs">{props.hash.slice(0, 10)}...</span>
+          <span className={iso.text.primary}>{props.label}</span>
+        )}
+        <span className={`font-mono text-xs ${iso.text.secondary}`}>{props.hash.slice(0, 10)}…</span>
       </div>
     ),
     adapter: mockEvmAdapter,

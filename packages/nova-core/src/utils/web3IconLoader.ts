@@ -2,6 +2,8 @@ import type { ComponentType, Ref } from 'react';
 
 import { web3IconImports } from './web3IconImports';
 
+export { web3TokenIconVariants } from './web3IconImports';
+
 /**
  * An icon component of `@web3icons/react`, with the props Nova passes to it.
  * @internal

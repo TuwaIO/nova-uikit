@@ -1,0 +1,20 @@
+@layer components {
+  .tuwa-status-glint {
+    animation: tuwa-status-glint 1.6s ease-in-out infinite;
+  }
+
+  @keyframes tuwa-status-glint {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tuwa-status-glint {
+      animation: none;
+    }
+  }
+}

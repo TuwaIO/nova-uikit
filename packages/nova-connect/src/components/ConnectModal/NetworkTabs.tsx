@@ -3,13 +3,12 @@
  */
 
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
-import { cn, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
-import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 
@@ -553,99 +552,102 @@ export const NetworkTabs = memo(
 
       return (
         <CustomContainer ref={ref} className={containerClasses} role="tablist" aria-label={containerAriaLabel}>
-          <CustomTabList className={tabListClasses}>
-            {tabsData.map((tabData) => {
-              const tabKey = `${tabData.network}_${tabData.index}`;
-              const networkKey = tabData.network?.toString() ?? 'all';
+          {/* A `layoutId` is global: `indicator` of the host page would fly here */}
+          <LayoutGroup id="nova-connect-network-tabs">
+            <CustomTabList className={tabListClasses}>
+              {tabsData.map((tabData) => {
+                const tabKey = `${tabData.network}_${tabData.index}`;
+                const networkKey = tabData.network?.toString() ?? 'all';
 
-              // Generate dynamic classes and styles
-              const tabClasses =
-                customization?.classNames?.tab?.({
-                  isSelected: tabData.isSelected,
-                  index: tabData.index,
-                }) ?? 'novacon:relative novacon:group';
+                // Generate dynamic classes and styles
+                const tabClasses =
+                  customization?.classNames?.tab?.({
+                    isSelected: tabData.isSelected,
+                    index: tabData.index,
+                  }) ?? 'novacon:relative novacon:group';
 
-              const tabButtonClasses =
-                customization?.classNames?.tabButton?.({
-                  isSelected: tabData.isSelected,
-                  tabData,
-                }) ??
-                cn(
-                  'novacon:cursor-pointer novacon:flex novacon:items-center novacon:gap-2 novacon:px-4 novacon:py-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:overflow-hidden novacon:relative novacon:z-4',
-                  'novacon:hover:bg-[var(--tuwa-bg-muted)]',
-                  'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
-                  tabData.isSelected
-                    ? 'novacon:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-accent)]'
-                    : 'novacon:text-[var(--tuwa-text-secondary)]',
-                );
+                const tabButtonClasses =
+                  customization?.classNames?.tabButton?.({
+                    isSelected: tabData.isSelected,
+                    tabData,
+                  }) ??
+                  cn(
+                    'novacon:cursor-pointer novacon:flex novacon:items-center novacon:gap-2 novacon:px-4 novacon:py-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:overflow-hidden novacon:relative novacon:z-4',
+                    'novacon:hover:bg-[var(--tuwa-bg-muted)]',
+                    'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+                    tabData.isSelected
+                      ? 'novacon:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-accent)]'
+                      : 'novacon:text-[var(--tuwa-text-secondary)]',
+                  );
 
-              const iconContainerClasses =
-                customization?.classNames?.iconContainer?.({ tabData }) ?? 'novacon:w-6 novacon:h-6';
+                const iconContainerClasses =
+                  customization?.classNames?.iconContainer?.({ tabData }) ?? 'novacon:w-6 novacon:h-6';
 
-              const tabTextClasses =
-                customization?.classNames?.tabText?.({
-                  isSelected: tabData.isSelected,
-                  tabData,
-                }) ?? 'novacon:block novacon:overflow-hidden novacon:whitespace-nowrap';
+                const tabTextClasses =
+                  customization?.classNames?.tabText?.({
+                    isSelected: tabData.isSelected,
+                    tabData,
+                  }) ?? 'novacon:block novacon:overflow-hidden novacon:whitespace-nowrap';
 
-              const indicatorClasses =
-                customization?.classNames?.indicator?.({ tabData }) ??
-                'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:z-3 novacon:rounded-[var(--tuwa-rounded-corners)]';
+                const indicatorClasses =
+                  customization?.classNames?.indicator?.({ tabData }) ??
+                  'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:z-3 novacon:rounded-[var(--tuwa-rounded-corners)]';
 
-              return (
-                <CustomTab key={tabKey} className={tabClasses} data-network={networkKey}>
-                  <CustomTabButton
-                    className={tabButtonClasses}
-                    type="button"
-                    role="tab"
-                    aria-selected={tabData.isSelected}
-                    aria-controls={`network-panel-${networkKey}`}
-                    onClick={() => handleTabSelect(tabData.network, tabData)}
-                    onMouseEnter={() => customHandlers?.onTabHover?.(tabData.network, tabData)}
-                    onFocus={() => customHandlers?.onTabFocus?.(tabData.network, tabData)}
-                    title={tabData.displayName}
-                    aria-label={getNetworkAriaLabel(tabData.network, tabData.isSelected)}
-                    tabData={tabData}
-                  >
-                    <CustomIconContainer
-                      className={iconContainerClasses}
-                      role="img"
-                      aria-label={
-                        customConfig?.ariaLabels?.iconSuffix
-                          ? `${formatLabel(labels.networkTab, { name: tabData.displayName })} ${customConfig.ariaLabels.iconSuffix}`
-                          : formatLabel(labels.networkNameIcon, { name: tabData.displayName })
-                      }
+                return (
+                  <CustomTab key={tabKey} className={tabClasses} data-network={networkKey}>
+                    <CustomTabButton
+                      className={tabButtonClasses}
+                      type="button"
+                      role="tab"
+                      aria-selected={tabData.isSelected}
+                      aria-controls={`network-panel-${networkKey}`}
+                      onClick={() => handleTabSelect(tabData.network, tabData)}
+                      onMouseEnter={() => customHandlers?.onTabHover?.(tabData.network, tabData)}
+                      onFocus={() => customHandlers?.onTabFocus?.(tabData.network, tabData)}
+                      title={tabData.displayName}
+                      aria-label={getNetworkAriaLabel(tabData.network, tabData.isSelected)}
                       tabData={tabData}
                     >
-                      {tabData.network ? (
-                        <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
-                      ) : (
-                        <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
-                          <GlobeAltIcon aria-hidden="true" />
-                        </div>
-                      )}
-                    </CustomIconContainer>
-
-                    <AnimatePresence initial={false}>
-                      <CustomTabText
-                        variants={textVariant}
-                        className={tabTextClasses}
-                        animate={tabData.isSelected ? 'active' : 'inactive'}
-                        aria-hidden={!tabData.isSelected}
+                      <CustomIconContainer
+                        className={iconContainerClasses}
+                        role="img"
+                        aria-label={
+                          customConfig?.ariaLabels?.iconSuffix
+                            ? `${formatLabel(labels.networkTab, { name: tabData.displayName })} ${customConfig.ariaLabels.iconSuffix}`
+                            : formatLabel(labels.networkNameIcon, { name: tabData.displayName })
+                        }
                         tabData={tabData}
                       >
-                        {tabData.displayName}
-                      </CustomTabText>
-                    </AnimatePresence>
-                  </CustomTabButton>
+                        {tabData.network ? (
+                          <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
+                        ) : (
+                          <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
+                            <GlobeAltIcon aria-hidden="true" />
+                          </div>
+                        )}
+                      </CustomIconContainer>
 
-                  {tabData.isSelected && (
-                    <CustomIndicator className={indicatorClasses} aria-hidden={true} tabData={tabData} />
-                  )}
-                </CustomTab>
-              );
-            })}
-          </CustomTabList>
+                      <AnimatePresence initial={false}>
+                        <CustomTabText
+                          variants={textVariant}
+                          className={tabTextClasses}
+                          animate={tabData.isSelected ? 'active' : 'inactive'}
+                          aria-hidden={!tabData.isSelected}
+                          tabData={tabData}
+                        >
+                          {tabData.displayName}
+                        </CustomTabText>
+                      </AnimatePresence>
+                    </CustomTabButton>
+
+                    {tabData.isSelected && (
+                      <CustomIndicator className={indicatorClasses} aria-hidden={true} tabData={tabData} />
+                    )}
+                  </CustomTab>
+                );
+              })}
+            </CustomTabList>
+          </LayoutGroup>
         </CustomContainer>
       );
     },

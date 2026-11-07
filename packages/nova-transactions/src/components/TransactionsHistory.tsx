@@ -5,9 +5,20 @@
 
 import { cn, QuasarLoader } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
-import { ComponentType, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ComponentType,
+  memo,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { latestRecordOf, successorOf } from '../utils/replacement';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';
@@ -128,6 +139,13 @@ export type TransactionsHistoryProps<T extends Transaction> = Pick<
   /** Whether transaction details can be viewed by clicking on history items. Defaults to true. */
   canViewDetails?: boolean;
   /**
+   * Called with the key of the selected transaction instead of opening its details inside the list; for a container
+   * that shows them itself, as {@link TransactionsInfoModal} does under its own header.
+   *
+   * @param txKey - The `txKey` of the selected transaction.
+   */
+  onSelectTx?: (txKey: string) => void;
+  /**
    * `removeTxFromPool` of the Pulsar store. With it, the details of a transaction pending for a long time offer to stop
    * tracking it.
    */
@@ -155,16 +173,30 @@ function DefaultLoader({ className, iconClassName }: TransactionsHistoryLoaderPr
   );
 }
 
+type HistoryRowProps<T extends Transaction> = Pick<
+  TransactionHistoryItemProps<T>,
+  'tx' | 'adapter' | 'canViewDetails' | 'customization'
+> & {
+  HistoryItem: ComponentType<TransactionHistoryItemProps<T>>;
+  selectRow: (txKey: string) => void;
+};
+
+/** One row of the list, rendered again only when its own record changes. */
+const HistoryRow = memo(function HistoryRow<T extends Transaction>({
+  HistoryItem,
+  selectRow,
+  ...props
+}: HistoryRowProps<T>) {
+  return <HistoryItem {...props} onSelectTx={() => selectRow(props.tx.txKey)} />;
+}) as <T extends Transaction>(props: HistoryRowProps<T> & { key: string }) => ReactElement;
+
 /**
  * Error indicator that appears briefly when a fetch fails, then fades out.
  */
 function PaginationErrorIndicator({ className, iconClassName }: { className?: string; iconClassName?: string }) {
   return (
     <div
-      className={cn(
-        'novatx:flex novatx:items-center novatx:justify-center novatx:py-3 novatx:animate-[novatx-fade-out_0.4s_ease-out_2s_forwards]',
-        className,
-      )}
+      className={cn('novatx:flex novatx:items-center novatx:justify-center novatx:py-3', className)}
       role="alert"
       aria-live="assertive"
     >
@@ -193,7 +225,8 @@ function HistoryPlaceholder({
   return (
     <div
       className={cn(
-        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:p-8 novatx:text-center',
+        // The secondary background: the secondary text on the muted one reads at 4.4:1 only
+        'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-8 novatx:text-center',
         className,
       )}
     >
@@ -215,10 +248,10 @@ function HistoryPlaceholder({
 /**
  * The transactions of the connected wallet (`selectAllTransactionsByActiveWallet` from `@tuwaio/pulsar-core`), newest
  * first, with a placeholder when no wallet is connected or there are no transactions. Selecting an item opens
- * {@link TransactionDetails} (when `canViewDetails` is `true`; `initialTxKey` opens one directly). With `pagination`,
- * it
- * calls `pagination.fetchNextPage(connectedWalletAddress)` when the end of the list becomes visible (an
- * `IntersectionObserver`) and shows a short error indicator when loading a page fails.
+ * {@link TransactionDetails} (when `canViewDetails` is `true`; `initialTxKey` opens one directly), or calls
+ * `onSelectTx` when it is set. With `pagination`, it calls `pagination.fetchNextPage(connectedWalletAddress)` when the
+ * end of the list becomes visible (an `IntersectionObserver`) and shows a short error indicator when loading a page
+ * fails.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionsHistoryProps}.
@@ -233,6 +266,7 @@ export function TransactionsHistory<T extends Transaction>({
   pagination,
   initialTxKey,
   canViewDetails = true,
+  onSelectTx,
   removeTxFromPool,
 }: TransactionsHistoryProps<T>) {
   const { transactionsModal } = useLabels();
@@ -252,11 +286,48 @@ export function TransactionsHistory<T extends Transaction>({
   const [showError, setShowError] = useState(false);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const sortedTransactions = (() => {
+  const sortedTransactions = useMemo(() => {
     if (!connectedWalletAddress) return [];
     const transactions = selectAllTransactionsByActiveWallet(transactionsPool, connectedWalletAddress);
     return transactions.sort((a, b) => (b.localTimestamp ?? 0) - (a.localTimestamp ?? 0));
-  })();
+  }, [transactionsPool, connectedWalletAddress]);
+
+  // The rows below are memoized: a write to one record, about once a second on Solana, must not render all of them
+  const classNames = customization?.classNames;
+  const rowCustomization = useMemo(
+    () => ({
+      classNames: {
+        container: classNames?.itemContainer,
+        iconWrapper: classNames?.itemIconWrapper,
+        icon: classNames?.itemIcon,
+        contentWrapper: classNames?.itemContentWrapper,
+        title: classNames?.itemTitle,
+        timestamp: classNames?.itemTimestamp,
+        description: classNames?.itemDescription,
+        statusBadge: classNames?.itemStatusBadge,
+        statusBadgeIcon: classNames?.itemStatusBadgeIcon,
+        statusBadgeLabel: classNames?.itemStatusBadgeLabel,
+        txKeyContainer: classNames?.itemTxKeyContainer,
+        hashLabel: classNames?.itemHashLabel,
+        hashLink: classNames?.itemHashLink,
+        hashCopyButton: classNames?.itemHashCopyButton,
+        originalHashLabel: classNames?.itemOriginalHashLabel,
+        originalHashLink: classNames?.itemOriginalHashLink,
+        originalHashCopyButton: classNames?.itemOriginalHashCopyButton,
+      },
+    }),
+    [classNames],
+  );
+  // The latest props, from a function that stays the same for the rows
+  const selectRow = useRef<(txKey: string) => void>(() => undefined);
+  useEffect(() => {
+    selectRow.current = (txKey) => {
+      if (!canViewDetails) return;
+      if (onSelectTx) onSelectTx(txKey);
+      else setSelectedTxKey(txKey);
+    };
+  });
+  const handleSelectRow = useCallback((txKey: string) => selectRow.current(txKey), []);
 
   /**
    * Detect isError rising edge (false → true) and show the error indicator.
@@ -273,45 +344,43 @@ export function TransactionsHistory<T extends Transaction>({
       // Defer state update to the next microtask to avoid synchronous setState inside effect body
       const showTimer = setTimeout(() => setShowError(true), 0);
 
+      clearTimeout(errorTimerRef.current);
       errorTimerRef.current = setTimeout(() => setShowError(false), ERROR_DISPLAY_DURATION);
 
-      return () => {
-        clearTimeout(showTimer);
-        clearTimeout(errorTimerRef.current);
-      };
+      // Not the timer that hides it: when the next try cleared the error, the mark stayed on screen after the page had loaded
+      return () => clearTimeout(showTimer);
     }
   }, [pagination?.isError]);
 
-  /**
-   * Stable callback for IntersectionObserver to trigger next page fetch.
-   * Only fires when more pages are available and no request is in-flight.
-   */
-  const handleIntersection = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const entry = entries[0];
-      if (entry?.isIntersecting && pagination?.hasMore && !pagination?.isLoading && connectedWalletAddress) {
-        void pagination.fetchNextPage(connectedWalletAddress);
-      }
-    },
-    [pagination, connectedWalletAddress],
-  );
+  useEffect(() => () => clearTimeout(errorTimerRef.current), []);
+
+  // Read through an Effect Event: a failed page changes only its flags, and a new observer for them reports the sentinel in
+  // view at once, which fetched that page again and again for as long as the end of the list was on screen
+  const fetchNextPage = useEffectEvent(() => {
+    if (pagination?.hasMore && !pagination.isLoading && connectedWalletAddress) {
+      void pagination.fetchNextPage(connectedWalletAddress);
+    }
+  });
 
   /**
-   * Attach IntersectionObserver to the sentinel element at the bottom of the list.
-   * Observes only when pagination is active and more pages are available.
+   * Attach IntersectionObserver to the sentinel element at the bottom of the list. A loaded page re-arms it, by
+   * `currentPage`. After a failure the next try comes when the sentinel leaves the view and enters it again.
    */
   useEffect(() => {
     if (!pagination?.hasMore || !sentinelRef.current) return;
 
-    const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.1,
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) fetchNextPage();
+      },
+      { threshold: 0.1 },
+    );
 
     observer.observe(sentinelRef.current);
 
     return () => observer.disconnect();
     // `selectedTxKey` too: the details take the list and its sentinel away, and Back brings a new one to observe
-  }, [pagination?.hasMore, handleIntersection, selectedTxKey]);
+  }, [pagination?.hasMore, pagination?.currentPage, connectedWalletAddress, selectedTxKey]);
 
   const {
     Placeholder = HistoryPlaceholder,
@@ -338,42 +407,24 @@ export function TransactionsHistory<T extends Transaction>({
     const shownTransactions = sortedTransactions.filter((tx) => !successorOf(tx, transactionsPool));
 
     if (shownTransactions.length > 0) {
-      // Extract item classNames from customization
-      const itemClassNames = {
-        container: customization?.classNames?.itemContainer,
-        iconWrapper: customization?.classNames?.itemIconWrapper,
-        icon: customization?.classNames?.itemIcon,
-        contentWrapper: customization?.classNames?.itemContentWrapper,
-        title: customization?.classNames?.itemTitle,
-        timestamp: customization?.classNames?.itemTimestamp,
-        description: customization?.classNames?.itemDescription,
-        statusBadge: customization?.classNames?.itemStatusBadge,
-        statusBadgeIcon: customization?.classNames?.itemStatusBadgeIcon,
-        statusBadgeLabel: customization?.classNames?.itemStatusBadgeLabel,
-        txKeyContainer: customization?.classNames?.itemTxKeyContainer,
-        hashLabel: customization?.classNames?.itemHashLabel,
-        hashLink: customization?.classNames?.itemHashLink,
-        hashCopyButton: customization?.classNames?.itemHashCopyButton,
-        originalHashLabel: customization?.classNames?.itemOriginalHashLabel,
-        originalHashLink: customization?.classNames?.itemOriginalHashLink,
-        originalHashCopyButton: customization?.classNames?.itemOriginalHashCopyButton,
-      };
-
       return (
         <div
           className={cn(
-            'NovaCustomScroll novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
+            // Positioned: a screen reader text of a row is `absolute`, and it escaped an unpositioned list, which stretched the
+            // whole window, with a second scroll and an empty band under its footer
+            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
           {shownTransactions.map((tx) => (
-            <HistoryItem
+            <HistoryRow
               key={tx.txKey}
+              HistoryItem={HistoryItem}
               tx={tx}
               adapter={adapter}
               canViewDetails={canViewDetails}
-              customization={{ classNames: itemClassNames }}
-              onSelectTx={() => canViewDetails && setSelectedTxKey(tx.txKey)}
+              customization={rowCustomization}
+              selectRow={handleSelectRow}
             />
           ))}
 
@@ -412,7 +463,7 @@ export function TransactionsHistory<T extends Transaction>({
     );
   };
 
-  if (selectedTxKey) {
+  if (selectedTxKey && !onSelectTx) {
     const opened = sortedTransactions.find((tx) => tx.txKey === selectedTxKey);
     // The details go on with the operation: a speed-up that lands while they are open must not leave them on the old record
     const selectedTx = opened && latestRecordOf(opened, transactionsPool);
@@ -423,6 +474,7 @@ export function TransactionsHistory<T extends Transaction>({
           adapter={adapter}
           onBack={() => setSelectedTxKey(null)}
           customization={customization?.detailsCustomization}
+          connectedWalletAddress={connectedWalletAddress}
           onStopTracking={
             removeTxFromPool &&
             ((txKey) => {

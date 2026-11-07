@@ -181,7 +181,16 @@ const DefaultToastError = ({
 
 const DefaultContainer = (props: ErrorsProviderContainerProps) => {
   const labels = useNovaConnectLabels();
-  return <ToastContainer {...props} role="alert" aria-live="assertive" aria-label={labels.somethingWentWrong} />;
+  return (
+    <ToastContainer
+      // On its own toasts: the same rule on `.Toastify__toast` took the padding from the toasts of the host
+      toastClassName="novacon:!p-0 novacon:!bg-transparent"
+      {...props}
+      role="alert"
+      aria-live="assertive"
+      aria-label={labels.somethingWentWrong}
+    />
+  );
 };
 
 // --- Default Handlers ---
@@ -246,6 +255,8 @@ export function ErrorsProvider({
 
   // Track displayed errors to prevent duplicates
   const displayedErrorsRef = useRef<Set<string>>(new Set());
+  // The error object told last: a later render with inline `customization` brought a toast the user had closed back
+  const toldErrorRef = useRef<unknown>(null);
   const currentToastIdRef = useRef<string | null>(null);
 
   // Error state derivation
@@ -253,8 +264,11 @@ export function ErrorsProvider({
   const hasSwitchError = Boolean(switchNetworkError);
   const isConnected = Boolean(activeConnection?.isConnected);
   const hasAnyError = hasWalletError || hasSwitchError;
-  const primaryError = connectionError || switchNetworkError || null;
-  const errorType = (hasWalletError ? 'wallet' : hasSwitchError ? 'switch' : null) as 'wallet' | 'switch' | null;
+  // While connected only a switch error is shown here, so a leftover connection error, which the connect window has
+  // told, must not hide it
+  const primaryError = isConnected ? (switchNetworkError ?? null) : connectionError || switchNetworkError || null;
+  const errorType = (primaryError ? (primaryError === connectionError ? 'wallet' : 'switch') : null) as
+    'wallet' | 'switch' | null;
 
   const errorState = {
     hasWalletError,
@@ -313,13 +327,13 @@ export function ErrorsProvider({
   // Original handler for error display - using full customization object in dependencies
   const originalErrorHandler = useCallback(
     (t: string, r: string | TuwaErrorState, k: string) => {
-      // Dismiss previous toast first
-      dismissCurrentToast();
-
-      // Check if this error was already displayed
+      // Already on screen. Checked before the dismiss: a repeated error removed its own toast and showed nothing
       if (displayedErrorsRef.current.has(k)) {
         return;
       }
+
+      // Dismiss previous toast first
+      dismissCurrentToast();
 
       try {
         // Generate custom toast options
@@ -397,6 +411,8 @@ export function ErrorsProvider({
         return;
       }
 
+      if (toldErrorRef.current === primaryError) return;
+      toldErrorRef.current = primaryError;
       showErrorToast(errorTitle, primaryError, errorHash);
     }
   }, [hasAnyError, isConnected, primaryError, errorType, errorTitle, errorHash, showErrorToast, dismissCurrentToast]);

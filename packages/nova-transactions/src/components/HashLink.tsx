@@ -3,9 +3,10 @@
  * blockchain hashes with copy-to-clipboard and block explorer link functionality.
  */
 
-import { cn, CopyIcon, ExternalLinkIcon, textCenterEllipsis, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, ExternalLinkIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { shortAddress } from '@tuwaio/orbit-core';
 
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 
 /** Props of {@link HashLink}. */
 export type HashLinkProps = {
@@ -62,7 +63,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
     classNames?.label,
   );
 
-  const hashContent = <span className={cn('', classNames?.hash)}>{textCenterEllipsis(hash, 5, 5)}</span>;
+  const hashContent = <span className={cn('', classNames?.hash)}>{shortAddress(hash)}</span>;
 
   return (
     <div className={containerClasses}>
@@ -72,15 +73,17 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
           <a
             href={explorerUrl}
             target="_blank"
+            data-nova-external-link=""
             rel="noopener noreferrer"
             className={cn(
               'novatx:flex novatx:items-center novatx:gap-x-1 novatx:text-[var(--tuwa-text-accent)] novatx:transition-colors novatx:hover:underline',
               classNames?.link,
             )}
             title={actions.viewOnExplorer}
-            aria-label={actions.viewOnExplorer}
           >
+            {/* The visible hash starts the accessible name (WCAG 2.5.3), what the link does follows */}
             {hashContent}
+            <span className="novatx:sr-only"> {actions.viewOnExplorer}</span>
             <ExternalLinkIcon className={cn('novatx:h-4 novatx:w-4', classNames?.linkIcon)} />
           </a>
         ) : (

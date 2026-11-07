@@ -17,7 +17,7 @@ export const chineseLabels: NovaConnectLabels = {
   all: '全部',
   active: '当前活跃',
   connectors: '连接器',
-  connectNewWallet: '连接新钱包',
+  connectNewWallet: '连接另一个钱包',
 
   // Connection states - Status messages for wallet connection flow
   connectionError: '连接错误',
@@ -46,6 +46,8 @@ export const chineseLabels: NovaConnectLabels = {
   switchNetwork: '切换网络',
   switchNetworks: '切换网络',
   connectingEllipsis: '连接中...',
+  signMessageInWallet: '请在钱包中签署消息',
+  checkWalletRequest: '请查看您的钱包：请求可能正在那里等待。',
   connectedWallets: '已连接钱包',
 
   // Wallet sections - Categories for wallet connector grouping
@@ -192,6 +194,7 @@ export const chineseLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: '切换网络 - {count} 个可用网络',
   transactionsInAppCount: '应用内交易 - {count} 笔交易',
   transactionsAvailable: '{count} 笔可用交易',
+  transactionsPendingCount: '待处理交易：{count}',
   noTransactionsForWallet: '该钱包暂无交易记录',
   walletName: '钱包名称：{name}',
   loadingWalletName: '正在加载钱包名称',

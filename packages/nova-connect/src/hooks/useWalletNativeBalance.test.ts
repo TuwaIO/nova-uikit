@@ -1,206 +1,221 @@
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-interface MockConnection {
-  address: string;
-  chainId: string | number;
-  connectorType: string;
-}
+import { render, unmount } from '../testing/hookHarness';
 
-let mockStoreState = {
-  activeConnection: null as MockConnection | null,
-  getAdapter: vi.fn(),
-};
+vi.mock('react', async (importOriginal) => {
+  const { hooks } = await import('../testing/hookHarness');
+  return {
+    ...(await importOriginal<typeof import('react')>()),
+    ...hooks,
+    useContext: () => satelliteStore.current,
+  };
+});
+
+// One Satellite store per test, as the callers of a page share one
+const satelliteStore = vi.hoisted(() => ({ current: {} as object }));
+const storeState = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 
 vi.mock('../satellite', () => ({
-  useSatelliteConnectStore: vi.fn((selector: (state: typeof mockStoreState) => unknown) => selector(mockStoreState)),
-}));
-
-vi.mock('@tuwaio/orbit-core', () => ({
-  getAdapterFromConnectorType: vi.fn((type: string) => {
-    if (type.includes('solana') || type.includes('phantom')) return OrbitAdapter.SOLANA;
-    return OrbitAdapter.EVM;
-  }),
-  OrbitAdapter: {
-    EVM: 'evm',
-    SOLANA: 'solana',
-  },
-}));
-
-// Stateful React mock to simulate useState, useEffect, useCallback, useRef
-let stateMap: Record<number, unknown> = {};
-let stateIndex = 0;
-const effectCleanupCallbacks: (() => void)[] = [];
-
-vi.mock('react', () => ({
-  useState: vi.fn((initial: unknown) => {
-    const idx = stateIndex++;
-    if (!(idx in stateMap)) {
-      stateMap[idx] = typeof initial === 'function' ? (initial as () => unknown)() : initial;
-    }
-    const setter = (val: unknown) => {
-      stateMap[idx] = typeof val === 'function' ? (val as (prev: unknown) => unknown)(stateMap[idx]) : val;
-    };
-    return [stateMap[idx], setter];
-  }),
-  useCallback: vi.fn((fn: unknown) => fn),
-  useRef: vi.fn((initial: unknown) => ({ current: initial })),
-  useEffect: vi.fn((effect: () => void | (() => void)) => {
-    const cleanup = effect();
-    if (typeof cleanup === 'function') {
-      effectCleanupCallbacks.push(cleanup);
-    }
-  }),
+  SatelliteStoreContext: {},
+  useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) => selector(storeState.value),
 }));
 
 import { useWalletNativeBalance } from './useWalletNativeBalance';
+import { balanceCacheOf } from './walletBalanceCache';
+
+const connectTo = (getBalance: unknown, connection: Record<string, unknown> = {}) => {
+  storeState.value = {
+    activeConnection: { address: '0x1', chainId: 1, connectorType: `${OrbitAdapter.EVM}:metamask`, ...connection },
+    getAdapter: () => ({ getBalance }),
+  };
+};
+const settle = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+};
 
 describe('useWalletNativeBalance', () => {
   beforeEach(() => {
-    stateMap = {};
-    stateIndex = 0;
-    vi.clearAllMocks();
+    satelliteStore.current = {};
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
   });
 
-  it('returns null balance and false loading when there is no active connection', () => {
-    mockStoreState = {
-      activeConnection: null,
-      getAdapter: vi.fn().mockReturnValue(undefined),
-    };
-
-    const result = useWalletNativeBalance();
-    expect(result.balance).toBeNull();
-    expect(result.isLoading).toBe(false);
-    expect(typeof result.refetch).toBe('function');
+  afterEach(() => {
+    unmount();
+    vi.restoreAllMocks();
   });
 
-  it('returns null when adapter does not have getBalance function', () => {
-    mockStoreState = {
-      activeConnection: {
-        address: 'AiNJoXtwr2p3',
-        chainId: 'solana:mainnet',
-        connectorType: 'phantom',
-      },
-      getAdapter: vi.fn().mockReturnValue({}), // no getBalance
-    };
-
-    const result = useWalletNativeBalance();
-    expect(result.balance).toBeNull();
-    expect(result.isLoading).toBe(false);
-  });
-
-  it('successfully fetches and caches Solana native balance', async () => {
-    const mockAdapter = {
-      getBalance: vi.fn().mockResolvedValue({
-        value: '2.5',
-        symbol: 'SOL',
-      }),
-    };
-
-    mockStoreState = {
-      activeConnection: {
-        address: 'AiNJoXtwr2p3',
-        chainId: 'solana:mainnet',
-        connectorType: 'phantom',
-      },
-      getAdapter: vi.fn().mockReturnValue(mockAdapter),
-    };
-
-    useWalletNativeBalance();
-    expect(mockAdapter.getBalance).toHaveBeenCalledWith('AiNJoXtwr2p3', 'solana:mainnet');
-
-    // Wait for promise resolution in mock state
-    await Promise.resolve();
-    await Promise.resolve();
-
-    // Re-render hook with updated cache
-    stateIndex = 0;
-    const updated = useWalletNativeBalance();
-    expect(updated.balance).toEqual({
-      value: '2.5',
-      symbol: 'SOL',
+  it('knows nothing without a wallet', () => {
+    storeState.value = { activeConnection: null, getAdapter: () => undefined };
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({
+      balance: null,
+      isLoading: false,
+      isError: false,
     });
   });
 
-  it('successfully fetches and caches EVM native balance', async () => {
-    const mockAdapter = {
-      getBalance: vi.fn().mockResolvedValue({
-        value: '1.25',
-        symbol: 'ETH',
-      }),
-    };
-
-    mockStoreState = {
-      activeConnection: {
-        address: '0x1234567890123456789012345678901234567890',
-        chainId: 1,
-        connectorType: 'metamask',
-      },
-      getAdapter: vi.fn().mockReturnValue(mockAdapter),
-    };
-
-    useWalletNativeBalance();
-    expect(mockAdapter.getBalance).toHaveBeenCalledWith('0x1234567890123456789012345678901234567890', 1);
-
-    await Promise.resolve();
-    await Promise.resolve();
-
-    stateIndex = 0;
-    const updated = useWalletNativeBalance();
-    expect(updated.balance).toEqual({
-      value: '1.25',
-      symbol: 'ETH',
+  it('knows nothing when the adapter has no getBalance', () => {
+    connectTo(undefined);
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({
+      balance: null,
+      isLoading: false,
+      isError: false,
     });
   });
 
-  it('handles getBalance error gracefully without throwing', async () => {
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const mockAdapter = {
-      getBalance: vi.fn().mockRejectedValue(new Error('RPC network timeout')),
-    };
+  it('asks the adapter once and gives the balance', async () => {
+    const getBalance = vi.fn().mockResolvedValue({ value: '2.5', symbol: 'ETH' });
+    connectTo(getBalance);
 
-    mockStoreState = {
-      activeConnection: {
-        address: '0x1234567890123456789012345678901234567890',
-        chainId: 1,
-        connectorType: 'metamask',
-      },
-      getAdapter: vi.fn().mockReturnValue(mockAdapter),
-    };
+    render(useWalletNativeBalance, undefined);
+    expect(getBalance).toHaveBeenCalledWith('0x1', 1);
+    await settle();
 
-    const result = useWalletNativeBalance();
-    expect(result.balance).toBeNull();
-
-    await Promise.resolve();
-    expect(consoleSpy).toHaveBeenCalled();
-    consoleSpy.mockRestore();
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({
+      balance: { value: '2.5', symbol: 'ETH' },
+      isLoading: false,
+    });
+    expect(getBalance).toHaveBeenCalledTimes(1);
   });
 
-  it('forces balance refresh when refetch is called', async () => {
-    const mockAdapter = {
-      getBalance: vi
-        .fn()
-        .mockResolvedValueOnce({ value: '1.0', symbol: 'SOL' })
-        .mockResolvedValueOnce({ value: '2.0', symbol: 'SOL' }),
-    };
+  // An RPC down showed `0.000` on the button of a wallet holding 5 ETH
+  it('tells a balance it could not read, and does not ask again by itself', async () => {
+    const getBalance = vi.fn().mockRejectedValue(new Error('429'));
+    connectTo(getBalance);
 
-    mockStoreState = {
-      activeConnection: {
-        address: 'AiNJoXtwr2p3',
-        chainId: 'solana:mainnet',
-        connectorType: 'phantom',
-      },
-      getAdapter: vi.fn().mockReturnValue(mockAdapter),
-    };
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    const data = render(useWalletNativeBalance, undefined);
 
-    const result = useWalletNativeBalance();
-    expect(mockAdapter.getBalance).toHaveBeenCalledTimes(1);
+    expect(data).toMatchObject({ balance: null, isLoading: false, isError: true });
+    expect(getBalance).toHaveBeenCalledTimes(1);
+  });
 
-    await Promise.resolve();
-    await Promise.resolve();
+  // It was cached and read as no entry, which asked the node again on every render
+  it('takes a getBalance that resolves to nothing for a failure', async () => {
+    const getBalance = vi.fn().mockResolvedValue(undefined);
+    connectTo(getBalance);
 
-    stateIndex = 0;
-    result.refetch();
-    expect(mockAdapter.getBalance).toHaveBeenCalledTimes(2);
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    render(useWalletNativeBalance, undefined);
+
+    expect(getBalance).toHaveBeenCalledTimes(1);
+  });
+
+  it('asks again with refetch, keeping the balance on screen meanwhile', async () => {
+    const getBalance = vi
+      .fn()
+      .mockResolvedValueOnce({ value: '2.5', symbol: 'ETH' })
+      .mockResolvedValueOnce({ value: '1.5', symbol: 'ETH' });
+    connectTo(getBalance);
+
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    (render(useWalletNativeBalance, undefined) as ReturnType<typeof useWalletNativeBalance>).refetch();
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '2.5' }, isLoading: true });
+
+    await settle();
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '1.5' }, isLoading: false });
+  });
+
+  it('clears the balance when a refresh fails', async () => {
+    const getBalance = vi
+      .fn()
+      .mockResolvedValueOnce({ value: '2.5', symbol: 'ETH' })
+      .mockRejectedValueOnce(new Error('503'));
+    connectTo(getBalance);
+
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    (render(useWalletNativeBalance, undefined) as ReturnType<typeof useWalletNativeBalance>).refetch();
+    await settle();
+
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: null, isError: true });
+    expect(getBalance).toHaveBeenCalledTimes(2);
+  });
+
+  it('sends nothing while it is not enabled', () => {
+    const getBalance = vi.fn().mockResolvedValue({ value: '2.5', symbol: 'ETH' });
+    connectTo(getBalance);
+
+    render(useWalletNativeBalance, { enabled: false });
+
+    expect(getBalance).not.toHaveBeenCalled();
+  });
+
+  // The button with `withBalance` off still tells the window, which reads the balance when it opens, that a transaction ended
+  it('only forgets the balance on refetch while it is not enabled', async () => {
+    const getBalance = vi.fn().mockResolvedValue({ value: '2.5', symbol: 'ETH' });
+    connectTo(getBalance);
+    const cache = balanceCacheOf(satelliteStore.current);
+    cache.load('0x1-1', getBalance);
+    await settle();
+    getBalance.mockClear();
+
+    (render(useWalletNativeBalance, { enabled: false }) as ReturnType<typeof useWalletNativeBalance>).refetch();
+
+    expect(getBalance).not.toHaveBeenCalled();
+    expect(cache.read('0x1-1').balance).toBeNull();
+  });
+
+  // The button kept `1.500` after paying 1 ETH of it, and the refresh in the window did not reach it
+  it('shares the balance and the request between the callers of a store', async () => {
+    const getBalance = vi
+      .fn()
+      .mockResolvedValueOnce({ value: '1.5', symbol: 'ETH' })
+      .mockResolvedValueOnce({ value: '0.5', symbol: 'ETH' });
+    connectTo(getBalance);
+    const cache = balanceCacheOf(satelliteStore.current);
+
+    render(useWalletNativeBalance, undefined);
+    cache.load('0x1-1', getBalance);
+    await settle();
+    expect(getBalance).toHaveBeenCalledTimes(1);
+
+    cache.load('0x1-1', getBalance, true);
+    await settle();
+
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '0.5' } });
+  });
+
+  it('ignores the answer of an older request', async () => {
+    let answerOld: (value: unknown) => void = () => undefined;
+    const old = new Promise((resolve) => {
+      answerOld = resolve;
+    });
+    const getBalance = vi.fn().mockReturnValueOnce(old).mockResolvedValueOnce({ value: '0.5', symbol: 'ETH' });
+    connectTo(getBalance);
+
+    (render(useWalletNativeBalance, undefined) as ReturnType<typeof useWalletNativeBalance>).refetch();
+    await settle();
+    answerOld({ value: '1.5', symbol: 'ETH' });
+    await settle();
+
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '0.5' } });
+  });
+
+  it('keeps a balance of each address and chain', async () => {
+    const getBalance = vi
+      .fn()
+      .mockResolvedValueOnce({ value: '2.5', symbol: 'ETH' })
+      .mockResolvedValueOnce({ value: '9', symbol: 'POL' });
+    connectTo(getBalance);
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    render(useWalletNativeBalance, undefined);
+
+    connectTo(getBalance, { chainId: 137 });
+    render(useWalletNativeBalance, undefined);
+    await settle();
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '9' } });
+
+    connectTo(getBalance);
+    expect(render(useWalletNativeBalance, undefined)).toMatchObject({ balance: { value: '2.5' } });
+    expect(getBalance).toHaveBeenCalledTimes(2);
   });
 });

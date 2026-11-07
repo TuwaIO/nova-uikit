@@ -11,6 +11,8 @@ import {
 import { action } from 'storybook/actions';
 import { polygon } from 'viem/chains';
 
+import { isoHistory } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -36,6 +38,7 @@ const meta: Meta<typeof TransactionDetails> = {
   ],
   args: {
     onBack: action('onBack'),
+    onClose: action('onClose'),
     adapter: [mockEvmAdapter, mockSolanaAdapter],
   },
   argTypes: {
@@ -46,6 +49,14 @@ const meta: Meta<typeof TransactionDetails> = {
     onBack: {
       action: 'onBack',
       description: 'Callback function triggered when clicking the back button in the header.',
+    },
+    onClose: {
+      action: 'onClose',
+      description: 'Shows the close button in the header and is called by it.',
+    },
+    hideHeader: {
+      control: 'boolean',
+      description: 'Leaves out the header, for a container that shows its own (as TransactionsInfoModal does).',
     },
     adapter: {
       control: false,
@@ -71,6 +82,9 @@ const mockEvmPendingTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
   status: undefined,
   syncStatus: 'pending-sync',
   type: 'Token Swap',
+  connectorType: 'evm:metamask',
+  confirmations: 0,
+  requiredConfirmations: 3,
   from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   to: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
   value: '1500000000000000000',
@@ -117,6 +131,23 @@ const mockEvmFailedTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
     },
   },
 } as any) as EvmTransaction;
+
+const mockSafePendingTx: EvmTransaction = createMockTx(OrbitAdapter.EVM, {
+  title: 'Treasury payout',
+  description: 'Waiting for the owners of the Safe to confirm',
+  pending: true,
+  status: undefined,
+  syncStatus: 'synced',
+  tracker: TransactionTracker.Safe,
+  type: 'Safe Transfer',
+  connectorType: 'evm:safe',
+  txKey: '0x3b2f9a7c51d04e6f8a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6a7b',
+  hash: undefined,
+  from: '0x8b99f36611f7c8b07043818e69248496bc120935',
+  to: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  confirmations: 1,
+  requiredConfirmations: 2,
+}) as EvmTransaction;
 
 const mockSolanaPendingTx: SolanaTransaction = {
   ...createMockTx(OrbitAdapter.SOLANA, {
@@ -179,7 +210,7 @@ const mockStarknetAdapter = {
 // --- Stories ---
 
 /**
- * Default story showing an active EVM transaction currently pending confirmation.
+ * A pending EVM transaction sent with MetaMask: speed-up and cancel in the status row, as in the tracking modal.
  */
 export const Default: Story = {
   args: {
@@ -204,6 +235,17 @@ export const EvmSuccess: Story = {
 export const EvmError: Story = {
   args: {
     tx: mockEvmFailedTx,
+    adapter: [mockEvmAdapter],
+  },
+};
+
+/**
+ * A Safe transaction waiting for its owners: the TX key (the `safeTxHash`) differs from the on-chain hash, which is
+ * not known yet, and the confirmations show the owners who signed.
+ */
+export const SafePending: Story = {
+  args: {
+    tx: mockSafePendingTx,
     adapter: [mockEvmAdapter],
   },
 };
@@ -239,19 +281,24 @@ export const StarknetSuccess: Story = {
 };
 
 /**
- * Custom colors of the header, title and network badge via the `customization` prop.
+ * Without the header, as `TransactionsInfoModal` shows the details under its own header.
  */
-export const WithCustomization: Story = {
+export const WithoutHeader: Story = {
   args: {
     tx: mockEvmSuccessTx,
     adapter: [mockEvmAdapter],
-    customization: {
-      classNames: {
-        header:
-          'bg-gradient-to-r from-[#0052ff]/10 via-[#1d4ed8]/10 to-[#0284c7]/10 border-[#0052ff]/30 dark:from-[#2563eb]/15 dark:via-[#3b82f6]/15 dark:to-[#38bdf8]/15 dark:border-[#38bdf8]/30',
-        title: 'text-[#0052ff] dark:text-[#38bdf8]',
-        networkBadge: 'border-[#0052ff]/40 bg-[#0052ff]/10 dark:border-[#38bdf8]/40 dark:bg-[#38bdf8]/10',
-      },
-    },
+    hideHeader: true,
+  },
+};
+
+/**
+ * The Isometric theme through the `customization` prop: the ink bar, the back button, the sections and the network.
+ */
+export const WithCustomization: Story = {
+  decorators: [withIsometricTheme],
+  args: {
+    tx: mockEvmSuccessTx,
+    adapter: [mockEvmAdapter],
+    customization: isoHistory.detailsCustomization,
   },
 };

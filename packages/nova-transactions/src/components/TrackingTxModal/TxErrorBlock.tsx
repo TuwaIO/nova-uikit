@@ -7,7 +7,7 @@ import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { useMemo } from 'react';
 
-import { useLabels } from '../../providers';
+import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 
 /** Class names of the parts of {@link TxErrorBlock}. */
 export type TxErrorBlockClassNames = {
@@ -78,11 +78,13 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
       <div className={cn('novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div
           className={cn(
-            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-icon)]',
+            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-text)]',
             classNames?.title,
           )}
         >
-          <ExclamationTriangleIcon className={cn('novatx:h-5 novatx:w-5', classNames?.icon)} />
+          <ExclamationTriangleIcon
+            className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', classNames?.icon)}
+          />
           <span>{txError.title}</span>
         </div>
         <button
@@ -99,8 +101,11 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
         </button>
       </div>
 
-      {/* --- Scrollable Error Message --- */}
+      {/* --- Scrollable Error Message: focusable, as a keyboard has no other way to scroll a long one --- */}
       <div
+        tabIndex={0}
+        role="region"
+        aria-label={txError.title}
         className={cn(
           'novatx:max-h-24 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2',
           classNames?.messageContainer,

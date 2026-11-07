@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ToastCloseButton } from '@tuwaio/nova-core';
 import { useState } from 'react';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
+
 const meta: Meta<typeof ToastCloseButton> = {
   title: 'Nova Core/Feedback/ToastCloseButton',
   component: ToastCloseButton,
@@ -75,7 +78,8 @@ export const CustomTooltip: Story = {
 };
 
 export const CustomStyle: Story = {
+  decorators: [withIsometricTheme],
   args: {
-    className: 'bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-500',
+    className: iso.button.icon,
   },
 };

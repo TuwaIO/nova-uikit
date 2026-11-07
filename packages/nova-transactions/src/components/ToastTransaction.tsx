@@ -9,9 +9,18 @@ import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
-import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
-import { canReplaceTx, runReplacement } from '../utils/replacement';
-import { hasConfirmations, progressOf, toneOf } from '../utils/txStatus';
+import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
+import { canReplaceTx, canSpeedUpTx, runReplacement } from '../utils/replacement';
+import {
+  hasConfirmations,
+  isTxOfWallet,
+  progressOf,
+  toneOf,
+  txDescriptionSource,
+  txTitleSource,
+} from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -164,7 +173,7 @@ const DefaultTxInfoButton = ({ onClick, children, className }: ToastTransactionA
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
-    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-gradient-from)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-gradient-from-hover)] novatx:active:scale-95';
+    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)] novatx:active:scale-95';
 
   return (
     <button className={buttonClassName} onClick={onClick} type="button">
@@ -186,7 +195,7 @@ const DefaultConfirmationsBadge = ({
 }) => (
   <div
     className={cn(
-      'novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:transition-colors novatx:duration-300',
+      'novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:transition-colors novatx:duration-300',
       isSuccess
         ? 'novatx:border-[var(--tuwa-success-icon)]/30 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]'
         : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',
@@ -221,7 +230,7 @@ export function ToastTransaction<T extends Transaction>({
   connectedWalletAddress,
   adapter,
 }: ToastTransactionProps<T>): JSX.Element {
-  const { actions, toast } = useLabels();
+  const { actions, toast, transaction } = useLabels();
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
@@ -253,7 +262,7 @@ export function ToastTransaction<T extends Transaction>({
   const classNames = customization?.classNames;
 
   // Next to speed-up and cancel as well: the details are where a transaction that never ends can be left behind
-  const canOpenDetails = !!openTxInfoModal && tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase();
+  const canOpenDetails = !!openTxInfoModal && isTxOfWallet(tx, connectedWalletAddress);
 
   return (
     <div
@@ -302,15 +311,14 @@ export function ToastTransaction<T extends Transaction>({
         <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
           <CStatusAwareText
             txStatus={tx.status}
-            source={tx.title}
-            fallback={tx.type}
+            source={txTitleSource(tx, transaction)}
             variant="title"
             applyColor
             className={classNames?.title}
           />
           <CStatusAwareText
             txStatus={tx.status}
-            source={tx.description}
+            source={txDescriptionSource(tx, transaction)}
             variant="description"
             className={classNames?.description}
           />
@@ -343,9 +351,11 @@ export function ToastTransaction<T extends Transaction>({
           >
             {canBeReplaced && (
               <div className={cn('novatx:flex novatx:items-center novatx:gap-4', classNames?.actionsContainer)}>
-                <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
-                  {actions.speedUp}
-                </SpeedUpButton>
+                {canSpeedUpTx(tx) && (
+                  <SpeedUpButton onClick={handleSpeedUp} className={classNames?.speedUpButton}>
+                    {actions.speedUp}
+                  </SpeedUpButton>
+                )}
                 <CancelButton onClick={handleCancel} className={classNames?.cancelButton}>
                   {actions.cancel}
                 </CancelButton>

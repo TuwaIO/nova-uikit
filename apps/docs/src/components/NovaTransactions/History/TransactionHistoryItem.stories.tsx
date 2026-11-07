@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionHistoryItem } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -117,20 +119,6 @@ export const Replaced: Story = {
 };
 
 /**
- * A Gelato transaction, demonstrating how `TransactionKey` shows the `txKey` as a "Task ID".
- */
-export const Gelato: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-      hash: '0x_on_chain_hash_from_gelato',
-    }),
-    adapter: [mockEvmAdapter],
-  },
-};
-
-/**
  * An example of a Solana transaction in the history view.
  */
 export const Solana: Story = {
@@ -141,22 +129,29 @@ export const Solana: Story = {
 };
 
 /**
- * A transaction with a custom title and timestamp, replacing the default components.
+ * The Isometric theme through the classes of the item, with a timestamp that replaces the default one.
  */
 export const WithCustomization: Story = {
-  name: 'With Custom Components',
+  name: 'With Customization',
+  decorators: [withIsometricTheme],
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
       pending: false,
     }),
     customization: {
+      classNames: {
+        container: `p-3 ${iso.box}`,
+        iconWrapper: `flex h-10 w-10 shrink-0 items-center justify-center ${iso.surface.border}`,
+        title: `text-sm ${iso.text.strong} ${iso.text.primary}`,
+        description: `mt-1 text-xs ${iso.text.normal} ${iso.text.secondary}`,
+        hashLabel: `pr-1 text-sm ${iso.text.strong} ${iso.text.primary}`,
+        hashLink: `flex items-center gap-x-1 underline underline-offset-2 ${iso.text.normal} ${iso.text.primary}`,
+        hashCopyButton: iso.button.copy,
+      },
       components: {
-        Title: (props) => (
-          <div className="font-bold text-[#0052ff] dark:text-[#38bdf8]">✨ Custom Title: {props.fallback}</div>
-        ),
         Timestamp: ({ timestamp }) => (
-          <div className="font-mono text-xs text-orange-500">⏰ {dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
+          <div className={`mb-1 ${iso.sectionTitle}`}>{dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
         ),
       },
     },

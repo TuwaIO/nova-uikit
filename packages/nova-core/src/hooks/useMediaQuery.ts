@@ -1,33 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 
 /**
- * A custom hook to detect if a media query matches the current screen dimensions.
- * Returns `false` on the server. In the browser it checks the query again on every `resize` event of `window`
- * (a listener that is removed on unmount).
+ * A custom hook to detect if a media query matches. Returns `false` on the server and during hydration, so the first
+ * render in the browser matches the markup of the server. In the browser it follows the `change` event of the query,
+ * through a listener that is removed on unmount.
  *
  * @param query - The media query string (e.g., '(max-width: 767px)').
  * @returns Whether the query matches.
  */
 export function useMediaQuery(query: string): boolean {
-  const getMatches = (q: string): boolean => {
-    if (typeof window !== 'undefined') {
-      return window.matchMedia(q).matches;
-    }
-    return false;
-  };
-
-  const [matches, setMatches] = useState<boolean>(getMatches(query));
-
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const listener = () => setMatches(media.matches);
-
-    // Re-check on mount and subscribe to changes
-    listener();
-    window.addEventListener('resize', listener);
-
-    return () => window.removeEventListener('resize', listener);
-  }, [query]);
-
-  return matches;
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const media = window.matchMedia(query);
+      media.addEventListener('change', onChange);
+      return () => media.removeEventListener('change', onChange);
+    },
+    [query],
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }

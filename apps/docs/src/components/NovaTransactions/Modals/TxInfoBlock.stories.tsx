@@ -1,10 +1,11 @@
-import { SparklesIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TxInfoBlock } from '@tuwaio/nova-transactions';
 import { OrbitAdapter, SOLANA_CHAIN_IDS } from '@tuwaio/orbit-core';
 import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import { monad, monadTestnet } from 'viem/chains';
 
+import { iso } from '../../../utils/customization/isometric';
+import { IsoCube, withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createInitialTx, createMockTx } from '../../../utils/mockTransactions';
 
@@ -68,20 +69,6 @@ export const InitialState: Story = {
 };
 
 /**
- * A transaction tracked by Gelato. The underlying `TransactionKey` component will
- * display the "Task ID".
- */
-export const GelatoTransaction: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-    }),
-    adapter: [mockEvmAdapter],
-  },
-};
-
-/**
  * A transaction on a test network (Monad Testnet). Testnet icons are recolored with `--tuwa-testnet-icons`.
  */
 export const DifferentNetwork: Story = {
@@ -109,17 +96,18 @@ export const DifferentNetworkMonad: Story = {
  * An example of customizing the `InfoRow` component: the rows of the network and the time. The hash row stays the default.
  */
 export const WithCustomization: Story = {
+  decorators: [withIsometricTheme],
   args: {
     ...Default.args,
     customization: {
       components: {
         InfoRow: ({ label, value }) => (
-          <div className="flex items-center justify-between gap-4 rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/10 p-2 dark:bg-[#38bdf8]/10">
-            <div className="flex items-center gap-2 font-medium text-[#0052ff] dark:text-[#38bdf8]">
-              <SparklesIcon className="h-4 w-4" />
+          <div className={`flex items-center justify-between gap-4 p-2 ${iso.box}`}>
+            <span className={`flex items-center gap-2 ${iso.sectionTitle}`}>
+              <IsoCube className="h-4 w-4" />
               {label}
-            </div>
-            <div className="font-bold text-[#1d4ed8] dark:text-[#7dd3fc]">{value}</div>
+            </span>
+            <span className={`text-sm ${iso.text.strong} ${iso.text.primary}`}>{value}</span>
           </div>
         ),
       },

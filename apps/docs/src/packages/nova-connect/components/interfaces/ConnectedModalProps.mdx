@@ -55,7 +55,7 @@ Customization options
 
 > `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L72)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:81](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L81)
 
 Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
 Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
@@ -70,7 +70,7 @@ Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency)
 
 > `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L51)
 
 Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
 
@@ -84,7 +84,7 @@ Pulsar adapter(s); with `transactionPool`, the connected modal shows the transac
 
 > `optional` **removeTxFromPool?**: (`txKey`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L49)
 
 `removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
 offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
@@ -125,7 +125,7 @@ Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.dev
 
 > `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L43)
 
 Transaction pool of Pulsar: the connect button shows the results and the wait of the transactions of the wallet
 
