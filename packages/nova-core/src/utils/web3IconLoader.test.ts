@@ -27,6 +27,11 @@ describe('web3IconImports', () => {
     expect(Object.keys(web3IconImports).sort()).toEqual(iconKeys.filter((key) => key in dynamicIconImports).sort());
   });
 
+  // The library's own TokenARB draws an "AR" with a plus: the generator keeps the mark of the network for it
+  it('draws ARB with the mark of Arbitrum', () => {
+    expect(String(web3IconImports.TokenARB)).toContain('NetworkArbitrumOne');
+  });
+
   it('leaves out the other token and exchange icons', () => {
     expect(Object.keys(web3IconImports).length).toBeLessThan(Object.keys(dynamicIconImports).length / 5);
   });

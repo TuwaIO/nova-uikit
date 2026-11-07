@@ -37,6 +37,10 @@ const files = new Map(
   ].map(([, key, file]) => [key, file]),
 );
 
+// Token icons of the library that draw something else under their name, seen by eye in the gallery of Storybook: the mark
+// of the network stands in. Look again after an update of @web3icons/react
+const WRONG_TOKEN_ICONS = { TokenARB: 'networks/NetworkArbitrumOne' };
+
 const keys = [
   ...new Set(
     [...networks, ...wallets]
@@ -65,7 +69,7 @@ const source = `/**
  * @internal
  */
 export const web3IconImports: Readonly<Record<string, () => Promise<{ default: unknown }>>> = {
-${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${files.get(key)}'),`).join('\n')}
+${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${WRONG_TOKEN_ICONS[key] ?? files.get(key)}'),`).join('\n')}
 };
 `;
 
