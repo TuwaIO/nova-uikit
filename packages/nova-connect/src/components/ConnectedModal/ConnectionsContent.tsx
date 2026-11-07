@@ -25,12 +25,23 @@ import {
   setChainId,
   shortAddress,
 } from '@tuwaio/orbit-core';
-import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ComponentType,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
-import { useSatelliteConnectStore } from '../../satellite';
+import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
+import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { WalletIcon } from '../WalletIcon';
 import { connectorDisplayName, isImpersonatedConnector } from './connectorName';
 
@@ -1190,6 +1201,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   const connect = useSatelliteConnectStore((store) => store.connect);
   const getAdapter = useSatelliteConnectStore((store) => store.getAdapter);
   const connecting = useSatelliteConnectStore((store) => store.connecting);
+  const store = useContext(SatelliteStoreContext);
   // The wallets of the store, updated when wallets are added after the modal opened
   const allConnectors = useWalletConnectors() ?? {};
 
@@ -1204,6 +1216,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
 
   // ARIA live region for announcements
   const [announcement, setAnnouncement] = useState<string>('');
+  // A recent wallet that could not connect: `connect` does not reject, and while a wallet is connected no toast tells it
+  const [connectFailed, setConnectFailed] = useState<boolean>(false);
 
   // Extract customization options
   const {
@@ -1374,7 +1388,19 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         });
         const walletName = connectorName(connectorType);
         if (isImpersonatedConnector(connectorType)) impersonatedHelpers.setImpersonated(address.trim());
+        setConnectFailed(false);
         await connect({ connectorType, chainId });
+
+        const state = store?.getState();
+        if (state?.connectionError) {
+          setConnectFailed(true);
+          setAnnouncement(labels.connectionError);
+          setTimeout(() => setAnnouncement(''), 3000);
+          customization?.handlers?.onConnectError?.(connectorType, new Error(state.connectionError.message));
+          return;
+        }
+        // Another wallet was chosen meanwhile: this one is not the one to announce
+        if (!state || !isConnectedAfterAttempt(state, connectorType)) return;
 
         // Announce to screen readers
         const announcement =
@@ -1396,7 +1422,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         setConnectingRecent(null);
       }
     },
-    [connect, customization, labels, appChains, solanaRPCUrls, connectorName],
+    [connect, store, customization, labels, appChains, solanaRPCUrls, connectorName],
   );
 
   /**
@@ -1629,6 +1655,12 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             );
           })}
         </RecentlyConnectedSection>
+      )}
+
+      {connectFailed && (
+        <p role="alert" className="novacon:mt-2 novacon:text-sm novacon:text-[var(--tuwa-error-text)]">
+          {labels.connectionError}
+        </p>
       )}
 
       {showAddWalletButton && (

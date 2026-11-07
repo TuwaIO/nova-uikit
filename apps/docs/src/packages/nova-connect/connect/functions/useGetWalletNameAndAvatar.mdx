@@ -6,11 +6,12 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **useGetWalletNameAndAvatar**(`options`): [`WalletNameAndAvatarData`](?path=/docs/packages-nova-connect-connect-interfaces-walletnameandavatardata--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:65](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L65)
+Defined in: [packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts:103](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useGetWalletNameAndAvatar.ts#L103)
 
 Resolves the name (ENS on EVM, SNS on Solana) and its avatar for the active wallet with `getName` and `getAvatar`
-of its Satellite adapter, which send requests to the name service. It resolves again when the address or the
-adapter changes, and cancels the previous lookup. Without a name it returns the shortened address.
+of its Satellite adapter, which send requests to the name service. All the callers share one lookup per wallet, kept
+for the life of the page; a failed one is not kept. It reads again when the address or the adapter changes, and drops
+the previous answer. Without a name it returns the shortened address.
 
 ## Parameters
 

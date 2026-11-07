@@ -9,6 +9,14 @@ export type ConnectedTxStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'rep
 
 const RESULTS: readonly ConnectedTxStatus[] = ['succeed', 'failed', 'replaced', 'cancelled'];
 
+/**
+ * Whether a status says that a transaction has ended.
+ *
+ * @param status - The status.
+ * @returns `true` for a result.
+ */
+export const isTxResult = (status: ConnectedTxStatus): boolean => RESULTS.includes(status);
+
 const asEvm = (tx: Transaction) => tx as unknown as EvmTransaction;
 
 /**

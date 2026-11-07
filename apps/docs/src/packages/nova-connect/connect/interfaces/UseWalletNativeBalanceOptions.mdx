@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Interfaces/UseWalletNativeBalanceOptions" />
+
+# UseWalletNativeBalanceOptions
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L25)
+
+Options of [useWalletNativeBalance](?path=/docs/packages-nova-connect-connect-functions-usewalletnativebalance--docs).
+
+## Properties
+
+### enabled?
+
+> `optional` **enabled?**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L30)
+
+Whether this caller needs the balance (default: `true`). When `false` it sends no request of its own, and `refetch`
+only forgets the balance, so that the next caller that needs it asks for the new one.

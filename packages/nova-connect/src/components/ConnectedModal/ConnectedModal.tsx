@@ -677,7 +677,8 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
       ...walletNameConfig,
     });
 
-    const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance();
+    // Closed, it asks nothing: an app without `withBalance` pays for no balance until the window opens
+    const { balance, isLoading: balanceLoading, refetch } = useWalletNativeBalance({ enabled: isConnectedModalOpen });
 
     /**
      * Handles network switching when user selects a different chain
@@ -841,6 +842,11 @@ export const ConnectedModal = forwardRef<HTMLDivElement, ConnectedModalProps>(
         transition,
       };
     })();
+
+    // The flag of a window closed with its last wallet: left set, the window came back with the next connection
+    useEffect(() => {
+      if (!hasActiveWallet && isConnectedModalOpen) setIsConnectedModalOpen(false);
+    }, [hasActiveWallet, isConnectedModalOpen, setIsConnectedModalOpen]);
 
     // Early return if no active wallet - prevents rendering empty modal
     if (!hasActiveWallet || !activeConnection) {

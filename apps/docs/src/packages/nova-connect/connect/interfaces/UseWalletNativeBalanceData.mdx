@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # UseWalletNativeBalanceData
 
-Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L27)
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:36](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L36)
 
 Result of [useWalletNativeBalance](?path=/docs/packages-nova-connect-connect-functions-usewalletnativebalance--docs).
 
@@ -14,9 +14,19 @@ Result of [useWalletNativeBalance](?path=/docs/packages-nova-connect-connect-fun
 
 > **balance**: [`UseWalletNativeBalanceState`](?path=/docs/packages-nova-connect-connect-type-aliases-usewalletnativebalancestate--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L29)
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:38](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L38)
 
-The balance, or `null` without a wallet, without `getBalance` or before it resolves
+The balance, or `null` without a wallet, without `getBalance`, before it resolves or after a failed request
+
+***
+
+### isError
+
+> **isError**: `boolean`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L42)
+
+Whether the last request failed, which tells a balance that cannot be read from one that is not known yet
 
 ***
 
@@ -24,7 +34,7 @@ The balance, or `null` without a wallet, without `getBalance` or before it resol
 
 > **isLoading**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L31)
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L40)
 
 Whether the balance is being requested
 
@@ -34,7 +44,7 @@ Whether the balance is being requested
 
 > **refetch**: () => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L33)
+Defined in: [packages/nova-connect/src/hooks/useWalletNativeBalance.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletNativeBalance.ts#L44)
 
 Requests the balance again (a failed refresh clears the kept balance)
 

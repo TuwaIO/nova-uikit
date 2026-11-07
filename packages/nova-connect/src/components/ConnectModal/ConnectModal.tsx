@@ -39,6 +39,7 @@ import { useWalletConnectors } from '../../hooks/useWalletConnectors';
 import { Connector, SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { InitialChains } from '../../types';
 import { getConnectChainId, getFilteredConnectors } from '../../utils';
+import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { AboutWallets, AboutWalletsCustomization } from './AboutWallets';
 import { Connecting, ConnectingCustomization } from './Connecting';
 import { ConnectorsSelections, ConnectorsSelectionsCustomization } from './ConnectorsSelections';
@@ -933,7 +934,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       });
 
       try {
-        await waitFor(() => store?.getState().activeConnection?.isConnected);
+        if (!store || !isConnectedAfterAttempt(store.getState(), connectorType)) return;
+        await waitFor(() => store.getState().activeConnection?.isConnected);
         setIsConnected(true);
         const modalCloseTime = setTimeout(() => setIsConnectModalOpen(false), 400);
         const isConnectedTimer = setTimeout(() => setIsConnected(false), 500);

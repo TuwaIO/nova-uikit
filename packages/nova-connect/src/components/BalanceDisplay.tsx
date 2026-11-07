@@ -367,10 +367,13 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Extract config
   const { showRefreshButton = true, successDuration = 1500 } = customization?.config ?? {};
 
-  // Show the success indicator when a load completes
+  // Determine if we have a valid balance
+  const hasBalance = Boolean(balance?.value && balance?.symbol);
+
+  // Show the success indicator when a load completes with a balance: a failed one has nothing to confirm
   if (prevIsLoading !== isLoading) {
     setPrevIsLoading(isLoading);
-    if (prevIsLoading && !isLoading) setShowSuccess(true);
+    if (prevIsLoading && !isLoading && hasBalance) setShowSuccess(true);
   }
 
   // Hide it after `successDuration`
@@ -384,9 +387,6 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   const handleRefetch = useCallback(() => {
     onRefetch?.();
   }, [onRefetch]);
-
-  // Determine if we have a valid balance
-  const hasBalance = Boolean(balance?.value && balance?.symbol);
 
   // Container classes
   const containerClasses = customization?.classNames?.container

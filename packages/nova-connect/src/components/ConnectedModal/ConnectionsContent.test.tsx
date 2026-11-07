@@ -14,6 +14,7 @@ vi.mock('react', async (importOriginal) => ({
   useMemo: (fn: () => unknown) => fn(),
   useRef: (initial: unknown) => ({ current: initial }),
   useSyncExternalStore: (_subscribe: unknown, getSnapshot: () => unknown) => getSnapshot(),
+  useContext: () => ({ getState: () => storeState }),
 }));
 
 vi.mock('../../hooks', () => ({
@@ -25,6 +26,7 @@ vi.mock('../../hooks', () => ({
 let storeState: Record<string, unknown> = {};
 
 vi.mock('../../satellite', () => ({
+  SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) => selector(storeState),
 }));
 
@@ -125,5 +127,44 @@ describe('ConnectionsContent', () => {
 
     await (row.props.onConnect as () => Promise<void>)();
     expect(connect).toHaveBeenCalledWith({ connectorType: connection.connectorType, chainId: 137 });
+  });
+
+  // `connect` does not reject: screen readers heard that it connected, and `onAfterConnect` ran for a wallet that had not
+  it('tells a recent wallet that failed to connect and runs only the error handler', async () => {
+    recentList = [[connection.connectorType, { address: connection.address, disconnectedTimestamp: 1 }]];
+    storeState.getConnectors = () => ({ evm: [{ name: 'MetaMask' }] });
+    storeState.connectionError = { message: 'User rejected the request' };
+    const onAfterConnect = vi.fn();
+    const onConnectError = vi.fn();
+
+    const element = ConnectionsContent({ customization: { handlers: { onAfterConnect, onConnectError } } }) as Element;
+    const recentSection = childrenOf(element).find((child) => childrenOf(child).length > 0) as Element;
+    const [row] = childrenOf(recentSection);
+    await (row.props.onConnect as () => Promise<void>)();
+
+    expect(onAfterConnect).not.toHaveBeenCalled();
+    expect(onConnectError).toHaveBeenCalledWith(
+      connection.connectorType,
+      expect.objectContaining({
+        message: 'User rejected the request',
+      }),
+    );
+  });
+
+  it('runs the after-handler when the recent wallet is the active one', async () => {
+    recentList = [[connection.connectorType, { address: connection.address, disconnectedTimestamp: 1 }]];
+    storeState.getConnectors = () => ({ evm: [{ name: 'MetaMask' }] });
+    const onAfterConnect = vi.fn();
+    const connect = vi.fn(async () => {
+      storeState.activeConnection = connection;
+    });
+    storeState.connect = connect;
+
+    const element = ConnectionsContent({ customization: { handlers: { onAfterConnect } } }) as Element;
+    const recentSection = childrenOf(element).find((child) => childrenOf(child).length > 0) as Element;
+    const [row] = childrenOf(recentSection);
+    await (row.props.onConnect as () => Promise<void>)();
+
+    expect(onAfterConnect).toHaveBeenCalledWith(connection.connectorType);
   });
 });

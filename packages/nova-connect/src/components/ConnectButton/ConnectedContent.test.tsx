@@ -111,7 +111,7 @@ describe('ConnectedContent formattedBalance handling', () => {
     const el = renderContent({ withBalance: true });
     const formatted = getRenderedFormattedBalance(el);
 
-    expect(formatted).toBe('0.000');
+    expect(formatted).toBe('—');
     expect(formatted).not.toContain('NaN');
   });
 
@@ -122,10 +122,11 @@ describe('ConnectedContent formattedBalance handling', () => {
     expect(getRenderedFormattedBalance(el)).toBe('0.000');
   });
 
-  it('safely formats null balance as "0.000"', () => {
+  // `0.000` on the button of a wallet holding 5 ETH, with an RPC that did not answer
+  it('shows a dash for a balance that is not known, not a balance of zero', () => {
     mockBalance = null;
     const el = renderContent({ withBalance: true });
 
-    expect(getRenderedFormattedBalance(el)).toBe('0.000');
+    expect(getRenderedFormattedBalance(el)).toBe('—');
   });
 });
