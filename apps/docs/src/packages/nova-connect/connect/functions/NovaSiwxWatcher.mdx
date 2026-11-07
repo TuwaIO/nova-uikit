@@ -6,25 +6,26 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaSiwxWatcher**(`props`): `null`
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:119](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L119)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L127)
 
-Signs the connected wallet in with SIWX. `NovaConnectProvider` renders it with its `siwx` prop, so apps do not
-render it themselves. It renders nothing.
+Signs wallets in with SIWX. `NovaConnectProvider` renders it with its `siwx` prop, so apps do not render it themselves. It
+renders nothing.
 
-- When a wallet connects (or the account changes), it asks the wallet to sign a SIWX message once per address
-  (`signIn` of `useSiwx` from `@tuwaio/siwx-react`: a wallet prompt, then `getNonce` and `verifier` requests to your
-  backend). A rejected or failed sign-in disconnects that wallet (if it is still the active one) and calls
-  `onError`. It also clears the SIWX session, unless the session belongs to another account (see `sessionScope`):
-  then the session keeps its `authenticated` status (which `@tuwaio/siwx-react` saves to `localStorage` again) and
-  Satellite Connect falls back to another wallet, such as the one of the session, which is not asked again. Without
-  `verifier` it logs a warning and does not sign in. A backend that could not answer ([NovaSiwxServiceError](?path=/docs/packages-nova-connect-connect-classes-novasiwxserviceerror--docs)) is no
-  failed sign-in: the wallet stays, no session ends, and it tries again every 15 seconds.
-- With the default `sessionScope` (`'chain'`), a network or cluster switch also asks the wallet to sign in again;
-  with `'account'`, a switch of the same account keeps the session and asks nothing.
-- When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until
-  Satellite Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by
-  `@tuwaio/siwx-react` is kept. With `endSessionOnlyAfterDisconnect`, it does so only once a wallet that this page
-  connected or restored has been disconnected.
+- A wallet counts as connected only after it has signed in: this sets the connection gate of the Satellite store
+  (`setConnectionGate`), so `connect` asks the wallet to sign a SIWX message (`signIn` of `useSiwx` from `@tuwaio/siwx-react`:
+  a wallet prompt, then `getNonce` and `verifier` requests to your backend) before `activeConnection` holds it, and
+  `connecting` stays `true` meanwhile. A rejection leaves the store as it was, with the error in `connectionError`, and
+  calls `onError`. A wallet whose session is valid is asked nothing. Without `verifier` it logs a warning and asks nothing.
+- After a page load nobody is asked anything: Satellite Connect restores the wallet only if the session restored by
+  `@tuwaio/siwx-react` covers it. Otherwise the page shows Connect, and the signature comes after the click.
+- A connected wallet that moves to another account (with the default `sessionScope` `'chain'`, also another network) is asked
+  to sign in, and disconnected if it rejects. With `'account'`, a network switch of the same account asks nothing.
+- When the session of the connected wallet ends, as with `signOut` of `useNovaSiwx` or `reset` of `useSiwxSessionStore`, the
+  wallet is disconnected: connected means signed in. It is not asked to sign again.
+- A backend that could not answer ([NovaSiwxServiceError](?path=/docs/packages-nova-connect-connect-classes-novasiwxserviceerror--docs)) is no failed sign-in: see there.
+- When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until Satellite
+  Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by `@tuwaio/siwx-react` is kept. With
+  `endSessionOnlyAfterDisconnect`, it does so only once a wallet that this page connected or restored has been disconnected.
 
 ## Parameters
 

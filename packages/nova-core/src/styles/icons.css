@@ -21,9 +21,31 @@
     transform: translateX(-3px);
   }
 
+  /* The lid turns on a hinge at the right end of its rim, as a real one does: a straight lift would read as a broken icon */
+  .tuwa-trash-lid {
+    transform-box: view-box;
+    transform-origin: 20.25px 5.96px;
+    transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  a:hover .tuwa-trash-lid,
+  a:focus-visible .tuwa-trash-lid,
+  button:not(:disabled):hover .tuwa-trash-lid,
+  button:not(:disabled):focus-visible .tuwa-trash-lid {
+    transform: rotate(14deg) translateY(-1px);
+  }
+
+  /* Faster than it opens: a click is over in about 100 ms, and the row of the button may be gone after it */
+  a:active .tuwa-trash-lid,
+  button:active .tuwa-trash-lid {
+    transform: none;
+    transition-duration: 90ms;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .tuwa-link-arrow,
-    .tuwa-exit-arrow {
+    .tuwa-exit-arrow,
+    .tuwa-trash-lid {
       transition: none;
       transform: none !important;
     }

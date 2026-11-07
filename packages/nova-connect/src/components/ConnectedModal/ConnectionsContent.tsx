@@ -2,7 +2,7 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import {
   cn,
   CopyIcon,
@@ -12,6 +12,7 @@ import {
   MorphText,
   NetworkIcon,
   QuasarLoader,
+  TrashIcon,
   useCopyToClipboard,
 } from '@tuwaio/nova-core';
 import {
