@@ -7,8 +7,8 @@ import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '
 import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { useLabels } from '../providers';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import { afterTrackedAction, isUserRejection, trackedButtonStep } from '../utils/replacement';
 
 type ButtonStatus = 'idle' | 'loading' | 'succeed' | 'failed' | 'replaced';

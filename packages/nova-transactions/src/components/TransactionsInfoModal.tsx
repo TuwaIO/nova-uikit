@@ -7,7 +7,8 @@ import { CloseIcon, cn, Dialog, DialogClose, DialogContent, DialogHeader, Dialog
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import { ComponentPropsWithoutRef, ComponentType, useState } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { latestRecordOf } from '../utils/replacement';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 import { TransactionDetails } from './TransactionDetails';

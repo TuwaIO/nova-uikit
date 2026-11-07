@@ -10,7 +10,7 @@ import { cn, CopyIcon, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, JSX, ReactNode } from 'react';
 import { ToastContentProps } from 'react-toastify';
 
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 
 // =============================================================================
 // Customization sub-types

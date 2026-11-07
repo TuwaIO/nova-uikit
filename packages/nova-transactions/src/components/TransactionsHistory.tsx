@@ -17,7 +17,8 @@ import {
   useState,
 } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { latestRecordOf, successorOf } from '../utils/replacement';
 import { TransactionDetails, TransactionDetailsCustomization } from './TransactionDetails';
 import { TransactionHistoryItem, TransactionHistoryItemProps } from './TransactionHistoryItem';

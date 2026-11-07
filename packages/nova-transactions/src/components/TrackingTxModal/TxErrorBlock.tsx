@@ -7,7 +7,7 @@ import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { useMemo } from 'react';
 
-import { useLabels } from '../../providers';
+import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 
 /** Class names of the parts of {@link TxErrorBlock}. */
 export type TxErrorBlockClassNames = {

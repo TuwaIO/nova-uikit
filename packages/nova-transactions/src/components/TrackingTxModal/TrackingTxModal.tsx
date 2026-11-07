@@ -26,7 +26,9 @@ import {
 import { motion, MotionProps } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../../providers';
+import { useNovaTransactionsError } from '../../providers/NovaTransactionsErrorContext';
+import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../../providers/NovaTransactionsProvider';
 import { canReplaceTx, canSpeedUpTx, isUserRejection, latestRecordOf, runReplacement } from '../../utils/replacement';
 import { progressOf, trackerGaveUp, txTitleSource } from '../../utils/txStatus';
 import {

@@ -14,8 +14,8 @@ import { defaultLabels } from '../../i18n/en';
 
 const { showPreSubmitErrorToast } = vi.hoisted(() => ({ showPreSubmitErrorToast: vi.fn() }));
 
-vi.mock('../../providers', () => ({
-  useLabels: () => defaultLabels,
+vi.mock('../../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
+vi.mock('../../providers/NovaTransactionsErrorContext', () => ({
   useNovaTransactionsError: () => ({ showPreSubmitErrorToast }),
 }));
 

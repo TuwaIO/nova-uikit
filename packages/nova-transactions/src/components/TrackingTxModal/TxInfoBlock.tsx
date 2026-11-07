@@ -9,7 +9,8 @@ import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/puls
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../../providers';
+import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../../providers/NovaTransactionsProvider';
 import { hasConfirmations } from '../../utils/txStatus';
 import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';

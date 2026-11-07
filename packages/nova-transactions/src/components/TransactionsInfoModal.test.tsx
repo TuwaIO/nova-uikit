@@ -10,9 +10,7 @@ vi.mock('react', async () => ({
   ...(await import('../testing/hookHarness')).hooks,
 }));
 
-vi.mock('../providers', () => ({
-  useLabels: () => defaultLabels,
-}));
+vi.mock('../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
 
 const { render, unmount } = await import('../testing/hookHarness');
 const { TransactionsInfoModal } = await import('./TransactionsInfoModal');

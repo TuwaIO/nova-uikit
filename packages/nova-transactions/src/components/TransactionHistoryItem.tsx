@@ -10,8 +10,8 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { ComponentType, JSX } from 'react';
 
-import { NovaTransactionsProviderProps } from '../providers';
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { txTitleSource } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';

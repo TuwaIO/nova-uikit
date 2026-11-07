@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 
 import { defineConfig, type Options } from 'tsup';
@@ -56,16 +57,30 @@ async function markClientEntry() {
   }
 }
 
+const publicEntries = { index: './src/index.ts', 'web3-icons': './src/web3-icons.ts', utils: './src/utils/index.ts' };
+
+// Every component is an entry of its own, so that a page takes only what it imports: with the entry points alone a page that wanted
+// `cn` and an icon evaluated the imports of the dialog and of `framer-motion` too. `package.json` lists these files as free of side
+// effects, and the bundler of an app leaves out what is not used. Flat, for the path of `web3-icons` above, and without the two
+// components of that entry: an entry of their own would take the loader out of it.
+const moduleEntries = Object.fromEntries(
+  ['components', 'hooks'].flatMap((directory) =>
+    readdirSync(`./src/${directory}`)
+      .filter((file) => /\.tsx?$/.test(file) && !/\.(test|stories)\.|^(Web3|Token)IconLazy\./.test(file))
+      .map((file) => [`module-${file.replace(/\.tsx?$/, '')}`, `./src/${directory}/${file}`]),
+  ),
+);
+
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
-    entry: { index: './src/index.ts', 'web3-icons': './src/web3-icons.ts', utils: './src/utils/index.ts' },
+    entry: { ...publicEntries, ...moduleEntries },
     treeshake: true,
     sourcemap: false,
     splitting: true,
     minify: true,
     clean: true,
-    dts: true,
+    dts: { entry: publicEntries },
     outExtension({ format }) {
       return {
         js: `.${format === 'esm' ? 'js' : 'cjs'}`,

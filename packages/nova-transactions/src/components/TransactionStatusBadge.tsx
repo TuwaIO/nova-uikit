@@ -6,7 +6,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import { statusLabelOf } from '../utils/txStatus';
 
 const SuccessIcon = ({ className }: { className?: string }) => <DrawnCheck variant="disc" className={className} />;

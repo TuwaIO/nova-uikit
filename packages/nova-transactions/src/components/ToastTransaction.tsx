@@ -9,7 +9,9 @@ import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 import { ComponentType, JSX, ReactNode } from 'react';
 import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
-import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
+import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { canReplaceTx, canSpeedUpTx, runReplacement } from '../utils/replacement';
 import {
   hasConfirmations,

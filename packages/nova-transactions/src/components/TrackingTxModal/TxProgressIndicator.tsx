@@ -7,7 +7,7 @@ import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText } from '@tuwaio/nova-c
 import { motion, useReducedMotion } from 'framer-motion';
 import { ComponentType } from 'react';
 
-import { useLabels } from '../../providers';
+import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 
 /** State of a step of {@link TxProgressIndicator}, which sets its colors and icon. */
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';

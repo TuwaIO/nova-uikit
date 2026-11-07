@@ -8,7 +8,8 @@ import { selectAdapterByKey } from '@tuwaio/orbit-core';
 import { Transaction, TransactionTracker } from '@tuwaio/pulsar-core';
 import { ReactNode } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { explorerUrlOfHash, explorerUrlOfReplaced } from '../utils/replacement';
 import { HashLink, HashLinkProps } from './HashLink';
 

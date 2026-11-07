@@ -19,9 +19,9 @@ vi.mock('react', async (importOriginal) => ({
   useState: (initial: () => unknown) => [initial(), () => {}],
 }));
 
-vi.mock('../providers', () => ({
-  useLabels: () => defaultLabels,
-  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: () => {} }),
+vi.mock('../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
+vi.mock('../providers/NovaTransactionsErrorContext', () => ({
+  useNovaTransactionsError: () => ({ showPreSubmitErrorToast: () => undefined }),
 }));
 
 import { TransactionDetails, TransactionDetailsProps } from './TransactionDetails';

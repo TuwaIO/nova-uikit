@@ -6,7 +6,7 @@
 import { cn, CopyIcon, ExternalLinkIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import { shortAddress } from '@tuwaio/orbit-core';
 
-import { useLabels } from '../providers';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 
 /** Props of {@link HashLink}. */
 export type HashLinkProps = {

@@ -19,7 +19,7 @@ vi.mock('react', async (importOriginal) => {
   };
 });
 
-vi.mock('../providers', () => ({ useLabels: () => defaultLabels }));
+vi.mock('../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
 vi.mock('./TransactionDetails', () => ({ TransactionDetails: () => null }));
 vi.mock('./TransactionHistoryItem', () => ({ TransactionHistoryItem: () => null }));
 

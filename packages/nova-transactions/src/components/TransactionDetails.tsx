@@ -42,7 +42,9 @@ import {
 import dayjs from 'dayjs';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
-import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
+import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
+import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
+import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import {
   canReplaceTx,
   canSpeedUpTx,
