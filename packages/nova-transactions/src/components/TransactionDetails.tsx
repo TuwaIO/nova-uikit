@@ -281,7 +281,12 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
         </span>
         <CopyButton value={jsonStr} dark className={classNames?.copyButton} />
       </div>
-      <div className={cn('NovaCustomScroll novatx:max-h-[300px] novatx:overflow-auto', classNames?.container)}>
+      <div
+        className={cn(
+          'NovaCustomScroll novatx:relative novatx:max-h-[300px] novatx:overflow-auto',
+          classNames?.container,
+        )}
+      >
         <pre
           className={cn(
             'novatx:m-0 novatx:px-5 novatx:py-4 novatx:font-mono novatx:text-[13px] novatx:leading-relaxed novatx:whitespace-pre-wrap novatx:text-slate-200 novatx:[overflow-wrap:anywhere]',

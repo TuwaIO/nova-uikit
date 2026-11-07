@@ -399,3 +399,20 @@ export const web3IconImports: Readonly<Record<string, () => Promise<{ default: u
   WalletZengo: () => import('@web3icons/react/icons/wallets/WalletZengo'),
   WalletZerion: () => import('@web3icons/react/icons/wallets/WalletZerion'),
 };
+
+/**
+ * The styles of the token icons of {@link web3IconImports} that do not have all three, by component name. `@web3icons/react`
+ * draws nothing for a style an icon does not have.
+ * @internal
+ */
+export const web3TokenIconVariants: Readonly<Record<string, readonly string[]>> = {
+  TokenCORE: ['branded', 'background'],
+  TokenCRV: ['branded', 'background'],
+  TokenCRVUSD: ['branded', 'background'],
+  TokenETHW: ['branded', 'background'],
+  TokenLUNA: ['branded', 'background'],
+  TokenPEPE: ['branded', 'background'],
+  TokenRETH: ['branded', 'background'],
+  TokenSHIB: ['branded', 'background'],
+  TokenXLM: ['mono'],
+};

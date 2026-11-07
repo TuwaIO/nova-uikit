@@ -127,4 +127,12 @@ describe('the pages of TransactionsHistory', () => {
 
     expect(fetchNextPage).not.toHaveBeenCalled();
   });
+
+  // The screen reader text of a row is `absolute`: it escaped the list and stretched the wallet window, with a second scroll
+  // and an empty band under its footer
+  it('keeps what is positioned in the rows inside the list', () => {
+    const tree = JSON.stringify(renderList(pagination()));
+
+    expect(tree).toMatch(/NovaCustomScroll novatx:relative/);
+  });
 });

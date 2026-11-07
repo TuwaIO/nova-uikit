@@ -22,7 +22,10 @@ const BUNDLED = new Set([...iconMapSource.matchAll(/^\s*Token(\w+): \(\) =>/gm)]
 // What a person looks for first comes first: what is in the bundle, then by market cap
 const TOKENS: Token[] = libraryTokens
   .map((token) => {
-    const symbol = token.filePath.replace('token:', '');
+    // A token with no file of its own has the path of its network, `network:ton`, which is no symbol
+    const symbol = token.filePath.startsWith('token:')
+      ? token.filePath.replace('token:', '')
+      : token.symbol.toUpperCase();
     return {
       symbol,
       name: token.name,
@@ -105,10 +108,10 @@ const TokenGallery = () => {
             href="https://www.web3icons.io/?type=token&variant=branded"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-1.5 text-sm text-[var(--tuwa-text-accent)] hover:underline"
+            className="mt-2 inline-flex items-center gap-1.5 text-sm whitespace-nowrap text-[var(--tuwa-text-accent)] hover:underline"
           >
             The original set on web3icons.io
-            <ExternalLinkIcon />
+            <ExternalLinkIcon className="h-3.5 w-3.5" />
           </a>
         </header>
 

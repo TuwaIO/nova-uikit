@@ -8,6 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { networks } from '@web3icons/common/metadata/networks';
+import { tokens } from '@web3icons/common/metadata/tokens';
 import { wallets } from '@web3icons/common/metadata/wallets';
 import { format, resolveConfig } from 'prettier';
 
@@ -45,6 +46,14 @@ const WRONG_TOKEN_ICONS = {
   TokenTAO: 'networks/NetworkBittensor',
 };
 
+// Tokens whose icon in the library is the mark of their network, with no file of their own: TON, INJ, HYPE and others
+const NETWORK_TOKEN_ICONS = Object.fromEntries(
+  tokens
+    .filter((token) => token.filePath.startsWith('network:') && !files.has(`Token${token.symbol.toUpperCase()}`))
+    .map((token) => [`Token${token.symbol.toUpperCase()}`, files.get(getWeb3IconKey(token.filePath))]),
+);
+const tokenIconFiles = { ...NETWORK_TOKEN_ICONS, ...WRONG_TOKEN_ICONS };
+
 const keys = [
   ...new Set(
     [...networks, ...wallets]
@@ -55,7 +64,25 @@ const keys = [
   ),
 ]
   .filter((key) => files.has(key))
+  .concat(Object.keys(NETWORK_TOKEN_ICONS))
   .sort();
+
+// The styles of the token icons above that do not have all three: `@web3icons/react` draws nothing for a style an icon
+// does not have, and the metadata is too long to load in a browser. Those drawn with a network mark have what it has
+const networkVariants = new Map(
+  networks.map((network) => [`networks/${getWeb3IconKey(network.filePath)}`, network.variants]),
+);
+const tokenVariants = Object.fromEntries(
+  tokens
+    .map((token) => [
+      getWeb3IconKey(`token:${token.filePath.startsWith('token:') ? token.filePath.slice(6) : token.symbol}`),
+      token.variants,
+    ])
+    .filter(([key]) => keys.includes(key))
+    .map(([key, variants]) => [key, networkVariants.get(WRONG_TOKEN_ICONS[key]) ?? variants])
+    .filter(([, variants]) => variants.length < 3)
+    .sort(([a], [b]) => a.localeCompare(b)),
+);
 
 const output = path.join(root, 'src', 'utils', 'web3IconImports.ts');
 const source = `/**
@@ -73,8 +100,15 @@ const source = `/**
  * @internal
  */
 export const web3IconImports: Readonly<Record<string, () => Promise<{ default: unknown }>>> = {
-${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${WRONG_TOKEN_ICONS[key] ?? files.get(key)}'),`).join('\n')}
+${keys.map((key) => `  ${key}: () => import('@web3icons/react/icons/${tokenIconFiles[key] ?? files.get(key)}'),`).join('\n')}
 };
+
+/**
+ * The styles of the token icons of {@link web3IconImports} that do not have all three, by component name. \`@web3icons/react\`
+ * draws nothing for a style an icon does not have.
+ * @internal
+ */
+export const web3TokenIconVariants: Readonly<Record<string, readonly string[]>> = ${JSON.stringify(tokenVariants)};
 `;
 
 writeFileSync(output, await format(source, { ...(await resolveConfig(output)), filepath: output }));

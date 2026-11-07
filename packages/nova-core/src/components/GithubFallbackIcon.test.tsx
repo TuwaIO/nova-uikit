@@ -48,4 +48,36 @@ describe('GithubFallbackIcon', () => {
 
     expect(fetch).not.toHaveBeenCalled();
   });
+
+  // OKB has only `mono`: asking for its `background` showed a letter
+  it('tries the other styles when the repository does not have the one asked for', async () => {
+    const fetch = vi.fn(async (url: string) =>
+      url.includes('/mono/')
+        ? { ok: true, status: 200, text: async () => '<svg></svg>' }
+        : { ok: false, status: 404, text: async () => '' },
+    );
+    vi.stubGlobal('fetch', fetch);
+
+    GithubFallbackIcon({
+      githubSrc: 'tokens/background/OKB.svg',
+      alternativeSrcs: ['tokens/branded/OKB.svg', 'tokens/mono/OKB.svg'],
+    });
+    await settle();
+
+    expect(fetch.mock.calls.map(([url]) => url.split('/raw-svgs/')[1])).toEqual([
+      'tokens/background/OKB.svg',
+      'tokens/branded/OKB.svg',
+      'tokens/mono/OKB.svg',
+    ]);
+  });
+
+  it('stops at a failure that says nothing of the file', async () => {
+    const fetch = vi.fn().mockResolvedValue({ ok: false, status: 503 });
+    vi.stubGlobal('fetch', fetch);
+
+    GithubFallbackIcon({ githubSrc: 'tokens/background/DOWN.svg', alternativeSrcs: ['tokens/mono/DOWN.svg'] });
+    await settle();
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
 });

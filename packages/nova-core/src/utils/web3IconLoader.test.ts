@@ -1,14 +1,19 @@
 import { networks } from '@web3icons/common/metadata/networks';
+import { tokens } from '@web3icons/common/metadata/tokens';
 import { wallets } from '@web3icons/common/metadata/wallets';
 import dynamicIconImports from '@web3icons/react/dynamicIconImports';
 import { describe, expect, it } from 'vitest';
 
 import { PAYMENT_TOKENS, POPULAR_TOKENS } from '../../scripts/web3IconTokens.mjs';
 import { getWeb3IconKey, loadWeb3Icon } from '../utils/web3IconLoader';
-import { web3IconImports } from './web3IconImports';
+import { web3IconImports, web3TokenIconVariants } from './web3IconImports';
 
 // The keys of the icons that NetworkIcon, WalletIcon and TokenIcon can render: those named by the network and wallet
 // metadata, and the tokens of scripts/web3IconTokens.mjs
+const networkMarkedTokens = tokens.filter(
+  (token) => token.filePath.startsWith('network:') && !(`Token${token.symbol.toUpperCase()}` in dynamicIconImports),
+);
+const networkTokenKeys = networkMarkedTokens.map((token) => `Token${token.symbol.toUpperCase()}`);
 const tokenKeys = [...PAYMENT_TOKENS, ...POPULAR_TOKENS].map((symbol) => getWeb3IconKey(`token:${symbol}`));
 const iconKeys = [
   ...new Set(
@@ -24,7 +29,9 @@ describe('web3IconImports', () => {
   it('lists exactly the icons of @web3icons/react that the network and wallet metadata and the token list name', () => {
     // After an update of @web3icons/react, @web3icons/common or the token list, run `pnpm generate:web3-icons` in
     // packages/nova-core
-    expect(Object.keys(web3IconImports).sort()).toEqual(iconKeys.filter((key) => key in dynamicIconImports).sort());
+    expect(Object.keys(web3IconImports).sort()).toEqual(
+      [...iconKeys.filter((key) => key in dynamicIconImports), ...networkTokenKeys].sort(),
+    );
   });
 
   // The library's own icons under these names draw something else, ARB an "AR" with a plus: the generator keeps the mark
@@ -35,6 +42,21 @@ describe('web3IconImports', () => {
     ['TokenTAO', 'NetworkBittensor'],
   ])('draws %s with %s', (token, network) => {
     expect(String(web3IconImports[token])).toContain(network);
+  });
+
+  // In the gallery they were `network:ton` with a letter: the library has no token file for them
+  it.each(networkMarkedTokens.map((token) => [`Token${token.symbol.toUpperCase()}`, getWeb3IconKey(token.filePath)]))(
+    'draws %s, which has no file of its own, with %s',
+    (token, network) => {
+      expect(String(web3IconImports[token])).toContain(network);
+    },
+  );
+
+  // XLM has only `mono` and CRV no `mono`: the library draws nothing for a style an icon does not have
+  it('knows the bundled tokens that do not have all three styles', () => {
+    expect(web3TokenIconVariants.TokenXLM).toEqual(['mono']);
+    expect(web3TokenIconVariants.TokenCRV).not.toContain('mono');
+    expect(web3TokenIconVariants.TokenUSDC).toBeUndefined();
   });
 
   it('leaves out the other token and exchange icons', () => {

@@ -409,7 +409,9 @@ export function TransactionsHistory<T extends Transaction>({
       return (
         <div
           className={cn(
-            'NovaCustomScroll novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
+            // Positioned: a screen reader text of a row is `absolute`, and it escaped an unpositioned list, which stretched the
+            // whole window, with a second scroll and an empty band under its footer
+            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
