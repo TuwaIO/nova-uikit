@@ -105,3 +105,18 @@ describe('the color of testnet icons', () => {
     expect(testnet).toEqual(['#6b655e', '#6b655e']);
   });
 });
+
+// Each package builds its classes on the monospace font of Tailwind, the font of the system, unless it is told otherwise: the wallet
+// window and the transactions read in another font than Nova Core itself
+describe('the monospace font of the packages of Nova', () => {
+  const rules = {
+    ':root': css.slice(css.indexOf(':root {'), css.indexOf(':lang(uk),')),
+    Ukrainian: css.slice(css.indexOf(':lang(uk),'), css.indexOf('.dark {')),
+  };
+
+  it.each(Object.entries(rules))('is the font of TUWA in %s', (_name, rule) => {
+    for (const prefix of ['novacon', 'novatx', 'novapay']) {
+      expect(rule).toContain(`--${prefix}-font-mono: var(--tuwa-font-mono);`);
+    }
+  });
+});
