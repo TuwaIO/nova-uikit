@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.12.0...nova-transactions-v0.13.0) (2026-11-07)
+
+
+### Features
+
+* the Nova pass: a sign-in that waits for the signature, sounds, Payments and the audit ([#139](https://github.com/TuwaIO/nova-uikit/issues/139)) ([c39b112](https://github.com/TuwaIO/nova-uikit/commit/c39b112897e49df9869f4c8b8de198670b3ce4a5))
+
+
+### Bug Fixes
+
+* **nova-transactions:** import the dayjs plugin with its file extension: dayjs has no exports map, and Node's ESM loader ([c39b112](https://github.com/TuwaIO/nova-uikit/commit/c39b112897e49df9869f4c8b8de198670b3ce4a5))
+
 ## [0.12.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.11.0...nova-transactions-v0.12.0) (2026-11-06)
 
 
