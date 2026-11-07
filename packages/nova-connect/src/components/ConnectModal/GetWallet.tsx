@@ -2,7 +2,7 @@
  * @file GetWallet component with comprehensive customization options and staggered animations.
  */
 
-import { cn, formatLabel, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, StarsBackground, useNovaSounds, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, useEffect, useEffectEvent } from 'react';
 
@@ -622,6 +622,12 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
     ref,
   ) => {
     // Get localized labels for UI text
+    // Each time the screen opens
+    const play = useNovaSounds();
+    useEffect(() => {
+      play('getWallet');
+    }, [play]);
+
     const labels = useNovaConnectLabels();
 
     // Extract customization options

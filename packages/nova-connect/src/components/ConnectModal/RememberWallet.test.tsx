@@ -20,6 +20,8 @@ vi.mock('framer-motion', () => ({
 }));
 
 const store = vi.hoisted(() => ({ rememberWallet: false, setRememberWallet: vi.fn() }));
+const play = vi.hoisted(() => vi.fn());
+vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play }));
 vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: typeof store) => unknown) => selector(store),
 }));
@@ -137,6 +139,15 @@ describe('RememberWallet', () => {
     expect(capture).toBe(true);
     expect(event.stopPropagation).toHaveBeenCalled();
     expect(tooltip(renderNodes())).toBeUndefined();
+  });
+
+  // Owner, 2026-11-07: the checkbox has a sound of its own
+  it('plays a sound when it is pressed, and still changes the choice', () => {
+    const input = renderNodes().find((n) => n.type === 'input')!;
+    (input.props!.onChange as Handler)({ target: { checked: true } });
+
+    expect(play).toHaveBeenCalledWith('checkbox');
+    expect(store.setRememberWallet).toHaveBeenCalledWith(true);
   });
 
   it('can be hidden', () => {

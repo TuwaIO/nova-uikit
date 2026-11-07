@@ -18,6 +18,9 @@ const WHEN: Record<NovaSoundName, string> = {
   modalClose: 'A dialog closed',
   externalLink: 'A link to another site',
   addWallet: 'Connect another wallet',
+  getWallet: 'The Get a wallet screen',
+  aboutWallets: 'The About wallets screen',
+  checkbox: 'Remember this wallet',
 };
 
 /** Every sound of the Nova components, to listen to. */

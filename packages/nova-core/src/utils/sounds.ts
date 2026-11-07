@@ -19,7 +19,10 @@ export type NovaSoundName =
   | 'modalOpen'
   | 'modalClose'
   | 'externalLink'
-  | 'addWallet';
+  | 'addWallet'
+  | 'getWallet'
+  | 'aboutWallets'
+  | 'checkbox';
 
 /** Every {@link NovaSoundName}. */
 export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
@@ -38,6 +41,9 @@ export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
   'modalClose',
   'externalLink',
   'addWallet',
+  'getWallet',
+  'aboutWallets',
+  'checkbox',
 ];
 
 /**
@@ -201,6 +207,28 @@ const SOUNDS: Record<NovaSoundName, Sound> = {
       { frequency: 1319, at: 0.14, duration: 0.2, gain: 0.35, shimmer: 6 },
     ],
     echoes: 1,
+  },
+  // The start of a voyage: open fifths that go on ringing, for the screen that sends a person to get a wallet
+  getWallet: {
+    tones: [
+      { frequency: 392, at: 0, duration: 0.18, gain: 0.45, shimmer: 8 },
+      { frequency: 587, at: 0.08, duration: 0.22, gain: 0.45, shimmer: 8 },
+      { frequency: 880, at: 0.16, duration: 0.3, gain: 0.4, shimmer: 6 },
+    ],
+    echoes: 2,
+  },
+  // A key that turns in a lock, and what it opens, for the screen whose picture is that key
+  aboutWallets: {
+    tones: [
+      { frequency: 1047, at: 0, duration: 0.05, gain: 0.3, wave: 'triangle' },
+      { frequency: 1319, at: 0.06, duration: 0.05, gain: 0.3, wave: 'triangle' },
+      { frequency: 1568, glideTo: 1760, at: 0.12, duration: 0.28, gain: 0.35, shimmer: 6 },
+    ],
+    echoes: 1,
+  },
+  // A small switch, muffled as a copy is
+  checkbox: {
+    tones: [{ frequency: 1200, glideTo: 900, at: 0, duration: 0.035, gain: 0.28, wave: 'triangle' }],
   },
 };
 
