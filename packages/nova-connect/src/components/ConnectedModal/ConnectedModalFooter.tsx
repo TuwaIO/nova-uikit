@@ -241,6 +241,7 @@ const DefaultExplorerLink: React.FC<
         href={href}
         className={cn(standardButtonClasses, className)}
         target="_blank"
+        data-nova-external-link=""
         rel="noopener noreferrer"
         aria-describedby={ariaDescribedBy}
         data-testid={testId}

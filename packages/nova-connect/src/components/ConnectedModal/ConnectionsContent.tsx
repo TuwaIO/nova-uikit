@@ -1672,6 +1672,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
         <button
           type="button"
           onClick={() => {
+            play('addWallet');
             setIsConnectModalOpen(true);
           }}
           className={cn(

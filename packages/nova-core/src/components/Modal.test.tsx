@@ -1,11 +1,17 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+const { play, effects } = vi.hoisted(() => ({ play: vi.fn(), effects: [] as Array<() => void | (() => void)> }));
+
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useState: (initial: unknown) => [initial, vi.fn()],
   useRef: (initial: unknown) => ({ current: initial }),
-  useEffect: vi.fn(),
+  useEffect: (effect: () => void | (() => void)) => {
+    effects.push(effect);
+  },
 }));
+
+vi.mock('../hooks/useNovaSounds', () => ({ useNovaSounds: () => play }));
 
 import { watchDialogFrameHeight } from './dialogFrameHeight';
 import { DialogContent, isInsideToast } from './Modal';
@@ -21,6 +27,20 @@ function elements(node: unknown): Element[] {
 }
 
 describe('DialogContent', () => {
+  // Owner, 2026-11-07: a dialog opens and closes with a muffled sound
+  it('plays a sound when it opens, and another when it closes', () => {
+    effects.length = 0;
+    play.mockClear();
+    const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
+    render({ children: 'content' }, null);
+
+    const cleanups = effects.map((effect) => effect());
+    expect(play).toHaveBeenCalledExactlyOnceWith('modalOpen');
+
+    cleanups.forEach((cleanup) => cleanup?.());
+    expect(play).toHaveBeenLastCalledWith('modalClose');
+  });
+
   it('never scales its frame with a layout animation (the scale left an empty band under shrinking content)', () => {
     const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
     const tree = render({ children: 'content' }, null);

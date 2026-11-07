@@ -114,6 +114,25 @@ describe('playNovaSound', () => {
     expect(started).toHaveBeenCalled();
   });
 
+  // Owner, 2026-11-07: muffled, and no chord of them when one dialog replaces another
+  it('lets a dialog that opens give way to the sound that came with it', () => {
+    playNovaSound('addWallet', true);
+    const before = started.mock.calls.length;
+
+    clock += 20;
+    playNovaSound('modalClose', true);
+    playNovaSound('modalOpen', true);
+    expect(started).toHaveBeenCalledTimes(before);
+
+    clock += 200;
+    playNovaSound('modalOpen', true);
+    expect(started).toHaveBeenCalledTimes(before + 1);
+
+    clock += 20;
+    playNovaSound('modalClose', true);
+    expect(started).toHaveBeenCalledTimes(before + 1);
+  });
+
   it('makes one sound of two parts that report the same moment', () => {
     playNovaSound('balanceRefresh', true);
     const once = started.mock.calls.length;

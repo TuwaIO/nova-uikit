@@ -13,6 +13,10 @@ const WHEN: Record<NovaSoundName, string> = {
   copy: 'A copy',
   balanceRefresh: 'A balance refreshed by hand',
   remove: 'A recent wallet removed',
+  modalOpen: 'A dialog opened',
+  modalClose: 'A dialog closed',
+  externalLink: 'A link to another site',
+  addWallet: 'Connect another wallet',
 };
 
 /** Every sound of the Nova components, to listen to. */

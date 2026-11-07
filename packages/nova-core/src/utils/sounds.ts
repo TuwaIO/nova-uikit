@@ -14,7 +14,11 @@ export type NovaSoundName =
   | 'networkSwitch'
   | 'copy'
   | 'balanceRefresh'
-  | 'remove';
+  | 'remove'
+  | 'modalOpen'
+  | 'modalClose'
+  | 'externalLink'
+  | 'addWallet';
 
 /** Every {@link NovaSoundName}. */
 export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
@@ -28,6 +32,10 @@ export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
   'copy',
   'balanceRefresh',
   'remove',
+  'modalOpen',
+  'modalClose',
+  'externalLink',
+  'addWallet',
 ];
 
 /**
@@ -160,7 +168,34 @@ const SOUNDS: Record<NovaSoundName, Sound> = {
     ],
     rushes: [{ from: 2400, to: 300, at: 0, duration: 0.28, gain: 0.6 }],
   },
+  // Muffled, as a copy is: a hatch that opens
+  modalOpen: {
+    tones: [{ frequency: 587, glideTo: 784, at: 0, duration: 0.07, gain: 0.22 }],
+  },
+  // And that closes
+  modalClose: {
+    tones: [{ frequency: 784, glideTo: 587, at: 0, duration: 0.07, gain: 0.18 }],
+  },
+  // It flies away
+  externalLink: {
+    tones: [{ frequency: 523, glideTo: 2093, at: 0, duration: 0.24, gain: 0.4, shimmer: 8 }],
+    rushes: [{ from: 900, to: 5200, at: 0, duration: 0.26, gain: 0.14 }],
+    echoes: 1,
+  },
+  // Another signal joins
+  addWallet: {
+    tones: [
+      { frequency: 659, at: 0, duration: 0.09, gain: 0.4, shimmer: 6 },
+      { frequency: 880, at: 0.07, duration: 0.09, gain: 0.4, shimmer: 6 },
+      { frequency: 1319, at: 0.14, duration: 0.2, gain: 0.35, shimmer: 6 },
+    ],
+    echoes: 1,
+  },
 };
+
+// They come with something else: a dialog that opens from a button that has its own sound, or that replaces another dialog
+const GIVES_WAY: readonly NovaSoundName[] = ['modalOpen', 'modalClose'];
+const GIVES_WAY_WITHIN_MS = 150;
 
 const DEFAULT_VOLUME = 0.2;
 const SILENCE = 0.0001;
@@ -175,6 +210,7 @@ const SAME_SOUND_WITHIN_MS = 60;
 let context: AudioContext | undefined;
 let noise: AudioBuffer | undefined;
 const lastPlayedAt = new Map<NovaSoundName, number>();
+let lastSoundAt = 0;
 
 function envelopeOf(audio: AudioContext, at: number, end: number, peak: number) {
   const gain = audio.createGain();
@@ -248,7 +284,9 @@ export function playNovaSound(name: NovaSoundName, config: NovaSoundsConfig | un
 
   const now = Date.now();
   if (now - (lastPlayedAt.get(name) ?? 0) < SAME_SOUND_WITHIN_MS) return;
+  if (GIVES_WAY.includes(name) && now - lastSoundAt < GIVES_WAY_WITHIN_MS) return;
   lastPlayedAt.set(name, now);
+  lastSoundAt = now;
 
   // A sound is never worth an error in the flow that asked for it
   try {

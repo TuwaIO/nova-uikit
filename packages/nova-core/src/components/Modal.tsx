@@ -2,6 +2,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import * as React from 'react';
 
+import { useNovaSounds } from '../hooks/useNovaSounds';
 import { cn, isTouchDevice } from '../utils';
 import { watchDialogAnchor } from './dialogAnchor';
 import { watchDialogFrameHeight } from './dialogFrameHeight';
@@ -155,6 +156,14 @@ const DialogContent = React.forwardRef<
     // State, not refs: Radix mounts the elements only while the dialog is open
     const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
     const [content, setContent] = React.useState<HTMLDivElement | null>(null);
+
+    // Radix mounts this only while the dialog is open. The two are quiet: when one dialog replaces another, or a louder sound
+    // has just played, or StrictMode runs this twice, the first of them is what is heard
+    const play = useNovaSounds();
+    React.useEffect(() => {
+      play('modalOpen');
+      return () => play('modalClose');
+    }, [play]);
 
     // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
     // has the new size, which leaves an empty band under the footer

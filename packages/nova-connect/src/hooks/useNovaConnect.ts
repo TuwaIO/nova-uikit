@@ -55,7 +55,8 @@ export interface NovaConnectProviderProps extends InitialChains {
   withChain?: boolean;
   /**
    * The sounds of Nova Connect, off without it: a wallet connected and disconnected, an error of a connection, a change of
-   * network, a copy, a balance refreshed by hand and a recent wallet removed. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and
+   * network, a copy, a balance refreshed by hand, a recent wallet removed, a dialog opened and closed, a link to another site
+   * and Connect another wallet. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and
    * sets the volume. They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of
    * `@tuwaio/nova-core/utils` for when they stay silent.
    */

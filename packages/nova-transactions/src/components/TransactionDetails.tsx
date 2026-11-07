@@ -369,6 +369,7 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
     <a
       href={href}
       target="_blank"
+      data-nova-external-link=""
       rel="noopener noreferrer"
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
@@ -734,6 +735,7 @@ export function TransactionDetails<T extends Transaction>({
               <a
                 href={explorerUrl}
                 target="_blank"
+                data-nova-external-link=""
                 rel="noopener noreferrer"
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >

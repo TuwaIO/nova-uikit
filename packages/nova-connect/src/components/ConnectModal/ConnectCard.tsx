@@ -1006,6 +1006,7 @@ export const ConnectCard = memo(
               onClick={handleInfoClick}
               href={infoLink}
               target="_blank"
+              data-nova-external-link=""
               rel="noopener noreferrer"
               aria-label={
                 customConfig?.ariaLabels?.infoLink

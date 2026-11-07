@@ -248,14 +248,30 @@ DefaultText.displayName = 'DefaultText';
 const DefaultTermsLink = (props: LegalDisclaimerTermsLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
-  return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
+  return (
+    <a
+      target={target}
+      data-nova-external-link={target === '_blank' ? '' : undefined}
+      rel={rel}
+      onClick={onClick}
+      {...restProps}
+    />
+  );
 };
 DefaultTermsLink.displayName = 'DefaultTermsLink';
 
 const DefaultPrivacyLink = (props: LegalDisclaimerPrivacyLinkProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `disclaimerData` is used in the default implementation, but not in the type signature
   const { target, rel, onClick, disclaimerData, ...restProps } = props;
-  return <a target={target} rel={rel} onClick={onClick} {...restProps} />;
+  return (
+    <a
+      target={target}
+      data-nova-external-link={target === '_blank' ? '' : undefined}
+      rel={rel}
+      onClick={onClick}
+      {...restProps}
+    />
+  );
 };
 DefaultPrivacyLink.displayName = 'DefaultPrivacyLink';
 

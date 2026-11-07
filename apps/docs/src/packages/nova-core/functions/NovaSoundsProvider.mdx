@@ -6,10 +6,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaSoundsProvider**(`props`): `Element`
 
-Defined in: [components/NovaSoundsProvider.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/NovaSoundsProvider.tsx#L25)
+Defined in: [components/NovaSoundsProvider.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/NovaSoundsProvider.tsx#L28)
 
 Sets the sounds of the Nova components under it. `NovaConnectProvider` of `@tuwaio/nova-connect` and
 `NovaTransactionsProvider` of `@tuwaio/nova-transactions` render it with their `sounds` prop.
+
+Side effect: with sounds on, a click listener on `document`, for the links of Nova that open a new tab
+(`data-nova-external-link`).
 
 ## Parameters
 

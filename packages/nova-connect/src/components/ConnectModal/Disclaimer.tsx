@@ -346,6 +346,7 @@ const DefaultLinkButton: React.FC<DisclaimerButtonProps> = ({
     <a
       href={action}
       target="_blank"
+      data-nova-external-link=""
       rel="noopener noreferrer"
       className={className}
       aria-label={ariaLabel || `${children} (${labels.learnMore})`}

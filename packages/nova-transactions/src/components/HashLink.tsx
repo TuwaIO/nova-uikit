@@ -73,6 +73,7 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
           <a
             href={explorerUrl}
             target="_blank"
+            data-nova-external-link=""
             rel="noopener noreferrer"
             className={cn(
               'novatx:flex novatx:items-center novatx:gap-x-1 novatx:text-[var(--tuwa-text-accent)] novatx:transition-colors novatx:hover:underline',
