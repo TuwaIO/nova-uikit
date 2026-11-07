@@ -29,6 +29,9 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
       const targetValue = target[key as keyof T];
       const sourceValue = source[key as keyof T];
 
+      // `undefined` says nothing: `{ title: maybeTitle }` erased the default label, which then rendered as nothing
+      if (sourceValue === undefined) return;
+
       // If the value is an object in both target and source, merge them recursively.
       if (isRecord(targetValue) && isRecord(sourceValue)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

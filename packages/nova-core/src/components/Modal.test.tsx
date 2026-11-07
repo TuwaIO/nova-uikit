@@ -8,7 +8,7 @@ vi.mock('react', async (importOriginal) => ({
 }));
 
 import { watchDialogFrameHeight } from './dialogFrameHeight';
-import { DialogContent } from './Modal';
+import { DialogContent, isInsideToast } from './Modal';
 
 type Element = { type: unknown; props: Record<string, unknown> & { children?: unknown } };
 
@@ -27,6 +27,18 @@ describe('DialogContent', () => {
 
     expect(elements(tree).filter((element) => 'layout' in element.props)).toEqual([]);
     expect(elements(tree).some((element) => element.props.children === 'content')).toBe(true);
+  });
+});
+
+describe('isInsideToast', () => {
+  // A press on a toast closed the dialog under it, or opened the leave question of a checkout
+  it('tells a toast from the rest of the page', () => {
+    expect(isInsideToast({ closest: (selector: string) => (selector === '.Toastify' ? {} : null) } as never)).toBe(
+      true,
+    );
+    expect(isInsideToast({ closest: () => null } as never)).toBe(false);
+    expect(isInsideToast(null)).toBe(false);
+    expect(isInsideToast({} as never)).toBe(false);
   });
 });
 

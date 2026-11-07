@@ -18,8 +18,26 @@ const GITHUB_RAW_URL =
  */
 const svgCache = new Map<string, string>();
 
-/** Icons the repository does not have, as they will not appear at this commit: asking again would only cost a request. */
-const missingIcons = new Set<string>();
+/**
+ * The request of each icon, kept with its answer, good or bad, for the life of the page: a table of one token asked GitHub
+ * once per row, and an icon the repository does not have or a request that failed was asked for again on every mount.
+ */
+const svgRequests = new Map<string, Promise<string>>();
+
+const requestSvg = (githubSrc: string): Promise<string> => {
+  let request = svgRequests.get(githubSrc);
+  if (!request) {
+    request = fetch(`${GITHUB_RAW_URL}/${githubSrc}`).then((response) => {
+      if (!response.ok) throw new Error(`Failed to load icon: ${response.status}`);
+      return response.text();
+    });
+    svgRequests.set(githubSrc, request);
+  }
+  return request;
+};
+
+/** A path without a file name, as for a wallet with an empty name: there is nothing to ask for. */
+const hasFileName = (githubSrc: string) => !/(^|\/)\.svg$/.test(githubSrc);
 
 /**
  * Loading state for the icon fetch operation.
@@ -71,48 +89,33 @@ export function GithubFallbackIcon({
   const state = cachedImgSrc ? 'success' : fetchState;
 
   useEffect(() => {
-    let isMounted = true;
-
     // Check cache first (might be loaded by another instance)
-    if (svgCache.has(cacheKey) || missingIcons.has(githubSrc)) {
-      return;
-    }
+    if (svgCache.has(cacheKey) || !hasFileName(githubSrc)) return;
 
-    const loadSvg = async () => {
-      setFetchState('loading');
+    let isMounted = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFetchState('loading');
 
-      try {
-        const response = await fetch(`${GITHUB_RAW_URL}/${githubSrc}`);
-
-        if (!response.ok) {
-          if (response.status === 404) missingIcons.add(githubSrc);
-          throw new Error(`Failed to load icon: ${response.status}`);
-        }
-
-        const svg = await response.text();
-
-        if (isMounted) {
-          const base64Svg = svgToBase64(svg, firstPathFill);
-          // Cache the result
-          svgCache.set(cacheKey, base64Svg);
-          setFetchedImgSrc(base64Svg);
-          setFetchState('success');
-        }
-      } catch {
-        if (isMounted) {
-          setFetchState('error');
-        }
-      }
-    };
-
-    loadSvg();
+    requestSvg(githubSrc).then(
+      (svg) => {
+        if (!isMounted) return;
+        const base64Svg = svgToBase64(svg, firstPathFill);
+        // Cache the result
+        svgCache.set(cacheKey, base64Svg);
+        setFetchedImgSrc(base64Svg);
+        setFetchState('success');
+      },
+      () => {
+        if (isMounted) setFetchState('error');
+      },
+    );
 
     return () => {
       isMounted = false;
     };
   }, [githubSrc, firstPathFill, cacheKey]);
 
-  if (missingIcons.has(githubSrc)) {
+  if (!hasFileName(githubSrc)) {
     return <FallbackIcon content={fallbackContent} className={className} />;
   }
 

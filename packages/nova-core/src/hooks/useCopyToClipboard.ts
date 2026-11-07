@@ -2,7 +2,7 @@
  * @file This file contains a custom React hook for copying text to the clipboard.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Result of `copy` of {@link useCopyToClipboard}: `copied: true`, or `copied: false` with the error (also without
@@ -57,6 +57,10 @@ export interface UseCopyToClipboardResult {
 export function useCopyToClipboard(timeout = 2000): UseCopyToClipboardResult {
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  // One timer: the reset of an earlier copy cut the `Copied` of a later one short
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => () => clearTimeout(resetTimer.current), []);
 
   const copy = useCallback(
     async (text: string): Promise<CopyToClipboardResult> => {
@@ -67,15 +71,18 @@ export function useCopyToClipboard(timeout = 2000): UseCopyToClipboardResult {
         setIsCopied(true);
         setError(null);
 
-        setTimeout(() => setIsCopied(false), timeout);
+        clearTimeout(resetTimer.current);
+        resetTimer.current = setTimeout(() => setIsCopied(false), timeout);
         return { copied: true };
       } catch (e) {
         const copyError = e instanceof Error ? e : new Error('Failed to copy text.');
         console.error(copyError);
         setError(copyError);
+        setIsCopied(false);
 
         // Reset error state after timeout as well
-        setTimeout(() => setError(null), timeout);
+        clearTimeout(resetTimer.current);
+        resetTimer.current = setTimeout(() => setError(null), timeout);
         return { copied: false, error: copyError };
       }
     },

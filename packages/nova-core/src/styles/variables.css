@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(novacore);
 @import './fonts.css';
 @import './quasar-loader.css';
+@import './status-edge.css';
 @import './icons.css';
 
 @theme {

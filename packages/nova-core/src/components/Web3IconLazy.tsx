@@ -1,6 +1,7 @@
 import { createElement, type Ref, use } from 'react';
 
 import { loadWeb3Icon } from '../utils/web3IconLoader';
+import { FallbackIcon } from './FallbackIcon';
 
 /**
  * Renders an icon of `@web3icons/react` loaded with `loadWeb3Icon` (one icon at a time). It suspends while the icon loads, so render it
@@ -24,5 +25,8 @@ export function Web3IconLazy({
   const Icon = use(loadWeb3Icon(filePath));
   // `Icon` is the default export of the icon module, cached per icon, so its identity never changes between renders
   // (the case the static-components rule guards against). `createElement` renders it, as `@web3icons/react` itself does.
-  return Icon ? createElement(Icon, { ref, variant, className }) : null;
+  // A chunk that failed to load left a blank place until a reload. The entry stays cached: `use()` would retry in a loop
+  return Icon
+    ? createElement(Icon, { ref, variant, className })
+    : createElement(FallbackIcon, { content: '?', className });
 }

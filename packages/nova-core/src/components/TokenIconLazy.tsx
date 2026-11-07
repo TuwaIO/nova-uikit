@@ -41,6 +41,13 @@ export function TokenIconLazy({
       />
     );
   }
+  // A mono icon is drawn with `currentColor`, which an `<img>` cannot inherit: it was black on every theme
+  if (variant === 'mono') {
+    return createElement(Icon, {
+      variant,
+      className: cn('novacore:w-full novacore:h-full novacore:rounded-full', className),
+    });
+  }
   return (
     <SvgToImg
       iconId={`token-${key}-${variant}`}

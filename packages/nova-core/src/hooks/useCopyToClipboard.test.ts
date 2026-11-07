@@ -1,9 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+const { setState, ref } = vi.hoisted(() => ({ setState: vi.fn(), ref: { current: undefined as unknown } }));
+
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
-  useState: (initial: unknown) => [initial, vi.fn()],
+  useState: (initial: unknown) => [initial, setState],
   useCallback: (fn: unknown) => fn,
+  useEffect: vi.fn(),
+  useRef: () => ref,
 }));
 
 import { useCopyToClipboard } from './useCopyToClipboard';
@@ -33,5 +37,23 @@ describe('useCopyToClipboard', () => {
   it('resolves `copied: false` without text', async () => {
     const result = await useCopyToClipboard().copy('');
     expect(result.copied).toBe(false);
+  });
+
+  // The reset of an earlier copy cut the `Copied` of a later one short
+  it('keeps a later copy for its whole time', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => undefined) } });
+    const { copy } = useCopyToClipboard(1000);
+
+    await copy('first');
+    await vi.advanceTimersByTimeAsync(900);
+    await copy('second');
+    setState.mockClear();
+    await vi.advanceTimersByTimeAsync(900);
+    expect(setState).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(setState).toHaveBeenCalledWith(false);
+    vi.useRealTimers();
   });
 });

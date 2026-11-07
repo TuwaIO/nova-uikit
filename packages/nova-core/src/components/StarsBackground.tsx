@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 /**
  * An animated background of twinkling stars, drawn as SVG circles with CSS animations. It fills its positioned parent
- * (`absolute`, `inset-0`); the stars are placed at random over the window size after mount, so nothing is rendered on
+ * (`absolute`, `inset-0`); the stars are placed at random inside it after mount, so nothing is rendered on
  * the server. Nova Connect uses it in the "about wallets" and "get a wallet" screens of the connect modal.
  *
  * @param props - The background props.
@@ -22,8 +22,8 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
 
     const numStars = starsCount ?? 200;
     return Array.from({ length: numStars }).map(() => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
+      x: `${Math.random() * 100}%`,
+      y: `${Math.random() * 100}%`,
       r: Math.random() * 1 + 0.5,
       isSupernova: Math.random() < 0.1,
       delay: Math.random() * 10,
@@ -38,7 +38,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
           <style>
             {`
               /* Pulse animation now includes scale for a more organic feel. */
-              @keyframes pulse {
+              @keyframes tuwa-stars-pulse {
                 0%, 100% { 
                   opacity: 0.2;
                   transform: scale(0.9);
@@ -50,7 +50,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
               }
               
               /* Supernova animation remains impactful. */
-              @keyframes supernova {
+              @keyframes tuwa-stars-supernova {
                 0% { 
                   transform: scale(1);
                   stroke: color-mix(in srgb, var(--tuwa-text-primary) 50%, transparent);
@@ -68,8 +68,8 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
                 }
               }
 
-              .pulsar {
-                animation-name: pulse;
+              .tuwa-star-pulsar {
+                animation-name: tuwa-stars-pulse;
                 animation-timing-function: ease-in-out;
                 animation-iteration-count: infinite;
                 /* In place: the default box is the whole SVG, and a star scaled from its center flies across the panel */
@@ -77,13 +77,20 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
                 transform-origin: center;
               }
 
-              .supernova {
-                animation-name: supernova;
+              .tuwa-star-supernova {
+                animation-name: tuwa-stars-supernova;
                 animation-timing-function: ease-out;
                 animation-iteration-count: infinite;
                 transform-box: fill-box;
                 transform-origin: center;
                 stroke-width: 2;
+              }
+
+              @media (prefers-reduced-motion: reduce) {
+                .tuwa-star-pulsar,
+                .tuwa-star-supernova {
+                  animation: none;
+                }
               }
             `}
           </style>
@@ -96,7 +103,7 @@ export function StarsBackground({ starsCount }: { starsCount?: number }) {
             cy={star.y}
             r={star.r}
             fill="color-mix(in srgb, var(--tuwa-text-primary) 70%, transparent)"
-            className={star.isSupernova ? 'supernova' : 'pulsar'}
+            className={star.isSupernova ? 'tuwa-star-supernova' : 'tuwa-star-pulsar'}
             style={{
               animationDelay: `${star.delay}s`,
               animationDuration: `${star.duration}s`,

@@ -48,8 +48,23 @@ const defaultModalBackdropAnimation: Variants = {
   exit: { opacity: 0 },
 };
 
+/** Tells a {@link DialogContent} that a {@link DialogDescription} is inside it. */
+const DescriptionReportContext = React.createContext<((hasDescription: boolean) => void) | null>(null);
+
 /**
- * The dimmed, blurred backdrop behind the dialog, faded in and out with `framer-motion`. {@link DialogContent} renders
+ * Whether what was pressed is part of a toast of `react-toastify`.
+ *
+ * @param target - The target of the event.
+ * @returns `true` inside a toast.
+ * @internal
+ */
+export function isInsideToast(target: EventTarget | null): boolean {
+  return !!(target as Partial<Element> | null)?.closest?.('.Toastify');
+}
+
+/**
+ * The dimmed, blurred backdrop behind the dialog, faded in with `framer-motion` (Radix removes it at once on close, so an
+ * `exit` variant does not run). {@link DialogContent} renders
  * it.
  *
  * Side effect: while it is mounted, the page does not scroll (`lockPageScroll`).
@@ -125,22 +140,21 @@ const DialogContent = React.forwardRef<
       animateHeight = true,
       onOpenAutoFocus,
       onCloseAutoFocus,
+      onPointerDownOutside,
       ...props
     },
     ref,
   ) => {
-    const [isMobile, setIsMobile] = React.useState(false);
+    // Not in an effect: a dialog mounted already open got the desktop animation on a touch device. The server says `false`,
+    // and the portal renders nothing during hydration, so no mismatch comes of it
+    const [isMobile] = React.useState(isTouchDevice);
+    const [hasDescription, setHasDescription] = React.useState(false);
     // The element that opened the dialog: Radix gives the focus back only to a `Dialog.Trigger`, and the Nova modals are
     // opened by buttons of the app (WCAG 2.4.3)
     const opener = React.useRef<HTMLElement | null>(null);
     // State, not refs: Radix mounts the elements only while the dialog is open
     const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
     const [content, setContent] = React.useState<HTMLDivElement | null>(null);
-
-    React.useEffect(() => {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsMobile(isTouchDevice());
-    }, []);
 
     // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
     // has the new size, which leaves an empty band under the footer
@@ -162,8 +176,15 @@ const DialogContent = React.forwardRef<
         <DialogOverlay backdropAnimation={backdropAnimation} />
 
         <DialogPrimitive.Content
-          aria-describedby="tuwa:modal-content"
+          // Radix names its description here, and warns of a description that is missing. Most Nova dialogs have none, and an
+          // id of no element cut those that do off from theirs
+          {...(hasDescription ? {} : { 'aria-describedby': undefined })}
           ref={ref}
+          onPointerDownOutside={(event) => {
+            onPointerDownOutside?.(event);
+            // A toast is above the dialog, not outside it: its click closed the dialog, or opened the leave question of a checkout
+            if (isInsideToast(event.target)) event.preventDefault();
+          }}
           onOpenAutoFocus={(event) => {
             // Called before the focus moves into the dialog
             const active = document.activeElement;
@@ -196,11 +217,13 @@ const DialogContent = React.forwardRef<
                   <div
                     ref={setContent}
                     className={cn(
-                      'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
+                      'NovaNoScrolling NovaDialogContent__elements novacore:relative novacore:flex novacore:max-h-[100dvh] novacore:sm:max-h-[calc(100dvh-2rem-2px)] novacore:w-full novacore:flex-col novacore:overflow-y-auto',
                       'novacore:[transform:translateZ(0)] novacore:[backface-visibility:hidden]',
                     )}
                   >
-                    {children}
+                    <DescriptionReportContext.Provider value={setHasDescription}>
+                      {children}
+                    </DescriptionReportContext.Provider>
                   </div>
                 </div>
               </motion.div>
@@ -221,7 +244,6 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
  */
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    aria-describedby="tuwa:modal-header"
     className={cn(
       'novacore:sticky novacore:flex novacore:top-0 novacore:z-11 novacore:w-full novacore:flex-row novacore:items-center novacore:justify-between',
       'novacore:border-b novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)] novacore:p-4',
@@ -240,7 +262,6 @@ DialogHeader.displayName = 'DialogHeader';
  */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    aria-describedby="tuwa:modal-footer"
     className={cn(
       'novacore:flex novacore:flex-col-reverse novacore:sm:flex-row novacore:sm:justify-end novacore:sm:space-x-2',
       className,
@@ -257,7 +278,6 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    aria-describedby="tuwa:modal-title"
     className={cn(
       'novacore:text-lg novacore:font-bold novacore:leading-none novacore:tracking-tight novacore:text-[var(--tuwa-text-primary)] novacore:m-0 novacore:font-mono',
       className,
@@ -271,14 +291,20 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName;
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
-    aria-describedby="tuwa:modal-description"
-    ref={ref}
-    className={cn('novacore:text-sm novacore:text-[var(--tuwa-text-secondary)]', className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const reportDescription = React.useContext(DescriptionReportContext);
+  React.useEffect(() => {
+    reportDescription?.(true);
+    return () => reportDescription?.(false);
+  }, [reportDescription]);
+  return (
+    <DialogPrimitive.Description
+      ref={ref}
+      className={cn('novacore:text-sm novacore:text-[var(--tuwa-text-secondary)]', className)}
+      {...props}
+    />
+  );
+});
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
