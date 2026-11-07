@@ -74,9 +74,9 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
 
 ## 🌐 External Services
 
-| Helper                                                     | Host                                                            | Purpose                                                                                                                                |
-| ---------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `GithubFallbackIcon` (used by `NetworkIcon`, `WalletIcon`) | `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository) | SVG of a network or wallet that the installed `@web3icons/common` does not list. The SVGs are cached in memory until the page reloads. |
+| Helper                                                                  | Host                                                            | Purpose                                                                                                                                |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `GithubFallbackIcon` (used by `NetworkIcon`, `WalletIcon`, `TokenIcon`) | `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository) | SVG of a network or wallet that the installed `@web3icons/common` does not list. The SVGs are cached in memory until the page reloads. |
 
 The other icons come from the installed `@web3icons/react`, and the font is embedded in the stylesheet. The package does not use `localStorage`.
 

@@ -7,7 +7,9 @@ import { SvgImg } from './SvgImg';
 /**
  * Base URL for fetching raw SVG icons from the web3icons GitHub repository.
  */
-const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/0xa3k5/web3icons/refs/heads/main/raw-svgs';
+// One commit, not a branch: what a page draws must not change under it
+const GITHUB_RAW_URL =
+  'https://raw.githubusercontent.com/0xa3k5/web3icons/fab284b6877de4243700e59fd60ced2164fa4992/raw-svgs';
 
 /**
  * In-memory cache for fetched SVG icons.
@@ -15,6 +17,9 @@ const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/0xa3k5/web3icons/refs/
  * Persists until page reload.
  */
 const svgCache = new Map<string, string>();
+
+/** Icons the repository does not have, as they will not appear at this commit: asking again would only cost a request. */
+const missingIcons = new Set<string>();
 
 /**
  * Loading state for the icon fetch operation.
@@ -35,6 +40,8 @@ export interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'sr
    * devnet and testnet: the white mark over it takes the color the background had (`applyFirstPathFill`).
    */
   firstPathFill?: string;
+  /** What the fallback shows when the icon cannot be loaded. Defaults to `?`. */
+  fallbackContent?: string;
 }
 
 /**
@@ -46,7 +53,14 @@ export interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'sr
  * @param props - {@link GithubFallbackIconProps}
  * @returns Loading indicator, the fetched icon, or an error fallback
  */
-export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, ...props }: GithubFallbackIconProps) {
+export function GithubFallbackIcon({
+  githubSrc,
+  className,
+  alt,
+  firstPathFill,
+  fallbackContent = '?',
+  ...props
+}: GithubFallbackIconProps) {
   const cacheKey = `${githubSrc}|${firstPathFill ?? ''}`;
   const cachedImgSrc = svgCache.get(cacheKey);
 
@@ -60,7 +74,7 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
     let isMounted = true;
 
     // Check cache first (might be loaded by another instance)
-    if (svgCache.has(cacheKey)) {
+    if (svgCache.has(cacheKey) || missingIcons.has(githubSrc)) {
       return;
     }
 
@@ -71,6 +85,7 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
         const response = await fetch(`${GITHUB_RAW_URL}/${githubSrc}`);
 
         if (!response.ok) {
+          if (response.status === 404) missingIcons.add(githubSrc);
           throw new Error(`Failed to load icon: ${response.status}`);
         }
 
@@ -97,6 +112,10 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
     };
   }, [githubSrc, firstPathFill, cacheKey]);
 
+  if (missingIcons.has(githubSrc)) {
+    return <FallbackIcon content={fallbackContent} className={className} />;
+  }
+
   if (state === 'loading' || state === 'idle') {
     return <FallbackIcon animate className={className} />;
   }
@@ -105,5 +124,5 @@ export function GithubFallbackIcon({ githubSrc, className, alt, firstPathFill, .
     return <SvgImg {...props} src={imgSrc} alt={alt} className={className} />;
   }
 
-  return <FallbackIcon content="?" className={className} />;
+  return <FallbackIcon content={fallbackContent} className={className} />;
 }

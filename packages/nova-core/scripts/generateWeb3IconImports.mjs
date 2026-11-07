@@ -39,7 +39,11 @@ const files = new Map(
 
 // Token icons of the library that draw something else under their name, seen by eye in the gallery of Storybook: the mark
 // of the network stands in. Look again after an update of @web3icons/react
-const WRONG_TOKEN_ICONS = { TokenARB: 'networks/NetworkArbitrumOne' };
+const WRONG_TOKEN_ICONS = {
+  TokenARB: 'networks/NetworkArbitrumOne',
+  TokenCORE: 'networks/NetworkCore',
+  TokenTAO: 'networks/NetworkBittensor',
+};
 
 const keys = [
   ...new Set(
