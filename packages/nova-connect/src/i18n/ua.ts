@@ -17,7 +17,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   all: 'Всі',
   active: 'Активний',
   connectors: 'Конектори',
-  connectNewWallet: 'Підключити новий гаманець',
+  connectNewWallet: 'Підключити ще один гаманець',
 
   // Стани підключення - Статусні повідомлення для процесу підключення гаманця
   connectionError: 'Помилка підключення',
