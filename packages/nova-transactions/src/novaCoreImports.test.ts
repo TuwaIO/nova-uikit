@@ -4,7 +4,7 @@ import path from 'node:path';
 import * as helpers from '@tuwaio/nova-core/utils';
 import { describe, expect, it } from 'vitest';
 
-// A file that needs only helpers of @tuwaio/nova-core (`cn`, `deepMerge`, `textCenterEllipsis`…) imports them from
+// A file that needs only helpers of @tuwaio/nova-core (`cn`, `deepMerge`…) imports them from
 // `@tuwaio/nova-core/utils`, which loads no React component and no icon; the main entry is for files that also use its
 // components or hooks. Entry points without UI then do not pull the icon loader into the bundle of an app.
 const src = path.resolve(__dirname);

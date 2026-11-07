@@ -1,5 +1,4 @@
-import { textCenterEllipsis } from '@tuwaio/nova-core/utils';
-import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
+import { getAdapterFromConnectorType, shortAddress } from '@tuwaio/orbit-core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSatelliteConnectStore } from '../satellite';
@@ -205,10 +204,10 @@ export function useGetWalletNameAndAvatar(options: UseGetWalletNameAndAvatarOpti
 
   const ensNameAbbreviated = ensName
     ? ensName.length > maxNameLength
-      ? textCenterEllipsis(ensName, abbreviateSymbols, abbreviateSymbols)
+      ? shortAddress(ensName, abbreviateSymbols, abbreviateSymbols)
       : ensName
     : walletAddress
-      ? textCenterEllipsis(walletAddress, abbreviateSymbols, abbreviateSymbols)
+      ? shortAddress(walletAddress, abbreviateSymbols, abbreviateSymbols)
       : undefined;
 
   return {

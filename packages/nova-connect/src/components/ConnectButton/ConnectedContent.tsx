@@ -24,6 +24,7 @@ import {
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
+import { isSameWallet } from '../../utils/connectedAddress';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
 import { connectedStatusFor, nextConnectedStatus } from './connectedStatus';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
@@ -315,8 +316,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     const prevTxPoolRef = useRef<Transaction[]>(
       Object.values(transactionPool ?? {}).filter(
-        (tx) =>
-          tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
+        (tx) => tx?.from && activeConnection?.address && isSameWallet(tx, activeConnection.address),
       ),
     );
 
@@ -355,8 +355,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
       const currentPool =
         Object.values(transactionPool ?? {}).filter(
-          (tx) =>
-            tx?.from && activeConnection?.address && tx.from.toLowerCase() === activeConnection.address.toLowerCase(),
+          (tx) => tx?.from && activeConnection?.address && isSameWallet(tx, activeConnection.address),
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];

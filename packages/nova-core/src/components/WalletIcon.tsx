@@ -1,3 +1,4 @@
+import { IMPERSONATED_CONNECTOR_ID } from '@tuwaio/orbit-core';
 import { wallets } from '@web3icons/common/metadata/wallets';
 import { Suspense } from 'react';
 
@@ -81,9 +82,9 @@ export function WalletIcon({ walletName, variant = 'background', className }: Wa
   const normalizedName = walletName.toLowerCase();
 
   // 1. Handle Custom Icon (Impersonated/Watch Mode)
-  if (normalizedName === 'impersonatedwallet') {
+  if (normalizedName === IMPERSONATED_CONNECTOR_ID) {
     return (
-      <SvgToImg iconId="impersonatedwallet" className={componentClassName}>
+      <SvgToImg iconId={IMPERSONATED_CONNECTOR_ID} className={componentClassName}>
         {(ref) => <ImpersonatedWalletIcon ref={ref} />}
       </SvgToImg>
     );

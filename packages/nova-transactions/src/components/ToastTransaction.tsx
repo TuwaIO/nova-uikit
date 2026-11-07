@@ -11,7 +11,7 @@ import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
 import { canReplaceTx, runReplacement } from '../utils/replacement';
-import { hasConfirmations, progressOf, toneOf } from '../utils/txStatus';
+import { hasConfirmations, isTxOfWallet, progressOf, toneOf } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -253,7 +253,7 @@ export function ToastTransaction<T extends Transaction>({
   const classNames = customization?.classNames;
 
   // Next to speed-up and cancel as well: the details are where a transaction that never ends can be left behind
-  const canOpenDetails = !!openTxInfoModal && tx.from.toLowerCase() === connectedWalletAddress?.toLowerCase();
+  const canOpenDetails = !!openTxInfoModal && isTxOfWallet(tx, connectedWalletAddress);
 
   return (
     <div

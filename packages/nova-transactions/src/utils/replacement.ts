@@ -3,6 +3,7 @@
  * was, and whether speed-up and cancel can be offered.
  */
 
+import { errorChain, getWalletFromConnectorType } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   Transaction,
@@ -11,6 +12,8 @@ import {
   TransactionTracker,
   TxAdapter,
 } from '@tuwaio/pulsar-core';
+
+import { isTxOfWallet } from './txStatus';
 
 const asEvm = (tx: Transaction) => tx as unknown as EvmTransaction;
 
@@ -73,7 +76,7 @@ export function canReplaceTx<T extends Transaction>(
     tx.pending &&
     (!tx.confirmations || Number(tx.confirmations) < 1) &&
     tx.tracker === 'ethereum' &&
-    tx.connectorType?.split(':')[1] === 'metamask' &&
+    getWalletFromConnectorType(tx.connectorType) === 'metamask' &&
     nonce !== undefined &&
     !!maxFeePerGas &&
     !!maxPriorityFeePerGas &&
@@ -83,7 +86,9 @@ export function canReplaceTx<T extends Transaction>(
 
 /** A person pressing "reject" in the wallet needs no message about it. */
 export function isUserRejection(error: unknown): boolean {
-  for (let current = error; current instanceof Error; current = current.cause) {
+  for (const current of errorChain(error)) {
+    // Only errors: a raw `{ code: 4001 }` still reports, as this asks a person to see what happened
+    if (!(current instanceof Error)) return false;
     const { name, message, code } = current as Error & { code?: number };
     if (name === 'UserRejectedRequestError' || code === 4001 || /user rejected|user denied/i.test(message)) return true;
   }
@@ -272,7 +277,7 @@ const PENDING_TOASTS_AT_LOAD = 3;
  * cannot act on them, and a toast for every finished record would be noise.
  *
  * @param pool - The pool.
- * @param wallet - The connected wallet, in lower case.
+ * @param wallet - The connected wallet.
  * @param closed - The transactions whose toast a person closed: left out, and in no one's place among the newest few.
  * @returns The transactions, newest first.
  */
@@ -282,7 +287,7 @@ export function pendingOfWallet<T extends Transaction>(
   closed?: ReadonlySet<string>,
 ): T[] {
   return Object.values(pool)
-    .filter((tx) => tx.pending && tx.from?.toLowerCase() === wallet && !closed?.has(tx.txKey))
+    .filter((tx) => tx.pending && isTxOfWallet(tx, wallet) && !closed?.has(tx.txKey))
     .sort((a, b) => Number(b.localTimestamp) - Number(a.localTimestamp))
     .slice(0, PENDING_TOASTS_AT_LOAD);
 }

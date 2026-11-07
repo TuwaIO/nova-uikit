@@ -15,6 +15,7 @@ import {
   formatConnectorName,
   getConnectorTypeFromName,
   getNetworkData,
+  IMPERSONATED_CONNECTOR_ID,
   impersonatedHelpers,
   isAddress,
   OrbitAdapter,
@@ -969,13 +970,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       if (connector.adapters.length === 1) {
         setSelectedAdapter(connector.adapters[0]);
         setConnectModalContentType(
-          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+          formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID ? 'impersonate' : 'connecting',
         );
       } else if (selectedAdapter) {
         setConnectModalContentType(
-          formatConnectorName(connector.name) === 'impersonatedwallet' ? 'impersonate' : 'connecting',
+          formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID ? 'impersonate' : 'connecting',
         );
-      } else if (formatConnectorName(connector.name) === 'impersonatedwallet') {
+      } else if (formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID) {
         setConnectModalContentType('impersonate');
       } else {
         setConnectModalContentType('network');

@@ -6,4 +6,3 @@ export * from './getChainName';
 export * from './isSolanaDev';
 export * from './isTouchDevice';
 export * from './svgUtils';
-export * from './textCenterEllipsis';

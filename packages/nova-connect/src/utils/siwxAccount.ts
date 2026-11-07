@@ -2,7 +2,7 @@
  * @file SIWX sessions that belong to an account rather than to one chain: the `'account'` scope of `NovaSiwxWatcher`.
  */
 
-import { parseCaip10AccountId } from '@tuwaio/orbit-core';
+import { normalizeAccountAddress, parseCaip10AccountId } from '@tuwaio/orbit-core';
 
 /**
  * The account of a CAIP-10 account ID without its chain: the namespace and the address, with an `eip155` address in
@@ -15,7 +15,7 @@ import { parseCaip10AccountId } from '@tuwaio/orbit-core';
 export function accountKey(accountId: string): string {
   const account = parseCaip10AccountId(accountId);
   if (!account) return accountId;
-  return `${account.namespace}:${account.namespace === 'eip155' ? account.address.toLowerCase() : account.address}`;
+  return `${account.namespace}:${normalizeAccountAddress(account.namespace, account.address)}`;
 }
 
 /**

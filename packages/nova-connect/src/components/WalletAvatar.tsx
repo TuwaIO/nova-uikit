@@ -4,6 +4,7 @@
  */
 
 import { cn } from '@tuwaio/nova-core/utils';
+import { shortAddress } from '@tuwaio/orbit-core';
 import makeBlockie from 'ethereum-blockies-base64';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useState } from 'react';
 
@@ -260,7 +261,7 @@ const defaultGenerateBgColor = (address: string): string => {
 
 const defaultFormatAddress = (address: string, labels: Record<string, string>): string => {
   if (!address) return labels.unknownWallet;
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  return shortAddress(address);
 };
 
 /**

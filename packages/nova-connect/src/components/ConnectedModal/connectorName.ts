@@ -1,4 +1,4 @@
-import { formatConnectorName } from '@tuwaio/orbit-core';
+import { formatConnectorName, getWalletFromConnectorType } from '@tuwaio/orbit-core';
 
 /**
  * The name of a wallet to show: the name of its connector, which the rest of the modal shows too, and the normalized ID of the
@@ -10,7 +10,7 @@ import { formatConnectorName } from '@tuwaio/orbit-core';
  */
 export function connectorDisplayName(connectorType: string, connectors?: Record<string, unknown[]>): string {
   // Remove adapter prefix (e.g., "EVM:METAMASK" -> "METAMASK")
-  const nameWithoutAdapter = connectorType.includes(':') ? connectorType.split(':')[1] : connectorType;
+  const nameWithoutAdapter = getWalletFromConnectorType(connectorType) ?? connectorType;
   const id = formatConnectorName(nameWithoutAdapter);
   const match = Object.values(connectors ?? {})
     .flat()

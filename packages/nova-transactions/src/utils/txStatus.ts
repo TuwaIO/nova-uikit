@@ -3,6 +3,7 @@
  */
 
 import type { StatusTone } from '@tuwaio/nova-core';
+import { getWalletFromConnectorType, isSameAddress, OrbitAdapter } from '@tuwaio/orbit-core';
 import { EvmTransaction, Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 
 import { NovaTransactionsLabels } from '../i18n/types';
@@ -107,5 +108,18 @@ export function trackerGaveUp(tx: Transaction | undefined): boolean {
  * @returns The wallet part, or the value as it is without an adapter.
  */
 export function walletPartOf(connectorType?: string): string | undefined {
-  return connectorType?.includes(':') ? connectorType.split(':')[1] : connectorType;
+  return getWalletFromConnectorType(connectorType) ?? connectorType;
+}
+
+/**
+ * Whether a transaction was sent by a wallet: an EVM address in any case, a Solana address exactly, as base58 in
+ * another case is another account.
+ *
+ * @param tx - The transaction.
+ * @param wallet - The address of the wallet.
+ * @returns `true` when it is the sender.
+ */
+export function isTxOfWallet(tx: Pick<Transaction, 'adapter' | 'from'>, wallet: string | undefined): boolean {
+  if (!tx.from || !wallet) return false;
+  return isSameAddress(tx.adapter === OrbitAdapter.EVM ? 'eip155' : tx.adapter, tx.from, wallet);
 }

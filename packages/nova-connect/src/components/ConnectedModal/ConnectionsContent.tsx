@@ -10,18 +10,19 @@ import {
   MorphText,
   NetworkIcon,
   QuasarLoader,
-  textCenterEllipsis,
   useCopyToClipboard,
 } from '@tuwaio/nova-core';
 import {
   ConnectorType,
-  formatConnectorName,
   getAdapterFromConnectorType,
+  getConnectorTypeFromName,
   getNetworkData,
+  getWalletFromConnectorType,
   impersonatedHelpers,
   RecentlyConnectedConnectorData,
   recentlyConnectedConnectorsListHelpers,
   setChainId,
+  shortAddress,
 } from '@tuwaio/orbit-core';
 import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -763,7 +764,12 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
       className={cn('novacon:relative novacon:flex-shrink-0', wrapperClassName)}
       style={{ width: size, height: size }}
     >
-      <WalletIcon name={connectorType.split(':')[1]} icon={icon} size={size} className={imageClassName} />
+      <WalletIcon
+        name={getWalletFromConnectorType(connectorType) ?? ''}
+        icon={icon}
+        size={size}
+        className={imageClassName}
+      />
       <div
         className={cn(
           'novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]',
@@ -1512,7 +1518,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           {activeConnection?.connectorType && (
             <ActiveConnectorRow
               connectorType={activeConnection.connectorType}
-              address={textCenterEllipsis(activeConnection.address, 6, 4)}
+              address={shortAddress(activeConnection.address ?? '')}
               fullAddress={activeConnection.address}
               displayName={ensNameAbbreviated}
               chainId={activeConnection.chainId}
@@ -1548,7 +1554,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               <ConnectedConnectorRow
                 key={connection.connectorType}
                 connectorType={connection.connectorType}
-                address={textCenterEllipsis(connection.address, 6, 4)}
+                address={shortAddress(connection.address ?? '')}
                 chainId={connection.chainId}
                 isActive={false}
                 onSwitch={() => handleSwitch(connection.connectorType)}
@@ -1587,7 +1593,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               // Safely check if c is a valid object with a name property
               if (c && typeof c === 'object' && 'name' in c && typeof (c as { name: unknown }).name === 'string') {
                 return (
-                  `${getAdapterFromConnectorType(connectorType)}:${formatConnectorName((c as { name: string }).name)}` ===
+                  getConnectorTypeFromName(getAdapterFromConnectorType(connectorType), (c as { name: string }).name) ===
                   connectorType
                 );
               }
@@ -1597,7 +1603,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
               <RecentlyConnectedRow
                 key={connectorType}
                 connectorType={connectorType}
-                address={textCenterEllipsis(data.address, 6, 4)}
+                address={shortAddress(data.address ?? '')}
                 timestamp={data.disconnectedTimestamp}
                 onConnect={isAvailable ? () => handleConnectRecent(data.address, connectorType) : undefined}
                 onRemove={(e) => handleRemoveRecent(connectorType, e)}

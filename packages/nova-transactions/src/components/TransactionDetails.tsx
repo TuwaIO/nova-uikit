@@ -29,10 +29,9 @@ import {
   QuasarLoader,
   StatusEdge,
   StatusTone,
-  textCenterEllipsis,
   useCopyToClipboard,
 } from '@tuwaio/nova-core';
-import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
+import { formatBaseUnits, OrbitAdapter, selectAdapterByKey, setChainId, shortAddress } from '@tuwaio/orbit-core';
 import {
   EvmTransaction,
   SolanaTransaction,
@@ -44,7 +43,6 @@ import dayjs from 'dayjs';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
-import { formatUnits } from '../utils/formatUnits';
 import {
   canReplaceTx,
   explorerUrlOfHash,
@@ -235,7 +233,7 @@ const DefaultCopyableField = ({ label, value, mono = true, className, children, 
           className={cn('novatx:truncate', mono && 'novatx:font-mono novatx:text-[13px]', classNames?.code)}
           title={value}
         >
-          {textCenterEllipsis(value, 8, 8)}
+          {shortAddress(value, 8, 8)}
         </span>
       )}
       <CopyButton value={value} className={classNames?.copyButton} />
@@ -369,7 +367,7 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
     >
-      {textCenterEllipsis(hash, 8, 8)}
+      {shortAddress(hash, 8, 8)}
     </a>
   ) : null;
 
@@ -580,8 +578,8 @@ export function TransactionDetails<T extends Transaction>({
 
   // Execution data of the chain
   const evmFees = evmTx && {
-    maxFee: formatUnits(evmTx.maxFeePerGas, 9),
-    maxPriorityFee: formatUnits(evmTx.maxPriorityFeePerGas, 9),
+    maxFee: formatBaseUnits(evmTx.maxFeePerGas, 9),
+    maxPriorityFee: formatBaseUnits(evmTx.maxPriorityFeePerGas, 9),
   };
   const evmInput = evmTx?.input && evmTx.input !== '0x' ? evmTx.input : undefined;
   const hasEvmData = !!(
@@ -594,7 +592,7 @@ export function TransactionDetails<T extends Transaction>({
       evmTx.replaces ||
       evmInput)
   );
-  const solanaFee = solanaTx ? formatUnits(solanaTx.fee, 9) : undefined;
+  const solanaFee = solanaTx ? formatBaseUnits(solanaTx.fee, 9) : undefined;
   const solanaInstructions = solanaTx?.instructions?.length ? solanaTx.instructions : undefined;
   const hasSolanaData = !!(
     solanaTx &&

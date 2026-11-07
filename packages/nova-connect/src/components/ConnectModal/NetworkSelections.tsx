@@ -594,10 +594,7 @@ export const NetworkSelections = memo(
         if (!networkData || !activeConnector) return;
 
         const originalHandler = (selectedNetwork: OrbitAdapter) => {
-          onClick(
-            selectedNetwork,
-            getConnectorTypeFromName(selectedNetwork, formatConnectorName(activeConnector)) as ConnectorType,
-          );
+          onClick(selectedNetwork, getConnectorTypeFromName(selectedNetwork, activeConnector));
         };
 
         if (customHandlers?.onNetworkClick) {
