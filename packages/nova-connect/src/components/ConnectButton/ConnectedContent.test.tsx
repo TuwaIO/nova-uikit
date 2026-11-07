@@ -122,6 +122,19 @@ describe('ConnectedContent formattedBalance handling', () => {
     expect(getRenderedFormattedBalance(el)).toBe('0.000');
   });
 
+  // From a dash to a number the button grew by 34 px on every change of network, and the row around it moved
+  it('keeps the place of the balance while it is not known', () => {
+    mockBalance = null;
+    const wrapper = (
+      renderContent({ withBalance: true }) as unknown as {
+        props: { children: Array<{ props: { children: Array<{ type: (p: unknown) => unknown; props: unknown }> } }> };
+      }
+    ).props.children[0];
+    const container = wrapper.props.children[0];
+
+    expect(JSON.stringify(container.type(container.props))).toContain('novacon:min-w-[5ch]');
+  });
+
   // `0.000` on the button of a wallet holding 5 ETH, with an RPC that did not answer
   it('shows a dash for a balance that is not known, not a balance of zero', () => {
     mockBalance = null;

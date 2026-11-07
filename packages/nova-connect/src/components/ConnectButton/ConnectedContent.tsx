@@ -206,7 +206,12 @@ const DefaultBalanceContainer = ({
       }
       {...props}
     >
-      <span className="novacon:font-semibold novacon:mr-1" aria-hidden="true">
+      {/* The place of `0.000` whatever is in it: from a dash to a number the button grew by 34 px on every change of network,
+          and the row around it moved */}
+      <span
+        className="novacon:mr-1 novacon:inline-block novacon:min-w-[5ch] novacon:text-center novacon:font-semibold"
+        aria-hidden="true"
+      >
         {formattedBalance}
       </span>
     </div>

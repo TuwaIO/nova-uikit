@@ -207,6 +207,10 @@ export interface BalanceDisplayProps {
 
 // --- Default Sub-Components ---
 
+// One box for the three states: the loader in a line of its own made the button taller for as long as it ran, and it looked
+// bigger than the icon it replaced
+const REFRESH_MARK_CLASSES = 'novacon:flex novacon:h-4 novacon:w-4 novacon:items-center novacon:justify-center';
+
 const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
   isLoading,
   showSuccess,
@@ -220,7 +224,7 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
       onClick={onRefetch}
       disabled={isLoading}
       className={cn(
-        'novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors',
+        'novacon:flex novacon:shrink-0 novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors',
         'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-tertiary)]',
         'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
         showSuccess && 'novacon:text-[var(--tuwa-success-text)]',
@@ -236,6 +240,7 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ duration: 0.2 }}
+            className={REFRESH_MARK_CLASSES}
           >
             <DrawnCheck className="novacon:w-4 novacon:h-4" />
           </motion.div>
@@ -246,8 +251,9 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
+            className={REFRESH_MARK_CLASSES}
           >
-            {isLoading ? <QuasarLoader size={16} /> : <ArrowPathIcon className="novacon:w-4 novacon:h-4" />}
+            {isLoading ? <QuasarLoader size={14} /> : <ArrowPathIcon className="novacon:w-4 novacon:h-4" />}
           </motion.div>
         )}
       </AnimatePresence>
