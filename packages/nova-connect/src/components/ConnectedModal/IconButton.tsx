@@ -2,13 +2,12 @@
  * @file IconButton component with comprehensive customization options for wallet and chain interactions.
  */
 
-import { ChevronArrowWithAnim, cn, NetworkIcon, QuasarLoader } from '@tuwaio/nova-core';
+import { ChevronArrowWithAnim, cn, formatLabel, NetworkIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { formatConnectorChainId, OrbitAdapter } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { WalletIcon } from '../WalletIcon';
 
 // --- Default Motion Variants ---

@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { TokenIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { ExternalLinkIcon, TokenIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import { tokens as libraryTokens } from '@web3icons/common/metadata/tokens';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useMemo, useState } from 'react';
@@ -101,6 +101,15 @@ const TokenGallery = () => {
             {TOKENS.length.toLocaleString('en')} tokens: {BUNDLED.size} go through your bundler, and the others, marked
             with a dot, load on demand from GitHub and cost your build nothing. Choose one to copy its code.
           </p>
+          <a
+            href="https://www.web3icons.io/?type=token&variant=branded"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 text-sm text-[var(--tuwa-text-accent)] hover:underline"
+          >
+            The original set on web3icons.io
+            <ExternalLinkIcon />
+          </a>
         </header>
 
         <div className="sticky top-0 z-10 -mx-2 mb-5 flex flex-wrap items-center gap-3 bg-[var(--tuwa-bg-secondary)] px-2 py-3">

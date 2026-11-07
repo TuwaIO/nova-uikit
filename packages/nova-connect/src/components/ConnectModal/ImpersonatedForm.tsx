@@ -2,7 +2,7 @@
  * @file ImpersonateForm component with comprehensive customization options and validation.
  */
 
-import { cn } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel } from '@tuwaio/nova-core/utils';
 import { isAddress, normalizeError, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, {
   ComponentType,
@@ -16,7 +16,6 @@ import React, {
 } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Types ---

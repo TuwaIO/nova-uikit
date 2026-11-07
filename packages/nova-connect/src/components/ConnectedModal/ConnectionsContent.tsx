@@ -7,6 +7,7 @@ import {
   cn,
   CopyIcon,
   ExternalLinkIcon,
+  formatLabel,
   MorphText,
   NetworkIcon,
   QuasarLoader,
@@ -28,7 +29,6 @@ import { ComponentType, forwardRef, ReactNode, useCallback, useEffect, useMemo, 
 
 import { useGetWalletNameAndAvatar, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon } from '../WalletIcon';

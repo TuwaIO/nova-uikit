@@ -3,7 +3,7 @@
  */
 
 import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, formatLabel, QuasarLoader } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
@@ -19,7 +19,6 @@ import React, {
 } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---

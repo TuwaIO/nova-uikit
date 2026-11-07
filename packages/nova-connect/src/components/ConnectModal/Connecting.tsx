@@ -2,12 +2,11 @@
  * @file Connecting component with comprehensive customization options and connection status display.
  */
 
-import { cn, DrawnCheck, DrawnCross, MorphText } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, formatLabel, MorphText } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';

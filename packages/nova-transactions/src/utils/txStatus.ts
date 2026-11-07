@@ -3,7 +3,7 @@
  */
 
 import type { StatusTone } from '@tuwaio/nova-core';
-import { getWalletFromConnectorType, isSameAddress, OrbitAdapter } from '@tuwaio/orbit-core';
+import { getWalletFromConnectorType, isSameAdapterAddress } from '@tuwaio/orbit-core';
 import { EvmTransaction, Transaction, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 
 import { NovaTransactionsLabels } from '../i18n/types';
@@ -121,7 +121,7 @@ export function walletPartOf(connectorType?: string): string | undefined {
  */
 export function isTxOfWallet(tx: Pick<Transaction, 'adapter' | 'from'>, wallet: string | undefined): boolean {
   if (!tx.from || !wallet) return false;
-  return isSameAddress(tx.adapter === OrbitAdapter.EVM ? 'eip155' : tx.adapter, tx.from, wallet);
+  return isSameAdapterAddress(tx.adapter, tx.from, wallet);
 }
 
 /**

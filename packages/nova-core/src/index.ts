@@ -10,6 +10,7 @@ export * from './components/Modal';
 export * from './components/MorphText';
 export * from './components/NetworkIcon';
 export * from './components/QuasarLoader';
+export * from './components/ScrollToTopButton';
 export * from './components/StarsBackground';
 export * from './components/StatusEdge';
 export * from './components/SvgImg';

@@ -2,13 +2,12 @@
  * @file ConnectedModalFooter component with comprehensive customization options and wallet control actions.
  */
 
-import { cn, standardButtonClasses } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { motion, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 
 // --- Default Motion Variants ---

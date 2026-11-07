@@ -4,6 +4,7 @@
  */
 
 import { ChevronArrowWithAnim, cn, MorphText } from '@tuwaio/nova-core';
+import { isSameAdapterAddress } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import React, {
   ComponentPropsWithoutRef,
@@ -24,7 +25,6 @@ import {
   useWalletNativeBalance,
 } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
-import { isSameWallet } from '../../utils/connectedAddress';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
 import { connectedStatusFor, nextConnectedStatus } from './connectedStatus';
 import { StatusIcon, StatusIconCustomization } from './StatusIcon';
@@ -316,7 +316,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
     const prevTxPoolRef = useRef<Transaction[]>(
       Object.values(transactionPool ?? {}).filter(
-        (tx) => tx?.from && activeConnection?.address && isSameWallet(tx, activeConnection.address),
+        (tx) =>
+          tx?.from && activeConnection?.address && isSameAdapterAddress(tx.adapter, tx.from, activeConnection.address),
       ),
     );
 
@@ -355,7 +356,10 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
 
       const currentPool =
         Object.values(transactionPool ?? {}).filter(
-          (tx) => tx?.from && activeConnection?.address && isSameWallet(tx, activeConnection.address),
+          (tx) =>
+            tx?.from &&
+            activeConnection?.address &&
+            isSameAdapterAddress(tx.adapter, tx.from, activeConnection.address),
         ) || [];
 
       const prevPool = prevTxPoolRef.current || [];

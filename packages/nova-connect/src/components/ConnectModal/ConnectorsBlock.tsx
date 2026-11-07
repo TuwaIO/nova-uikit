@@ -2,7 +2,7 @@
  * @file ConnectorsBlock component with comprehensive customization options and connector group display.
  */
 
-import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel, isTouchDevice } from '@tuwaio/nova-core/utils';
 import {
   ConnectorType,
   delay,
@@ -16,7 +16,6 @@ import {
 import React, { ComponentType, forwardRef, memo, useCallback, useContext, useMemo, useRef } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 import { SatelliteStoreContext, useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';

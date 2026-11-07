@@ -2,12 +2,11 @@
  * @file AboutWallets component with comprehensive customization options and touch support.
  */
 
-import { cn, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
+import { cn, formatLabel, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
-import { formatLabel } from '../../i18n/formatLabel';
 import { AboutWalletsArt, hasArt } from './AboutWalletsArt';
 
 // --- Types ---

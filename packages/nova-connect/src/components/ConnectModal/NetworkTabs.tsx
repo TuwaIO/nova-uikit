@@ -3,13 +3,12 @@
  */
 
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
-import { cn, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, NetworkIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 

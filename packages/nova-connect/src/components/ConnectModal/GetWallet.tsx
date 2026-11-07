@@ -2,12 +2,11 @@
  * @file GetWallet component with comprehensive customization options and staggered animations.
  */
 
-import { cn, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, StarsBackground, WalletIcon } from '@tuwaio/nova-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { ComponentType, forwardRef, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
-import { formatLabel } from '../../i18n/formatLabel';
 
 // --- Types ---
 

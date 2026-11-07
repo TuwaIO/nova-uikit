@@ -2,8 +2,8 @@
  * @file ConnectedModalMainContent component with comprehensive customization options for all child components.
  */
 
-import { cn, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
-import { getWalletFromConnectorType } from '@tuwaio/orbit-core';
+import { cn, formatLabel, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
+import { getWalletFromConnectorType, isSameAdapterAddress } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
@@ -20,9 +20,7 @@ import React, {
 
 import { NativeBalanceResult, NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
 import { useWalletConnectors } from '../../hooks/useWalletConnectors';
-import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
-import { isSameWallet } from '../../utils/connectedAddress';
 import { goesOnInNewRecord } from '../ConnectButton/connectedStatus';
 import { WalletAvatar, type WalletAvatarCustomization } from '../WalletAvatar';
 import {
@@ -692,7 +690,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
           ? Object.values(transactionPool).filter(
               (tx, _, all) =>
                 tx?.from &&
-                isSameWallet(tx, activeAddress) &&
+                isSameAdapterAddress(tx.adapter, tx.from, activeAddress) &&
                 // A sped-up record is no row of the history, and the count is read out next to that list
                 !goesOnInNewRecord(tx, all),
             )

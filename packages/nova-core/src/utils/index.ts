@@ -2,6 +2,7 @@ export * from './classes';
 export * from './cn';
 export * from './contrast';
 export * from './deepMerge';
+export * from './formatLabel';
 export * from './getChainName';
 export * from './isSolanaDev';
 export * from './isTouchDevice';

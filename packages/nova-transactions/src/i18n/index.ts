@@ -6,6 +6,7 @@
  */
 
 export * from './en';
+export * from './labelsForLocale';
 export * from './types';
 export * from './ua';
 export * from './zh';
