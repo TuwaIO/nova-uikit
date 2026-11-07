@@ -176,7 +176,8 @@ const DefaultIcon = ({ isCopied: _, className, ...props }: ToastValidationErrorI
 const DefaultTitle = ({ title, className }: ToastValidationErrorTitleProps) => (
   <span
     className={cn(
-      'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-error-icon)]',
+      // The text color of the state, not that of its icon: on a light surface the icon color has 3.8:1 where text needs 4.5:1
+      'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-error-text)]',
       className,
     )}
     role="heading"
@@ -193,7 +194,8 @@ const DefaultFieldBadge = ({ fieldLabel, fieldName, className }: ToastValidation
       className,
     )}
   >
-    <span className="novatx:opacity-60">{fieldLabel}:</span>
+    {/* Told apart by weight: with the color faded it had 3:1 on the tinted badge */}
+    <span>{fieldLabel}:</span>
     <span className="novatx:font-mono novatx:font-semibold">{fieldName}</span>
   </div>
 );

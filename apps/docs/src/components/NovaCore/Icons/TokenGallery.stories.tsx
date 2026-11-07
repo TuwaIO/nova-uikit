@@ -39,7 +39,7 @@ const segmentClass = (isActive: boolean) =>
   `cursor-pointer rounded-[calc(var(--tuwa-rounded-corners)-2px)] px-3 py-1.5 text-xs capitalize transition-colors ${
     isActive
       ? 'bg-[var(--tuwa-bg-primary)] text-[var(--tuwa-text-primary)] shadow-sm'
-      : 'text-[var(--tuwa-text-secondary)] hover:text-[var(--tuwa-text-primary)]'
+      : 'text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-bg-primary)]/60'
   }`;
 
 /** One token: the card copies the code that draws it. */
@@ -54,7 +54,8 @@ const TokenCard = ({ token, variant, reduceMotion }: { token: Token; variant: Va
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.18, ease: 'easeOut' }}
       onClick={() => void copy(`<TokenIcon symbol="${token.symbol}" />`)}
-      aria-label={`Copy the code of the ${token.name} icon`}
+      // Starts with the text on the card: whoever speaks to the page says what they see
+      aria-label={`${isCopied ? 'Copied' : token.symbol} ${token.name}, copy the code of the icon`}
       title={token.isBundled ? token.name : `${token.name}, loaded on demand`}
       className="group relative flex min-w-0 cursor-pointer flex-col items-center gap-3 rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] px-3 pt-5 pb-3.5 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[var(--tuwa-text-accent)] hover:shadow-[0_10px_28px_-14px_rgb(0_0_0/0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tuwa-text-accent)]"
     >
@@ -69,8 +70,9 @@ const TokenCard = ({ token, variant, reduceMotion }: { token: Token; variant: Va
           className={`max-w-full truncate font-mono text-xs tracking-wide ${isCopied ? 'text-[var(--tuwa-text-accent)]' : 'text-[var(--tuwa-text-primary)]'}`}
         >
           {isCopied ? 'Copied' : token.symbol}
-        </span>
-        <span className="max-w-full truncate text-[11px] text-[var(--tuwa-text-tertiary)]">{token.name}</span>
+        </span>{' '}
+        {/* The space keeps the two words apart in the accessible text: spans alone would read as one word */}
+        <span className="max-w-full truncate text-[11px] text-[var(--tuwa-text-secondary)]">{token.name}</span>
       </span>
     </motion.button>
   );
@@ -136,7 +138,7 @@ const TokenGallery = () => {
               aria-label="Search tokens by symbol or name"
               className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--tuwa-text-tertiary)]"
             />
-            <span className="shrink-0 font-mono text-xs text-[var(--tuwa-text-tertiary)]" aria-live="polite">
+            <span className="shrink-0 font-mono text-xs text-[var(--tuwa-text-secondary)]" aria-live="polite">
               {found.length.toLocaleString('en')}
             </span>
           </label>
@@ -199,7 +201,7 @@ const TokenGallery = () => {
                 >
                   Load more
                 </button>
-                <p className="text-xs text-[var(--tuwa-text-tertiary)]">
+                <p className="text-xs text-[var(--tuwa-text-secondary)]">
                   {visible.length.toLocaleString('en')} of {found.length.toLocaleString('en')}
                 </p>
               </div>
