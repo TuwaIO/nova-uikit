@@ -10,8 +10,20 @@
     transform: translate(2px, -2px);
   }
 
+  .tuwa-exit-arrow {
+    transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  a:hover .tuwa-exit-arrow,
+  a:focus-visible .tuwa-exit-arrow,
+  button:hover .tuwa-exit-arrow,
+  button:focus-visible .tuwa-exit-arrow {
+    transform: translateX(-3px);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .tuwa-link-arrow {
+    .tuwa-link-arrow,
+    .tuwa-exit-arrow {
       transition: none;
       transform: none !important;
     }

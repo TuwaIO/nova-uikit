@@ -3,6 +3,7 @@ export * from './components/ChevronArrowWithAnim';
 export * from './components/CloseIcon';
 export * from './components/CopyIcon';
 export * from './components/DrawnCheck';
+export * from './components/ExitIcon';
 export * from './components/ExternalLinkIcon';
 export * from './components/FallbackIcon';
 export * from './components/GithubFallbackIcon';

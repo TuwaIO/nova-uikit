@@ -2,6 +2,7 @@
  * @file ConnectedModalFooter component with comprehensive customization options and wallet control actions.
  */
 
+import { ExitIcon } from '@tuwaio/nova-core';
 import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { motion, type Variants } from 'framer-motion';
@@ -206,9 +207,6 @@ const DefaultDisconnectButton: React.FC<
   connectionsCount,
   ...props
 }) => {
-  const iconPath =
-    'M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15';
-
   return (
     <button
       type="button"
@@ -218,7 +216,7 @@ const DefaultDisconnectButton: React.FC<
       data-testid={testId}
       {...props}
     >
-      <DefaultFooterIcon pathData={iconPath} className="novacon:w-5 novacon:h-5" />
+      <ExitIcon className="novacon:w-5 novacon:h-5" />
       <span id={ariaDescribedBy} className="novacon:sr-only">
         {labels.disconnectAllDescription}
       </span>

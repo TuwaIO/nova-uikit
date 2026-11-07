@@ -2,10 +2,11 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { ArrowLeftStartOnRectangleIcon, ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ArrowsRightLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
 import {
   cn,
   CopyIcon,
+  ExitIcon,
   ExternalLinkIcon,
   formatLabel,
   MorphText,
@@ -1078,7 +1079,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
         >
-          <ArrowLeftStartOnRectangleIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
+          <ExitIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>
       </div>
     );
@@ -1670,11 +1671,23 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             setIsConnectModalOpen(true);
           }}
           className={cn(
-            'novacon:mt-2 novacon:w-full novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-dashed novacon:border-[var(--tuwa-border-primary)] novacon:p-3 novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:border-[var(--tuwa-text-accent)] novacon:hover:text-[var(--tuwa-text-accent)]',
+            'tuwa-add-wallet novacon:relative novacon:mt-2 novacon:flex novacon:w-full novacon:cursor-pointer novacon:items-center novacon:gap-3 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-3 novacon:text-left novacon:font-mono novacon:text-sm novacon:font-medium novacon:text-[var(--tuwa-text-primary)]',
             customization?.classNames?.addWalletButton?.(),
           )}
         >
-          + {labels.connectNewWallet}
+          <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="novacon:h-8 novacon:w-8 novacon:shrink-0">
+            <circle className="tuwa-add-wallet-ring" cx="16" cy="16" r="15" />
+            <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
+          </svg>
+          <span className="novacon:min-w-0 novacon:flex-1">{labels.connectNewWallet}</span>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+          >
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
         </button>
       )}
     </Container>
