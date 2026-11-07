@@ -83,7 +83,7 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
 | ----------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `GithubFallbackIcon` (used by `NetworkIcon`, `WalletIcon`, `TokenIcon`) | `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository) | SVG of a network or wallet that the installed `@web3icons/common` does not list. The SVGs are cached in memory until the page reloads. |
 
-The other icons come from the installed `@web3icons/react`, and the font is embedded in the stylesheet. The package does not use `localStorage`.
+The other icons come from the installed `@web3icons/react`, and the fonts are files next to the stylesheet (`dist/fonts`), served from your own origin by your bundler: a face is fetched only when the page uses it, and cached once. The package does not use `localStorage`.
 
 ---
 

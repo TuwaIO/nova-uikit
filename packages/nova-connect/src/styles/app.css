@@ -4,10 +4,10 @@
 @import 'tw-animate-css'; /*TODO: need warning about this in docs*/
 
 @theme {
-  --animate-float: float var(--tw-duration, 4000ms) var(--tw-ease, ease-in-out) infinite;
-  --animate-rotate: rotate var(--tw-duration, 1500ms) var(--tw-ease, ease) infinite;
+  --animate-float: novacon-float var(--tw-duration, 4000ms) var(--tw-ease, ease-in-out) infinite;
+  --animate-rotate: novacon-rotate var(--tw-duration, 1500ms) var(--tw-ease, ease) infinite;
 
-  @keyframes float {
+  @keyframes novacon-float {
     0%,
     100% {
       transform: translateY(0);
@@ -17,7 +17,7 @@
     }
   }
 
-  @keyframes rotate {
+  @keyframes novacon-rotate {
     0% {
       transform: rotate(0deg);
     }
@@ -35,7 +35,8 @@
   box-shadow: 0 2px 0 var(--tuwa-pending-icon) inset;
 }
 
-div[data-radix-popper-content-wrapper] {
+/* Above the dialogs of Nova. Only its own lists: the poppers of the host are its own */
+div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
   z-index: 101 !important;
 }
 

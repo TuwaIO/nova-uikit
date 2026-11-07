@@ -181,7 +181,16 @@ const DefaultToastError = ({
 
 const DefaultContainer = (props: ErrorsProviderContainerProps) => {
   const labels = useNovaConnectLabels();
-  return <ToastContainer {...props} role="alert" aria-live="assertive" aria-label={labels.somethingWentWrong} />;
+  return (
+    <ToastContainer
+      // On its own toasts: the same rule on `.Toastify__toast` took the padding from the toasts of the host
+      toastClassName="novacon:!p-0 novacon:!bg-transparent"
+      {...props}
+      role="alert"
+      aria-live="assertive"
+      aria-label={labels.somethingWentWrong}
+    />
+  );
 };
 
 // --- Default Handlers ---

@@ -8,7 +8,10 @@ const element = () => {
   const classes = new Set<string>();
   return {
     dataset: {} as Record<string, string | undefined>,
-    classList: { add: (name: string) => classes.add(name), remove: (name: string) => classes.delete(name) },
+    classList: {
+      add: (name: string) => classes.add(name),
+      remove: (...names: string[]) => names.forEach((name) => classes.delete(name)),
+    },
     has: (name: string) => classes.has(name),
   };
 };
@@ -17,6 +20,7 @@ const page = () => {
   const documentElement = element();
   const body = element();
   vi.stubGlobal('document', { documentElement, body });
+  vi.stubGlobal('window', { innerWidth: 1000 });
   return { documentElement, body };
 };
 
@@ -46,6 +50,27 @@ describe('lockPageScroll', () => {
     lower();
     expect(documentElement.has('NovaModalOpen')).toBe(false);
     expect(documentElement.dataset.novaModalsOpen).toBeUndefined();
+  });
+
+  // Owner, 2026-11-07: a gutter on the page of a host all the time is not Nova's to choose. It is kept only for a dialog, and only
+  // for a scrollbar that takes room, or the page would jump the other way
+  it('keeps the width of a scrollbar that takes room, while the dialog is open', () => {
+    const { documentElement } = page();
+    Object.assign(documentElement, { clientWidth: 985 });
+
+    const release = lockPageScroll();
+    expect(documentElement.has('NovaModalGutter')).toBe(true);
+
+    release();
+    expect(documentElement.has('NovaModalGutter')).toBe(false);
+  });
+
+  it('keeps no gutter for an overlay scrollbar, or for a page with none', () => {
+    const { documentElement } = page();
+    Object.assign(documentElement, { clientWidth: 1000 });
+
+    lockPageScroll();
+    expect(documentElement.has('NovaModalGutter')).toBe(false);
   });
 
   it('the stylesheet stops scrolling for that class, on any element', () => {

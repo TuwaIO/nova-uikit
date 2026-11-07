@@ -20,7 +20,8 @@
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
     },
-    "./dist/index.css": "./dist/index.css"
+    "./dist/index.css": "./dist/index.css",
+    "./dist/fonts/*": "./dist/fonts/*"
   },
   "publishConfig": {
     "access": "public"
@@ -34,7 +35,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css",
+    "build": "tsup && pnpm exec postcss ./src/styles/variables.css -o ./dist/index.css && rm -rf ./dist/fonts && cp -R ./src/styles/fonts ./dist/fonts",
     "generate:web3-icons": "node scripts/generateWeb3IconImports.mjs",
     "test": "vitest run"
   },

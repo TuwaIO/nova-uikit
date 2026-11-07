@@ -34,43 +34,45 @@
   );
 }
 
+/* Nova keeps to its own parts: the classes with its prefixes. The font, the line height and the tracking used to reach the whole page
+   of the host, with `!important`: a `<pre class="font-mono">` of a merchant lost its line height and could not get it back. */
 @layer base {
-  body {
+  /* The outermost part of Nova: the parts in it inherit, a monospace label among them. A customized part with no prefix follows the page */
+  :is([class*='novacore:'], [class*='novacon:'], [class*='novatx:'], [class*='novapay:']):not(
+    :is([class*='novacore:'], [class*='novacon:'], [class*='novatx:'], [class*='novapay:']) *
+  ) {
     font-family: var(--tuwa-font-sans);
   }
 
-  [class*='font-mono'] {
+  :is(
+    [class*='novacore:font-mono'],
+    [class*='novacon:font-mono'],
+    [class*='novatx:font-mono'],
+    [class*='novapay:font-mono']
+  ) {
     letter-spacing: -0.025em !important;
+  }
+
+  /* A part that sets its own line height has it, as the raw data of a transaction with several lines */
+  :is(
+    [class*='novacore:font-mono'],
+    [class*='novacon:font-mono'],
+    [class*='novatx:font-mono'],
+    [class*='novapay:font-mono']
+  ):not([class*=':leading-']) {
     line-height: 1 !important;
   }
 
   /* Reset negative tracking for Cyrillic / Ukrainian to prevent glyph collision */
-  :lang(uk) [class*='font-mono'],
-  html[lang='uk'] [class*='font-mono'],
-  html[lang^='uk'] [class*='font-mono'],
-  [lang='uk'] [class*='font-mono'],
-  [lang^='uk'] [class*='font-mono'] {
-    letter-spacing: normal !important;
-  }
-
-  :lang(uk) h1,
-  :lang(uk) h2,
-  :lang(uk) h3,
-  :lang(uk) h4,
-  :lang(uk) h5,
-  :lang(uk) h6,
-  html[lang='uk'] h1,
-  html[lang='uk'] h2,
-  html[lang='uk'] h3,
-  html[lang='uk'] h4,
-  html[lang='uk'] h5,
-  html[lang='uk'] h6,
-  html[lang^='uk'] h1,
-  html[lang^='uk'] h2,
-  html[lang^='uk'] h3,
-  html[lang^='uk'] h4,
-  html[lang^='uk'] h5,
-  html[lang^='uk'] h6 {
+  :lang(uk)
+    :is(
+      [class*='novacore:font-mono'],
+      [class*='novacon:font-mono'],
+      [class*='novatx:font-mono'],
+      [class*='novapay:font-mono']
+    ),
+  :lang(uk)
+    :is(h1, h2, h3, h4, h5, h6):is([class*='novacore:'], [class*='novacon:'], [class*='novatx:'], [class*='novapay:']) {
     letter-spacing: normal !important;
   }
 }
@@ -195,13 +197,10 @@ html[lang^='uk'],
   --tuwa-testnet-icons: #6b655e;
 }
 
-.Toastify {
+/* Its toasts stay clickable above a dialog, which turns off the pointer on the page. Its own containers: `nova-transactions`,
+   `nova-validation-...` and `nova-connect-errors`. The toasts of the host are its own. */
+.Toastify[id^='nova-'] {
   pointer-events: auto;
-}
-
-.Toastify__toast {
-  padding: 0 !important;
-  background: transparent;
 }
 
 @media (hover: hover) {
@@ -210,7 +209,7 @@ html[lang^='uk'],
   }
 
   .NovaCustomScroll {
-    animation: scrolling forwards;
+    animation: nova-scrolling forwards;
     animation-timeline: scroll(self);
   }
 
@@ -229,7 +228,7 @@ html[lang^='uk'],
     background-color: var(--tuwa-text-primary);
   }
 
-  @keyframes scrolling {
+  @keyframes nova-scrolling {
     0%,
     to {
       padding-right: 2px;
@@ -252,11 +251,12 @@ html[lang^='uk'],
   }
 }
 
-html {
-  scrollbar-gutter: stable;
-}
-
 .NovaModalOpen {
   overflow: hidden;
+}
+
+/* The width of the scrollbar that goes while a dialog is open, so that the page does not jump. Only then: the gutter of the page is
+   the host's to choose. */
+.NovaModalGutter {
   scrollbar-gutter: stable;
 }

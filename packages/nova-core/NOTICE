@@ -49,14 +49,9 @@ SOFTWARE.
 
 ========================================================================
 
-This product bundles embedded font software:
+This product includes font software:
 
 Project: Geist & Geist Mono
 Source: https://github.com/vercel/geist-font
-Copyright (c) 2023 Vercel, Inc.
-License: SIL Open Font License 1.1 (http://scripts.sil.org/OFL)
-
-Project: JetBrains Mono
-Source: https://github.com/JetBrains/JetBrainsMono
-Copyright (c) 2020 JetBrains s.r.o.
-License: SIL Open Font License 1.1 (http://scripts.sil.org/OFL)
+Copyright 2024 The Geist Project Authors
+License: SIL Open Font License 1.1 (https://openfontlicense.org), the text is in dist/fonts/OFL-Geist.txt
