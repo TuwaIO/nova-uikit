@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.13.0...nova-core-v0.13.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* **nova-core:** the monospace labels of every Nova package in the font of TUWA ([#144](https://github.com/TuwaIO/nova-uikit/issues/144)) ([d2a88e9](https://github.com/TuwaIO/nova-uikit/commit/d2a88e929995399c71f5a10cbb3f24c17834c425))
+
 ## [0.13.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.12.0...nova-core-v0.13.0) (2026-11-07)
 
 
