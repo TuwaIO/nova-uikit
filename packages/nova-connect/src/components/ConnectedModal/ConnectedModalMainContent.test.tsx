@@ -83,6 +83,32 @@ describe('ConnectedModalMainContent', () => {
     expect(listeners.size).toBe(0);
   });
 
+  // The icon stood outside the button with nothing saying what it meant, and in it the button would look busy
+  it('says under the button how many transactions are open, and nothing when none is', () => {
+    const open = { txKey: '0x1', from: address, pending: true } as unknown as Transaction;
+    const done = { txKey: '0x2', from: address, pending: false } as unknown as Transaction;
+
+    const section = (pool: Record<string, Transaction>) => {
+      type Node = { type?: unknown; props?: { children?: unknown; hasPendingTransactions?: boolean } };
+      const find = (node: unknown): Node | undefined => {
+        if (Array.isArray(node)) return node.map(find).find(Boolean);
+        const element = node as Node | null;
+        if (element?.props?.hasPendingTransactions !== undefined) return element;
+        return element?.props ? find(element.props.children) : undefined;
+      };
+      const found = find(renderMainContent({ transactionPool: pool }));
+      return JSON.stringify((found!.type as (props: unknown) => unknown)(found!.props));
+    };
+
+    const withOpen = section({ '0x1': open, '0x2': done });
+    expect(withOpen).toContain('pending-transactions-indicator');
+    expect(withOpen).toContain('Transactions pending: 1');
+
+    const withNone = section({ '0x2': done });
+    expect(withNone).not.toContain('pending-transactions-indicator');
+    expect(withNone).toContain('view-transactions-button');
+  });
+
   it('calls onTransactionsUpdate when the transactions change, not after every render', () => {
     const tx = { txKey: '0x1', from: address, pending: true } as unknown as Transaction;
     const pool = { '0x1': tx };

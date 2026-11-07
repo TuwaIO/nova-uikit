@@ -5,6 +5,7 @@ import * as React from 'react';
 import { cn, isTouchDevice } from '../utils';
 import { watchDialogAnchor } from './dialogAnchor';
 import { watchDialogFrameHeight } from './dialogFrameHeight';
+import { lockPageScroll } from './pageScrollLock';
 
 /**
  * The dialog root (`Root` of `@radix-ui/react-dialog`): holds the open state (`open`, `defaultOpen`, `onOpenChange`).
@@ -51,8 +52,7 @@ const defaultModalBackdropAnimation: Variants = {
  * The dimmed, blurred backdrop behind the dialog, faded in and out with `framer-motion`. {@link DialogContent} renders
  * it.
  *
- * Side effect: while it is mounted, the `NovaModalOpen` class is set on `document.body`; the stylesheet of this package
- * uses it to stop the page from scrolling.
+ * Side effect: while it is mounted, the page does not scroll (`lockPageScroll`).
  *
  * @param props - The overlay props.
  * @param props.className - Classes added to the backdrop element.
@@ -61,16 +61,7 @@ const defaultModalBackdropAnimation: Variants = {
  * @returns The backdrop.
  */
 const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: Variants; className?: string }) => {
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.document.body.classList.add('NovaModalOpen');
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.document.body.classList.remove('NovaModalOpen');
-      }
-    };
-  }, []);
+  React.useEffect(() => lockPageScroll(), []);
   return (
     <AnimatePresence>
       <motion.div

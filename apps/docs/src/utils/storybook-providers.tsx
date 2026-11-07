@@ -5,6 +5,7 @@ import { ConnectButtonProps } from '@tuwaio/nova-connect/components';
 import { EVMConnectorsWatcher } from '@tuwaio/nova-connect/evm';
 import { SatelliteConnectProvider, useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
 import { SolanaConnectorsWatcher } from '@tuwaio/nova-connect/solana';
+import { NovaTransactionsProvider, type NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
 import { createBoundedUseStore, createPulsarStore, Transaction } from '@tuwaio/pulsar-core';
 import { pulsarEvmAdapter } from '@tuwaio/pulsar-evm';
 import { pulsarSolanaAdapter } from '@tuwaio/pulsar-solana';
@@ -29,7 +30,7 @@ import {
   sepolia,
 } from 'viem/chains';
 
-import { novaConnectLabels } from '../../i18n/novaLabels';
+import { novaConnectLabels, novaTransactionsLabels } from '../../i18n/novaLabels';
 import { useStorybookLocale } from '../../i18n/useStorybookLocale';
 import { connectedWalletTransactionsMock } from './connectedWalletTransactionsMock';
 
@@ -180,6 +181,15 @@ function SatelliteConnectProvidersInner({
       >
         {children}
       </NovaConnectProvider>
+      {/* As in an app: mounted beside the wallet window, and the labels of its language reach the history and details there */}
+      <NovaTransactionsProvider
+        transactionsPool={{}}
+        adapter={getAdapter() as NovaTransactionsProviderProps<Transaction>['adapter']}
+        labels={novaTransactionsLabels[locale]}
+        closeTxTrackedModal={() => undefined}
+        executeTxAction={async () => undefined}
+        features={{ toasts: false, transactionsModal: false, trackingTxModal: false, validationErrorToast: false }}
+      />
     </>
   );
 }

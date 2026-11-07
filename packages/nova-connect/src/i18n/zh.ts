@@ -192,6 +192,7 @@ export const chineseLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: '切换网络 - {count} 个可用网络',
   transactionsInAppCount: '应用内交易 - {count} 笔交易',
   transactionsAvailable: '{count} 笔可用交易',
+  transactionsPendingCount: '待处理交易：{count}',
   noTransactionsForWallet: '该钱包暂无交易记录',
   walletName: '钱包名称：{name}',
   loadingWalletName: '正在加载钱包名称',

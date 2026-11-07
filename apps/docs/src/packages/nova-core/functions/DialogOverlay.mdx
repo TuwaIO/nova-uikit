@@ -11,8 +11,7 @@ Defined in: [components/Modal.tsx:63](https://github.com/TuwaIO/nova-uikit/blob/
 The dimmed, blurred backdrop behind the dialog, faded in and out with `framer-motion`. [DialogContent](?path=/docs/packages-nova-core-variables-dialogcontent--docs) renders
 it.
 
-Side effect: while it is mounted, the `NovaModalOpen` class is set on `document.body`; the stylesheet of this package
-uses it to stop the page from scrolling.
+Side effect: while it is mounted, the page does not scroll (`lockPageScroll`).
 
 ## Parameters
 

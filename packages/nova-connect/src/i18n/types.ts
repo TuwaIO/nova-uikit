@@ -383,6 +383,8 @@ export type NovaConnectLabels = {
   transactionsInAppCount: string;
   /** Screen reader text of the "View transactions" button (default: `{count} transactions available`) */
   transactionsAvailable: string;
+  /** The line under the "View transactions" button while the wallet has open transactions (default: `Transactions pending: {count}`). */
+  transactionsPendingCount: string;
   /**
    * Screen reader status without transactions of the active wallet (default: `No transactions found for this wallet`)
    */

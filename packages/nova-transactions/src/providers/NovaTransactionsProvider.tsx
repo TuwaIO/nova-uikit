@@ -39,7 +39,7 @@ import {
   toastStepFor,
 } from '../utils/replacement';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
-import { NovaTransactionsLabelsProvider } from './NovaTransactionsLabelsProvider';
+import { NovaTransactionsLabelsProvider, useOfferLabels } from './NovaTransactionsLabelsProvider';
 
 /**
  * Maps a transaction's final status to the corresponding toast type for visual feedback.
@@ -165,6 +165,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
   );
 
   const mergedLabels = useMemo(() => deepMerge(defaultLabels, labels || {}), [labels]);
+  useOfferLabels(mergedLabels);
 
   /**
    * Fires a top-center error toast for any error that occurs before the transaction

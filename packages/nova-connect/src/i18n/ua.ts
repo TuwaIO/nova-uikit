@@ -202,6 +202,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: 'Змінити мережу: доступно мереж — {count}',
   transactionsInAppCount: 'Транзакції в застосунку: {count}',
   transactionsAvailable: 'Доступно транзакцій: {count}',
+  transactionsPendingCount: 'Транзакцій в очікуванні: {count}',
   noTransactionsForWallet: 'Для цього гаманця транзакцій не знайдено',
   walletName: "Ім'я гаманця: {name}",
   loadingWalletName: 'Завантаження імені гаманця',

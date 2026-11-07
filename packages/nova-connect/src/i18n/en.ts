@@ -202,6 +202,7 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetworkNetworksAvailable: 'Switch network - {count} networks available',
   transactionsInAppCount: 'Transactions in app - {count} transactions',
   transactionsAvailable: '{count} transactions available',
+  transactionsPendingCount: 'Transactions pending: {count}',
   noTransactionsForWallet: 'No transactions found for this wallet',
   walletName: 'Wallet name: {name}',
   loadingWalletName: 'Loading wallet name',

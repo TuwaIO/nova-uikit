@@ -3,17 +3,54 @@
  * It allows for deep customization of all text displayed by the library.
  */
 
-import { createContext, ReactNode, useContext } from 'react';
+import { globalSingleton } from '@tuwaio/orbit-core';
+import { createContext, ReactNode, useContext, useEffect, useSyncExternalStore } from 'react';
 
 import { defaultLabels } from '../i18n/en';
 import { NovaTransactionsLabels } from '../i18n/types';
 
 /**
- * React Context for storing and providing the UI labels.
- * It is initialized with the default English labels, ensuring that components
- * work even without an explicit provider.
+ * React Context for storing and providing the UI labels, for what renders inside a provider.
  */
-const LabelsContext = createContext<NovaTransactionsLabels>(defaultLabels);
+const LabelsContext = createContext<NovaTransactionsLabels | null>(null);
+
+// What the mounted `NovaTransactionsProvider` was given. It has no children: the wallet window of Nova Connect and other
+// parts of this package render outside it and got English. On `globalThis`, as a bundler can load this package twice
+const hostedLabels = globalSingleton<{ labels: NovaTransactionsLabels | null; listeners: Set<() => void> }>(
+  'tuwaio.nova-transactions.labels',
+  () => ({ labels: null, listeners: new Set() }),
+);
+
+const subscribeToHostedLabels = (listener: () => void) => {
+  hostedLabels.listeners.add(listener);
+  return () => {
+    hostedLabels.listeners.delete(listener);
+  };
+};
+const readHostedLabels = () => hostedLabels.labels;
+const noHostedLabels = () => null;
+
+const setHostedLabels = (labels: NovaTransactionsLabels | null) => {
+  hostedLabels.labels = labels;
+  hostedLabels.listeners.forEach((listener) => listener());
+};
+
+/**
+ * Offers the labels of `NovaTransactionsProvider` to the parts of this package that render outside it, until it unmounts.
+ *
+ * Side effect: keeps them on `globalThis` (`Symbol.for('tuwaio.nova-transactions.labels')`) while mounted.
+ *
+ * @param labels - The merged labels of the provider.
+ * @internal
+ */
+export const useOfferLabels = (labels: NovaTransactionsLabels): void => {
+  useEffect(() => {
+    setHostedLabels(labels);
+    return () => {
+      if (hostedLabels.labels === labels) setHostedLabels(null);
+    };
+  }, [labels]);
+};
 
 /**
  * A React component that provides a custom set of labels to all child components.
@@ -34,8 +71,8 @@ export const NovaTransactionsLabelsProvider = ({
 };
 
 /**
- * A custom hook to easily access the i18n labels from any component
- * within the `NovaTransactionsLabelsProvider` tree.
+ * A custom hook to easily access the i18n labels from any component: those of the `NovaTransactionsLabelsProvider`
+ * above it, otherwise those of the `NovaTransactionsProvider` mounted in the app, otherwise the English defaults.
  *
  * @returns {NovaTransactionsLabels} The complete object of UI labels.
  *
@@ -46,5 +83,7 @@ export const NovaTransactionsLabelsProvider = ({
  * }
  */
 export const useLabels = (): NovaTransactionsLabels => {
-  return useContext(LabelsContext);
+  const inTree = useContext(LabelsContext);
+  const hosted = useSyncExternalStore(subscribeToHostedLabels, readHostedLabels, noHostedLabels);
+  return inTree ?? hosted ?? defaultLabels;
 };

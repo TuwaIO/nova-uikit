@@ -4,6 +4,7 @@
 
 import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
 import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
   Component,
@@ -14,6 +15,7 @@ import React, {
   ReactNode,
   Suspense,
   useCallback,
+  useState,
 } from 'react';
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
@@ -435,6 +437,11 @@ const TransactionsHistory = lazy(() =>
   import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsHistory })),
 );
 
+// The details of a transaction open here, over the wallet window: inside it they read as a second header under its own
+const TransactionsInfoModal = lazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsInfoModal })),
+);
+
 // --- Default Sub-Components ---
 const DefaultLoadingContainer: React.FC<ConnectedModalTxHistoryLoadingContainerProps> = ({
   labels,
@@ -687,6 +694,7 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
   ) => {
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
+    const [openedTxKey, setOpenedTxKey] = useState<string | null>(null);
 
     // Extract custom components and config
     const {
@@ -827,7 +835,20 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
                   className="novacon:w-full"
                   customization={customization?.transactionsHistory}
                   pagination={pagination}
-                  canViewDetails={!!removeTxFromPool}
+                  onSelectTx={setOpenedTxKey}
+                  removeTxFromPool={removeTxFromPool}
+                />
+                <TransactionsInfoModal
+                  isOpen={openedTxKey !== null}
+                  setIsOpen={(isOpen) => {
+                    if (!isOpen) setOpenedTxKey(null);
+                  }}
+                  selectedTxKey={openedTxKey}
+                  transactionsPool={transactionPool}
+                  adapter={pulsarAdapter}
+                  connectedWalletAddress={activeConnection!.address}
+                  connectedAdapterType={getAdapterFromConnectorType(activeConnection!.connectorType)}
+                  pagination={pagination}
                   removeTxFromPool={removeTxFromPool}
                 />
               </TransactionsHistoryWrapper>

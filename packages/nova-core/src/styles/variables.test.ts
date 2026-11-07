@@ -97,20 +97,11 @@ describe('theme variables', () => {
   });
 });
 
-// `NetworkIcon` paints the background of a testnet's icon with this color. A pale one left the white mark of Solana Devnet and
-// the pale mark of Sepolia on a square of nearly the same shade: at 1.8 to 1 it read as a broken icon
+// `NetworkIcon` paints the background of a testnet's icon with this color. The owner chose it by eye: a darker one
+// (#6b655e) gave the marks more contrast, and made the list of networks read too dark
 describe('the color of testnet icons', () => {
-  const testnet = [...css.matchAll(/--tuwa-testnet-icons:\s*(#[0-9a-f]{6})/gi)].map((match) => match[1]);
-
-  it('is set in both themes', () => {
-    expect(testnet).toHaveLength(2);
-  });
-
-  it.each([
-    ['the white mark of Solana', '#ffffff'],
-    ['the green of the Ethereum mark', '#8FFCF3'],
-    ['the violet of the Ethereum mark', '#CABCF8'],
-  ])('keeps %s visible (WCAG 1.4.11, 3 to 1)', (_name, mark) => {
-    for (const color of testnet) expect(contrastRatio(color, mark)).toBeGreaterThanOrEqual(3);
+  it('is the pale one in both themes', () => {
+    const testnet = [...css.matchAll(/--tuwa-testnet-icons:\s*(#[0-9a-f]{6})/gi)].map((match) => match[1]);
+    expect(testnet).toEqual(['#c4bfb8', '#c4bfb8']);
   });
 });
