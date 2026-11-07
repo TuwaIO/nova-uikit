@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.13.0...nova-transactions-v0.13.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* **nova-transactions:** the validation toast title is readable on light surfaces ([#141](https://github.com/TuwaIO/nova-uikit/issues/141)) ([be6d5f6](https://github.com/TuwaIO/nova-uikit/commit/be6d5f693c39fa1e23627c64c353745c863ed32b))
+
 ## [0.13.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.12.0...nova-transactions-v0.13.0) (2026-11-07)
 
 
