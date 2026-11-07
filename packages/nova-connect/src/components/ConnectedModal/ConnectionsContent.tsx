@@ -32,7 +32,7 @@ import { formatLabel } from '../../i18n/formatLabel';
 import { useSatelliteConnectStore } from '../../satellite';
 import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { WalletIcon } from '../WalletIcon';
-import { connectorDisplayName } from './connectorName';
+import { connectorDisplayName, isImpersonatedConnector } from './connectorName';
 
 // --- Types for Customization ---
 
@@ -1373,12 +1373,8 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
           solanaRPCUrls,
         });
         const walletName = connectorName(connectorType);
-        if (walletName === 'Impersonatedwallet') {
-          impersonatedHelpers.setImpersonated(address.trim());
-          await connect({ connectorType, chainId });
-        } else {
-          await connect({ connectorType, chainId });
-        }
+        if (isImpersonatedConnector(connectorType)) impersonatedHelpers.setImpersonated(address.trim());
+        await connect({ connectorType, chainId });
 
         // Announce to screen readers
         const announcement =
