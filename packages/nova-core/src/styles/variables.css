@@ -131,6 +131,11 @@
   --tuwa-font-mono:
     'Geist Mono', 'JetBrains Mono', 'Cascadia Code', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', monospace;
+  /* The packages of Nova build their classes with prefixes of their own, each on the monospace font of Tailwind, which is the
+     font of the system: their labels did not match the rest. Here again for Ukrainian, as a variable keeps the value of its rule */
+  --novacon-font-mono: var(--tuwa-font-mono);
+  --novatx-font-mono: var(--tuwa-font-mono);
+  --novapay-font-mono: var(--tuwa-font-mono);
 }
 
 :lang(uk),
@@ -152,6 +157,9 @@ html[lang^='uk'],
     'Liberation Mono',
     monospace
   );
+  --novacon-font-mono: var(--tuwa-font-mono);
+  --novatx-font-mono: var(--tuwa-font-mono);
+  --novapay-font-mono: var(--tuwa-font-mono);
 }
 
 .dark {
