@@ -125,19 +125,22 @@ export function isTxOfWallet(tx: Pick<Transaction, 'adapter' | 'from'>, wallet: 
 }
 
 /**
- * The title a transaction shows: the one the app gave it, otherwise the default of the labels. A saved text would freeze
- * one language, so the default is read here and never written to the record.
+ * The title a transaction shows: the one the app gave it, otherwise the default of the labels with its type in brackets,
+ * which says what kind of transaction it is. A saved text would freeze one language, so the default is read here and never
+ * written to the record.
  *
  * @param tx - The transaction.
  * @param tx.title - Its title, by status or one for all.
+ * @param tx.type - Its type, from the app.
  * @param labels - The labels of a transaction.
  * @returns What to pass to `StatusAwareText` as `source`.
  */
 export function txTitleSource(
-  tx: { title?: string | readonly string[] },
+  tx: { title?: string | readonly string[]; type?: string },
   labels: NovaTransactionsLabels['transaction'],
 ): string | readonly string[] {
-  return tx.title?.length ? tx.title : labels.defaultTitle;
+  if (tx.title?.length) return tx.title;
+  return tx.type ? `${labels.defaultTitle} (${tx.type})` : labels.defaultTitle;
 }
 
 /**

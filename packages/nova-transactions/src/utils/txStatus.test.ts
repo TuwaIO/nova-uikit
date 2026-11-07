@@ -135,6 +135,9 @@ describe('a transaction with no title or description', () => {
     const byStatus = ['Swapping', 'Swapped', 'Failed', 'Replaced'];
     expect(txTitleSource({ title: byStatus }, labels)).toBe(byStatus);
     expect(txTitleSource({}, ukrainianLabels.transaction)).toBe('Транзакція');
+    // The type in brackets says what kind of transaction it is
+    expect(txTitleSource({ type: 'increment' }, ukrainianLabels.transaction)).toBe('Транзакція (increment)');
+    expect(txTitleSource({ type: 'increment', title: 'Swap' }, labels)).toBe('Swap');
   });
 
   // In the order `statusText` reads: pending, success, failed, replaced
