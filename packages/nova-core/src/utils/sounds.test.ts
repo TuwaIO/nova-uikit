@@ -3,14 +3,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NOVA_SOUND_NAMES, type NovaSoundName, playNovaSound } from './sounds';
 
 const started = vi.fn();
+const rushed = vi.fn();
 const ramps = vi.fn();
-const param = () => ({ setValueAtTime: vi.fn(), exponentialRampToValueAtTime: ramps });
+const param = (ramp = vi.fn()) => ({ setValueAtTime: vi.fn(), exponentialRampToValueAtTime: ramp });
 let state = 'running';
 const resume = vi.fn(async () => undefined);
 const created = vi.fn();
 
 class FakeAudioContext {
   currentTime = 0;
+  sampleRate = 8000;
   destination = {};
   resume = resume;
   get state() {
@@ -20,10 +22,19 @@ class FakeAudioContext {
     created();
   }
   createOscillator() {
-    return { type: 'sine', frequency: param(), connect: vi.fn(), start: started, stop: vi.fn() };
+    return { type: 'sine', frequency: param(), detune: param(), connect: vi.fn(), start: started, stop: vi.fn() };
   }
   createGain() {
-    return { gain: param(), connect: vi.fn() };
+    return { gain: param(ramps), connect: vi.fn() };
+  }
+  createBuffer(_channels: number, length: number) {
+    return { getChannelData: () => new Float32Array(length) };
+  }
+  createBufferSource() {
+    return { buffer: null, connect: vi.fn(), start: rushed, stop: vi.fn() };
+  }
+  createBiquadFilter() {
+    return { type: 'lowpass', Q: param(), frequency: param(), connect: vi.fn() };
   }
 }
 
@@ -73,7 +84,7 @@ describe('playNovaSound', () => {
     expect(started).not.toHaveBeenCalled();
 
     playNovaSound('txError', { volume: 5 });
-    expect(Math.max(...ramps.mock.calls.map(([value]) => value as number))).toBe(1);
+    expect(Math.max(...ramps.mock.calls.map(([value]) => value as number))).toBeLessThanOrEqual(1);
   });
 
   // With two tabs open, each tracks the same transaction
@@ -94,6 +105,13 @@ describe('playNovaSound', () => {
     vi.stubGlobal('window', undefined);
     playNovaSound('connect', true);
     expect(started).not.toHaveBeenCalled();
+  });
+
+  // Owner, 2026-11-07: a wallet thrown away sounds like one
+  it('gives a removed wallet the rush of its fall as well as its tones', () => {
+    playNovaSound('remove', true);
+    expect(rushed).toHaveBeenCalledOnce();
+    expect(started).toHaveBeenCalled();
   });
 
   it('makes one sound of two parts that report the same moment', () => {

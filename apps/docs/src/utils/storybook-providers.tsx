@@ -12,7 +12,6 @@ import { pulsarSolanaAdapter } from '@tuwaio/pulsar-solana';
 import { createDefaultTransports, impersonated, safeSdkOptions } from '@tuwaio/satellite-evm';
 import { satelliteEVMAdapter } from '@tuwaio/satellite-evm';
 import { satelliteSolanaAdapter } from '@tuwaio/satellite-solana';
-import { useSiwxSession } from '@tuwaio/siwx-react';
 import { safe } from '@wagmi/connectors';
 import { createConfig, createStorage, injected, noopStorage } from '@wagmi/core';
 import {
@@ -134,6 +133,10 @@ export interface ExtendedConnectButtonProps extends ConnectButtonProps {
 
 interface SatelliteConnectProvidersProps {
   children: React.ReactNode;
+  /** The `siwx` prop of `NovaConnectProvider`, for the stories of the sign-in. */
+  siwx?: NovaConnectProviderProps['siwx'];
+  /** Whether the last wallet comes back after a reload, for the stories of the sign-in. */
+  autoConnect?: boolean;
   withBalance?: boolean;
   withChain?: boolean;
   withImpersonated?: boolean;
@@ -145,6 +148,7 @@ interface SatelliteConnectProvidersProps {
 
 function SatelliteConnectProvidersInner({
   children,
+  siwx,
   withBalance,
   withChain,
   withImpersonated,
@@ -155,14 +159,14 @@ function SatelliteConnectProvidersInner({
 }: SatelliteConnectProvidersProps) {
   const activeConnection = useSatelliteConnectStore((state) => state.activeConnection);
   const getAdapter = usePulsarStore((state) => state.getAdapter);
-  const siwxSession = useSiwxSession();
   // The language tool of the toolbar picks the labels, as an app passes its own language
   const locale = useStorybookLocale();
 
   return (
     <>
-      <EVMConnectorsWatcher wagmiConfig={wagmiConfig} siwx={siwxSession} />
-      <SolanaConnectorsWatcher siwx={siwxSession} />
+      {/* Without the session: with it, they disconnect a wallet on a change of network, before `siwx` of Nova Connect can ask */}
+      <EVMConnectorsWatcher wagmiConfig={wagmiConfig} />
+      <SolanaConnectorsWatcher />
 
       <NovaConnectProvider
         appChains={appEVMChains}
@@ -178,6 +182,7 @@ function SatelliteConnectProvidersInner({
         popularConnectors={popularConnectors}
         legal={legal}
         labels={novaConnectLabels[locale]}
+        siwx={siwx}
         sounds
       >
         {children}
@@ -197,6 +202,8 @@ function SatelliteConnectProvidersInner({
 
 export function StorybookProviders({
   children,
+  siwx,
+  autoConnect = false,
   withBalance,
   withChain,
   withImpersonated,
@@ -208,9 +215,10 @@ export function StorybookProviders({
   // No WagmiProvider: EVMConnectorsWatcher hydrates the wagmi config, so the installed (EIP-6963) wallets appear.
   // rememberWallet={false}: a wallet is kept until the tab closes unless "Remember this wallet" is ticked (Cookie Policy)
   return (
-    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={false} rememberWallet={false}>
+    <SatelliteConnectProvider adapter={satelliteAdapters} autoConnect={autoConnect} rememberWallet={false}>
       {customization && <div className="custom-theme" style={{ display: 'none' }} />}
       <SatelliteConnectProvidersInner
+        siwx={siwx}
         withBalance={withBalance}
         withChain={withChain}
         withImpersonated={withImpersonated}

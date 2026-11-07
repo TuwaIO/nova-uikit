@@ -1,5 +1,6 @@
 /**
- * @file The sounds of the Nova components: short tones synthesized with the Web Audio API, so no files and no requests.
+ * @file The sounds of the Nova components: short space-like tones synthesized with the Web Audio API, so no files and no
+ * requests.
  */
 
 /** The moments of the Nova components that can have a sound. */
@@ -12,7 +13,8 @@ export type NovaSoundName =
   | 'error'
   | 'networkSwitch'
   | 'copy'
-  | 'balanceRefresh';
+  | 'balanceRefresh'
+  | 'remove';
 
 /** Every {@link NovaSoundName}. */
 export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
@@ -25,6 +27,7 @@ export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
   'networkSwitch',
   'copy',
   'balanceRefresh',
+  'remove',
 ];
 
 /**
@@ -52,63 +55,175 @@ type Tone = {
   /** Loudness against the other sounds, from 0 to 1. */
   gain: number;
   wave?: OscillatorType;
+  /** Cents between two voices of the tone, whose slow beating is what makes it shimmer. */
+  shimmer?: number;
 };
 
-// Up for what began or went well, down for what ended or failed. What happens often, a copy or a refresh, is the quietest
-const TONES: Record<NovaSoundName, readonly Tone[]> = {
-  connect: [
-    { frequency: 659, at: 0, duration: 0.09, gain: 0.9 },
-    { frequency: 988, at: 0.07, duration: 0.16, gain: 0.9 },
-  ],
-  disconnect: [
-    { frequency: 494, at: 0, duration: 0.09, gain: 0.8 },
-    { frequency: 330, at: 0.07, duration: 0.17, gain: 0.8 },
-  ],
-  txPending: [{ frequency: 880, at: 0, duration: 0.07, gain: 0.5, wave: 'triangle' }],
-  txSuccess: [
-    { frequency: 523, at: 0, duration: 0.09, gain: 0.8 },
-    { frequency: 659, at: 0.08, duration: 0.09, gain: 0.8 },
-    { frequency: 784, at: 0.16, duration: 0.2, gain: 0.9 },
-  ],
-  txError: [
-    { frequency: 220, at: 0, duration: 0.13, gain: 1, wave: 'triangle' },
-    { frequency: 175, at: 0.11, duration: 0.22, gain: 1, wave: 'triangle' },
-  ],
-  error: [{ frequency: 196, glideTo: 165, at: 0, duration: 0.18, gain: 0.9, wave: 'triangle' }],
-  networkSwitch: [{ frequency: 520, glideTo: 780, at: 0, duration: 0.13, gain: 0.55 }],
-  copy: [{ frequency: 1400, at: 0, duration: 0.04, gain: 0.3 }],
-  balanceRefresh: [
-    { frequency: 660, at: 0, duration: 0.05, gain: 0.3 },
-    { frequency: 880, at: 0.055, duration: 0.06, gain: 0.3 },
-  ],
+/** Noise that a moving filter turns into a rush of air. */
+type Rush = {
+  /** Hertz of the filter at the start. */
+  from: number;
+  /** Hertz of the filter at the end. */
+  to: number;
+  /** Seconds after the start of the sound. */
+  at: number;
+  /** Seconds. */
+  duration: number;
+  /** Loudness against the other sounds, from 0 to 1. */
+  gain: number;
+};
+
+type Sound = {
+  tones: readonly Tone[];
+  rushes?: readonly Rush[];
+  /** How many times the tones come back, quieter each time, as from far away. */
+  echoes?: number;
+};
+
+// The theme of TUWA is space: what begins slides up and rings on, what ends slides down, and the echoes give it the room. What
+// happens often, a copy or a refresh, is the shortest and the quietest
+const SOUNDS: Record<NovaSoundName, Sound> = {
+  // Docking: a glide up that settles on a ringing fifth
+  connect: {
+    tones: [
+      { frequency: 330, glideTo: 660, at: 0, duration: 0.18, gain: 0.55, shimmer: 8 },
+      { frequency: 660, at: 0.14, duration: 0.34, gain: 0.7, shimmer: 6 },
+      { frequency: 990, at: 0.2, duration: 0.38, gain: 0.4, shimmer: 6 },
+    ],
+    echoes: 2,
+  },
+  // Powering down
+  disconnect: {
+    tones: [
+      { frequency: 660, glideTo: 165, at: 0, duration: 0.38, gain: 0.7, shimmer: 10 },
+      { frequency: 330, glideTo: 82, at: 0.04, duration: 0.42, gain: 0.35 },
+    ],
+    echoes: 1,
+  },
+  // A sonar ping sent out, and its reflections
+  txPending: {
+    tones: [{ frequency: 1175, at: 0, duration: 0.12, gain: 0.45, shimmer: 5 }],
+    echoes: 3,
+  },
+  // Arrival: a rising chord of open fifths
+  txSuccess: {
+    tones: [
+      { frequency: 523, at: 0, duration: 0.3, gain: 0.6, shimmer: 6 },
+      { frequency: 784, at: 0.09, duration: 0.34, gain: 0.6, shimmer: 6 },
+      { frequency: 1175, at: 0.18, duration: 0.4, gain: 0.55, shimmer: 6 },
+      { frequency: 1568, at: 0.27, duration: 0.5, gain: 0.4, shimmer: 6 },
+    ],
+    echoes: 2,
+  },
+  // A signal lost
+  txError: {
+    tones: [
+      { frequency: 311, glideTo: 155, at: 0, duration: 0.34, gain: 0.8, wave: 'triangle', shimmer: 14 },
+      { frequency: 233, glideTo: 110, at: 0.12, duration: 0.42, gain: 0.8, wave: 'triangle', shimmer: 14 },
+    ],
+    echoes: 1,
+  },
+  // A glitch in the signal
+  error: {
+    tones: [{ frequency: 247, glideTo: 185, at: 0, duration: 0.22, gain: 0.7, wave: 'triangle', shimmer: 18 }],
+    echoes: 1,
+  },
+  // A jump through hyperspace
+  networkSwitch: {
+    tones: [
+      { frequency: 392, glideTo: 1175, at: 0, duration: 0.2, gain: 0.45, shimmer: 10 },
+      { frequency: 1175, at: 0.16, duration: 0.22, gain: 0.3, shimmer: 6 },
+    ],
+    rushes: [{ from: 600, to: 3200, at: 0, duration: 0.22, gain: 0.12 }],
+    echoes: 1,
+  },
+  // A star that twinkles
+  copy: {
+    tones: [
+      { frequency: 1760, at: 0, duration: 0.06, gain: 0.25 },
+      { frequency: 2637, at: 0.045, duration: 0.09, gain: 0.2 },
+    ],
+  },
+  // A short scan
+  balanceRefresh: {
+    tones: [
+      { frequency: 880, glideTo: 1320, at: 0, duration: 0.1, gain: 0.22 },
+      { frequency: 1320, at: 0.09, duration: 0.12, gain: 0.2, shimmer: 5 },
+    ],
+  },
+  // Out through the airlock and into the bin: the rush of the fall, the thud of the landing and the lid
+  remove: {
+    tones: [
+      { frequency: 520, glideTo: 110, at: 0.02, duration: 0.26, gain: 0.4, wave: 'triangle' },
+      { frequency: 90, glideTo: 55, at: 0.26, duration: 0.14, gain: 0.9 },
+      { frequency: 1400, at: 0.3, duration: 0.05, gain: 0.12, wave: 'triangle' },
+    ],
+    rushes: [{ from: 2400, to: 300, at: 0, duration: 0.28, gain: 0.6 }],
+  },
 };
 
 const DEFAULT_VOLUME = 0.2;
 const SILENCE = 0.0001;
+const ATTACK_SECONDS = 0.012;
+const ECHO_SECONDS = 0.14;
+const ECHO_LEVEL = 0.35;
+// Room for the tones that overlap: measured, the loudest sound stays below clipping at full volume. Two voices share it
+const TONE_LEVEL = 0.8;
 // Two parts of a page that report the same moment, as the balance in the button and in the window, make one sound
 const SAME_SOUND_WITHIN_MS = 60;
 
 let context: AudioContext | undefined;
+let noise: AudioBuffer | undefined;
 const lastPlayedAt = new Map<NovaSoundName, number>();
 
-function playTone(audio: AudioContext, start: number, volume: number, tone: Tone) {
+function envelopeOf(audio: AudioContext, at: number, end: number, peak: number) {
+  const gain = audio.createGain();
+  gain.gain.setValueAtTime(SILENCE, at);
+  gain.gain.exponentialRampToValueAtTime(Math.max(peak, SILENCE), at + ATTACK_SECONDS);
+  gain.gain.exponentialRampToValueAtTime(SILENCE, end);
+  gain.connect(audio.destination);
+  return gain;
+}
+
+function playTone(audio: AudioContext, start: number, level: number, tone: Tone) {
   const at = start + tone.at;
   const end = at + tone.duration;
-  const oscillator = audio.createOscillator();
-  const gain = audio.createGain();
+  const voices = tone.shimmer ? [tone.shimmer, -tone.shimmer] : [0];
+  const gain = envelopeOf(audio, at, end, (tone.gain * level * TONE_LEVEL) / voices.length);
 
-  oscillator.type = tone.wave ?? 'sine';
-  oscillator.frequency.setValueAtTime(tone.frequency, at);
-  if (tone.glideTo) oscillator.frequency.exponentialRampToValueAtTime(tone.glideTo, end);
+  for (const cents of voices) {
+    const oscillator = audio.createOscillator();
+    oscillator.type = tone.wave ?? 'sine';
+    oscillator.detune.setValueAtTime(cents, at);
+    oscillator.frequency.setValueAtTime(tone.frequency, at);
+    if (tone.glideTo) oscillator.frequency.exponentialRampToValueAtTime(tone.glideTo, end);
+    oscillator.connect(gain);
+    oscillator.start(at);
+    oscillator.stop(end + 0.02);
+  }
+}
 
-  gain.gain.setValueAtTime(SILENCE, at);
-  gain.gain.exponentialRampToValueAtTime(Math.max(tone.gain * volume, SILENCE), at + 0.008);
-  gain.gain.exponentialRampToValueAtTime(SILENCE, end);
+function playRush(audio: AudioContext, start: number, level: number, rush: Rush) {
+  const at = start + rush.at;
+  const end = at + rush.duration;
 
-  oscillator.connect(gain);
-  gain.connect(audio.destination);
-  oscillator.start(at);
-  oscillator.stop(end + 0.02);
+  if (!noise) {
+    noise = audio.createBuffer(1, audio.sampleRate, audio.sampleRate);
+    const samples = noise.getChannelData(0);
+    for (let i = 0; i < samples.length; i += 1) samples[i] = Math.random() * 2 - 1;
+  }
+
+  const source = audio.createBufferSource();
+  source.buffer = noise;
+  const filter = audio.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.Q.setValueAtTime(1.2, at);
+  filter.frequency.setValueAtTime(rush.from, at);
+  filter.frequency.exponentialRampToValueAtTime(rush.to, end);
+  source.connect(filter);
+  filter.connect(envelopeOf(audio, at, end, rush.gain * level));
+  source.start(at);
+  source.stop(end + 0.02);
 }
 
 /**
@@ -140,7 +255,12 @@ export function playNovaSound(name: NovaSoundName, config: NovaSoundsConfig | un
     context ??= new AudioContext();
     if (context.state === 'suspended') void context.resume().catch(() => undefined);
     const start = context.currentTime + 0.01;
-    for (const tone of TONES[name]) playTone(context, start, volume, tone);
+    const { tones, rushes = [], echoes = 0 } = SOUNDS[name];
+
+    for (let echo = 0; echo <= echoes; echo += 1) {
+      for (const tone of tones) playTone(context, start + echo * ECHO_SECONDS, volume * ECHO_LEVEL ** echo, tone);
+    }
+    for (const rush of rushes) playRush(context, start, volume, rush);
   } catch (error) {
     console.warn('[Nova] Could not play a sound:', error);
   }

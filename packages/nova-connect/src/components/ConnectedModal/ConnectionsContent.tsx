@@ -14,6 +14,7 @@ import {
   QuasarLoader,
   TrashIcon,
   useCopyToClipboard,
+  useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
   ConnectorType,
@@ -1430,13 +1431,15 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
   /**
    * Handle removing a recent wallet from history
    */
+  const play = useNovaSounds();
   const handleRemoveRecent = useCallback(
     (connectorType: ConnectorType, event: React.MouseEvent) => {
       event.stopPropagation();
       recentlyConnectedConnectorsListHelpers.removeConnector(connectorType);
       updateRecentList(); // Manually update state to reflect changes immediately
+      play('remove');
     },
-    [updateRecentList],
+    [updateRecentList, play],
   );
 
   /**

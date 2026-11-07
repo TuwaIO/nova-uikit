@@ -66,13 +66,14 @@ vi.mock('@tuwaio/siwx-react', async (importOriginal) => {
 });
 
 const disconnect = vi.fn();
+const disconnectAll = vi.fn(async () => undefined);
 let activeConnection: Record<string, unknown> | undefined;
 let connecting = false;
 
 vi.mock('../satellite', () => ({
   SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
-    selector({ activeConnection, connecting, disconnect, isAutoConnectFinished: true }),
+    selector({ activeConnection, connecting, disconnect, disconnectAll, isAutoConnectFinished: true }),
 }));
 
 const { NovaSiwxWatcher } = await import('./NovaSiwxWatcher');
@@ -409,18 +410,45 @@ describe('NovaSiwxWatcher with a wallet that is already connected', () => {
     vi.restoreAllMocks();
   });
 
-  // Connected means signed in. A sign-out used to do one thing or another, by how the session had started
-  it('disconnects a wallet whose session ended, with no prompt', () => {
+  // Connected means signed in. A sign-out used to do one thing or another, by how the session had started. All of the wallets:
+  // with one disconnected, the next would take over and be asked to sign in right after the person has signed out
+  it('disconnects every wallet when the session ended, with no prompt', () => {
     signedInAs(FIRST);
     activeConnection = walletOf(FIRST);
     mount(props);
-    expect(disconnect).not.toHaveBeenCalled();
+    expect(disconnectAll).not.toHaveBeenCalled();
 
     useSiwxSessionStore.getState().reset();
     render(NovaSiwxWatcher, props);
 
-    expect(disconnect).toHaveBeenCalledOnce();
-    expect(disconnect).toHaveBeenCalledWith('evm:metamask');
+    expect(disconnectAll).toHaveBeenCalledOnce();
+    expect(disconnect).not.toHaveBeenCalled();
+    expect(signIn).not.toHaveBeenCalled();
+  });
+
+  // The wallets go one by one, and what wagmi reports of those left re-runs the check with no session: live, a prompt for the
+  // wallet that was just signing out
+  it('asks nobody while the wallets of a session that ended are going', async () => {
+    const going = deferred<undefined>();
+    disconnectAll.mockReturnValueOnce(going.promise);
+    signedInAs(SECOND);
+    activeConnection = walletOf(SECOND);
+    mount(props);
+
+    useSiwxSessionStore.getState().reset();
+    render(NovaSiwxWatcher, props);
+    activeConnection = walletOf(SECOND);
+    render(NovaSiwxWatcher, props);
+    activeConnection = walletOf(FIRST);
+    render(NovaSiwxWatcher, props);
+
+    expect(signIn).not.toHaveBeenCalled();
+    expect(disconnectAll).toHaveBeenCalledOnce();
+
+    going.resolve(undefined);
+    activeConnection = undefined;
+    await flush();
+    render(NovaSiwxWatcher, props);
     expect(signIn).not.toHaveBeenCalled();
   });
 

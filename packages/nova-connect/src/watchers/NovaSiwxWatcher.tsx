@@ -114,9 +114,12 @@ export interface NovaSiwxWatcherProps extends SatelliteSiwxFieldOptions {
  *   `@tuwaio/siwx-react` covers it. Otherwise the page shows Connect, and the signature comes after the click.
  * - A connected wallet that moves to another account (with the default `sessionScope` `'chain'`, also another network) is asked
  *   to sign in, and disconnected if it rejects. With `'account'`, a network switch of the same account asks nothing.
- * - When the session of the connected wallet ends, as with `signOut` of `useNovaSiwx` or `reset` of `useSiwxSessionStore`, the
- *   wallet is disconnected: connected means signed in. It is not asked to sign again.
+ * - When the session of the connected wallet ends, as with `signOut` of `useNovaSiwx` or `reset` of `useSiwxSessionStore`, every
+ *   wallet is disconnected (`disconnectAll`): connected means signed in. None is asked to sign again.
  * - A backend that could not answer ({@link NovaSiwxServiceError}) is no failed sign-in: see there.
+ * - Do not also pass the session to the `siwx` prop of `EVMConnectorsWatcher` or `SolanaConnectorsWatcher`: they would
+ *   disconnect a wallet on a change of network at once, before it is asked to sign in, and with `sessionScope` `'account'`
+ *   on every change of network.
  * - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until Satellite
  *   Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by `@tuwaio/siwx-react` is kept. With
  *   `endSessionOnlyAfterDisconnect`, it does so only once a wallet that this page connected or restored has been disconnected.
@@ -145,6 +148,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   } = props;
   const activeConnection = useSatelliteConnectStore((s) => s.activeConnection);
   const disconnect = useSatelliteConnectStore((s) => s.disconnect);
+  const disconnectAll = useSatelliteConnectStore((s) => s.disconnectAll);
   const isConnecting = useSatelliteConnectStore((s) => s.connecting);
   // `undefined` with `@tuwaio/satellite-core` before 0.6.1, which has no such flag
   const isAutoConnectFinished = useSatelliteConnectStore((s) => s.isAutoConnectFinished);
@@ -162,6 +166,7 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
   // Wallets at the connection gate. The session of such a wallet is written before Satellite shows the wallet, and until
   // then it may look as if the active wallet had lost its session
   const walletsAtGate = useRef(0);
+  const walletsGoing = useRef(false);
   // The account a sign-in is asking while it runs, and the one that last had a session, to tell a session that ended from
   // a wallet that moved
   const askedAccount = useRef<string | null>(null);
@@ -441,12 +446,18 @@ export function NovaSiwxWatcher(props: NovaSiwxWatcherProps) {
 
       const { connectorType, address } = activeConnection;
 
-      // Its session ended, as with a sign-out: connected means signed in, and nobody asked to sign again
+      // Its session ended, as with a sign-out: connected means signed in. All of the wallets: with one disconnected, the next
+      // would take over and be asked to sign in right after the person has signed out
       if (status === 'idle' && !session && signedInAccount.current === promptKey) {
         signedInAccount.current = null;
-        disconnect(connectorType);
+        walletsGoing.current = true;
+        void disconnectAll().finally(() => {
+          walletsGoing.current = false;
+        });
         return;
       }
+      // They go one by one, and what the wallet library reports of those left comes back here with no session
+      if (walletsGoing.current) return;
 
       // Another wallet passed the gate, and Satellite is about to show it
       if (walletsAtGate.current > 0) return;

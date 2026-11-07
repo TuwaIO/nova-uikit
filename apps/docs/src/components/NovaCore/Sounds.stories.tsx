@@ -12,6 +12,7 @@ const WHEN: Record<NovaSoundName, string> = {
   networkSwitch: 'A change of network',
   copy: 'A copy',
   balanceRefresh: 'A balance refreshed by hand',
+  remove: 'A recent wallet removed',
 };
 
 /** Every sound of the Nova components, to listen to. */

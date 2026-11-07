@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaSiwxWatcher**(`props`): `null`
 
-Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:127](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L127)
+Defined in: [packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx:130](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/watchers/NovaSiwxWatcher.tsx#L130)
 
 Signs wallets in with SIWX. `NovaConnectProvider` renders it with its `siwx` prop, so apps do not render it themselves. It
 renders nothing.
@@ -20,9 +20,12 @@ renders nothing.
   `@tuwaio/siwx-react` covers it. Otherwise the page shows Connect, and the signature comes after the click.
 - A connected wallet that moves to another account (with the default `sessionScope` `'chain'`, also another network) is asked
   to sign in, and disconnected if it rejects. With `'account'`, a network switch of the same account asks nothing.
-- When the session of the connected wallet ends, as with `signOut` of `useNovaSiwx` or `reset` of `useSiwxSessionStore`, the
-  wallet is disconnected: connected means signed in. It is not asked to sign again.
+- When the session of the connected wallet ends, as with `signOut` of `useNovaSiwx` or `reset` of `useSiwxSessionStore`, every
+  wallet is disconnected (`disconnectAll`): connected means signed in. None is asked to sign again.
 - A backend that could not answer ([NovaSiwxServiceError](?path=/docs/packages-nova-connect-connect-classes-novasiwxserviceerror--docs)) is no failed sign-in: see there.
+- Do not also pass the session to the `siwx` prop of `EVMConnectorsWatcher` or `SolanaConnectorsWatcher`: they would
+  disconnect a wallet on a change of network at once, before it is asked to sign in, and with `sessionScope` `'account'`
+  on every change of network.
 - When no wallet is connected, it clears the SIWX session and calls `destroyer`. After a page load it waits until Satellite
   Connect has finished reconnecting (`isAutoConnectFinished`), so the session restored by `@tuwaio/siwx-react` is kept. With
   `endSessionOnlyAfterDisconnect`, it does so only once a wallet that this page connected or restored has been disconnected.
