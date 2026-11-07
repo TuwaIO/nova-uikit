@@ -4,6 +4,8 @@ import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -131,6 +133,7 @@ export const Solana: Story = {
  */
 export const WithCustomization: Story = {
   name: 'With Custom Components',
+  decorators: [withIsometricTheme],
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
       status: TransactionStatus.Success,
@@ -138,11 +141,9 @@ export const WithCustomization: Story = {
     }),
     customization: {
       components: {
-        Title: (props) => (
-          <div className="font-bold text-[#0052ff] dark:text-[#38bdf8]">✨ Custom Title: {props.fallback}</div>
-        ),
+        Title: (props) => <div className={`text-sm ${iso.text.strong} ${iso.text.primary}`}>{props.fallback}</div>,
         Timestamp: ({ timestamp }) => (
-          <div className="font-mono text-xs text-orange-700">⏰ {dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
+          <div className={`mb-1 ${iso.sectionTitle}`}>{dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
         ),
       },
     },

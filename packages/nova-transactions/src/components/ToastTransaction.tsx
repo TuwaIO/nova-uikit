@@ -193,7 +193,7 @@ const DefaultConfirmationsBadge = ({
 }) => (
   <div
     className={cn(
-      'novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:transition-colors novatx:duration-300',
+      'novatx:flex novatx:min-w-[18px] novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:transition-colors novatx:duration-300',
       isSuccess
         ? 'novatx:border-[var(--tuwa-success-icon)]/30 novatx:bg-[var(--tuwa-success-bg)] novatx:text-[var(--tuwa-success-text)]'
         : 'novatx:border-[var(--tuwa-pending-icon)]/30 novatx:bg-[var(--tuwa-pending-bg)]/50 novatx:text-[var(--tuwa-pending-text)]',

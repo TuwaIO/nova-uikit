@@ -19,7 +19,21 @@ function iconOf(chainId: number | string) {
   return { fill: image.props.firstPathFill, filePath: (icon as Element).props.filePath as string };
 }
 
-// The networks of the checkout presets and of the Cosmos playground: each draws the icon of its mainnet, recolored
+/** The circle of a testnet, and the mark in it. */
+function testnetMarkOf(chainId: number | string) {
+  const circle = NetworkIcon({ chainId }) as Element;
+  const scale = circle.props.children as Element;
+  const suspense = scale.props.children as Element;
+  const mark = suspense.props.children as Element;
+  return {
+    className: circle.props.className as string,
+    variant: mark.props.variant,
+    filePath: mark.props.filePath as string,
+  };
+}
+
+// The networks of the checkout presets and of the Cosmos playground. Owner, 2026-11-07: each testnet brought the shape and the
+// color of its mainnet's background, so they are one white mark on one grey circle now
 describe('NetworkIcon of a testnet', () => {
   it.each([
     ['Base Sepolia', 84532, 'network:base'],
@@ -30,9 +44,13 @@ describe('NetworkIcon of a testnet', () => {
     ['Solana Devnet', 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1', 'network:solana'],
     ['Solana Testnet', 'solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z', 'network:solana'],
     ['Solana Devnet by name', 'solana:devnet', 'network:solana'],
-  ])('%s draws the %s icon of its mainnet in the testnet colors', async (_name, chainId, filePath) => {
-    const icon = iconOf(chainId);
-    expect(icon).toEqual({ fill: 'var(--tuwa-testnet-icons)', filePath });
+  ])('%s draws the %s mark in white on the grey circle', async (_name, chainId, filePath) => {
+    const { className, variant, filePath: drawn } = testnetMarkOf(chainId);
+    expect(drawn).toBe(filePath);
+    expect(variant).toBe('mono');
+    expect(className).toContain('novacore:bg-[var(--tuwa-testnet-icons)]');
+    expect(className).toContain('novacore:text-white');
+    expect(className).toContain('novacore:rounded-full');
     expect(await loadWeb3Icon(filePath)).not.toBeNull();
   });
 

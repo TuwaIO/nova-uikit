@@ -11,6 +11,8 @@ import {
 import { action } from 'storybook/actions';
 import { polygon } from 'viem/chains';
 
+import { iso } from '../../../utils/customization/isometric';
+import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
 
@@ -293,17 +295,16 @@ export const WithoutHeader: Story = {
  * Custom colors of the header, title and network badge via the `customization` prop.
  */
 export const WithCustomization: Story = {
+  decorators: [withIsometricTheme],
   args: {
     tx: mockEvmSuccessTx,
     adapter: [mockEvmAdapter],
     customization: {
       classNames: {
-        header:
-          'bg-gradient-to-r from-[#0052ff]/4 via-[#1d4ed8]/4 to-[#0284c7]/4 border-[#0052ff]/30 dark:from-[#2563eb]/15 dark:via-[#3b82f6]/15 dark:to-[#38bdf8]/15 dark:border-[#38bdf8]/30',
-        title: 'text-[#0052ff] dark:text-[#38bdf8]',
-        sectionHeader: 'text-[#0052ff] dark:text-[#38bdf8]',
-        // A border only: a tinted background drops the secondary text of the badge below 4.5:1
-        networkBadge: 'border-[#0052ff]/40 dark:border-[#38bdf8]/40',
+        header: `${iso.surface.ink} ${iso.text.onInk}`,
+        title: iso.text.onInk,
+        sectionHeader: iso.sectionTitle,
+        networkBadge: iso.surface.border,
       },
     },
   },

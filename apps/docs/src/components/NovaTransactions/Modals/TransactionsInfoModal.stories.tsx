@@ -29,7 +29,7 @@ export default meta;
 type Story = StoryObj<typeof TransactionsInfoModal>;
 
 const OPEN_BUTTON_CLASSES =
-  'cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-[var(--tuwa-rounded-corners)] hover:bg-blue-700 transition-colors';
+  'cursor-pointer rounded-[var(--tuwa-rounded-corners)] bg-[var(--tuwa-button-gradient-from)] px-4 py-2 text-[var(--tuwa-text-on-accent)] transition-colors hover:bg-[var(--tuwa-button-gradient-from-hover)]';
 
 /** The modal and the button that opens it. */
 const WithOpenButton = ({
@@ -127,10 +127,7 @@ export const OpenOnTransaction: Story = {
 
     return (
       <>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer bg-blue-600 text-white px-4 novacore:py-2 rounded-[var(--tuwa-rounded-corners)]"
-        >
+        <button onClick={() => setIsOpen(true)} className={OPEN_BUTTON_CLASSES}>
           Open Modal
         </button>
         <TransactionsInfoModal

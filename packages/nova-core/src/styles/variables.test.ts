@@ -97,11 +97,11 @@ describe('theme variables', () => {
   });
 });
 
-// `NetworkIcon` paints the background of a testnet's icon with this color. The owner chose it by eye: a darker one
-// (#6b655e) gave the marks more contrast, and made the list of networks read too dark
+// `NetworkIcon` draws a testnet as a white mark on a circle of this color. The owner chose it by eye. With the colored marks of
+// before, this grey made the list of networks read too dark, and #c4bfb8 stood for a while; a white mark needs this one
 describe('the color of testnet icons', () => {
-  it('is the pale one in both themes', () => {
+  it('is the grey of the circle behind the white mark, in both themes', () => {
     const testnet = [...css.matchAll(/--tuwa-testnet-icons:\s*(#[0-9a-f]{6})/gi)].map((match) => match[1]);
-    expect(testnet).toEqual(['#c4bfb8', '#c4bfb8']);
+    expect(testnet).toEqual(['#6b655e', '#6b655e']);
   });
 });

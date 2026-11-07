@@ -924,7 +924,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <div className="novacon:absolute novacon:top-2 novacon:right-2">
           <span
             className={cn(
-              'novacon:rounded-full novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
+              'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
               classNames?.badge,
             )}
           >

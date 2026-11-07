@@ -170,7 +170,8 @@ export function TransactionHistoryItem<T extends Transaction>({
         <div className="novatx:flex novatx:min-w-0 novatx:flex-1 novatx:items-center novatx:gap-4">
           <div
             className={cn(
-              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-bg-muted)]',
+              // A line, not a fill: the band of the muted color was thick, and on a light theme it could hardly be seen
+              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:border-[color-mix(in_srgb,var(--tuwa-text-tertiary)_55%,transparent)]',
               classNames?.iconWrapper,
             )}
           >

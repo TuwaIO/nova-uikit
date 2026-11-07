@@ -1,0 +1,69 @@
+/* The Isometric theme of the playground of the docs hub: one ink, square corners, a line drawing. On the whole page for a
+   story with `.custom-theme` (a modal is in a portal), and inside `.tuwa-isometric` for one story among others */
+:root:has(.custom-theme),
+.tuwa-isometric {
+  --tuwa-bg-primary: #ffffff;
+  --tuwa-bg-secondary: #ffffff;
+  --tuwa-bg-muted: #eef0f5;
+  --tuwa-border-primary: #101423;
+  --tuwa-border-secondary: #d5d8e0;
+  --tuwa-text-primary: #101423;
+  --tuwa-text-secondary: #4b5163;
+  --tuwa-text-tertiary: #8a90a2;
+  --tuwa-text-accent: #101423;
+  --tuwa-text-on-accent: #ffffff;
+  --tuwa-button-gradient-from: #101423;
+  --tuwa-button-gradient-to: #101423;
+  --tuwa-button-gradient-from-hover: #2a3043;
+  --tuwa-button-gradient-to-hover: #2a3043;
+  --tuwa-standart-button-bg: #ffffff;
+  --tuwa-standart-button-hover: #eef0f5;
+  --tuwa-success-bg: #e7f6ec;
+  --tuwa-success-text: #0b6e35;
+  --tuwa-success-icon: #15803d;
+  --tuwa-error-bg: #fdecec;
+  --tuwa-error-text: #b42318;
+  --tuwa-error-icon: #e5484d;
+  --tuwa-pending-bg: #fff6dc;
+  --tuwa-pending-text: #8a5300;
+  --tuwa-pending-icon: #a16207;
+  --tuwa-info-bg: #eef0f5;
+  --tuwa-info-text: #4b5163;
+  --tuwa-info-icon: #6b7184;
+  --tuwa-testnet-icons: #8a90a2;
+  --tuwa-rounded-corners: 0px;
+  --tuwa-ring-width: 1px;
+}
+
+:root.dark:has(.custom-theme),
+.dark .tuwa-isometric {
+  --tuwa-bg-primary: #141829;
+  --tuwa-bg-secondary: #141829;
+  --tuwa-bg-muted: #1f2438;
+  --tuwa-border-primary: #363c52;
+  --tuwa-border-secondary: #242a3c;
+  --tuwa-text-primary: #e8eaf2;
+  --tuwa-text-secondary: #a5abbd;
+  --tuwa-text-tertiary: #6e7489;
+  --tuwa-text-accent: #c8cddb;
+  --tuwa-text-on-accent: #e8eaf2;
+  --tuwa-button-gradient-from: #454c66;
+  --tuwa-button-gradient-to: #454c66;
+  --tuwa-button-gradient-from-hover: #525a77;
+  --tuwa-button-gradient-to-hover: #525a77;
+  --tuwa-standart-button-bg: #141829;
+  --tuwa-standart-button-hover: #1f2438;
+  --tuwa-success-bg: #0f2e1d;
+  --tuwa-success-text: #7be3a2;
+  --tuwa-success-icon: #3ccb7f;
+  --tuwa-error-bg: #3a1216;
+  --tuwa-error-text: #ff9b9b;
+  --tuwa-error-icon: #ff6b6b;
+  --tuwa-pending-bg: #3a2c07;
+  --tuwa-pending-text: #ffd866;
+  --tuwa-pending-icon: #f5c242;
+  --tuwa-info-bg: #1f2438;
+  --tuwa-info-text: #c8cddb;
+  --tuwa-info-icon: #a5abbd;
+  --tuwa-testnet-icons: #6e7489;
+}
