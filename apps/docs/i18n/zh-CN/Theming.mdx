@@ -203,135 +203,98 @@ Nova 组件接受 `customization` 属性，可深度控制样式。这是全面�
 
 ### 模式：共享样式对象
 
-创建一个集中管理的样式文件，以确保风格一致：
+创建一个集中管理的样式文件，以确保风格一致。下面的示例是这些故事所用 Isometric 主题的一部分；[完整主题](https://github.com/TuwaIO/nova-uikit/blob/main/apps/docs/src/utils/customization/isometric.ts)涵盖每个部分：
 
 ```typescript
-// utils/customization/shared_styles.ts
+// customization/shared.ts
 import { cn } from '@tuwaio/nova-core/utils';
 
-export const SHARED_STYLES = {
-  // Typography
-  fontMono: 'font-[DM_Mono] font-light',
-  fontMonoMedium: 'font-[DM_Mono] font-medium',
+// Set on every container: square corners and one typeface for all its parts
+export const drawing = '**:rounded-none! **:font-sans!';
 
-  // Text Colors (using TUWA variables)
-  textPrimary: 'text-[var(--tuwa-text-primary)]',
-  textSecondary: 'text-[var(--tuwa-text-secondary)]',
-  textAccent: 'text-[var(--tuwa-text-accent)]',
-  textError: 'red',
+export const focus =
+  'focus:outline-none focus-visible:ring-[length:var(--tuwa-ring-width)]! focus-visible:ring-offset-2 focus-visible:ring-[var(--tuwa-text-accent)]!';
 
-  // Background Colors
-  bgBase: 'bg-[var(--tuwa-bg-secondary)]',
-  bgDark: 'bg-[var(--tuwa-bg-primary)]',
-  bgAccent: 'bg-[var(--tuwa-text-accent)]',
-  bgMuted: 'bg-[var(--tuwa-bg-muted)]',
+export const text = {
+  normal: 'font-normal',
+  strong: 'font-semibold',
+  primary: 'text-[var(--tuwa-text-primary)]!',
+  secondary: 'text-[var(--tuwa-text-secondary)]!',
+  onInk: 'text-[var(--tuwa-text-on-accent)]!',
+};
 
-  // Borders
-  borderDefault: 'border border-[var(--tuwa-border-primary)]',
-  borderAccent: 'border-[var(--tuwa-text-accent)]',
+export const surface = {
+  base: 'bg-[var(--tuwa-bg-secondary)]!',
+  ink: 'bg-[var(--tuwa-button-gradient-from)]!',
+  border: 'border! border-[var(--tuwa-border-primary)]!',
+};
 
-  // Focus States
-  baseFocus: 'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--tuwa-text-accent)]',
+const buttonBase = cn(
+  'cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 text-sm',
+  surface.border,
+  focus,
+);
 
-  // Interactive States
-  itemInteractive: cn(
-    'transition-all duration-200 ease-out',
-    'focus:outline-none focus:ring-2 focus:ring-offset-2',
-    'focus:ring-[var(--tuwa-text-accent)] focus:ring-offset-[var(--tuwa-bg-secondary)]',
+export const button = {
+  primary: cn(buttonBase, text.strong, surface.ink, text.onInk),
+  outline: cn(buttonBase, text.normal, surface.base, text.primary),
+  // A square icon button on the ink bar of a header
+  iconOnInk: cn(
+    'cursor-pointer p-1 transition-colors bg-transparent! hover:bg-[var(--tuwa-bg-secondary)]!',
+    text.onInk,
+    'hover:text-[var(--tuwa-text-primary)]!',
   ),
-} as const;
-
-// Reusable button patterns
-export const BUTTON_STYLES = {
-  primary: cn(
-    'cursor-pointer inline-flex items-center justify-center gap-2',
-    'rounded-[4px] transition-all duration-200',
-    'px-4 py-2 text-sm',
-    'bg-[var(--tuwa-text-accent)] text-[var(--tuwa-text-on-accent)]',
-    'hover:bg-[var(--tuwa-bg-muted)] hover:text-[var(--tuwa-text-primary)]',
-  ),
-
-  ghost: cn(
-    'cursor-pointer inline-flex items-center justify-center gap-2',
-    'rounded-[4px] transition-all duration-200',
-    'bg-[var(--tuwa-bg-secondary)]',
-    'border border-[var(--tuwa-border-primary)]',
-    'text-[var(--tuwa-text-primary)]',
-    'hover:bg-[var(--tuwa-border-primary)]',
-  ),
-
-  danger: cn(
-    'cursor-pointer inline-flex items-center justify-center gap-2',
-    'rounded-[4px] transition-all duration-200',
-    'border border-[var(--tuwa-border-primary)]',
-    'text-[var(--tuwa-text-primary)]',
-    'hover:bg-[var(--tuwa-error-icon)]/10',
-    'hover:border-[var(--tuwa-error-icon)]',
-    'hover:text-[var(--tuwa-error-icon)]',
-  ),
-} as const;
+};
 ```
 
 ### 定制 Nova Connect
 
 ```typescript
-// utils/customization/nova_connect_provider.ts
-import { NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
+// customization/connect.ts
+import type { NovaConnectProviderCustomization } from '@tuwaio/nova-connect';
 import { cn } from '@tuwaio/nova-core/utils';
-import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 
-export const nova_connect_customization: NovaConnectProviderCustomization = {
+import { connectCard } from './connectCard';
+import { button, drawing, surface, text } from './shared';
+
+const sectionTitle = cn(text.strong, text.primary, 'text-xs uppercase tracking-wider');
+
+export const connectCustomization: NovaConnectProviderCustomization = {
   modals: {
     connectModal: {
       classNames: {
-        modalContainer: () => 'bg-[var(--tuwa-bg-secondary)]',
-        header: () => cn('bg-[var(--tuwa-bg-secondary)]', 'border-b border-[var(--tuwa-border-primary)]'),
-        title: () => cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
-        closeButton: () =>
-          cn(
-            'cursor-pointer rounded-[4px] p-1 transition-colors',
-            SHARED_STYLES.textSecondary,
-            'hover:bg-[var(--tuwa-bg-muted)]',
-            SHARED_STYLES.baseFocus,
-          ),
-        mainContent: () => 'bg-[var(--tuwa-bg-secondary)]',
-        footer: () => cn('bg-[var(--tuwa-bg-secondary)]', 'border-t border-[var(--tuwa-border-primary)]'),
-        backButton: () => BUTTON_STYLES.ghost,
-        actionButton: () => BUTTON_STYLES.primary,
+        modalContainer: () => cn(drawing, surface.base),
+        header: () => cn(surface.ink, text.onInk),
+        title: () => cn(text.strong, text.onInk, 'text-base'),
+        closeButton: () => button.iconOnInk,
+        mainContent: () => surface.base,
+        footer: () => surface.base,
+        backButton: () => cn(button.outline, 'min-h-10'),
+        actionButton: () => cn(button.primary, 'min-h-10'),
       },
 
       childComponents: {
         connectorsSelections: {
           connectorsBlock: {
-            installed: {
-              classNames: {
-                title: () =>
-                  cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textAccent, 'text-sm uppercase tracking-wide'),
-              },
-            },
+            installed: { classNames: { title: () => sectionTitle }, connectCard },
+            popular: { classNames: { title: () => sectionTitle }, connectCard },
           },
         },
 
+        // The wallet in a frame that turns green or red; the message under it says the rest
         connecting: {
           classNames: {
-            container: () => 'flex flex-col gap-4 items-center justify-center w-full',
             statusContainer: ({ statusData }) =>
               cn(
-                'relative flex items-center justify-center',
-                'min-w-[110px] min-h-[110px]',
-                'border-2 rounded-full p-4',
-                'transition-all duration-300 ease-in-out',
+                'relative flex min-h-[150px] min-w-[150px] items-center justify-center border-2 p-6 transition-colors duration-300',
+                surface.base,
                 statusData.state === 'error'
-                  ? 'border-[var(--tuwa-error-icon)] bg-[var(--tuwa-error-icon)]/5'
+                  ? 'border-[var(--tuwa-error-icon)]'
                   : statusData.state === 'success'
-                    ? 'border-[var(--tuwa-text-accent)] bg-[var(--tuwa-text-accent)]/5'
-                    : 'border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-secondary)]',
+                    ? 'border-[var(--tuwa-success-icon)]'
+                    : 'border-[var(--tuwa-border-secondary)]',
               ),
-            spinner: () =>
-              cn(
-                'absolute animate-spin rounded-full -inset-[2px]',
-                'border-2 border-[var(--tuwa-text-accent)] border-t-transparent',
-              ),
+            statusMessage: () => cn(text.strong, text.primary, 'text-lg'),
           },
         },
       },
@@ -343,48 +306,29 @@ export const nova_connect_customization: NovaConnectProviderCustomization = {
 ### 定制 Connect Card
 
 ```typescript
-// utils/customization/connect_card.ts
-import { ConnectCardCustomization } from '@tuwaio/nova-connect/components';
+// customization/connectCard.ts
+import type { ConnectCardCustomization } from '@tuwaio/nova-connect/components';
 import { cn } from '@tuwaio/nova-core/utils';
-import { SHARED_STYLES } from './shared_styles';
 
-export const connect_card_customization: ConnectCardCustomization = {
+import { focus, surface, text } from './shared';
+
+export const connectCard: ConnectCardCustomization = {
   classNames: {
     container: ({ cardData }) =>
       cn(
-        'group cursor-pointer p-4 rounded-xl transition-colors relative border',
-        'w-full h-auto flex items-center justify-between',
-        { 'w-[125px] h-[125px] flex-col text-center': cardData.isTouch },
-        'border-[var(--tuwa-border-primary)]',
-        'bg-[var(--tuwa-bg-secondary)]',
-        'hover:bg-[var(--tuwa-bg-muted)]',
-        'hover:border-[var(--tuwa-text-accent)]',
-        SHARED_STYLES.baseFocus,
+        'group relative flex cursor-pointer items-center justify-between p-3',
+        cardData.isTouch && 'h-[120px] w-[120px] flex-col justify-center p-2 text-center',
+        surface.base,
+        surface.border,
+        'hover:bg-[var(--tuwa-bg-muted)]!',
+        focus,
       ),
-
-    content: ({ cardData }) =>
-      cn(
-        'flex gap-3 transition duration-300 ease-in-out items-center',
-        { 'flex-col items-center gap-1': cardData.isTouch },
-        'text-[var(--tuwa-text-primary)]',
-        'group-hover:text-[var(--tuwa-text-accent)]',
-      ),
-
-    title: () =>
-      cn(
-        SHARED_STYLES.fontMono,
-        'text-[var(--tuwa-text-primary)]',
-        'group-hover:text-[var(--tuwa-text-accent)]',
-        'transition-colors duration-200',
-      ),
-
+    title: () => cn(text.normal, text.primary),
+    subtitle: () => cn(text.normal, text.secondary, 'text-xs'),
     chevron: () =>
       cn(
-        'w-5 h-5 transition duration-300 ease-in-out',
-        'translate-x-[-10px] opacity-0',
-        'group-hover:translate-x-0 group-hover:opacity-100',
-        'text-[var(--tuwa-text-secondary)]',
-        'group-hover:text-[var(--tuwa-text-accent)]',
+        'h-5 w-5 -translate-x-2 opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100',
+        text.primary,
       ),
   },
 };
@@ -393,29 +337,31 @@ export const connect_card_customization: ConnectCardCustomization = {
 ### 定制交易弹窗提示 (Toast)
 
 ```typescript
-// utils/customization/nova_tx_provider.ts
+// customization/transactions.ts
 import { cn } from '@tuwaio/nova-core/utils';
-import { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
+import type { NovaTransactionsProviderProps } from '@tuwaio/nova-transactions/providers';
 import type { Transaction } from '@tuwaio/pulsar-core';
-import { SHARED_STYLES, BUTTON_STYLES } from './shared_styles';
 
-export const nova_tx_customization: NovaTransactionsProviderProps<Transaction>['customization'] = {
+import { button, drawing, surface, text } from './shared';
+
+export const transactionsCustomization: NovaTransactionsProviderProps<Transaction>['customization'] = {
   toast: {
     classNames: {
-      container: cn('rounded-[4px]', 'border border-[var(--tuwa-border-primary)]', 'bg-[var(--tuwa-bg-secondary)]'),
-      title: cn(SHARED_STYLES.fontMonoMedium, 'text-sm', SHARED_STYLES.textPrimary),
-      description: cn(SHARED_STYLES.fontMono, 'mt-1 text-xs', SHARED_STYLES.textSecondary),
-      hashLink: cn(SHARED_STYLES.fontMono, 'text-[var(--tuwa-text-accent)]', 'hover:underline transition-colors'),
-      statusBadge: cn(SHARED_STYLES.fontMono, 'text-xs font-medium'),
-      speedUpButton: BUTTON_STYLES.primary,
+      container: cn(drawing, surface.base, surface.border),
+      title: cn(text.strong, text.primary, 'text-sm'),
+      description: cn(text.normal, text.secondary, 'mt-1 text-xs'),
+      hashLink: cn(text.normal, text.primary, 'underline underline-offset-2'),
+      statusBadge: cn(text.normal, 'text-xs'),
+      txInfoButton: cn(button.primary, 'min-h-8 px-3 py-1'),
     },
   },
 
   trackingTxModal: {
     classNames: {
-      container: 'bg-[var(--tuwa-bg-secondary)]',
-      header: cn('bg-[var(--tuwa-bg-secondary)]', 'border-[var(--tuwa-border-primary)]'),
-      headerTitle: cn(SHARED_STYLES.fontMonoMedium, SHARED_STYLES.textPrimary),
+      container: cn(drawing, surface.base),
+      header: cn(surface.ink, text.onInk),
+      headerTitle: cn(text.strong, text.onInk, 'text-base'),
+      closeButton: button.iconOnInk,
     },
   },
 };
@@ -430,8 +376,8 @@ import type { Transaction } from '@tuwaio/pulsar-core';
 import type { ReactNode } from 'react';
 import { mainnet } from 'viem/chains';
 
-import { nova_connect_customization } from './utils/customization/nova_connect_provider';
-import { nova_tx_customization } from './utils/customization/nova_tx_provider';
+import { connectCustomization } from './customization/connect';
+import { transactionsCustomization } from './customization/transactions';
 
 // The Pulsar store values and adapters, passed as in the README of @tuwaio/nova-transactions
 type PulsarProps = Omit<NovaTransactionsProviderProps<Transaction>, 'customization'>;
@@ -439,9 +385,9 @@ type PulsarProps = Omit<NovaTransactionsProviderProps<Transaction>, 'customizati
 // Rendered inside SatelliteConnectProvider, as in the README of @tuwaio/nova-connect
 export function Providers({ children, pulsar }: { children: ReactNode; pulsar: PulsarProps }) {
   return (
-    <NovaConnectProvider appChains={[mainnet]} customization={nova_connect_customization}>
+    <NovaConnectProvider appChains={[mainnet]} customization={connectCustomization}>
       {children}
-      <NovaTransactionsProvider {...pulsar} customization={nova_tx_customization} />
+      <NovaTransactionsProvider {...pulsar} customization={transactionsCustomization} />
     </NovaConnectProvider>
   );
 }
