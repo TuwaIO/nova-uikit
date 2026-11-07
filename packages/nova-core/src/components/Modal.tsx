@@ -100,6 +100,18 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
 };
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+// Inside `Content`, which Radix mounts only while the dialog is open. `DialogContent` itself stays mounted with the `Dialog` around
+// it, so an effect there runs once, with the page. The two are quiet: when one dialog replaces another, or a louder sound has just
+// played, or StrictMode runs this twice, the first of them is what is heard
+function DialogSounds() {
+  const play = useNovaSounds();
+  React.useEffect(() => {
+    play('modalOpen');
+    return () => play('modalClose');
+  }, [play]);
+  return null;
+}
+
 /**
  * The dialog panel (`Content` of `@radix-ui/react-dialog`), rendered in a portal above {@link DialogOverlay}. It takes
  * the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
@@ -157,14 +169,6 @@ const DialogContent = React.forwardRef<
     const [frame, setFrame] = React.useState<HTMLDivElement | null>(null);
     const [content, setContent] = React.useState<HTMLDivElement | null>(null);
 
-    // Radix mounts this only while the dialog is open. The two are quiet: when one dialog replaces another, or a louder sound
-    // has just played, or StrictMode runs this twice, the first of them is what is heard
-    const play = useNovaSounds();
-    React.useEffect(() => {
-      play('modalOpen');
-      return () => play('modalClose');
-    }, [play]);
-
     // Not a `layout` animation of `framer-motion`: it scales the frame, and while the frame shrinks its content already
     // has the new size, which leaves an empty band under the footer
     React.useEffect(() => {
@@ -212,6 +216,7 @@ const DialogContent = React.forwardRef<
           )}
           {...props}
         >
+          <DialogSounds />
           <div className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
             <AnimatePresence>
               <motion.div

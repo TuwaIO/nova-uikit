@@ -1,3 +1,4 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const { play, effects } = vi.hoisted(() => ({ play: vi.fn(), effects: [] as Array<() => void | (() => void)> }));
@@ -26,13 +27,23 @@ function elements(node: unknown): Element[] {
   return [element, ...elements(element.props.children)];
 }
 
+const isDialogSounds = (element: Element | null | undefined) =>
+  (element?.type as { name?: string } | undefined)?.name === 'DialogSounds';
+
 describe('DialogContent', () => {
-  // Owner, 2026-11-07: a dialog opens and closes with a muffled sound
-  it('plays a sound when it opens, and another when it closes', () => {
+  // Owner, 2026-11-07: a dialog opens and closes with a muffled sound. `DialogContent` itself stays mounted with the `Dialog`: an
+  // effect of its own ran once, with the page, and no dialog made a sound
+  it('plays a sound when it opens and another when it closes, from what Radix mounts only while it is open', () => {
+    const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
+    const tree = elements(render({ children: 'content' }, null));
+    const content = tree.find((element) =>
+      [element.props.children].flat().some((child) => isDialogSounds(child as Element)),
+    );
+    expect(content?.type).toBe(DialogPrimitive.Content);
+
     effects.length = 0;
     play.mockClear();
-    const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
-    render({ children: 'content' }, null);
+    (elements(content?.props.children).find(isDialogSounds)?.type as () => unknown)();
 
     const cleanups = effects.map((effect) => effect());
     expect(play).toHaveBeenCalledExactlyOnceWith('modalOpen');
