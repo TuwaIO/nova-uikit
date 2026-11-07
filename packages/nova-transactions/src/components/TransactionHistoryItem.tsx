@@ -11,6 +11,8 @@ import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { ComponentType, JSX } from 'react';
 
 import { NovaTransactionsProviderProps } from '../providers';
+import { useLabels } from '../providers';
+import { txTitleSource } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -138,6 +140,7 @@ export function TransactionHistoryItem<T extends Transaction>({
   onSelectTx,
   canViewDetails = true,
 }: TransactionHistoryItemProps<T>): JSX.Element {
+  const { transaction } = useLabels();
   const {
     Icon = DefaultIcon,
     Title = StatusAwareText,
@@ -177,8 +180,7 @@ export function TransactionHistoryItem<T extends Transaction>({
           <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
             <Title
               txStatus={tx.status}
-              source={tx.title}
-              fallback={tx.type}
+              source={txTitleSource(tx, transaction)}
               variant="title"
               applyColor
               className={classNames?.title}

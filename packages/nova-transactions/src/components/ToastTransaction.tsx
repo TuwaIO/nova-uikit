@@ -11,7 +11,14 @@ import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../providers';
 import { canReplaceTx, runReplacement } from '../utils/replacement';
-import { hasConfirmations, isTxOfWallet, progressOf, toneOf } from '../utils/txStatus';
+import {
+  hasConfirmations,
+  isTxOfWallet,
+  progressOf,
+  toneOf,
+  txDescriptionSource,
+  txTitleSource,
+} from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
@@ -221,7 +228,7 @@ export function ToastTransaction<T extends Transaction>({
   connectedWalletAddress,
   adapter,
 }: ToastTransactionProps<T>): JSX.Element {
-  const { actions, toast } = useLabels();
+  const { actions, toast, transaction } = useLabels();
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
@@ -302,15 +309,14 @@ export function ToastTransaction<T extends Transaction>({
         <div className={cn('novatx:min-w-0 novatx:flex-1', classNames?.contentWrapper)}>
           <CStatusAwareText
             txStatus={tx.status}
-            source={tx.title}
-            fallback={tx.type}
+            source={txTitleSource(tx, transaction)}
             variant="title"
             applyColor
             className={classNames?.title}
           />
           <CStatusAwareText
             txStatus={tx.status}
-            source={tx.description}
+            source={txDescriptionSource(tx, transaction)}
             variant="description"
             className={classNames?.description}
           />

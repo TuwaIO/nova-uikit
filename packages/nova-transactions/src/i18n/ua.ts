@@ -4,6 +4,15 @@ import { NovaTransactionsLabels } from './types';
  * Ukrainian (uk) translations for Nova Transactions modals, toasts, and history.
  */
 export const ukrainianLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: 'Транзакція',
+    defaultDescription: {
+      pending: 'Очікуємо на підтвердження мережі.',
+      success: 'Підтверджено мережею.',
+      failed: 'Не вдалося виконати.',
+      replaced: 'Її замінила інша транзакція.',
+    },
+  },
   transactionsModal: {
     history: {
       title: 'Історія транзакцій',

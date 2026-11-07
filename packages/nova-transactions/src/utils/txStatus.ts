@@ -123,3 +123,36 @@ export function isTxOfWallet(tx: Pick<Transaction, 'adapter' | 'from'>, wallet: 
   if (!tx.from || !wallet) return false;
   return isSameAddress(tx.adapter === OrbitAdapter.EVM ? 'eip155' : tx.adapter, tx.from, wallet);
 }
+
+/**
+ * The title a transaction shows: the one the app gave it, otherwise the default of the labels. A saved text would freeze
+ * one language, so the default is read here and never written to the record.
+ *
+ * @param tx - The transaction.
+ * @param tx.title - Its title, by status or one for all.
+ * @param labels - The labels of a transaction.
+ * @returns What to pass to `StatusAwareText` as `source`.
+ */
+export function txTitleSource(
+  tx: { title?: string | readonly string[] },
+  labels: NovaTransactionsLabels['transaction'],
+): string | readonly string[] {
+  return tx.title?.length ? tx.title : labels.defaultTitle;
+}
+
+/**
+ * The description a toast shows: the one the app gave the transaction, otherwise a sentence about its status.
+ *
+ * @param tx - The transaction.
+ * @param tx.description - Its description, by status or one for all.
+ * @param labels - The labels of a transaction.
+ * @returns What to pass to `StatusAwareText` as `source`, in the order pending, success, failed, replaced.
+ */
+export function txDescriptionSource(
+  tx: { description?: string | readonly string[] },
+  labels: NovaTransactionsLabels['transaction'],
+): string | readonly string[] {
+  if (tx.description?.length) return tx.description;
+  const { pending, success, failed, replaced } = labels.defaultDescription;
+  return [pending, success, failed, replaced];
+}

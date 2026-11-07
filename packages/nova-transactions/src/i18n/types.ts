@@ -8,6 +8,22 @@
  * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
 export type NovaTransactionsLabels = {
+  /** What a transaction shows when the app gave it no title or description. */
+  transaction: {
+    /** The title of a transaction with none. */
+    defaultTitle: string;
+    /** The description of a transaction with none, by its status, in the toast. */
+    defaultDescription: {
+      /** While it waits. */
+      pending: string;
+      /** When it succeeded. */
+      success: string;
+      /** When it failed. */
+      failed: string;
+      /** When another transaction took its place. */
+      replaced: string;
+    };
+  };
   /** Labels for the main wallet information modal. */
   transactionsModal: {
     /** Labels of the transaction history. */

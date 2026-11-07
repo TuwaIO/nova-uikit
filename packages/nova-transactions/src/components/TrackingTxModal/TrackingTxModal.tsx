@@ -28,7 +28,7 @@ import { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
 
 import { NovaTransactionsProviderProps, useLabels, useNovaTransactionsError } from '../../providers';
 import { canReplaceTx, latestRecordOf, runReplacement } from '../../utils/replacement';
-import { progressOf, trackerGaveUp } from '../../utils/txStatus';
+import { progressOf, trackerGaveUp, txTitleSource } from '../../utils/txStatus';
 import {
   TxErrorBlock,
   TxErrorBlockClassNames,
@@ -422,11 +422,11 @@ export function TrackingTxModal<T extends Transaction>({
 type TrackingModalClassNames = TrackingTxModalCustomization<Transaction>['classNames'];
 
 function DefaultHeaderTitle({ tx, className }: { tx: Transaction | InitialTransaction; className?: string }) {
+  const { transaction } = useLabels();
   return (
     <StatusAwareText
       txStatus={'status' in tx ? tx.status : undefined}
-      source={tx.title}
-      fallback={tx.type}
+      source={txTitleSource(tx, transaction)}
       variant="title"
       className={cn('novatx:text-lg', className)}
     />

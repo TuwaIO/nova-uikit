@@ -4,6 +4,15 @@ import { NovaTransactionsLabels } from './types';
  * Chinese Simplified (zh-CN) localization for Nova Transactions modals, toasts, and history.
  */
 export const chineseLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: '交易',
+    defaultDescription: {
+      pending: '正在等待网络确认。',
+      success: '已由网络确认。',
+      failed: '交易未成功。',
+      replaced: '已被另一笔交易替换。',
+    },
+  },
   transactionsModal: {
     history: {
       title: '交易历史',

@@ -11,6 +11,15 @@ import { NovaTransactionsLabels } from './types';
  * for creating other language translations.
  */
 export const defaultLabels: NovaTransactionsLabels = {
+  transaction: {
+    defaultTitle: 'Transaction',
+    defaultDescription: {
+      pending: 'Waiting for the network to confirm it.',
+      success: 'Confirmed by the network.',
+      failed: 'It did not go through.',
+      replaced: 'Another transaction took its place.',
+    },
+  },
   transactionsModal: {
     history: {
       title: 'Transactions History',
