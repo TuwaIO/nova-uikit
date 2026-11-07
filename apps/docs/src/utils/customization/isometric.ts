@@ -64,8 +64,10 @@ const surface = {
   border: 'border! border-[var(--tuwa-border-primary)]!',
 };
 
-// A box with faces
-const box = cn(faceRoom, surface.base, surface.border, faces);
+// A frame with faces, for a part of its own size
+const framed = cn(surface.base, surface.border, faces);
+// A box with faces that fills the width of its list or section
+const box = cn(faceRoom, framed);
 const sectionTitle = cn(text.strong, text.secondary, 'text-xs uppercase tracking-wider');
 
 const buttonBase = cn(
@@ -442,6 +444,8 @@ export const isoConnectButton: ConnectButtonCustomization = {
   },
 };
 
+const detailsSection = cn(box, '[&_dl>div]:border-[var(--tuwa-border-secondary)]!');
+
 /** The `customization` prop of `TransactionsHistory`, also used by the history modal. */
 export const isoHistory: TransactionsHistoryCustomization<Transaction> = {
   classNames: {
@@ -462,19 +466,25 @@ export const isoHistory: TransactionsHistoryCustomization<Transaction> = {
     itemHashLink: cn(text.normal, text.primary, 'flex items-center gap-x-1 underline underline-offset-2'),
     itemHashCopyButton: button.copy,
   },
-  // The transaction details: its three sections are boxes alike
+  // The transaction details: an ink bar over sections that are boxes alike, with light lines between their rows. The status
+  // keeps the color of its state, and its row is no box: it has no padding of its own
   detailsCustomization: {
     classNames: {
       container: drawing,
-      backButton: button.outline,
-      statusIconContainer: surface.border,
-      title: cn(text.strong, text.primary),
-      subtitle: cn(text.normal, text.secondary),
+      header: modal.header,
+      backButton: button.iconOnInk,
+      closeButton: button.iconOnInk,
+      title: cn(text.strong, text.onInk),
+      subtitle: cn(text.normal, text.onInk, 'opacity-70'),
+      actionButton: button.outline,
       sectionHeader: cn(sectionTitle, text.primary),
-      coreInfoCard: box,
-      metadataSection: box,
-      executionSection: box,
-      networkBadge: cn(text.normal, text.primary, surface.base, surface.border),
+      metadataSection: detailsSection,
+      contextSection: detailsSection,
+      executionSection: detailsSection,
+      networkBadge: cn(text.normal, text.primary, surface.base, surface.border, 'px-2 py-0.5'),
+      stopTrackingContainer: box,
+      stopTrackingHint: cn(text.normal, text.secondary),
+      stopTrackingButton: button.link,
     },
   },
 };
@@ -553,4 +563,4 @@ export const isoTransactions: NovaTransactionsCustomization = {
 };
 
 /** The parts of the drawing, for the stories that draw a part of their own. */
-export const iso = { box, button, drawing, faces, faceRoom, modal, press, sectionTitle, surface, text };
+export const iso = { box, button, drawing, faces, faceRoom, framed, modal, press, sectionTitle, surface, text };

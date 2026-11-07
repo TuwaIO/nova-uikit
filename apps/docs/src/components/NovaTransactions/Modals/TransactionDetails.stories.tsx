@@ -11,7 +11,7 @@ import {
 import { action } from 'storybook/actions';
 import { polygon } from 'viem/chains';
 
-import { iso } from '../../../utils/customization/isometric';
+import { isoHistory } from '../../../utils/customization/isometric';
 import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
 import { createMockTx } from '../../../utils/mockTransactions';
@@ -292,20 +292,13 @@ export const WithoutHeader: Story = {
 };
 
 /**
- * Custom colors of the header, title and network badge via the `customization` prop.
+ * The Isometric theme through the `customization` prop: the ink bar, the back button, the sections and the network.
  */
 export const WithCustomization: Story = {
   decorators: [withIsometricTheme],
   args: {
     tx: mockEvmSuccessTx,
     adapter: [mockEvmAdapter],
-    customization: {
-      classNames: {
-        header: `${iso.surface.ink} ${iso.text.onInk}`,
-        title: iso.text.onInk,
-        sectionHeader: iso.sectionTitle,
-        networkBadge: iso.surface.border,
-      },
-    },
+    customization: isoHistory.detailsCustomization,
   },
 };

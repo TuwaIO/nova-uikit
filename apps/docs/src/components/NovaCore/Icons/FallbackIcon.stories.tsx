@@ -72,6 +72,6 @@ export const CustomStyle: Story = {
   args: {
     animate: false,
     content: '!',
-    className: `h-12 w-12 ${iso.box} ${iso.text.primary}`,
+    className: `h-12 w-12 ${iso.framed} ${iso.text.primary}`,
   },
 };

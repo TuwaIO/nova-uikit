@@ -16,6 +16,9 @@
   --tuwa-button-gradient-to: #101423;
   --tuwa-button-gradient-from-hover: #2a3043;
   --tuwa-button-gradient-to-hover: #2a3043;
+  /* Set here as well: on `:root` these take the gradient start of `:root`, which one story among others does not change */
+  --tuwa-button-primary-bg: #101423;
+  --tuwa-button-primary-bg-hover: #2a3043;
   --tuwa-standart-button-bg: #ffffff;
   --tuwa-standart-button-hover: #eef0f5;
   --tuwa-success-bg: #e7f6ec;
@@ -51,6 +54,8 @@
   --tuwa-button-gradient-to: #454c66;
   --tuwa-button-gradient-from-hover: #525a77;
   --tuwa-button-gradient-to-hover: #525a77;
+  --tuwa-button-primary-bg: #454c66;
+  --tuwa-button-primary-bg-hover: #525a77;
   --tuwa-standart-button-bg: #141829;
   --tuwa-standart-button-hover: #1f2438;
   --tuwa-success-bg: #0f2e1d;

@@ -129,10 +129,10 @@ export const Solana: Story = {
 };
 
 /**
- * A transaction with a custom title and timestamp, replacing the default components.
+ * The Isometric theme through the classes of the item, with a timestamp that replaces the default one.
  */
 export const WithCustomization: Story = {
-  name: 'With Custom Components',
+  name: 'With Customization',
   decorators: [withIsometricTheme],
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
@@ -140,8 +140,16 @@ export const WithCustomization: Story = {
       pending: false,
     }),
     customization: {
+      classNames: {
+        container: `p-3 ${iso.box}`,
+        iconWrapper: `flex h-10 w-10 shrink-0 items-center justify-center ${iso.surface.border}`,
+        title: `text-sm ${iso.text.strong} ${iso.text.primary}`,
+        description: `mt-1 text-xs ${iso.text.normal} ${iso.text.secondary}`,
+        hashLabel: `pr-1 text-sm ${iso.text.strong} ${iso.text.primary}`,
+        hashLink: `flex items-center gap-x-1 underline underline-offset-2 ${iso.text.normal} ${iso.text.primary}`,
+        hashCopyButton: iso.button.copy,
+      },
       components: {
-        Title: (props) => <div className={`text-sm ${iso.text.strong} ${iso.text.primary}`}>{props.fallback}</div>,
         Timestamp: ({ timestamp }) => (
           <div className={`mb-1 ${iso.sectionTitle}`}>{dayjs.unix(timestamp!).format('HH:mm:ss')}</div>
         ),

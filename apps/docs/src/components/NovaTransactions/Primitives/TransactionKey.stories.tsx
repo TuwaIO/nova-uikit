@@ -125,8 +125,17 @@ export const HistoryVariant: Story = {
  * Customizes the rendering of the hash link to showcase additional styling or content.
  */
 export const WithCustomRender: Story = {
-  decorators: [withIsometricTheme],
+  decorators: [
+    (Story) => (
+      <div className="w-[420px]">
+        <Story />
+      </div>
+    ),
+    withIsometricTheme,
+  ],
   args: {
+    // The boxes draw the frame: the line that sets the key apart from a toast is not needed here
+    className: 'border-t-0! pt-0!',
     tx: createMockTx(OrbitAdapter.EVM, {
       tracker: TransactionTracker.Safe,
       txKey: '0xsafe_transaction_hash_abcdef123456',

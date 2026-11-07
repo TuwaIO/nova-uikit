@@ -73,6 +73,6 @@ export const InteractiveCopy: Story = {
 export const WithCustomStyling: Story = {
   decorators: [withIsometricTheme],
   args: {
-    className: iso.box,
+    className: iso.framed,
   },
 };
