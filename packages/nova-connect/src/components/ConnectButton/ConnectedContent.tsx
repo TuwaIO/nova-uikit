@@ -5,7 +5,7 @@
 
 import { ChevronArrowWithAnim, cn, MorphText } from '@tuwaio/nova-core';
 import { isSameAdapterAddress } from '@tuwaio/orbit-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import React, {
   ComponentPropsWithoutRef,
   ComponentType,
@@ -319,12 +319,14 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     const parsedBalance = balance?.value ? parseFloat(balance.value) : NaN;
     const formattedBalance = Number.isFinite(parsedBalance) ? parsedBalance.toFixed(3) : UNKNOWN_BALANCE;
 
-    const prevTxPoolRef = useRef<Transaction[]>(
-      Object.values(transactionPool ?? {}).filter(
+    // Once, not on every render: the pool can be long
+    const prevTxPoolRef = useRef<Transaction[] | null>(null);
+    if (prevTxPoolRef.current === null) {
+      prevTxPoolRef.current = Object.values(transactionPool ?? {}).filter(
         (tx) =>
           tx?.from && activeConnection?.address && isSameAdapterAddress(tx.adapter, tx.from, activeConnection.address),
-      ),
-    );
+      );
+    }
 
     // Extract custom components and config
     const {

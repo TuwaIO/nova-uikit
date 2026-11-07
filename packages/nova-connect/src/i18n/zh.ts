@@ -46,6 +46,7 @@ export const chineseLabels: NovaConnectLabels = {
   switchNetwork: '切换网络',
   switchNetworks: '切换网络',
   connectingEllipsis: '连接中...',
+  checkWalletRequest: '请查看您的钱包：请求可能正在那里等待。',
   connectedWallets: '已连接钱包',
 
   // Wallet sections - Categories for wallet connector grouping

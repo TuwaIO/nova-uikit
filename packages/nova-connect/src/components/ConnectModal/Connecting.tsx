@@ -4,7 +4,7 @@
 
 import { cn, DrawnCheck, DrawnCross, formatLabel, MorphText } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef } from 'react';
+import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -12,6 +12,9 @@ import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
 
 // --- Types ---
+
+/** How long a wallet may stay silent before the screen says to look at it. */
+const LONG_WAIT_MS = 20_000;
 
 /**
  * State of a wallet connection: `error` when the Satellite store has a `connectionError` (or `customErrorMessage` is
@@ -641,6 +644,17 @@ export const Connecting = memo(
       /**
        * Error message
        */
+      // A wallet may never answer, or wait behind a window of its own: nothing else tells a person where to look
+      const [isWaitingLong, setIsWaitingLong] = useState(false);
+      useEffect(() => {
+        if (connectionState !== 'connecting') return;
+        const timer = setTimeout(() => setIsWaitingLong(true), LONG_WAIT_MS);
+        return () => {
+          clearTimeout(timer);
+          setIsWaitingLong(false);
+        };
+      }, [connectionState]);
+
       const errorMessage =
         connectionState !== 'error'
           ? null
@@ -709,13 +723,6 @@ export const Connecting = memo(
         isMountedRef.current = false;
         prevStateRef.current = null;
         prevStatusDataRef.current = null;
-
-        if (typeof window !== 'undefined') {
-          const element = document.querySelector('[data-connecting-component]');
-          if (element) {
-            element.getAnimations?.().forEach((animation) => animation.cancel());
-          }
-        }
       };
 
       // The handlers are read through Effect Events, so a new `handlers` object on every render does not re-run the
@@ -887,6 +894,10 @@ export const Connecting = memo(
             >
               <MorphText wrap>{displayMessage}</MorphText>
             </CustomStatusMessage>
+
+            {isWaitingLong && (
+              <p className="novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]">{labels.checkWalletRequest}</p>
+            )}
 
             {/* Error Details */}
             {errorMessage && (

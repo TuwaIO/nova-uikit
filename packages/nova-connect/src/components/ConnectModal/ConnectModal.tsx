@@ -32,6 +32,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from 'react';
 
 import { ConnectContentType, useNovaConnect, useNovaConnectLabels } from '../../hooks';
@@ -726,6 +727,9 @@ export interface ConnectModalProps extends InitialChains {
   customization?: ConnectModalCustomization;
 }
 
+/** The screens of one choice of a wallet: Back from them is back to the list as it was. */
+const SCREENS_OF_A_CHOICE: readonly ConnectContentType[] = ['network', 'connecting', 'impersonate'];
+
 /**
  * The connect modal: wallet list with network tabs, network choice for multi-network wallets, connection progress
  * with retry, "About wallets", "Get a wallet" and the impersonation form. Open it with `setIsConnectModalOpen(true)`
@@ -733,10 +737,8 @@ export interface ConnectModalProps extends InitialChains {
  *
  * Opening the modal resets it to the wallet list. A wallet connects through `connect` of the Satellite store to the
  * first chain of `appChains` (EVM) or the first cluster of `solanaRPCUrls` (Solana), and the modal closes 400 ms after
- * the wallet reports the connection (it waits up to 10 seconds). The network and connecting screens keep the height of
- * the wallet list (measured with a `ResizeObserver` while the list is shown and forgotten when the modal closes; at most
- * the height of the window less 2rem), with the footer at the bottom and the connection status in the middle, so
- * choosing a wallet, its network and going back do not resize the modal. Texts
+ * that wallet has become the active one. While the wallet has not answered the modal waits, and after 20 seconds it says to
+ * check the wallet. The top edge of the window stays where it opened and its height follows the content. Texts
  * come from the Nova Connect labels, except a few English accessibility texts.
  *
  * Props: {@link ConnectModalProps}.
@@ -782,6 +784,9 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
 
   const labels = useNovaConnectLabels();
   const store = useContext(SatelliteStoreContext);
+  const resetConnectionError = useSatelliteConnectStore((state) => state.resetConnectionError);
+  // The tab of the list when a wallet was chosen
+  const tabBeforeChoice = useRef<OrbitAdapter | undefined>(undefined);
 
   // The wallets of the store while the modal is open, updated when wallets are added after it opened
   const connectors = useWalletConnectors({ enabled: isConnectModalOpen });
@@ -887,6 +892,8 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
    */
   const handleOpenChange = useCallback(
     (open: boolean) => {
+      // Told by now, and left in the store it hid what came later
+      if (!open) resetConnectionError();
       if (handlers?.onOpenChange) {
         handlers.onOpenChange(open, modalData);
       } else {
@@ -894,14 +901,21 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handlers?.onOpenChange, modalData, setIsConnectModalOpen],
+    [handlers?.onOpenChange, modalData, setIsConnectModalOpen, resetConnectionError],
   );
 
   /**
    * Handle back navigation with custom handler
    */
   const handleBack = useCallback(() => {
-    const originalHandler = () => setConnectModalContentType(goBackContentType());
+    const originalHandler = () => {
+      const previous = goBackContentType();
+      // `selectedAdapter` is also the wallet's own chain family: Back left the list narrowed to it, with the tab of All gone
+      if (previous === 'connectors' && SCREENS_OF_A_CHOICE.includes(connectModalContentType)) {
+        setSelectedAdapter(tabBeforeChoice.current);
+      }
+      setConnectModalContentType(previous);
+    };
 
     if (handlers?.onBack) {
       handlers.onBack(modalData, originalHandler);
@@ -909,7 +923,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       originalHandler();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType]);
+  }, [handlers?.onBack, modalData, setConnectModalContentType, goBackContentType, connectModalContentType]);
 
   /**
    * Handle info button click
@@ -969,12 +983,9 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const handleConnectorClick = useCallback(
     (connector: GroupedConnector) => {
       setActiveConnector(formatConnectorName(connector.name));
+      tabBeforeChoice.current = selectedAdapter;
       if (connector.adapters.length === 1) {
         setSelectedAdapter(connector.adapters[0]);
-        setConnectModalContentType(
-          formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID ? 'impersonate' : 'connecting',
-        );
-      } else if (selectedAdapter) {
         setConnectModalContentType(
           formatConnectorName(connector.name) === IMPERSONATED_CONNECTOR_ID ? 'impersonate' : 'connecting',
         );
@@ -1003,7 +1014,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
           />
         );
       case 'connectors':
-        return connectors ? (
+        return connectors && Object.values(connectors).some((wallets) => wallets.length > 0) ? (
           <>
             <NetworkTabs
               networks={Object.keys(connectors) as OrbitAdapter[]}

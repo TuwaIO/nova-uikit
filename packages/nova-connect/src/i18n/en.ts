@@ -46,6 +46,7 @@ export const defaultLabels: NovaConnectLabels = {
   switchNetwork: 'Switch network',
   switchNetworks: 'Switch Networks',
   connectingEllipsis: 'Connecting...',
+  checkWalletRequest: 'Check your wallet: the request may be waiting there.',
   connectedWallets: 'Connected Wallets',
 
   // Wallet sections - Categories for wallet connector grouping

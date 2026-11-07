@@ -4,7 +4,7 @@
 
 import { cn, formatLabel, QuasarLoader, standardButtonClasses } from '@tuwaio/nova-core';
 import { getWalletFromConnectorType, isSameAdapterAddress } from '@tuwaio/orbit-core';
-import { Transaction } from '@tuwaio/pulsar-core';
+import type { Transaction } from '@tuwaio/pulsar-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
 import { AnimatePresence, type Easing, motion, type Variants } from 'framer-motion';
 import React, {

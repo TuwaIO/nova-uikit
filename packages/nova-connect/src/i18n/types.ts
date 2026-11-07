@@ -78,6 +78,8 @@ export type NovaConnectLabels = {
   switchNetworks: string;
   /** Title of the connection screen before the wallet is known (default: `Connecting...`) */
   connectingEllipsis: string;
+  /** Shown when a wallet has not answered for a while. */
+  checkWalletRequest: string;
   /** Title of the connections screen (default: `Connected Wallets`) */
   connectedWallets: string;
 

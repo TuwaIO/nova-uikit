@@ -119,6 +119,13 @@ export interface WalletIconProps extends Omit<ComponentPropsWithoutRef<'div'>, '
 }
 
 // --- Default Sub-Components ---
+/** The URL of an icon, when it is one this component draws. */
+const toCleanIconUrl = (icon: string | undefined): string | null => {
+  const trimmedIcon = icon?.trim();
+  if (!trimmedIcon) return null;
+  return ['http://', 'https://', '/', 'data:'].some((start) => trimmedIcon.startsWith(start)) ? trimmedIcon : null;
+};
+
 const DefaultLoadingOverlay = ({ isLoading, className }: WalletIconLoadingOverlayProps) => {
   if (!isLoading) return null;
 
@@ -177,7 +184,8 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
   ) => {
     const labels = useNovaConnectLabels();
     const [hasError, setHasError] = useState(false);
-    const [isLoading, setIsLoading] = useState(Boolean(icon));
+    // By the URL it will use: an icon it refuses left a blank pulsing circle for good
+    const [isLoading, setIsLoading] = useState(Boolean(toCleanIconUrl(icon)));
 
     // Extract custom components
     const {
@@ -192,30 +200,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
     // Generate alt text for accessibility
     const imageAltText = altText || `${walletName} ${labels.walletIcon}`;
 
-    // Clean and validate icon URL
-    // Clean and validate icon URL
-    const cleanIconUrl = (() => {
-      if (!icon) return null;
-
-      try {
-        const trimmedIcon = icon.trim();
-        if (!trimmedIcon) return null;
-
-        // Basic URL validation
-        if (
-          trimmedIcon.startsWith('http://') ||
-          trimmedIcon.startsWith('https://') ||
-          trimmedIcon.startsWith('/') ||
-          trimmedIcon.startsWith('data:')
-        ) {
-          return trimmedIcon;
-        }
-
-        return null;
-      } catch {
-        return null;
-      }
-    })();
+    const cleanIconUrl = toCleanIconUrl(icon);
 
     // Handle image load success
     const handleImageLoad = useCallback(() => {

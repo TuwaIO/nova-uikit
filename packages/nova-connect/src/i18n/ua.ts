@@ -46,6 +46,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   switchNetwork: 'Змінити мережу',
   switchNetworks: 'Змінити Мережі',
   connectingEllipsis: 'Підключення...',
+  checkWalletRequest: 'Перевірте гаманець: запит може чекати там.',
   connectedWallets: 'Підключені Гаманці',
 
   // Секції гаманців - Категорії для групування з'єднувачів гаманців

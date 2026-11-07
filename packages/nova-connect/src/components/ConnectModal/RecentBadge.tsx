@@ -3,7 +3,7 @@
  */
 
 import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -225,6 +225,7 @@ const DefaultAnimatedGradient: React.FC<RecentBadgeAnimatedGradientProps> = ({
   animationConfig,
   gradientConfig,
 }) => {
+  const reduceMotion = useReducedMotion();
   const gradientBackground = (() => {
     const stops = gradientConfig.stops.map((stop) => `${stop.color} ${stop.position}%`).join(', ');
     return `linear-gradient(${gradientConfig.direction}, ${stops})`;
@@ -235,7 +236,8 @@ const DefaultAnimatedGradient: React.FC<RecentBadgeAnimatedGradientProps> = ({
     backgroundSize: gradientConfig.backgroundSize,
   };
 
-  if (!animated) {
+  // A repaint on every frame for as long as the list is open, and against what the person asked for
+  if (!animated || reduceMotion) {
     return <span className={className} style={animatedStyle} />;
   }
 

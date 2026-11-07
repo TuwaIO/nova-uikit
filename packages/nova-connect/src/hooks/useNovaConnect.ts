@@ -1,5 +1,5 @@
 import { globalSingleton, OrbitAdapter } from '@tuwaio/orbit-core';
-import { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
+import type { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
 import { createContext, useContext } from 'react';
 
 import { LocalTxPagination } from '../components';

@@ -11,7 +11,6 @@ import React, {
   ComponentPropsWithoutRef,
   ComponentType,
   forwardRef,
-  lazy,
   ReactNode,
   Suspense,
   useCallback,
@@ -20,6 +19,7 @@ import React, {
 
 import { NovaConnectProviderProps, useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
+import { retryableLazy } from '../../utils/retryableLazy';
 
 // --- Default Motion Variants ---
 const DEFAULT_CONTAINER_ANIMATION_VARIANTS: Variants = {
@@ -432,13 +432,13 @@ export interface ConnectedModalTxHistoryProps extends Pick<
 }
 
 // Loaded on the first render of the history, in a chunk of its own
-const TransactionsHistory = lazy(() =>
-  import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsHistory })),
+const getTransactionsHistory = retryableLazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => module.TransactionsHistory),
 );
 
 // The details of a transaction open here, over the wallet window: inside it they read as a second header under its own
-const TransactionsInfoModal = lazy(() =>
-  import('@tuwaio/nova-transactions').then((module) => ({ default: module.TransactionsInfoModal })),
+const getTransactionsInfoModal = retryableLazy(() =>
+  import('@tuwaio/nova-transactions').then((module) => module.TransactionsInfoModal),
 );
 
 // --- Default Sub-Components ---
@@ -694,6 +694,9 @@ export const ConnectedModalTxHistory = forwardRef<HTMLDivElement, ConnectedModal
     const labels = useNovaConnectLabels();
     const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
     const [openedTxKey, setOpenedTxKey] = useState<string | null>(null);
+    // Per mount of the screen: leaving it and coming back tries a failed load again
+    const [TransactionsHistory] = useState(getTransactionsHistory);
+    const [TransactionsInfoModal] = useState(getTransactionsInfoModal);
 
     // Extract custom components and config
     const {

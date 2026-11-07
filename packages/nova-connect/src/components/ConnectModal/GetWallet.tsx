@@ -461,7 +461,7 @@ const DefaultStarsBackground: React.FC<GetWalletStarsBackgroundProps> = ({ class
   <>
     {show && (
       <div className={className} {...props}>
-        <StarsBackground starsCount={50} />
+        <StarsBackground starsCount={16} />
       </div>
     )}
   </>

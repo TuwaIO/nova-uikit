@@ -422,6 +422,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
     // Validation timeout ref
     const validationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const validationRun = useRef(0);
     const isInitializedRef = useRef(false);
 
     // Extract customization options
@@ -457,6 +458,8 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
      * Clear validation timeout
      */
     const clearValidationTimeout = useCallback(() => {
+      // Also what is on its way: a name that answered late took the place of the one in the field, and Connect impersonated it
+      validationRun.current += 1;
       if (validationTimeoutRef.current) {
         clearTimeout(validationTimeoutRef.current);
         validationTimeoutRef.current = null;
@@ -506,11 +509,15 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       [setImpersonatedAddress],
     );
 
+    // Nothing answers into a form that is gone
+    useEffect(() => clearValidationTimeout, [clearValidationTimeout]);
+
     /**
      * Validate a value and update state accordingly
      */
     const validateValue = useCallback(
       async (value: string): Promise<string | null> => {
+        const run = validationRun.current;
         customHandlers?.onValidationStart?.(value);
 
         // Custom validation first
@@ -525,6 +532,13 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // Empty validation
         if (!value.trim()) {
           const error = labels.impersonateAddressEmpty;
+          customHandlers?.onValidationComplete?.(value, error);
+          return error;
+        }
+
+        // Before the name is looked up: with a wallet connected Connect does nothing, and it passed without a message
+        if (activeConnection?.isConnected) {
+          const error = labels.impersonateAddressConnected;
           customHandlers?.onValidationComplete?.(value, error);
           return error;
         }
@@ -551,6 +565,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
 
           // Try to resolve the domain name
           const resolved = await resolveDomainName(value);
+          if (run !== validationRun.current) return null;
           if (!resolved) {
             const error = labels.impersonateAddressNotCorrect;
             customHandlers?.onValidationComplete?.(value, error);
@@ -568,13 +583,6 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // Regular address validation
         if (!isAddress(value)) {
           const error = labels.impersonateAddressNotCorrect;
-          customHandlers?.onValidationComplete?.(value, error);
-          return error;
-        }
-
-        // Connected wallet check
-        if (activeConnection?.isConnected) {
-          const error = labels.impersonateAddressConnected;
           customHandlers?.onValidationComplete?.(value, error);
           return error;
         }
@@ -615,7 +623,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // No check of `hasInteracted` here: it is still `false` in this closure for the first change, and an address set in one go
         // would never be validated, which keeps Connect disabled.
         validationTimeoutRef.current = setTimeout(async () => {
+          const run = validationRun.current;
           const error = await validateValue(value);
+          if (run !== validationRun.current) return;
           if (error) {
             setConnectionError(normalizeError(new Error(error)));
           } else {
@@ -641,6 +651,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         const newValue = event.target.value;
         setInputValue(newValue);
         setHasInteracted(true);
+        // What was resolved belongs to the old text: Connect impersonated it while the new name was being looked up
+        setResolvedAddress(null);
+        setImpersonatedAddress('');
 
         // Clear error immediately if user is typing valid input
         if (newValue.trim() && connectionError) {
@@ -655,7 +668,14 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
         // Call custom handler
         customHandlers?.onInputChange?.(newValue, resolvedAddress);
       },
-      [connectionError, resetConnectionError, triggerValidation, customHandlers, resolvedAddress],
+      [
+        connectionError,
+        resetConnectionError,
+        triggerValidation,
+        customHandlers,
+        resolvedAddress,
+        setImpersonatedAddress,
+      ],
     );
 
     /**
@@ -692,7 +712,9 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
       clearValidationTimeout();
 
       // Immediate validation on blur
+      const run = validationRun.current;
       const error = await validateValue(inputValue);
+      if (run !== validationRun.current) return;
       if (error) {
         setConnectionError(normalizeError(new Error(error)));
       } else {
