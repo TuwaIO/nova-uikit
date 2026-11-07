@@ -3,13 +3,15 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-// Owner, 2026-11-07: these two screens open with a sound of their own, each time, as the screen mounts
-describe('the screens of the connect window', () => {
-  it.each([
-    ['GetWallet.tsx', 'getWallet'],
-    ['AboutWallets.tsx', 'aboutWallets'],
-  ])('%s plays %s when it opens', (file, sound) => {
-    const source = readFileSync(join(__dirname, file), 'utf8');
-    expect(source).toMatch(new RegExp(`useEffect\\(\\(\\) => \\{\\s*play\\('${sound}'\\);\\s*\\}, \\[play\\]\\)`));
+// Owner, 2026-11-07: the Get a wallet screen opens with a sound of its own, and each picture of About wallets draws itself with one
+describe('the sounds of the connect window', () => {
+  it('plays when the Get a wallet screen opens', () => {
+    const source = readFileSync(join(__dirname, 'GetWallet.tsx'), 'utf8');
+    expect(source).toMatch(/useEffect\(\(\) => \{\s*play\('getWallet'\);\s*\}, \[play\]\)/);
+  });
+
+  it('plays with every picture that draws itself, and with none when nothing is drawn', () => {
+    const source = readFileSync(join(__dirname, 'AboutWalletsArt.tsx'), 'utf8');
+    expect(source).toMatch(/if \(!reduce\) play\('aboutWallets'\);\s*\}, \[slideId, reduce, play\]\)/);
   });
 });

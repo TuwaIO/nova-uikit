@@ -217,12 +217,15 @@ const SOUNDS: Record<NovaSoundName, Sound> = {
     ],
     echoes: 2,
   },
-  // A key that turns in a lock, and what it opens, for the screen whose picture is that key
+  // A picture that draws itself: a line rises under the strokes, the nodes light up one by one and the core rings at the end
   aboutWallets: {
     tones: [
-      { frequency: 1047, at: 0, duration: 0.05, gain: 0.3, wave: 'triangle' },
-      { frequency: 1319, at: 0.06, duration: 0.05, gain: 0.3, wave: 'triangle' },
-      { frequency: 1568, glideTo: 1760, at: 0.12, duration: 0.28, gain: 0.35, shimmer: 6 },
+      { frequency: 220, glideTo: 440, at: 0, duration: 0.9, gain: 0.25, shimmer: 10 },
+      { frequency: 880, at: 0.3, duration: 0.08, gain: 0.14 },
+      { frequency: 988, at: 0.42, duration: 0.08, gain: 0.14 },
+      { frequency: 1175, at: 0.54, duration: 0.08, gain: 0.14 },
+      { frequency: 1319, at: 0.66, duration: 0.08, gain: 0.16 },
+      { frequency: 1760, at: 1, duration: 0.4, gain: 0.26, shimmer: 6 },
     ],
     echoes: 1,
   },

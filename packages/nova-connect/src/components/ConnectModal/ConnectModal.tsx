@@ -7,7 +7,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  ExternalLinkIcon,
   standardButtonClasses,
+  useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
   ConnectorType,
@@ -109,6 +111,8 @@ export interface BottomButtonConfig {
   disabled?: boolean;
   /** Shows `Loading...` and disables the button (not set by the modal) */
   loading?: boolean;
+  /** Whether it opens another site: the button shows the icon of an external link */
+  isExternal?: boolean;
 }
 
 // --- Component Props Types ---
@@ -783,6 +787,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
   const activeConnection = useSatelliteConnectStore((store) => store.activeConnection);
 
   const labels = useNovaConnectLabels();
+  const play = useNovaSounds();
   const store = useContext(SatelliteStoreContext);
   const resetConnectionError = useSatelliteConnectStore((state) => state.resetConnectionError);
   // The tab of the list when a wallet was chosen
@@ -1102,10 +1107,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       case 'getWallet':
         return {
           title: labels.choseWallet,
+          // A host that replaces the action decides where it leads
+          isExternal: !handlers.onActionClick?.getWallet,
           onClick: () => {
             if (handlers.onActionClick?.getWallet) {
               handlers.onActionClick.getWallet(modalData);
             } else {
+              play('externalLink');
               window.open(
                 getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.choseWallet,
                 '_blank',
@@ -1117,10 +1125,13 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
       case 'about':
         return {
           title: labels.learnMore,
+          // A host that replaces the action decides where it leads
+          isExternal: !handlers.onActionClick?.about,
           onClick: () => {
             if (handlers.onActionClick?.about) {
               handlers.onActionClick.about(modalData);
             } else {
+              play('externalLink');
               window.open(
                 getNetworkData(selectedAdapter ?? (Object.keys(connectors!)[0] as OrbitAdapter))?.links?.about,
                 '_blank',
@@ -1264,6 +1275,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
                     buttonConfig={bottomButtonConfig}
                   >
                     {bottomButtonConfig.title}
+                    {bottomButtonConfig.isExternal && <ExternalLinkIcon className="novacon:h-4 novacon:w-4" />}
                   </ActionButton>
                   <ActionDescription
                     id="bottom-action-description"

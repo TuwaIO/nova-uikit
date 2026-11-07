@@ -5,8 +5,9 @@
  * theme and weighs a few KB.
  */
 
+import { useNovaSounds } from '@tuwaio/nova-core';
 import { motion, useReducedMotion } from 'framer-motion';
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 
 const ACCENT = 'var(--tuwa-text-accent)';
 const EASE = [0.4, 0, 0.2, 1] as const;
@@ -127,6 +128,12 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
     setLastSlideId(slideId);
     setHasChanged(true);
   }
+
+  // With each picture that draws itself. With less motion it is simply there, and nothing is drawn to hear
+  const play = useNovaSounds();
+  useEffect(() => {
+    if (!reduce) play('aboutWallets');
+  }, [slideId, reduce, play]);
 
   // On the first drawing the subject waits for the plate and the network, and on a change it follows what is being drawn away
   const start = hasChanged ? 0.15 : 0.55;

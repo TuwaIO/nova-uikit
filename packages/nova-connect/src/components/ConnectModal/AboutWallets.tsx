@@ -2,7 +2,7 @@
  * @file AboutWallets component with comprehensive customization options and touch support.
  */
 
-import { cn, formatLabel, QuasarLoader, StarsBackground, useNovaSounds } from '@tuwaio/nova-core';
+import { cn, formatLabel, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -768,12 +768,6 @@ const DefaultStatus: React.FC<AboutWalletsStatusProps> = ({
  * ```
  */
 export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ className, customization }, ref) => {
-  // Each time the screen opens
-  const play = useNovaSounds();
-  useEffect(() => {
-    play('aboutWallets');
-  }, [play]);
-
   const labels = useNovaConnectLabels();
 
   // Extract customization options

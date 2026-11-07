@@ -19,7 +19,7 @@ const WHEN: Record<NovaSoundName, string> = {
   externalLink: 'A link to another site',
   addWallet: 'Connect another wallet',
   getWallet: 'The Get a wallet screen',
-  aboutWallets: 'The About wallets screen',
+  aboutWallets: 'A picture of About wallets being drawn',
   checkbox: 'Remember this wallet',
 };
 

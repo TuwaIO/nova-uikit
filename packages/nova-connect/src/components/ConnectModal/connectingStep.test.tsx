@@ -1,4 +1,4 @@
-import { AnimatedHeight } from '@tuwaio/nova-core';
+import { AnimatedHeight, ExternalLinkIcon } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { motion } from 'framer-motion';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -21,6 +21,12 @@ const { state } = vi.hoisted(() => ({
     modal: {} as Record<string, unknown>,
     context: null as { isWaitingForSignature?: boolean } | null,
   },
+}));
+
+const play = vi.hoisted(() => vi.fn());
+vi.mock('@tuwaio/nova-core', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tuwaio/nova-core')>()),
+  useNovaSounds: () => play,
 }));
 
 vi.mock('../../hooks', () => ({
@@ -175,6 +181,22 @@ describe('the connecting step', () => {
     // A layout root: what the indicator of the network tabs measures against in a fixed window
     expect(wrapper?.props.layoutRoot).toBe(true);
     expect(wrapper?.props.transition).toBeUndefined();
+  });
+
+  // Owner, 2026-11-07: these two lead to another site, and said so neither by eye nor by ear
+  it.each(['getWallet', 'about'])('shows that the action of the %s screen leads away, and plays it', (screen) => {
+    const open = vi.fn();
+    vi.stubGlobal('window', { open });
+    play.mockClear();
+    const { modal } = openModal();
+    const tree = show(modal, { connectModalContentType: screen });
+    const action = elements(tree).find((element) => 'buttonConfig' in element.props)!;
+
+    expect(elements(action.props.children).some((element) => element.type === ExternalLinkIcon)).toBe(true);
+
+    (action.props.onClick as () => void)();
+    expect(play).toHaveBeenCalledWith('externalLink');
+    expect(open).toHaveBeenCalledOnce();
   });
 
   it.each(['connectors', 'network', 'connecting'])(
