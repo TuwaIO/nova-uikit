@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # NovaConnectProviderProps
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L40)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L41)
 
 Props of `NovaConnectProvider`. `appChains` and `solanaRPCUrls` give the chains of the app; without both, the
 modals are not rendered.
@@ -37,7 +37,7 @@ EVM chains of the app, the viem chains of your wagmi config. See [NovaConnectApp
 
 > **children**: `ReactNode`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L74)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L82)
 
 The app
 
@@ -47,7 +47,7 @@ The app
 
 > `optional` **customConnectorGroups?**: `Record`\<`string`, `string`[]\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:60](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L60)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L68)
 
 Extra wallet groups of the wallet list: group title → wallet names, in order
 
@@ -57,7 +57,7 @@ Extra wallet groups of the wallet list: group title → wallet names, in order
 
 > `optional` **labels?**: `Partial`\<[`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L76)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:84](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L84)
 
 Texts to override, merged over the English defaults
 
@@ -67,7 +67,7 @@ Texts to override, merged over the English defaults
 
 > `optional` **legal?**: [`LegalConfig`](?path=/docs/packages-nova-connect-connect-interfaces-legalconfig--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L62)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L70)
 
 Legal configuration for Terms of Service and Privacy Policy links
 
@@ -77,7 +77,7 @@ Legal configuration for Terms of Service and Privacy Policy links
 
 > `optional` **pagination?**: [`LocalTxPagination`](?path=/docs/packages-nova-connect-components-type-aliases-localtxpagination--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:72](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L72)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:80](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L80)
 
 Pagination state for infinite scroll, forwarded to ConnectedModalTxHistory and TransactionsHistory.
 Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency).
@@ -88,7 +88,7 @@ Mirrors TxInMemoryPagination from @tuwaio/pulsar-core (optional peer dependency)
 
 > `optional` **popularConnectors?**: `string`[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:58](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L58)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:66](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L66)
 
 Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini)
 
@@ -98,7 +98,7 @@ Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Co
 
 > `optional` **pulsarAdapter?**: `TxAdapter`\<`Transaction`\> \| `TxAdapter`\<`Transaction`\>[]
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:50](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L50)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:51](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L51)
 
 Pulsar adapter(s); with `transactionPool`, the connected modal shows the transaction history
 
@@ -108,7 +108,7 @@ Pulsar adapter(s); with `transactionPool`, the connected modal shows the transac
 
 > `optional` **removeTxFromPool?**: (`txKey`) => `void`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:48](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L48)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:49](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L49)
 
 `removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
 offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
@@ -130,7 +130,7 @@ person acts on when one never ends. An app that shows a pool of its own must rem
 
 > `optional` **siwx?**: [`NovaSiwxWatcherProps`](?path=/docs/packages-nova-connect-connect-interfaces-novasiwxwatcherprops--docs)
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:67](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L67)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:75](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L75)
 
 SIWX sign-in of the connected wallet (see `NovaSiwxWatcher`). Without it, Nova Connect does not sign in and does
 not touch the SIWX session.
@@ -152,11 +152,24 @@ Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.dev
 
 ***
 
+### sounds?
+
+> `optional` **sounds?**: `NovaSoundsConfig`
+
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:62](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L62)
+
+The sounds of Nova Connect, off without it: a wallet connected and disconnected, an error of a connection, a change of
+network, a copy and a balance refreshed by hand. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and
+sets the volume. They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of
+`@tuwaio/nova-core/utils` for when they stay silent.
+
+***
+
 ### transactionPool?
 
 > `optional` **transactionPool?**: `TransactionPool`\<`Transaction`\>
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:42](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L42)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:43](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L43)
 
 Transaction pool of Pulsar: the connect button shows the results and the wait of the transactions of the wallet
 
@@ -166,7 +179,7 @@ Transaction pool of Pulsar: the connect button shows the results and the wait of
 
 > `optional` **withBalance?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L52)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L53)
 
 Whether the connect button shows the native balance
 
@@ -176,7 +189,7 @@ Whether the connect button shows the native balance
 
 > `optional` **withChain?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:54](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L54)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:55](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L55)
 
 Whether the connect button shows a chain selector
 
@@ -186,6 +199,6 @@ Whether the connect button shows a chain selector
 
 > `optional` **withImpersonated?**: `boolean`
 
-Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:56](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L56)
+Defined in: [packages/nova-connect/src/hooks/useNovaConnect.ts:64](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useNovaConnect.ts#L64)
 
 Whether the wallet list offers the impersonated wallet (a read-only address, for development)

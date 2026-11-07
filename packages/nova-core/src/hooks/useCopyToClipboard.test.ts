@@ -1,6 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const { setState, ref } = vi.hoisted(() => ({ setState: vi.fn(), ref: { current: undefined as unknown } }));
+const { setState, ref, context, playNovaSound } = vi.hoisted(() => ({
+  setState: vi.fn(),
+  ref: { current: undefined as unknown },
+  context: { sounds: undefined as unknown },
+  playNovaSound: vi.fn(),
+}));
+
+vi.mock('../utils/sounds', () => ({ playNovaSound }));
 
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
@@ -8,6 +15,7 @@ vi.mock('react', async (importOriginal) => ({
   useCallback: (fn: unknown) => fn,
   useEffect: vi.fn(),
   useRef: () => ref,
+  useContext: () => context.sounds,
 }));
 
 import { useCopyToClipboard } from './useCopyToClipboard';
@@ -32,6 +40,20 @@ describe('useCopyToClipboard', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await expect(useCopyToClipboard().copy('0x123')).resolves.toEqual({ copied: false, error });
+  });
+
+  it('plays the sound of the provider above it after a copy, and none after a failed one', async () => {
+    context.sounds = { volume: 0.3 };
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => undefined) } });
+    await useCopyToClipboard().copy('0x123');
+    expect(playNovaSound).toHaveBeenCalledWith('copy', { volume: 0.3 });
+
+    playNovaSound.mockClear();
+    vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => Promise.reject(new Error('No'))) } });
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    await useCopyToClipboard().copy('0x123');
+    expect(playNovaSound).not.toHaveBeenCalled();
+    context.sounds = undefined;
   });
 
   it('resolves `copied: false` without text', async () => {

@@ -2,6 +2,7 @@
  * @file Main NovaConnect provider component with comprehensive customization capabilities.
  */
 
+import { NovaSoundsProvider } from '@tuwaio/nova-core';
 import { deepMerge } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
@@ -19,6 +20,7 @@ import {
 } from '../hooks';
 import { defaultLabels, NovaConnectLabels } from '../i18n';
 import { useSatelliteConnectStore } from '../satellite';
+import { NovaConnectSounds } from '../watchers/NovaConnectSounds';
 import { NovaSiwxWatcher } from '../watchers/NovaSiwxWatcher';
 import { ErrorsProvider, ErrorsProviderCustomization } from './ErrorsProvider';
 import { NovaConnectLabelsProvider } from './NovaConnectLabelsProvider';
@@ -281,6 +283,7 @@ export function NovaConnectProvider({
   customConnectorGroups,
   legal,
   siwx,
+  sounds,
   customization,
   pagination,
 }: NovaConnectProviderPropsWithCustomization) {
@@ -499,7 +502,12 @@ export function NovaConnectProvider({
     providerContext,
   );
 
-  return <>{finalProviderTree}</>;
+  return (
+    <NovaSoundsProvider sounds={sounds}>
+      {sounds ? <NovaConnectSounds /> : null}
+      {finalProviderTree}
+    </NovaSoundsProvider>
+  );
 }
 
 // Add display name for better debugging

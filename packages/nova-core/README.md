@@ -72,6 +72,10 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
 
 ---
 
+## 🔊 Sounds
+
+`playNovaSound` of `@tuwaio/nova-core/utils` plays short tones synthesized with the Web Audio API, with no files and no requests. Nothing plays unless it is asked for: `NovaSoundsProvider` (which the `sounds` prop of the Nova Connect and Nova Transactions providers renders) sets them for the components under it, and `useNovaSounds` plays them from a component of yours.
+
 ## 🌐 External Services
 
 | Helper                                                                  | Host                                                            | Purpose                                                                                                                                |

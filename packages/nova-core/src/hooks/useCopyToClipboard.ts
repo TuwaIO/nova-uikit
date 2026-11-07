@@ -2,7 +2,10 @@
  * @file This file contains a custom React hook for copying text to the clipboard.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+
+import { playNovaSound } from '../utils/sounds';
+import { NovaSoundsContext } from './useNovaSounds';
 
 /**
  * Result of `copy` of {@link useCopyToClipboard}: `copied: true`, or `copied: false` with the error (also without
@@ -29,7 +32,8 @@ export interface UseCopyToClipboardResult {
 }
 
 /**
- * Copies text to the clipboard and keeps a "copied" state for user feedback.
+ * Copies text to the clipboard and keeps a "copied" state for user feedback. A successful copy plays the `copy` sound under a
+ * `NovaSoundsProvider` that has sounds on.
  *
  * @param timeout - How long `isCopied` (and `error` after a failure) stays set, in milliseconds (default: `2000`).
  * @returns See {@link UseCopyToClipboardResult}.
@@ -59,6 +63,7 @@ export function useCopyToClipboard(timeout = 2000): UseCopyToClipboardResult {
   const [error, setError] = useState<Error | null>(null);
   // One timer: the reset of an earlier copy cut the `Copied` of a later one short
   const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const sounds = useContext(NovaSoundsContext);
 
   useEffect(() => () => clearTimeout(resetTimer.current), []);
 
@@ -68,6 +73,7 @@ export function useCopyToClipboard(timeout = 2000): UseCopyToClipboardResult {
 
       try {
         await navigator.clipboard.writeText(text);
+        playNovaSound('copy', sounds);
         setIsCopied(true);
         setError(null);
 
@@ -86,7 +92,7 @@ export function useCopyToClipboard(timeout = 2000): UseCopyToClipboardResult {
         return { copied: false, error: copyError };
       }
     },
-    [timeout],
+    [timeout, sounds],
   );
 
   return { isCopied, copy, error };

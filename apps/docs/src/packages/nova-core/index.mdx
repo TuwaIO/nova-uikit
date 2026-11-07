@@ -73,6 +73,10 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
 
 ---
 
+## 🔊 Sounds
+
+`playNovaSound` of `@tuwaio/nova-core/utils` plays short tones synthesized with the Web Audio API, with no files and no requests. Nothing plays unless it is asked for: `NovaSoundsProvider` (which the `sounds` prop of the Nova Connect and Nova Transactions providers renders) sets them for the components under it, and `useNovaSounds` plays them from a component of yours.
+
 ## 🌐 External Services
 
 | Helper                                                                  | Host                                                            | Purpose                                                                                                                                |
@@ -113,6 +117,9 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [ExternalLinkIconProps](?path=/docs/packages-nova-core-type-aliases-externallinkiconprops--docs)
 - [MorphIconProps](?path=/docs/packages-nova-core-type-aliases-morphiconprops--docs)
 - [MorphTextProps](?path=/docs/packages-nova-core-type-aliases-morphtextprops--docs)
+- [NovaSoundName](?path=/docs/packages-nova-core-type-aliases-novasoundname--docs)
+- [NovaSoundsConfig](?path=/docs/packages-nova-core-type-aliases-novasoundsconfig--docs)
+- [NovaSoundsProviderProps](?path=/docs/packages-nova-core-type-aliases-novasoundsproviderprops--docs)
 - [QuasarLoaderProps](?path=/docs/packages-nova-core-type-aliases-quasarloaderprops--docs)
 - [ScrollToTopButtonProps](?path=/docs/packages-nova-core-type-aliases-scrolltotopbuttonprops--docs)
 - [StatusEdgeProps](?path=/docs/packages-nova-core-type-aliases-statusedgeprops--docs)
@@ -130,6 +137,8 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [DialogPortal](?path=/docs/packages-nova-core-variables-dialogportal--docs)
 - [DialogTitle](?path=/docs/packages-nova-core-variables-dialogtitle--docs)
 - [DialogTrigger](?path=/docs/packages-nova-core-variables-dialogtrigger--docs)
+- [NOVA\_SOUND\_NAMES](?path=/docs/packages-nova-core-variables-nova-sound-names--docs)
+- [NovaSoundsContext](?path=/docs/packages-nova-core-variables-novasoundscontext--docs)
 - [standardButtonClasses](?path=/docs/packages-nova-core-variables-standardbuttonclasses--docs)
 
 ## Functions
@@ -160,7 +169,9 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [MorphIcon](?path=/docs/packages-nova-core-functions-morphicon--docs)
 - [MorphText](?path=/docs/packages-nova-core-functions-morphtext--docs)
 - [NetworkIcon](?path=/docs/packages-nova-core-functions-networkicon--docs)
+- [NovaSoundsProvider](?path=/docs/packages-nova-core-functions-novasoundsprovider--docs)
 - [parseHexColor](?path=/docs/packages-nova-core-functions-parsehexcolor--docs)
+- [playNovaSound](?path=/docs/packages-nova-core-functions-playnovasound--docs)
 - [QuasarLoader](?path=/docs/packages-nova-core-functions-quasarloader--docs)
 - [readableTextColor](?path=/docs/packages-nova-core-functions-readabletextcolor--docs)
 - [resolveCssVariable](?path=/docs/packages-nova-core-functions-resolvecssvariable--docs)
@@ -175,4 +186,5 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [TrashIcon](?path=/docs/packages-nova-core-functions-trashicon--docs)
 - [useCopyToClipboard](?path=/docs/packages-nova-core-functions-usecopytoclipboard--docs)
 - [useMediaQuery](?path=/docs/packages-nova-core-functions-usemediaquery--docs)
+- [useNovaSounds](?path=/docs/packages-nova-core-functions-usenovasounds--docs)
 - [WalletIcon](?path=/docs/packages-nova-core-functions-walleticon--docs)

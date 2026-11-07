@@ -4,9 +4,9 @@
  */
 
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, QuasarLoader, useNovaSounds } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
-import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useState } from 'react';
+import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 
@@ -352,6 +352,9 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [prevIsLoading, setPrevIsLoading] = useState(isLoading);
   const novaConnectLabels = useNovaConnectLabels();
+  const play = useNovaSounds();
+  // A refresh of its own, and not one after a transaction: the sound answers the click
+  const isRefreshAsked = useRef(false);
 
   // Merge labels with defaults
   const labels: Required<BalanceDisplayLabels> = {
@@ -385,12 +388,17 @@ export const BalanceDisplay: React.FC<BalanceDisplayProps> = ({
   // Hide it after `successDuration`
   useEffect(() => {
     if (!showSuccess) return;
+    if (isRefreshAsked.current) {
+      isRefreshAsked.current = false;
+      play('balanceRefresh');
+    }
     const timer = setTimeout(() => setShowSuccess(false), successDuration);
     return () => clearTimeout(timer);
-  }, [showSuccess, successDuration]);
+  }, [showSuccess, successDuration, play]);
 
   // Handle refetch
   const handleRefetch = useCallback(() => {
+    isRefreshAsked.current = true;
     onRefetch?.();
   }, [onRefetch]);
 

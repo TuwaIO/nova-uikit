@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Variables/NovaSoundsContext" />
+
+# NovaSoundsContext
+
+> `const` **NovaSoundsContext**: `Context`\<[`NovaSoundsConfig`](?path=/docs/packages-nova-core-type-aliases-novasoundsconfig--docs) \| `undefined`\>
+
+Defined in: [hooks/useNovaSounds.ts:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useNovaSounds.ts#L14)
+
+The `sounds` of the closest `NovaSoundsProvider`, shared on `globalThis` so that two copies of this package agree.
+Without a provider it is `undefined`: no sounds.

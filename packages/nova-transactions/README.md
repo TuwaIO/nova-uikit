@@ -96,6 +96,10 @@ Start transactions with the store's `executeTxAction`. A full app with Satellite
 
 ---
 
+## 🔊 Sounds
+
+Sounds are off unless you ask for them: `<NovaTransactionsProvider sounds />` plays a transaction that reaches the pool, its success and failure, an error before it reached the pool, and a copy. `sounds={{ copy: false, volume: 0.3 }}` leaves out a sound and sets the volume. They are synthesized in the browser with the Web Audio API, with no files and no requests, and they play only in a visible tab, after the person has used the page. A pool restored after a page load makes no sound.
+
 ## 🗄️ Browser Storage
 
 A toast closed with the cross while its transaction is pending stays closed after a page load, until the transaction changes state: the keys of up to 50 such transactions are kept in `localStorage`, under `nova-transactions:closedToasts`.

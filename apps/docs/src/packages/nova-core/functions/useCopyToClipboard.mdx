@@ -6,9 +6,10 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **useCopyToClipboard**(`timeout?`): [`UseCopyToClipboardResult`](?path=/docs/packages-nova-core-interfaces-usecopytoclipboardresult--docs)
 
-Defined in: [hooks/useCopyToClipboard.ts:57](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L57)
+Defined in: [hooks/useCopyToClipboard.ts:61](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useCopyToClipboard.ts#L61)
 
-Copies text to the clipboard and keeps a "copied" state for user feedback.
+Copies text to the clipboard and keeps a "copied" state for user feedback. A successful copy plays the `copy` sound under a
+`NovaSoundsProvider` that has sounds on.
 
 ## Parameters
 

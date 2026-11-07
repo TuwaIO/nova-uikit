@@ -93,7 +93,7 @@
   "peerDependencies": {
     "@heroicons/react": "2.x.x",
     "@radix-ui/react-select": "2.x.x",
-    "@tuwaio/nova-core": ">=0.12.1",
+    "@tuwaio/nova-core": ">=0.13",
     "@tuwaio/nova-transactions": ">=0.11",
     "@tuwaio/orbit-core": ">=0.6.2",
     "@tuwaio/orbit-evm": ">=0.3",

@@ -6,4 +6,5 @@ export * from './formatLabel';
 export * from './getChainName';
 export * from './isSolanaDev';
 export * from './isTouchDevice';
+export * from './sounds';
 export * from './svgUtils';

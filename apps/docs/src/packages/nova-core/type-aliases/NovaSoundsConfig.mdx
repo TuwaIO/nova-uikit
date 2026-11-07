@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Type Aliases/NovaSoundsConfig" />
+
+# NovaSoundsConfig
+
+> **NovaSoundsConfig** = `boolean` \| `object` & `Partial`\<`Record`\<[`NovaSoundName`](?path=/docs/packages-nova-core-type-aliases-novasoundname--docs), `boolean`\>\>
+
+Defined in: [utils/sounds.ts:41](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/sounds.ts#L41)
+
+Which sounds play. Sounds are off unless they are asked for: `true` plays all of them, and an object plays all of them
+except the ones set to `false`, with `volume` from 0 to 1 (default: `0.2`).
+
+## Example
+
+```ts
+import type { NovaSoundsConfig } from '@tuwaio/nova-core/utils';
+
+export const sounds: NovaSoundsConfig = { copy: false, volume: 0.3 };
+```

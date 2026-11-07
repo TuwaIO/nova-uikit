@@ -178,6 +178,7 @@ function SatelliteConnectProvidersInner({
         popularConnectors={popularConnectors}
         legal={legal}
         labels={novaConnectLabels[locale]}
+        sounds
       >
         {children}
       </NovaConnectProvider>

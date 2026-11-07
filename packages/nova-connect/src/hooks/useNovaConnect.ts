@@ -1,3 +1,4 @@
+import type { NovaSoundsConfig } from '@tuwaio/nova-core/utils';
 import { globalSingleton, OrbitAdapter } from '@tuwaio/orbit-core';
 import type { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
 import { createContext, useContext } from 'react';
@@ -52,6 +53,13 @@ export interface NovaConnectProviderProps extends InitialChains {
   withBalance?: boolean;
   /** Whether the connect button shows a chain selector */
   withChain?: boolean;
+  /**
+   * The sounds of Nova Connect, off without it: a wallet connected and disconnected, an error of a connection, a change of
+   * network, a copy and a balance refreshed by hand. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and
+   * sets the volume. They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of
+   * `@tuwaio/nova-core/utils` for when they stay silent.
+   */
+  sounds?: NovaSoundsConfig;
   /** Whether the wallet list offers the impersonated wallet (a read-only address, for development) */
   withImpersonated?: boolean;
   /** Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini) */
