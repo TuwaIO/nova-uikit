@@ -1,6 +1,6 @@
 /**
  * @file This file contains the `TransactionKey` component, which is responsible for displaying
- * the various identifiers associated with a transaction (e.g., hash, Gelato Task ID).
+ * the various identifiers associated with a transaction (e.g., hash, Safe transaction hash).
  */
 
 import { cn } from '@tuwaio/nova-core/utils';
@@ -41,7 +41,7 @@ export type TransactionKeyProps<T extends Transaction> = Pick<NovaTransactionsPr
 
 /**
  * The identifiers of a transaction: the key of its tracker when it differs from the on-chain hash (Safe transaction
- * hash, Gelato task ID, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
+ * hash, ERC-4337 user operation hash, Solana signature), and the on-chain hash; for a replaced
  * transaction, the original and the replacing hash. Hashes link to the explorer URL of the adapter's
  * `getExplorerTxUrl` when there is one.
  *

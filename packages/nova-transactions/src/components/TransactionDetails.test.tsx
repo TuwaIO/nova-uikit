@@ -200,7 +200,7 @@ describe('TransactionDetails', () => {
     expect(findElement(anotherAccount, byText(defaultLabels.actions.speedUp))).toBeUndefined();
   });
 
-  it('shows the TX key only when it differs from the hash (Safe, Gelato)', () => {
+  it('shows the TX key only when it differs from the hash (Safe)', () => {
     expect(containsText(renderDetails(evmTx), defaultLabels.transactionDetails.txKey)).toBe(false);
 
     const safeTx = { ...evmTx, txKey: '0xsafe', tracker: TransactionTracker.Safe } as EvmTransaction;

@@ -29,7 +29,6 @@ export const chineseLabels: NovaTransactionsLabels = {
     confirmationsLabel: '区块确认数',
   },
   hashLabels: {
-    gelato: 'Gelato 任务 ID',
     safe: 'Safe 交易哈希',
     erc4337: 'UserOp 哈希',
     original: '初始交易哈希',

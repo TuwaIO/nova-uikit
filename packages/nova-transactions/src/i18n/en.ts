@@ -36,7 +36,6 @@ export const defaultLabels: NovaTransactionsLabels = {
     confirmationsLabel: 'Confirmations',
   },
   hashLabels: {
-    gelato: 'Gelato Task ID',
     safe: 'Safe Tx Hash',
     erc4337: 'UserOp Hash',
     original: 'Original Tx Hash',

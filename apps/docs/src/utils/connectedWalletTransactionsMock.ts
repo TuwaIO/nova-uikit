@@ -13,7 +13,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '4ecrNTNBLwR4L2LNpFsrRCDLvj35aWqhNqdTnaYCmvxsEeLGXCNEYYcNu3evVF2okyNCLaM1BpWV9mnMDq4CaAze': {
       type: 'increment',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Incrementing', 'Incremented', 'Error', 'Replaced'],
       description: [
         'New value will be 3',
@@ -65,7 +64,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '28en6B5ECdS3APe4JXf7FiFkQsGa9QAR5UkgY9CeYCGCQmt6s1HLf8EnDowoWEz5QYEs5M6VqsYVz4r1PPrx8tUS': {
       type: 'decrement',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Decrementing', 'Decremented', 'Error', 'Replaced'],
       description: [
         'New value will be 2',
@@ -128,7 +126,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 817,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,
@@ -186,7 +183,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
     '54DP5G1Xozw4wwrzXPmSz6ULS32SYo1GkvRo7XY9aNLfd9eUxr9w84U6yDWatWRmeoRYfXuAbznzQaqnxSECH1zD': {
       type: 'increment',
       adapter: 'solana',
-      rpcUrl: 'https://api.devnet.solana.com',
       title: ['Incrementing', 'Incremented', 'Error', 'Replaced'],
       description: [
         'New value will be 12',
@@ -285,7 +281,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 819,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,
@@ -323,7 +318,6 @@ export function connectedWalletTransactionsMock(connectedWallet: string) {
         value: 819,
         contractAddress: '0xAe7f46914De82028eCB7E2bF97Feb3D3dDCc2BAB',
       },
-      rpcUrl: 11155111,
       withTrackedModal: true,
       connectorType: 'evm:metamask',
       from: connectedWallet,

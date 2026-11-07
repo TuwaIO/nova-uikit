@@ -126,6 +126,10 @@ describe('TrackingTxModal', () => {
       lastTxKey: '0xabc',
       localTimestamp: 1,
       withTrackedModal: true,
+      tracker: TransactionTracker.ERC4337,
+      requiredConfirmations: 3,
+      bundlerUrl: 'https://bundler.example',
+      pimlicoApiKey: 'key',
     } as unknown as InitialTransaction;
 
     const element = TrackingTxModal({
@@ -144,7 +148,15 @@ describe('TrackingTxModal', () => {
       expect.objectContaining({
         txKey: '0xabc',
         executeTxAction,
-        tx: expect.objectContaining({ desiredChainID: 1, actionFunction, rpcUrl: undefined }),
+        // Without these a retried UserOperation went through the wrong tracker and lost its bundler
+        tx: expect.objectContaining({
+          desiredChainID: 1,
+          actionFunction,
+          tracker: TransactionTracker.ERC4337,
+          requiredConfirmations: 3,
+          bundlerUrl: 'https://bundler.example',
+          pimlicoApiKey: 'key',
+        }),
       }),
     );
   });

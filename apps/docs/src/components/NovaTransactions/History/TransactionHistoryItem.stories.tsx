@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionHistoryItem } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
@@ -111,20 +111,6 @@ export const Replaced: Story = {
         'Token swap failed',
         'The swap was cancelled',
       ],
-    }),
-    adapter: [mockEvmAdapter],
-  },
-};
-
-/**
- * A Gelato transaction, demonstrating how `TransactionKey` shows the `txKey` as a "Task ID".
- */
-export const Gelato: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-      hash: '0x_on_chain_hash_from_gelato',
     }),
     adapter: [mockEvmAdapter],
   },

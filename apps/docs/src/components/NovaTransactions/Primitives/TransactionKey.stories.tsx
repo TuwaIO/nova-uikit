@@ -72,19 +72,6 @@ export const DefaultSolana: Story = {
 };
 
 /**
- * Showcases Gelato transaction details with both Task ID and on-chain hash.
- */
-export const Gelato: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-    }),
-    adapter: mockEvmAdapter,
-  },
-};
-
-/**
  * Displays the Safe transaction hash combined with the on-chain hash.
  */
 export const Safe: Story = {
@@ -138,8 +125,8 @@ export const HistoryVariant: Story = {
 export const WithCustomRender: Story = {
   args: {
     tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
+      tracker: TransactionTracker.Safe,
+      txKey: '0xsafe_transaction_hash_abcdef123456',
     }),
     renderHashLink: (props) => (
       <div className="rounded-[var(--tuwa-rounded-corners)] bg-[#0052ff]/15 px-2 py-1 text-[#0052ff] dark:bg-[#38bdf8]/15 dark:text-[#7dd3fc]">

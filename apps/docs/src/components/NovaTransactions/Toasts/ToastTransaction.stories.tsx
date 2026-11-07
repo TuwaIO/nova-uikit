@@ -77,24 +77,6 @@ export const PendingWithActions: Story = {
 };
 
 /**
- * A pending Gelato transaction. The "Speed Up" and "Cancel" actions are correctly hidden
- * because the tracker is not 'ethereum'.
- */
-export const PendingGelato: Story = {
-  name: 'Pending (Gelato)',
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      pending: true,
-      status: undefined,
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_12345',
-      hash: undefined,
-      title: 'Processing Gasless Tx...',
-    }),
-  },
-};
-
-/**
  * A failed EVM transaction, showing error styling.
  */
 export const Failed: Story = {

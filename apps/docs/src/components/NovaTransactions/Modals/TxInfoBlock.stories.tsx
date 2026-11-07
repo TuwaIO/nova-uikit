@@ -68,20 +68,6 @@ export const InitialState: Story = {
 };
 
 /**
- * A transaction tracked by Gelato. The underlying `TransactionKey` component will
- * display the "Task ID".
- */
-export const GelatoTransaction: Story = {
-  args: {
-    tx: createMockTx(OrbitAdapter.EVM, {
-      tracker: TransactionTracker.Gelato,
-      txKey: 'gelato_task_id_abcdef123456',
-    }),
-    adapter: [mockEvmAdapter],
-  },
-};
-
-/**
  * A transaction on a test network (Monad Testnet). Testnet icons are recolored with `--tuwa-testnet-icons`.
  */
 export const DifferentNetwork: Story = {

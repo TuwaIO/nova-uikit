@@ -268,8 +268,11 @@ export function TrackingTxModal<T extends Transaction>({
       title: txToDisplay.title,
       description: txToDisplay.description,
       payload: txToDisplay.payload,
-      // Only a custom RPC URL of the submission: the adapters derive the default one from `desiredChainID`
-      rpcUrl: 'rpcUrl' in txToDisplay ? txToDisplay.rpcUrl : undefined,
+      // What the submission asked for, not what the record ended up with: a forced tracker, and the fees of a bundler
+      tracker: initialTx?.tracker,
+      requiredConfirmations: initialTx?.requiredConfirmations,
+      bundlerUrl: initialTx?.bundlerUrl,
+      pimlicoApiKey: initialTx?.pimlicoApiKey,
       withTrackedModal: 'withTrackedModal' in txToDisplay ? txToDisplay.withTrackedModal : false,
     };
     foundAdapter.retryTxAction({ tx: retryParams, txKey: activeTx?.txKey ?? '', onClose, executeTxAction });

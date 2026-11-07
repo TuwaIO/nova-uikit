@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionsHistory } from '@tuwaio/nova-transactions';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
-import { TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
+import { TransactionStatus } from '@tuwaio/pulsar-core';
 import dayjs from 'dayjs';
 
 import { mockEvmAdapter, mockSolanaAdapter } from '../../../utils/mockAdapters';
@@ -84,12 +84,6 @@ export const Default: Story = {
           error: { message: 'Transaction failed due to an unexpected error.', raw: {} },
           from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
           localTimestamp: dayjs().subtract(1, 'hour').unix(),
-        }),
-        createMockTx(OrbitAdapter.EVM, {
-          tracker: TransactionTracker.Gelato,
-          txKey: 'gelato_task_123',
-          from: '0x742d35Cc6c2C32C5D0aE5E5f96f5B8e7a2E5a1c8',
-          localTimestamp: dayjs().subtract(15, 'minutes').unix(),
         }),
       ].reduce((pool, tx) => ({ ...pool, [tx.txKey]: tx }), {}),
     },

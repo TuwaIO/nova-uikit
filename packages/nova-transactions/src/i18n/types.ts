@@ -57,8 +57,6 @@ export type NovaTransactionsLabels = {
   };
   /** Labels for different types of transaction hashes/keys. */
   hashLabels: {
-    /** Label for a Gelato Task ID. */
-    gelato: string;
     /** Label for a Safe Transaction Hash. */
     safe: string;
     /** Label for an ERC-4337 UserOperation Hash. */

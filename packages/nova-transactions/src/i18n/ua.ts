@@ -29,7 +29,6 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     confirmationsLabel: 'Підтвердження',
   },
   hashLabels: {
-    gelato: 'ID завдання Gelato',
     safe: 'Хеш транзакції Safe',
     erc4337: 'Хеш UserOp',
     original: 'Початковий хеш',

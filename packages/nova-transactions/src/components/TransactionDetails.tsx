@@ -485,7 +485,7 @@ const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, Y
  *   its nonce and fees, whose adapter has `speedUpTxAction` and `cancelTxAction`, the speed-up and cancel buttons (the rule
  *   of {@link TrackingTxModal}); with `onStopTracking`, the offer to stop tracking a transaction pending for over 10 minutes;
  * - Metadata: the hash (linked to the explorer), network, sender, recipient, adapter, submission and finish times,
- *   tracker, connector, confirmations, the transaction key when it differs from the hash (Gelato, Safe, ERC-4337);
+ *   tracker, connector, confirmations, the transaction key when it differs from the hash (Safe, ERC-4337);
  * - Context & Payload: the title and description of the current status, the error and the payload;
  * - the execution data of the chain (EVM: nonce, fees in gwei, value in wei, the hash that replaced it, the hash it
  *   replaced, input data; Solana: fee in

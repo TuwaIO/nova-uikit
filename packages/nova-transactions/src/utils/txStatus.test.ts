@@ -71,7 +71,7 @@ describe('trackerGaveUp', () => {
     expect(trackerGaveUp(tx({ status: TransactionStatus.Failed, tracker: TransactionTracker.Ethereum }))).toBe(false);
   });
 
-  it.each([TransactionTracker.Ethereum, TransactionTracker.Safe, TransactionTracker.Gelato])(
+  it.each([TransactionTracker.Ethereum, TransactionTracker.Safe, 'gelato' as TransactionTracker])(
     'an error of the %s tracker says nothing about the chain: no Retry, it could send a second time',
     (tracker) => {
       expect(trackerGaveUp(failed({ tracker }))).toBe(true);

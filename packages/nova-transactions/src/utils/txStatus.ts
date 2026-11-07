@@ -80,8 +80,8 @@ export function statusLabelOf(tx: Transaction, statuses: NovaTransactionsLabels[
 
 /**
  * Whether a failed transaction failed because its tracker gave up, which says nothing about the chain: it may still land, and
- * a Retry could send the operation a second time. A revert on the standard EVM tracker has no error of the tracker. Safe and
- * Gelato write one only on giving up in practice. On Solana what had a commitment has landed, whatever came after.
+ * a Retry could send the operation a second time. A revert on the standard EVM tracker has no error of the tracker. Safe
+ * writes one only on giving up in practice, as a saved record of the Gelato relay did. On Solana what had a commitment has landed, whatever came after.
  *
  * @param tx - The transaction.
  * @returns Whether Retry must not be offered.
@@ -91,12 +91,12 @@ export function trackerGaveUp(tx: Transaction | undefined): boolean {
   switch (tx.tracker) {
     case TransactionTracker.Ethereum:
     case TransactionTracker.Safe:
-    case TransactionTracker.Gelato:
       return true;
     case TransactionTracker.Solana:
       return 'confirmationStatus' in tx && !!tx.confirmationStatus;
     default:
-      return false;
+      // A record saved when the Gelato relay was followed: a relay may have run it, so a Retry could send it twice
+      return (tx.tracker as string) === 'gelato';
   }
 }
 
