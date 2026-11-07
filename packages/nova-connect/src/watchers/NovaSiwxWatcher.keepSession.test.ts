@@ -80,6 +80,7 @@ const signIn = vi.fn(
 );
 
 vi.mock('../satellite', () => ({
+  SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({ activeConnection, disconnect, isAutoConnectFinished }),
 }));
@@ -90,7 +91,7 @@ vi.mock('@tuwaio/siwx-react', async (importOriginal) => ({
   useSiwx: () => ({ signIn }),
   useSiwxSessionStore: Object.assign(
     (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status, reset }),
-    { setState },
+    { setState, getState: () => ({ session, status }) },
   ),
 }));
 

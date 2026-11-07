@@ -321,6 +321,7 @@ export function NovaConnectProvider({
   const [activeConnector, setActiveConnector] = useState<string | undefined>(undefined);
   const [impersonatedAddress, setImpersonatedAddress] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [isWaitingForSignature, setIsWaitingForSignature] = useState(false);
   const [connectedModalContentType, setConnectedModalContentType] = useState<ConnectedContentType>('main');
 
   // Memoized: every consumer of `useNovaConnect` rendered again with each render of this provider
@@ -356,6 +357,8 @@ export function NovaConnectProvider({
       setImpersonatedAddress,
       isConnected,
       setIsConnected,
+      isWaitingForSignature,
+      setIsWaitingForSignature,
       legal,
     }),
     [
@@ -389,6 +392,8 @@ export function NovaConnectProvider({
       setImpersonatedAddress,
       isConnected,
       setIsConnected,
+      isWaitingForSignature,
+      setIsWaitingForSignature,
       legal,
     ],
   );

@@ -12,13 +12,14 @@ import { render, unmount } from '../../testing/hookHarness';
 vi.mock('react', async (importOriginal) => {
   const { hooks } = await import('../../testing/hookHarness');
   // `useContext` reads the Satellite store context, not used here
-  return { ...(await importOriginal<typeof import('react')>()), ...hooks, useContext: () => null };
+  return { ...(await importOriginal<typeof import('react')>()), ...hooks, useContext: () => state.context };
 });
 
 const { state } = vi.hoisted(() => ({
   state: {
     labels: undefined as unknown as NovaConnectLabels,
     modal: {} as Record<string, unknown>,
+    context: null as { isWaitingForSignature?: boolean } | null,
   },
 }));
 
@@ -83,10 +84,29 @@ const heading = (tree: unknown) =>
 describe('the connecting step', () => {
   beforeEach(() => {
     state.labels = defaultLabels;
+    state.context = null;
   });
   afterEach(() => {
     unmount();
     vi.unstubAllGlobals();
+  });
+
+  // The wallet waits at the gate of the sign-in: a window that said "connecting" gave no reason to look at the wallet
+  it.each([
+    ['en', defaultLabels, 'Sign the message in your wallet'],
+    ['uk', ukrainianLabels, 'Підпишіть повідомлення в гаманці'],
+    ['zh', chineseLabels, '请在钱包中签署消息'],
+  ])('%s: says what the wallet is waiting for while it is asked to sign in', (_, labels, expected) => {
+    state.labels = labels;
+    state.context = { isWaitingForSignature: true };
+
+    expect(heading(renderConnecting({}))).toBe(expected);
+  });
+
+  it('works without the provider, which is not needed for the step on its own', () => {
+    state.context = null;
+
+    expect(heading(renderConnecting({}))).toBe('Connecting to MetaMask...');
   });
 
   it.each([

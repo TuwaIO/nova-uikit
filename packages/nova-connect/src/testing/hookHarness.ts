@@ -2,7 +2,8 @@
  * @file A minimal renderer of one component for tests: the package has no DOM testing library. Mock `react` with
  * `hooks` (keeping the other exports), then call `render` several times and `unmount`. Hooks keep their state between
  * renders in call order, effects compare their dependencies, and `useEffectEvent` returns a stable function that calls
- * the callback of the latest render. `useSyncExternalStore` returns `getSnapshot()` and subscribes after the render
+ * the callback of the latest render. `useContext` returns what `provideContext` set, or the default of the context.
+ * `useSyncExternalStore` returns `getSnapshot()` and subscribes after the render
  * (again when `subscribe` changes) with a listener that does nothing: a test calls the listener its store received and
  * renders again. This module must not import `react`.
  */
@@ -12,6 +13,7 @@ type Slot = { deps?: readonly unknown[]; value?: unknown; cleanup?: unknown; lat
 const slots: Slot[] = [];
 let index = 0;
 const pendingEffects: Array<() => void> = [];
+const provided = new Map<object, unknown>();
 
 const depsChanged = (prev: readonly unknown[] | undefined, next: readonly unknown[] | undefined) =>
   !prev || !next || prev.length !== next.length || prev.some((dep, i) => !Object.is(dep, next[i]));
@@ -75,6 +77,9 @@ export const hooks = {
     }
     return getSnapshot();
   },
+  useContext(context: object & { _currentValue?: unknown }) {
+    return provided.has(context) ? provided.get(context) : context._currentValue;
+  },
   useId() {
     const slot = nextSlot();
     if (!('value' in slot)) slot.value = `id-${index}`;
@@ -97,9 +102,20 @@ export function render<P>(component: (props: P, ref?: null) => unknown, props: P
   return output;
 }
 
+/**
+ * Sets what `useContext` returns for a context until {@link unmount}, as a provider above the component would.
+ *
+ * @param context - The context.
+ * @param value - Its value.
+ */
+export function provideContext(context: object, value: unknown): void {
+  provided.set(context, value);
+}
+
 /** Runs the effect cleanups and forgets the state. */
 export function unmount(): void {
   for (const slot of slots) if (typeof slot.cleanup === 'function') slot.cleanup();
   slots.length = 0;
   pendingEffects.length = 0;
+  provided.clear();
 }

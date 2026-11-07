@@ -44,13 +44,17 @@ const reset = vi.fn();
 const setState = vi.fn();
 let rejectSignIn: (error: Error) => void = () => undefined;
 const signIn = vi.fn(
-  () =>
-    new Promise((_, reject) => {
-      rejectSignIn = reject;
+  (options: { onError?: (message: string) => void }) =>
+    new Promise<void>((resolve) => {
+      rejectSignIn = (error) => {
+        options.onError?.(error.message);
+        resolve();
+      };
     }),
 );
 
 vi.mock('../satellite', () => ({
+  SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({ activeConnection, disconnect, isAutoConnectFinished: true }),
 }));
@@ -61,7 +65,7 @@ vi.mock('@tuwaio/siwx-react', async (importOriginal) => ({
   useSiwx: () => ({ signIn }),
   useSiwxSessionStore: Object.assign(
     (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status, reset }),
-    { setState },
+    { setState, getState: () => ({ session, status }) },
   ),
 }));
 

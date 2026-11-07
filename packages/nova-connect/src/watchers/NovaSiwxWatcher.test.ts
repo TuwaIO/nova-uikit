@@ -1,209 +1,124 @@
-import { useSiwxSessionStore } from '@tuwaio/siwx-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useSatelliteConnectStore } from '../satellite';
-import { NovaSiwxWatcher } from './NovaSiwxWatcher';
+import { render, unmount } from '../testing/hookHarness';
 
-vi.mock('react', () => ({
-  useEffect: (fn: () => void | (() => void)) => {
-    fn();
-  },
-  useRef: (initial: unknown) => ({ current: initial }),
-  useCallback: (fn: unknown) => fn,
-  useEffectEvent: (fn: unknown) => fn,
-}));
+vi.mock('react', async (importOriginal) => {
+  const { hooks } = await import('../testing/hookHarness');
+  return { ...(await importOriginal<typeof import('react')>()), ...hooks };
+});
 
-const mockDisconnect = vi.fn();
-const mockResetSession = vi.fn();
-const mockSignIn = vi.fn().mockResolvedValue({ success: true });
+const ADDRESS = '0x1234567890123456789012345678901234567890';
+
+const disconnect = vi.fn();
+const reset = vi.fn();
+const signIn = vi.fn<(options: { onError?: (message: string) => void }) => Promise<void>>(async () => undefined);
+
+let activeConnection: Record<string, unknown> | null | undefined;
+let isAutoConnectFinished: boolean | undefined;
+let session: { address: string } | null;
+let status: string;
+
+const wallet = () => ({
+  connectorType: 'evm:metamask',
+  address: ADDRESS,
+  chainId: 1,
+  isConnected: true,
+  signMessage: vi.fn(async () => '0xsignature'),
+});
 
 vi.mock('../satellite', () => ({
-  useSatelliteConnectStore: vi.fn((selector: (state: unknown) => unknown) =>
-    selector({
-      activeConnection: {
-        connectorType: 'evm:metamask',
-        address: '0x1234567890123456789012345678901234567890',
-        chainId: 1,
-        isConnected: true,
-        signMessage: vi.fn().mockResolvedValue('0xsignature'),
-      },
-      disconnect: mockDisconnect,
-    }),
-  ),
+  SatelliteStoreContext: {},
+  useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) =>
+    selector({ activeConnection, isAutoConnectFinished, disconnect }),
 }));
 
 vi.mock('@tuwaio/siwx-react', () => ({
-  useSiwx: () => ({
-    signIn: mockSignIn,
-    signOut: vi.fn(),
-  }),
-  useSiwxSessionStore: vi.fn((selector: (state: unknown) => unknown) =>
-    selector({
-      session: null,
-      status: 'idle',
-      reset: mockResetSession,
-    }),
+  useSiwx: () => ({ signIn }),
+  useSiwxSessionStore: Object.assign(
+    (selector: (state: Record<string, unknown>) => unknown) => selector({ session, status, reset }),
+    { getState: () => ({ session, status }), setState: vi.fn() },
   ),
-  getSatelliteSiwxFields: vi.fn().mockReturnValue({
+  isSessionMatchingConnection: () => false,
+  getSatelliteSiwxFields: () => ({
     domain: 'app.tuwa.io',
-    address: 'eip155:1:0x1234567890123456789012345678901234567890',
+    address: `eip155:1:${ADDRESS}`,
     uri: 'https://app.tuwa.io',
     chainId: 'eip155:1',
     statement: 'Sign in to TUWA.',
   }),
 }));
 
-describe('NovaSiwxWatcher', () => {
-  let errorSpy: ReturnType<typeof vi.spyOn>;
-  let warnSpy: ReturnType<typeof vi.spyOn>;
+const { NovaSiwxWatcher } = await import('./NovaSiwxWatcher');
 
+const flush = () => new Promise((resolve) => setTimeout(resolve));
+
+describe('NovaSiwxWatcher', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
-      selector({
-        activeConnection: {
-          connectorType: 'evm:metamask',
-          address: '0x1234567890123456789012345678901234567890',
-          chainId: 1,
-          isConnected: true,
-          signMessage: vi.fn().mockResolvedValue('0xsignature'),
-        },
-        disconnect: mockDisconnect,
-      } as never),
-    );
-
-    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
-      selector({
-        session: null,
-        status: 'idle',
-        reset: mockResetSession,
-      } as never),
-    );
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    activeConnection = wallet();
+    isAutoConnectFinished = undefined;
+    session = null;
+    status = 'idle';
   });
-
   afterEach(() => {
-    errorSpy.mockRestore();
-    warnSpy.mockRestore();
+    unmount();
+    vi.restoreAllMocks();
   });
 
-  it('triggers SIWX signIn on active connection', async () => {
-    const mockVerifier = vi.fn().mockResolvedValue({ address: '0x1234567890123456789012345678901234567890' });
-    const mockSuccess = vi.fn();
+  it('asks a connected wallet that has no session', () => {
+    render(NovaSiwxWatcher, { verifier: vi.fn() });
 
-    NovaSiwxWatcher({
-      enabled: true,
-      verifier: mockVerifier,
-      onSuccess: mockSuccess,
-    });
-
-    expect(mockSignIn).toHaveBeenCalled();
+    expect(signIn).toHaveBeenCalledOnce();
   });
 
-  it('handles verification failure by disconnecting wallet and resetting session', async () => {
-    const mockError = vi.fn();
-    const failingSignIn = vi.fn().mockImplementation(({ onError }: { onError: (err: Error) => void }) => {
-      onError(new Error('User rejected signature'));
-      return Promise.reject(new Error('User rejected signature'));
-    });
+  it('disconnects the wallet and clears the session when it rejects', async () => {
+    const onError = vi.fn();
+    signIn.mockImplementationOnce(async (options) => options.onError?.('User rejected signature'));
 
-    const mockVerifier = vi.fn();
+    render(NovaSiwxWatcher, { verifier: vi.fn(), onError });
+    await flush();
 
-    mockSignIn.mockImplementationOnce(failingSignIn);
-
-    NovaSiwxWatcher({
-      enabled: true,
-      verifier: mockVerifier,
-      onError: mockError,
-    });
-
-    expect(mockDisconnect).toHaveBeenCalledWith('evm:metamask');
-    expect(mockResetSession).toHaveBeenCalled();
-    expect(mockError).toHaveBeenCalledWith('User rejected signature');
+    expect(disconnect).toHaveBeenCalledWith('evm:metamask');
+    expect(reset).toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledWith('User rejected signature');
   });
 
   it('keeps a restored session while Satellite auto-connect is still running', () => {
-    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+    const destroyer = vi.fn(async () => undefined);
+    activeConnection = undefined;
+    isAutoConnectFinished = false;
+    session = { address: `eip155:1:${ADDRESS}` };
+    status = 'authenticated';
 
-    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
-      selector({
-        activeConnection: undefined,
-        isAutoConnectFinished: false,
-        disconnect: mockDisconnect,
-      } as never),
-    );
+    render(NovaSiwxWatcher, { destroyer });
 
-    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
-      selector({
-        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
-        status: 'authenticated',
-        reset: mockResetSession,
-      } as never),
-    );
-
-    NovaSiwxWatcher({
-      enabled: true,
-      destroyer: mockDestroyer,
-    });
-
-    expect(mockResetSession).not.toHaveBeenCalled();
-    expect(mockDestroyer).not.toHaveBeenCalled();
+    expect(reset).not.toHaveBeenCalled();
+    expect(destroyer).not.toHaveBeenCalled();
   });
 
   it('resets a restored session when Satellite auto-connect finishes without a wallet', () => {
-    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+    const destroyer = vi.fn(async () => undefined);
+    activeConnection = undefined;
+    isAutoConnectFinished = true;
+    session = { address: `eip155:1:${ADDRESS}` };
+    status = 'authenticated';
 
-    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
-      selector({
-        activeConnection: undefined,
-        isAutoConnectFinished: true,
-        disconnect: mockDisconnect,
-      } as never),
-    );
+    render(NovaSiwxWatcher, { destroyer });
 
-    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
-      selector({
-        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
-        status: 'authenticated',
-        reset: mockResetSession,
-      } as never),
-    );
-
-    NovaSiwxWatcher({
-      enabled: true,
-      destroyer: mockDestroyer,
-    });
-
-    expect(mockResetSession).toHaveBeenCalled();
-    expect(mockDestroyer).toHaveBeenCalled();
+    expect(reset).toHaveBeenCalled();
+    expect(destroyer).toHaveBeenCalled();
   });
 
-  it('triggers destroyer when active connection becomes disconnected', () => {
-    const mockDestroyer = vi.fn().mockResolvedValue(undefined);
+  it('calls the destroyer when the active connection is gone', () => {
+    const destroyer = vi.fn(async () => undefined);
+    activeConnection = null;
+    session = { address: `eip155:1:${ADDRESS}` };
+    status = 'authenticated';
 
-    vi.mocked(useSatelliteConnectStore).mockImplementation((selector) =>
-      selector({
-        activeConnection: null,
-        disconnect: mockDisconnect,
-      } as never),
-    );
+    render(NovaSiwxWatcher, { destroyer });
 
-    vi.mocked(useSiwxSessionStore).mockImplementation((selector) =>
-      selector({
-        session: { address: 'eip155:1:0x1234567890123456789012345678901234567890' },
-        status: 'authenticated',
-        reset: mockResetSession,
-      } as never),
-    );
-
-    NovaSiwxWatcher({
-      enabled: true,
-      destroyer: mockDestroyer,
-    });
-
-    expect(mockResetSession).toHaveBeenCalled();
-    expect(mockDestroyer).toHaveBeenCalled();
+    expect(reset).toHaveBeenCalled();
+    expect(destroyer).toHaveBeenCalled();
   });
 });

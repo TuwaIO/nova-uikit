@@ -4,9 +4,10 @@
 
 import { cn, DrawnCheck, DrawnCross, formatLabel, MorphText } from '@tuwaio/nova-core';
 import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
-import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent, useRef, useState } from 'react';
+import React, { ComponentType, forwardRef, memo, useContext, useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
+import { NovaConnectProviderContext } from '../../hooks/useNovaConnect';
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
@@ -576,6 +577,8 @@ export const Connecting = memo(
     ) => {
       const labels = useNovaConnectLabels();
       const connectionError = useSatelliteConnectStore((store) => store.connectionError);
+      // Not `useNovaConnect`, which throws: this step also works on its own, outside the provider
+      const isWaitingForSignature = useContext(NovaConnectProviderContext)?.isWaitingForSignature ?? false;
 
       const isMountedRef = useRef(true);
       const prevStateRef = useRef<ConnectionState | null>(null);
@@ -637,6 +640,7 @@ export const Connecting = memo(
             return labels.connectedSuccessfully;
           case 'connecting':
           default:
+            if (isWaitingForSignature) return labels.signMessageInWallet;
             return walletName ? `${labels.connectingTo} ${walletName}...` : labels.connectingEllipsis;
         }
       })();

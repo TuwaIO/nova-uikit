@@ -145,6 +145,14 @@ export interface NovaConnectProviderType extends Omit<
   setConnectedButtonStatus: (value: ButtonTxStatus) => void;
   /** Whether a wallet has just connected in the connect modal (`true` for 500 ms before the modal closes) */
   isConnected: boolean;
+  /** Whether the wallet of a connection is asked to sign in, with `siwx`: the connect window then says so */
+  isWaitingForSignature: boolean;
+  /**
+   * Set by the SIWX watcher while a wallet is asked to sign in.
+   *
+   * @param value - Whether it is asked.
+   */
+  setIsWaitingForSignature: (value: boolean) => void;
   /**
    * Sets the "just connected" state of the connect modal.
    *
