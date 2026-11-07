@@ -9,8 +9,8 @@ import { type Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 const NEW_TRANSACTION_SECONDS = 60;
 
 /**
- * Returns the sound of a transaction that has changed: `txPending` for one that has just reached the pool, `txSuccess` and
- * `txError` for one that has just finished. A transaction replaced by another one makes no sound: its successor reports it.
+ * Returns the sound of a transaction that has changed: `txPending` for one that has just reached the pool, and `txSuccess`,
+ * `txError` or `txReplaced` for one that has just finished.
  *
  * @internal
  * @param tx - The record now.
@@ -25,6 +25,31 @@ export function txSoundOf(tx: Transaction, previous: Transaction | undefined, no
   } else if (previous.pending && !tx.pending) {
     if (tx.status === TransactionStatus.Success) sound = 'txSuccess';
     if (tx.status === TransactionStatus.Failed) sound = 'txError';
+    if (tx.status === TransactionStatus.Replaced) sound = 'txReplaced';
   }
   return sound;
+}
+
+/**
+ * Returns the sounds of a change of the pool, each once. A speed-up ends one record and adds the next at the same moment: that is
+ * one event, and only `txReplaced` is heard.
+ *
+ * @internal
+ * @param pool - The pool now.
+ * @param previousPool - The pool before.
+ * @param nowSeconds - The time now, in seconds.
+ * @returns The sounds.
+ */
+export function txSoundsOf(
+  pool: Record<string, Transaction>,
+  previousPool: Record<string, Transaction>,
+  nowSeconds: number,
+) {
+  const sounds = new Set<NovaSoundName>();
+  for (const tx of Object.values(pool)) {
+    const sound = txSoundOf(tx, previousPool[tx.txKey], nowSeconds);
+    if (sound) sounds.add(sound);
+  }
+  if (sounds.has('txReplaced')) sounds.delete('txPending');
+  return [...sounds];
 }

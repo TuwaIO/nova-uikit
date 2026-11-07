@@ -10,6 +10,7 @@ export type NovaSoundName =
   | 'txPending'
   | 'txSuccess'
   | 'txError'
+  | 'txReplaced'
   | 'error'
   | 'networkSwitch'
   | 'copy'
@@ -27,6 +28,7 @@ export const NOVA_SOUND_NAMES: readonly NovaSoundName[] = [
   'txPending',
   'txSuccess',
   'txError',
+  'txReplaced',
   'error',
   'networkSwitch',
   'copy',
@@ -131,19 +133,26 @@ const SOUNDS: Record<NovaSoundName, Sound> = {
     ],
     echoes: 1,
   },
+  // A change of course: down, and up on another line
+  txReplaced: {
+    tones: [
+      { frequency: 784, glideTo: 587, at: 0, duration: 0.14, gain: 0.45, shimmer: 8 },
+      { frequency: 587, glideTo: 880, at: 0.12, duration: 0.22, gain: 0.45, shimmer: 8 },
+    ],
+    echoes: 1,
+  },
   // A glitch in the signal
   error: {
     tones: [{ frequency: 247, glideTo: 185, at: 0, duration: 0.22, gain: 0.7, wave: 'triangle', shimmer: 18 }],
     echoes: 1,
   },
-  // A jump through hyperspace
+  // A jump through hyperspace, in clean tones: noise under it sounded like crumpled paper, which is for the bin alone
   networkSwitch: {
     tones: [
-      { frequency: 392, glideTo: 1175, at: 0, duration: 0.2, gain: 0.45, shimmer: 10 },
-      { frequency: 1175, at: 0.16, duration: 0.22, gain: 0.3, shimmer: 6 },
+      { frequency: 494, glideTo: 988, at: 0, duration: 0.12, gain: 0.4, shimmer: 12 },
+      { frequency: 988, at: 0.1, duration: 0.2, gain: 0.28, shimmer: 8 },
     ],
-    rushes: [{ from: 600, to: 3200, at: 0, duration: 0.22, gain: 0.12 }],
-    echoes: 1,
+    echoes: 2,
   },
   // A star that twinkles
   copy: {
@@ -176,11 +185,13 @@ const SOUNDS: Record<NovaSoundName, Sound> = {
   modalClose: {
     tones: [{ frequency: 784, glideTo: 587, at: 0, duration: 0.07, gain: 0.18 }],
   },
-  // It flies away
+  // It flies away: up and further off with each echo
   externalLink: {
-    tones: [{ frequency: 523, glideTo: 2093, at: 0, duration: 0.24, gain: 0.4, shimmer: 8 }],
-    rushes: [{ from: 900, to: 5200, at: 0, duration: 0.26, gain: 0.14 }],
-    echoes: 1,
+    tones: [
+      { frequency: 440, glideTo: 1760, at: 0, duration: 0.22, gain: 0.35, shimmer: 10 },
+      { frequency: 880, glideTo: 3520, at: 0.03, duration: 0.2, gain: 0.14 },
+    ],
+    echoes: 2,
   },
   // Another signal joins
   addWallet: {

@@ -114,6 +114,12 @@ describe('playNovaSound', () => {
     expect(started).toHaveBeenCalled();
   });
 
+  // Owner, 2026-11-07: noise under them sounded like crumpled paper. The rush is for the bin alone
+  it.each(NOVA_SOUND_NAMES.filter((name) => name !== 'remove'))('%s has no rush of noise', (name: NovaSoundName) => {
+    playNovaSound(name, true);
+    expect(rushed).not.toHaveBeenCalled();
+  });
+
   // Owner, 2026-11-07: muffled, and no chord of them when one dialog replaces another
   it('lets a dialog that opens give way to the sound that came with it', () => {
     playNovaSound('addWallet', true);

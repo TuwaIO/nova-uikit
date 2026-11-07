@@ -98,7 +98,7 @@ Start transactions with the store's `executeTxAction`. A full app with Satellite
 
 ## 🔊 Sounds
 
-Sounds are off unless you ask for them: `<NovaTransactionsProvider sounds />` plays a transaction that reaches the pool, its success and failure, an error before it reached the pool, a copy, a dialog opened and closed, and a link to the explorer. `sounds={{ copy: false, volume: 0.3 }}` leaves out a sound and sets the volume. They are synthesized in the browser with the Web Audio API, with no files and no requests, and they play only in a visible tab, after the person has used the page. A pool restored after a page load makes no sound.
+Sounds are off unless you ask for them: `<NovaTransactionsProvider sounds />` plays a transaction that reaches the pool, its success, failure and replacement, an error before it reached the pool, a copy, a dialog opened and closed, and a link to the explorer. `sounds={{ copy: false, volume: 0.3 }}` leaves out a sound and sets the volume. They are synthesized in the browser with the Web Audio API, with no files and no requests, and they play only in a visible tab, after the person has used the page. A pool restored after a page load makes no sound.
 
 ## 🗄️ Browser Storage
 

@@ -158,7 +158,7 @@ tracking it: a dropped transaction stays pending until its nonce is spent, which
 
 > `optional` **sounds?**: `NovaSoundsConfig`
 
-The sounds of the transactions, off without it: a transaction in the pool, its success and failure, an error before it
+The sounds of the transactions, off without it: a transaction in the pool, its success, failure and replacement, an error before it
 reached the pool, a copy, a dialog opened
 and closed, and a link to the explorer. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and sets the volume.
 They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of `@tuwaio/nova-core/utils` for

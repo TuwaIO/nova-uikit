@@ -1,5 +1,7 @@
 import { ConnectButton, type ConnectButtonProps } from '@tuwaio/nova-connect/components';
 import { useSatelliteConnectStore } from '@tuwaio/nova-connect/satellite';
+import { useNovaSounds } from '@tuwaio/nova-core';
+import type { NovaSoundName } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { Transaction, TransactionPool, TransactionStatus } from '@tuwaio/pulsar-core';
 import { useEffect, useRef, useState } from 'react';
@@ -74,6 +76,15 @@ const SCENARIOS: Record<string, (from: string) => { waiting: unknown[]; result: 
   },
 };
 
+/** What a person hears of each operation: while it waits, and at its result, as in `NovaTransactionsProvider`. */
+const SOUNDS: Record<string, { waiting: NovaSoundName; result: NovaSoundName }> = {
+  Success: { waiting: 'txPending', result: 'txSuccess' },
+  Failed: { waiting: 'txPending', result: 'txError' },
+  Replaced: { waiting: 'txPending', result: 'txReplaced' },
+  Cancelled: { waiting: 'txPending', result: 'txReplaced' },
+  'Sped up': { waiting: 'txReplaced', result: 'txSuccess' },
+};
+
 const poolOf = (records: unknown[]) =>
   Object.fromEntries(
     records.map((record) => {
@@ -96,12 +107,18 @@ export function ConnectButtonWithTransactions(props: ConnectButtonProps) {
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
+  const playSound = useNovaSounds();
+
   const play = (name: string) => {
     if (!address) return;
     const { waiting, result } = SCENARIOS[name](address);
     clearTimeout(timer.current);
     setPool(poolOf(waiting));
-    timer.current = setTimeout(() => setPool(poolOf(result)), 2500);
+    playSound(SOUNDS[name].waiting);
+    timer.current = setTimeout(() => {
+      setPool(poolOf(result));
+      playSound(SOUNDS[name].result);
+    }, 2500);
   };
 
   return (

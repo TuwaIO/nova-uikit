@@ -47,7 +47,7 @@ import {
   toastsOfRemoved,
   toastStepFor,
 } from '../utils/replacement';
-import { txSoundOf } from '../utils/txSounds';
+import { txSoundsOf } from '../utils/txSounds';
 import { NovaTransactionsErrorContext, VALIDATION_ERROR_CONTAINER_ID } from './NovaTransactionsErrorContext';
 import { NovaTransactionsLabelsProvider, useOfferLabels } from './NovaTransactionsLabelsProvider';
 
@@ -97,7 +97,7 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
     validationErrorToast?: boolean;
   };
   /**
-   * The sounds of the transactions, off without it: a transaction in the pool, its success and failure, an error before it
+   * The sounds of the transactions, off without it: a transaction in the pool, its success, failure and replacement, an error before it
    * reached the pool, a copy, a dialog opened
    * and closed, and a link to the explorer. `true` plays all, and `{ copy: false, volume: 0.3 }` leaves out one and sets the volume.
    * They are synthesized in the browser: no files and no requests. See `NovaSoundsConfig` of `@tuwaio/nova-core/utils` for
@@ -319,10 +319,11 @@ export function NovaTransactionsProvider<T extends Transaction>({
     const closed = records.some((tx) => !prevPool[tx.txKey]) ? closedToasts() : undefined;
     let openedNew = 0;
 
-    records.forEach((currentTx) => {
-      const sound = txSoundOf(currentTx, prevPool[currentTx.txKey], Date.now() / 1000);
-      if (sound) playNovaSound(sound, soundsRef.current);
+    for (const sound of txSoundsOf(transactionsPool, prevPool, Date.now() / 1000)) {
+      playNovaSound(sound, soundsRef.current);
+    }
 
+    records.forEach((currentTx) => {
       const step = toastStepFor(
         currentTx,
         prevPool[currentTx.txKey],

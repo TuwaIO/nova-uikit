@@ -8,6 +8,7 @@ const WHEN: Record<NovaSoundName, string> = {
   txPending: 'A transaction reached the pool',
   txSuccess: 'A transaction succeeded',
   txError: 'A transaction failed',
+  txReplaced: 'A transaction replaced, cancelled or sped up',
   error: 'An error',
   networkSwitch: 'A change of network',
   copy: 'A copy',
