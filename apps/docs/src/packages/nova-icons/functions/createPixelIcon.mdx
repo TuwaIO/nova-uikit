@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Functions/createPixelIcon" />
+
+# createPixelIcon()
+
+> **createPixelIcon**(`name`, `art`): [`NovaIcon`](?path=/docs/packages-nova-icons-type-aliases-novaicon--docs)
+
+Defined in: [pixelIcon.tsx:52](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L52)
+
+Makes an icon of a pixel grid in the TUWA retro style: an SVG with the grid as its view box and crisp edges, the
+pixels in the color of the text (`currentColor`) and the lit ones in `--tuwa-icon-accent` (the color of the text when
+the theme sets none). It is `1em` square unless its class sets a size, and hidden from screen readers unless it has a
+`title`.
+
+## Parameters
+
+### name
+
+`string`
+
+The name of the component, as the icon is exported (`XMarkIcon`).
+
+### art
+
+readonly `string`[]
+
+The rows of the grid, top first, all of one length: `#` a pixel, `o` a lit pixel, `.` none.
+
+## Returns
+
+[`NovaIcon`](?path=/docs/packages-nova-icons-type-aliases-novaicon--docs)
+
+The component.
+
+## Throws
+
+When the rows differ in length or hold another mark.

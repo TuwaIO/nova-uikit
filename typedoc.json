@@ -22,6 +22,7 @@
     "compilerOptions": {
       "paths": {
         "@tuwaio/nova-core": ["./packages/nova-core/src/index.ts"],
+        "@tuwaio/nova-icons": ["./packages/nova-icons/src/index.ts"],
         "@tuwaio/nova-connect": ["./packages/nova-connect/src/index.ts"],
         "@tuwaio/nova-connect/components": ["./packages/nova-connect/src/components/index.ts"],
         "@tuwaio/nova-connect/hooks": ["./packages/nova-connect/src/hooks/index.ts"],

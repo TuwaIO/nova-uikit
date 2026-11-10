@@ -213,6 +213,8 @@ const preview: Preview = {
             'Overview',
             'nova-core',
             ['Overview', '*'],
+            'nova-icons',
+            ['Overview', '*'],
             'nova-connect',
             ['Overview', 'connect', ['Overview', '*'], '*', ['Overview', '*']],
             'nova-transactions',

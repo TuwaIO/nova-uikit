@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Type Aliases/NovaIconProps" />
+
+# NovaIconProps
+
+> **NovaIconProps** = `SVGProps`\<`SVGSVGElement`\> & `object`
+
+Defined in: [pixelIcon.tsx:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L11)
+
+The props of a Nova icon: those of an SVG element, as for the icons of Heroicons, so one replaces the other.
+
+- `title`: what the icon means, for an icon that is the only content of a control; without it the icon is hidden
+  from screen readers (`aria-hidden`).
+- `titleId`: the `id` of that title, which `aria-labelledby` names.
+- `ref`: the SVG element.
+
+## Type Declaration
+
+### ref?
+
+> `optional` **ref?**: `Ref`\<`SVGSVGElement`\>
+
+### title?
+
+> `optional` **title?**: `string`
+
+### titleId?
+
+> `optional` **titleId?**: `string`

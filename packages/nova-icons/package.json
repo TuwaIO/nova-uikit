@@ -1,0 +1,64 @@
+{
+  "name": "@tuwaio/nova-icons",
+  "version": "0.0.0",
+  "private": false,
+  "author": "Oleksandr Tkach",
+  "license": "Apache-2.0",
+  "description": "The icons of Nova UI Kit (TUWA) in the TUWA retro pixel style: React components drawn on a pixel grid, in the color of the text, with the same names and props as Heroicons.",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "socket.json",
+    "NOTICE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "react",
+    "icons",
+    "pixel-art",
+    "ui-kit",
+    "tuwa"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuwaIO/nova-uikit.git",
+    "directory": "packages/nova-icons"
+  },
+  "homepage": "https://github.com/TuwaIO/nova-uikit",
+  "bugs": {
+    "url": "https://github.com/TuwaIO/nova-uikit/issues"
+  },
+  "contributors": [
+    {
+      "name": "Oleksandr Tkach",
+      "url": "https://github.com/Argeare5"
+    }
+  ],
+  "peerDependencies": {
+    "react": ">=19.2.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1",
+    "tsup": "^9.0.0",
+    "typescript": "6.0.3",
+    "vitest": "^5.1.0"
+  }
+}
