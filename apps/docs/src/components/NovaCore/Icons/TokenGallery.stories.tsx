@@ -36,10 +36,10 @@ const TOKENS: Token[] = libraryTokens
   .sort((a, b) => Number(b.isBundled) - Number(a.isBundled) || a.rank - b.rank || a.symbol.localeCompare(b.symbol));
 
 const segmentClass = (isActive: boolean) =>
-  `cursor-pointer rounded-[calc(var(--tuwa-rounded-corners)-2px)] px-3 py-1.5 text-xs capitalize transition-colors ${
+  `cursor-pointer rounded-[var(--tuwa-rounded-corners)] px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
     isActive
-      ? 'bg-[var(--tuwa-bg-primary)] text-[var(--tuwa-text-primary)] shadow-sm'
-      : 'text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-bg-primary)]/60'
+      ? 'bg-[var(--tuwa-text-primary)] text-[var(--tuwa-bg-primary)]'
+      : 'text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-bg-primary)]'
   }`;
 
 /** One token: the card copies the code that draws it. */
@@ -57,10 +57,10 @@ const TokenCard = ({ token, variant, reduceMotion }: { token: Token; variant: Va
       // Starts with the text on the card: whoever speaks to the page says what they see
       aria-label={`${isCopied ? 'Copied' : token.symbol} ${token.name}, copy the code of the icon`}
       title={token.isBundled ? token.name : `${token.name}, loaded on demand`}
-      className="group relative flex min-w-0 cursor-pointer flex-col items-center gap-3 rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] px-3 pt-5 pb-3.5 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[var(--tuwa-text-accent)] hover:shadow-[0_10px_28px_-14px_rgb(0_0_0/0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tuwa-text-accent)]"
+      className="group relative flex min-w-0 cursor-pointer flex-col items-center gap-3 rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] px-3 pt-5 pb-3.5 transition-colors duration-200 hover:border-[var(--tuwa-text-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tuwa-text-accent)]"
     >
       {!token.isBundled && (
-        <span aria-hidden className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[var(--tuwa-text-tertiary)]" />
+        <span aria-hidden className="absolute top-2 right-2 h-1.5 w-1.5 bg-[var(--tuwa-text-tertiary)]" />
       )}
       <span className="block h-11 w-11 transition-transform duration-200 group-hover:scale-110">
         <TokenIcon symbol={token.symbol} variant={variant} />

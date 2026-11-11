@@ -1,141 +1,20 @@
 /* The motions of @tuwaio/nova-icons (the `motion` prop of an icon). Each plays once when the icon appears, and not
    at all for a reader who asks for less motion. */
 
-/* assemble: the pixels gather along the diagonals of the grid, one diagonal every 12 ms, from the top left */
-@keyframes nova-icon-gather {
+/* assemble: the picture assembles from its pixels. Each pixel (`data-px`) flies in to its place from its own spot nearby
+   (`--nova-px-x`, `--nova-px-y`) after its own delay (`--nova-px-delay`), with a little overshoot, as the pixels of the
+   TUWA theme switch travel. `pixelFlight` gives a pixel its spot; `--nova-px-start` holds the whole picture back. A
+   pixel ends at its own opacity and color: a half-lit one stays half lit */
+@keyframes nova-icon-fly {
   from {
     opacity: 0;
+    transform: translate(var(--nova-px-x, 0px), var(--nova-px-y, 0px));
   }
 }
 
-/* Past the 30th diagonal (a grid larger than 16 x 16) a pixel comes with the last one, never first */
-svg[data-motion='assemble'] [data-step] {
-  animation: nova-icon-gather 120ms ease-out both;
-  animation-delay: 360ms;
-}
-
-svg[data-motion='assemble'] [data-step='0'] {
-  animation-delay: 0ms;
-}
-
-svg[data-motion='assemble'] [data-step='1'] {
-  animation-delay: 12ms;
-}
-
-svg[data-motion='assemble'] [data-step='2'] {
-  animation-delay: 24ms;
-}
-
-svg[data-motion='assemble'] [data-step='3'] {
-  animation-delay: 36ms;
-}
-
-svg[data-motion='assemble'] [data-step='4'] {
-  animation-delay: 48ms;
-}
-
-svg[data-motion='assemble'] [data-step='5'] {
-  animation-delay: 60ms;
-}
-
-svg[data-motion='assemble'] [data-step='6'] {
-  animation-delay: 72ms;
-}
-
-svg[data-motion='assemble'] [data-step='7'] {
-  animation-delay: 84ms;
-}
-
-svg[data-motion='assemble'] [data-step='8'] {
-  animation-delay: 96ms;
-}
-
-svg[data-motion='assemble'] [data-step='9'] {
-  animation-delay: 108ms;
-}
-
-svg[data-motion='assemble'] [data-step='10'] {
-  animation-delay: 120ms;
-}
-
-svg[data-motion='assemble'] [data-step='11'] {
-  animation-delay: 132ms;
-}
-
-svg[data-motion='assemble'] [data-step='12'] {
-  animation-delay: 144ms;
-}
-
-svg[data-motion='assemble'] [data-step='13'] {
-  animation-delay: 156ms;
-}
-
-svg[data-motion='assemble'] [data-step='14'] {
-  animation-delay: 168ms;
-}
-
-svg[data-motion='assemble'] [data-step='15'] {
-  animation-delay: 180ms;
-}
-
-svg[data-motion='assemble'] [data-step='16'] {
-  animation-delay: 192ms;
-}
-
-svg[data-motion='assemble'] [data-step='17'] {
-  animation-delay: 204ms;
-}
-
-svg[data-motion='assemble'] [data-step='18'] {
-  animation-delay: 216ms;
-}
-
-svg[data-motion='assemble'] [data-step='19'] {
-  animation-delay: 228ms;
-}
-
-svg[data-motion='assemble'] [data-step='20'] {
-  animation-delay: 240ms;
-}
-
-svg[data-motion='assemble'] [data-step='21'] {
-  animation-delay: 252ms;
-}
-
-svg[data-motion='assemble'] [data-step='22'] {
-  animation-delay: 264ms;
-}
-
-svg[data-motion='assemble'] [data-step='23'] {
-  animation-delay: 276ms;
-}
-
-svg[data-motion='assemble'] [data-step='24'] {
-  animation-delay: 288ms;
-}
-
-svg[data-motion='assemble'] [data-step='25'] {
-  animation-delay: 300ms;
-}
-
-svg[data-motion='assemble'] [data-step='26'] {
-  animation-delay: 312ms;
-}
-
-svg[data-motion='assemble'] [data-step='27'] {
-  animation-delay: 324ms;
-}
-
-svg[data-motion='assemble'] [data-step='28'] {
-  animation-delay: 336ms;
-}
-
-svg[data-motion='assemble'] [data-step='29'] {
-  animation-delay: 348ms;
-}
-
-svg[data-motion='assemble'] [data-step='30'] {
-  animation-delay: 360ms;
+[data-motion='assemble'] [data-px] {
+  animation: nova-icon-fly 520ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation-delay: calc(var(--nova-px-start, 0ms) + var(--nova-px-delay, 0ms));
 }
 
 /* breathe: the lit pixels (the whole drawing when there are none) dim and come back, once */
@@ -150,7 +29,7 @@ svg[data-motion='breathe'] [data-breathe] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  svg[data-motion] [data-step],
+  [data-motion] [data-px],
   svg[data-motion] [data-breathe] {
     animation: none;
   }

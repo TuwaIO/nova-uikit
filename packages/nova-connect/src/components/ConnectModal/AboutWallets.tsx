@@ -494,10 +494,6 @@ DefaultSection.displayName = 'DefaultSection';
 const DefaultSlideContainer: React.FC<AboutWalletsSlideContainerProps> = ({ children, className, ...props }) => (
   <div className={cn('novacon:relative novacon:z-1 novacon:overflow-hidden novacon:h-full', className)} {...props}>
     <StarsBackground starsCount={16} />
-    <div
-      className="novacon:absolute novacon:inset-0 novacon:z-1 novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,82,255,0.12),rgba(255,255,255,0))]"
-      aria-hidden="true"
-    />
 
     <div className="novacon:relative novacon:z-2 novacon:h-full">{children}</div>
   </div>
@@ -547,7 +543,7 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
                 width={200}
                 height={200}
                 className={cn(
-                  'novacon:rounded-full novacon:transition-opacity novacon:duration-300',
+                  'novacon:rounded-[var(--tuwa-rounded-full)] novacon:transition-opacity novacon:duration-300',
                   'novacon:object-cover',
                   imageLoaded ? 'novacon:opacity-100' : 'novacon:opacity-0',
                   imageClassName,
@@ -562,7 +558,7 @@ const DefaultImageSection: React.FC<AboutWalletsImageSectionProps> = ({
 
             {!imageLoaded && (
               <div
-                className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center"
+                className="novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-full)] novacon:flex novacon:items-center novacon:justify-center"
                 style={{ width: 200, height: 200 }}
                 aria-hidden="true"
               >
@@ -590,7 +586,8 @@ const DefaultContentSection: React.FC<AboutWalletsContentSectionProps> = ({
   return (
     <div
       className={cn(
-        'novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]',
+        // Opaque, so the stars of the slide stay out of the text, with the scanlines of the dialog
+        'tuwa-scanlines novacon:text-center novacon:relative novacon:p-4 novacon:bg-[var(--tuwa-bg-primary)]',
         classNames?.contentSection?.({ slideIndex }),
         className,
       )}
@@ -625,7 +622,7 @@ const DefaultIndicator: React.FC<AboutWalletsIndicatorProps> = ({
   <button
     onClick={onClick}
     className={cn(
-      'novacon:cursor-pointer novacon:h-2 novacon:rounded-full novacon:transition-all novacon:duration-300',
+      'novacon:cursor-pointer novacon:h-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-all novacon:duration-300',
       'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
       'novacon:bg-[var(--tuwa-border-primary)] novacon:w-2 novacon:hover:bg-[var(--tuwa-text-accent)]',
       {
@@ -652,17 +649,15 @@ const DefaultNavigation: React.FC<AboutWalletsNavigationProps> = ({
 }) => (
   <nav
     className={cn(
-      'novacon:flex novacon:justify-center novacon:space-x-2 novacon:mt-6 novacon:relative novacon:z-3 novacon:mx-4 novacon:mb-4',
+      'novacon:flex novacon:items-center novacon:justify-center novacon:gap-4 novacon:mt-6 novacon:relative novacon:z-3 novacon:mx-4 novacon:mb-4',
       className,
     )}
     role="tablist"
     aria-label={labels.carouselNavigation}
   >
-    <div
-      className="novacon:absolute novacon:left-1/2 novacon:top-1/2 novacon:transform novacon:-translate-x-1/2 novacon:-translate-y-1/2 novacon:z-1 novacon:h-[2px] novacon:w-full novacon:bg-[var(--tuwa-border-primary)]"
-      aria-hidden="true"
-    />
-    <div className="novacon:flex novacon:gap-2 novacon:px-4 novacon:bg-[var(--tuwa-bg-primary)] novacon:relative novacon:z-2">
+    {/* A line of 1 px on either side of the dots: no fill under them to hide one line, so the scanlines show through */}
+    <div className="novacon:h-px novacon:flex-1 novacon:bg-[var(--tuwa-border-primary)]" aria-hidden="true" />
+    <div className="novacon:flex novacon:gap-2 novacon:relative novacon:z-2">
       {slides.map((slide, index) => (
         <IndicatorComponent
           key={slide.id}
@@ -675,6 +670,7 @@ const DefaultNavigation: React.FC<AboutWalletsNavigationProps> = ({
         />
       ))}
     </div>
+    <div className="novacon:h-px novacon:flex-1 novacon:bg-[var(--tuwa-border-primary)]" aria-hidden="true" />
   </nav>
 );
 

@@ -550,7 +550,8 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
       showTopButton,
       showBottomButton,
     }) ||
-    'NovaCustomScroll novacon:relative novacon:flex novacon:w-full novacon:flex-col novacon:p-2 novacon:gap-1 novacon:max-h-[312px] novacon:overflow-x-hidden novacon:overflow-y-auto';
+    // Paper and ink: the rows of the list are cells on lines of 1 px (the list draws them, `ChainListRenderer`)
+    'NovaCustomScroll novacon:relative novacon:flex novacon:w-full novacon:flex-col novacon:max-h-[312px] novacon:overflow-x-hidden novacon:overflow-y-auto';
 
   // Button animation wrapper classes and styles
   const topButtonWrapperClasses =

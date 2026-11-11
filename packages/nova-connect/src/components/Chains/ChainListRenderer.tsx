@@ -329,7 +329,8 @@ const DefaultActiveIndicatorWrapper: React.FC<ChainListRendererActiveIndicatorWr
     return (
       <div
         className={cn(
-          'novacon:flex novacon:items-center novacon:space-x-2 novacon:text-xs novacon:font-mono novacon:font-semibold novacon:text-[var(--tuwa-text-tertiary)]',
+          // Ink, not the success color: on the muted row of the active chain it read at 4:1
+          'novacon:flex novacon:items-center novacon:space-x-2 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)]',
           className,
         )}
       >
@@ -352,7 +353,7 @@ const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = 
     <>
       <span
         className={cn(
-          'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-full novacon:bg-[var(--tuwa-success-text)]',
+          'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-success-text)]',
           className,
         )}
         aria-label={label}
@@ -384,12 +385,12 @@ const SelectItemBase = forwardRef<ElementRef<typeof Select.Item>, SelectItemBase
         ref={forwardedRef}
         className={cn(
           // Base styles
-          'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
+          'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-3 novacon:py-2.5',
           'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           // Interactive states
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
-          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-inset novacon:focus:ring-[var(--tuwa-text-accent)]',
           // Active state
           { 'novacon:bg-[var(--tuwa-bg-muted)]': isActive },
           // Custom classes
@@ -581,11 +582,11 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
       ? customization?.classNames?.item?.({ isActive, isMobile, chainId: formattedChainId })
       : cn(
           // Default item styles
-          'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-2 novacon:py-2',
+          'novacon:flex novacon:items-center novacon:w-full novacon:text-left novacon:px-3 novacon:py-2.5',
           'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:space-x-3 novacon:cursor-pointer novacon:outline-none',
           'novacon:text-[var(--tuwa-text-primary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
           'novacon:focus:bg-[var(--tuwa-bg-muted)] novacon:focus:outline-none',
-          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+          'novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-inset novacon:focus:ring-[var(--tuwa-text-accent)]',
           { 'novacon:bg-[var(--tuwa-bg-muted)]': isActive, 'novacon:justify-between': isMobile },
           // Custom classes
           itemClassName,
@@ -684,7 +685,15 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
     <MotionContainer
       role="listbox"
       aria-label={ariaLabel || labels.selectChain}
-      className={containerClasses}
+      // Paper and ink: the chains are cells on lines of 1 px, unless a host styles the list
+      className={
+        customization?.classNames?.container
+          ? containerClasses
+          : cn(
+              'novacon:flex novacon:flex-col novacon:divide-y novacon:divide-[var(--tuwa-border-primary)]',
+              containerClasses,
+            )
+      }
       {...containerMotionProps}
     >
       {chainsList.map(renderChainItem)}

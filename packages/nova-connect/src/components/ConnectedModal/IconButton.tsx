@@ -384,7 +384,7 @@ const DefaultLoadingOverlay: React.FC<IconButtonLoadingOverlayProps> = ({ loadin
   return (
     <div
       className={cn(
-        'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-primary)]/50 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center',
+        'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-primary)]/50 novacon:rounded-[var(--tuwa-rounded-full)] novacon:flex novacon:items-center novacon:justify-center',
         className,
       )}
       aria-hidden="true"
@@ -412,7 +412,7 @@ const DefaultButtonContent: React.FC<IconButtonContentProps> = ({
 };
 
 /**
- * A round button with a wallet icon and/or a network icon, used by the connected modal to open the connections and
+ * A button with a wallet icon and/or a network icon (its corners `--tuwa-rounded-full`, square by default), used by the connected modal to open the connections and
  * network screens. It is clickable, with a chevron, only when `onClick` is set and `items` is above 1.
  *
  * Props: {@link IconButtonProps}; the ref is forwarded to the button.
@@ -573,7 +573,7 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
         })
       : cn(
           // Base styles
-          'novacon:flex novacon:items-center novacon:justify-center novacon:gap-1 novacon:rounded-full novacon:leading-[0]',
+          'novacon:flex novacon:items-center novacon:justify-center novacon:gap-1 novacon:rounded-[var(--tuwa-rounded-full)] novacon:leading-[0]',
           'novacon:bg-[var(--tuwa-bg-primary)] novacon:border novacon:border-[var(--tuwa-border-primary)]',
           'novacon:p-1.5 novacon:transition-all novacon:duration-200 novacon:relative',
 
@@ -582,7 +582,7 @@ export const IconButton = forwardRef<Omit<HTMLButtonElement, 'style'>, IconButto
 
           // Interactive states
           {
-            'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:[&_img]:scale-95 novacon:active:[&_img]:scale-85 novacon:hover:shadow-sm':
+            'novacon:cursor-pointer novacon:hover:[&_svg]:scale-95 novacon:active:[&_svg]:scale-85 novacon:hover:[&_img]:scale-95 novacon:active:[&_img]:scale-85':
               isClickable,
             'novacon:cursor-not-allowed novacon:opacity-50': disabled && !loading,
             'novacon:cursor-wait novacon:opacity-75': loading,

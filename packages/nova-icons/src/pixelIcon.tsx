@@ -1,10 +1,10 @@
-import type { ReactElement, ReactNode, Ref, SVGProps } from 'react';
+import type { CSSProperties, ReactElement, ReactNode, Ref, SVGProps } from 'react';
 
 /**
  * A motion of a Nova icon, which plays once when the icon appears, through `@tuwaio/nova-icons/motion.css`:
  *
- * - `assemble`: the pixels gather along the diagonals, from the top left, in about 0.4 s. For an empty state or a large
- *   icon.
+ * - `assemble`: the icon assembles from its pixels: each one flies in to its place from a spot nearby, with a little
+ *   overshoot, in about 0.75 s (see `pixelFlight`). For an empty state or a large icon.
  * - `breathe`: the lit pixels (the whole drawing when the icon has none) dim and come back once, in 1.6 s. For an icon
  *   next to something that waits: a wallet, a transaction.
  *
@@ -60,23 +60,51 @@ export function pixelPath(art: readonly string[], mark: string): string {
     .join('');
 }
 
-/** One diagonal of the drawing for `assemble`: its pixels of one mark, and its step (the sum of x and y). */
-type Step = { step: number; d: string; lit: boolean };
+/** A number in [0, 1) of a pixel and a salt, the same on every render: the scatter of `pixelFlight` without randomness. */
+function noise(x: number, y: number, salt: number): number {
+  let hash = Math.imul(x + 1, 0x27d4eb2d) ^ Math.imul(y + 1, 0x165667b1) ^ Math.imul(salt, 0x9e3779b9);
+  hash = Math.imul(hash ^ (hash >>> 15), 0x85ebca6b);
+  hash = Math.imul(hash ^ (hash >>> 13), 0xc2b2ae35);
+  return ((hash ^ (hash >>> 16)) >>> 0) / 4294967296;
+}
 
-/** The pixels of a grid split by diagonal, the plain ones and the lit ones apart. */
-function stepsOf(art: readonly string[]): Step[] {
-  const steps = new Map<string, Step>();
-  art.forEach((row, y) =>
-    [...row].forEach((mark, x) => {
-      if (mark === '.') return;
-      const lit = mark === 'o';
-      const key = `${x + y}${lit ? 'o' : '#'}`;
-      const step = steps.get(key) ?? { step: x + y, d: '', lit };
-      step.d += `M${x} ${y}h1v1h-1z`;
-      steps.set(key, step);
-    }),
-  );
-  return [...steps.values()].sort((a, b) => a.step - b.step);
+const round = (value: number) => Math.round(value * 100) / 100;
+
+/**
+ * Where a pixel of a picture that assembles itself comes from, and when: the CSS variables that `motion.css` reads for an
+ * element with `data-px` under an element with `data-motion="assemble"` (an icon with `motion="assemble"`, or any pixel
+ * drawing of yours). The pixel flies in to its place from a spot 3 to 7 cells away, in a direction of its own, after a
+ * delay of its own, so the pixels of a picture gather from all round it. The same pixel gets the same spot on every
+ * render: nothing random, and a server render matches the client.
+ *
+ * @param x - The column of the pixel on its grid.
+ * @param y - The row of the pixel on its grid.
+ * @param options - How far and over how long the pixels come.
+ * @param options.spread - The distance in cells, times this (a grid of 64 might take 3); 1 by default.
+ * @param options.stagger - The longest delay of a pixel, in ms; 220 by default.
+ * @returns The `style` of the pixel: `--nova-px-x`, `--nova-px-y` (its start, in user units of the SVG) and
+ * `--nova-px-delay`.
+ */
+export function pixelFlight(
+  x: number,
+  y: number,
+  { spread = 1, stagger = 220 }: { spread?: number; stagger?: number } = {},
+): CSSProperties {
+  const angle = noise(x, y, 1) * Math.PI * 2;
+  const distance = (3 + noise(x, y, 2) * 4) * spread;
+  return {
+    '--nova-px-x': `${round(Math.cos(angle) * distance)}px`,
+    '--nova-px-y': `${round(Math.sin(angle) * distance)}px`,
+    '--nova-px-delay': `${Math.round(noise(x, y, 3) * stagger)}ms`,
+  } as CSSProperties;
+}
+
+/** A pixel of the drawing for `assemble`, plain or lit. */
+type Cell = { x: number; y: number; lit: boolean };
+
+/** The pixels of a grid, one by one. */
+function cellsOf(art: readonly string[]): Cell[] {
+  return art.flatMap((row, y) => [...row].flatMap((mark, x) => (mark === '.' ? [] : [{ x, y, lit: mark === 'o' }])));
 }
 
 /**
@@ -96,13 +124,22 @@ export function createPixelIcon(name: string, art: readonly string[]): NovaIcon 
   }
   const base = pixelPath(art, '#');
   const lit = pixelPath(art, 'o');
-  let steps: Step[] | undefined;
+  let cells: Cell[] | undefined;
 
   const drawing = (motion: NovaIconMotion | undefined): ReactNode => {
     if (motion === 'assemble') {
-      steps ??= stepsOf(art);
-      return steps.map(({ step, d, lit: isLit }) => (
-        <path key={`${step}${isLit ? 'o' : '#'}`} d={d} fill={isLit ? LIT_FILL : undefined} data-step={String(step)} />
+      cells ??= cellsOf(art);
+      return cells.map(({ x, y, lit: isLit }) => (
+        <rect
+          key={`${x}-${y}`}
+          x={x}
+          y={y}
+          width={1}
+          height={1}
+          fill={isLit ? LIT_FILL : undefined}
+          data-px=""
+          style={pixelFlight(x, y)}
+        />
       ));
     }
     const breathe = motion === 'breathe' ? '' : undefined;

@@ -42,51 +42,52 @@
     transition-duration: 90ms;
   }
 
-  /* The pixel look: the same moves by one pixel of the grid, in a step, as a pixel drawing moves */
+  /* The pixel look: the same moves, by two pixels of the grid and smoothly: a step of one pixel went unseen */
   .tuwa-link-arrow-px,
   .tuwa-exit-arrow-px,
   .tuwa-trash-lid-px {
-    transition: transform 160ms step-end;
+    transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
   }
 
   a:hover .tuwa-link-arrow-px,
   a:focus-visible .tuwa-link-arrow-px,
   button:not(:disabled):hover .tuwa-link-arrow-px,
   button:not(:disabled):focus-visible .tuwa-link-arrow-px {
-    transform: translate(1px, -1px);
+    transform: translate(2px, -2px);
   }
 
   a:hover .tuwa-exit-arrow-px,
   a:focus-visible .tuwa-exit-arrow-px,
   button:not(:disabled):hover .tuwa-exit-arrow-px,
   button:not(:disabled):focus-visible .tuwa-exit-arrow-px {
-    transform: translateX(-1px);
+    transform: translateX(-2px);
   }
 
   a:hover .tuwa-trash-lid-px,
   a:focus-visible .tuwa-trash-lid-px,
   button:not(:disabled):hover .tuwa-trash-lid-px,
   button:not(:disabled):focus-visible .tuwa-trash-lid-px {
-    transform: translate(1px, -1px);
+    transform: translate(1px, -2px);
   }
 
+  /* Faster than it opens, as the lid of the classic look */
   a:active .tuwa-trash-lid-px,
   button:not(:disabled):active .tuwa-trash-lid-px {
     transform: none;
+    transition-duration: 90ms;
   }
 
-  /* The pixel marks of a result draw pixel by pixel; one already there when the page opens is simply shown */
-  /* Linear, not step-end: a one-shot step-end animation can end a hair short of its last frame and stay hidden */
-  .tuwa-drawn-px {
-    animation: tuwa-drawn-px 1ms linear both;
-    animation-delay: calc(80ms + var(--k) * 16ms);
+  /* The color of the icon follows its action under the pointer (the rules below the layer) */
+  .tuwa-link-icon,
+  .tuwa-exit-icon,
+  .tuwa-trash-icon {
+    transition: color 200ms ease;
   }
 
-  [data-still] .tuwa-drawn-px {
-    animation: none;
-  }
+  /* The pixel marks of a result assemble from their pixels (`[data-motion='assemble'] [data-px]` of the motions of
+     @tuwaio/nova-icons); one already there when the page opens is simply shown */
 
-  /* A copied text: the sheets go, and the check mark draws itself pixel by pixel; back, the check mark goes at once */
+  /* A copied text: the sheets go, and the check mark assembles from its pixels; back, the check mark goes at once */
   .tuwa-copy-px-sheets {
     transition: opacity 120ms steps(2, end);
   }
@@ -97,12 +98,10 @@
 
   .tuwa-copy-px-check {
     opacity: 0;
-    transition: opacity 1ms step-end;
   }
 
   [data-copied] .tuwa-copy-px-check {
     opacity: 1;
-    transition-delay: calc(100ms + var(--k) * 14ms);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -116,20 +115,29 @@
       transform: none !important;
     }
 
-    .tuwa-drawn-px {
-      animation: none;
-    }
-
-    .tuwa-copy-px-sheets,
-    .tuwa-copy-px-check,
-    [data-copied] .tuwa-copy-px-check {
+    .tuwa-copy-px-sheets {
       transition: none;
     }
   }
 }
 
-@keyframes tuwa-drawn-px {
-  from {
-    opacity: 0;
-  }
+/* Under the pointer an icon of an action takes its color: the accent for a link to another site, red for an exit and for a
+   bin. Outside the layers, so that it wins over the color class a host or a Nova part gives the icon. Not on a filled
+   button (`tuwa-solid`): there the icon keeps the color of the label, as the accent on the accent read as nothing */
+a:not(.tuwa-solid):hover .tuwa-link-icon,
+a:not(.tuwa-solid):focus-visible .tuwa-link-icon,
+button:not(.tuwa-solid):not(:disabled):hover .tuwa-link-icon,
+button:not(.tuwa-solid):not(:disabled):focus-visible .tuwa-link-icon {
+  color: var(--tuwa-text-accent);
+}
+
+a:not(.tuwa-solid):hover .tuwa-exit-icon,
+a:not(.tuwa-solid):focus-visible .tuwa-exit-icon,
+button:not(.tuwa-solid):not(:disabled):hover .tuwa-exit-icon,
+button:not(.tuwa-solid):not(:disabled):focus-visible .tuwa-exit-icon,
+a:not(.tuwa-solid):hover .tuwa-trash-icon,
+a:not(.tuwa-solid):focus-visible .tuwa-trash-icon,
+button:not(.tuwa-solid):not(:disabled):hover .tuwa-trash-icon,
+button:not(.tuwa-solid):not(:disabled):focus-visible .tuwa-trash-icon {
+  color: var(--tuwa-error-icon);
 }

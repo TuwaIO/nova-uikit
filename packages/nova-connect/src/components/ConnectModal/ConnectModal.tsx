@@ -8,6 +8,7 @@ import {
   DialogTitle,
   ExternalLinkIcon,
   NovaSetIcon,
+  primaryButtonClasses,
   standardButtonClasses,
   useNovaSounds,
 } from '@tuwaio/nova-core';
@@ -691,7 +692,7 @@ const DefaultActionButton = forwardRef<HTMLButtonElement, ConnectModalActionButt
       type="button"
       onClick={onClick}
       disabled={disabled || loading}
-      className={cn(standardButtonClasses, className)}
+      className={cn(primaryButtonClasses, className)}
       {...props}
     >
       {loading ? 'Loading...' : children}

@@ -48,7 +48,7 @@ describe('formatCountLabel', () => {
   });
 });
 
-// Showcase review, 2026-10-29: the compact order on a phone read "1 items"
+// The compact order on a phone read "1 items"
 
 describe('formatCountLabel', () => {
   const english = { one: '{count} item', other: '{count} items' };

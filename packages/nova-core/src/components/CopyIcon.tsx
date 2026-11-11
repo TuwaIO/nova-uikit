@@ -2,6 +2,7 @@
  * @file The icon of a copy button, which turns into a check mark.
  */
 
+import { pixelFlight } from '@tuwaio/nova-icons';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { CSSProperties } from 'react';
 
@@ -40,10 +41,13 @@ export function CopyIcon({ copied = false, className, look }: CopyIconProps) {
         fill="currentColor"
         aria-hidden="true"
         data-copied={copied ? '' : undefined}
+        // Once copied, the check mark assembles from its pixels (`motion.css` of @tuwaio/nova-icons)
+        data-motion={copied ? 'assemble' : undefined}
+        style={{ '--nova-px-start': '100ms' } as CSSProperties}
         className={cn('novacore:block', className)}
       >
         <path className="tuwa-copy-px-sheets" d={SHEETS_PATH} />
-        {CHECK_CELLS.map(({ x, y }, index) => (
+        {CHECK_CELLS.map(({ x, y }) => (
           <rect
             key={`${x}-${y}`}
             className="tuwa-copy-px-check"
@@ -52,7 +56,8 @@ export function CopyIcon({ copied = false, className, look }: CopyIconProps) {
             width={1}
             height={1}
             fill="var(--tuwa-success-icon)"
-            style={{ '--k': index } as CSSProperties}
+            data-px=""
+            style={pixelFlight(x, y)}
           />
         ))}
       </svg>

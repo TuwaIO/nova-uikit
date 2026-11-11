@@ -17,7 +17,7 @@ export type StepClassNames = {
   container?: string;
   /** Classes for the connecting line */
   line?: string;
-  /** Classes for the circle element */
+  /** Classes for the mark of the step (the key keeps its old name: the mark is square now, `--tuwa-rounded-full`) */
   circle?: string;
   /** Classes for the label text */
   label?: string;
@@ -52,7 +52,7 @@ const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; circle: string }> = 
     line: 'novatx:bg-[var(--tuwa-info-icon)]',
     circle: 'novatx:bg-[var(--tuwa-info-icon)]',
   },
-  // The line behind the circle stops at its edge
+  // The line behind the mark stops at its edge
   active: {
     line: 'novatx:bg-[var(--tuwa-pending-icon)]',
     circle: 'novatx:bg-[var(--tuwa-bg-primary)]',
@@ -114,7 +114,7 @@ function ActiveMark() {
     <span className="novatx:relative novatx:block novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-pending-icon)]">
       {!reduceMotion && (
         <motion.span
-          className="novatx:absolute novatx:inset-0 novatx:rounded-full novatx:bg-current"
+          className="novatx:absolute novatx:inset-0 novatx:rounded-[var(--tuwa-rounded-full)] novatx:bg-current"
           animate={{ scale: [0.8, 1.7], opacity: [0.3, 0] }}
           transition={{ duration: 1.6, ease: 'easeOut', repeat: Infinity }}
         />
@@ -137,7 +137,7 @@ function ActiveMark() {
         />
       </svg>
       <motion.span
-        className="novatx:absolute novatx:inset-[6.5px] novatx:rounded-full novatx:bg-current"
+        className="novatx:absolute novatx:inset-[6.5px] novatx:rounded-[var(--tuwa-rounded-full)] novatx:bg-current"
         animate={reduceMotion ? undefined : { scale: [1, 0.72, 1] }}
         transition={{ duration: 1.6, ease: 'easeInOut', repeat: Infinity }}
       />
@@ -145,20 +145,20 @@ function ActiveMark() {
   );
 }
 
-/** The mark inside the circle of a step. */
+/** The mark inside the square of a step: ink on the color of the step, which reads on its green, red and grey alike. */
 function StepMark({ status }: { status: StepStatus }) {
   switch (status) {
     case 'completed':
-      return <DrawnCheck className="novatx:h-3.5 novatx:w-3.5 novatx:text-white" />;
+      return <DrawnCheck className="novatx:h-3.5 novatx:w-3.5 novatx:text-[#101014]" />;
     case 'error':
-      return <DrawnCross className="novatx:h-3.5 novatx:w-3.5 novatx:text-white" />;
+      return <DrawnCross className="novatx:h-3.5 novatx:w-3.5 novatx:text-[#101014]" />;
     case 'replaced':
-      return <NovaSetIcon solid="ArrowPathIcon" className="novatx:h-3 novatx:w-3 novatx:text-white" />;
+      return <NovaSetIcon solid="ArrowPathIcon" className="novatx:h-3 novatx:w-3 novatx:text-[#101014]" />;
     case 'active':
       return <ActiveMark />;
     default:
       return (
-        <span className="novatx:block novatx:h-1 novatx:w-1 novatx:rounded-full novatx:bg-[var(--tuwa-border-primary)]" />
+        <span className="novatx:block novatx:h-1 novatx:w-1 novatx:rounded-[var(--tuwa-rounded-full)] novatx:bg-[var(--tuwa-border-primary)]" />
       );
   }
 }
@@ -236,7 +236,7 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
 
       <div
         className={cn(
-          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-full novatx:transition-colors novatx:duration-300',
+          'novatx:relative novatx:z-10 novatx:flex novatx:h-5 novatx:w-5 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-full)] novatx:transition-colors novatx:duration-300',
           styles.circle,
           classNames?.circle,
           statusOverride?.circle,

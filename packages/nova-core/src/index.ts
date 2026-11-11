@@ -27,4 +27,5 @@ export * from './hooks/useCopyToClipboard';
 export * from './hooks/useMediaQuery';
 export * from './hooks/useNovaIcons';
 export * from './hooks/useNovaSounds';
+export * from './pixel/flight';
 export * from './utils';

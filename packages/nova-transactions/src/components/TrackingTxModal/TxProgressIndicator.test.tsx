@@ -48,7 +48,7 @@ describe('TxProgressIndicator', () => {
   });
 });
 
-// The owner, 2026-11-11: what Nova draws has a pixel variant
+// What Nova draws has a pixel variant
 describe('the pixel spinner of a step', () => {
   type Rect = { type: string; props: { className?: string; style?: Record<string, number> } };
   const parts = () => (PixelActiveMark() as unknown as { props: { children: [Rect[], Rect] } }).props.children;

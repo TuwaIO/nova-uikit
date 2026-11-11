@@ -42,7 +42,7 @@ const render = (Component: unknown, props: object) =>
 const markOf = (nodes: Node[], component: (props: object) => unknown) => nodes.find((node) => node.type === component);
 
 describe('the pixel look of the connect button', () => {
-  // The owner, 2026-11-11: what Nova draws has a pixel variant; the status marks draw themselves pixel by pixel
+  // What Nova draws has a pixel variant; the status marks assemble from their pixels
   it('draws the status of a transaction with the pixel marks of nova-core', () => {
     icons.look = 'pixel';
     expect(

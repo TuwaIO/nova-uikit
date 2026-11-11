@@ -10,7 +10,7 @@ export interface FallbackIconProps {
    */
   animate?: boolean;
   /**
-   * Text content to display inside the fallback circle (e.g., "?", "!", or empty).
+   * Text content to display inside the fallback tile (e.g., "?", "!", or empty).
    * @default ''
    */
   content?: string;
@@ -25,7 +25,7 @@ export interface FallbackIconProps {
  * Defines shape, background color, and layout.
  */
 const FALLBACK_CLASS =
-  'novacore:flex novacore:items-center novacore:justify-center novacore:w-full novacore:h-full novacore:rounded-full novacore:text-[var(--tuwa-text-secondary)] novacore:bg-[var(--tuwa-bg-muted)]';
+  'novacore:flex novacore:items-center novacore:justify-center novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)] novacore:text-[var(--tuwa-text-secondary)] novacore:bg-[var(--tuwa-bg-muted)]';
 
 /**
  * A reusable placeholder component used for Suspense fallbacks (loading)

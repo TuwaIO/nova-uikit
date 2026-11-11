@@ -21,30 +21,35 @@ const VISUALS = {
     Icon: null,
     color: 'novatx:text-[var(--tuwa-pending-text)]',
     background: 'novatx:bg-[var(--tuwa-pending-bg)]',
+    border: 'novatx:border-[color-mix(in_srgb,var(--tuwa-pending-icon)_35%,transparent)]',
     iconColor: 'novatx:text-[var(--tuwa-pending-icon)]',
   },
   confirmed: {
     Icon: SuccessIcon,
     color: 'novatx:text-[var(--tuwa-success-text)]',
     background: 'novatx:bg-[var(--tuwa-success-bg)]',
+    border: 'novatx:border-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)]',
     iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Success]: {
     Icon: SuccessIcon,
     color: 'novatx:text-[var(--tuwa-success-text)]',
     background: 'novatx:bg-[var(--tuwa-success-bg)]',
+    border: 'novatx:border-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)]',
     iconColor: 'novatx:text-[var(--tuwa-success-icon)]',
   },
   [TransactionStatus.Failed]: {
     Icon: FailedIcon,
     color: 'novatx:text-[var(--tuwa-error-text)]',
     background: 'novatx:bg-[var(--tuwa-error-bg)]',
+    border: 'novatx:border-[color-mix(in_srgb,var(--tuwa-error-icon)_35%,transparent)]',
     iconColor: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   [TransactionStatus.Replaced]: {
     Icon: ReplacedIcon,
     color: 'novatx:text-[var(--tuwa-info-text)]',
     background: 'novatx:bg-[var(--tuwa-info-bg)]',
+    border: 'novatx:border-[color-mix(in_srgb,var(--tuwa-info-icon)_35%,transparent)]',
     iconColor: 'novatx:text-[var(--tuwa-info-icon)]',
   },
 } as const;
@@ -57,7 +62,10 @@ const VISUALS = {
 export type TransactionStatusBadgeProps<T extends Transaction> = {
   /** The transaction whose status is shown. */
   tx: T;
-  /** `badge` is a colored pill. `plain` is the icon and label alone, for the status line of a card. Defaults to `badge`. */
+  /**
+   * `badge` is a square chip in the color of the status, with a frame of 1 px. `plain` is the icon and label alone, for the
+   * status line of a card. Defaults to `badge`.
+   */
   variant?: 'badge' | 'plain';
   /** Classes of the badge. */
   className?: string;
@@ -91,9 +99,12 @@ export function TransactionStatusBadge<T extends Transaction>({
   const { statuses } = useLabels();
 
   const isPlain = variant === 'plain';
+  // Paper and ink: monospace capitals with spacing; the badge is a square chip with a frame of its tone
   const baseClasses = cn(
-    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:text-xs novatx:font-mono novatx:font-medium novatx:transition-colors novatx:duration-300',
-    !isPlain && 'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-2 novatx:py-1',
+    'novatx:inline-flex novatx:items-center novatx:gap-x-1.5 novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:transition-colors novatx:duration-300',
+    isPlain
+      ? 'novatx:text-[11px]'
+      : 'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-1.5 novatx:py-0.5 novatx:text-[10px]',
   );
 
   const isConfirmed =
@@ -108,7 +119,8 @@ export function TransactionStatusBadge<T extends Transaction>({
         className={cn(
           baseClasses,
           'novatx:text-[var(--tuwa-info-text)]',
-          !isPlain && 'novatx:bg-[var(--tuwa-info-bg)]',
+          !isPlain &&
+            'novatx:bg-[var(--tuwa-info-bg)] novatx:border-[color-mix(in_srgb,var(--tuwa-info-icon)_35%,transparent)]',
           classNames?.container,
           className,
         )}
@@ -118,10 +130,10 @@ export function TransactionStatusBadge<T extends Transaction>({
     );
   }
 
-  const { Icon, color, background, iconColor } = visual;
+  const { Icon, color, background, border, iconColor } = visual;
 
   return (
-    <div className={cn(baseClasses, color, !isPlain && background, classNames?.container, className)}>
+    <div className={cn(baseClasses, color, !isPlain && [background, border], classNames?.container, className)}>
       {/* A row of a list is simply shown when the list opens: old results must not all draw at once */}
       <MorphIcon iconKey={visualKey as string} animateFirst={isPlain}>
         {Icon ? (

@@ -10,8 +10,8 @@ Defined in: [pixelIcon.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/pa
 
 A motion of a Nova icon, which plays once when the icon appears, through `@tuwaio/nova-icons/motion.css`:
 
-- `assemble`: the pixels gather along the diagonals, from the top left, in about 0.4 s. For an empty state or a large
-  icon.
+- `assemble`: the icon assembles from its pixels: each one flies in to its place from a spot nearby, with a little
+  overshoot, in about 0.75 s (see `pixelFlight`). For an empty state or a large icon.
 - `breathe`: the lit pixels (the whole drawing when the icon has none) dim and come back once, in 1.6 s. For an icon
   next to something that waits: a wallet, a transaction.
 

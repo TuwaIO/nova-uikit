@@ -253,7 +253,8 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: Connected
   return (
     <div
       className={cn(
-        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite novacon:motion-reduce:after:animate-none",
+        // Paper and ink: a frame with a segment of the pending color running round it (`tuwa-square-chase`)
+        'tuwa-square-chase novacon:absolute novacon:inset-[-4px] novacon:rounded-[var(--tuwa-rounded-full)] novacon:border novacon:border-[color-mix(in_srgb,var(--tuwa-pending-icon)_35%,transparent)] novacon:[--tuwa-chase-border:1px]',
         className,
       )}
       aria-hidden="true"

@@ -1,6 +1,5 @@
 /**
- * @file The edge of a card that shows the state of an operation: a thin strip along the top and a soft wash of the status
- * color below it.
+ * @file The edge of a card that shows the state of an operation: a thin strip of the status color along the top.
  */
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -37,15 +36,15 @@ export type StatusEdgeProps = {
   classNames?: {
     /** Classes of the strip along the top. */
     strip?: string;
-    /** Classes of the wash under it. */
+    /** Classes of a layer over the whole card that shows a result, none by default (a tint of the status, for one). */
     wash?: string;
   };
 };
 
 /**
  * Put it first in a card with `position: relative` (it fills the card and takes its corners). While pending, a glint in
- * the pending color runs along the top; a result fills the strip and washes the top of the card in the status color, with
- * a crossfade. With `prefers-reduced-motion` nothing moves and the colors just change.
+ * the pending color runs along the top; a result fills the strip in the status color, with a crossfade. The card keeps its
+ * own color: `classNames.wash` gives it a tint. With `prefers-reduced-motion` nothing moves and the colors just change.
  *
  * @param props - See {@link StatusEdgeProps}.
  * @returns The edge, hidden from screen readers: the status text is what tells them.
@@ -64,13 +63,12 @@ export function StatusEdge({ tone, progress, className, classNames }: StatusEdge
       )}
     >
       <AnimatePresence initial={false}>
-        {tone !== 'pending' && (
+        {/* Paper and ink: the strip tells the status, and the card keeps its own color (a tint of the whole card was too much
+            color). Only `classNames.wash` lays a layer over it */}
+        {tone !== 'pending' && classNames?.wash && (
           <motion.div
             key={tone}
-            className={cn('novacore:absolute novacore:inset-x-0 novacore:top-0 novacore:h-20', classNames?.wash)}
-            style={{
-              background: `linear-gradient(to bottom, color-mix(in srgb, ${color} 12%, transparent), transparent)`,
-            }}
+            className={cn('novacore:absolute novacore:inset-0', classNames?.wash)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -95,8 +93,8 @@ export function StatusEdge({ tone, progress, className, classNames }: StatusEdge
         {tone === 'pending' && !reduceMotion && (
           // In CSS, not `framer-motion`: a pending transaction can wait for an hour, with a JavaScript loop on every frame
           <div
-            className="tuwa-status-glint novacore:absolute novacore:inset-y-0 novacore:left-0 novacore:w-1/3"
-            style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }}
+            className="tuwa-status-glint novacore:absolute novacore:inset-y-0 novacore:left-0 novacore:w-1/4"
+            style={{ backgroundColor: color }}
           />
         )}
       </div>

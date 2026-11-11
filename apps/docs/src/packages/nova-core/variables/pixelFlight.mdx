@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Variables/pixelFlight" />
+
+# pixelFlight
+
+> `const` **pixelFlight**: (`x`, `y`, `options?`) => `ReturnType`\<*typeof* [`pixelFlight`](?path=/docs/packages-nova-icons-functions-pixelflight--docs)\> = `flightOfNovaIcons`
+
+Defined in: [pixel/flight.ts:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/pixel/flight.ts#L17)
+
+Where a pixel of a picture that assembles itself comes from, and when: `pixelFlight` of `@tuwaio/nova-icons`, the one
+motion of every pixel drawing of Nova (the icons, the marks of a result, the pictures of the connect modal). Give each
+pixel `data-px` and this `style`, and its parent `data-motion="assemble"`: the pixel flies in to its place from a spot
+3 to 7 cells away (times `spread`), after a delay of up to `stagger` ms, once, with a little overshoot. The same pixel
+gets the same spot on every render.
+
+## Parameters
+
+### x
+
+`number`
+
+The column of the pixel on its grid.
+
+### y
+
+`number`
+
+The row of the pixel on its grid.
+
+### options?
+
+How far and over how long the pixels come.
+
+#### spread?
+
+`number`
+
+The distance in cells, times this; 1 by default.
+
+#### stagger?
+
+`number`
+
+The longest delay of a pixel, in ms; 220 by default.
+
+## Returns
+
+`ReturnType`\<*typeof* [`pixelFlight`](?path=/docs/packages-nova-icons-functions-pixelflight--docs)\>
+
+The `style` of the pixel: `--nova-px-x`, `--nova-px-y` and `--nova-px-delay`.

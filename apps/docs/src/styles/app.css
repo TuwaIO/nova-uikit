@@ -6,34 +6,54 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   STORYBOOK DOCS PALETTE — Sapphire / Cobalt / Oceanic Azure (Light)
-                            & Sapphire / Glacial Sky (Dark)
-   Matches @tuwaio/docs-ui v0.5.5 while keeping Nova's --tuwa-button-gradient-*
-   variables untouched for the ConnectButton.
+   STORYBOOK DOCS PALETTE — paper and ink, the look of Nova
+   Warm paper, ink text, lines of 1 px, the TUWA blue for links and the accent.
    ═══════════════════════════════════════════════════════════════════════════ */
 :root {
   --tuwa-docs-primary: #0052ff;
-  --tuwa-docs-via: #1d4ed8;
-  --tuwa-docs-secondary: #0284c7;
-  --tuwa-docs-gradient: linear-gradient(135deg, #0052ff 0%, #1d4ed8 50%, #0284c7 100%);
+  /* Links on hover */
+  --tuwa-docs-secondary: #0047de;
   /* The page furniture has tokens of its own: the theme of a customized story sets --tuwa-* for the whole document */
-  --tuwa-docs-text: #111827;
-  --tuwa-docs-text-secondary: #6b7280;
-  --tuwa-docs-text-tertiary: #9ca3af;
-  --tuwa-docs-border: #e5e7eb;
-  --tuwa-docs-surface: #f9fafb;
+  --tuwa-docs-text: #101014;
+  --tuwa-docs-text-secondary: #636366;
+  --tuwa-docs-text-tertiary: #8e8e90;
+  --tuwa-docs-border: #d6d5d1;
+  --tuwa-docs-surface: #f2f1ee;
 }
 
 .dark {
-  --tuwa-docs-primary: #38bdf8;
-  --tuwa-docs-via: #3b82f6;
-  --tuwa-docs-secondary: #7dd3fc;
-  --tuwa-docs-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #7dd3fc 100%);
-  --tuwa-docs-text: #f9fafb;
-  --tuwa-docs-text-secondary: #9ca3af;
-  --tuwa-docs-text-tertiary: #6b7280;
-  --tuwa-docs-border: #374151;
-  --tuwa-docs-surface: #1f2937;
+  --tuwa-docs-primary: #60a5fa;
+  --tuwa-docs-secondary: #93c5fd;
+  --tuwa-docs-text: #f2f1ee;
+  --tuwa-docs-text-secondary: #9d9c9a;
+  --tuwa-docs-text-tertiary: #77767a;
+  --tuwa-docs-border: #2b2c30;
+  --tuwa-docs-surface: #17181b;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STORYBOOK DOCS BLOCKS — lines, not shadows; square corners
+   The code blocks, the frames of the stories and the tables of the docs pages
+   are drawn with a line of 1 px. Storybook's own
+   blocks only: nothing inside a story is touched.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sbdocs .docblock-source,
+.sbdocs .sbdocs-preview,
+.sbdocs .docblock-argstable,
+.sbdocs .docblock-argstable-body,
+.sbdocs .docblock-code-toggle,
+.sbdocs pre:not(.sbdocs-preview pre):not(.docs-story pre) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.sbdocs .docblock-source,
+.sbdocs .sbdocs-preview {
+  border: 1px solid var(--tuwa-docs-border) !important;
+}
+
+.sbdocs code:not(.sbdocs-preview code):not(.docs-story code) {
+  border-radius: 0 !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -68,7 +88,7 @@
 
 .dark .sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a) {
   color: var(--tuwa-docs-primary);
-  text-decoration-color: rgba(56, 189, 248, 0.4);
+  text-decoration-color: rgba(96, 165, 250, 0.4);
 }
 
 .dark .sbdocs-content a:not(.sbdocs-preview a):not(.docs-story a):not(.tuwa-docs-footer a):hover {

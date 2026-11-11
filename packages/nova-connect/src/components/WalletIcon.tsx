@@ -132,7 +132,7 @@ const DefaultLoadingOverlay = ({ isLoading, className }: WalletIconLoadingOverla
   return (
     <div
       className={cn(
-        'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-full',
+        'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:rounded-[var(--tuwa-rounded-full)]',
         className,
       )}
       aria-hidden="true"
@@ -145,7 +145,7 @@ const DefaultErrorIndicator = ({ walletName, hasError }: WalletIconErrorIndicato
 
   return (
     <div
-      className="novacon:absolute novacon:top-0 novacon:right-0 novacon:w-2 novacon:h-2 novacon:bg-red-500 novacon:rounded-full"
+      className="novacon:absolute novacon:top-0 novacon:right-0 novacon:w-2 novacon:h-2 novacon:bg-[var(--tuwa-error-icon)] novacon:rounded-[var(--tuwa-rounded-full)]"
       title={`Failed to load icon for ${walletName}`}
       aria-hidden="true"
     />
@@ -184,7 +184,7 @@ export const WalletIcon = forwardRef<HTMLDivElement, WalletIconProps>(
   ) => {
     const labels = useNovaConnectLabels();
     const [hasError, setHasError] = useState(false);
-    // By the URL it will use: an icon it refuses left a blank pulsing circle for good
+    // By the URL it will use: an icon it refuses left a blank pulsing tile for good
     const [isLoading, setIsLoading] = useState(Boolean(toCleanIconUrl(icon)));
 
     // Extract custom components

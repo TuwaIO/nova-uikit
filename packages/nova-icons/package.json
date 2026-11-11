@@ -70,6 +70,16 @@
         "default": "./dist/tuwa/index.cjs"
       }
     },
+    "./brands": {
+      "import": {
+        "types": "./dist/brands/index.d.ts",
+        "default": "./dist/brands/index.js"
+      },
+      "require": {
+        "types": "./dist/brands/index.d.cts",
+        "default": "./dist/brands/index.cjs"
+      }
+    },
     "./motion.css": "./motion.css"
   },
   "publishConfig": {

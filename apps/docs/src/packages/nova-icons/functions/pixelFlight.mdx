@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Functions/pixelFlight" />
+
+# pixelFlight()
+
+> **pixelFlight**(`x`, `y`, `options?`): `CSSProperties`
+
+Defined in: [pixelIcon.tsx:88](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L88)
+
+Where a pixel of a picture that assembles itself comes from, and when: the CSS variables that `motion.css` reads for an
+element with `data-px` under an element with `data-motion="assemble"` (an icon with `motion="assemble"`, or any pixel
+drawing of yours). The pixel flies in to its place from a spot 3 to 7 cells away, in a direction of its own, after a
+delay of its own, so the pixels of a picture gather from all round it. The same pixel gets the same spot on every
+render: nothing random, and a server render matches the client.
+
+## Parameters
+
+### x
+
+`number`
+
+The column of the pixel on its grid.
+
+### y
+
+`number`
+
+The row of the pixel on its grid.
+
+### options?
+
+How far and over how long the pixels come.
+
+#### spread?
+
+`number` = `1`
+
+The distance in cells, times this (a grid of 64 might take 3); 1 by default.
+
+#### stagger?
+
+`number` = `220`
+
+The longest delay of a pixel, in ms; 220 by default.
+
+## Returns
+
+`CSSProperties`
+
+The `style` of the pixel: `--nova-px-x`, `--nova-px-y` (its start, in user units of the SVG) and
+`--nova-px-delay`.

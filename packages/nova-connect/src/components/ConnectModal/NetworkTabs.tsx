@@ -572,11 +572,15 @@ export const NetworkTabs = memo(
                   }) ??
                   cn(
                     'novacon:cursor-pointer novacon:flex novacon:items-center novacon:gap-2 novacon:px-4 novacon:py-2 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:overflow-hidden novacon:relative novacon:z-4',
-                    'novacon:hover:bg-[var(--tuwa-bg-muted)]',
-                    'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-border-primary)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+                    'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-bg-primary)]',
+                    // Paper and ink: the chosen tab is ink with paper text (the indicator under it), the others ink on paper.
+                    // Paper text only on the ink indicator of Nova, and once it has slid under the tab; on an indicator of the
+                    // host the chosen tab keeps the ink
                     tabData.isSelected
-                      ? 'novacon:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-accent)]'
-                      : 'novacon:text-[var(--tuwa-text-secondary)]',
+                      ? CustomIndicator === DefaultIndicator && !customization?.classNames?.indicator
+                        ? 'novacon:text-[var(--tuwa-bg-primary)] novacon:delay-150'
+                        : 'novacon:text-[var(--tuwa-text-primary)]'
+                      : 'novacon:text-[var(--tuwa-text-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-text-primary)]',
                   );
 
                 const iconContainerClasses =
@@ -586,11 +590,12 @@ export const NetworkTabs = memo(
                   customization?.classNames?.tabText?.({
                     isSelected: tabData.isSelected,
                     tabData,
-                  }) ?? 'novacon:block novacon:overflow-hidden novacon:whitespace-nowrap';
+                  }) ??
+                  'novacon:block novacon:overflow-hidden novacon:whitespace-nowrap novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em]';
 
                 const indicatorClasses =
                   customization?.classNames?.indicator?.({ tabData }) ??
-                  'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-bg-muted)] novacon:z-3 novacon:rounded-[var(--tuwa-rounded-corners)]';
+                  'novacon:absolute novacon:inset-0 novacon:bg-[var(--tuwa-text-primary)] novacon:z-3 novacon:rounded-[var(--tuwa-rounded-corners)]';
 
                 return (
                   <CustomTab key={tabKey} className={tabClasses} data-network={networkKey}>
@@ -620,7 +625,7 @@ export const NetworkTabs = memo(
                         {tabData.network ? (
                           <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
                         ) : (
-                          <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
+                          <div className="novacon:w-6 novacon:h-6">
                             {/* The size of its box: Heroicons filled it, the pixel icons are 1em square */}
                             <NovaSetIcon
                               solid="GlobeAltIcon"

@@ -2,22 +2,24 @@
  * @file The picture of the "About wallets" slides, drawn in the manner of the TUWA mark: thin lines in the text color, a bright
  * core in the accent color and node dots at the ends. One SVG for all the slides: on a change of slide the lines of one subject
  * are drawn away while those of the next are drawn in, and the core travels from one to the other. Inline, so it follows the
- * theme and weighs a few KB. The pixel look draws the same picture on a grid of 64: the subject gathers pixel by pixel and
- * the lights step along the lines.
+ * theme and weighs a few KB. The pixel look draws the same picture on a grid of 64: the subject assembles from its pixels and
+ * the lights run along the lines, all of it moving smoothly.
  */
 
-import { useNovaIcons, useNovaSounds } from '@tuwaio/nova-core';
+import { pixelFlight, useNovaIcons, useNovaSounds } from '@tuwaio/nova-core';
 import { motion, useReducedMotion } from 'framer-motion';
 import { type CSSProperties, useEffect, useState } from 'react';
 
 import {
-  byDiagonal,
+  ART_FLIGHT,
   type Cell,
   KEY,
   NETWORK as PIXEL_NETWORK,
   NODES as PIXEL_NODES,
   pathOf,
+  PIXEL_FIRST_START,
   PLATE,
+  type Subject,
   WALLET,
 } from './aboutWalletsPixels';
 
@@ -147,10 +149,13 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
     if (!reduce) play('aboutWallets');
   }, [slideId, reduce, play]);
 
-  // On the first drawing the subject waits for the plate and the network, and on a change it follows what is being drawn away
+  // On the first drawing the subject waits for the plate and the network, and on a change it follows what is being drawn away.
+  // The pixel plate and network are there at once, so its subject starts at once too: the wait read as a delay
   const start = hasChanged ? 0.15 : 0.55;
   const { look } = useNovaIcons();
-  if (look === 'pixel') return <PixelArt slideId={slideId} label={label} start={start} />;
+  if (look === 'pixel') {
+    return <PixelArt slideId={slideId} label={label} start={hasChanged ? 0.15 : PIXEL_FIRST_START} />;
+  }
   const isKey = slideId === 1;
   const isWallet = slideId === 2;
   const core = CORE[slideId] ?? CORE[1];
@@ -164,18 +169,19 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
       aria-label={label}
       className="novacon-art novacon:block novacon:h-full novacon:w-full novacon:overflow-visible novacon:text-[var(--tuwa-text-primary)]"
     >
-      {/* The plate */}
-      <motion.circle
-        cx={100}
-        cy={100}
-        r={99}
+      {/* The plate: square, as every frame of paper and ink */}
+      <motion.rect
+        x={1}
+        y={1}
+        width={198}
+        height={198}
         fill="var(--tuwa-bg-secondary)"
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: reduce ? 0 : 0.6 }}
       />
       <motion.path
-        d="M100 1a99 99 0 1 1 0 198a99 99 0 1 1 0-198"
+        d="M1 1H199V199H1Z"
         stroke="var(--tuwa-border-primary)"
         {...(reduce
           ? { initial: false as const, animate: { pathLength: 1, opacity: 1 } }
@@ -298,27 +304,25 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
   );
 }
 
-const PLATE_DISC = pathOf(PLATE.disc);
+const PLATE_FACE = pathOf(PLATE.face);
 const PLATE_RIM = pathOf(PLATE.rim);
 const NETWORK_PATHS = PIXEL_NETWORK.map(pathOf);
+/** Each pixel of a layer once: the lines of a subject cross, and a pixel drawn twice would fly in twice. */
+const unique = (cells: Cell[]) => [...new Map(cells.map((cell) => [`${cell.x},${cell.y}`, cell])).values()];
+
+/** The layers of a subject that assemble: the half-lit lines, the ink and the lit pixels, each pixel once. */
+const layersOf = (subject: Subject) => ({
+  paths: unique(subject.paths.flat()),
+  ink: unique(subject.ink),
+  lit: unique(subject.lit),
+});
+
 const SUBJECTS = {
-  1: {
-    subject: KEY,
-    ink: byDiagonal(KEY.ink),
-    lit: byDiagonal(KEY.lit),
-    paths: KEY.paths.map(byDiagonal),
-    seconds: [9],
-  },
-  2: {
-    subject: WALLET,
-    ink: byDiagonal(WALLET.ink),
-    lit: byDiagonal(WALLET.lit),
-    paths: WALLET.paths.map(byDiagonal),
-    seconds: [7, 8],
-  },
+  1: { subject: KEY, layers: layersOf(KEY), seconds: [9] },
+  2: { subject: WALLET, layers: layersOf(WALLET), seconds: [7, 8] },
 } as const;
 
-/** A light that steps along a line of pixels, slowly: each pixel lights up in its turn (`dist/index.css`). */
+/** A light that runs along a line of pixels, slowly: each pixel lights up in its turn and fades (`dist/index.css`). */
 const PixelFlow = ({
   cells,
   seconds,
@@ -350,11 +354,14 @@ const PixelFlow = ({
 );
 
 /**
- * The pixel picture: the plate, the network with lights stepping along it and its nodes twinkling, the subject of the slide
- * gathering pixel by pixel from the top left (again on a change of slide), and its core stepping over from the last one. All
- * of it is CSS of `dist/index.css`, still with `prefers-reduced-motion`.
+ * The pixel picture: the plate, the network with lights running along it and its nodes twinkling, the subject of the slide
+ * assembling from its pixels (again on a change of slide: each pixel flies in to its place, as in every pixel drawing of
+ * Nova), and its core gliding over from the last one. All of it is CSS of `dist/index.css` and of the motions of
+ * `@tuwaio/nova-icons`, still with `prefers-reduced-motion`.
+ *
+ * @internal
  */
-function PixelArt({ slideId, label, start }: { slideId: number; label: string; start: number }) {
+export function PixelArt({ slideId, label, start }: { slideId: number; label: string; start: number }) {
   const shown = SUBJECTS[slideId as 1 | 2] ?? SUBJECTS[1];
   const { core } = shown.subject;
   return (
@@ -363,10 +370,10 @@ function PixelArt({ slideId, label, start }: { slideId: number; label: string; s
       shapeRendering="crispEdges"
       role="img"
       aria-label={label}
-      style={{ '--art-start': `${start}s` } as CSSProperties}
+      style={{ '--art-start': `${start}s`, '--nova-px-start': `${start}s` } as CSSProperties}
       className="novacon-art novacon-art-px novacon:block novacon:h-full novacon:w-full novacon:text-[var(--tuwa-text-primary)]"
     >
-      <path className="novacon-art-px-plate" d={PLATE_DISC} fill="var(--tuwa-bg-secondary)" />
+      <path className="novacon-art-px-plate" d={PLATE_FACE} fill="var(--tuwa-bg-secondary)" />
       <path className="novacon-art-px-plate" d={PLATE_RIM} fill="var(--tuwa-border-primary)" />
 
       {NETWORK_PATHS.map((d) => (
@@ -389,41 +396,49 @@ function PixelArt({ slideId, label, start }: { slideId: number; label: string; s
       ))}
 
       <g className="novacon-art-px-float">
-        {/* A new subject is a new group: it gathers again from the top left */}
-        <g key={slideId}>
-          {shown.paths.map((steps, index) =>
-            steps.map(({ step, d }) => (
-              <path
-                key={`${index}-${step}`}
-                className="novacon-art-px-in novacon-art-px-path"
-                d={d}
-                style={{ '--d': step } as CSSProperties}
-              />
-            )),
-          )}
+        {/* A new subject is a new group: it assembles again */}
+        <g key={slideId} data-motion="assemble">
+          {shown.layers.paths.map(({ x, y }) => (
+            <rect
+              key={`path-${x}-${y}`}
+              className="novacon-art-px-path"
+              x={x}
+              y={y}
+              width={1}
+              height={1}
+              data-px=""
+              style={pixelFlight(x, y, ART_FLIGHT)}
+            />
+          ))}
           {shown.subject.paths.map((cells, index) => (
             <PixelFlow key={index} cells={cells} seconds={shown.seconds[index] ?? 8} delay={2 + index * 2} />
           ))}
-          {shown.ink.map(({ step, d }) => (
-            <path
-              key={step}
-              className="novacon-art-px-in"
-              d={d}
+          {shown.layers.ink.map(({ x, y }) => (
+            <rect
+              key={`ink-${x}-${y}`}
+              x={x}
+              y={y}
+              width={1}
+              height={1}
               fill="currentColor"
-              style={{ '--d': step } as CSSProperties}
+              data-px=""
+              style={pixelFlight(x, y, ART_FLIGHT)}
             />
           ))}
-          {shown.lit.map(({ step, d }) => (
-            <path
-              key={step}
-              className="novacon-art-px-in"
-              d={d}
+          {shown.layers.lit.map(({ x, y }) => (
+            <rect
+              key={`lit-${x}-${y}`}
+              x={x}
+              y={y}
+              width={1}
+              height={1}
               fill="var(--tuwa-text-accent)"
-              style={{ '--d': step + 12 } as CSSProperties}
+              data-px=""
+              style={pixelFlight(x, y, ART_FLIGHT)}
             />
           ))}
         </g>
-        {/* The core steps from the last subject to this one */}
+        {/* The core glides from the last subject to this one */}
         {/* Around (3, 3) of its own: a glow of 8 pixels, the core of 4 with its corners cut, a white spark of 2 */}
         <g className="novacon-art-px-core" style={{ transform: `translate(${core.x - 3}px, ${core.y - 3}px)` }}>
           <path

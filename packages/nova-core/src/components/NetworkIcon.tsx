@@ -23,7 +23,7 @@ export interface NetworkIconProps {
    * mono icon stays an inline SVG, so that its `currentColor` follows the theme.
    */
   variant?: 'background' | 'branded' | 'mono';
-  /** Classes merged with the default classes (full size of the parent, rounded). */
+  /** Classes merged with the default classes (full size of the parent, corners of `--tuwa-rounded-full`, square by default). */
   className?: string;
 }
 
@@ -35,7 +35,7 @@ const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
  * icon at a time (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
  * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
  * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet draw the mark of their mainnet in white on a
- * `--tuwa-testnet-icons` circle. An icon without a `mono` style keeps its own drawing on that background instead.
+ * `--tuwa-testnet-icons` tile (square, `--tuwa-rounded-full`). An icon without a `mono` style keeps its own drawing on that background instead.
  *
  * Side effect: a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common` does not list.
  *
@@ -53,7 +53,10 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
   const isTestnet = (isStringId && isSolanaDev(chainId)) || chainInfo.name.toLowerCase().includes('testnet');
   const testnetFill = isTestnet ? TESTNET_FILL : undefined;
 
-  const componentClassName = cn('novacore:w-full novacore:h-full novacore:rounded-full', className);
+  const componentClassName = cn(
+    'novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)]',
+    className,
+  );
 
   // Resolve icon ID for the library
   const iconId = typeof networkId === 'string' ? networkId : chainInfo.filePath;
@@ -74,7 +77,7 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
     return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />;
   }
 
-  // In the shape of a circle and one color, whatever the mark: each network brought the shape and the color of its background,
+  // In one shape (the tile of `--tuwa-rounded-full`) and one color, whatever the mark: each network brought the shape and the color of its background,
   // a square here and an octagon there. Not an `<img>`: a mono icon draws in `currentColor`. Scaled, as some parents force the
   // size of an SVG in them
   if (isTestnet && variant !== 'mono' && icon.variants?.includes('mono')) {

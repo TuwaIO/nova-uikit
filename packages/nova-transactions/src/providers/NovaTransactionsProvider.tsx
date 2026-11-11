@@ -437,7 +437,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
                 icon={false}
                 closeButton={CustomizedCloseButton}
                 containerId={toastContainerId}
-                toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
+                toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0 novatx:!rounded-[var(--tuwa-rounded-corners)]"
                 {...toastProps}
                 style={hidesToasts ? { ...toastProps.style, display: 'none' } : toastProps.style}
               />
@@ -471,7 +471,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
                 closeOnClick={false}
                 icon={false}
                 closeButton={CustomizedCloseButton}
-                toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0"
+                toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0 novatx:!rounded-[var(--tuwa-rounded-corners)]"
               />
             )}
 

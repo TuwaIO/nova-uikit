@@ -7,8 +7,9 @@
     from {
       transform: translateX(-100%);
     }
+    /* The glint is a quarter of the strip: 400% of its width takes it past the end before it starts again */
     to {
-      transform: translateX(300%);
+      transform: translateX(400%);
     }
   }
 

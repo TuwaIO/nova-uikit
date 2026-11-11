@@ -48,7 +48,7 @@ export function TokenIconLazy({
         alternativeSrcs={alternativeSrcs}
         fallbackContent={key.charAt(0)}
         alt={key}
-        className={cn('novacore:w-full novacore:h-full novacore:rounded-full', className)}
+        className={cn('novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)]', className)}
       />
     );
   }
@@ -57,13 +57,13 @@ export function TokenIconLazy({
   if (drawnVariant === 'mono') {
     return createElement(Icon, {
       variant: drawnVariant,
-      className: cn('novacore:w-full novacore:h-full novacore:rounded-full', className),
+      className: cn('novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)]', className),
     });
   }
   return (
     <SvgToImg
       iconId={`token-${key}-${drawnVariant}`}
-      className={cn('novacore:w-full novacore:h-full novacore:rounded-full', className)}
+      className={cn('novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)]', className)}
     >
       {(ref) => createElement(Icon, { ref, variant: drawnVariant })}
     </SvgToImg>

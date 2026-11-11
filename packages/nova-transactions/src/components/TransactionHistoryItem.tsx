@@ -160,7 +160,7 @@ export function TransactionHistoryItem<T extends Transaction>({
         if (canViewDetails) onSelectTx?.();
       }}
       className={cn(
-        'novatx:flex novatx:flex-col novatx:gap-2 novatx:border-b novatx:border-[var(--tuwa-border-secondary)] novatx:p-3 novatx:transition-colors novatx:last:border-b-0',
+        'novatx:flex novatx:flex-col novatx:gap-2 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:p-3 novatx:transition-colors novatx:last:border-b-0',
         onSelectTx && canViewDetails && 'novatx:cursor-pointer novatx:hover:bg-[var(--tuwa-bg-secondary)]',
         classNames?.container,
         className,
@@ -171,7 +171,7 @@ export function TransactionHistoryItem<T extends Transaction>({
           <div
             className={cn(
               // A line, not a fill: the band of the muted color was thick, and on a light theme it could hardly be seen
-              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:border novatx:border-[color-mix(in_srgb,var(--tuwa-text-tertiary)_55%,transparent)]',
+              'novatx:flex novatx:h-10 novatx:w-10 novatx:flex-shrink-0 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-full)] novatx:border novatx:border-[color-mix(in_srgb,var(--tuwa-text-tertiary)_55%,transparent)]',
               classNames?.iconWrapper,
             )}
           >

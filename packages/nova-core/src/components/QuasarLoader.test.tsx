@@ -68,7 +68,7 @@ describe('QuasarLoader, classic', () => {
   });
 });
 
-// The owner, 2026-11-11: what Nova draws has a pixel variant, its look by default, and the look of today with Heroicons
+// What Nova draws has a pixel variant, its look by default, and the look of today with Heroicons
 describe('QuasarLoader, pixel', () => {
   const svgOf = (tree: unknown) => elements(tree).find((element) => element.type === 'svg')!;
   const rectsOf = (tree: unknown, className: string) =>

@@ -94,7 +94,7 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   motionProps?: MotionProps;
   /** Components that replace the default parts. */
   components?: {
-    /** The strip and the wash of the status color along the top. */
+    /** The strip of the status color along the top. */
     StatusEdge?: ComponentType<StatusEdgeProps>;
     /** The header with the title and the close button. */
     Header?: ComponentType<TrackingTxModalHeaderProps>;
@@ -113,7 +113,7 @@ export type TrackingTxModalCustomization<T extends Transaction> = {
   classNames?: {
     /** Classes for the outer container */
     container?: string;
-    /** Classes for the strip and the wash of the status color */
+    /** Classes for the strip of the status color */
     statusEdge?: string;
     /** Classes for the header section */
     header?: string;
@@ -320,7 +320,7 @@ export function TrackingTxModal<T extends Transaction>({
           {...customization?.motionProps}
           className={cn('novatx:relative novatx:flex novatx:w-full novatx:flex-col', classNames?.container, className)}
         >
-          {/* Above the sticky header, which is opaque: under it no strip or wash would ever show */}
+          {/* Above the sticky header, which is opaque: under it the strip would never show */}
           <CStatusEdge
             tone={tone}
             progress={activeTx && progressOf(activeTx)}
@@ -487,7 +487,7 @@ const MainActionButton = ({
         type="button"
         onClick={onRetry}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-t-[var(--tuwa-rounded-corners)] novatx:sm:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
+          'tuwa-solid novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-button-primary-bg)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-4 novatx:py-2 novatx:min-h-[36px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-colors novatx:hover:border-[var(--tuwa-button-primary-bg-hover)] novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
           classNames?.retryButton,
         )}
       >
@@ -501,7 +501,7 @@ const MainActionButton = ({
         type="button"
         onClick={onOpenAllTransactions}
         className={cn(
-          'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)]',
+          'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-strong)] novatx:bg-transparent novatx:px-4 novatx:py-2 novatx:min-h-[36px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-standart-button-hover)]',
           classNames?.allTransactionsButton,
         )}
       >
@@ -539,7 +539,7 @@ const DefaultFooter = ({
             type="button"
             onClick={onSpeedUp}
             className={cn(
-              'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+              'novatx:cursor-pointer novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
               classNames?.speedUpButton,
             )}
           >
@@ -551,7 +551,7 @@ const DefaultFooter = ({
             type="button"
             onClick={onCancel}
             className={cn(
-              'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+              'novatx:cursor-pointer novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
               classNames?.cancelButton,
             )}
           >
@@ -574,7 +574,7 @@ const DefaultFooter = ({
           onClick={onClose}
           disabled={isProcessing && !canReplace}
           className={cn(
-            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-muted)] novatx:px-4 novatx:py-2 novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-border-primary)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
+            'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-strong)] novatx:bg-transparent novatx:px-4 novatx:py-2 novatx:min-h-[36px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-primary)] novatx:transition-colors novatx:hover:bg-[var(--tuwa-standart-button-hover)] novatx:disabled:cursor-not-allowed novatx:disabled:opacity-50',
             classNames?.closeModalButton,
           )}
         >

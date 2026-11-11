@@ -6,6 +6,7 @@ import * as heroSolid from '@heroicons/react/24/solid';
 import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
+import * as brands from './brands';
 import * as root from './index';
 import * as outline from './outline';
 import * as solid from './solid';
@@ -18,7 +19,7 @@ const iconsOf = (module: Record<string, unknown>) =>
   Object.entries(module).filter(([name]) => /^[A-Z]\w*Icon$/.test(name));
 
 // The Heroicons that the TUWA ecosystem imports on any branch (Nova, Quasar, quasar-client, the docs and docs-ui, the
-// website, cosmos and the templates, counted 2026-11-11): the set has every one of them, so that changing the import is
+// website, cosmos and the templates): the set has every one of them, so that changing the import is
 // the whole replacement
 const USED_OUTLINE = `AdjustmentsHorizontal ArchiveBox ArrowDownCircle ArrowTopRightOnSquare DocumentMagnifyingGlass
   ExclamationCircle Pencil ShoppingBag ArrowDown ArrowDownTray ArrowLeft ArrowLeftStartOnRectangle
@@ -38,7 +39,7 @@ const USED_SOLID = `ArrowDown ArrowPath ArrowUp Beaker CheckCircle ChevronDown C
 const names = (list: string) => list.split(/\s+/).map((name) => `${name}Icon`);
 
 describe('the icons of the set', () => {
-  // The owner, 2026-11-11: the library works as Heroicons do, with the same names
+  // The library works as Heroicons do, with the same names
   it('are named exactly as their Heroicons, outline and solid', () => {
     for (const [name] of iconsOf(outline)) expect(heroOutline, name).toHaveProperty(name);
     for (const [name] of iconsOf(solid)) expect(heroSolid, name).toHaveProperty(name);
@@ -62,7 +63,7 @@ describe('the icons of the set', () => {
   });
 });
 
-// The owner, 2026-11-11: icons of TUWA's own for the Transactions and Webhooks of the Quasar dashboard, beside the
+// Icons of TUWA's own for the Transactions and Webhooks of the Quasar dashboard, beside the
 // Heroicons names and never in place of one
 describe('the icons of TUWA', () => {
   it('are the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
@@ -86,6 +87,37 @@ describe('the icons of TUWA', () => {
   });
 });
 
+// The marks of the services TUWA links to (the website footer, docs-ui, the Quasar dashboard),
+// in pixels like the rest; Heroicons has no marks of brands
+describe('the icons of brands', () => {
+  it('are the marks TUWA links to, in one color', () => {
+    expect(iconsOf(brands).map(([name]) => name)).toEqual([
+      'DiscordIcon',
+      'GitHubIcon',
+      'NpmIcon',
+      'TelegramIcon',
+      'XIcon',
+    ]);
+    for (const [name, Icon] of iconsOf(brands)) {
+      const svg = (Icon as (props: object) => ReactElement)({}) as unknown as Node & { props: { children?: unknown } };
+      expect(svg.props.viewBox, name).toBe('0 0 16 16');
+      // A mark is drawn in the color of the text, not lit with the accent of the theme
+      expect(JSON.stringify(svg.props.children), name).not.toContain('--tuwa-icon-accent');
+    }
+  });
+
+  it('have no Heroicons name, so that the X of X never stands in for a close mark', () => {
+    for (const [name] of iconsOf(brands)) {
+      expect(heroOutline, name).not.toHaveProperty(name);
+      expect(heroSolid, name).not.toHaveProperty(name);
+    }
+  });
+
+  it('are in the main entry too', () => {
+    for (const [name, Icon] of iconsOf(brands)) expect(root[name as keyof typeof root], name).toBe(Icon);
+  });
+});
+
 describe('the package', () => {
   const pkg = JSON.parse(readFileSync(join(PACKAGE, 'package.json'), 'utf8')) as {
     exports: Record<string, Record<string, string>>;
@@ -96,7 +128,16 @@ describe('the package', () => {
   // micro (16) solid ones drawn once on the same 16 x 16 grid
   it('has the import paths of Heroicons, all solid paths leading to the one solid set', () => {
     expect(Object.keys(pkg.exports)).toEqual(
-      expect.arrayContaining(['.', './24/outline', './24/solid', './20/solid', './16/solid', './tuwa', './motion.css']),
+      expect.arrayContaining([
+        '.',
+        './24/outline',
+        './24/solid',
+        './20/solid',
+        './16/solid',
+        './tuwa',
+        './brands',
+        './motion.css',
+      ]),
     );
     expect(pkg.exports['./20/solid']).toEqual(pkg.exports['./24/solid']);
     expect(pkg.exports['./16/solid']).toEqual(pkg.exports['./24/solid']);
@@ -119,18 +160,18 @@ describe('the package', () => {
     expect(pkg.sideEffects).toEqual(['*.css']);
   });
 
-  // The owner, 2026-11-11: each motion plays once, in plain CSS, and never for a reader who asks for less motion
+  // Each motion plays once, in plain CSS, and never for a reader who asks for less motion
   it('animates in plain CSS, each motion once, and not at all under reduced motion', () => {
     const css = readFileSync(join(PACKAGE, 'motion.css'), 'utf8');
-    expect(css).toMatch(/@keyframes nova-icon-gather/);
+    expect(css).toMatch(/@keyframes nova-icon-fly/);
     expect(css).toMatch(/@keyframes nova-icon-breathe/);
-    expect(css).not.toMatch(/infinite/);
-    for (let step = 1; step <= 30; step++) expect(css, `step ${step}`).toContain(`[data-step='${step}']`);
-    // A grid larger than 16 x 16 has diagonals past 30: they come with the last one, not first; the first one waits for none
-    const fallback = css.indexOf("svg[data-motion='assemble'] [data-step] {");
-    expect(css.slice(fallback, css.indexOf('}', fallback))).toContain('animation-delay: 360ms');
-    expect(fallback).toBeLessThan(css.indexOf("[data-step='1']"));
-    expect(css).toMatch(/\[data-step='0'\] \{\s*animation-delay: 0ms;/);
+    expect(css).not.toMatch(/infinite|step-end|steps\(/);
+    // A pixel flies from its own spot (`pixelFlight`), after its own delay, once, with a little overshoot
+    const fly = css.slice(css.indexOf("[data-motion='assemble'] [data-px] {"));
+    expect(fly.slice(0, fly.indexOf('}'))).toMatch(/animation: nova-icon-fly \d+ms cubic-bezier\([^)]*\) both;/);
+    expect(fly.slice(0, fly.indexOf('}'))).toContain('var(--nova-px-delay');
+    const keyframes = css.slice(css.indexOf('@keyframes nova-icon-fly'));
+    expect(keyframes.slice(0, keyframes.indexOf('}\n}'))).toContain('translate(var(--nova-px-x');
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)[^}]*\{[^}]*animation: none/);
   });
 });

@@ -247,7 +247,7 @@ const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProp
 };
 
 /**
- * An animated status icon: an SVG path, drawn with `framer-motion`, in a circle colored with the
+ * An animated status icon: an SVG path, drawn with `framer-motion`, in a tile (square, `--tuwa-rounded-full`) colored with the
  * `--tuwa-<colorVar>-text` variable. The connect button shows it after a transaction of the connected wallet succeeded,
  * failed or was replaced. Pass the path data as children. Animations can be turned off with
  * `customization.config.disableAnimation` or `reduceMotion`.
@@ -316,7 +316,7 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const containerClasses = customization?.classNames?.container
       ? customization.classNames.container({ txStatus, colorVar })
       : cn(
-          'novacon:w-6 novacon:h-6 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center novacon:shadow-sm',
+          'novacon:w-6 novacon:h-6 novacon:rounded-[var(--tuwa-rounded-full)] novacon:flex novacon:items-center novacon:justify-center',
           `novacon:text-[var(--tuwa-${colorVar}-text)] novacon:bg-[var(--tuwa-bg-primary)]`,
           className,
         );
@@ -350,7 +350,7 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const shouldReduceMotion = customization?.config?.reduceMotion ?? false;
     const isAnimationDisabled = customization?.config?.disableAnimation ?? false;
 
-    // Create SVG element with custom props. The pixel look draws the marks of nova-core pixel by pixel, unless the svg is
+    // Create SVG element with custom props. In the pixel look the marks of nova-core assemble from their pixels, unless the svg is
     // customized
     const isStill = isAnimationDisabled || shouldReduceMotion;
     const pixelMark =

@@ -172,7 +172,7 @@ const DefaultTitle = ({ title, titleId, className }: ToastErrorTitleProps) => {
     <p
       id={titleId}
       className={cn(
-        'novacon:text-sm novacon:font-semibold novacon:truncate novacon:text-[var(--tuwa-error-text)]',
+        'novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:truncate novacon:text-[var(--tuwa-error-text)]',
         className,
       )}
       role="heading"
@@ -328,7 +328,7 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
     const containerClasses = customization?.classNames?.container
       ? customization.classNames.container({ hasTitle: Boolean(title), hasError: Boolean(rawError) })
       : cn(
-          'novacon:bg-[var(--tuwa-bg-primary)] novacon:p-4 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:w-full',
+          'tuwa-scanlines novacon:bg-[var(--tuwa-bg-primary)] novacon:p-4 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:w-full',
           'novacon:border novacon:border-[var(--tuwa-border-primary)]',
           className,
         );
@@ -347,13 +347,14 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       ? customization.classNames.button({ isCopied, disabled })
       : cn(
           'novacon:cursor-pointer novacon:mt-2 novacon:font-mono novacon:text-xs novacon:font-medium novacon:inline-flex novacon:items-center novacon:space-x-1.5',
-          'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-error-text)] novacon:focus:ring-opacity-50 novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
+          'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-error-text)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
           'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:px-2 novacon:py-1 novacon:transition-all novacon:duration-200',
-          'novacon:hover:bg-[var(--tuwa-error-text)] novacon:hover:bg-opacity-10',
-          'novacon:active:bg-[var(--tuwa-error-text)] novacon:active:bg-opacity-20',
+          'novacon:hover:bg-[color-mix(in_srgb,var(--tuwa-error-text)_10%,transparent)]',
+          'novacon:active:bg-[color-mix(in_srgb,var(--tuwa-error-text)_20%,transparent)]',
           'novacon:text-[var(--tuwa-error-text)] novacon:hover:text-[var(--tuwa-error-text)]',
           {
-            'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-10 novacon:text-[var(--tuwa-success-text)]':
+            // A frame, not a tint: the success text on a tint of itself read at 4.1:1
+            'novacon:outline novacon:outline-1 novacon:outline-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)] novacon:text-[var(--tuwa-success-text)]':
               isCopied,
           },
         );

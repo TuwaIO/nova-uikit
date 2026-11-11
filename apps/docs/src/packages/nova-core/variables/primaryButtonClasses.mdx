@@ -1,0 +1,14 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Variables/primaryButtonClasses" />
+
+# primaryButtonClasses
+
+> `const` **primaryButtonClasses**: `"tuwa-solid novacore:cursor-pointer novacore:rounded-[var(--tuwa-rounded-corners)] novacore:border novacore:border-[var(--tuwa-button-primary-bg)] novacore:bg-[var(--tuwa-button-primary-bg)] novacore:px-3 novacore:py-2 novacore:flex novacore:items-center novacore:justify-center novacore:gap-1.5 novacore:text-xs novacore:font-mono novacore:font-bold novacore:uppercase novacore:tracking-[0.12em] novacore:text-[var(--tuwa-text-on-accent)] novacore:transition-colors novacore:hover:border-[var(--tuwa-button-primary-bg-hover)] novacore:hover:bg-[var(--tuwa-button-primary-bg-hover)] novacore:disabled:cursor-not-allowed novacore:disabled:opacity-50 novacore:min-h-[36px]"` = `'tuwa-solid novacore:cursor-pointer novacore:rounded-[var(--tuwa-rounded-corners)] novacore:border novacore:border-[var(--tuwa-button-primary-bg)] novacore:bg-[var(--tuwa-button-primary-bg)] novacore:px-3 novacore:py-2 novacore:flex novacore:items-center novacore:justify-center novacore:gap-1.5 novacore:text-xs novacore:font-mono novacore:font-bold novacore:uppercase novacore:tracking-[0.12em] novacore:text-[var(--tuwa-text-on-accent)] novacore:transition-colors novacore:hover:border-[var(--tuwa-button-primary-bg-hover)] novacore:hover:bg-[var(--tuwa-button-primary-bg-hover)] novacore:disabled:cursor-not-allowed novacore:disabled:opacity-50 novacore:min-h-[36px]'`
+
+Defined in: [utils/classes.ts:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/utils/classes.ts#L15)
+
+Classes of the main button of Nova: one solid color (`--tuwa-button-primary-bg`, `--tuwa-text-on-accent`), square, a
+monospace label in capitals with spacing, the same size as [standardButtonClasses](?path=/docs/packages-nova-core-variables-standardbuttonclasses--docs). `tuwa-solid` marks it as filled:
+the icons of an action in it (a link to another site, an exit, a bin) keep the color of its label under the pointer.
+Give `tuwa-solid` to a filled button of your own for the same.

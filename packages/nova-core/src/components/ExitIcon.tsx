@@ -34,7 +34,7 @@ export function ExitIcon({ className, look }: ExitIconProps) {
         {...PIXEL_SVG}
         fill="currentColor"
         aria-hidden="true"
-        className={cn('novacore:block novacore:overflow-visible', className)}
+        className={cn('tuwa-exit-icon novacore:block novacore:overflow-visible', className)}
       >
         <path d={EXIT_DOOR_PATH} />
         <path className="tuwa-exit-arrow-px" d={EXIT_ARROW_PATH} />
@@ -50,7 +50,7 @@ export function ExitIcon({ className, look }: ExitIconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={cn('novacore:block novacore:overflow-visible', className)}
+      className={cn('tuwa-exit-icon novacore:block novacore:overflow-visible', className)}
     >
       <path d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15" />
       <g className="tuwa-exit-arrow">

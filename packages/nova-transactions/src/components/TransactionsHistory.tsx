@@ -202,13 +202,16 @@ function PaginationErrorIndicator({ className, iconClassName }: { className?: st
       aria-live="assertive"
     >
       {look === 'pixel' ? (
-        <NovaSetIcon outline="XCircleIcon" className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)} />
+        <NovaSetIcon
+          outline="XCircleIcon"
+          className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', iconClassName)}
+        />
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)}
+          className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', iconClassName)}
         >
           <path
             fillRule="evenodd"
@@ -417,7 +420,7 @@ export function TransactionsHistory<T extends Transaction>({
           className={cn(
             // Positioned: a screen reader text of a row is `absolute`, and it escaped an unpositioned list, which stretched the
             // whole window, with a second scroll and an empty band under its footer
-            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
+            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
@@ -497,7 +500,7 @@ export function TransactionsHistory<T extends Transaction>({
       {customization?.title && (
         <h3
           className={cn(
-            'novatx:text-lg novatx:font-bold novatx:font-mono novatx:text-[var(--tuwa-text-primary)]',
+            'novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)]',
             customization?.classNames?.titleText,
           )}
         >

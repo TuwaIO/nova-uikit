@@ -34,7 +34,7 @@ export function TrashIcon({ className, look }: TrashIconProps) {
         {...PIXEL_SVG}
         fill="currentColor"
         aria-hidden="true"
-        className={cn('novacore:block novacore:overflow-visible', className)}
+        className={cn('tuwa-trash-icon novacore:block novacore:overflow-visible', className)}
       >
         <path d={TRASH_CAN_PATH} />
         <path className="tuwa-trash-lid-px" d={TRASH_LID_PATH} />
@@ -50,7 +50,7 @@ export function TrashIcon({ className, look }: TrashIconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={cn('novacore:block novacore:overflow-visible', className)}
+      className={cn('tuwa-trash-icon novacore:block novacore:overflow-visible', className)}
     >
       <path d="M19.228 5.79 18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79" />
       <path d="M14.74 9l-.346 9M9.606 18 9.26 9" />

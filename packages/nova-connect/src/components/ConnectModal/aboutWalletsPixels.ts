@@ -116,8 +116,11 @@ function box(x: number, y: number, w: number, h: number): Cell[] {
   return cells;
 }
 
-/** The plate: a disc and its rim. */
-export const PLATE = { disc: ring(32, 32, 31.6, 32), rim: ring(32, 32, 31.6, 1) };
+/** The plate: a square as large as the grid, as every frame of paper and ink, and its rim, the edge of it. */
+export const PLATE = {
+  face: block(0, 0, N),
+  rim: block(0, 0, N).filter(({ x, y }) => x === 0 || y === 0 || x === N - 1 || y === N - 1),
+};
 
 /** The network behind the subject: four lines, each in order from its first point, and the nodes at their ends. */
 export const NETWORK: Cell[][] = [
@@ -208,21 +211,25 @@ export const WALLET: Subject = {
 };
 
 /**
- * The pixels split by diagonal (the sum of x and y), for a picture that gathers from the top left.
- *
- * @param cells - The pixels.
- * @returns For each diagonal that has pixels, its number and its path data.
- */
-export function byDiagonal(cells: Cell[]): { step: number; d: string }[] {
-  const steps = new Map<number, string>();
-  for (const { x, y } of cells) steps.set(x + y, `${steps.get(x + y) ?? ''}M${x} ${y}h1v1h-1z`);
-  return [...steps].sort(([a], [b]) => a - b).map(([step, d]) => ({ step, d }));
-}
-
-/**
  * Path data of pixels.
  *
  * @param cells - The pixels.
  * @returns One square per pixel.
  */
 export const pathOf = (cells: Cell[]) => cells.map(({ x, y }) => `M${x} ${y}h1v1h-1z`).join('');
+
+/**
+ * How the pixels of a subject fly in (`pixelFlight`): from three times as far as those of an icon, on a grid of 64, and
+ * over a longer while, as there are many of them.
+ *
+ * @internal
+ */
+export const ART_FLIGHT = { spread: 3, stagger: 600 } as const;
+
+/**
+ * When the subject of the pixel picture starts to assemble on the first open, in seconds: at once. The plate and the
+ * network of the pixel look are there from the start (the classic look waits for its lines to be drawn first).
+ *
+ * @internal
+ */
+export const PIXEL_FIRST_START = 0.1;

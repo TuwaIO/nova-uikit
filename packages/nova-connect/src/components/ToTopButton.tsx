@@ -221,6 +221,8 @@ export const ToTopButton = forwardRef<HTMLButtonElement, ToTopButtonProps>(
       ? customization.classNames.button({ disabled, hasOnClick: Boolean(onClick) })
       : cn(
           'novacon:flex novacon:w-full novacon:h-6 novacon:items-center novacon:justify-center',
+          // A cell of the list: a line of 1 px parts it from the rows under it
+          'novacon:border-b novacon:border-[var(--tuwa-border-primary)]',
           'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
           'novacon:transition-colors novacon:duration-200',
           'novacon:hover:bg-[var(--tuwa-standart-button-hover)] novacon:hover:text-[var(--tuwa-text-secondary)]',

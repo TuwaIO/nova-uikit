@@ -60,7 +60,7 @@ describe('playNovaSound', () => {
     vi.restoreAllMocks();
   });
 
-  // The owner's decision: an update of the package must not make somebody else's site start making noise
+  // An update of the package must not make somebody else's site start making noise
   it.each([undefined, false])('stays silent unless it is asked: %s', (config) => {
     playNovaSound('connect', config);
     expect(started).not.toHaveBeenCalled();
@@ -107,20 +107,20 @@ describe('playNovaSound', () => {
     expect(started).not.toHaveBeenCalled();
   });
 
-  // Owner, 2026-11-07: a wallet thrown away sounds like one
+  // A wallet thrown away sounds like one
   it('gives a removed wallet the rush of its fall as well as its tones', () => {
     playNovaSound('remove', true);
     expect(rushed).toHaveBeenCalledOnce();
     expect(started).toHaveBeenCalled();
   });
 
-  // Owner, 2026-11-07: noise under them sounded like crumpled paper. The rush is for the bin alone
+  // Noise under them sounded like crumpled paper. The rush is for the bin alone
   it.each(NOVA_SOUND_NAMES.filter((name) => name !== 'remove'))('%s has no rush of noise', (name: NovaSoundName) => {
     playNovaSound(name, true);
     expect(rushed).not.toHaveBeenCalled();
   });
 
-  // Owner, 2026-11-07: muffled, and no chord of them when one dialog replaces another
+  // Muffled, and no chord of them when one dialog replaces another
   it('lets a dialog that opens give way to the sound that came with it', () => {
     playNovaSound('addWallet', true);
     const before = started.mock.calls.length;

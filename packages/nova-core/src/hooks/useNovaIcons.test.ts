@@ -25,7 +25,7 @@ import { heroicons } from '../heroicons';
 import { NOVA_OUTLINE_ICONS, NOVA_SOLID_ICONS, pixelIcons, useNovaIcons } from './useNovaIcons';
 
 describe('the icons of Nova', () => {
-  // The owner, 2026-11-11: Nova is pixel by default, and returns to its look of today when heroicons are given
+  // Nova is pixel by default, and returns to its look of today when heroicons are given
   it('are the pixel ones of @tuwaio/nova-icons without a provider', () => {
     given.value = undefined;
     const icons = useNovaIcons();

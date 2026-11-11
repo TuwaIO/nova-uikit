@@ -19,25 +19,25 @@ function iconOf(chainId: number | string) {
   return { fill: image.props.firstPathFill, filePath: (icon as Element).props.filePath as string };
 }
 
-/** The circle of a testnet, and the mark in it. */
+/** The tile of a testnet, and the mark in it. */
 function testnetMarkOf(chainId: number | string) {
-  const circle = NetworkIcon({ chainId }) as Element;
-  const scale = circle.props.children as Element;
+  const tile = NetworkIcon({ chainId }) as Element;
+  const scale = tile.props.children as Element;
   const suspense = scale.props.children as Element;
   const mark = suspense.props.children as Element;
   return {
-    className: circle.props.className as string,
+    className: tile.props.className as string,
     scaleClassName: scale.props.className as string,
     variant: mark.props.variant,
     filePath: mark.props.filePath as string,
   };
 }
 
-// The networks of the checkout presets and of the Cosmos playground. Owner, 2026-11-07: each testnet brought the shape and the
-// color of its mainnet's background, so they are one white mark on one grey circle now
+// The networks of the checkout presets and of the Cosmos playground. Each testnet brought the shape and the
+// color of its mainnet's background, so they are one white mark on one grey tile now (square)
 describe('NetworkIcon of a testnet', () => {
-  // Owner, 2026-11-07: a button that sets the size of every svg in it, as the Isometric keys do, pulled the mark to a corner
-  it('keeps the mark in the middle of the circle, whatever size a host gives the svg', () => {
+  // A button that sets the size of every svg in it, as the Isometric keys do, pulled the mark to a corner
+  it('keeps the mark in the middle of the tile, whatever size a host gives the svg', () => {
     const { scaleClassName } = testnetMarkOf(11155111);
     expect(scaleClassName).toContain('novacore:items-center');
     expect(scaleClassName).toContain('novacore:justify-center');
@@ -52,13 +52,13 @@ describe('NetworkIcon of a testnet', () => {
     ['Solana Devnet', 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1', 'network:solana'],
     ['Solana Testnet', 'solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z', 'network:solana'],
     ['Solana Devnet by name', 'solana:devnet', 'network:solana'],
-  ])('%s draws the %s mark in white on the grey circle', async (_name, chainId, filePath) => {
+  ])('%s draws the %s mark in white on the grey tile', async (_name, chainId, filePath) => {
     const { className, variant, filePath: drawn } = testnetMarkOf(chainId);
     expect(drawn).toBe(filePath);
     expect(variant).toBe('mono');
     expect(className).toContain('novacore:bg-[var(--tuwa-testnet-icons)]');
     expect(className).toContain('novacore:text-white');
-    expect(className).toContain('novacore:rounded-full');
+    expect(className).toContain('novacore:rounded-[var(--tuwa-rounded-full)]');
     expect(await loadWeb3Icon(filePath)).not.toBeNull();
   });
 
@@ -83,11 +83,11 @@ function path(fill?: string): SvgPathLike & { fill: string | null } {
   return item;
 }
 
-// Showcase review, 2026-10-29: Base Sepolia showed an empty square. The Base icon is a white square on a blue
+// Base Sepolia showed an empty square. The Base icon is a white square on a blue
 // background; recoloring only the background left a white square on grey, which reads as an empty checkbox
 describe('recolorTestnetPaths', () => {
-  // Live, 2026-11-06: the Solana background is a gradient, and the white mark that took it became a gradient mark on grey. The
-  // owner: on a testnet the Solana mark stays plain white, as it was. Only a solid color moves to the mark
+  // The Solana background is a gradient, and the white mark that took it became a gradient mark on grey. On a testnet
+  // the Solana mark stays plain white, as it was. Only a solid color moves to the mark
   it('leaves a white mark white when the background is a gradient', () => {
     const background = path('url(#solana__b)');
     const mark = path('#fff');

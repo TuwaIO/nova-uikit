@@ -34,7 +34,7 @@ export function ExternalLinkIcon({ className, look }: ExternalLinkIconProps) {
         {...PIXEL_SVG}
         fill="currentColor"
         aria-hidden="true"
-        className={cn('novacore:block novacore:overflow-visible', className)}
+        className={cn('tuwa-link-icon novacore:block novacore:overflow-visible', className)}
       >
         <path d={LINK_BOX_PATH} />
         <path className="tuwa-link-arrow-px" d={LINK_ARROW_PATH} />
@@ -50,7 +50,7 @@ export function ExternalLinkIcon({ className, look }: ExternalLinkIconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={cn('novacore:block novacore:overflow-visible', className)}
+      className={cn('tuwa-link-icon novacore:block novacore:overflow-visible', className)}
     >
       <path d="M10.5 5H7.25A2.25 2.25 0 0 0 5 7.25v9.5A2.25 2.25 0 0 0 7.25 19h9.5A2.25 2.25 0 0 0 19 16.75V13.5" />
       <g className="tuwa-link-arrow">

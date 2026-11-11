@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { pixelFlight } from '@tuwaio/nova-icons';
 import * as outline from '@tuwaio/nova-icons/24/outline';
 import * as solid from '@tuwaio/nova-icons/24/solid';
 import { createElement as h, isValidElement, type ReactElement } from 'react';
@@ -108,14 +109,18 @@ describe('the pixel look of the parts that move', () => {
   const cellsDrawn = (tree: unknown, className: string) =>
     elements(tree).filter((node) => String(node.props.className ?? '').includes(className));
 
-  it('draws a result pixel by pixel, in the order of its strokes', () => {
+  // Not lit up in place: the mark assembles from its pixels, each flying in from a spot nearby (`pixelFlight` of
+  // @tuwaio/nova-icons, the one motion of every pixel drawing of Nova)
+  it('assembles a result from its pixels', () => {
     presence.initial = undefined;
     const check = cellsDrawn(h(DrawnCheck, {}), 'tuwa-drawn-px');
-    expect(check.map((node) => Number((node.props.style as Record<string, number>)['--k']))).toEqual(
-      check.map((_, index) => index),
-    );
+    for (const node of check) {
+      expect(node.props['data-px']).toBe('');
+      expect(node.props.style).toEqual(pixelFlight(Number(node.props.x), Number(node.props.y)));
+    }
     expect(check.length).toBe(cellsOf(art.CHECK).length);
     expect(svgOf(h(DrawnCheck, {})).props.shapeRendering).toBe('crispEdges');
+    expect(svgOf(h(DrawnCheck, {})).props['data-motion']).toBe('assemble');
     // On a disc the mark is cut out: its pixels are drawn in the color of the page
     const onDisc = cellsDrawn(h(DrawnCross, { variant: 'disc' }), 'tuwa-drawn-px');
     expect(onDisc.length).toBe(cellsOf(art.CROSS_CUT).length);
@@ -129,33 +134,38 @@ describe('the pixel look of the parts that move', () => {
     };
     const render = () => {
       slots.next = 0;
-      return svgOf(h(DrawnCheck, {})).props['data-still'];
+      return svgOf(h(DrawnCheck, {})).props['data-motion'];
     };
     mount();
     presence.initial = false;
-    expect(render()).toBe('');
+    expect(render()).toBeUndefined();
     // On its way out, framer-motion gives the presence again without `initial`: the mark stays still, not drawn again
     presence.initial = undefined;
-    expect(render()).toBe('');
-    mount();
     expect(render()).toBeUndefined();
+    mount();
+    expect(render()).toBe('assemble');
   });
 
-  it('turns the sheets of a copy into a check mark', () => {
+  it('turns the sheets of a copy into a check mark, which assembles from its pixels', () => {
     const copied = svgOf(h(CopyIcon, { copied: true }));
     expect(copied.props['data-copied']).toBe('');
+    expect(copied.props['data-motion']).toBe('assemble');
     expect(svgOf(h(CopyIcon, {})).props['data-copied']).toBeUndefined();
+    expect(svgOf(h(CopyIcon, {})).props['data-motion']).toBeUndefined();
+    for (const node of cellsDrawn(h(CopyIcon, { copied: true }), 'tuwa-copy-px-check')) {
+      expect(node.props.style).toEqual(pixelFlight(Number(node.props.x), Number(node.props.y)));
+    }
     expect(cellsDrawn(h(CopyIcon, {}), 'tuwa-copy-px-check').length).toBe(cellsOf(art.CHECK).length);
     expect(cellsDrawn(h(CopyIcon, {}), 'tuwa-copy-px-sheets')).toHaveLength(1);
   });
 
-  it('moves the arrow of a link, of an exit and the lid of the bin by one pixel', () => {
+  it('moves the arrow of a link, of an exit and the lid of the bin by two pixels', () => {
     expect(cellsDrawn(h(ExternalLinkIcon, {}), 'tuwa-link-arrow-px')).toHaveLength(1);
     expect(cellsDrawn(h(ExitIcon, {}), 'tuwa-exit-arrow-px')).toHaveLength(1);
     expect(cellsDrawn(h(TrashIcon, {}), 'tuwa-trash-lid-px')).toHaveLength(1);
     const css = readFileSync(path.resolve(__dirname, '../styles/icons.css'), 'utf8');
     expect(css).toContain('button:not(:disabled):hover .tuwa-link-arrow-px');
-    expect(css).toContain('transform: translate(1px, -1px)');
+    expect(css).toContain('transform: translate(2px, -2px)');
   });
 
   it('draws the close cross and the chevron on the grid', () => {
@@ -173,7 +183,7 @@ describe('the pixel look of the parts that move', () => {
   });
 });
 
-// Found 2026-11-11 in a browser: Chrome ends a one-shot animation a hair short of its end (progress 0.9999…), and step-end
+// Found in a browser: Chrome ends a one-shot animation a hair short of its end (progress 0.9999…), and step-end
 // then keeps its first frame: pixels that should have appeared stayed hidden for good. One-shot animations are linear; only
 // the endless ones step
 describe('the stylesheets of Nova', () => {
@@ -189,6 +199,51 @@ describe('the stylesheets of Nova', () => {
     for (const css of sheets) {
       for (const [declaration] of css.matchAll(/animation:[^;]*;/g)) {
         if (/step-end|steps\(/.test(declaration)) expect(declaration, declaration).toContain('infinite');
+      }
+    }
+  });
+});
+
+// Under the pointer the icon of a link, of an exit and of a bin move smoothly, by two pixels of the grid (a step of one
+// pixel went unseen), and take the color of what they do: the accent for a link, red for an exit or a bin
+describe('the icons of actions under the pointer', () => {
+  const css = readFileSync(path.resolve(__dirname, '../styles/icons.css'), 'utf8');
+  const unlayered = css.slice(css.indexOf('/* Under the pointer an icon of an action'));
+  const svgOf = (tree: unknown) => elements(tree).find((node) => node.type === 'svg')!;
+
+  it('move smoothly, never in a step', () => {
+    for (const part of ['tuwa-link-arrow-px', 'tuwa-exit-arrow-px', 'tuwa-trash-lid-px']) {
+      const rule = css.slice(css.indexOf(`.${part}`), css.indexOf('}', css.indexOf(`.${part}`)));
+      expect(rule, part).not.toMatch(/step-end|steps\(/);
+    }
+  });
+
+  it('take the color of their action, over the classes a host gives them', () => {
+    expect(unlayered).toMatch(/\.tuwa-link-icon \{\s*color: var\(--tuwa-text-accent\)/);
+    expect(unlayered).toMatch(/\.tuwa-exit-icon,[^{]*\.tuwa-trash-icon \{\s*color: var\(--tuwa-error-icon\)/);
+  });
+
+  // On a filled button the icon keeps the color of its label: the accent on the accent read as nothing
+  it('keep their color on a filled button (`tuwa-solid`)', () => {
+    const selectors = unlayered
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split('{')
+      .slice(0, -1)
+      .flatMap((block) => block.slice(block.lastIndexOf('}') + 1).split(','))
+      .map((selector) => selector.trim())
+      .filter(Boolean);
+    expect(selectors.length).toBeGreaterThan(8);
+    for (const selector of selectors) expect(selector, selector).toMatch(/^(a|button):not\(\.tuwa-solid\)/);
+  });
+
+  it('carry the class of their action in both looks', () => {
+    for (const [Icon, name] of [
+      [ExternalLinkIcon, 'tuwa-link-icon'],
+      [ExitIcon, 'tuwa-exit-icon'],
+      [TrashIcon, 'tuwa-trash-icon'],
+    ] as const) {
+      for (const look of ['pixel', 'classic'] as const) {
+        expect(String(svgOf(h(Icon, { look })).props.className), `${name} ${look}`).toContain(name);
       }
     }
   });

@@ -38,7 +38,7 @@ describe('StarsBackground', () => {
     box.size = { width: 300, height: 200 };
   });
 
-  // The owner, 2026-11-11: the stars must look like stars, not dots, in both looks
+  // The stars must look like stars, not dots, in both looks
   it('in the classic look has four-pointed stars among the small round ones', () => {
     const tree = StarsBackground({ starsCount: 120, look: 'classic' });
     const all = elements(tree);

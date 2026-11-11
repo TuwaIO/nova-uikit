@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useCopyToClipboard } from '@tuwaio/nova-core';
 import * as outline from '@tuwaio/nova-icons/24/outline';
 import * as solid from '@tuwaio/nova-icons/24/solid';
+import * as brands from '@tuwaio/nova-icons/brands';
 import * as tuwa from '@tuwaio/nova-icons/tuwa';
 import { type ComponentType, type SVGProps, useMemo, useState } from 'react';
 
@@ -12,6 +13,7 @@ const SETS = {
   outline: { title: 'Outline', path: '@tuwaio/nova-icons/24/outline', icons: outline },
   solid: { title: 'Solid', path: '@tuwaio/nova-icons/24/solid', icons: solid },
   tuwa: { title: 'TUWA', path: '@tuwaio/nova-icons/tuwa', icons: tuwa },
+  brands: { title: 'Brands', path: '@tuwaio/nova-icons/brands', icons: brands },
 } as const;
 const SIZES = [16, 20, 24, 32, 48] as const;
 const MOTIONS = ['still', 'assemble', 'breathe'] as const;
@@ -25,10 +27,10 @@ const entriesOf = (set: SetName): Entry[] =>
     .map(([name, Icon]) => ({ name, Icon: Icon as Icon }));
 
 const segmentClass = (isActive: boolean) =>
-  `cursor-pointer rounded-[calc(var(--tuwa-rounded-corners)-2px)] px-3 py-1.5 text-xs transition-colors ${
+  `cursor-pointer rounded-[var(--tuwa-rounded-corners)] px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
     isActive
-      ? 'bg-[var(--tuwa-bg-primary)] text-[var(--tuwa-text-primary)] shadow-sm'
-      : 'text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-bg-primary)]/60'
+      ? 'bg-[var(--tuwa-text-primary)] text-[var(--tuwa-bg-primary)]'
+      : 'text-[var(--tuwa-text-primary)] hover:bg-[var(--tuwa-bg-primary)]'
   }`;
 
 /** One icon: the card copies the line that imports it. */
@@ -53,7 +55,7 @@ const IconCard = ({
       onClick={() => void copy(`import { ${entry.name} } from '${SETS[set].path}';`)}
       // Starts with the text on the card: whoever speaks to the page says what they see
       aria-label={`${isCopied ? 'Copied' : label}, copy the import of ${entry.name}`}
-      className="group flex min-w-0 cursor-pointer flex-col items-center gap-3 rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] px-3 pt-5 pb-3.5 transition-[border-color,box-shadow] duration-200 hover:border-[var(--tuwa-text-accent)] hover:shadow-[0_10px_28px_-14px_rgb(0_0_0/0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tuwa-text-accent)]"
+      className="group flex min-w-0 cursor-pointer flex-col items-center gap-3 rounded-[var(--tuwa-rounded-corners)] border border-[var(--tuwa-border-primary)] bg-[var(--tuwa-bg-primary)] px-3 pt-5 pb-3.5 transition-colors duration-200 hover:border-[var(--tuwa-text-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--tuwa-text-accent)]"
     >
       <span className="flex h-12 items-center justify-center text-[var(--tuwa-text-primary)]">
         {/* A new key replays the motion, once */}
@@ -91,8 +93,9 @@ const NovaIconGallery = () => {
           <h2 className="text-2xl font-semibold tracking-tight">Nova icons</h2>
           <p className="mt-1.5 text-sm text-[var(--tuwa-text-secondary)]">
             {entriesOf('outline').length} outline, {entriesOf('solid').length} solid and {entriesOf('tuwa').length} TUWA
-            icons in the TUWA retro pixel style, on a 16 × 16 grid with two-pixel lines. They have the names and the
-            import paths of Heroicons; the lit pixels take the accent of the theme. Choose one to copy its import.
+            icons and {entriesOf('brands').length} marks of brands in the TUWA retro pixel style, on a 16 × 16 grid with
+            two-pixel lines. They have the names and the import paths of Heroicons; the lit pixels take the accent of
+            the theme. Choose one to copy its import.
           </p>
         </header>
 

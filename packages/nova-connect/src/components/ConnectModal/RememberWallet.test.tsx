@@ -22,12 +22,21 @@ vi.mock('framer-motion', () => ({
 const store = vi.hoisted(() => ({ rememberWallet: false, setRememberWallet: vi.fn() }));
 const play = vi.hoisted(() => vi.fn());
 const icons = vi.hoisted(() => ({ look: 'classic' as 'classic' | 'pixel' }));
-vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play, NovaSetIcon: () => null, useNovaIcons: () => icons }));
+vi.mock('@tuwaio/nova-core', async (importOriginal) => ({
+  // The real flight: what the pixels of the check mark are given is what is checked
+  pixelFlight: (await importOriginal<typeof import('@tuwaio/nova-core')>()).pixelFlight,
+  useNovaSounds: () => play,
+  NovaSetIcon: () => null,
+  useNovaIcons: () => icons,
+}));
 vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: typeof store) => unknown) => selector(store),
 }));
 
+import { pixelFlight } from '@tuwaio/nova-core';
+
 import { RememberWallet } from './RememberWallet';
+import { CHECK_FLIGHT } from './rememberWalletCheck';
 
 type Node = { type?: unknown; props?: Record<string, unknown> & { children?: unknown } };
 type Handler = (event?: unknown) => void;
@@ -88,17 +97,47 @@ describe('RememberWallet', () => {
     expect(checkmark(renderNodes()).animate).toMatchObject({ pathLength: 1 });
   });
 
-  // The pixel look: a check mark of six pixels that draws itself when the box is ticked (CSS, by `data-on`)
+  // The pixel look: a check mark that shows when the box is ticked (CSS, by `data-on`), and assembles from its pixels
   it('draws the pixel check mark only when the box is ticked, in the pixel look', () => {
     icons.look = 'pixel';
-    const svgOf = (nodes: Node[]) => nodes.find((n) => n.type === 'svg' && n.props?.viewBox === '0 0 6 6')!;
+    const svgOf = (nodes: Node[]) => nodes.find((n) => n.type === 'svg' && n.props?.viewBox === '0 0 7 7')!;
     expect(svgOf(renderNodes()).props!['data-on']).toBeUndefined();
     unmount();
 
+    // Already ticked when the list opens (the default): the mark is simply there, it does not assemble again
+    store.rememberWallet = true;
+    const already = renderNodes();
+    expect(svgOf(already).props!['data-on']).toBe('');
+    expect(svgOf(already).props!['data-motion']).toBeUndefined();
+    unmount();
+
+    // Ticked here: the check mark assembles from its pixels, as every pixel drawing of Nova
+    store.rememberWallet = false;
+    (renderNodes().find((n) => n.type === 'input')!.props!.onChange as Handler)({ target: { checked: true } });
     store.rememberWallet = true;
     const ticked = renderNodes();
-    expect(svgOf(ticked).props!['data-on']).toBe('');
-    expect(ticked.filter((n) => n.props?.className === 'tuwa-remember-px')).toHaveLength(6);
+    expect(svgOf(ticked).props!['data-motion']).toBe('assemble');
+    const pixels = ticked.filter((n) => n.props?.className === 'tuwa-remember-px');
+    expect(pixels).toHaveLength(13);
+    for (const pixel of pixels) {
+      expect(pixel.props!['data-px']).toBe('');
+      expect(pixel.props!.style).toEqual(pixelFlight(Number(pixel.props!.x), Number(pixel.props!.y), CHECK_FLIGHT));
+    }
+    icons.look = 'classic';
+  });
+
+  // The pixel check was too thin to read (a line one pixel wide on a grid of 6). Its line is two pixels
+  // thick: every row of it has runs of two pixels at least
+  it('draws the pixel check mark two pixels thick', () => {
+    icons.look = 'pixel';
+    store.rememberWallet = true;
+    const cells = renderNodes()
+      .filter((n) => n.props?.className === 'tuwa-remember-px')
+      .map((n) => [Number(n.props!.x), Number(n.props!.y)] as const);
+    for (const row of new Set(cells.map(([, y]) => y))) {
+      const xs = cells.filter(([, y]) => y === row).map(([x]) => x);
+      for (const x of xs) expect(xs.includes(x - 1) || xs.includes(x + 1), `pixel ${x},${row}`).toBe(true);
+    }
     icons.look = 'classic';
   });
 
@@ -156,7 +195,7 @@ describe('RememberWallet', () => {
     expect(tooltip(renderNodes())).toBeUndefined();
   });
 
-  // Owner, 2026-11-07: the checkbox has a sound of its own
+  // The checkbox has a sound of its own
   it('plays a sound when it is pressed, and still changes the choice', () => {
     const input = renderNodes().find((n) => n.type === 'input')!;
     (input.props!.onChange as Handler)({ target: { checked: true } });

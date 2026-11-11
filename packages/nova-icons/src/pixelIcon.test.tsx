@@ -1,7 +1,7 @@
 import { isValidElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { createPixelIcon, LIT_FILL, pixelPath } from './pixelIcon';
+import { createPixelIcon, LIT_FILL, pixelFlight, pixelPath } from './pixelIcon';
 
 type Node = { type: unknown; props: Record<string, unknown> & { children?: unknown } };
 
@@ -53,7 +53,7 @@ describe('a pixel icon', () => {
     expect(lit.props).toMatchObject({ d: 'M1 1h1v1h-1z', fill: LIT_FILL });
   });
 
-  // The owner, 2026-11-11: the lit pixels stay, and they must read in the light and the dark theme. The color of the
+  // The lit pixels stay, and they must read in the light and the dark theme. The color of the
   // text is light in a dark theme and dark in a light one, so a mix of the TUWA blue with it is darker on a light page
   // and lighter on a dark one; a theme that sets an accent (Nova, Quasar) gives its own for each theme
   it('lights its lit pixels in the accent of the theme, and without one in a TUWA blue mixed with the text color', () => {
@@ -77,31 +77,61 @@ describe('a pixel icon', () => {
   });
 });
 
-// The owner, 2026-11-11: both motions, once each and in plain CSS. The component only marks what moves; `motion.css`
+// Both motions, once each and in plain CSS. The component only marks what moves; `motion.css`
 // of the package animates it
 describe('the motions of an icon', () => {
   const Icon = createPixelIcon('TestIcon', ['##.', '.o#', '#..']);
 
-  it('gathers its pixels along the diagonals: one step per diagonal, the same pixels as the still icon', () => {
+  // Not lit up in place: each pixel flies in to its place from a spot nearby, as the pixels of the theme switch travel
+  it('assembles from its pixels: one element per pixel, each flying in from its own spot', () => {
     const svg = Icon({ motion: 'assemble' }) as unknown as Node;
     expect(svg.props['data-motion']).toBe('assemble');
-    const parts = childrenOf(svg).filter((child) => child.type === 'path');
-    for (const part of parts) {
-      const step = Number(part.props['data-step']);
-      for (const pixel of pixelsOf(part.props.d)) {
-        const [x, y] = pixel.split(',').map(Number);
-        expect(x + y).toBe(step);
-      }
-    }
+    const pixels = childrenOf(svg).filter((child) => child.type === 'rect');
+    const at = (p: Node) => `${p.props.x},${p.props.y}`;
     const still = childrenOf(Icon({}) as unknown as Node);
-    const drawn = (list: Node[], lit: boolean) =>
-      list
+    const drawn = (lit: boolean) =>
+      still
         .filter((p) => (p.props.fill === LIT_FILL) === lit)
         .flatMap((p) => pixelsOf(p.props.d))
         .sort();
-    expect(drawn(parts, false)).toEqual(drawn(still, false));
-    expect(drawn(parts, true)).toEqual(drawn(still, true));
-    expect(new Set(parts.map((p) => p.props['data-step']))).toEqual(new Set(['0', '1', '2', '3']));
+    expect(
+      pixels
+        .filter((p) => p.props.fill !== LIT_FILL)
+        .map(at)
+        .sort(),
+    ).toEqual(drawn(false));
+    expect(
+      pixels
+        .filter((p) => p.props.fill === LIT_FILL)
+        .map(at)
+        .sort(),
+    ).toEqual(drawn(true));
+    for (const pixel of pixels) {
+      expect(pixel.props['data-px']).toBe('');
+      expect(pixel.props.style).toEqual(pixelFlight(Number(pixel.props.x), Number(pixel.props.y)));
+    }
+  });
+
+  it('sends each pixel from a spot of its own, nearby, the same on every render', () => {
+    const spots = new Set<string>();
+    for (let x = 0; x < 16; x++) {
+      for (let y = 0; y < 16; y++) {
+        const flight = pixelFlight(x, y) as Record<string, string>;
+        const dx = parseFloat(flight['--nova-px-x']);
+        const dy = parseFloat(flight['--nova-px-y']);
+        const distance = Math.hypot(dx, dy);
+        expect(distance).toBeGreaterThanOrEqual(2.9);
+        expect(distance).toBeLessThanOrEqual(7.1);
+        expect(parseFloat(flight['--nova-px-delay'])).toBeLessThanOrEqual(240);
+        expect(pixelFlight(x, y)).toEqual(flight);
+        spots.add(`${flight['--nova-px-x']} ${flight['--nova-px-y']}`);
+      }
+    }
+    // Scattered round the picture, not all from one side
+    expect(spots.size).toBeGreaterThan(200);
+    const far = pixelFlight(3, 5, { spread: 4, stagger: 600 }) as Record<string, string>;
+    const near = pixelFlight(3, 5) as Record<string, string>;
+    expect(parseFloat(far['--nova-px-x'])).toBeCloseTo(parseFloat(near['--nova-px-x']) * 4, 1);
   });
 
   it('breathes with its lit pixels, or with the whole drawing when it has none', () => {

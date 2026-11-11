@@ -14,18 +14,19 @@ const icons = (variant: string) =>
   );
 
 // The import paths of Heroicons: `24/outline` and `24/solid` (where `20/solid` and `16/solid` lead too, see `exports`),
-// and `tuwa` for the icons of TUWA's own
+// `tuwa` for the icons of TUWA's own and `brands` for the marks of the services TUWA links to
 const barrels = {
   index: './src/index.ts',
   '24/outline/index': './src/outline.ts',
   '24/solid/index': './src/solid.ts',
   'tuwa/index': './src/tuwa.ts',
+  'brands/index': './src/brands.ts',
 };
 
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
-    entry: { ...barrels, ...icons('outline'), ...icons('solid'), ...icons('tuwa') },
+    entry: { ...barrels, ...icons('outline'), ...icons('solid'), ...icons('tuwa'), ...icons('brands') },
     treeshake: true,
     sourcemap: false,
     minify: true,

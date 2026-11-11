@@ -44,7 +44,7 @@ export interface NovaConnectProviderProps extends InitialChains {
   transactionPool?: TransactionPool<Transaction>;
   /**
    * `removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
-   * offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
+   * offer to stop tracking a transaction that has been pending for over 10 minutes: the waiting connect button is what a
    * person acts on when one never ends. An app that shows a pool of its own must remove the record there too.
    */
   removeTxFromPool?: (txKey: string) => void;

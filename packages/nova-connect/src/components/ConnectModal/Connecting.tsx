@@ -77,7 +77,7 @@ export type ConnectingContainerProps = {
 } & React.RefAttributes<HTMLElement>;
 
 /**
- * Props for a custom status container (the circle around the wallet icon).
+ * Props for a custom status container (the frame around the wallet icon: square, `--tuwa-rounded-full`).
  */
 export type ConnectingStatusContainerProps = {
   /** Classes from `classNames.statusContainer` or the defaults (the border color follows the state) */
@@ -531,7 +531,7 @@ const DefaultLoadingPlaceholder = forwardRef<HTMLDivElement, ConnectingLoadingPl
 DefaultLoadingPlaceholder.displayName = 'DefaultLoadingPlaceholder';
 
 /**
- * The connection screen of the connect modal: the wallet icon in a circle with a spinner while connecting, a success
+ * The connection screen of the connect modal: the wallet icon in a frame with a light running round it while connecting, a success
  * or error icon, the heading and, on error, a message. Reads `connectionError` from the Satellite store.
  *
  * Props: {@link ConnectingProps}; the ref is forwarded to the container.
@@ -702,21 +702,20 @@ export const Connecting = memo(
         : cn(
             'novacon:relative novacon:flex novacon:items-center novacon:justify-center',
             'novacon:min-w-[180px] novacon:min-h-[180px] novacon:md:min-w-[150px] novacon:md:min-h-[150px]',
-            'novacon:border-2 novacon:rounded-full',
+            'novacon:border novacon:rounded-[var(--tuwa-rounded-full)]',
             'novacon:p-4 novacon:md:p-6',
             'novacon:transition-all novacon:duration-300 novacon:ease-in-out',
+            // A light tint: `bg-opacity-*` of Tailwind 3 is not in Tailwind 4, and the frame was filled solid
             statusData.state === 'error' && [
               'novacon:border-[var(--tuwa-error-text)]',
-              'novacon:bg-[var(--tuwa-error-text)] novacon:bg-opacity-5',
+              'novacon:bg-[color-mix(in_srgb,var(--tuwa-error-text)_5%,transparent)]',
             ],
             statusData.state === 'success' && [
               'novacon:border-[var(--tuwa-success-text)]',
-              'novacon:bg-[var(--tuwa-success-text)] novacon:bg-opacity-5',
+              'novacon:bg-[color-mix(in_srgb,var(--tuwa-success-text)_5%,transparent)]',
             ],
-            statusData.state === 'connecting' && [
-              'novacon:border-[var(--tuwa-border-primary)]',
-              'novacon:bg-[var(--tuwa-bg-primary)]',
-            ],
+            // No fill of its own: the scanlines of the dialog show through the frame
+            statusData.state === 'connecting' && 'novacon:border-[var(--tuwa-border-primary)]',
           );
 
       const performDefaultCleanup = () => {
@@ -814,12 +813,13 @@ export const Connecting = memo(
               <CustomSpinner
                 className={
                   customization?.classNames?.spinner?.({ statusData }) ??
-                  // The one wait that stays a ring and not the Quasar loader: it runs around the circle of the wallet
+                  // The one wait that is not the Quasar loader: a segment of the pending color runs round the frame of
+                  // the wallet (`tuwa-square-chase`), along its corners whatever their radius
                   cn(
-                    'novacon:absolute novacon:animate-spin novacon:motion-reduce:animate-none novacon:rounded-full novacon:-inset-[2px]',
-                    'novacon:w-[calc(100%_+_4px)] novacon:h-[calc(100%_+_4px)]',
-                    'novacon:border-2 novacon:border-[var(--tuwa-pending-text)]',
-                    'novacon:border-t-transparent',
+                    'tuwa-square-chase novacon:absolute novacon:-inset-px novacon:rounded-[var(--tuwa-rounded-full)]',
+                    'novacon:w-[calc(100%_+_2px)] novacon:h-[calc(100%_+_2px)]',
+                    'novacon:border-2 novacon:border-[color-mix(in_srgb,var(--tuwa-pending-text)_25%,transparent)]',
+                    'novacon:[--tuwa-chase-border:2px]',
                   )
                 }
                 role="progressbar"
@@ -835,7 +835,7 @@ export const Connecting = memo(
                 className={
                   customization?.classNames?.statusIcon?.({ statusData }) ??
                   cn(
-                    'novacon:absolute novacon:-top-2 novacon:-right-2 novacon:w-8 novacon:h-8 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center novacon:bg-[var(--tuwa-error-text)]',
+                    'novacon:absolute novacon:-top-2 novacon:-right-2 novacon:w-8 novacon:h-8 novacon:rounded-[var(--tuwa-rounded-full)] novacon:flex novacon:items-center novacon:justify-center novacon:bg-[var(--tuwa-error-text)]',
                     {
                       'novacon:bg-[var(--tuwa-success-text)]': connectionState === 'success',
                     },

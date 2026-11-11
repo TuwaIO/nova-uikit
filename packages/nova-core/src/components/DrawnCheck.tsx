@@ -2,6 +2,7 @@
  * @file The marks of a result, a check mark and a cross, which draw themselves.
  */
 
+import { pixelFlight } from '@tuwaio/nova-icons';
 import { motion, PresenceContext, useReducedMotion } from 'framer-motion';
 import { type CSSProperties, useContext, useState } from 'react';
 
@@ -61,10 +62,12 @@ function DrawnMark({
         fill="none"
         aria-hidden="true"
         className={cn('novacore:block', className)}
-        data-still={isStill ? '' : undefined}
+        // The mark assembles from its pixels (`motion.css` of @tuwaio/nova-icons); one already there is simply shown
+        data-motion={isStill ? undefined : 'assemble'}
+        style={{ '--nova-px-start': '80ms' } as CSSProperties}
       >
         {isDisc && <path d={DISC_PATH} fill="currentColor" />}
-        {PIXEL_MARKS[mark][variant].map(({ x, y }, index) => (
+        {PIXEL_MARKS[mark][variant].map(({ x, y }) => (
           <rect
             key={`${x}-${y}`}
             className="tuwa-drawn-px"
@@ -74,7 +77,8 @@ function DrawnMark({
             height={1}
             // Cut out of the disc, as in a solid icon, in both themes
             fill={isDisc ? 'var(--tuwa-bg-primary)' : 'currentColor'}
-            style={{ '--k': index } as CSSProperties}
+            data-px=""
+            style={pixelFlight(x, y)}
           />
         ))}
       </svg>
@@ -124,7 +128,8 @@ export function DrawnCheck(props: DrawnMarkProps) {
 }
 
 /**
- * The cross of a failure, drawn stroke by stroke like {@link DrawnCheck}.
+ * The cross of a failure, which appears like {@link DrawnCheck}: it assembles from its pixels in the pixel look, and is drawn
+ * stroke by stroke in the classic one.
  *
  * @param props - See {@link DrawnMarkProps}.
  * @returns The icon.

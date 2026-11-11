@@ -2,7 +2,7 @@
  * @file Disclaimer component with comprehensive customization options.
  */
 
-import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
+import { cn, formatLabel, primaryButtonClasses, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import React, { ComponentType, forwardRef, useCallback, useEffect, useEffectEvent, useId } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
@@ -117,7 +117,10 @@ export type DisclaimerButtonProps = {
   children: React.ReactNode;
   /** The `actionAbout` label with the title (the "Learn more" button) or the `viewAction` label (the list button) */
   'aria-label'?: string;
-  /** Classes from `classNames.button` or `standardButtonClasses` of `@tuwaio/nova-core` */
+  /**
+   * Classes from `classNames.button`, or of `@tuwaio/nova-core`: `primaryButtonClasses` for the primary button (Learn more),
+   * `standardButtonClasses` for the other
+   */
   className?: string;
   /** `<data-testid>-learn-more` or `<data-testid>-list-action` */
   'data-testid'?: string;
@@ -209,7 +212,8 @@ export type DisclaimerCustomization = {
      */
     actions?: () => string;
     /**
-     * Returns the classes of a button, instead of `standardButtonClasses` of `@tuwaio/nova-core`.
+     * Returns the classes of a button, instead of `primaryButtonClasses` (the primary one) or `standardButtonClasses` of
+     * `@tuwaio/nova-core`.
      *
      * @param params - The button.
      * @param params.isLink - Whether the action is a URL.
@@ -519,7 +523,8 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
       (action: DisclaimerButtonAction, buttonText: string, ariaLabel: string, testId?: string, isPrimary = false) => {
         const isLinkAction = isLink(action);
         const buttonClasses = cn(
-          customization?.classNames?.button?.({ isLink: isLinkAction, isPrimary }) ?? standardButtonClasses,
+          customization?.classNames?.button?.({ isLink: isLinkAction, isPrimary }) ??
+            (isPrimary ? primaryButtonClasses : standardButtonClasses),
         );
 
         if (isLinkAction) {
