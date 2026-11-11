@@ -150,3 +150,24 @@ describe('the pixel look of the parts that move', () => {
     expect(svgOf(h(CopyIcon, { look: 'classic' })).props.viewBox).toBe('0 0 24 24');
   });
 });
+
+// Found 2026-11-11 in a browser: Chrome ends a one-shot animation a hair short of its end (progress 0.9999…), and step-end
+// then keeps its first frame: pixels that should have appeared stayed hidden for good. One-shot animations are linear; only
+// the endless ones step
+describe('the stylesheets of Nova', () => {
+  const sheets = [
+    '../styles/icons.css',
+    '../styles/quasar-loader.css',
+    '../../../nova-connect/src/styles/app.css',
+    '../../../nova-transactions/src/styles/app.css',
+    '../../../nova-icons/motion.css',
+  ].map((file) => readFileSync(path.resolve(__dirname, file), 'utf8'));
+
+  it('step only through endless animations', () => {
+    for (const css of sheets) {
+      for (const [declaration] of css.matchAll(/animation:[^;]*;/g)) {
+        if (/step-end|steps\(/.test(declaration)) expect(declaration, declaration).toContain('infinite');
+      }
+    }
+  });
+});

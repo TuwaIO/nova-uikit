@@ -2,12 +2,24 @@
  * @file The picture of the "About wallets" slides, drawn in the manner of the TUWA mark: thin lines in the text color, a bright
  * core in the accent color and node dots at the ends. One SVG for all the slides: on a change of slide the lines of one subject
  * are drawn away while those of the next are drawn in, and the core travels from one to the other. Inline, so it follows the
- * theme and weighs a few KB.
+ * theme and weighs a few KB. The pixel look draws the same picture on a grid of 64: the subject gathers pixel by pixel and
+ * the lights step along the lines.
  */
 
-import { useNovaSounds } from '@tuwaio/nova-core';
+import { useNovaIcons, useNovaSounds } from '@tuwaio/nova-core';
 import { motion, useReducedMotion } from 'framer-motion';
 import { type CSSProperties, useEffect, useState } from 'react';
+
+import {
+  byDiagonal,
+  type Cell,
+  KEY,
+  NETWORK as PIXEL_NETWORK,
+  NODES as PIXEL_NODES,
+  pathOf,
+  PLATE,
+  WALLET,
+} from './aboutWalletsPixels';
 
 const ACCENT = 'var(--tuwa-text-accent)';
 const EASE = [0.4, 0, 0.2, 1] as const;
@@ -137,6 +149,8 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
 
   // On the first drawing the subject waits for the plate and the network, and on a change it follows what is being drawn away
   const start = hasChanged ? 0.15 : 0.55;
+  const { look } = useNovaIcons();
+  if (look === 'pixel') return <PixelArt slideId={slideId} label={label} start={start} />;
   const isKey = slideId === 1;
   const isWallet = slideId === 2;
   const core = CORE[slideId] ?? CORE[1];
@@ -279,6 +293,147 @@ export function AboutWalletsArt({ slideId, label }: AboutWalletsArtProps) {
           <circle r={8.5} fill={ACCENT} />
           <circle r={2.7} fill="#fff" />
         </motion.g>
+      </g>
+    </svg>
+  );
+}
+
+const PLATE_DISC = pathOf(PLATE.disc);
+const PLATE_RIM = pathOf(PLATE.rim);
+const NETWORK_PATHS = PIXEL_NETWORK.map(pathOf);
+const SUBJECTS = {
+  1: {
+    subject: KEY,
+    ink: byDiagonal(KEY.ink),
+    lit: byDiagonal(KEY.lit),
+    paths: KEY.paths.map(byDiagonal),
+    seconds: [9],
+  },
+  2: {
+    subject: WALLET,
+    ink: byDiagonal(WALLET.ink),
+    lit: byDiagonal(WALLET.lit),
+    paths: WALLET.paths.map(byDiagonal),
+    seconds: [7, 8],
+  },
+} as const;
+
+/** A light that steps along a line of pixels, slowly: each pixel lights up in its turn (`dist/index.css`). */
+const PixelFlow = ({
+  cells,
+  seconds,
+  delay,
+  opacity = 1,
+}: {
+  cells: Cell[];
+  seconds: number;
+  delay: number;
+  opacity?: number;
+}) => (
+  <g
+    style={
+      { '--s': `${seconds}s`, '--d0': `${delay}s`, '--len': cells.length, '--art-opacity': opacity } as CSSProperties
+    }
+  >
+    {cells.map(({ x, y }, index) => (
+      <rect
+        key={`${x}-${y}`}
+        className="novacon-art-px-flow"
+        x={x}
+        y={y}
+        width={1}
+        height={1}
+        style={{ '--i': index } as CSSProperties}
+      />
+    ))}
+  </g>
+);
+
+/**
+ * The pixel picture: the plate, the network with lights stepping along it and its nodes twinkling, the subject of the slide
+ * gathering pixel by pixel from the top left (again on a change of slide), and its core stepping over from the last one. All
+ * of it is CSS of `dist/index.css`, still with `prefers-reduced-motion`.
+ */
+function PixelArt({ slideId, label, start }: { slideId: number; label: string; start: number }) {
+  const shown = SUBJECTS[slideId as 1 | 2] ?? SUBJECTS[1];
+  const { core } = shown.subject;
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      shapeRendering="crispEdges"
+      role="img"
+      aria-label={label}
+      style={{ '--art-start': `${start}s` } as CSSProperties}
+      className="novacon-art novacon-art-px novacon:block novacon:h-full novacon:w-full novacon:text-[var(--tuwa-text-primary)]"
+    >
+      <path className="novacon-art-px-plate" d={PLATE_DISC} fill="var(--tuwa-bg-secondary)" />
+      <path className="novacon-art-px-plate" d={PLATE_RIM} fill="var(--tuwa-border-primary)" />
+
+      {NETWORK_PATHS.map((d) => (
+        <path key={d} className="novacon-art-px-net" d={d} fill="currentColor" />
+      ))}
+      {PIXEL_NETWORK.map((cells, index) => (
+        <PixelFlow key={index} cells={cells} seconds={11 + index * 2} delay={2 + index * 1.7} opacity={0.45} />
+      ))}
+      {PIXEL_NODES.map(({ x, y }, index) => (
+        <rect
+          key={`${x}-${y}`}
+          className="novacon-art-px-twinkle"
+          x={x}
+          y={y}
+          width={2}
+          height={2}
+          fill="currentColor"
+          style={{ '--art-delay': `${index * 0.7}s` } as CSSProperties}
+        />
+      ))}
+
+      <g className="novacon-art-px-float">
+        {/* A new subject is a new group: it gathers again from the top left */}
+        <g key={slideId}>
+          {shown.paths.map((steps, index) =>
+            steps.map(({ step, d }) => (
+              <path
+                key={`${index}-${step}`}
+                className="novacon-art-px-in novacon-art-px-path"
+                d={d}
+                style={{ '--d': step } as CSSProperties}
+              />
+            )),
+          )}
+          {shown.subject.paths.map((cells, index) => (
+            <PixelFlow key={index} cells={cells} seconds={shown.seconds[index] ?? 8} delay={2 + index * 2} />
+          ))}
+          {shown.ink.map(({ step, d }) => (
+            <path
+              key={step}
+              className="novacon-art-px-in"
+              d={d}
+              fill="currentColor"
+              style={{ '--d': step } as CSSProperties}
+            />
+          ))}
+          {shown.lit.map(({ step, d }) => (
+            <path
+              key={step}
+              className="novacon-art-px-in"
+              d={d}
+              fill="var(--tuwa-text-accent)"
+              style={{ '--d': step + 12 } as CSSProperties}
+            />
+          ))}
+        </g>
+        {/* The core steps from the last subject to this one */}
+        {/* Around (3, 3) of its own: a glow of 8 pixels, the core of 4 with its corners cut, a white spark of 2 */}
+        <g className="novacon-art-px-core" style={{ transform: `translate(${core.x - 3}px, ${core.y - 3}px)` }}>
+          <path
+            className="novacon-art-px-glow"
+            d="M1 -1h4v1h1v1h1v4h-1v1h-1v1h-4v-1h-1v-1h-1v-4h1v-1h1z"
+            fill="var(--tuwa-text-accent)"
+          />
+          <path d="M2 1h2v1h1v2h-1v1h-2v-1h-1v-2h1z" fill="var(--tuwa-text-accent)" />
+          <rect x={2} y={2} width={2} height={2} fill="#fff" />
+        </g>
       </g>
     </svg>
   );

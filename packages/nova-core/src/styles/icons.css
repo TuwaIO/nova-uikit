@@ -76,8 +76,9 @@
   }
 
   /* The pixel marks of a result draw pixel by pixel; one already there when the page opens is simply shown */
+  /* Linear, not step-end: a one-shot step-end animation can end a hair short of its last frame and stay hidden */
   .tuwa-drawn-px {
-    animation: tuwa-drawn-px 1ms step-end both;
+    animation: tuwa-drawn-px 1ms linear both;
     animation-delay: calc(80ms + var(--k) * 16ms);
   }
 
