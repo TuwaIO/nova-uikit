@@ -17,9 +17,11 @@ const PACKAGE = join(__dirname, '..');
 const iconsOf = (module: Record<string, unknown>) =>
   Object.entries(module).filter(([name]) => /^[A-Z]\w*Icon$/.test(name));
 
-// The Heroicons that the TUWA ecosystem imports (Nova, Quasar, quasar-client, the docs, the website, cosmos and the
-// templates, counted 2026-11-11): the set has every one of them, so that changing the import is the whole replacement
-const USED_OUTLINE = `AdjustmentsHorizontal ArchiveBox ArrowDownCircle ArrowDown ArrowDownTray ArrowLeft ArrowLeftStartOnRectangle
+// The Heroicons that the TUWA ecosystem imports on any branch (Nova, Quasar, quasar-client, the docs and docs-ui, the
+// website, cosmos and the templates, counted 2026-11-11): the set has every one of them, so that changing the import is
+// the whole replacement
+const USED_OUTLINE = `AdjustmentsHorizontal ArchiveBox ArrowDownCircle ArrowTopRightOnSquare DocumentMagnifyingGlass
+  ExclamationCircle Pencil ShoppingBag ArrowDown ArrowDownTray ArrowLeft ArrowLeftStartOnRectangle
   ArrowPath ArrowPathRoundedSquare ArrowRight ArrowRightStartOnRectangle ArrowsRightLeft ArrowsUpDown ArrowTrendingUp
   ArrowUpCircle ArrowUpTray ArrowUturnLeft Banknotes Beaker BellAlert Bell Bolt BookOpen Briefcase BuildingOffice2
   BuildingOffice Calculator CalendarDays Camera ChartBar ChartBarSquare ChatBubbleLeftRight ChatBubbleOvalLeftEllipsis
