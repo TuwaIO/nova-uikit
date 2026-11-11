@@ -13,13 +13,19 @@ const icons = (variant: string) =>
       .map((file) => [`${variant}/${file.replace(/\.ts$/, '')}`, `./src/${variant}/${file}`]),
   );
 
-// The import paths of Heroicons: `24/outline` and `24/solid` (where `20/solid` and `16/solid` lead too, see `exports`)
-const barrels = { index: './src/index.ts', '24/outline/index': './src/outline.ts', '24/solid/index': './src/solid.ts' };
+// The import paths of Heroicons: `24/outline` and `24/solid` (where `20/solid` and `16/solid` lead too, see `exports`),
+// and `tuwa` for the icons of TUWA's own
+const barrels = {
+  index: './src/index.ts',
+  '24/outline/index': './src/outline.ts',
+  '24/solid/index': './src/solid.ts',
+  'tuwa/index': './src/tuwa.ts',
+};
 
 export default defineConfig([
   {
     format: ['cjs', 'esm'],
-    entry: { ...barrels, ...icons('outline'), ...icons('solid') },
+    entry: { ...barrels, ...icons('outline'), ...icons('solid'), ...icons('tuwa') },
     treeshake: true,
     sourcemap: false,
     minify: true,

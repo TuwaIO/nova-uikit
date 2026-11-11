@@ -38,7 +38,7 @@ export function WaitingForWallet() {
 }
 ```
 
-The paths are those of Heroicons: `24/outline`, and `24/solid`, `20/solid` and `16/solid`, which lead to the same solid icons, drawn once for small sizes. The main entry `@tuwaio/nova-icons` has the outline icons.
+The paths are those of Heroicons: `24/outline`, and `24/solid`, `20/solid` and `16/solid`, which lead to the same solid icons, drawn once for small sizes. `@tuwaio/nova-icons/tuwa` has icons of TUWA's own, which Heroicons does not have (`import { TransactionsIcon } from '@tuwaio/nova-icons/tuwa'`). The main entry `@tuwaio/nova-icons` has the outline icons and those of TUWA.
 
 An icon is `1em` square unless its class sets a size, and hidden from screen readers unless it has a `title`. Its lit pixels (the clasp of the wallet, the keyhole of a lock) take the color of `--tuwa-icon-accent`, else of `--tuwa-text-accent`, the accent that the Nova and Quasar themes set for the light and the dark theme, else the TUWA blue mixed with the color of the text, which reads on a light and on a dark page. Set `--tuwa-icon-accent: currentColor` to draw an icon in one color.
 

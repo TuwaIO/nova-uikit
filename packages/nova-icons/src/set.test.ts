@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 import * as root from './index';
 import * as outline from './outline';
 import * as solid from './solid';
+import * as tuwa from './tuwa';
 
 type Node = { props: Record<string, unknown> };
 
@@ -59,6 +60,30 @@ describe('the icons of the set', () => {
   });
 });
 
+// The owner, 2026-11-11: icons of TUWA's own for the Transactions and Webhooks of the Quasar dashboard, beside the
+// Heroicons names and never in place of one
+describe('the icons of TUWA', () => {
+  it('are the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
+    expect(iconsOf(tuwa).map(([name]) => name)).toEqual(['TransactionsIcon', 'WebhooksIcon']);
+    for (const [name, Icon] of iconsOf(tuwa)) {
+      const svg = (Icon as (props: object) => ReactElement)({}) as unknown as Node & { props: { children?: unknown } };
+      expect(svg.props.viewBox, name).toBe('0 0 16 16');
+      expect(JSON.stringify(svg.props.children), name).toContain('--tuwa-icon-accent');
+    }
+  });
+
+  it('have no Heroicons name, so that they never stand in for one', () => {
+    for (const [name] of iconsOf(tuwa)) {
+      expect(heroOutline, name).not.toHaveProperty(name);
+      expect(heroSolid, name).not.toHaveProperty(name);
+    }
+  });
+
+  it('are in the main entry too', () => {
+    for (const [name, Icon] of iconsOf(tuwa)) expect(root[name as keyof typeof root], name).toBe(Icon);
+  });
+});
+
 describe('the package', () => {
   const pkg = JSON.parse(readFileSync(join(PACKAGE, 'package.json'), 'utf8')) as {
     exports: Record<string, Record<string, string>>;
@@ -69,7 +94,7 @@ describe('the package', () => {
   // micro (16) solid ones drawn once on the same 16 x 16 grid
   it('has the import paths of Heroicons, all solid paths leading to the one solid set', () => {
     expect(Object.keys(pkg.exports)).toEqual(
-      expect.arrayContaining(['.', './24/outline', './24/solid', './20/solid', './16/solid', './motion.css']),
+      expect.arrayContaining(['.', './24/outline', './24/solid', './20/solid', './16/solid', './tuwa', './motion.css']),
     );
     expect(pkg.exports['./20/solid']).toEqual(pkg.exports['./24/solid']);
     expect(pkg.exports['./16/solid']).toEqual(pkg.exports['./24/solid']);

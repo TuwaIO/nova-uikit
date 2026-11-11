@@ -35,6 +35,11 @@
       "import": "./dist/24/solid/index.js",
       "require": "./dist/24/solid/index.cjs"
     },
+    "./tuwa": {
+      "types": "./dist/tuwa/index.d.ts",
+      "import": "./dist/tuwa/index.js",
+      "require": "./dist/tuwa/index.cjs"
+    },
     "./motion.css": "./motion.css"
   },
   "publishConfig": {
