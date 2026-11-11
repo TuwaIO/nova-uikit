@@ -39,7 +39,7 @@ const renderFunction = (component: unknown) => {
 describe('SelectContentAnimated', () => {
   afterEach(unmount);
 
-  // Owner, 2026-11-07: the frame was on the list, and the scroll arrows, next to it, stood outside the frame
+  // The frame was on the list, and the scroll arrows, next to it, stood outside the frame
   it('draws the frame around the list and its scroll buttons', () => {
     const tree = elements(render(renderFunction(SelectContentAnimated), { children: 'chains' }));
     const content = tree.find((element) => element.type === 'content')!;

@@ -2,8 +2,7 @@
  * @file This file contains the `TxActionButton`, a stateful button for initiating and tracking transactions.
  */
 
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, NovaSetIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { EvmTransaction, Transaction, TransactionPool } from '@tuwaio/pulsar-core';
 import { ButtonHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
@@ -19,7 +18,7 @@ const STATUS_ICONS = {
   loading: <QuasarLoader size={16} accent="currentColor" />,
   succeed: <DrawnCheck variant="disc" className={ICON_CLASSES} />,
   failed: <DrawnCross variant="disc" className={ICON_CLASSES} />,
-  replaced: <ArrowPathIcon className={ICON_CLASSES} />,
+  replaced: <NovaSetIcon solid="ArrowPathIcon" className={ICON_CLASSES} />,
 };
 
 /**

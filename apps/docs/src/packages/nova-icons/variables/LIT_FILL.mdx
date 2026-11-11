@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Variables/LIT_FILL" />
+
+# LIT\_FILL
+
+> `const` **LIT\_FILL**: `"var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #0052ff 72%, currentColor)))"` = `'var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #0052ff 72%, currentColor)))'`
+
+Defined in: [pixelIcon.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L39)
+
+The color of the lit pixels: `--tuwa-icon-accent`, else the accent of a TUWA theme (`--tuwa-text-accent`, which Nova
+and Quasar set for the light and the dark theme), else the TUWA blue mixed with the color of the text, which is darker
+on a light page and lighter on a dark one, so the lit pixels read in both.

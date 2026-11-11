@@ -3,11 +3,24 @@
  * control.
  */
 
+import { DrawnCheck, DrawnCross, NovaSetIcon, useNovaIcons } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
+
+/**
+ * The path data the connect button gives each status. In the pixel look the pixel marks of nova-core take their place.
+ *
+ * @internal
+ */
+export const DEFAULT_STATUS_PATHS = {
+  succeed: 'm4.5 12.75 6 6 9-13.5',
+  failed: 'M6 18 18 6M6 6l12 12',
+  replaced:
+    'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99',
+} as const;
 
 // --- Default Motion Variants ---
 const DEFAULT_MOTION_PATH_VARIANTS: Variants = {
@@ -234,10 +247,15 @@ const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProp
 };
 
 /**
- * An animated status icon: an SVG path, drawn with `framer-motion`, in a circle colored with the
+ * An animated status icon: an SVG path, drawn with `framer-motion`, in a tile (square, `--tuwa-rounded-full`) colored with the
  * `--tuwa-<colorVar>-text` variable. The connect button shows it after a transaction of the connected wallet succeeded,
  * failed or was replaced. Pass the path data as children. Animations can be turned off with
  * `customization.config.disableAnimation` or `reduceMotion`.
+ *
+ * In the pixel look (the default icon set of nova-core) the path the connect button gives each status is drawn as a pixel
+ * mark that draws itself (`DrawnCheck`, `DrawnCross`, the arrows of `ArrowPathIcon`). A path of your own, `customization.svg`,
+ * `components.Svg` or `components.Path`, or any option of the path (`classNames.path`, `variants.path`, `animation.path`)
+ * keeps the SVG path in any look.
  *
  * Props: {@link StatusIconProps}; the ref is forwarded to the container.
  *
@@ -269,6 +287,7 @@ const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProp
 export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
   ({ txStatus, colorVar, children, 'aria-label': ariaLabel, className, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
+    const { look } = useNovaIcons();
 
     // Extract path data from children
     const pathData = typeof children === 'string' ? children : '';
@@ -297,7 +316,7 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const containerClasses = customization?.classNames?.container
       ? customization.classNames.container({ txStatus, colorVar })
       : cn(
-          'novacon:w-6 novacon:h-6 novacon:rounded-full novacon:flex novacon:items-center novacon:justify-center novacon:shadow-sm',
+          'novacon:w-6 novacon:h-6 novacon:rounded-[var(--tuwa-rounded-full)] novacon:flex novacon:items-center novacon:justify-center',
           `novacon:text-[var(--tuwa-${colorVar}-text)] novacon:bg-[var(--tuwa-bg-primary)]`,
           className,
         );
@@ -331,9 +350,36 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const shouldReduceMotion = customization?.config?.reduceMotion ?? false;
     const isAnimationDisabled = customization?.config?.disableAnimation ?? false;
 
-    // Create SVG element with custom props
+    // Create SVG element with custom props. In the pixel look the marks of nova-core assemble from their pixels, unless the svg is
+    // customized
+    const isStill = isAnimationDisabled || shouldReduceMotion;
+    const pixelMark =
+      txStatus === 'succeed' ? (
+        <DrawnCheck className={cn('novacon:w-4 novacon:h-4', svgClasses)} still={isStill} />
+      ) : txStatus === 'failed' ? (
+        <DrawnCross className={cn('novacon:w-4 novacon:h-4', svgClasses)} still={isStill} />
+      ) : (
+        <NovaSetIcon
+          solid="ArrowPathIcon"
+          motion={isStill ? undefined : 'assemble'}
+          className={cn('novacon:w-4 novacon:h-4', svgClasses)}
+          aria-hidden="true"
+          focusable="false"
+        />
+      );
+    // The pixel marks stand in for the default path only: a path or an option of the path the app gives keeps the SVG
+    const isDefaultPath = pathData.replace(/\s+/g, ' ').trim() === DEFAULT_STATUS_PATHS[txStatus];
+    const isPathCustomized = Boolean(
+      customization?.svg ||
+      customization?.components?.Path ||
+      customization?.classNames?.path ||
+      customization?.variants?.path ||
+      customization?.animation?.path,
+    );
     const svgElement = customization?.components?.Svg ? (
       <Svg pathData={pathData} className={svgClasses} aria-hidden={true} focusable={false} />
+    ) : look === 'pixel' && isDefaultPath && !isPathCustomized ? (
+      pixelMark
     ) : (
       <svg
         className={cn('novacon:w-4 novacon:h-4', svgClasses)}

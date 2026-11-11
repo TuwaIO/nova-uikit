@@ -52,7 +52,7 @@ describe('lockPageScroll', () => {
     expect(documentElement.dataset.novaModalsOpen).toBeUndefined();
   });
 
-  // Owner, 2026-11-07: a gutter on the page of a host all the time is not Nova's to choose. It is kept only for a dialog, and only
+  // A gutter on the page of a host all the time is not Nova's to choose. It is kept only for a dialog, and only
   // for a scrollbar that takes room, or the page would jump the other way
   it('keeps the width of a scrollbar that takes room, while the dialog is open', () => {
     const { documentElement } = page();

@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **NovaTransactionsProviderProps**\<`T`\> = `object` & `Pick`\<`ITxTrackingStore`\<`T`\>, `"closeTxTrackedModal"` \| `"executeTxAction"` \| `"initialTx"`\> & `Omit`\<`ToastContainerProps`, `"containerId"`\>
 
-Defined in: [providers/NovaTransactionsProvider.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L68)
+Defined in: [providers/NovaTransactionsProvider.tsx:70](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsProvider.tsx#L70)
 
 Defines the props for the `NovaTransactionsProvider` component.
 
@@ -124,6 +124,14 @@ speed-up or a cancel, which nothing else tells the person.
 ##### Default Value
 
 `true`
+
+### icons?
+
+> `optional` **icons?**: [`NovaIconSet`](?path=/docs/packages-nova-core-type-aliases-novaiconset--docs)
+
+The icons of Nova and the look of what it draws: the pixel icons of `@tuwaio/nova-icons` without it, `heroicons` of
+`@tuwaio/nova-core/heroicons` for the look Nova had before (the loaders, the drawn marks and the star field follow), or a
+set of your own. See `NovaIconsProvider` of `@tuwaio/nova-core`.
 
 ### labels?
 

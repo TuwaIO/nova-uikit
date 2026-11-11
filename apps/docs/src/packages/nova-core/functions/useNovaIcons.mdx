@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/useNovaIcons" />
+
+# useNovaIcons()
+
+> **useNovaIcons**(): [`NovaIconSet`](?path=/docs/packages-nova-core-type-aliases-novaiconset--docs)
+
+Defined in: [hooks/useNovaIcons.ts:164](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useNovaIcons.ts#L164)
+
+Returns the icon set of the closest `NovaIconsProvider`: the icons the Nova components draw, and their look. In a React
+Server Component, which has no context, it is `pixelIcons`: the loader and the icons that render there draw the pixel look
+unless their `look` prop says otherwise.
+
+## Returns
+
+[`NovaIconSet`](?path=/docs/packages-nova-core-type-aliases-novaiconset--docs)
+
+The set; `pixelIcons` without a provider.
+
+## Example
+
+```tsx
+import { useNovaIcons } from '@tuwaio/nova-core';
+
+export function RetryLabel() {
+  const { solid } = useNovaIcons();
+  return (
+    <span>
+      <solid.ArrowPathIcon className="h-4 w-4" aria-hidden /> Retry
+    </span>
+  );
+}
+```

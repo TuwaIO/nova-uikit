@@ -536,7 +536,7 @@ const DefaultTransactionsSection: React.FC<ConnectedModalMainContentTransactions
               role="status"
               data-testid="pending-transactions-indicator"
             >
-              <span className="novacon:flex novacon:items-center novacon:justify-center novacon:gap-1.5 novacon:pt-1.5 novacon:text-xs novacon:text-[var(--tuwa-text-secondary)]">
+              <span className="novacon:flex novacon:items-center novacon:justify-center novacon:gap-1.5 novacon:pt-1.5 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-pending-text)]">
                 <QuasarLoader size={14} accent="var(--tuwa-pending-icon)" />
                 {formatLabel(labels.transactionsPendingCount, { count: pendingCount })}
               </span>

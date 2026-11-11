@@ -1,5 +1,5 @@
 /**
- * @file RecentBadge component with comprehensive customization options and animated gradient border.
+ * @file RecentBadge component with comprehensive customization options: a square accent chip with a still frame, or a light running along it.
  */
 
 import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
@@ -43,7 +43,10 @@ export interface BadgeAnimationConfig {
 export interface BadgeGradientConfig {
   /** Direction of the gradient (default: `90deg`) */
   direction: string;
-  /** Color stops for the gradient (default: a light stripe with `--tuwa-text-secondary` at 20%) */
+  /**
+   * Color stops of the frame (default: the accent at 40% with a brighter stripe of the accent at 20%, which shows only when
+   * the frame runs; still, the frame is one color)
+   */
   stops: Array<{
     /** Position percentage (0-100) */
     position: number;
@@ -155,6 +158,8 @@ export type RecentBadgeCustomization = {
   };
   /** Configuration options */
   config?: {
+    /** A light runs along the frame (default: `false`, the frame is still; the `animated` prop wins) */
+    animated?: boolean;
     /** Custom animation configuration */
     animation?: Partial<BadgeAnimationConfig>;
     /** Custom gradient configuration */
@@ -177,7 +182,7 @@ export interface RecentBadgeProps {
   className?: string;
   /** Content to display inside the badge (default: the `recent` label) */
   children?: React.ReactNode;
-  /** Whether the gradient border moves (default: `true`) */
+  /** Whether a light runs along the frame (default: `config.animated`, else `false`: the frame is still, in one color) */
   animated?: boolean;
   /** ARIA label of the badge (default: the text of `children`) */
   'aria-label'?: string;
@@ -197,14 +202,16 @@ const defaultAnimationConfig: BadgeAnimationConfig = {
 };
 
 /**
- * Default gradient configuration
+ * Default border configuration: paper and ink, a frame of 1 px in the accent, one color (no gradient). With `animated`, a
+ * brighter light runs along it.
  */
+const FRAME = 'color-mix(in srgb, var(--tuwa-text-accent) 40%, transparent)';
 const defaultGradientConfig: BadgeGradientConfig = {
   direction: '90deg',
   stops: [
-    { position: 0, color: 'rgba(255, 255, 255, 0)' },
-    { position: 20, color: 'var(--tuwa-text-secondary)' },
-    { position: 40, color: 'rgba(255, 255, 255, 0)' },
+    { position: 0, color: FRAME },
+    { position: 20, color: 'var(--tuwa-text-accent)' },
+    { position: 40, color: FRAME },
   ],
   backgroundSize: '200% 100%',
 };
@@ -238,7 +245,10 @@ const DefaultAnimatedGradient: React.FC<RecentBadgeAnimatedGradientProps> = ({
 
   // A repaint on every frame for as long as the list is open, and against what the person asked for
   if (!animated || reduceMotion) {
-    return <span className={className} style={animatedStyle} />;
+    // Still: where the light ends its run, past the stops of the light (the frame in one color by default)
+    return (
+      <span className={className} style={{ ...animatedStyle, backgroundPositionX: animationConfig.finalPosition }} />
+    );
   }
 
   return (
@@ -265,8 +275,9 @@ const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className
 );
 
 /**
- * The "Recent" badge of a wallet card: a small label with a gradient border that moves with Framer Motion. It is
- * smaller on touch devices.
+ * The "Recent" badge of a wallet card: a square chip in the accent, its label in monospace capitals, with a still frame
+ * of 1 px. With `animated` (or `config.animated`), a light runs along the frame (Framer Motion). It is smaller on touch
+ * devices.
  *
  * Props: {@link RecentBadgeProps}; the ref is forwarded to the container.
  *
@@ -278,6 +289,7 @@ const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className
  *   <RecentBadge
  *     customization={{
  *       config: {
+ *         animated: true,
  *         animation: { duration: 2, ease: 'easeInOut' },
  *         gradient: {
  *           direction: '45deg',
@@ -297,7 +309,8 @@ const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className
  */
 export const RecentBadge = memo(
   forwardRef<HTMLSpanElement, RecentBadgeProps>(
-    ({ className, children: childrenProp, animated = true, 'aria-label': ariaLabel, customization }, ref) => {
+    ({ className, children: childrenProp, animated: animatedProp, 'aria-label': ariaLabel, customization }, ref) => {
+      const animated = animatedProp ?? customization?.config?.animated ?? false;
       const labels = useNovaConnectLabels();
       const children = childrenProp ?? labels.recent;
 
@@ -350,14 +363,13 @@ export const RecentBadge = memo(
           return customization.classNames.container({ isTouch, animated });
         }
 
-        const sizeClasses = isTouch
-          ? 'novacon:px-1.5 novacon:py-0.5 novacon:text-[10px]'
-          : 'novacon:px-2.5 novacon:py-1 novacon:text-xs';
+        // Paper and ink: a square chip, monospace capitals with spacing, in the accent
+        const sizeClasses = isTouch ? 'novacon:px-1.5 novacon:py-0.5' : 'novacon:px-2 novacon:py-1';
 
         return cn(
-          'novacon:flex novacon:items-center novacon:justify-center novacon:overflow-hidden',
-          'novacon:font-mono novacon:font-medium',
-          'novacon:text-[var(--tuwa-text-secondary)] novacon:border novacon:border-[var(--tuwa-border-primary)]',
+          'novacon:relative novacon:flex novacon:items-center novacon:justify-center novacon:overflow-hidden',
+          'novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:leading-3',
+          'novacon:text-[var(--tuwa-text-accent)]',
           'novacon:rounded-[var(--tuwa-rounded-corners)]',
           sizeClasses,
           className,
@@ -382,7 +394,7 @@ export const RecentBadge = memo(
        */
       const backgroundOverlayClasses =
         customization?.classNames?.backgroundOverlay?.() ??
-        'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-bg-primary)] novacon:inset-[1px]';
+        'novacon:absolute novacon:z-10 novacon:pointer-events-none novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_6%,var(--tuwa-bg-primary))] novacon:inset-[1px]';
 
       /**
        * Memoized content classes

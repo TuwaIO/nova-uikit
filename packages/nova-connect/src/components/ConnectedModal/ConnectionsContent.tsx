@@ -2,7 +2,6 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import {
   cn,
   CopyIcon,
@@ -11,9 +10,11 @@ import {
   formatLabel,
   MorphText,
   NetworkIcon,
+  NovaSetIcon,
   QuasarLoader,
   TrashIcon,
   useCopyToClipboard,
+  useNovaIcons,
   useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
@@ -47,6 +48,19 @@ import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { WalletIcon } from '../WalletIcon';
 import { connectorDisplayName, isImpersonatedConnector } from './connectorName';
+
+/**
+ * The pixel frame of "Connect another wallet": the dots round the edge of a square on a grid of 16, every other one. Two sets
+ * that take turns on hover, so the dots seem to run round the frame, as the dashes of the classic look do.
+ */
+const ADD_WALLET_DOTS = (() => {
+  const edge: { x: number; y: number }[] = [];
+  for (let x = 1; x < 14; x++) edge.push({ x, y: 1 });
+  for (let y = 1; y < 14; y++) edge.push({ x: 14, y });
+  for (let x = 14; x > 1; x--) edge.push({ x, y: 14 });
+  for (let y = 14; y > 1; y--) edge.push({ x: 1, y });
+  return edge.filter((_, index) => index % 2 === 0);
+})();
 
 // --- Types for Customization ---
 
@@ -786,7 +800,7 @@ const ConnectorIcon: React.FC<ConnectorIconProps> = ({
       />
       <div
         className={cn(
-          'novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-full novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]',
+          'novacon:absolute novacon:-bottom-1 novacon:-right-1 novacon:flex novacon:items-center novacon:justify-center novacon:rounded-[var(--tuwa-rounded-full)] novacon:border novacon:border-[var(--tuwa-bg-secondary)] novacon:bg-[var(--tuwa-bg-primary)]',
           badgeClassName,
         )}
         style={{ width: badgeSize, height: badgeSize }}
@@ -834,7 +848,7 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, ConnectionsCon
       <div ref={ref}>
         <h3
           className={cn(
-            'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            'novacon:mb-2 novacon:text-[11px] novacon:font-mono novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-secondary)]',
             classNames?.title,
           )}
         >
@@ -861,7 +875,7 @@ const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, ConnectionsCo
       <div ref={ref}>
         <h3
           className={cn(
-            'novacon:mb-2 novacon:text-xs novacon:font-mono novacon:font-medium novacon:uppercase novacon:tracking-wider novacon:text-[var(--tuwa-text-secondary)]',
+            'novacon:mb-2 novacon:text-[11px] novacon:font-mono novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-secondary)]',
             classNames?.title,
           )}
         >
@@ -869,7 +883,7 @@ const DefaultRecentlyConnectedSection = forwardRef<HTMLDivElement, ConnectionsCo
         </h3>
         <div
           className={cn(
-            'NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-2',
+            'NovaCustomScroll novacon:max-h-[240px] novacon:overflow-x-hidden novacon:overflow-y-auto novacon:flex novacon:flex-col novacon:gap-0 novacon:[&>*+*]:-mt-px',
             classNames?.list,
           )}
         >
@@ -917,7 +931,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
       <div
         ref={ref}
         className={cn(
-          'novacon:relative novacon:flex novacon:items-center novacon:justify-between novacon:bg-[var(--tuwa-bg-accent)]/10 novacon:p-4',
+          'novacon:relative novacon:flex novacon:items-center novacon:justify-between novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4',
           classNames?.container,
           className,
         )}
@@ -926,7 +940,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <div className="novacon:absolute novacon:top-2 novacon:right-2">
           <span
             className={cn(
-              'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-success-bg)]/20 novacon:px-1.5 novacon:py-0.5 novacon:text-[10px] novacon:font-medium novacon:text-[var(--tuwa-success-text)]',
+              'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)] novacon:bg-[var(--tuwa-success-bg)] novacon:px-1.5 novacon:py-0.5 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:leading-3 novacon:text-[var(--tuwa-success-text)]',
               classNames?.badge,
             )}
           >
@@ -970,7 +984,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
               <button
                 onClick={handleCopy}
                 className={cn(
-                  'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:font-mono novacon:text-[10px] novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                  'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                   classNames?.copyButton,
                 )}
                 title={labels.copyAddress}
@@ -982,7 +996,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
                 <button
                   onClick={handleExplorer}
                   className={cn(
-                    'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:text-[10px] novacon:font-mono novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
+                    'novacon:flex novacon:cursor-pointer novacon:items-center novacon:gap-1 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
                     classNames?.explorerButton,
                   )}
                   title={labels.viewOnExplorer}
@@ -998,7 +1012,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <button
           onClick={onDisconnect}
           className={cn(
-            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
           aria-label={`${labels.disconnect} ${connectorType}`}
@@ -1033,7 +1047,8 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             classNames?.switchIndicator,
           )}
         >
-          <ArrowsRightLeftIcon
+          <NovaSetIcon
+            outline="ArrowsRightLeftIcon"
             className={cn('novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]', classNames?.switchIcon)}
           />
         </div>
@@ -1135,7 +1150,7 @@ const DefaultRecentlyConnectedRow = forwardRef<HTMLDivElement, RecentlyConnected
               onClick={onConnect}
               disabled={isConnecting}
               className={cn(
-                'novacon:relative novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-medium novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
+                'novacon:relative novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)]',
                 isConnecting && 'novacon:cursor-not-allowed novacon:opacity-50',
                 classNames?.connectButton,
               )}
@@ -1432,6 +1447,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
    * Handle removing a recent wallet from history
    */
   const play = useNovaSounds();
+  const { look } = useNovaIcons();
   const handleRemoveRecent = useCallback(
     (connectorType: ConnectorType, event: React.MouseEvent) => {
       event.stopPropagation();
@@ -1680,19 +1696,55 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             customization?.classNames?.addWalletButton?.(),
           )}
         >
-          <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="novacon:h-8 novacon:w-8 novacon:shrink-0">
-            <circle className="tuwa-add-wallet-ring" cx="16" cy="16" r="15" />
-            <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
-          </svg>
-          <span className="novacon:min-w-0 novacon:flex-1">{labels.connectNewWallet}</span>
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 16 16"
-            fill="none"
-            className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
-          >
-            <path d="M3 8h10M9 4l4 4-4 4" />
-          </svg>
+          {look === 'pixel' ? (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              shapeRendering="crispEdges"
+              className="novacon:h-8 novacon:w-8 novacon:shrink-0"
+            >
+              {ADD_WALLET_DOTS.map(({ x, y }, index) => (
+                <rect
+                  key={`${x}-${y}`}
+                  className={index % 2 ? 'tuwa-add-wallet-px-dot tuwa-add-wallet-px-dot--b' : 'tuwa-add-wallet-px-dot'}
+                  x={x}
+                  y={y}
+                  width={1}
+                  height={1}
+                />
+              ))}
+              <path className="tuwa-add-wallet-px-plus" d="M7 4h2v3h3v2h-3v3h-2v-3h-3v-2h3z" />
+            </svg>
+          ) : (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 32 32"
+              fill="none"
+              className="novacon:h-8 novacon:w-8 novacon:shrink-0"
+            >
+              <rect className="tuwa-add-wallet-ring" x="1" y="1" width="30" height="30" />
+              <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
+            </svg>
+          )}
+          <span className="novacon:min-w-0 novacon:flex-1 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em]">
+            {labels.connectNewWallet}
+          </span>
+          {look === 'pixel' ? (
+            <NovaSetIcon
+              outline="ArrowRightIcon"
+              aria-hidden="true"
+              className="tuwa-add-wallet-px-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+            />
+          ) : (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+            >
+              <path d="M3 8h10M9 4l4 4-4 4" />
+            </svg>
+          )}
         </button>
       )}
     </Container>

@@ -37,7 +37,7 @@ describe('NovaSoundsProvider', () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  // Owner, 2026-11-07: a link to another site flies away
+  // A link to another site flies away
   it('plays a click on a link of Nova that opens a new tab', () => {
     NovaSoundsProvider({ sounds: true, children: null });
 

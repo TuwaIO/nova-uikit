@@ -11,7 +11,7 @@ export interface TokenIconProps {
   symbol: string;
   /** Icon style of `@web3icons/react`. Defaults to `'background'`. */
   variant?: 'background' | 'branded' | 'mono';
-  /** Classes merged with the default classes (full size of the parent, rounded). */
+  /** Classes merged with the default classes (full size of the parent, corners of `--tuwa-rounded-full`, square by default). */
   className?: string;
 }
 

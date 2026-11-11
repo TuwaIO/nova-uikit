@@ -1,4 +1,3 @@
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import {
   AnimatedHeight,
   CloseIcon,
@@ -8,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   ExternalLinkIcon,
+  NovaSetIcon,
+  primaryButtonClasses,
   standardButtonClasses,
   useNovaSounds,
 } from '@tuwaio/nova-core';
@@ -603,7 +604,7 @@ const DefaultInfoButton = forwardRef<HTMLButtonElement, ConnectModalInfoButtonPr
       onClick={onClick}
       {...props}
     >
-      <InformationCircleIcon width={20} height={20} aria-hidden="true" />
+      <NovaSetIcon outline="InformationCircleIcon" width={20} height={20} aria-hidden="true" />
     </button>
   ),
 );
@@ -691,7 +692,7 @@ const DefaultActionButton = forwardRef<HTMLButtonElement, ConnectModalActionButt
       type="button"
       onClick={onClick}
       disabled={disabled || loading}
-      className={cn(standardButtonClasses, className)}
+      className={cn(primaryButtonClasses, className)}
       {...props}
     >
       {loading ? 'Loading...' : children}

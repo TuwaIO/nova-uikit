@@ -3,8 +3,7 @@
  * Exported for use in ConnectedModal and external applications for displaying token balances.
  */
 
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, QuasarLoader, useNovaSounds } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, NovaSetIcon, QuasarLoader, useNovaSounds } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -224,7 +223,7 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
       onClick={onRefetch}
       disabled={isLoading}
       className={cn(
-        'novacon:flex novacon:shrink-0 novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-full novacon:transition-colors',
+        'novacon:flex novacon:shrink-0 novacon:cursor-pointer novacon:ml-2 novacon:p-1 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors',
         'novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:text-[var(--tuwa-text-tertiary)]',
         'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-[var(--tuwa-text-accent)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
         showSuccess && 'novacon:text-[var(--tuwa-success-text)]',
@@ -253,7 +252,11 @@ const DefaultRefreshButton: React.FC<RefreshButtonProps> = ({
             transition={{ duration: 0.2 }}
             className={REFRESH_MARK_CLASSES}
           >
-            {isLoading ? <QuasarLoader size={14} /> : <ArrowPathIcon className="novacon:w-4 novacon:h-4" />}
+            {isLoading ? (
+              <QuasarLoader size={14} />
+            ) : (
+              <NovaSetIcon solid="ArrowPathIcon" className="novacon:w-4 novacon:h-4" />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

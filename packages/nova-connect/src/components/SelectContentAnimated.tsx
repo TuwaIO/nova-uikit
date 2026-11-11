@@ -130,7 +130,7 @@ export const SelectContentAnimated = forwardRef<
     const selectContentClasses = cn(
       // Default styles always applied. The frame is here, not on the list: the scroll buttons are next to the list, and a
       // frame around the list alone left them outside it
-      'novacon:overflow-hidden novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-[var(--tuwa-rounded-corners)] novacon:shadow-xl',
+      'novacon:overflow-hidden novacon:bg-[var(--tuwa-bg-secondary)] novacon:rounded-[var(--tuwa-rounded-corners)]',
       'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
       'novacon:w-[--radix-select-trigger-width]',
       'novacon:data-[state=open]:animate-in novacon:data-[state=closed]:animate-out',

@@ -2,8 +2,7 @@
  * @file ConnectedModalTxHistory component with comprehensive customization options for transaction history display.
  */
 
-import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn, formatLabel, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, formatLabel, NovaSetIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
@@ -480,11 +479,14 @@ const DefaultErrorContainer: React.FC<ConnectedModalTxHistoryErrorContainerProps
     >
       <div
         className={cn(
-          'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-warning-bg)] novacon:text-[var(--tuwa-warning-text)]',
+          'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-warning-bg)] novacon:text-[var(--tuwa-warning-text)]',
           classNames?.iconContainer,
         )}
       >
-        <ExclamationTriangleIcon className={cn('novacon:w-full novacon:h-full', classNames?.icon)} />
+        <NovaSetIcon
+          solid="ExclamationTriangleIcon"
+          className={cn('novacon:w-full novacon:h-full', classNames?.icon)}
+        />
       </div>
 
       <div className={cn('novacon:space-y-2', classNames?.content)}>
@@ -557,7 +559,7 @@ function PulsarAdapterRequired({
     'novacon:flex novacon:flex-col novacon:items-center novacon:justify-center novacon:text-center novacon:gap-4 novacon:p-6';
   const iconContainerClasses =
     customization?.classNames?.pulsarRequiredIconContainer?.() ??
-    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-full novacon:bg-[var(--tuwa-button-primary-bg)] novacon:text-[var(--tuwa-text-on-accent)]';
+    'novacon:w-12 novacon:h-12 novacon:p-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-button-primary-bg)] novacon:text-[var(--tuwa-text-on-accent)]';
   const iconClasses = customization?.classNames?.pulsarRequiredIcon?.() ?? 'novacon:w-full novacon:h-full';
   const contentClasses = customization?.classNames?.pulsarRequiredContent?.() ?? 'novacon:space-y-2';
   const titleClasses =
@@ -573,7 +575,7 @@ function PulsarAdapterRequired({
   const content = (
     <div className={containerClasses} role="alert">
       <div className={iconContainerClasses}>
-        <PuzzlePieceIcon className={iconClasses} />
+        <NovaSetIcon solid="PuzzlePieceIcon" className={iconClasses} />
       </div>
 
       <div className={contentClasses}>

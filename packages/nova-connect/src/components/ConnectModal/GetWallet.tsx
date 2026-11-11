@@ -702,10 +702,8 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
      */
     const gradientOverlayClasses =
       customization?.classNames?.gradientOverlay?.() ??
-      cn(
-        'novacon:absolute novacon:inset-0 novacon:z-1',
-        'novacon:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,82,255,0.12),rgba(255,255,255,0))]',
-      );
+      // Paper and ink: no glow over the stars (the scanlines of the dialog show through)
+      'novacon:absolute novacon:inset-0 novacon:z-1';
 
     /**
      * Memoized animation wrapper classes

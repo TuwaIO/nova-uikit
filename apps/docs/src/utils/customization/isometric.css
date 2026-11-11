@@ -35,6 +35,10 @@
   --tuwa-info-icon: #6b7184;
   --tuwa-testnet-icons: #8a90a2;
   --tuwa-rounded-corners: 0px;
+  --tuwa-rounded-full: 0px;
+  --tuwa-border-strong: #101423;
+  /* A line drawing on white: no scanlines */
+  --tuwa-scanline: transparent;
   --tuwa-ring-width: 1px;
 }
 
@@ -71,4 +75,6 @@
   --tuwa-info-text: #c8cddb;
   --tuwa-info-icon: #a5abbd;
   --tuwa-testnet-icons: #6e7489;
+  --tuwa-border-strong: #6e7489;
+  --tuwa-scanline: transparent;
 }

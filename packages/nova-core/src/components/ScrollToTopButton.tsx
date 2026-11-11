@@ -52,7 +52,7 @@ export function ScrollToTopButton({ label, visibleAfter = 500, className }: Scro
           type="button"
           aria-label={label}
           className={cn(
-            'novacore:fixed novacore:right-4 novacore:bottom-8 novacore:z-50 novacore:flex novacore:h-12 novacore:w-12 novacore:cursor-pointer novacore:items-center novacore:justify-center novacore:overflow-hidden novacore:rounded-[var(--tuwa-rounded-corners)] novacore:border novacore:border-white/10 novacore:bg-[var(--tuwa-button-gradient-from)] novacore:text-[var(--tuwa-text-on-accent)] novacore:shadow-lg novacore:transition-colors novacore:duration-200 novacore:hover:bg-[var(--tuwa-button-gradient-from-hover)] novacore:hover:shadow-xl novacore:md:right-8',
+            'tuwa-solid novacore:fixed novacore:right-4 novacore:bottom-8 novacore:z-50 novacore:flex novacore:h-12 novacore:w-12 novacore:cursor-pointer novacore:items-center novacore:justify-center novacore:overflow-hidden novacore:rounded-[var(--tuwa-rounded-corners)] novacore:border novacore:border-[var(--tuwa-button-primary-bg)] novacore:bg-[var(--tuwa-button-primary-bg)] novacore:text-[var(--tuwa-text-on-accent)] novacore:transition-colors novacore:duration-200 novacore:hover:border-[var(--tuwa-button-primary-bg-hover)] novacore:hover:bg-[var(--tuwa-button-primary-bg-hover)] novacore:md:right-8',
             className,
           )}
           onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })}

@@ -2,8 +2,13 @@
  * @file The marks of a result, a check mark and a cross, which draw themselves.
  */
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { pixelFlight } from '@tuwaio/nova-icons';
+import { motion, PresenceContext, useReducedMotion } from 'framer-motion';
+import { type CSSProperties, useContext, useState } from 'react';
 
+import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
+import { CHECK, CHECK_CUT, CROSS, CROSS_CUT, DISC } from '../pixel/art';
+import { pathOf, PIXEL_SVG, strokeOrder } from '../pixel/draw';
 import { cn } from '../utils';
 
 /** Props of {@link DrawnCheck} and {@link DrawnCross}. */
@@ -12,6 +17,10 @@ export type DrawnMarkProps = {
   variant?: 'plain' | 'disc';
   /** Classes of the icon, which set its size and color. */
   className?: string;
+  /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
+  look?: NovaLook;
+  /** Whether the mark is simply shown, without drawing itself (the pixel look; the classic one follows its AnimatePresence). */
+  still?: boolean;
 };
 
 /** The strokes of each mark, on a disc and alone. */
@@ -23,9 +32,58 @@ const STROKES = {
 /** How long one stroke takes to draw, in seconds. */
 const STROKE_SECONDS = { check: 0.35, cross: 0.2 } as const;
 
-function DrawnMark({ mark, variant = 'plain', className }: DrawnMarkProps & { mark: keyof typeof STROKES }) {
+/** The pixel marks: the mark alone, and the mark cut out of a disc. */
+const PIXEL_MARKS = {
+  check: { plain: strokeOrder(CHECK, 'check'), disc: strokeOrder(CHECK_CUT, 'check') },
+  cross: { plain: strokeOrder(CROSS, 'cross'), disc: strokeOrder(CROSS_CUT, 'cross') },
+} as const;
+const DISC_PATH = pathOf(DISC);
+
+function DrawnMark({
+  mark,
+  variant = 'plain',
+  className,
+  look,
+  still,
+}: DrawnMarkProps & { mark: keyof typeof STROKES }) {
   const reduceMotion = useReducedMotion();
+  const setLook = useNovaIcons().look;
+  // Inside an AnimatePresence with `initial={false}`, a mark that is there when the page opens is shown, not drawn. Taken at
+  // mount: on its way out, framer-motion gives the presence again without `initial`, and the mark would draw itself again
+  const presence = useContext(PresenceContext);
+  const [startedStill] = useState(() => presence?.initial === false);
+  const isStill = startedStill || still;
   const isDisc = variant === 'disc';
+
+  if ((look ?? setLook) === 'pixel') {
+    return (
+      <svg
+        {...PIXEL_SVG}
+        fill="none"
+        aria-hidden="true"
+        className={cn('novacore:block', className)}
+        // The mark assembles from its pixels (`motion.css` of @tuwaio/nova-icons); one already there is simply shown
+        data-motion={isStill ? undefined : 'assemble'}
+        style={{ '--nova-px-start': '80ms' } as CSSProperties}
+      >
+        {isDisc && <path d={DISC_PATH} fill="currentColor" />}
+        {PIXEL_MARKS[mark][variant].map(({ x, y }) => (
+          <rect
+            key={`${x}-${y}`}
+            className="tuwa-drawn-px"
+            x={x}
+            y={y}
+            width={1}
+            height={1}
+            // Cut out of the disc, as in a solid icon, in both themes
+            fill={isDisc ? 'var(--tuwa-bg-primary)' : 'currentColor'}
+            data-px=""
+            style={pixelFlight(x, y)}
+          />
+        ))}
+      </svg>
+    );
+  }
   const seconds = STROKE_SECONDS[mark];
 
   return (
@@ -70,7 +128,8 @@ export function DrawnCheck(props: DrawnMarkProps) {
 }
 
 /**
- * The cross of a failure, drawn stroke by stroke like {@link DrawnCheck}.
+ * The cross of a failure, which appears like {@link DrawnCheck}: it assembles from its pixels in the pixel look, and is drawn
+ * stroke by stroke in the classic one.
  *
  * @param props - See {@link DrawnMarkProps}.
  * @returns The icon.

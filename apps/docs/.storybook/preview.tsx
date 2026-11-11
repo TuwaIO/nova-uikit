@@ -2,6 +2,8 @@ import '../src/styles/app.css';
 
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import type { Preview } from '@storybook/react-vite';
+import { NovaIconsProvider } from '@tuwaio/nova-core';
+import { heroicons } from '@tuwaio/nova-core/heroicons';
 import React, { useEffect, useState } from 'react';
 import { addons } from 'storybook/preview-api';
 import { create } from 'storybook/theming/create';
@@ -58,23 +60,25 @@ const tuwaTheme = create({
   brandImage: LOGO_LIGHT,
   brandTarget: '_self',
   colorPrimary: '#0052ff',
-  colorSecondary: '#0284c7',
-  appBg: '#ffffff',
-  appContentBg: '#ffffff',
-  appBorderColor: '#e5e7eb',
-  appBorderRadius: 8,
+  colorSecondary: '#0052ff',
+  appBg: '#f2f1ee',
+  appContentBg: '#faf9f7',
+  appPreviewBg: '#faf9f7',
+  appBorderColor: '#d6d5d1',
+  appBorderRadius: 0,
   fontBase: '"Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
   fontCode: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-  textColor: '#1f2937',
-  textInverseColor: '#ffffff',
-  barTextColor: '#6b7280',
+  textColor: '#101014',
+  textInverseColor: '#faf9f7',
+  textMutedColor: '#636366',
+  barTextColor: '#636366',
   barSelectedColor: '#0052ff',
-  barHoverColor: '#0284c7',
-  barBg: '#f9fafb',
-  inputBg: '#ffffff',
-  inputBorder: '#d1d5db',
-  inputTextColor: '#1f2937',
-  inputBorderRadius: 6,
+  barHoverColor: '#0047de',
+  barBg: '#f2f1ee',
+  inputBg: '#faf9f7',
+  inputBorder: '#bdbcb9',
+  inputTextColor: '#101014',
+  inputBorderRadius: 0,
 });
 
 const tuwaDarkTheme = create({
@@ -83,24 +87,27 @@ const tuwaDarkTheme = create({
   brandUrl: 'https://www.tuwa.io/',
   brandImage: LOGO_DARK,
   brandTarget: '_self',
-  colorPrimary: '#2563eb',
-  colorSecondary: '#38bdf8',
-  appBg: '#0a0e27',
-  appContentBg: '#0d1230',
-  appBorderColor: '#1e293b',
-  appBorderRadius: 8,
+  colorPrimary: '#3d7bff',
+  // Storybook darkens it 18% under white text on the chosen item: #4f8cff keeps 5.9:1 there
+  colorSecondary: '#4f8cff',
+  appBg: '#101014',
+  appContentBg: '#121316',
+  appPreviewBg: '#121316',
+  appBorderColor: '#2b2c30',
+  appBorderRadius: 0,
   fontBase: '"Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
   fontCode: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-  textColor: '#f1f5f9',
-  textInverseColor: '#0a0e27',
-  barTextColor: '#94a3b8',
-  barSelectedColor: '#38bdf8',
-  barHoverColor: '#7dd3fc',
-  barBg: '#0a0e27',
-  inputBg: '#11183c',
-  inputBorder: '#334155',
-  inputTextColor: '#f1f5f9',
-  inputBorderRadius: 6,
+  textColor: '#f2f1ee',
+  textInverseColor: '#101014',
+  textMutedColor: '#9d9c9a',
+  barTextColor: '#9d9c9a',
+  barSelectedColor: '#60a5fa',
+  barHoverColor: '#93c5fd',
+  barBg: '#101014',
+  inputBg: '#17181b',
+  inputBorder: '#3a3b3f',
+  inputTextColor: '#f2f1ee',
+  inputBorderRadius: 0,
 });
 
 // ─── Themed Docs Container ────────────────────────────────────────────────────
@@ -206,12 +213,15 @@ const preview: Preview = {
           'Introduction',
           'Theming',
           'ConnectButton',
+          'Nova Icons',
           'Nova Core',
           'Nova Transactions',
           'Packages',
           [
             'Overview',
             'nova-core',
+            ['Overview', '*'],
+            'nova-icons',
             ['Overview', '*'],
             'nova-connect',
             ['Overview', 'connect', ['Overview', '*'], '*', ['Overview', '*']],
@@ -247,7 +257,31 @@ const preview: Preview = {
       },
     },
   },
+  // The icons of Nova: pixel by default, or the Heroicons set and the classic look of what Nova draws
+  globalTypes: {
+    icons: {
+      description: 'The icons and the look of Nova',
+      toolbar: {
+        title: 'Icons',
+        icon: 'grid',
+        items: [
+          { value: 'pixel', title: 'Pixel (nova-icons)' },
+          { value: 'heroicons', title: 'Classic (Heroicons)' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: { icons: 'pixel' },
   decorators: [
+    (Story, context) =>
+      context.globals.icons === 'heroicons' ? (
+        <NovaIconsProvider icons={heroicons}>
+          <Story />
+        </NovaIconsProvider>
+      ) : (
+        <Story />
+      ),
     (Story) => (
       <ThemeInjector>
         <Story />

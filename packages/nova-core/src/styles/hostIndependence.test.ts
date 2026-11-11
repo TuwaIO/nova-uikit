@@ -8,7 +8,7 @@ const connect = read('../../../nova-connect/src/styles/app.css');
 const fonts = read('./fonts.css');
 const withoutComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, '');
 
-// Owner, 2026-11-07: Nova keeps to its own parts. These reached the whole page of the host
+// Nova keeps to its own parts. These reached the whole page of the host
 describe('the styles of Nova on the page of a host', () => {
   it.each([
     ['the font of the page', /(^|[\s,}])body\s*\{/],
@@ -52,7 +52,7 @@ describe('the fonts', () => {
     expect(existsSync(new URL(`./${file}`, import.meta.url))).toBe(true);
   });
 
-  // Owner, 2026-11-07: the SIL Open Font License asks for its text to go with the fonts
+  // The SIL Open Font License asks for its text to go with the fonts
   it('come with their license', () => {
     expect(readFileSync(new URL('./fonts/OFL-Geist.txt', import.meta.url), 'utf8')).toContain('SIL OPEN FONT LICENSE');
   });

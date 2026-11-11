@@ -5,7 +5,6 @@
 
 @theme {
   --animate-float: novacon-float var(--tw-duration, 4000ms) var(--tw-ease, ease-in-out) infinite;
-  --animate-rotate: novacon-rotate var(--tw-duration, 1500ms) var(--tw-ease, ease) infinite;
 
   @keyframes novacon-float {
     0%,
@@ -16,23 +15,46 @@
       transform: translateY(-10px);
     }
   }
+}
 
-  @keyframes novacon-rotate {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+/* Paper and ink, a wait: a frame (its border is the element's) with a solid segment of the pending color running round
+   it, smoothly, on the border itself, so it follows the corners of the frame whatever `--tuwa-rounded-full` is. In place
+   of a spinning ring, which a square frame cannot be. `--tuwa-chase-border` is the width of the frame */
+@property --tuwa-chase-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.tuwa-square-chase::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--tuwa-chase-border, 1px));
+  padding: var(--tuwa-chase-border, 1px);
+  border-radius: inherit;
+  pointer-events: none;
+  /* Hard stops: one solid segment, no fading ends */
+  background: conic-gradient(from var(--tuwa-chase-angle), var(--tuwa-pending-icon) 0 14%, transparent 14% 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: tuwa-square-chase 2.4s linear infinite;
+}
+
+@keyframes tuwa-square-chase {
+  to {
+    --tuwa-chase-angle: 360deg;
   }
 }
 
-@utility u-shadow-inner-base {
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
-}
-
-@utility u-shadow-inset-arc {
-  box-shadow: 0 2px 0 var(--tuwa-pending-icon) inset;
+@media (prefers-reduced-motion: reduce) {
+  .tuwa-square-chase::after {
+    animation: none;
+  }
 }
 
 /* Above the dialogs of Nova. Only its own lists: the poppers of the host are its own */
@@ -62,6 +84,113 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
 
 .novacon-art-float {
   animation: novacon-art-float 8s ease-in-out infinite;
+}
+
+/* The pixel picture: crisp pixels; the subject assembles from them (the motions of @tuwaio/nova-icons: each pixel flies in
+   to its place), and then they move, fade and glow smoothly. In steps the motion was not smooth (a whole pixel of the
+   picture is several on screen) */
+.novacon-art-px-net {
+  opacity: 0.12;
+}
+
+.novacon-art-px-path {
+  fill: var(--tuwa-text-accent);
+  opacity: 0.45;
+}
+
+.novacon-art-px-flow {
+  fill: var(--tuwa-text-accent);
+  opacity: 0;
+  animation: novacon-art-px-flow var(--s, 9s) linear infinite;
+  animation-delay: calc(var(--d0, 2s) + var(--s, 9s) * 0.58 * var(--i) / var(--len));
+}
+
+.novacon-art-px-twinkle {
+  opacity: 0.2;
+  animation: novacon-art-px-twinkle 7s ease-in-out var(--art-delay, 0s) infinite;
+}
+
+.novacon-art-px-glow {
+  opacity: 0.18;
+  animation: novacon-art-px-glow 5s ease-in-out infinite;
+}
+
+.novacon-art-px-float {
+  animation: novacon-art-px-float 8s ease-in-out infinite;
+}
+
+/* The core glides from one subject to the next, and comes up after its first subject */
+.novacon-art-px-core {
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: novacon-art-px-in 1ms linear both;
+  animation-delay: calc(var(--art-start, 0.55s) + 0.8s);
+}
+
+/* Hidden until its turn, by visibility: the layers keep their own opacity (the orbit and the circuit are half lit) */
+@keyframes novacon-art-px-in {
+  from {
+    visibility: hidden;
+  }
+}
+
+/* Each pixel of a line lights up in its turn and fades: the light runs along the line with a short tail */
+@keyframes novacon-art-px-flow {
+  0% {
+    opacity: 0;
+  }
+
+  1.5% {
+    opacity: var(--art-opacity, 1);
+  }
+
+  7%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes novacon-art-px-twinkle {
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+
+  50% {
+    opacity: 0.42;
+  }
+}
+
+@keyframes novacon-art-px-glow {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+
+  50% {
+    opacity: 0.26;
+  }
+}
+
+@keyframes novacon-art-px-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .novacon-art-px-flow,
+  .novacon-art-px-twinkle,
+  .novacon-art-px-glow,
+  .novacon-art-px-float,
+  .novacon-art-px-core {
+    animation: none;
+    transition: none;
+  }
 }
 
 @keyframes novacon-art-flow {
@@ -149,12 +278,8 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
   padding: 1px;
   border-radius: inherit;
   pointer-events: none;
-  background: conic-gradient(
-    from var(--tuwa-add-wallet-angle),
-    transparent 0 72%,
-    var(--tuwa-text-accent) 88%,
-    transparent 100%
-  );
+  /* Hard stops: one solid segment of the accent, no fading ends */
+  background: conic-gradient(from var(--tuwa-add-wallet-angle), transparent 0 84%, var(--tuwa-text-accent) 84% 100%);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -177,12 +302,11 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
   color: var(--tuwa-text-accent);
 }
 
+/* A square frame of dashes (its edge of 120 holds 20 of them); on hover the dashes run round it */
 .tuwa-add-wallet-ring {
   stroke: var(--tuwa-text-accent);
   stroke-width: 1;
-  stroke-dasharray: 3 3.28;
-  transform-box: fill-box;
-  transform-origin: center;
+  stroke-dasharray: 3 3;
   animation: tuwa-add-wallet-turn 12s linear infinite;
   animation-play-state: paused;
 }
@@ -231,7 +355,75 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
 
 @keyframes tuwa-add-wallet-turn {
   to {
-    transform: rotate(360deg);
+    stroke-dashoffset: -120;
+  }
+}
+
+/* The pixel look: a square frame of dots that take turns on hover, a plus, an arrow that steps one pixel */
+.tuwa-add-wallet-px-dot {
+  fill: var(--tuwa-text-accent);
+  opacity: 0.9;
+}
+
+.tuwa-add-wallet-px-dot--b {
+  opacity: 0.35;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-dot,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-dot {
+  animation: tuwa-add-wallet-px-turn 0.8s step-end infinite;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-dot--b,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-dot--b {
+  animation-delay: -0.4s;
+}
+
+.tuwa-add-wallet-px-plus {
+  fill: var(--tuwa-text-accent);
+}
+
+.tuwa-add-wallet-px-arrow {
+  opacity: 0.5;
+  transition:
+    transform 160ms step-end,
+    opacity 200ms ease;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-arrow,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-arrow {
+  opacity: 1;
+  transform: translateX(1px);
+}
+
+/* The pixel check mark of "Remember this wallet": ticked, it assembles from its pixels; unticked, it goes at once */
+.tuwa-remember-px {
+  opacity: 0;
+}
+
+/* Ticked: the check mark assembles from its pixels (`[data-motion='assemble'] [data-px]` of @tuwaio/nova-icons) */
+[data-on] > .tuwa-remember-px {
+  opacity: 1;
+}
+
+@keyframes tuwa-add-wallet-px-turn {
+  0% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuwa-add-wallet-px-dot,
+  .tuwa-add-wallet-px-arrow,
+  .tuwa-remember-px,
+  [data-on] > .tuwa-remember-px {
+    animation: none !important;
+    transition: none;
+    transform: none !important;
   }
 }
 

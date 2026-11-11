@@ -184,7 +184,7 @@ const DefaultContainer = (props: ErrorsProviderContainerProps) => {
   return (
     <ToastContainer
       // On its own toasts: the same rule on `.Toastify__toast` took the padding from the toasts of the host
-      toastClassName="novacon:!p-0 novacon:!bg-transparent"
+      toastClassName="novacon:!p-0 novacon:!bg-transparent novacon:!shadow-none novacon:!rounded-[var(--tuwa-rounded-corners)]"
       {...props}
       role="alert"
       aria-live="assertive"

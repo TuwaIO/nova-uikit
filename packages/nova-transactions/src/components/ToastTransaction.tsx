@@ -43,7 +43,7 @@ export type ToastTransactionActionButtonProps = {
 export type ToastTransactionCustomization<T extends Transaction> = {
   /** Components that replace the default parts. */
   components?: {
-    /** The strip and the wash of the status color along the top of the toast. */
+    /** The strip of the status color along the top of the toast. */
     StatusEdge?: ComponentType<StatusEdgeProps>;
     /** The title and the description. */
     StatusAwareText?: ComponentType<StatusAwareTextProps>;
@@ -67,7 +67,7 @@ export type ToastTransactionCustomization<T extends Transaction> = {
   classNames?: {
     /** Classes for the toast container */
     container?: string;
-    /** Classes for the strip and the wash of the status color */
+    /** Classes for the strip of the status color */
     statusEdge?: string;
     /** Classes for the status line at the top (status + confirmations) */
     statusLine?: string;
@@ -148,7 +148,7 @@ const DefaultSpeedUpButton = ({ onClick, children, className }: ToastTransaction
     onClick={onClick}
     type="button"
     className={cn(
-      'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+      'novatx:cursor-pointer novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
       className,
     )}
   >
@@ -161,7 +161,7 @@ const DefaultCancelButton = ({ onClick, children, className }: ToastTransactionA
     onClick={onClick}
     type="button"
     className={cn(
-      'novatx:cursor-pointer novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
+      'novatx:cursor-pointer novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)] novatx:transition-opacity novatx:hover:opacity-80',
       className,
     )}
   >
@@ -173,7 +173,7 @@ const DefaultTxInfoButton = ({ onClick, children, className }: ToastTransactionA
   // If custom className provided, use it exclusively. Otherwise use default styles.
   const buttonClassName = className
     ? className
-    : 'novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-text-on-accent)] novatx:shadow-lg novatx:transition-all novatx:duration-200 novatx:ease-in-out novatx:hover:shadow-xl novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)] novatx:active:scale-95';
+    : 'tuwa-solid novatx:cursor-pointer novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-button-primary-bg)] novatx:px-3 novatx:py-1 novatx:min-h-[28px] novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-on-accent)] novatx:transition-colors novatx:duration-200 novatx:hover:bg-[var(--tuwa-button-primary-bg-hover)]';
 
   return (
     <button className={buttonClassName} onClick={onClick} type="button">
@@ -210,8 +210,8 @@ const DefaultConfirmationsBadge = ({
 /**
  * The body of a transaction toast: a strip in the status color along the top (a glint while pending, filling up with the
  * confirmations when they are counted), the status line with the number of confirmations, the network icon, the title and
- * description (colored by status), and the hashes with explorer links. A change of status morphs the texts and washes the
- * top of the toast in the color of the result. For a pending, unconfirmed EVM transaction sent with MetaMask by the
+ * description (colored by status), and the hashes with explorer links. A change of status morphs the texts, and the strip
+ * along the top takes the color of the result; the toast keeps its own color. For a pending, unconfirmed EVM transaction sent with MetaMask by the
  * connected wallet, once the tracker has read its nonce and fees, it offers speed-up and cancel (when the adapter has
  * `speedUpTxAction` and `cancelTxAction`), and a refusal of the action is shown through `useNovaTransactionsError`; for
  * transactions of the connected wallet, a button opens the transaction in the history modal. `NovaTransactionsProvider` shows
@@ -267,7 +267,7 @@ export function ToastTransaction<T extends Transaction>({
   return (
     <div
       className={cn(
-        'novatx:relative novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        'tuwa-scanlines novatx:relative novatx:flex novatx:w-full novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4',
         classNames?.container,
         className,
       )}

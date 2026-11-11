@@ -2,12 +2,20 @@
  * @file The icon of a button that removes: a bin with a lid of its own.
  */
 
+import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
+import { TRASH_CAN, TRASH_LID } from '../pixel/art';
+import { pathOf, PIXEL_SVG } from '../pixel/draw';
 import { cn } from '../utils';
+
+const TRASH_CAN_PATH = pathOf(TRASH_CAN);
+const TRASH_LID_PATH = pathOf(TRASH_LID);
 
 /** Props of {@link TrashIcon}. */
 export type TrashIconProps = {
   /** Classes of the icon, which set its size and color. */
   className?: string;
+  /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
+  look?: NovaLook;
 };
 
 /**
@@ -18,7 +26,21 @@ export type TrashIconProps = {
  * @param props - See {@link TrashIconProps}.
  * @returns The icon.
  */
-export function TrashIcon({ className }: TrashIconProps) {
+export function TrashIcon({ className, look }: TrashIconProps) {
+  const setLook = useNovaIcons().look;
+  if ((look ?? setLook) === 'pixel') {
+    return (
+      <svg
+        {...PIXEL_SVG}
+        fill="currentColor"
+        aria-hidden="true"
+        className={cn('tuwa-trash-icon novacore:block novacore:overflow-visible', className)}
+      >
+        <path d={TRASH_CAN_PATH} />
+        <path className="tuwa-trash-lid-px" d={TRASH_LID_PATH} />
+      </svg>
+    );
+  }
   return (
     <svg
       viewBox="0 0 24 24"
@@ -28,7 +50,7 @@ export function TrashIcon({ className }: TrashIconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={cn('novacore:block novacore:overflow-visible', className)}
+      className={cn('tuwa-trash-icon novacore:block novacore:overflow-visible', className)}
     >
       <path d="M19.228 5.79 18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79" />
       <path d="M14.74 9l-.346 9M9.606 18 9.26 9" />

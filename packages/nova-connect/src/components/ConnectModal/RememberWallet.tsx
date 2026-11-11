@@ -2,14 +2,14 @@
  * @file RememberWallet component: the "Remember this wallet" checkbox under the wallet list of the connect modal.
  */
 
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { useNovaSounds } from '@tuwaio/nova-core';
+import { NovaSetIcon, pixelFlight, useNovaIcons, useNovaSounds } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
-import { ComponentType, ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { ComponentType, CSSProperties, ReactNode, useEffect, useId, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
+import { CHECK_FLIGHT, PIXEL_CHECK } from './rememberWalletCheck';
 
 /**
  * Props for a custom container of {@link RememberWallet}.
@@ -131,11 +131,16 @@ export function RememberWallet({ customization }: { customization?: RememberWall
   const rememberWallet = useSatelliteConnectStore((store) => store.rememberWallet);
   const setStoreRememberWallet = useSatelliteConnectStore((store) => store.setRememberWallet);
   const play = useNovaSounds();
+  // Ticked here, in this list: only then does the check mark assemble. A box already ticked when the list opens (the
+  // default) shows its mark at once, as the classic look does
+  const [tickedHere, setTickedHere] = useState(false);
   const setRememberWallet = (remember: boolean) => {
     play('checkbox');
+    setTickedHere(remember);
     setStoreRememberWallet(remember);
   };
   const reduceMotion = useReducedMotion() ?? false;
+  const { look } = useNovaIcons();
   const hintId = useId();
   const tooltipId = useId();
   const [hovered, setHovered] = useState(false);
@@ -225,29 +230,59 @@ export function RememberWallet({ customization }: { customization?: RememberWall
               className="novacon:pointer-events-none novacon:absolute novacon:inset-0 novacon:rounded-[inherit] novacon:bg-[var(--tuwa-text-accent)]"
             />
           )}
-          <svg
-            viewBox="0 0 16 16"
-            fill="none"
-            className={
-              classNames?.checkmark?.() ??
-              cn('novacon:relative novacon:h-3 novacon:w-3 novacon:text-[var(--tuwa-text-on-accent)]')
-            }
-          >
-            <motion.path
-              d="M3.5 8.5l3 3 6-7"
-              stroke="currentColor"
-              strokeWidth={2.25}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={false}
-              animate={{ pathLength: rememberWallet ? 1 : 0, opacity: rememberWallet ? 1 : 0 }}
-              transition={
-                reduceMotion
-                  ? { duration: 0 }
-                  : { duration: rememberWallet ? 0.26 : 0.14, delay: rememberWallet ? 0.06 : 0, ease: 'easeOut' }
+          {look === 'pixel' ? (
+            <svg
+              viewBox="0 0 7 7"
+              shapeRendering="crispEdges"
+              fill="currentColor"
+              aria-hidden="true"
+              data-on={rememberWallet ? '' : undefined}
+              // Ticked here, the check mark assembles from its pixels (the motions of @tuwaio/nova-icons)
+              data-motion={rememberWallet && tickedHere ? 'assemble' : undefined}
+              style={{ '--nova-px-start': '60ms' } as CSSProperties}
+              className={
+                classNames?.checkmark?.() ??
+                cn('novacon:relative novacon:h-3.5 novacon:w-3.5 novacon:text-[var(--tuwa-text-on-accent)]')
               }
-            />
-          </svg>
+            >
+              {PIXEL_CHECK.map(([x, y]) => (
+                <rect
+                  key={`${x}-${y}`}
+                  className="tuwa-remember-px"
+                  x={x}
+                  y={y}
+                  width={1}
+                  height={1}
+                  data-px=""
+                  style={pixelFlight(x, y, CHECK_FLIGHT)}
+                />
+              ))}
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              className={
+                classNames?.checkmark?.() ??
+                cn('novacon:relative novacon:h-3 novacon:w-3 novacon:text-[var(--tuwa-text-on-accent)]')
+              }
+            >
+              <motion.path
+                d="M3.5 8.5l3 3 6-7"
+                stroke="currentColor"
+                strokeWidth={2.25}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={false}
+                animate={{ pathLength: rememberWallet ? 1 : 0, opacity: rememberWallet ? 1 : 0 }}
+                transition={
+                  reduceMotion
+                    ? { duration: 0 }
+                    : { duration: rememberWallet ? 0.26 : 0.14, delay: rememberWallet ? 0.06 : 0, ease: 'easeOut' }
+                }
+              />
+            </svg>
+          )}
         </motion.span>
         <span
           className={
@@ -272,14 +307,14 @@ export function RememberWallet({ customization }: { customization?: RememberWall
           className={
             classNames?.infoButton?.() ??
             cn(
-              'novacon:flex novacon:h-5 novacon:w-5 novacon:cursor-pointer novacon:items-center novacon:justify-center novacon:rounded-full',
+              'novacon:flex novacon:h-5 novacon:w-5 novacon:cursor-pointer novacon:items-center novacon:justify-center novacon:rounded-[var(--tuwa-rounded-full)]',
               'novacon:text-[var(--tuwa-text-tertiary)] novacon:transition-colors novacon:hover:text-[var(--tuwa-text-primary)]',
               'novacon:focus-visible:outline-none novacon:focus-visible:ring-[length:var(--tuwa-ring-width)] novacon:focus-visible:ring-[var(--tuwa-text-accent)]',
               open && 'novacon:text-[var(--tuwa-text-primary)]',
             )
           }
         >
-          <InformationCircleIcon width={16} height={16} aria-hidden="true" />
+          <NovaSetIcon outline="InformationCircleIcon" width={16} height={16} aria-hidden="true" />
         </button>
         <AnimatePresence>
           {open && (
@@ -295,7 +330,7 @@ export function RememberWallet({ customization }: { customization?: RememberWall
                 classNames?.tooltip?.() ??
                 cn(
                   'novacon:pointer-events-none novacon:absolute novacon:right-0 novacon:bottom-full novacon:z-20 novacon:mb-2 novacon:w-max novacon:max-w-[240px]',
-                  'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-text-primary)] novacon:px-3 novacon:py-2 novacon:shadow-lg',
+                  'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:bg-[var(--tuwa-text-primary)] novacon:px-3 novacon:py-2',
                   'novacon:text-left novacon:text-xs novacon:leading-snug novacon:text-[var(--tuwa-bg-primary)]',
                 )
               }

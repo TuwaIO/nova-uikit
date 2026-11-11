@@ -2,7 +2,7 @@
  * @file ConnectorsSelections component with comprehensive customization options and categorized connector display.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { NovaSetIcon } from '@tuwaio/nova-core';
 import { cn, isTouchDevice } from '@tuwaio/nova-core/utils';
 import {
   formatConnectorName,
@@ -862,7 +862,8 @@ export const ConnectorsSelections = memo(
               customHandlers?.onEmptyStateAction ? () => customHandlers.onEmptyStateAction!(selectionsData) : undefined
             }
           >
-            <ExclamationTriangleIcon
+            <NovaSetIcon
+              outline="ExclamationTriangleIcon"
               width={32}
               height={32}
               className="novacon:text-[var(--tuwa-text-accent)] novacon:mb-3"

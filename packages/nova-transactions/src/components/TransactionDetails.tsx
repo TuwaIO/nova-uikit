@@ -4,18 +4,6 @@
  */
 
 import {
-  ArrowPathIcon,
-  BoltIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  CloudArrowUpIcon,
-  CloudIcon,
-  CommandLineIcon,
-  CpuChipIcon,
-  DocumentTextIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
-import {
   CloseIcon,
   cn,
   CopyIcon,
@@ -26,6 +14,7 @@ import {
   MorphIcon,
   MorphText,
   NetworkIcon,
+  NovaSetIcon,
   QuasarLoader,
   StatusEdge,
   StatusTone,
@@ -56,6 +45,21 @@ import {
 import { statusText } from '../utils/statusText';
 import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
+
+/** The icons of the sections and rows, from the icon set of `NovaIconsProvider` (the pixel ones by default). */
+const SectionIcons = {
+  CheckCircleIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="CheckCircleIcon" className={className} />
+  ),
+  ClockIcon: ({ className }: { className?: string }) => <NovaSetIcon outline="ClockIcon" className={className} />,
+  CommandLineIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="CommandLineIcon" className={className} />
+  ),
+  CpuChipIcon: ({ className }: { className?: string }) => <NovaSetIcon outline="CpuChipIcon" className={className} />,
+  DocumentTextIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="DocumentTextIcon" className={className} />
+  ),
+};
 
 // --- Sub-components Prop Types ---
 
@@ -106,7 +110,7 @@ export type DetailItemProps = {
 /** Props of a row of the metadata section of {@link TransactionDetails} (network, adapter, times, tracker…). */
 export type MetadataRowProps = {
   /**
-   * Icon component (a Heroicons icon by default), rendered with a `className`. The default row does not show it; it is
+   * Icon component (an icon of the Nova icon set by default), rendered with a `className`. The default row does not show it; it is
    * passed for custom rows.
    */
   icon: ComponentType<{ className?: string }>;
@@ -161,7 +165,7 @@ export type SectionHeadingProps = {
   children: ReactNode;
   /** Classes of the heading. */
   className?: string;
-  /** Icon component of the section (a Heroicons icon by default), rendered with a `className`. */
+  /** Icon component of the section (an icon of the Nova icon set by default), rendered with a `className`. */
   icon?: ComponentType<{ className?: string }>;
 };
 
@@ -170,7 +174,7 @@ export type SectionHeadingProps = {
 const SectionCard = ({ children, className }: { children: ReactNode; className?: string }) => (
   <section
     className={cn(
-      'novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-xs novatx:sm:p-5',
+      'novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-1.5 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:sm:p-5',
       className,
     )}
   >
@@ -181,13 +185,13 @@ const SectionCard = ({ children, className }: { children: ReactNode; className?:
 const SectionHeading = ({ children, className, icon: Icon }: SectionHeadingProps) => (
   <div className="novatx:mb-1 novatx:flex novatx:min-w-0 novatx:items-center novatx:gap-3.5">
     {Icon && (
-      <span className="novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-full novatx:bg-[var(--tuwa-text-accent)]/10 novatx:text-[var(--tuwa-text-accent)]">
+      <span className="novatx:flex novatx:h-10 novatx:w-10 novatx:shrink-0 novatx:items-center novatx:justify-center novatx:rounded-[var(--tuwa-rounded-full)] novatx:bg-[var(--tuwa-text-accent)]/10 novatx:text-[var(--tuwa-text-accent)]">
         <Icon className="novatx:h-5 novatx:w-5" />
       </span>
     )}
     <h4
       className={cn(
-        'novatx:m-0 novatx:min-w-0 novatx:truncate novatx:font-mono novatx:text-lg novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:sm:text-xl',
+        'novatx:m-0 novatx:min-w-0 novatx:truncate novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)]',
         className,
       )}
     >
@@ -198,7 +202,8 @@ const SectionHeading = ({ children, className, icon: Icon }: SectionHeadingProps
 
 const rowClassName =
   'novatx:flex novatx:min-w-0 novatx:items-baseline novatx:justify-between novatx:gap-4 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:py-2.5 novatx:text-[13px] novatx:last:border-b-0';
-const rowLabelClassName = 'novatx:shrink-0 novatx:text-[var(--tuwa-text-secondary)]';
+const rowLabelClassName =
+  'novatx:shrink-0 novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)]';
 const rowValueClassName =
   'novatx:m-0 novatx:min-w-0 novatx:text-right novatx:text-[var(--tuwa-text-primary)] novatx:[overflow-wrap:anywhere]';
 
@@ -213,7 +218,7 @@ const CopyButton = ({ value, className, dark = false }: { value: string; classNa
       className={cn(
         'novatx:inline-flex novatx:h-[26px] novatx:w-[26px] novatx:shrink-0 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:self-center novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:transition-colors',
         dark
-          ? 'novatx:border-slate-700 novatx:text-slate-400 novatx:hover:text-slate-100'
+          ? 'novatx:border-[#2b2c30] novatx:text-[#9d9c9a] novatx:hover:text-[#f2f1ee]'
           : 'novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:text-[var(--tuwa-text-secondary)] novatx:hover:text-[var(--tuwa-text-accent)]',
         className,
       )}
@@ -268,17 +273,22 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
   return (
     <div
       className={cn(
-        'novatx:mt-2 novatx:overflow-hidden novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-slate-800 novatx:bg-slate-900',
+        'novatx:mt-2 novatx:overflow-hidden novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[#2b2c30] novatx:bg-[#0b0b0e]',
         className,
       )}
     >
       <div
         className={cn(
-          'novatx:flex novatx:items-center novatx:justify-between novatx:gap-2 novatx:border-b novatx:border-slate-800 novatx:py-1 novatx:pr-1.5 novatx:pl-4',
+          'novatx:flex novatx:items-center novatx:justify-between novatx:gap-2 novatx:border-b novatx:border-[#2b2c30] novatx:py-1 novatx:pr-1.5 novatx:pl-4',
           classNames?.header,
         )}
       >
-        <span className={cn('novatx:font-mono novatx:text-[11px] novatx:text-slate-400', classNames?.label)}>
+        <span
+          className={cn(
+            'novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[#9d9c9a]',
+            classNames?.label,
+          )}
+        >
           {label}
         </span>
         <CopyButton value={jsonStr} dark className={classNames?.copyButton} />
@@ -291,7 +301,7 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
       >
         <pre
           className={cn(
-            'novatx:m-0 novatx:px-5 novatx:py-4 novatx:font-mono novatx:text-[13px] novatx:leading-relaxed novatx:whitespace-pre-wrap novatx:text-slate-200 novatx:[overflow-wrap:anywhere]',
+            'novatx:m-0 novatx:px-5 novatx:py-4 novatx:font-mono novatx:text-[13px] novatx:leading-relaxed novatx:whitespace-pre-wrap novatx:text-[#e9e8e4] novatx:[overflow-wrap:anywhere]',
             classNames?.pre,
           )}
         >
@@ -313,7 +323,7 @@ const BADGE_TONES: Record<BadgeTone, string> = {
     'novatx:border-[var(--tuwa-error-icon)]/25 novatx:bg-[var(--tuwa-error-bg)] novatx:text-[var(--tuwa-error-text)]',
   info: 'novatx:border-[var(--tuwa-info-icon)]/25 novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
   // The info colors: the secondary text on the muted background reads at 4.4:1 only
-  muted: 'novatx:border-transparent novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
+  muted: 'novatx:border-[var(--tuwa-info-icon)]/25 novatx:bg-[var(--tuwa-info-bg)] novatx:text-[var(--tuwa-info-text)]',
 };
 
 const Badge = ({
@@ -332,7 +342,7 @@ const Badge = ({
   <span
     title={title}
     className={cn(
-      'novatx:inline-flex novatx:items-center novatx:gap-1.5 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-2 novatx:py-0.5 novatx:text-[10px] novatx:font-black novatx:uppercase novatx:tracking-widest',
+      'novatx:inline-flex novatx:items-center novatx:gap-1.5 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:px-1.5 novatx:py-0.5 novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em]',
       BADGE_TONES[tone],
       className,
     )}
@@ -358,7 +368,7 @@ const StatusMark = ({ tone }: { tone: StatusTone }) => (
     ) : tone === 'success' ? (
       <DrawnCheck className="novatx:h-3.5 novatx:w-3.5" />
     ) : tone === 'neutral' ? (
-      <ArrowPathIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
+      <NovaSetIcon outline="ArrowPathIcon" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
     ) : (
       <DrawnCross className="novatx:h-3.5 novatx:w-3.5" />
     )}
@@ -388,7 +398,7 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
   );
 
 const actionButtonClassName =
-  'novatx:inline-flex novatx:h-9 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-2 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:font-mono novatx:text-sm novatx:font-bold novatx:tracking-tight novatx:text-[var(--tuwa-text-primary)] novatx:no-underline novatx:transition-colors novatx:hover:bg-[var(--tuwa-bg-muted)]';
+  'novatx:inline-flex novatx:h-9 novatx:cursor-pointer novatx:items-center novatx:justify-center novatx:gap-2 novatx:whitespace-nowrap novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-strong)] novatx:bg-transparent novatx:px-4 novatx:font-mono novatx:text-xs novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-primary)] novatx:no-underline novatx:transition-colors novatx:hover:bg-[var(--tuwa-standart-button-hover)]';
 
 // --- Customization Types ---
 
@@ -570,7 +580,8 @@ export function TransactionDetails<T extends Transaction>({
       <Badge
         tone="pending"
         icon={
-          <CloudArrowUpIcon
+          <NovaSetIcon
+            outline="CloudArrowUpIcon"
             className="novatx:h-3.5 novatx:w-3.5 novatx:animate-pulse novatx:motion-reduce:animate-none"
             aria-hidden="true"
           />
@@ -582,7 +593,7 @@ export function TransactionDetails<T extends Transaction>({
     ) : tx.syncStatus === 'synced' ? (
       <Badge
         tone="muted"
-        icon={<CloudIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
+        icon={<NovaSetIcon outline="CloudIcon" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
         title={transactionDetails.syncStatus.syncedTooltip}
       >
         {transactionDetails.syncStatus.synced}
@@ -628,7 +639,7 @@ export function TransactionDetails<T extends Transaction>({
       {!hideHeader && (
         <header
           className={cn(
-            'novatx:sticky novatx:top-0 novatx:z-10 novatx:flex novatx:items-center novatx:gap-3 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:py-3.5 novatx:sm:px-5 novatx:sm:py-4',
+            'tuwa-scanlines novatx:sticky novatx:top-0 novatx:z-10 novatx:flex novatx:items-center novatx:gap-3 novatx:border-b novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:px-4 novatx:py-3.5 novatx:sm:px-5 novatx:sm:py-4',
             classNames?.header,
           )}
         >
@@ -657,7 +668,7 @@ export function TransactionDetails<T extends Transaction>({
 
       <div
         className={cn(
-          'novatx:relative novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-4 novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-4 novatx:sm:p-5',
+          'tuwa-scanlines novatx:relative novatx:flex novatx:min-w-0 novatx:flex-col novatx:gap-4 novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-4 novatx:sm:p-5',
           classNames?.body,
         )}
       >
@@ -682,7 +693,7 @@ export function TransactionDetails<T extends Transaction>({
               type="button"
               onClick={() => onStopTracking(tx.txKey)}
               className={cn(
-                'novatx:cursor-pointer novatx:self-start novatx:text-sm novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
+                'novatx:cursor-pointer novatx:self-start novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-accent)] novatx:transition-opacity novatx:hover:opacity-80',
                 classNames?.stopTrackingButton,
               )}
             >
@@ -719,7 +730,7 @@ export function TransactionDetails<T extends Transaction>({
                   onClick={() => void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal)}
                   className={cn(actionButtonClassName, classNames?.actionButton)}
                 >
-                  <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                  <NovaSetIcon outline="BoltIcon" className="novatx:h-4 novatx:w-4" aria-hidden="true" />
                   {actions.speedUp}
                 </button>
               )}
@@ -728,7 +739,7 @@ export function TransactionDetails<T extends Transaction>({
                 onClick={() => void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal)}
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >
-                <XCircleIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                <NovaSetIcon outline="XCircleIcon" className="novatx:h-4 novatx:w-4" aria-hidden="true" />
                 {actions.cancel}
               </button>
             </div>
@@ -750,7 +761,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {/* ── Metadata ── */}
         <CSectionCard className={classNames?.metadataSection}>
-          <CSectionHeading icon={DocumentTextIcon} className={classNames?.sectionHeader}>
+          <CSectionHeading icon={SectionIcons.DocumentTextIcon} className={classNames?.sectionHeader}>
             {transactionDetails.metadata}
           </CSectionHeading>
           <dl className="novatx:m-0">
@@ -761,7 +772,7 @@ export function TransactionDetails<T extends Transaction>({
             ) : (
               <CDetailItem label={transactionDetails.hash} value="—" />
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.network}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.network}>
               <span
                 className={cn(
                   'novatx:inline-flex novatx:max-w-full novatx:items-center novatx:gap-2 novatx:align-middle',
@@ -783,25 +794,25 @@ export function TransactionDetails<T extends Transaction>({
             ) : (
               <CDetailItem label={transactionDetails.to} value="—" />
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.adapter}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.adapter}>
               {tx.adapter}
             </CMetadataRow>
-            <CMetadataRow icon={ClockIcon} label={transactionDetails.submittedAt}>
+            <CMetadataRow icon={SectionIcons.ClockIcon} label={transactionDetails.submittedAt}>
               {formatTime(tx.localTimestamp)}
             </CMetadataRow>
             {tx.finishedTimestamp && (
-              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.finishedAt}>
+              <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.finishedAt}>
                 {formatTime(tx.finishedTimestamp)}
               </CMetadataRow>
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.tracker}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.tracker}>
               {tx.tracker}
             </CMetadataRow>
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.connector}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.connector}>
               <span className="novatx:capitalize">{walletPartOf(tx.connectorType)}</span>
             </CMetadataRow>
             {showConfirmations && (
-              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.confirmations}>
+              <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.confirmations}>
                 {`${tx.confirmations}${tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}`}
               </CMetadataRow>
             )}
@@ -812,7 +823,7 @@ export function TransactionDetails<T extends Transaction>({
         {/* ── Context & Payload ── */}
         {hasContext && (
           <CSectionCard className={classNames?.contextSection}>
-            <CSectionHeading icon={CommandLineIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CommandLineIcon} className={classNames?.sectionHeader}>
               {transactionDetails.contextTitle}
             </CSectionHeading>
             {(titleContext || descriptionContext) && (
@@ -830,7 +841,7 @@ export function TransactionDetails<T extends Transaction>({
         {/* ── Execution data of the chain ── */}
         {hasEvmData && evmTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.evmTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">
@@ -860,7 +871,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {hasSolanaData && solanaTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.solanaTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">
@@ -876,7 +887,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {hasStarknetData && starknetTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.starknetTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">

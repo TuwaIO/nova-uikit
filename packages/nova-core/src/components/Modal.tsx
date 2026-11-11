@@ -64,7 +64,7 @@ export function isInsideToast(target: EventTarget | null): boolean {
 }
 
 /**
- * The dimmed, blurred backdrop behind the dialog, faded in with `framer-motion` (Radix removes it at once on close, so an
+ * The dimmed backdrop behind the dialog (ink at 50%, no blur), faded in with `framer-motion` (Radix removes it at once on close, so an
  * `exit` variant does not run). {@link DialogContent} renders
  * it.
  *
@@ -89,10 +89,7 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
         className="novacore:relative novacore:overflow-hidden"
       >
         <div
-          className={cn(
-            'novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-black/55 novacore:backdrop-blur-sm novacore:backdrop-saturate-150',
-            className,
-          )}
+          className={cn('novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-[rgb(16_16_20/0.5)]', className)}
         />
       </motion.div>
     </AnimatePresence>
@@ -225,7 +222,7 @@ const DialogContent = React.forwardRef<
                 animate="animate"
                 initial="initial"
                 exit="exit"
-                className="NovaNoScrolling novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
+                className="NovaNoScrolling tuwa-scanlines novacore:relative novacore:overflow-hidden novacore:bg-[var(--tuwa-bg-primary)] novacore:border novacore:border-[var(--tuwa-border-primary)] novacore:rounded-t-[var(--tuwa-rounded-corners)] novacore:sm:rounded-[var(--tuwa-rounded-corners)]"
               >
                 <div ref={setFrame} className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
                   <div
@@ -260,7 +257,7 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   <div
     className={cn(
       'novacore:sticky novacore:flex novacore:top-0 novacore:z-11 novacore:w-full novacore:flex-row novacore:items-center novacore:justify-between',
-      'novacore:border-b novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)] novacore:p-4',
+      'tuwa-scanlines novacore:border-b novacore:border-[var(--tuwa-border-primary)] novacore:bg-[var(--tuwa-bg-primary)] novacore:p-4',
       className,
     )}
     {...props}

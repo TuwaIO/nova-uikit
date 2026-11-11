@@ -1,0 +1,14 @@
+export { ArrowDownIcon } from './solid/ArrowDownIcon';
+export { ArrowPathIcon } from './solid/ArrowPathIcon';
+export { ArrowUpIcon } from './solid/ArrowUpIcon';
+export { BeakerIcon } from './solid/BeakerIcon';
+export { CheckCircleIcon } from './solid/CheckCircleIcon';
+export { ChevronDownIcon } from './solid/ChevronDownIcon';
+export { ChevronLeftIcon } from './solid/ChevronLeftIcon';
+export { ChevronRightIcon } from './solid/ChevronRightIcon';
+export { ChevronUpDownIcon } from './solid/ChevronUpDownIcon';
+export { ChevronUpIcon } from './solid/ChevronUpIcon';
+export { DocumentDuplicateIcon } from './solid/DocumentDuplicateIcon';
+export { ExclamationTriangleIcon } from './solid/ExclamationTriangleIcon';
+export { GlobeAltIcon } from './solid/GlobeAltIcon';
+export { PuzzlePieceIcon } from './solid/PuzzlePieceIcon';

@@ -57,7 +57,12 @@ async function markClientEntry() {
   }
 }
 
-const publicEntries = { index: './src/index.ts', 'web3-icons': './src/web3-icons.ts', utils: './src/utils/index.ts' };
+const publicEntries = {
+  index: './src/index.ts',
+  'web3-icons': './src/web3-icons.ts',
+  utils: './src/utils/index.ts',
+  heroicons: './src/heroicons.ts',
+};
 
 // Every component is an entry of its own, so that a page takes only what it imports: with the entry points alone a page that wanted
 // `cn` and an icon evaluated the imports of the dialog and of `framer-motion` too. `package.json` lists these files as free of side

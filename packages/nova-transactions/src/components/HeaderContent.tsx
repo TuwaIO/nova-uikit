@@ -3,7 +3,7 @@
  * the title with its subtitle and the close button.
  */
 
-import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { NovaSetIcon } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { ReactNode } from 'react';
 
@@ -62,7 +62,7 @@ export function HeaderContent({ title, subtitle, onBack, backLabel, closeButton,
             classNames?.backButton,
           )}
         >
-          <ArrowLeftIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+          <NovaSetIcon outline="ArrowLeftIcon" className="novatx:h-4 novatx:w-4" aria-hidden="true" />
         </button>
       )}
       <div className="novatx:flex novatx:min-w-0 novatx:flex-1 novatx:flex-col novatx:gap-0.5">

@@ -3,9 +3,13 @@
  * status.
  */
 
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, DrawnCross, MorphIcon, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, NovaSetIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { ComponentType } from 'react';
+
+/** The icon of a replaced transaction, from the icon set of `NovaIconsProvider`. */
+const ReplacedIcon = ({ className }: { className?: string }) => (
+  <NovaSetIcon solid="ArrowPathIcon" className={className} />
+);
 
 /**
  * State shown by {@link TxStatusVisual}: the first that applies of succeed, failed, replaced and processing, else
@@ -50,7 +54,7 @@ const RESULT_ICONS: Record<
     className: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   replaced: {
-    Icon: ArrowPathIcon,
+    Icon: ReplacedIcon,
     className: 'novatx:text-[var(--tuwa-info-icon)]',
   },
 };

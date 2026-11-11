@@ -22,6 +22,7 @@
     "@solana/webcrypto-ed25519-polyfill": "^8.6.0",
     "@tuwaio/nova-connect": "workspace:^",
     "@tuwaio/nova-core": "workspace:^",
+    "@tuwaio/nova-icons": "workspace:^",
     "@tuwaio/nova-transactions": "workspace:^",
     "@tuwaio/orbit-core": "^0.6.2",
     "@tuwaio/orbit-evm": "^0.4.2",

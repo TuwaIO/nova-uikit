@@ -49,6 +49,10 @@ const pressed = 'scale-100! -translate-x-[4px] translate-y-[4px] shadow-none!';
 // Room for the faces of a box in a scroll area or a list
 const faceRoom = 'ml-[4px] mb-[4px] w-[calc(100%-4px)]';
 
+// Its own type: some Nova parts add these classes to their defaults, which set monospace capitals with spacing (the look of
+// paper and ink); the line drawing keeps plain words
+const plain = 'normal-case! tracking-normal!';
+
 const text = {
   normal: 'font-normal',
   strong: 'font-semibold',
@@ -72,18 +76,25 @@ const sectionTitle = cn(text.strong, text.secondary, 'text-xs uppercase tracking
 
 const buttonBase = cn(
   'cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 text-sm',
+  plain,
   surface.border,
   focus,
 );
 const button = {
-  primary: cn(buttonBase, text.strong, surface.ink, text.onInk, press),
+  // Filled: the icons in it keep their color under the pointer
+  primary: cn('tuwa-solid', buttonBase, text.strong, surface.ink, text.onInk, press),
   outline: cn(buttonBase, text.normal, surface.base, text.primary, press),
   danger: cn(buttonBase, text.normal, surface.base, text.primary, 'hover:text-[var(--tuwa-error-icon)]!', press),
-  link: cn('cursor-pointer text-sm underline underline-offset-2 transition-opacity hover:opacity-70', text.primary),
-  quiet: cn('cursor-pointer text-sm transition-opacity hover:opacity-70', text.secondary),
+  link: cn(
+    'cursor-pointer text-sm underline underline-offset-2 transition-opacity hover:opacity-70',
+    plain,
+    text.primary,
+  ),
+  quiet: cn('cursor-pointer text-sm transition-opacity hover:opacity-70', plain, text.secondary),
   // A square icon button: copy, close, remove
   icon: cn(
     'cursor-pointer p-1 transition-colors scale-100! [&_svg]:text-current bg-transparent! hover:bg-[var(--tuwa-bg-muted)]!',
+    plain,
     text.secondary,
     'hover:text-[var(--tuwa-text-primary)]!',
     focus,
@@ -95,7 +106,7 @@ const button = {
     'hover:text-[var(--tuwa-text-primary)]!',
     'focus:outline-none focus:ring-0! focus-visible:ring-[length:var(--tuwa-ring-width)]! focus-visible:ring-[var(--tuwa-text-on-accent)]!',
   ),
-  copy: cn('cursor-pointer transition-colors', text.secondary, 'hover:text-[var(--tuwa-text-primary)]!'),
+  copy: cn('cursor-pointer transition-colors', plain, text.secondary, 'hover:text-[var(--tuwa-text-primary)]!'),
 };
 
 // Nova's dialog panel draws the frame of every modal; the header is an ink bar, like the head of a table
@@ -152,6 +163,7 @@ const connectCard: ConnectCardCustomization = {
   recentBadge: {
     classNames: { container: () => cn('relative overflow-hidden px-2 py-0.5 text-xs', text.secondary) },
     config: {
+      animated: true,
       gradient: {
         stops: [
           { position: 0, color: 'var(--tuwa-border-secondary)' },
@@ -297,20 +309,36 @@ export const isoConnect: NovaConnectProviderCustomization = {
             iconContainer: () =>
               'h-5 w-5 [&>div]:h-5! [&>div]:w-5! [&>div]:bg-transparent! [&_img]:h-5 [&_img]:w-5 [&_svg]:h-5 [&_svg]:w-5',
             indicator: () => 'hidden',
+            tabText: () => 'block overflow-hidden whitespace-nowrap',
           },
         },
         connectorsSelections: {
+          // The impersonated wallet is a key like the others
+          impersonateCard: connectCard,
           disclaimer: {
             classNames: {
               button: ({ isPrimary }) => cn(isPrimary ? button.primary : button.outline, 'min-h-9 px-3 py-1.5'),
             },
           },
+          // Keys with faces need room between them: Nova's cards share their lines of 1 px instead
           connectorsBlock: {
-            installed: { classNames: { title: () => cn(sectionTitle, text.primary) }, connectCard },
-            popular: { classNames: { title: () => sectionTitle }, connectCard },
+            installed: {
+              classNames: { title: () => cn(sectionTitle, text.primary) },
+              connectCard,
+              config: { layout: { mouseGap: 'gap-2' } },
+            },
+            popular: {
+              classNames: { title: () => sectionTitle },
+              connectCard,
+              config: { layout: { mouseGap: 'gap-2' } },
+            },
           },
         },
-        networkSelections: { classNames: { title: () => cn(text.normal, text.primary, 'mb-2') }, connectCard },
+        networkSelections: {
+          classNames: { title: () => cn(text.normal, text.primary, 'mb-2') },
+          connectCard,
+          config: { scroll: { gap: { mouse: 'gap-2' } } },
+        },
         // The wallet in a frame that pulses amber while it connects and turns green or red after; the message under it
         // says the rest, so Nova's round spinner and corner badges are left out
         connecting: {
@@ -336,8 +364,6 @@ export const isoConnect: NovaConnectProviderCustomization = {
           classNames: {
             title: () => cn(text.strong, text.primary, 'text-xl'),
             description: () => cn(text.normal, text.secondary, 'text-sm'),
-            // The strip behind the indicators takes the surface color
-            navigation: () => '[&>div:last-child]:bg-[var(--tuwa-bg-secondary)]!',
             indicator: ({ isActive }) =>
               cn(
                 'h-2 cursor-pointer transition-all duration-300',
@@ -450,7 +476,10 @@ export const isoConnectButton: ConnectButtonCustomization = {
   },
 };
 
-const detailsSection = cn(box, '[&_dl>div]:border-[var(--tuwa-border-secondary)]!');
+const detailsSection = cn(
+  box,
+  '[&_dl>div]:border-[var(--tuwa-border-secondary)]! [&_dt]:normal-case! [&_dt]:tracking-normal! [&_dt]:font-normal!',
+);
 
 /** The `customization` prop of `TransactionsHistory`, also used by the history modal. */
 export const isoHistory: TransactionsHistoryCustomization<Transaction> = {
@@ -467,7 +496,7 @@ export const isoHistory: TransactionsHistoryCustomization<Transaction> = {
     itemTitle: cn(text.strong, text.primary, 'text-sm'),
     itemTimestamp: cn(text.normal, text.secondary, 'mb-1 block text-xs'),
     itemDescription: cn(text.normal, text.secondary, 'mt-1 text-xs'),
-    itemStatusBadge: cn(text.normal, 'text-xs'),
+    itemStatusBadge: cn(text.normal, plain, 'text-xs'),
     itemHashLabel: cn(text.strong, text.primary, 'pr-1 text-sm'),
     itemHashLink: cn(text.normal, text.primary, 'flex items-center gap-x-1 underline underline-offset-2'),
     itemHashCopyButton: button.copy,
@@ -507,7 +536,7 @@ export const isoTransactions: NovaTransactionsCustomization = {
       hashLabel: cn(text.strong, text.primary, 'pr-1 text-sm'),
       hashLink: cn(text.normal, text.primary, 'underline underline-offset-2'),
       hashCopyButton: button.copy,
-      statusBadge: cn(text.normal, 'text-xs'),
+      statusBadge: cn(text.normal, plain, 'text-xs'),
       speedUpButton: button.link,
       cancelButton: button.quiet,
       txInfoButton: cn(button.primary, 'min-h-8 px-3 py-1'),
@@ -552,7 +581,7 @@ export const isoTransactions: NovaTransactionsCustomization = {
     infoBlockCustomization: {
       classNames: {
         container: cn(surface.base, surface.border),
-        rowLabel: cn(text.normal, text.secondary),
+        rowLabel: cn(text.normal, plain, text.secondary),
         rowValue: cn(text.strong, text.primary),
         separator: 'border-[var(--tuwa-border-primary)]!',
       },

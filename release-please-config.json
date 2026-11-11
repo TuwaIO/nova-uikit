@@ -9,6 +9,10 @@
       "package-name": "@tuwaio/nova-core",
       "release-type": "node"
     },
+    "packages/nova-icons": {
+      "package-name": "@tuwaio/nova-icons",
+      "release-type": "node"
+    },
     "packages/nova-transactions": {
       "package-name": "@tuwaio/nova-transactions",
       "release-type": "node"

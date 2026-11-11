@@ -86,11 +86,18 @@ function DefaultInfoRow({ label, value, classNames }: TxInfoBlockInfoRowProps) {
   return (
     <div
       className={cn(
-        'novatx:flex novatx:items-center novatx:justify-between novatx:text-sm novatx:gap-2',
+        'novatx:flex novatx:items-center novatx:justify-between novatx:text-sm novatx:gap-2 novatx:py-2.5',
         classNames?.row,
       )}
     >
-      <span className={cn('novatx:text-[var(--tuwa-text-secondary)]', classNames?.label)}>{label}</span>
+      <span
+        className={cn(
+          'novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)]',
+          classNames?.label,
+        )}
+      >
+        {label}
+      </span>
       <span
         className={cn('novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-text-primary)]', classNames?.value)}
       >
@@ -121,7 +128,8 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
   return (
     <div
       className={cn(
-        'novatx:flex novatx:flex-col novatx:gap-3 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-3',
+        // Paper and ink: cells on lines of 1 px
+        'novatx:flex novatx:flex-col novatx:divide-y novatx:divide-[var(--tuwa-border-primary)] novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:px-3',
         classNames?.container,
         className,
       )}
@@ -177,7 +185,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
       {'txKey' in tx && tx.txKey && (
         <div
           className={cn(
-            'novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:pt-3',
+            'novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:py-3',
             classNames?.separator,
           )}
         >

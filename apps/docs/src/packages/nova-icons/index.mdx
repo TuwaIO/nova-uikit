@@ -1,0 +1,248 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Overview" />
+
+# Nova Icons
+
+The icons of Nova UI Kit in the TUWA retro pixel style: React components drawn on a 16 × 16 pixel grid with crisp edges and two-pixel lines, in the color of the text. They have the names, the import paths and the props of Heroicons (`@heroicons/react/24/outline` → `@tuwaio/nova-icons/24/outline`, `XMarkIcon`, `className`, `title`), so replacing the package name in a named import replaces the icon. The default imports of single Heroicons (`@heroicons/react/24/outline/XMarkIcon`) have no counterpart: import the icon by name from its path.
+
+The set has every icon the TUWA apps use, more with every release; see them all in the [gallery](https://stories.tuwa.io/?path=/story/nova-icons-gallery--gallery). The Nova components draw these icons by default (see `NovaIconsProvider` of [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs) for the Heroicons look).
+
+## Installation
+
+```bash
+pnpm add @tuwaio/nova-icons
+```
+
+`react` 19.2.3 or newer is a peer dependency.
+
+## Usage
+
+```tsx
+import { WalletIcon, XMarkIcon } from '@tuwaio/nova-icons/24/outline';
+import { CheckCircleIcon } from '@tuwaio/nova-icons/24/solid';
+
+export function CloseButton({ onClose }: { onClose: () => void }) {
+  return (
+    <button type="button" onClick={onClose} aria-label="Close">
+      <XMarkIcon className="h-4 w-4" />
+    </button>
+  );
+}
+
+export function Paid() {
+  return <CheckCircleIcon title="Paid" titleId="invoice-paid" className="h-5 w-5 text-green-600" />;
+}
+
+export function WaitingForWallet() {
+  return <WalletIcon motion="breathe" className="h-5 w-5" />;
+}
+```
+
+The paths are those of Heroicons: `24/outline`, and `24/solid`, `20/solid` and `16/solid`, which lead to the same solid icons, drawn once for small sizes. `@tuwaio/nova-icons/tuwa` has icons of TUWA's own, which Heroicons does not have (`import { TransactionsIcon } from '@tuwaio/nova-icons/tuwa'`), and `@tuwaio/nova-icons/brands` the marks of the services TUWA links to, for links to them: `GitHubIcon`, `XIcon` (the mark of X, not a close mark, which is `XMarkIcon`), `TelegramIcon`, `DiscordIcon` and `NpmIcon`. The marks belong to their owners and are drawn in one color, the color of the text. The main entry `@tuwaio/nova-icons` has the outline icons, those of TUWA and the marks.
+
+An icon is `1em` square unless its class sets a size, and hidden from screen readers unless it has a `title`. Its lit pixels (the clasp of the wallet, the keyhole of a lock) take the color of `--tuwa-icon-accent`, else of `--tuwa-text-accent`, the accent that the Nova and Quasar themes set for the light and the dark theme, else the TUWA blue mixed with the color of the text, which reads on a light and on a dark page. Set `--tuwa-icon-accent: currentColor` to draw an icon in one color.
+
+## Motion
+
+An icon can play one motion, once, when it appears: `motion="assemble"` (the icon assembles from its pixels: each one flies in to its place from a spot nearby, for an empty state or a large icon) or `motion="breathe"` (the lit pixels dim and come back, next to something that waits). The motions are plain CSS: import the stylesheet once.
+
+```css
+@import '@tuwaio/nova-icons/motion.css';
+```
+
+Without the stylesheet, and for a reader who asks for less motion (`prefers-reduced-motion`), the icons stay still.
+
+A pixel drawing of your own can assemble in the same way: give each pixel `data-px` and the `style` of `pixelFlight(x, y)`, and its parent `data-motion="assemble"`. `--nova-px-start` on the parent holds the whole picture back.
+
+```tsx
+import { pixelFlight } from '@tuwaio/nova-icons';
+
+const PIXELS = [
+  [1, 1],
+  [2, 1],
+  [2, 2],
+] as const;
+
+export function Spark() {
+  return (
+    <svg viewBox="0 0 4 4" width={32} height={32} shapeRendering="crispEdges" data-motion="assemble" aria-hidden>
+      {PIXELS.map(([x, y]) => (
+        <rect
+          key={`${x}-${y}`}
+          x={x}
+          y={y}
+          width={1}
+          height={1}
+          fill="currentColor"
+          data-px=""
+          style={pixelFlight(x, y)}
+        />
+      ))}
+    </svg>
+  );
+}
+```
+
+Each icon is a module of its own and the package has no side effects but its stylesheet, so a bundler keeps only the icons an app imports.
+
+## 🗄️ Browser Storage
+
+None.
+
+## 🌐 External Services
+
+None.
+
+## License
+
+[Apache-2.0](https://github.com/TuwaIO/nova-uikit/blob/main/LICENSE)
+
+## Type Aliases
+
+- [NovaIcon](?path=/docs/packages-nova-icons-type-aliases-novaicon--docs)
+- [NovaIconMotion](?path=/docs/packages-nova-icons-type-aliases-novaiconmotion--docs)
+- [NovaIconProps](?path=/docs/packages-nova-icons-type-aliases-novaiconprops--docs)
+
+## Variables
+
+- [AdjustmentsHorizontalIcon](?path=/docs/packages-nova-icons-variables-adjustmentshorizontalicon--docs)
+- [ArchiveBoxIcon](?path=/docs/packages-nova-icons-variables-archiveboxicon--docs)
+- [ArrowDownCircleIcon](?path=/docs/packages-nova-icons-variables-arrowdowncircleicon--docs)
+- [ArrowDownIcon](?path=/docs/packages-nova-icons-variables-arrowdownicon--docs)
+- [ArrowDownTrayIcon](?path=/docs/packages-nova-icons-variables-arrowdowntrayicon--docs)
+- [ArrowLeftIcon](?path=/docs/packages-nova-icons-variables-arrowlefticon--docs)
+- [ArrowLeftStartOnRectangleIcon](?path=/docs/packages-nova-icons-variables-arrowleftstartonrectangleicon--docs)
+- [ArrowPathIcon](?path=/docs/packages-nova-icons-variables-arrowpathicon--docs)
+- [ArrowPathRoundedSquareIcon](?path=/docs/packages-nova-icons-variables-arrowpathroundedsquareicon--docs)
+- [ArrowRightIcon](?path=/docs/packages-nova-icons-variables-arrowrighticon--docs)
+- [ArrowRightStartOnRectangleIcon](?path=/docs/packages-nova-icons-variables-arrowrightstartonrectangleicon--docs)
+- [ArrowsRightLeftIcon](?path=/docs/packages-nova-icons-variables-arrowsrightlefticon--docs)
+- [ArrowsUpDownIcon](?path=/docs/packages-nova-icons-variables-arrowsupdownicon--docs)
+- [ArrowTopRightOnSquareIcon](?path=/docs/packages-nova-icons-variables-arrowtoprightonsquareicon--docs)
+- [ArrowTrendingUpIcon](?path=/docs/packages-nova-icons-variables-arrowtrendingupicon--docs)
+- [ArrowUpCircleIcon](?path=/docs/packages-nova-icons-variables-arrowupcircleicon--docs)
+- [ArrowUpIcon](?path=/docs/packages-nova-icons-variables-arrowupicon--docs)
+- [ArrowUpTrayIcon](?path=/docs/packages-nova-icons-variables-arrowuptrayicon--docs)
+- [ArrowUturnLeftIcon](?path=/docs/packages-nova-icons-variables-arrowuturnlefticon--docs)
+- [BanknotesIcon](?path=/docs/packages-nova-icons-variables-banknotesicon--docs)
+- [BeakerIcon](?path=/docs/packages-nova-icons-variables-beakericon--docs)
+- [BellAlertIcon](?path=/docs/packages-nova-icons-variables-bellalerticon--docs)
+- [BellIcon](?path=/docs/packages-nova-icons-variables-bellicon--docs)
+- [BoltIcon](?path=/docs/packages-nova-icons-variables-bolticon--docs)
+- [BookOpenIcon](?path=/docs/packages-nova-icons-variables-bookopenicon--docs)
+- [BriefcaseIcon](?path=/docs/packages-nova-icons-variables-briefcaseicon--docs)
+- [BuildingOffice2Icon](?path=/docs/packages-nova-icons-variables-buildingoffice2icon--docs)
+- [BuildingOfficeIcon](?path=/docs/packages-nova-icons-variables-buildingofficeicon--docs)
+- [CalculatorIcon](?path=/docs/packages-nova-icons-variables-calculatoricon--docs)
+- [CalendarDaysIcon](?path=/docs/packages-nova-icons-variables-calendardaysicon--docs)
+- [CameraIcon](?path=/docs/packages-nova-icons-variables-cameraicon--docs)
+- [ChartBarIcon](?path=/docs/packages-nova-icons-variables-chartbaricon--docs)
+- [ChartBarSquareIcon](?path=/docs/packages-nova-icons-variables-chartbarsquareicon--docs)
+- [ChatBubbleLeftRightIcon](?path=/docs/packages-nova-icons-variables-chatbubbleleftrighticon--docs)
+- [ChatBubbleOvalLeftEllipsisIcon](?path=/docs/packages-nova-icons-variables-chatbubbleovalleftellipsisicon--docs)
+- [CheckBadgeIcon](?path=/docs/packages-nova-icons-variables-checkbadgeicon--docs)
+- [CheckCircleIcon](?path=/docs/packages-nova-icons-variables-checkcircleicon--docs)
+- [CheckIcon](?path=/docs/packages-nova-icons-variables-checkicon--docs)
+- [ChevronDownIcon](?path=/docs/packages-nova-icons-variables-chevrondownicon--docs)
+- [ChevronLeftIcon](?path=/docs/packages-nova-icons-variables-chevronlefticon--docs)
+- [ChevronRightIcon](?path=/docs/packages-nova-icons-variables-chevronrighticon--docs)
+- [ChevronUpDownIcon](?path=/docs/packages-nova-icons-variables-chevronupdownicon--docs)
+- [ChevronUpIcon](?path=/docs/packages-nova-icons-variables-chevronupicon--docs)
+- [CircleStackIcon](?path=/docs/packages-nova-icons-variables-circlestackicon--docs)
+- [ClipboardDocumentCheckIcon](?path=/docs/packages-nova-icons-variables-clipboarddocumentcheckicon--docs)
+- [ClipboardDocumentIcon](?path=/docs/packages-nova-icons-variables-clipboarddocumenticon--docs)
+- [ClockIcon](?path=/docs/packages-nova-icons-variables-clockicon--docs)
+- [CloudArrowUpIcon](?path=/docs/packages-nova-icons-variables-cloudarrowupicon--docs)
+- [CloudIcon](?path=/docs/packages-nova-icons-variables-cloudicon--docs)
+- [CodeBracketIcon](?path=/docs/packages-nova-icons-variables-codebracketicon--docs)
+- [CodeBracketSquareIcon](?path=/docs/packages-nova-icons-variables-codebracketsquareicon--docs)
+- [Cog6ToothIcon](?path=/docs/packages-nova-icons-variables-cog6toothicon--docs)
+- [CommandLineIcon](?path=/docs/packages-nova-icons-variables-commandlineicon--docs)
+- [CpuChipIcon](?path=/docs/packages-nova-icons-variables-cpuchipicon--docs)
+- [CreditCardIcon](?path=/docs/packages-nova-icons-variables-creditcardicon--docs)
+- [CubeIcon](?path=/docs/packages-nova-icons-variables-cubeicon--docs)
+- [CurrencyDollarIcon](?path=/docs/packages-nova-icons-variables-currencydollaricon--docs)
+- [CursorArrowRaysIcon](?path=/docs/packages-nova-icons-variables-cursorarrowraysicon--docs)
+- [DevicePhoneMobileIcon](?path=/docs/packages-nova-icons-variables-devicephonemobileicon--docs)
+- [DiscordIcon](?path=/docs/packages-nova-icons-variables-discordicon--docs)
+- [DocumentArrowDownIcon](?path=/docs/packages-nova-icons-variables-documentarrowdownicon--docs)
+- [DocumentArrowUpIcon](?path=/docs/packages-nova-icons-variables-documentarrowupicon--docs)
+- [DocumentCheckIcon](?path=/docs/packages-nova-icons-variables-documentcheckicon--docs)
+- [DocumentDuplicateIcon](?path=/docs/packages-nova-icons-variables-documentduplicateicon--docs)
+- [DocumentMagnifyingGlassIcon](?path=/docs/packages-nova-icons-variables-documentmagnifyingglassicon--docs)
+- [DocumentTextIcon](?path=/docs/packages-nova-icons-variables-documenttexticon--docs)
+- [EllipsisHorizontalIcon](?path=/docs/packages-nova-icons-variables-ellipsishorizontalicon--docs)
+- [EnvelopeIcon](?path=/docs/packages-nova-icons-variables-envelopeicon--docs)
+- [EnvelopeOpenIcon](?path=/docs/packages-nova-icons-variables-envelopeopenicon--docs)
+- [ExclamationCircleIcon](?path=/docs/packages-nova-icons-variables-exclamationcircleicon--docs)
+- [ExclamationTriangleIcon](?path=/docs/packages-nova-icons-variables-exclamationtriangleicon--docs)
+- [EyeIcon](?path=/docs/packages-nova-icons-variables-eyeicon--docs)
+- [EyeSlashIcon](?path=/docs/packages-nova-icons-variables-eyeslashicon--docs)
+- [FaceFrownIcon](?path=/docs/packages-nova-icons-variables-facefrownicon--docs)
+- [FingerPrintIcon](?path=/docs/packages-nova-icons-variables-fingerprinticon--docs)
+- [FolderIcon](?path=/docs/packages-nova-icons-variables-foldericon--docs)
+- [FunnelIcon](?path=/docs/packages-nova-icons-variables-funnelicon--docs)
+- [GitHubIcon](?path=/docs/packages-nova-icons-variables-githubicon--docs)
+- [GlobeAltIcon](?path=/docs/packages-nova-icons-variables-globealticon--docs)
+- [GlobeEuropeAfricaIcon](?path=/docs/packages-nova-icons-variables-globeeuropeafricaicon--docs)
+- [HashtagIcon](?path=/docs/packages-nova-icons-variables-hashtagicon--docs)
+- [HomeIcon](?path=/docs/packages-nova-icons-variables-homeicon--docs)
+- [IdentificationIcon](?path=/docs/packages-nova-icons-variables-identificationicon--docs)
+- [InboxIcon](?path=/docs/packages-nova-icons-variables-inboxicon--docs)
+- [InformationCircleIcon](?path=/docs/packages-nova-icons-variables-informationcircleicon--docs)
+- [KeyIcon](?path=/docs/packages-nova-icons-variables-keyicon--docs)
+- [LanguageIcon](?path=/docs/packages-nova-icons-variables-languageicon--docs)
+- [LightBulbIcon](?path=/docs/packages-nova-icons-variables-lightbulbicon--docs)
+- [LinkIcon](?path=/docs/packages-nova-icons-variables-linkicon--docs)
+- [LIT\_FILL](?path=/docs/packages-nova-icons-variables-lit-fill--docs)
+- [LockClosedIcon](?path=/docs/packages-nova-icons-variables-lockclosedicon--docs)
+- [LockOpenIcon](?path=/docs/packages-nova-icons-variables-lockopenicon--docs)
+- [MagnifyingGlassIcon](?path=/docs/packages-nova-icons-variables-magnifyingglassicon--docs)
+- [MoonIcon](?path=/docs/packages-nova-icons-variables-moonicon--docs)
+- [NoSymbolIcon](?path=/docs/packages-nova-icons-variables-nosymbolicon--docs)
+- [NpmIcon](?path=/docs/packages-nova-icons-variables-npmicon--docs)
+- [PaintBrushIcon](?path=/docs/packages-nova-icons-variables-paintbrushicon--docs)
+- [PaperAirplaneIcon](?path=/docs/packages-nova-icons-variables-paperairplaneicon--docs)
+- [PauseCircleIcon](?path=/docs/packages-nova-icons-variables-pausecircleicon--docs)
+- [PauseIcon](?path=/docs/packages-nova-icons-variables-pauseicon--docs)
+- [PencilIcon](?path=/docs/packages-nova-icons-variables-pencilicon--docs)
+- [PencilSquareIcon](?path=/docs/packages-nova-icons-variables-pencilsquareicon--docs)
+- [PhotoIcon](?path=/docs/packages-nova-icons-variables-photoicon--docs)
+- [PlusIcon](?path=/docs/packages-nova-icons-variables-plusicon--docs)
+- [PuzzlePieceIcon](?path=/docs/packages-nova-icons-variables-puzzlepieceicon--docs)
+- [QrCodeIcon](?path=/docs/packages-nova-icons-variables-qrcodeicon--docs)
+- [QuestionMarkCircleIcon](?path=/docs/packages-nova-icons-variables-questionmarkcircleicon--docs)
+- [ReceiptPercentIcon](?path=/docs/packages-nova-icons-variables-receiptpercenticon--docs)
+- [RocketLaunchIcon](?path=/docs/packages-nova-icons-variables-rocketlaunchicon--docs)
+- [ScaleIcon](?path=/docs/packages-nova-icons-variables-scaleicon--docs)
+- [ServerIcon](?path=/docs/packages-nova-icons-variables-servericon--docs)
+- [ServerStackIcon](?path=/docs/packages-nova-icons-variables-serverstackicon--docs)
+- [ShieldCheckIcon](?path=/docs/packages-nova-icons-variables-shieldcheckicon--docs)
+- [ShieldExclamationIcon](?path=/docs/packages-nova-icons-variables-shieldexclamationicon--docs)
+- [ShoppingBagIcon](?path=/docs/packages-nova-icons-variables-shoppingbagicon--docs)
+- [SignalIcon](?path=/docs/packages-nova-icons-variables-signalicon--docs)
+- [SignalSlashIcon](?path=/docs/packages-nova-icons-variables-signalslashicon--docs)
+- [SparklesIcon](?path=/docs/packages-nova-icons-variables-sparklesicon--docs)
+- [Squares2X2Icon](?path=/docs/packages-nova-icons-variables-squares2x2icon--docs)
+- [SunIcon](?path=/docs/packages-nova-icons-variables-sunicon--docs)
+- [TagIcon](?path=/docs/packages-nova-icons-variables-tagicon--docs)
+- [TelegramIcon](?path=/docs/packages-nova-icons-variables-telegramicon--docs)
+- [TransactionsIcon](?path=/docs/packages-nova-icons-variables-transactionsicon--docs)
+- [TrashIcon](?path=/docs/packages-nova-icons-variables-trashicon--docs)
+- [UserCircleIcon](?path=/docs/packages-nova-icons-variables-usercircleicon--docs)
+- [UserGroupIcon](?path=/docs/packages-nova-icons-variables-usergroupicon--docs)
+- [UserIcon](?path=/docs/packages-nova-icons-variables-usericon--docs)
+- [UserPlusIcon](?path=/docs/packages-nova-icons-variables-userplusicon--docs)
+- [UsersIcon](?path=/docs/packages-nova-icons-variables-usersicon--docs)
+- [WalletIcon](?path=/docs/packages-nova-icons-variables-walleticon--docs)
+- [WebhooksIcon](?path=/docs/packages-nova-icons-variables-webhooksicon--docs)
+- [XCircleIcon](?path=/docs/packages-nova-icons-variables-xcircleicon--docs)
+- [XIcon](?path=/docs/packages-nova-icons-variables-xicon--docs)
+- [XMarkIcon](?path=/docs/packages-nova-icons-variables-xmarkicon--docs)
+
+## Functions
+
+- [createPixelIcon](?path=/docs/packages-nova-icons-functions-createpixelicon--docs)
+- [pixelFlight](?path=/docs/packages-nova-icons-functions-pixelflight--docs)
+- [pixelPath](?path=/docs/packages-nova-icons-functions-pixelpath--docs)

@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Type Aliases/NovaIconMotion" />
+
+# NovaIconMotion
+
+> **NovaIconMotion** = `"assemble"` \| `"breathe"`
+
+Defined in: [pixelIcon.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L13)
+
+A motion of a Nova icon, which plays once when the icon appears, through `@tuwaio/nova-icons/motion.css`:
+
+- `assemble`: the icon assembles from its pixels: each one flies in to its place from a spot nearby, with a little
+  overshoot, in about 0.75 s (see `pixelFlight`). For an empty state or a large icon.
+- `breathe`: the lit pixels (the whole drawing when the icon has none) dim and come back once, in 1.6 s. For an icon
+  next to something that waits: a wallet, a transaction.
+
+Without the stylesheet, and for a reader who asks for less motion (`prefers-reduced-motion`), the icon stays still.

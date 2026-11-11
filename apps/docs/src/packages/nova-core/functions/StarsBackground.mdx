@@ -6,17 +6,27 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **StarsBackground**(`props`): `Element`
 
-Defined in: [components/StarsBackground.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StarsBackground.tsx#L13)
+Defined in: [components/StarsBackground.tsx:102](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/StarsBackground.tsx#L102)
 
-An animated background of twinkling stars, drawn as SVG circles with CSS animations. It fills its positioned parent
-(`absolute`, `inset-0`); the stars are placed at random inside it after mount, so nothing is rendered on
-the server. Nova Connect uses it in the "about wallets" and "get a wallet" screens of the connect modal.
+An animated background of twinkling stars. It fills its positioned parent (`absolute`, `inset-0`); the stars are placed at
+random inside it after mount, so nothing is rendered on the server. Two looks: `classic`, small round stars with four-pointed
+ones among them, and `pixel`, stars of a few crisp pixels that step through their brightness. Nova Connect uses it in the
+"about wallets" and "get a wallet" screens of the connect modal. It holds still with `prefers-reduced-motion`.
+
+Side effect: a `ResizeObserver` on its element, which places the pixel stars on whole pixels when the field changes size.
 
 ## Parameters
 
 ### props
 
 The background props.
+
+#### look?
+
+[`NovaLook`](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
+
+`pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel
+without one).
 
 #### starsCount?
 

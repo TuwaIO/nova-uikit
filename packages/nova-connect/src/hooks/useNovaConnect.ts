@@ -1,3 +1,4 @@
+import type { NovaIconSet } from '@tuwaio/nova-core';
 import type { NovaSoundsConfig } from '@tuwaio/nova-core/utils';
 import { globalSingleton, OrbitAdapter } from '@tuwaio/orbit-core';
 import type { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
@@ -43,7 +44,7 @@ export interface NovaConnectProviderProps extends InitialChains {
   transactionPool?: TransactionPool<Transaction>;
   /**
    * `removeTxFromPool` of the Pulsar store. With it the rows of the history in the connected modal open their details, which
-   * offer to stop tracking a transaction that has been pending for over 10 minutes: the spinning connect button is what a
+   * offer to stop tracking a transaction that has been pending for over 10 minutes: the waiting connect button is what a
    * person acts on when one never ends. An app that shows a pool of its own must remove the record there too.
    */
   removeTxFromPool?: (txKey: string) => void;
@@ -61,6 +62,12 @@ export interface NovaConnectProviderProps extends InitialChains {
    * `@tuwaio/nova-core/utils` for when they stay silent.
    */
   sounds?: NovaSoundsConfig;
+  /**
+   * The icons of Nova and the look of what it draws: the pixel icons of `@tuwaio/nova-icons` without it, `heroicons` of
+   * `@tuwaio/nova-core/heroicons` for the look Nova had before (the loaders, the drawn marks, the pictures and the star field
+   * follow), or a set of your own. See `NovaIconsProvider` of `@tuwaio/nova-core`.
+   */
+  icons?: NovaIconSet;
   /** Whether the wallet list offers the impersonated wallet (a read-only address, for development) */
   withImpersonated?: boolean;
   /** Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini) */

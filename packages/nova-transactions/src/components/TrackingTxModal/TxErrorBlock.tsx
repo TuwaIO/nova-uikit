@@ -2,8 +2,7 @@
  * @file This file contains the `TxErrorBlock` component for displaying transaction error messages.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, NovaSetIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { useMemo } from 'react';
 
@@ -78,11 +77,12 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
       <div className={cn('novatx:mb-2 novatx:flex novatx:items-center novatx:justify-between', classNames?.header)}>
         <div
           className={cn(
-            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:font-bold novatx:text-[var(--tuwa-error-text)]',
+            'novatx:flex novatx:items-center novatx:gap-2 novatx:font-mono novatx:text-xs novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-error-text)]',
             classNames?.title,
           )}
         >
-          <ExclamationTriangleIcon
+          <NovaSetIcon
+            solid="ExclamationTriangleIcon"
             className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', classNames?.icon)}
           />
           <span>{txError.title}</span>
@@ -107,7 +107,7 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
         role="region"
         aria-label={txError.title}
         className={cn(
-          'novatx:max-h-24 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2',
+          'novatx:max-h-24 novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-primary)] novatx:p-2',
           classNames?.messageContainer,
         )}
       >

@@ -82,6 +82,8 @@
 
 ```css
 :root {
+  /* Paper and ink: warm paper, ink text, lines of 1 px and the TUWA blue, square, with no gradients or soft
+     shadows. Primary, secondary and accent text hold WCAG AA (4.5:1) on the three surfaces; tertiary is for hints. */
   --tuwa-success-bg: theme('colors.green.100');
   --tuwa-success-text: theme('colors.green.700');
   --tuwa-success-icon: theme('colors.green.500');
@@ -94,39 +96,49 @@
   --tuwa-pending-text: theme('colors.yellow.800');
   --tuwa-pending-icon: theme('colors.yellow.600');
 
-  --tuwa-info-bg: theme('colors.gray.100');
-  --tuwa-info-text: theme('colors.gray.600');
-  --tuwa-info-icon: theme('colors.gray.500');
+  --tuwa-info-bg: #e9e8e4;
+  --tuwa-info-text: #55545a;
+  --tuwa-info-icon: #8e8e90;
 
-  --tuwa-text-primary: theme('colors.gray.900');
-  --tuwa-text-secondary: theme('colors.gray.500');
-  --tuwa-text-tertiary: theme('colors.gray.400');
-  --tuwa-text-accent: theme('colors.blue.600');
-  --tuwa-text-on-accent: theme('colors.white');
+  --tuwa-text-primary: #101014;
+  --tuwa-text-secondary: #636366;
+  --tuwa-text-tertiary: #8e8e90;
+  --tuwa-text-accent: #0052ff;
+  --tuwa-text-on-accent: #ffffff;
 
-  --tuwa-bg-primary: theme('colors.white');
-  --tuwa-bg-secondary: theme('colors.gray.50');
-  --tuwa-bg-muted: theme('colors.gray.100');
+  /* Raised (dialogs, cards), paper, sunken */
+  --tuwa-bg-primary: #faf9f7;
+  --tuwa-bg-secondary: #f2f1ee;
+  --tuwa-bg-muted: #e9e8e4;
 
-  --tuwa-border-primary: theme('colors.gray.200');
-  --tuwa-border-secondary: theme('colors.gray.100');
+  --tuwa-border-primary: #d6d5d1;
+  --tuwa-border-secondary: #e4e3df;
+  /* The frame of a secondary button and of a chosen cell */
+  --tuwa-border-strong: #a9a8a6;
 
-  /* The main button: one solid color, read from the gradient start (a brand color set there still applies) */
+  /* The main button is one solid color. It reads the gradient start, so a brand color set there before still applies;
+     the gradient end only tints decorations (StarsBackground). */
   --tuwa-button-primary-bg: var(--tuwa-button-gradient-from);
   --tuwa-button-primary-bg-hover: var(--tuwa-button-gradient-from-hover);
 
-  --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.sky.600');
+  --tuwa-button-gradient-from: #0052ff;
+  --tuwa-button-gradient-to: #5b8cff;
 
-  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.sky.700');
+  --tuwa-button-gradient-from-hover: #0047de;
+  --tuwa-button-gradient-to-hover: #0052ff;
 
-  --tuwa-standart-button-bg: theme('colors.gray.100');
-  --tuwa-standart-button-hover: theme('colors.gray.200');
+  /* A secondary button: no fill, a frame of `--tuwa-border-strong`, the hover fill */
+  --tuwa-standart-button-bg: transparent;
+  --tuwa-standart-button-hover: #e9e8e4;
 
   --tuwa-testnet-icons: #6b655e;
 
-  --tuwa-rounded-corners: 4px;
+  /* Lines across a surface, a retro screen, barely there; `transparent` turns them off */
+  --tuwa-scanline: rgb(16 16 20 / 0.015);
+
+  --tuwa-rounded-corners: 0px;
+  /* The shapes that were circles (avatars, icons of wallets, tokens and networks, dots): square; 9999px rounds them again */
+  --tuwa-rounded-full: 0px;
   --tuwa-ring-width: 2px;
 }
 ```
@@ -149,34 +161,37 @@
   --tuwa-pending-text: theme('colors.yellow.300');
   --tuwa-pending-icon: theme('colors.yellow.400');
 
-  --tuwa-info-bg: theme('colors.gray.700');
-  --tuwa-info-text: theme('colors.gray.300');
-  --tuwa-info-icon: theme('colors.gray.400');
+  --tuwa-info-bg: #222327;
+  --tuwa-info-text: #b9b8b5;
+  --tuwa-info-icon: #77767a;
 
-  --tuwa-text-primary: theme('colors.gray.50');
-  --tuwa-text-secondary: theme('colors.gray.400');
-  --tuwa-text-tertiary: theme('colors.gray.500');
-  --tuwa-text-accent: theme('colors.blue.400');
-  --tuwa-text-on-accent: theme('colors.white');
+  --tuwa-text-primary: #f2f1ee;
+  --tuwa-text-secondary: #9d9c9a;
+  --tuwa-text-tertiary: #77767a;
+  --tuwa-text-accent: #60a5fa;
+  --tuwa-text-on-accent: #ffffff;
 
-  --tuwa-bg-primary: theme('colors.gray.900');
-  --tuwa-bg-secondary: theme('colors.gray.800');
-  --tuwa-bg-muted: theme('colors.gray.700');
+  --tuwa-bg-primary: #101014;
+  --tuwa-bg-secondary: #17181b;
+  --tuwa-bg-muted: #222327;
 
-  --tuwa-border-primary: theme('colors.gray.700');
-  --tuwa-border-secondary: theme('colors.gray.800');
+  --tuwa-border-primary: #2b2c30;
+  --tuwa-border-secondary: #1d1e22;
+  --tuwa-border-strong: #55565a;
 
-  /* blue-600: white text on blue-500 is only 3.8:1 (WCAG AA needs 4.5) */
-  --tuwa-button-gradient-from: theme('colors.blue.600');
-  --tuwa-button-gradient-to: theme('colors.sky.300');
+  /* The TUWA blue: white text on it is 5.7:1 (WCAG AA needs 4.5) */
+  --tuwa-button-gradient-from: #0052ff;
+  --tuwa-button-gradient-to: #60a5fa;
 
-  --tuwa-button-gradient-from-hover: theme('colors.blue.700');
-  --tuwa-button-gradient-to-hover: theme('colors.sky.400');
+  --tuwa-button-gradient-from-hover: #0047de;
+  --tuwa-button-gradient-to-hover: #93c5fd;
 
-  --tuwa-standart-button-bg: theme('colors.gray.700');
-  --tuwa-standart-button-hover: theme('colors.gray.800');
+  --tuwa-standart-button-bg: transparent;
+  --tuwa-standart-button-hover: #222327;
 
   --tuwa-testnet-icons: #6b655e;
+
+  --tuwa-scanline: rgb(242 241 238 / 0.012);
 }
 ```
 
@@ -184,12 +199,11 @@
 
 ## ♿ Контраст (WCAG 2.2 AA)
 
-Типові токени тримають текст на рівні 4.5:1 або вище в обох темах (`nova-core` перевіряє кожну пару): `--tuwa-text-primary`
-на кожному тлі, `--tuwa-text-secondary` і `--tuwa-text-accent` на `--tuwa-bg-primary` і `--tuwa-bg-secondary`,
-`--tuwa-text-on-accent` на головній кнопці та кожен текст статусу на його власному тлі. Головна кнопка вирізняється
-на сторінці з контрастом 3:1 або вище. Два правила допомагають зберегти читабельність ваших власних компонентів:
+Типові токени тримають текст на рівні 4.5:1 або вище в обох темах (`nova-core` перевіряє кожну пару): `--tuwa-text-primary`,
+`--tuwa-text-secondary` і `--tuwa-text-accent` на кожному тлі, `--tuwa-text-on-accent` на головній кнопці та кожен
+текст статусу на його власному тлі. Головна кнопка вирізняється на сторінці з контрастом 3:1 або вище. Одне правило
+допомагає зберегти читабельність ваших власних компонентів:
 
-- Розміщуйте другорядний текст на основному або другорядному тлі; на `--tuwa-bg-muted` використовуйте `--tuwa-text-primary`.
 - Залишайте `--tuwa-text-tertiary` для підказок і декоративних елементів: його контраст нижчий за 4.5:1.
 
 Коли змінюєте токени, перевіряйте свої пари за допомогою `contrastRatio` з `@tuwaio/nova-core`. Для тексту на кольорі,

@@ -43,7 +43,7 @@ Install the Nova packages with their peer dependencies and the Satellite Connect
 pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/nova-transactions \
   @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react \
   @tuwaio/siwx-react @tuwaio/siwx-core @tuwaio/pulsar-core \
-  react react-dom react-toastify framer-motion @heroicons/react @radix-ui/react-dialog @radix-ui/react-select \
+  react react-dom react-toastify framer-motion @radix-ui/react-dialog @radix-ui/react-select \
   @web3icons/react @web3icons/common ethereum-blockies-base64 clsx tailwind-merge dayjs zustand immer
 ```
 
@@ -123,6 +123,12 @@ No `WagmiProvider` from `wagmi` is needed: Nova Connect calls `@wagmi/core` acti
 A full app with Nova Transactions, SIWX and a Pulsar store synced with a server is in the **[Full-Stack React guide](https://docs.tuwa.io/guides/full-stack-react)**. Every component, with its customization options, can be tried in [Storybook](https://stories.tuwa.io/?path=/docs/introduction--docs).
 
 ---
+
+## 🎨 Icons
+
+Every part takes the theme of `@tuwaio/nova-core`, paper and ink by default: square, drawn with lines of 1 px, without soft shadows or gradients, its buttons, chips and labels in monospace capitals (see The Look in [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs)).
+
+The components draw the pixel icons of [`@tuwaio/nova-icons`](https://stories.tuwa.io/?path=/docs/packages-nova-icons-overview--docs), and the wallet of Connect wallet, the status marks of the button, the loaders, the About wallets picture and the star field in the same pixel look; a pixel drawing assembles from its pixels as it appears. `<NovaConnectProvider icons={heroicons} />`, with `heroicons` of `@tuwaio/nova-core/heroicons` and `@heroicons/react` installed, brings back the thin lines of Heroicons and the classic look; see Icons in [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs).
 
 ## 🔊 Sounds
 

@@ -386,23 +386,28 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     classNames.button?.({ buttonData }) ||
     cn(
       'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
-      'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:font-mono novacon:font-medium novacon:text-sm novacon:transition-all novacon:duration-200',
-      'novacon:hover:scale-[1.02] novacon:active:scale-[0.98]',
+      // Paper and ink: flat, square, framed; no growing on hover
+      'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:font-mono novacon:transition-colors novacon:duration-200',
       'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)]',
       'novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
-      'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:disabled:hover:scale-100',
+      'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed',
       isConnected
         ? [
-            'novacon:bg-[var(--tuwa-bg-secondary)]',
+            // The name of the wallet or its address: never in capitals (addresses are case-sensitive)
+            'novacon:text-sm novacon:font-medium',
+            // A surface of its own: it sits on the page of the host, whatever its color
+            'novacon:bg-[var(--tuwa-bg-primary)]',
             'novacon:text-[var(--tuwa-text-primary)]',
-            'novacon:hover:bg-[var(--tuwa-bg-muted)]',
+            'novacon:hover:bg-[var(--tuwa-standart-button-hover)]',
             'novacon:focus:ring-[var(--tuwa-text-secondary)]',
-            'novacon:border novacon:border-[var(--tuwa-border-primary)]',
+            'novacon:border-[var(--tuwa-border-strong)]',
           ]
         : [
-            'novacon:bg-[var(--tuwa-button-primary-bg)]',
+            // Filled: the icons in it keep their color under the pointer (`tuwa-solid`)
+            'tuwa-solid novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em]',
+            'novacon:border-[var(--tuwa-button-primary-bg)] novacon:bg-[var(--tuwa-button-primary-bg)]',
             'novacon:text-[var(--tuwa-text-on-accent)]',
-            'novacon:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
+            'novacon:hover:border-[var(--tuwa-button-primary-bg-hover)] novacon:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
             'novacon:focus:ring-[var(--tuwa-text-accent)]',
           ],
       className,

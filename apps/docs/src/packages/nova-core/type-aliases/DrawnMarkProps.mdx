@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **DrawnMarkProps** = `object`
 
-Defined in: [components/DrawnCheck.tsx:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L10)
+Defined in: [components/DrawnCheck.tsx:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L15)
 
 Props of [DrawnCheck](?path=/docs/packages-nova-core-functions-drawncheck--docs) and [DrawnCross](?path=/docs/packages-nova-core-functions-drawncross--docs).
 
@@ -16,9 +16,29 @@ Props of [DrawnCheck](?path=/docs/packages-nova-core-functions-drawncheck--docs)
 
 > `optional` **className?**: `string`
 
-Defined in: [components/DrawnCheck.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L14)
+Defined in: [components/DrawnCheck.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L19)
 
 Classes of the icon, which set its size and color.
+
+***
+
+### look?
+
+> `optional` **look?**: [`NovaLook`](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
+
+Defined in: [components/DrawnCheck.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L21)
+
+`pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one).
+
+***
+
+### still?
+
+> `optional` **still?**: `boolean`
+
+Defined in: [components/DrawnCheck.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L23)
+
+Whether the mark is simply shown, without drawing itself (the pixel look; the classic one follows its AnimatePresence).
 
 ***
 
@@ -26,6 +46,6 @@ Classes of the icon, which set its size and color.
 
 > `optional` **variant?**: `"plain"` \| `"disc"`
 
-Defined in: [components/DrawnCheck.tsx:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L12)
+Defined in: [components/DrawnCheck.tsx:17](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/DrawnCheck.tsx#L17)
 
 `plain` is the mark alone, in the text color. `disc` is the mark on a disc in the text color. Defaults to `plain`.

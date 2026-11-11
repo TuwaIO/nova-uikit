@@ -2,8 +2,7 @@
  * @file NetworkSelections component with comprehensive customization options for network selection.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon, NovaSetIcon, sectionLabelClasses } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -348,7 +347,10 @@ export type NetworkSelectionsCustomization = {
       gap?: {
         /** On touch devices (default: `novacon:gap-3`) */
         touch?: string;
-        /** On devices without a touch screen (default: `novacon:gap-2`) */
+        /**
+         * On devices without a touch screen (default: `novacon:gap-0 novacon:[&>*+*]:-mt-px`: the cards on shared lines of 1 px,
+         * each one 1 px up over the frame of the last; a value of yours replaces both)
+         */
         mouse?: string;
       };
     };
@@ -576,7 +578,8 @@ export const NetworkSelections = memo(
       'novacon:flex-col',
       customConfig?.scroll?.mouseMaxHeight ?? 'novacon:max-h-[310px]',
       'novacon:overflow-y-auto',
-      customConfig?.scroll?.gap?.mouse ?? 'novacon:gap-2',
+      // Paper and ink: the networks are cells on shared lines of 1 px
+      customConfig?.scroll?.gap?.mouse ?? 'novacon:gap-0 novacon:[&>*+*]:-mt-px',
     ];
 
     const cssClasses = {
@@ -627,7 +630,7 @@ export const NetworkSelections = memo(
             aria-hidden={true}
             selectionsData={selectionsData}
           >
-            <ExclamationTriangleIcon width={32} height={32} />
+            <NovaSetIcon outline="ExclamationTriangleIcon" width={32} height={32} />
           </CustomErrorIcon>
           <CustomErrorTitle
             className={
@@ -664,7 +667,7 @@ export const NetworkSelections = memo(
       >
         <CustomTitle
           id="network-selection-title"
-          className={customization?.classNames?.title?.({ selectionsData })}
+          className={customization?.classNames?.title?.({ selectionsData }) ?? sectionLabelClasses}
           role="heading"
           aria-level={2}
           selectionsData={selectionsData}

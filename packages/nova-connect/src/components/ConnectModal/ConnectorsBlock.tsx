@@ -276,7 +276,10 @@ export type ConnectorsBlockCustomization = {
     layout?: {
       /** Gap on touch devices, used without `touchClasses` (default: `novacon:gap-3`) */
       touchGap?: string;
-      /** Gap on devices without a touch screen, used without `mouseClasses` (default: `novacon:gap-2`) */
+      /**
+       * Gap on devices without a touch screen, used without `mouseClasses` (default: `novacon:gap-0 novacon:[&>*+*]:-mt-px`:
+       * the cards on shared lines of 1 px, each one 1 px up over the frame of the last; a value of yours replaces both)
+       */
       mouseGap?: string;
       /** Classes on touch devices (default: a row with `touchGap`) */
       touchClasses?: string[];
@@ -507,9 +510,10 @@ export const ConnectorsBlock = memo(
         customConfig?.layout?.touchGap ?? 'novacon:gap-3',
       ];
 
+      // Paper and ink: the wallets are cells on shared lines of 1 px (each card's frame, the next one 1 px up)
       const mouseClasses = customConfig?.layout?.mouseClasses ?? [
         'novacon:flex-col',
-        customConfig?.layout?.mouseGap ?? 'novacon:gap-2',
+        customConfig?.layout?.mouseGap ?? 'novacon:gap-0 novacon:[&>*+*]:-mt-px',
       ];
 
       const layoutClasses = {
@@ -613,9 +617,10 @@ export const ConnectorsBlock = memo(
 
         title:
           customization?.classNames?.title?.({ blockData }) ??
-          cn('novacon:text-sm novacon:font-mono novacon:text-[var(--tuwa-text-secondary)]', {
-            'novacon:font-bold novacon:text-[var(--tuwa-text-accent)]': blockData.isTitleBold,
-          }),
+          cn(
+            'novacon:font-mono novacon:text-[11px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-secondary)]',
+            { 'novacon:text-[var(--tuwa-text-accent)]': blockData.isTitleBold },
+          ),
 
         connectorsList:
           customization?.classNames?.connectorsList?.({ blockData }) ??

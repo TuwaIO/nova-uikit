@@ -5,8 +5,7 @@
  * when a `beforeTxProcess` preflight check rejects.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, CopyIcon, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, MorphText, NovaSetIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, JSX, ReactNode } from 'react';
 import { ToastContentProps } from 'react-toastify';
 
@@ -77,7 +76,7 @@ export type ToastValidationErrorClassNames = {
   header?: string;
   /** Classes applied to the title/icon wrapper. */
   titleWrapper?: string;
-  /** Classes applied to the `<ExclamationTriangleIcon>` (or custom icon). */
+  /** Classes applied to the `<NovaSetIcon solid="ExclamationTriangleIcon">` (or custom icon). */
   icon?: string;
   /** Classes applied to the title text node. */
   title?: string;
@@ -167,7 +166,8 @@ export type ToastValidationErrorProps = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DefaultIcon = ({ isCopied: _, className, ...props }: ToastValidationErrorIconProps) => (
-  <ExclamationTriangleIcon
+  <NovaSetIcon
+    solid="ExclamationTriangleIcon"
     className={cn('novatx:h-5 novatx:w-5 novatx:flex-shrink-0 novatx:text-[var(--tuwa-error-icon)]', className)}
     {...props}
   />
@@ -177,7 +177,7 @@ const DefaultTitle = ({ title, className }: ToastValidationErrorTitleProps) => (
   <span
     className={cn(
       // The text color of the state, not that of its icon: on a light surface the icon color has 3.8:1 where text needs 4.5:1
-      'novatx:text-sm novatx:font-mono novatx:font-semibold novatx:text-[var(--tuwa-error-text)]',
+      'novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-error-text)]',
       className,
     )}
     role="heading"
@@ -190,12 +190,14 @@ const DefaultTitle = ({ title, className }: ToastValidationErrorTitleProps) => (
 const DefaultFieldBadge = ({ fieldLabel, fieldName, className }: ToastValidationErrorFieldProps) => (
   <div
     className={cn(
-      'novatx:mt-2 novatx:inline-flex novatx:items-center novatx:gap-1 novatx:rounded novatx:border novatx:border-[var(--tuwa-error-icon)]/20 novatx:bg-[var(--tuwa-error-bg)] novatx:px-2 novatx:py-0.5 novatx:text-xs novatx:text-[var(--tuwa-error-text)]',
+      'novatx:mt-2 novatx:inline-flex novatx:items-center novatx:gap-1 novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-error-icon)]/20 novatx:bg-[var(--tuwa-error-bg)] novatx:px-2 novatx:py-0.5 novatx:text-xs novatx:text-[var(--tuwa-error-text)]',
       className,
     )}
   >
     {/* Told apart by weight: with the color faded it had 3:1 on the tinted badge */}
-    <span>{fieldLabel}:</span>
+    <span className="novatx:font-mono novatx:text-[10px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em]">
+      {fieldLabel}:
+    </span>
     <span className="novatx:font-mono novatx:font-semibold">{fieldName}</span>
   </div>
 );
@@ -203,7 +205,7 @@ const DefaultFieldBadge = ({ fieldLabel, fieldName, className }: ToastValidation
 const DefaultMessage = ({ message, className, containerClassName }: ToastValidationErrorMessageProps) => (
   <div
     className={cn(
-      'novatx:mt-2 novatx:max-h-20 novatx:overflow-y-auto novatx:rounded novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-2',
+      'novatx:mt-2 novatx:max-h-20 novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:bg-[var(--tuwa-bg-secondary)] novatx:p-2',
       containerClassName,
     )}
   >
@@ -294,7 +296,8 @@ export function ToastValidationError({
     cn(
       'novatx:mt-3 novatx:inline-flex novatx:cursor-pointer novatx:items-center novatx:gap-1.5',
       'novatx:rounded-[var(--tuwa-rounded-corners)] novatx:px-2 novatx:py-1',
-      'novatx:text-xs novatx:font-mono novatx:font-medium novatx:text-[var(--tuwa-error-text)]',
+      'novatx:border novatx:border-[color-mix(in_srgb,var(--tuwa-error-icon)_35%,transparent)]',
+      'novatx:text-xs novatx:font-mono novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-error-text)]',
       'novatx:transition-all novatx:duration-200',
       'novatx:hover:bg-[var(--tuwa-error-icon)]/10',
       'novatx:focus:outline-none novatx:focus:ring-[length:var(--tuwa-ring-width)] novatx:focus:ring-[var(--tuwa-error-text)]/50',
@@ -312,7 +315,7 @@ export function ToastValidationError({
       aria-live="assertive"
       className={cn(
         'novatx:w-full novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-error-icon)]/30',
-        'novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4 novatx:shadow-md',
+        'tuwa-scanlines novatx:bg-[var(--tuwa-bg-primary)] novatx:p-4',
         cls.container,
         className,
       )}

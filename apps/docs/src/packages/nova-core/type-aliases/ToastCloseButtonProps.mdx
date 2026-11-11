@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ToastCloseButtonProps** = `object`
 
-Defined in: [components/ToastCloseButton.tsx:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L10)
+Defined in: [components/ToastCloseButton.tsx:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L15)
 
 Defines the props for the ToastCloseButton component.
 
@@ -16,7 +16,7 @@ Defines the props for the ToastCloseButton component.
 
 > `optional` **ariaLabel?**: `string`
 
-Defined in: [components/ToastCloseButton.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L18)
+Defined in: [components/ToastCloseButton.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L23)
 
 Accessible label of the button. Defaults to `'Close toast notification'`.
 
@@ -26,7 +26,7 @@ Accessible label of the button. Defaults to `'Close toast notification'`.
 
 > `optional` **className?**: `string`
 
-Defined in: [components/ToastCloseButton.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L24)
+Defined in: [components/ToastCloseButton.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L29)
 
 Optional custom className for the button container.
 
@@ -36,7 +36,7 @@ Optional custom className for the button container.
 
 > `optional` **closeToast?**: (`e`) => `void`
 
-Defined in: [components/ToastCloseButton.tsx:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L16)
+Defined in: [components/ToastCloseButton.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L21)
 
 Called when the button is clicked. `react-toastify` passes it to a custom close button to dismiss the toast.
 
@@ -58,9 +58,19 @@ The click event.
 
 > `optional` **iconClassName?**: `string`
 
-Defined in: [components/ToastCloseButton.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L28)
+Defined in: [components/ToastCloseButton.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L33)
 
 Optional custom className for the close icon SVG.
+
+***
+
+### look?
+
+> `optional` **look?**: [`NovaLook`](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
+
+Defined in: [components/ToastCloseButton.tsx:35](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L35)
+
+`pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one).
 
 ***
 
@@ -68,6 +78,6 @@ Optional custom className for the close icon SVG.
 
 > `optional` **title?**: `string`
 
-Defined in: [components/ToastCloseButton.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L20)
+Defined in: [components/ToastCloseButton.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/ToastCloseButton.tsx#L25)
 
 Tooltip of the button. Defaults to `'Close toast notification'`.

@@ -3,7 +3,7 @@
  * Supports infinite scrolling when `pagination` props are provided.
  */
 
-import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, NovaSetIcon, QuasarLoader, useNovaIcons } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import {
   ComponentType,
@@ -194,24 +194,32 @@ const HistoryRow = memo(function HistoryRow<T extends Transaction>({
  * Error indicator that appears briefly when a fetch fails, then fades out.
  */
 function PaginationErrorIndicator({ className, iconClassName }: { className?: string; iconClassName?: string }) {
+  const { look } = useNovaIcons();
   return (
     <div
       className={cn('novatx:flex novatx:items-center novatx:justify-center novatx:py-3', className)}
       role="alert"
       aria-live="assertive"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)}
-      >
-        <path
-          fillRule="evenodd"
-          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
-          clipRule="evenodd"
+      {look === 'pixel' ? (
+        <NovaSetIcon
+          outline="XCircleIcon"
+          className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', iconClassName)}
         />
-      </svg>
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', iconClassName)}
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      )}
     </div>
   );
 }
@@ -412,7 +420,7 @@ export function TransactionsHistory<T extends Transaction>({
           className={cn(
             // Positioned: a screen reader text of a row is `absolute`, and it escaped an unpositioned list, which stretched the
             // whole window, with a second scroll and an empty band under its footer
-            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)]',
+            'NovaCustomScroll novatx:relative novatx:sm:max-h-[400px] novatx:overflow-y-auto novatx:rounded-[var(--tuwa-rounded-corners)] novatx:border novatx:border-[var(--tuwa-border-primary)]',
             customization?.classNames?.listWrapper,
           )}
         >
@@ -492,7 +500,7 @@ export function TransactionsHistory<T extends Transaction>({
       {customization?.title && (
         <h3
           className={cn(
-            'novatx:text-lg novatx:font-bold novatx:font-mono novatx:text-[var(--tuwa-text-primary)]',
+            'novatx:font-mono novatx:text-[11px] novatx:font-bold novatx:uppercase novatx:tracking-[0.12em] novatx:text-[var(--tuwa-text-secondary)]',
             customization?.classNames?.titleText,
           )}
         >

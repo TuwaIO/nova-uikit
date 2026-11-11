@@ -1,0 +1,134 @@
+{
+  "name": "@tuwaio/nova-icons",
+  "version": "0.0.0",
+  "private": false,
+  "author": "Oleksandr Tkach",
+  "license": "Apache-2.0",
+  "description": "The icons of Nova UI Kit (TUWA) in the TUWA retro pixel style: React components drawn on a pixel grid, in the color of the text, with the names, import paths and props of Heroicons.",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./24/outline": {
+      "import": {
+        "types": "./dist/24/outline/index.d.ts",
+        "default": "./dist/24/outline/index.js"
+      },
+      "require": {
+        "types": "./dist/24/outline/index.d.cts",
+        "default": "./dist/24/outline/index.cjs"
+      }
+    },
+    "./24/solid": {
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
+    },
+    "./20/solid": {
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
+    },
+    "./16/solid": {
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
+    },
+    "./tuwa": {
+      "import": {
+        "types": "./dist/tuwa/index.d.ts",
+        "default": "./dist/tuwa/index.js"
+      },
+      "require": {
+        "types": "./dist/tuwa/index.d.cts",
+        "default": "./dist/tuwa/index.cjs"
+      }
+    },
+    "./brands": {
+      "import": {
+        "types": "./dist/brands/index.d.ts",
+        "default": "./dist/brands/index.js"
+      },
+      "require": {
+        "types": "./dist/brands/index.d.cts",
+        "default": "./dist/brands/index.cjs"
+      }
+    },
+    "./motion.css": "./motion.css"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "motion.css",
+    "socket.json",
+    "NOTICE"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "react",
+    "icons",
+    "pixel-art",
+    "ui-kit",
+    "tuwa"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuwaIO/nova-uikit.git",
+    "directory": "packages/nova-icons"
+  },
+  "homepage": "https://github.com/TuwaIO/nova-uikit",
+  "bugs": {
+    "url": "https://github.com/TuwaIO/nova-uikit/issues"
+  },
+  "contributors": [
+    {
+      "name": "Oleksandr Tkach",
+      "url": "https://github.com/Argeare5"
+    }
+  ],
+  "peerDependencies": {
+    "react": ">=19.2.3"
+  },
+  "devDependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1",
+    "tsup": "^9.0.0",
+    "typescript": "6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

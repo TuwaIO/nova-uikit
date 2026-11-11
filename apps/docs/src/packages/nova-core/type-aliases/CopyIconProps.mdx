@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **CopyIconProps** = `object`
 
-Defined in: [components/CopyIcon.tsx:10](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L10)
+Defined in: [components/CopyIcon.tsx:18](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L18)
 
 Props of [CopyIcon](?path=/docs/packages-nova-core-functions-copyicon--docs).
 
@@ -16,7 +16,7 @@ Props of [CopyIcon](?path=/docs/packages-nova-core-functions-copyicon--docs).
 
 > `optional` **className?**: `string`
 
-Defined in: [components/CopyIcon.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L14)
+Defined in: [components/CopyIcon.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L22)
 
 Classes of the icon, which set its size and the color of the sheets. The check mark is in the success color.
 
@@ -26,6 +26,16 @@ Classes of the icon, which set its size and the color of the sheets. The check m
 
 > `optional` **copied?**: `boolean`
 
-Defined in: [components/CopyIcon.tsx:12](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L12)
+Defined in: [components/CopyIcon.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L20)
 
 Whether the text has just been copied: the two sheets then give way to a check mark.
+
+***
+
+### look?
+
+> `optional` **look?**: [`NovaLook`](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
+
+Defined in: [components/CopyIcon.tsx:24](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/CopyIcon.tsx#L24)
+
+`pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one).

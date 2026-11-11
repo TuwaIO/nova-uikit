@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-icons/Functions/pixelPath" />
+
+# pixelPath()
+
+> **pixelPath**(`art`, `mark`): `string`
+
+Defined in: [pixelIcon.tsx:53](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-icons/src/pixelIcon.tsx#L53)
+
+The pixels of one mark of a grid as SVG path data: each run of the mark in a row is one rectangle, so the path stays
+short and its edges meet without seams.
+
+## Parameters
+
+### art
+
+readonly `string`[]
+
+The rows of the grid, top first.
+
+### mark
+
+`string`
+
+The mark to draw (`#` or `o`).
+
+## Returns
+
+`string`
+
+The path data; empty when the grid has no such pixel.

@@ -134,7 +134,8 @@ export const Controlled: Story = {
  */
 export const ConfirmationDialog: Story = {
   render: () => {
-    const dangerButtonStyles = `${buttonBaseStyles} bg-[var(--tuwa-error-bg)] text-[var(--tuwa-error-text)] hover:opacity-80 focus:ring-[var(--tuwa-error-icon)]`;
+    // A frame under the pointer, not a fade: a faded label lost its contrast on the paper of the theme (axe)
+    const dangerButtonStyles = `${buttonBaseStyles} border border-transparent bg-[var(--tuwa-error-bg)] text-[var(--tuwa-error-text)] hover:border-[var(--tuwa-error-icon)] focus:ring-[var(--tuwa-error-icon)]`;
 
     return (
       <Dialog>
@@ -212,7 +213,8 @@ export const ScrollableContent: Story = {
  */
 export const InfoDialog: Story = {
   render: () => {
-    const infoButtonStyles = `${buttonBaseStyles} bg-[var(--tuwa-info-bg)] text-[var(--tuwa-info-text)] hover:opacity-80 focus:ring-[var(--tuwa-info-icon)]`;
+    // A frame under the pointer, not a fade: a faded label lost its contrast on the paper of the theme (axe)
+    const infoButtonStyles = `${buttonBaseStyles} border border-transparent bg-[var(--tuwa-info-bg)] text-[var(--tuwa-info-text)] hover:border-[var(--tuwa-info-icon)] focus:ring-[var(--tuwa-info-icon)]`;
 
     return (
       <Dialog>

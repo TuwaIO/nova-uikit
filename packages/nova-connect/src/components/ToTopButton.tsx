@@ -2,7 +2,7 @@
  * @file This file contains the `ToTopButton` component, a customizable scroll-to-top button with full styling control.
  */
 
-import { ChevronUpIcon } from '@heroicons/react/24/solid';
+import { NovaSetIcon } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
@@ -112,7 +112,8 @@ export interface ToTopButtonProps extends Omit<
 // --- Default Sub-Components ---
 const DefaultIcon = ({ disabled, className, ...props }: ToTopButtonIconProps) => {
   return (
-    <ChevronUpIcon
+    <NovaSetIcon
+      solid="ChevronUpIcon"
       className={cn(
         'novacon:w-4 novacon:h-4 novacon:transition-transform novacon:duration-200',
         disabled && 'novacon:opacity-50',
@@ -220,6 +221,8 @@ export const ToTopButton = forwardRef<HTMLButtonElement, ToTopButtonProps>(
       ? customization.classNames.button({ disabled, hasOnClick: Boolean(onClick) })
       : cn(
           'novacon:flex novacon:w-full novacon:h-6 novacon:items-center novacon:justify-center',
+          // A cell of the list: a line of 1 px parts it from the rows under it
+          'novacon:border-b novacon:border-[var(--tuwa-border-primary)]',
           'novacon:bg-[var(--tuwa-bg-secondary)] novacon:text-[var(--tuwa-text-primary)]',
           'novacon:transition-colors novacon:duration-200',
           'novacon:hover:bg-[var(--tuwa-standart-button-hover)] novacon:hover:text-[var(--tuwa-text-secondary)]',

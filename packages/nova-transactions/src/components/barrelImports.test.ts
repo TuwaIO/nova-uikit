@@ -10,7 +10,7 @@ const sourcesOf = (directory: string): string[] =>
     return name.endsWith('.tsx') && !name.includes('.test.') ? [path] : [];
   });
 
-// Owner, 2026-11-07: importing `HashLink` reached the provider, react-toastify and the history through this barrel, for a page that
+// Importing `HashLink` reached the provider, react-toastify and the history through this barrel, for a page that
 // uses none of them
 describe('the components of Nova Transactions', () => {
   it.each(sourcesOf(__dirname))('%s imports what it needs, not the barrel of the providers', (path) => {

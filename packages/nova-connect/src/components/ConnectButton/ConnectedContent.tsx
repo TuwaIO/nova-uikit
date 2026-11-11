@@ -27,7 +27,7 @@ import {
 import { useSatelliteConnectStore } from '../../satellite';
 import { WalletAvatar, WalletAvatarCustomization } from '../WalletAvatar';
 import { connectedStatusFor, isTxResult, nextConnectedStatus } from './connectedStatus';
-import { StatusIcon, StatusIconCustomization } from './StatusIcon';
+import { DEFAULT_STATUS_PATHS, StatusIcon, StatusIconCustomization } from './StatusIcon';
 
 // --- Types for Customization ---
 /** What {@link ConnectedContent} shows for the current button status. */
@@ -253,7 +253,8 @@ const DefaultLoadingAnimation = ({ connectedButtonStatus, className }: Connected
   return (
     <div
       className={cn(
-        "novacon:rounded-full novacon:absolute novacon:inset-[-4px] novacon:before:content-[''] novacon:after:content-[''] novacon:before:rounded-full novacon:after:rounded-full novacon:before:absolute novacon:after:absolute novacon:before:inset-0 novacon:after:inset-0 novacon:before:u-shadow-inner-base novacon:after:u-shadow-inset-arc novacon:after:animate-rotate novacon:after:duration-2000 novacon:after:ease-linear novacon:after:infinite novacon:motion-reduce:after:animate-none",
+        // Paper and ink: a frame with a segment of the pending color running round it (`tuwa-square-chase`)
+        'tuwa-square-chase novacon:absolute novacon:inset-[-4px] novacon:rounded-[var(--tuwa-rounded-full)] novacon:border novacon:border-[color-mix(in_srgb,var(--tuwa-pending-icon)_35%,transparent)] novacon:[--tuwa-chase-border:1px]',
         className,
       )}
       aria-hidden="true"
@@ -440,7 +441,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 aria-label={labels.transactionSuccess}
                 customization={customization?.childCustomizations?.statusIcon?.succeed}
               >
-                m4.5 12.75 6 6 9-13.5
+                {DEFAULT_STATUS_PATHS.succeed}
               </StatusIcon>
             ),
             ariaLabel: baseAriaLabel,
@@ -455,7 +456,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 aria-label={labels.transactionError}
                 customization={customization?.childCustomizations?.statusIcon?.failed}
               >
-                M6 18 18 6M6 6l12 12
+                {DEFAULT_STATUS_PATHS.failed}
               </StatusIcon>
             ),
             ariaLabel: baseAriaLabel,
@@ -473,8 +474,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 }
                 customization={customization?.childCustomizations?.statusIcon?.replaced}
               >
-                M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0
-                13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99
+                {DEFAULT_STATUS_PATHS.replaced}
               </StatusIcon>
             ),
             ariaLabel: baseAriaLabel,

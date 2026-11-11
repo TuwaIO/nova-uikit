@@ -183,7 +183,7 @@ describe('the connecting step', () => {
     expect(wrapper?.props.transition).toBeUndefined();
   });
 
-  // Owner, 2026-11-07: these two lead to another site, and said so neither by eye nor by ear
+  // These two lead to another site, and said so neither by eye nor by ear
   it.each(['getWallet', 'about'])('shows that the action of the %s screen leads away, and plays it', (screen) => {
     const open = vi.fn();
     vi.stubGlobal('window', { open });

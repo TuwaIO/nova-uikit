@@ -199,7 +199,7 @@ const sizeClasses = {
 // --- Default Sub-Components ---
 const DefaultLoadingOverlay = ({ isLoading, showLoading, disableAnimation }: WalletAvatarLoadingOverlayProps) => {
   const loadingClasses = cn(
-    'novacon:absolute novacon:inset-0 novacon:rounded-full novacon:bg-[var(--tuwa-bg-muted)]',
+    'novacon:absolute novacon:inset-0 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-bg-muted)]',
     {
       'novacon:animate-pulse': !disableAnimation && showLoading && isLoading,
       'novacon:opacity-0': !isLoading || !showLoading,
@@ -215,7 +215,7 @@ const DefaultAvatarImage = ({ src, isLoading, onLoad, onError, address, ensAvata
     <img
       key={`${ensAvatar || 'blockie'}-${address}`}
       className={cn(
-        'novacon:h-full novacon:w-full novacon:rounded-full novacon:object-cover novacon:relative novacon:z-10',
+        'novacon:h-full novacon:w-full novacon:rounded-[var(--tuwa-rounded-full)] novacon:object-cover novacon:relative novacon:z-10',
         'novacon:transition-opacity novacon:duration-300 novacon:opacity-100',
         {
           'novacon:opacity-0': isLoading,
@@ -265,7 +265,7 @@ const defaultFormatAddress = (address: string, labels: Record<string, string>): 
 };
 
 /**
- * The round avatar of a wallet: `ensAvatar` (an ENS or SNS avatar URL from the Satellite adapters) when it loads,
+ * The avatar of a wallet (square, `--tuwa-rounded-full`): `ensAvatar` (an ENS or SNS avatar URL from the Satellite adapters) when it loads,
  * otherwise a blockie of the address on a background color derived from it. The container has `role="img"` and an
  * accessible label.
  *
@@ -359,7 +359,7 @@ export const WalletAvatar = forwardRef<HTMLDivElement, WalletAvatarProps>(
       ? customization.classNames.container({ size, bgColor, address })
       : cn(
           sizeClasses[size],
-          'novacon:flex-shrink-0 novacon:rounded-full novacon:relative novacon:overflow-hidden',
+          'novacon:flex-shrink-0 novacon:rounded-[var(--tuwa-rounded-full)] novacon:relative novacon:overflow-hidden',
           'novacon:ring-1 novacon:ring-[var(--tuwa-border-primary)]',
           'novacon:focus-within:ring-2 novacon:focus-within:ring-[var(--tuwa-text-accent)]',
           className,

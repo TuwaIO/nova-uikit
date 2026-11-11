@@ -2,9 +2,7 @@
  * @file ConnectCard component with comprehensive customization options for wallet connection cards.
  */
 
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon, NovaSetIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
@@ -603,7 +601,7 @@ const NetworkIcons = memo(
             className={
               customization?.classNames?.networkIcon?.({ networkData, cardData }) ??
               cn(
-                'novacon:w-4 novacon:h-4 novacon:rounded-full novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-primary)] novacon:flex novacon:items-center novacon:justify-center',
+                'novacon:w-4 novacon:h-4 novacon:rounded-[var(--tuwa-rounded-full)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-primary)] novacon:flex novacon:items-center novacon:justify-center',
                 {
                   'novacon:-ml-2': networkData.index > 0,
                 },
@@ -622,7 +620,7 @@ const NetworkIcons = memo(
             className={
               customization?.classNames?.overflowIndicator?.({ overflowCount, cardData }) ??
               cn(
-                'novacon:w-4 novacon:h-4 novacon:rounded-full novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-primary)] novacon:-ml-2 novacon:flex novacon:items-center novacon:justify-center novacon:text-[8px]',
+                'novacon:w-4 novacon:h-4 novacon:rounded-[var(--tuwa-rounded-full)] novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-primary)] novacon:-ml-2 novacon:flex novacon:items-center novacon:justify-center novacon:text-[8px]',
               )
             }
             role="img"
@@ -861,7 +859,7 @@ export const ConnectCard = memo(
       const containerClasses = customization?.classNames?.container
         ? customization.classNames.container({ cardData })
         : cn(
-            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:bg-[var(--tuwa-bg-muted)]',
+            'novacon:group novacon:cursor-pointer novacon:p-4 novacon:rounded-[var(--tuwa-rounded-corners)] novacon:transition-colors novacon:relative novacon:border novacon:border-[var(--tuwa-border-primary)] novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed novacon:bg-[var(--tuwa-bg-secondary)] novacon:hover:z-1 novacon:hover:border-[var(--tuwa-border-strong)] novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:focus-visible:z-1',
             className,
             'novacon:w-full novacon:h-auto',
             'novacon:flex novacon:items-center novacon:justify-between',
@@ -1015,7 +1013,7 @@ export const ConnectCard = memo(
               }
               cardData={cardData}
             >
-              <InformationCircleIcon width={16} height={16} aria-hidden="true" />
+              <NovaSetIcon outline="InformationCircleIcon" width={16} height={16} aria-hidden="true" />
             </CustomInfoLink>
           )}
 
@@ -1049,7 +1047,8 @@ export const ConnectCard = memo(
               aria-hidden={true}
               cardData={cardData}
             >
-              <ChevronRightIcon />
+              {/* The size of its box: Heroicons filled it, the pixel icons are 1em square */}
+              <NovaSetIcon solid="ChevronRightIcon" className="novacon:block novacon:h-full novacon:w-full" />
             </CustomChevron>
           )}
         </CustomContainer>

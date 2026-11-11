@@ -66,8 +66,11 @@ const TEXT_PAIRS: [string, string][] = [
   ['text-primary', 'bg-muted'],
   ['text-secondary', 'bg-primary'],
   ['text-secondary', 'bg-secondary'],
+  // Paper and ink: the sunken layer carries labels and links too
+  ['text-secondary', 'bg-muted'],
   ['text-accent', 'bg-primary'],
   ['text-accent', 'bg-secondary'],
+  ['text-accent', 'bg-muted'],
   ['text-on-accent', 'button-primary-bg'],
   ['text-on-accent', 'button-primary-bg-hover'],
   ['success-text', 'success-bg'],
@@ -97,7 +100,7 @@ describe('theme variables', () => {
   });
 });
 
-// `NetworkIcon` draws a testnet as a white mark on a circle of this color. The owner chose it by eye. With the colored marks of
+// `NetworkIcon` draws a testnet as a white mark on a tile of this color, chosen by eye. With the colored marks of
 // before, this grey made the list of networks read too dark, and #c4bfb8 stood for a while; a white mark needs this one
 describe('the color of testnet icons', () => {
   it('is the grey of the circle behind the white mark, in both themes', () => {
