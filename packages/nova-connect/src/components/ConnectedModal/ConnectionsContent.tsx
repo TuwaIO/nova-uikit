@@ -2,7 +2,6 @@
  * @file ConnectionsContent component for managing multiple wallet connections.
  */
 
-import { ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import {
   cn,
   CopyIcon,
@@ -11,6 +10,7 @@ import {
   formatLabel,
   MorphText,
   NetworkIcon,
+  NovaSetIcon,
   QuasarLoader,
   TrashIcon,
   useCopyToClipboard,
@@ -1033,7 +1033,8 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             classNames?.switchIndicator,
           )}
         >
-          <ArrowsRightLeftIcon
+          <NovaSetIcon
+            outline="ArrowsRightLeftIcon"
             className={cn('novacon:h-4 novacon:w-4 novacon:text-[var(--tuwa-text-accent)]', classNames?.switchIcon)}
           />
         </div>

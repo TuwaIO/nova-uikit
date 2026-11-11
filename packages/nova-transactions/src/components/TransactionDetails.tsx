@@ -4,18 +4,6 @@
  */
 
 import {
-  ArrowPathIcon,
-  BoltIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  CloudArrowUpIcon,
-  CloudIcon,
-  CommandLineIcon,
-  CpuChipIcon,
-  DocumentTextIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
-import {
   CloseIcon,
   cn,
   CopyIcon,
@@ -26,6 +14,7 @@ import {
   MorphIcon,
   MorphText,
   NetworkIcon,
+  NovaSetIcon,
   QuasarLoader,
   StatusEdge,
   StatusTone,
@@ -56,6 +45,21 @@ import {
 import { statusText } from '../utils/statusText';
 import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
+
+/** The icons of the sections and rows, from the icon set of `NovaIconsProvider` (the pixel ones by default). */
+const SectionIcons = {
+  CheckCircleIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="CheckCircleIcon" className={className} />
+  ),
+  ClockIcon: ({ className }: { className?: string }) => <NovaSetIcon outline="ClockIcon" className={className} />,
+  CommandLineIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="CommandLineIcon" className={className} />
+  ),
+  CpuChipIcon: ({ className }: { className?: string }) => <NovaSetIcon outline="CpuChipIcon" className={className} />,
+  DocumentTextIcon: ({ className }: { className?: string }) => (
+    <NovaSetIcon outline="DocumentTextIcon" className={className} />
+  ),
+};
 
 // --- Sub-components Prop Types ---
 
@@ -106,7 +110,7 @@ export type DetailItemProps = {
 /** Props of a row of the metadata section of {@link TransactionDetails} (network, adapter, times, tracker…). */
 export type MetadataRowProps = {
   /**
-   * Icon component (a Heroicons icon by default), rendered with a `className`. The default row does not show it; it is
+   * Icon component (an icon of the Nova icon set by default), rendered with a `className`. The default row does not show it; it is
    * passed for custom rows.
    */
   icon: ComponentType<{ className?: string }>;
@@ -161,7 +165,7 @@ export type SectionHeadingProps = {
   children: ReactNode;
   /** Classes of the heading. */
   className?: string;
-  /** Icon component of the section (a Heroicons icon by default), rendered with a `className`. */
+  /** Icon component of the section (an icon of the Nova icon set by default), rendered with a `className`. */
   icon?: ComponentType<{ className?: string }>;
 };
 
@@ -358,7 +362,7 @@ const StatusMark = ({ tone }: { tone: StatusTone }) => (
     ) : tone === 'success' ? (
       <DrawnCheck className="novatx:h-3.5 novatx:w-3.5" />
     ) : tone === 'neutral' ? (
-      <ArrowPathIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
+      <NovaSetIcon outline="ArrowPathIcon" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
     ) : (
       <DrawnCross className="novatx:h-3.5 novatx:w-3.5" />
     )}
@@ -570,7 +574,8 @@ export function TransactionDetails<T extends Transaction>({
       <Badge
         tone="pending"
         icon={
-          <CloudArrowUpIcon
+          <NovaSetIcon
+            outline="CloudArrowUpIcon"
             className="novatx:h-3.5 novatx:w-3.5 novatx:animate-pulse novatx:motion-reduce:animate-none"
             aria-hidden="true"
           />
@@ -582,7 +587,7 @@ export function TransactionDetails<T extends Transaction>({
     ) : tx.syncStatus === 'synced' ? (
       <Badge
         tone="muted"
-        icon={<CloudIcon className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
+        icon={<NovaSetIcon outline="CloudIcon" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />}
         title={transactionDetails.syncStatus.syncedTooltip}
       >
         {transactionDetails.syncStatus.synced}
@@ -719,7 +724,7 @@ export function TransactionDetails<T extends Transaction>({
                   onClick={() => void runReplacement(foundAdapter!.speedUpTxAction!, tx, reportRefusal)}
                   className={cn(actionButtonClassName, classNames?.actionButton)}
                 >
-                  <BoltIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                  <NovaSetIcon outline="BoltIcon" className="novatx:h-4 novatx:w-4" aria-hidden="true" />
                   {actions.speedUp}
                 </button>
               )}
@@ -728,7 +733,7 @@ export function TransactionDetails<T extends Transaction>({
                 onClick={() => void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal)}
                 className={cn(actionButtonClassName, classNames?.actionButton)}
               >
-                <XCircleIcon className="novatx:h-4 novatx:w-4" aria-hidden="true" />
+                <NovaSetIcon outline="XCircleIcon" className="novatx:h-4 novatx:w-4" aria-hidden="true" />
                 {actions.cancel}
               </button>
             </div>
@@ -750,7 +755,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {/* ── Metadata ── */}
         <CSectionCard className={classNames?.metadataSection}>
-          <CSectionHeading icon={DocumentTextIcon} className={classNames?.sectionHeader}>
+          <CSectionHeading icon={SectionIcons.DocumentTextIcon} className={classNames?.sectionHeader}>
             {transactionDetails.metadata}
           </CSectionHeading>
           <dl className="novatx:m-0">
@@ -761,7 +766,7 @@ export function TransactionDetails<T extends Transaction>({
             ) : (
               <CDetailItem label={transactionDetails.hash} value="—" />
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.network}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.network}>
               <span
                 className={cn(
                   'novatx:inline-flex novatx:max-w-full novatx:items-center novatx:gap-2 novatx:align-middle',
@@ -783,25 +788,25 @@ export function TransactionDetails<T extends Transaction>({
             ) : (
               <CDetailItem label={transactionDetails.to} value="—" />
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.adapter}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.adapter}>
               {tx.adapter}
             </CMetadataRow>
-            <CMetadataRow icon={ClockIcon} label={transactionDetails.submittedAt}>
+            <CMetadataRow icon={SectionIcons.ClockIcon} label={transactionDetails.submittedAt}>
               {formatTime(tx.localTimestamp)}
             </CMetadataRow>
             {tx.finishedTimestamp && (
-              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.finishedAt}>
+              <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.finishedAt}>
                 {formatTime(tx.finishedTimestamp)}
               </CMetadataRow>
             )}
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.tracker}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.tracker}>
               {tx.tracker}
             </CMetadataRow>
-            <CMetadataRow icon={CpuChipIcon} label={transactionDetails.connector}>
+            <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.connector}>
               <span className="novatx:capitalize">{walletPartOf(tx.connectorType)}</span>
             </CMetadataRow>
             {showConfirmations && (
-              <CMetadataRow icon={CheckCircleIcon} label={transactionDetails.confirmations}>
+              <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.confirmations}>
                 {`${tx.confirmations}${tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}`}
               </CMetadataRow>
             )}
@@ -812,7 +817,7 @@ export function TransactionDetails<T extends Transaction>({
         {/* ── Context & Payload ── */}
         {hasContext && (
           <CSectionCard className={classNames?.contextSection}>
-            <CSectionHeading icon={CommandLineIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CommandLineIcon} className={classNames?.sectionHeader}>
               {transactionDetails.contextTitle}
             </CSectionHeading>
             {(titleContext || descriptionContext) && (
@@ -830,7 +835,7 @@ export function TransactionDetails<T extends Transaction>({
         {/* ── Execution data of the chain ── */}
         {hasEvmData && evmTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.evmTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">
@@ -860,7 +865,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {hasSolanaData && solanaTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.solanaTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">
@@ -876,7 +881,7 @@ export function TransactionDetails<T extends Transaction>({
 
         {hasStarknetData && starknetTx && (
           <CSectionCard className={classNames?.executionSection}>
-            <CSectionHeading icon={CpuChipIcon} className={classNames?.sectionHeader}>
+            <CSectionHeading icon={SectionIcons.CpuChipIcon} className={classNames?.sectionHeader}>
               {transactionDetails.starknetTitle}
             </CSectionHeading>
             <dl className="novatx:m-0">

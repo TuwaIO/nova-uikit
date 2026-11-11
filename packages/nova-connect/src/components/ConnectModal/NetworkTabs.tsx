@@ -2,8 +2,7 @@
  * @file NetworkTabs component with comprehensive customization options and animated transitions.
  */
 
-import { GlobeAltIcon } from '@heroicons/react/24/solid';
-import { cn, formatLabel, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, NetworkIcon, NovaSetIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion, Variants } from 'framer-motion';
 import React, { ComponentType, forwardRef, memo, useEffect, useEffectEvent } from 'react';
@@ -622,7 +621,7 @@ export const NetworkTabs = memo(
                           <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
                         ) : (
                           <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
-                            <GlobeAltIcon aria-hidden="true" />
+                            <NovaSetIcon solid="GlobeAltIcon" aria-hidden="true" />
                           </div>
                         )}
                       </CustomIconContainer>

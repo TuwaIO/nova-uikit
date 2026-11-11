@@ -2,7 +2,7 @@
  * @file This file contains the `ToTopButton` component, a customizable scroll-to-top button with full styling control.
  */
 
-import { ChevronUpIcon } from '@heroicons/react/24/solid';
+import { NovaSetIcon } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
 
@@ -112,7 +112,8 @@ export interface ToTopButtonProps extends Omit<
 // --- Default Sub-Components ---
 const DefaultIcon = ({ disabled, className, ...props }: ToTopButtonIconProps) => {
   return (
-    <ChevronUpIcon
+    <NovaSetIcon
+      solid="ChevronUpIcon"
       className={cn(
         'novacon:w-4 novacon:h-4 novacon:transition-transform novacon:duration-200',
         disabled && 'novacon:opacity-50',

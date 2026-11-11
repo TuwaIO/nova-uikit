@@ -2,8 +2,7 @@
  * @file ConnectedModalTxHistory component with comprehensive customization options for transaction history display.
  */
 
-import { ExclamationTriangleIcon, PuzzlePieceIcon } from '@heroicons/react/24/solid';
-import { cn, formatLabel, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, formatLabel, NovaSetIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Variants } from 'framer-motion';
 import React, {
@@ -484,7 +483,10 @@ const DefaultErrorContainer: React.FC<ConnectedModalTxHistoryErrorContainerProps
           classNames?.iconContainer,
         )}
       >
-        <ExclamationTriangleIcon className={cn('novacon:w-full novacon:h-full', classNames?.icon)} />
+        <NovaSetIcon
+          solid="ExclamationTriangleIcon"
+          className={cn('novacon:w-full novacon:h-full', classNames?.icon)}
+        />
       </div>
 
       <div className={cn('novacon:space-y-2', classNames?.content)}>
@@ -573,7 +575,7 @@ function PulsarAdapterRequired({
   const content = (
     <div className={containerClasses} role="alert">
       <div className={iconContainerClasses}>
-        <PuzzlePieceIcon className={iconClasses} />
+        <NovaSetIcon solid="PuzzlePieceIcon" className={iconClasses} />
       </div>
 
       <div className={contentClasses}>

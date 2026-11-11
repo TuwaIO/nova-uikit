@@ -1,3 +1,4 @@
+import type { NovaIconSet } from '@tuwaio/nova-core';
 import type { NovaSoundsConfig } from '@tuwaio/nova-core/utils';
 import { globalSingleton, OrbitAdapter } from '@tuwaio/orbit-core';
 import type { Transaction, TransactionPool, TxAdapter } from '@tuwaio/pulsar-core';
@@ -61,6 +62,12 @@ export interface NovaConnectProviderProps extends InitialChains {
    * `@tuwaio/nova-core/utils` for when they stay silent.
    */
   sounds?: NovaSoundsConfig;
+  /**
+   * The icons of Nova and the look of what it draws: the pixel icons of `@tuwaio/nova-icons` without it, `heroicons` of
+   * `@tuwaio/nova-core/heroicons` for the look Nova had before (the loaders, the drawn marks, the pictures and the star field
+   * follow), or a set of your own. See `NovaIconsProvider` of `@tuwaio/nova-core`.
+   */
+  icons?: NovaIconSet;
   /** Whether the wallet list offers the impersonated wallet (a read-only address, for development) */
   withImpersonated?: boolean;
   /** Wallet names of the "Popular" group, in order (default: WalletConnect, Porto, Coinbase, Gemini) */

@@ -23,7 +23,7 @@
 pnpm add @tuwaio/nova-core @tuwaio/orbit-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
 ```
 
-Peer dependencies: `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4.1.24), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x).
+Peer dependencies: `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4.1.24), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x); `@heroicons/react` (2.x) is optional, for the Heroicons set (see Icons below).
 
 Import the stylesheet once, before the stylesheets of the other Nova packages:
 
@@ -69,6 +69,24 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
   );
 }
 ```
+
+---
+
+## 🎨 Icons
+
+The Nova components draw their icons from an icon set: by default the pixel icons of [`@tuwaio/nova-icons`](https://stories.tuwa.io/?path=/docs/packages-nova-icons-overview--docs), a dependency of this package. `heroicons` of `@tuwaio/nova-core/heroicons` is the set of Heroicons that Nova drew before; it needs `@heroicons/react` (2.x), an optional peer dependency, and only an app that imports it loads Heroicons. Give a set to `NovaIconsProvider`, or to the `icons` prop of `NovaConnectProvider` and `NovaTransactionsProvider`:
+
+```tsx
+import { NovaIconsProvider } from '@tuwaio/nova-core';
+import { heroicons } from '@tuwaio/nova-core/heroicons';
+import type { ReactNode } from 'react';
+
+export function ClassicNova({ children }: { children: ReactNode }) {
+  return <NovaIconsProvider icons={heroicons}>{children}</NovaIconsProvider>;
+}
+```
+
+`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`).
 
 ---
 

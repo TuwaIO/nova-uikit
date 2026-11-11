@@ -2,7 +2,7 @@
  * @file Main NovaConnect provider component with comprehensive customization capabilities.
  */
 
-import { NovaSoundsProvider } from '@tuwaio/nova-core';
+import { NovaIconsProvider, NovaSoundsProvider } from '@tuwaio/nova-core';
 import { deepMerge } from '@tuwaio/nova-core/utils';
 import { OrbitAdapter, TuwaErrorState } from '@tuwaio/orbit-core';
 import { BaseConnector } from '@tuwaio/satellite-core';
@@ -284,6 +284,7 @@ export function NovaConnectProvider({
   legal,
   siwx,
   sounds,
+  icons,
   customization,
   pagination,
 }: NovaConnectProviderPropsWithCustomization) {
@@ -503,10 +504,12 @@ export function NovaConnectProvider({
   );
 
   return (
-    <NovaSoundsProvider sounds={sounds}>
-      {sounds ? <NovaConnectSounds /> : null}
-      {finalProviderTree}
-    </NovaSoundsProvider>
+    <NovaIconsProvider icons={icons}>
+      <NovaSoundsProvider sounds={sounds}>
+        {sounds ? <NovaConnectSounds /> : null}
+        {finalProviderTree}
+      </NovaSoundsProvider>
+    </NovaIconsProvider>
   );
 }
 

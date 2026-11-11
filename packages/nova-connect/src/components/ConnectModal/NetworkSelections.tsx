@@ -2,8 +2,7 @@
  * @file NetworkSelections component with comprehensive customization options for network selection.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon, NovaSetIcon } from '@tuwaio/nova-core';
 import {
   ConnectorType,
   formatConnectorName,
@@ -627,7 +626,7 @@ export const NetworkSelections = memo(
             aria-hidden={true}
             selectionsData={selectionsData}
           >
-            <ExclamationTriangleIcon width={32} height={32} />
+            <NovaSetIcon outline="ExclamationTriangleIcon" width={32} height={32} />
           </CustomErrorIcon>
           <CustomErrorTitle
             className={

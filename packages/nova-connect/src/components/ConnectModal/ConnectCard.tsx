@@ -2,9 +2,7 @@
  * @file ConnectCard component with comprehensive customization options for wallet connection cards.
  */
 
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { cn, formatLabel, isTouchDevice, NetworkIcon } from '@tuwaio/nova-core';
+import { cn, formatLabel, isTouchDevice, NetworkIcon, NovaSetIcon } from '@tuwaio/nova-core';
 import { getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useCallback } from 'react';
 
@@ -1015,7 +1013,7 @@ export const ConnectCard = memo(
               }
               cardData={cardData}
             >
-              <InformationCircleIcon width={16} height={16} aria-hidden="true" />
+              <NovaSetIcon outline="InformationCircleIcon" width={16} height={16} aria-hidden="true" />
             </CustomInfoLink>
           )}
 
@@ -1049,7 +1047,7 @@ export const ConnectCard = memo(
               aria-hidden={true}
               cardData={cardData}
             >
-              <ChevronRightIcon />
+              <NovaSetIcon solid="ChevronRightIcon" />
             </CustomChevron>
           )}
         </CustomContainer>

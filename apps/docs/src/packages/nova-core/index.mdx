@@ -24,7 +24,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 pnpm add @tuwaio/nova-core @tuwaio/orbit-core react @radix-ui/react-dialog @web3icons/react @web3icons/common framer-motion clsx tailwind-merge
 ```
 
-Peer dependencies: `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4.1.24), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x).
+Peer dependencies: `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `@radix-ui/react-dialog` (1.x), `@web3icons/react` (>=4.1.24), `@web3icons/common` (>=0.11), `framer-motion`, `clsx` (2.x) and `tailwind-merge` (3.x); `@heroicons/react` (2.x) is optional, for the Heroicons set (see Icons below).
 
 Import the stylesheet once, before the stylesheets of the other Nova packages:
 
@@ -73,6 +73,24 @@ export function AddressChip({ address, chainId }: { address: string; chainId: nu
 
 ---
 
+## 🎨 Icons
+
+The Nova components draw their icons from an icon set: by default the pixel icons of [`@tuwaio/nova-icons`](https://stories.tuwa.io/?path=/docs/packages-nova-icons-overview--docs), a dependency of this package. `heroicons` of `@tuwaio/nova-core/heroicons` is the set of Heroicons that Nova drew before; it needs `@heroicons/react` (2.x), an optional peer dependency, and only an app that imports it loads Heroicons. Give a set to `NovaIconsProvider`, or to the `icons` prop of `NovaConnectProvider` and `NovaTransactionsProvider`:
+
+```tsx
+import { NovaIconsProvider } from '@tuwaio/nova-core';
+import { heroicons } from '@tuwaio/nova-core/heroicons';
+import type { ReactNode } from 'react';
+
+export function ClassicNova({ children }: { children: ReactNode }) {
+  return <NovaIconsProvider icons={heroicons}>{children}</NovaIconsProvider>;
+}
+```
+
+`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`).
+
+---
+
 ## 🔊 Sounds
 
 `playNovaSound` of `@tuwaio/nova-core/utils` plays short tones synthesized with the Web Audio API, with no files and no requests. Nothing plays unless it is asked for: `NovaSoundsProvider` (which the `sounds` prop of the Nova Connect and Nova Transactions providers renders) sets them for the components under it, and `useNovaSounds` plays them from a component of yours.
@@ -117,6 +135,11 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [ExternalLinkIconProps](?path=/docs/packages-nova-core-type-aliases-externallinkiconprops--docs)
 - [MorphIconProps](?path=/docs/packages-nova-core-type-aliases-morphiconprops--docs)
 - [MorphTextProps](?path=/docs/packages-nova-core-type-aliases-morphtextprops--docs)
+- [NovaIconComponent](?path=/docs/packages-nova-core-type-aliases-novaiconcomponent--docs)
+- [NovaIconSet](?path=/docs/packages-nova-core-type-aliases-novaiconset--docs)
+- [NovaIconsProviderProps](?path=/docs/packages-nova-core-type-aliases-novaiconsproviderprops--docs)
+- [NovaLook](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
+- [NovaSetIconProps](?path=/docs/packages-nova-core-type-aliases-novaseticonprops--docs)
 - [NovaSoundName](?path=/docs/packages-nova-core-type-aliases-novasoundname--docs)
 - [NovaSoundsConfig](?path=/docs/packages-nova-core-type-aliases-novasoundsconfig--docs)
 - [NovaSoundsProviderProps](?path=/docs/packages-nova-core-type-aliases-novasoundsproviderprops--docs)
@@ -137,8 +160,12 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [DialogPortal](?path=/docs/packages-nova-core-variables-dialogportal--docs)
 - [DialogTitle](?path=/docs/packages-nova-core-variables-dialogtitle--docs)
 - [DialogTrigger](?path=/docs/packages-nova-core-variables-dialogtrigger--docs)
+- [NOVA\_OUTLINE\_ICONS](?path=/docs/packages-nova-core-variables-nova-outline-icons--docs)
+- [NOVA\_SOLID\_ICONS](?path=/docs/packages-nova-core-variables-nova-solid-icons--docs)
 - [NOVA\_SOUND\_NAMES](?path=/docs/packages-nova-core-variables-nova-sound-names--docs)
+- [NovaIconsContext](?path=/docs/packages-nova-core-variables-novaiconscontext--docs)
 - [NovaSoundsContext](?path=/docs/packages-nova-core-variables-novasoundscontext--docs)
+- [pixelIcons](?path=/docs/packages-nova-core-variables-pixelicons--docs)
 - [standardButtonClasses](?path=/docs/packages-nova-core-variables-standardbuttonclasses--docs)
 
 ## Functions
@@ -169,6 +196,8 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [MorphIcon](?path=/docs/packages-nova-core-functions-morphicon--docs)
 - [MorphText](?path=/docs/packages-nova-core-functions-morphtext--docs)
 - [NetworkIcon](?path=/docs/packages-nova-core-functions-networkicon--docs)
+- [NovaIconsProvider](?path=/docs/packages-nova-core-functions-novaiconsprovider--docs)
+- [NovaSetIcon](?path=/docs/packages-nova-core-functions-novaseticon--docs)
 - [NovaSoundsProvider](?path=/docs/packages-nova-core-functions-novasoundsprovider--docs)
 - [parseHexColor](?path=/docs/packages-nova-core-functions-parsehexcolor--docs)
 - [playNovaSound](?path=/docs/packages-nova-core-functions-playnovasound--docs)
@@ -186,5 +215,6 @@ Licensed under the **Apache-2.0 License**. See the [LICENSE](https://github.com/
 - [TrashIcon](?path=/docs/packages-nova-core-functions-trashicon--docs)
 - [useCopyToClipboard](?path=/docs/packages-nova-core-functions-usecopytoclipboard--docs)
 - [useMediaQuery](?path=/docs/packages-nova-core-functions-usemediaquery--docs)
+- [useNovaIcons](?path=/docs/packages-nova-core-functions-usenovaicons--docs)
 - [useNovaSounds](?path=/docs/packages-nova-core-functions-usenovasounds--docs)
 - [WalletIcon](?path=/docs/packages-nova-core-functions-walleticon--docs)

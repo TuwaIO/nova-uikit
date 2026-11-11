@@ -20,6 +20,11 @@
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
     },
+    "./heroicons": {
+      "types": "./dist/heroicons.d.ts",
+      "import": "./dist/heroicons.js",
+      "require": "./dist/heroicons.cjs"
+    },
     "./dist/index.css": "./dist/index.css",
     "./dist/fonts/*": "./dist/fonts/*"
   },
@@ -63,7 +68,11 @@
       "url": "https://github.com/Argeare5"
     }
   ],
+  "dependencies": {
+    "@tuwaio/nova-icons": "workspace:^"
+  },
   "peerDependencies": {
+    "@heroicons/react": "2.x.x",
     "@radix-ui/react-dialog": "1.x.x",
     "@tuwaio/orbit-core": ">=0.6.1",
     "@web3icons/common": ">=0.11",
@@ -73,7 +82,13 @@
     "react": ">=19.2.3",
     "tailwind-merge": "3.x.x"
   },
+  "peerDependenciesMeta": {
+    "@heroicons/react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.3.1",
     "@tailwindcss/postcss": "^4.3.4",
     "@tailwindcss/vite": "^4.3.4",

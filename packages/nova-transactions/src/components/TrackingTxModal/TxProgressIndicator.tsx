@@ -2,8 +2,7 @@
  * @file This file contains the `TxProgressIndicator` component, a visual step-by-step progress bar for transactions.
  */
 
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, NovaSetIcon } from '@tuwaio/nova-core';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ComponentType } from 'react';
 
@@ -110,7 +109,7 @@ function StepMark({ status }: { status: StepStatus }) {
     case 'error':
       return <DrawnCross className="novatx:h-3.5 novatx:w-3.5 novatx:text-white" />;
     case 'replaced':
-      return <ArrowPathIcon className="novatx:h-3 novatx:w-3 novatx:text-white" />;
+      return <NovaSetIcon solid="ArrowPathIcon" className="novatx:h-3 novatx:w-3 novatx:text-white" />;
     case 'active':
       return <ActiveMark />;
     default:

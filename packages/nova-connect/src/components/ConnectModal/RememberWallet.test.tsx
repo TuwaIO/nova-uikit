@@ -21,7 +21,7 @@ vi.mock('framer-motion', () => ({
 
 const store = vi.hoisted(() => ({ rememberWallet: false, setRememberWallet: vi.fn() }));
 const play = vi.hoisted(() => vi.fn());
-vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play }));
+vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play, NovaSetIcon: () => null }));
 vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: typeof store) => unknown) => selector(store),
 }));

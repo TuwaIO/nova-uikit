@@ -2,12 +2,16 @@
  * @file This file contains the `TransactionStatusBadge` component for visually displaying a transaction's status.
  */
 
-import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, NovaSetIcon, QuasarLoader } from '@tuwaio/nova-core';
 import { Transaction, TransactionStatus } from '@tuwaio/pulsar-core';
 
 import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import { statusLabelOf } from '../utils/txStatus';
+
+/** The icon of a replaced transaction, from the icon set of `NovaIconsProvider`. */
+const ReplacedIcon = ({ className }: { className?: string }) => (
+  <NovaSetIcon solid="ArrowPathIcon" className={className} />
+);
 
 const SuccessIcon = ({ className }: { className?: string }) => <DrawnCheck variant="disc" className={className} />;
 const FailedIcon = ({ className }: { className?: string }) => <DrawnCross variant="disc" className={className} />;
@@ -38,7 +42,7 @@ const VISUALS = {
     iconColor: 'novatx:text-[var(--tuwa-error-icon)]',
   },
   [TransactionStatus.Replaced]: {
-    Icon: ArrowPathIcon,
+    Icon: ReplacedIcon,
     color: 'novatx:text-[var(--tuwa-info-text)]',
     background: 'novatx:bg-[var(--tuwa-info-bg)]',
     iconColor: 'novatx:text-[var(--tuwa-info-icon)]',

@@ -42,7 +42,7 @@ Install the Nova packages with their peer dependencies and the Satellite Connect
 pnpm add @tuwaio/nova-connect @tuwaio/nova-core @tuwaio/nova-transactions \
   @tuwaio/orbit-core @tuwaio/satellite-core @tuwaio/satellite-react \
   @tuwaio/siwx-react @tuwaio/siwx-core @tuwaio/pulsar-core \
-  react react-dom react-toastify framer-motion @heroicons/react @radix-ui/react-dialog @radix-ui/react-select \
+  react react-dom react-toastify framer-motion @radix-ui/react-dialog @radix-ui/react-select \
   @web3icons/react @web3icons/common ethereum-blockies-base64 clsx tailwind-merge dayjs zustand immer
 ```
 

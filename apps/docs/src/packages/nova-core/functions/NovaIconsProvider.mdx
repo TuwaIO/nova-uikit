@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/NovaIconsProvider" />
+
+# NovaIconsProvider()
+
+> **NovaIconsProvider**(`props`): `string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element` \| `null` \| `undefined`
+
+Defined in: [components/NovaIconsProvider.tsx:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/NovaIconsProvider.tsx#L39)
+
+Sets the icons and the look of the Nova components under it. Without a provider they are pixel (`pixelIcons`).
+`NovaConnectProvider` of `@tuwaio/nova-connect` and `NovaTransactionsProvider` of `@tuwaio/nova-transactions` render it
+with their `icons` prop.
+
+## Parameters
+
+### props
+
+[`NovaIconsProviderProps`](?path=/docs/packages-nova-core-type-aliases-novaiconsproviderprops--docs)
+
+See [NovaIconsProviderProps](?path=/docs/packages-nova-core-type-aliases-novaiconsproviderprops--docs).
+
+## Returns
+
+`string` \| `number` \| `bigint` \| `boolean` \| `Iterable`\<`ReactNode`, `any`, `any`\> \| `Promise`\<`AwaitedReactNode`\> \| `Element` \| `null` \| `undefined`
+
+The children, inside the provider of the context when it has icons.
+
+## Example
+
+```tsx
+import { NovaIconsProvider } from '@tuwaio/nova-core';
+import { heroicons } from '@tuwaio/nova-core/heroicons';
+import type { ReactNode } from 'react';
+
+export function ClassicNova({ children }: { children: ReactNode }) {
+  return <NovaIconsProvider icons={heroicons}>{children}</NovaIconsProvider>;
+}
+```

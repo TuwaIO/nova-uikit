@@ -2,8 +2,7 @@
  * @file RememberWallet component: the "Remember this wallet" checkbox under the wallet list of the connect modal.
  */
 
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
-import { useNovaSounds } from '@tuwaio/nova-core';
+import { NovaSetIcon, useNovaSounds } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
 import { ComponentType, ReactNode, useEffect, useId, useRef, useState } from 'react';
@@ -279,7 +278,7 @@ export function RememberWallet({ customization }: { customization?: RememberWall
             )
           }
         >
-          <InformationCircleIcon width={16} height={16} aria-hidden="true" />
+          <NovaSetIcon outline="InformationCircleIcon" width={16} height={16} aria-hidden="true" />
         </button>
         <AnimatePresence>
           {open && (

@@ -29,10 +29,10 @@ The package has two entry points:
 | `@tuwaio/nova-transactions`           | The components, `defaultLabels` and the label types                             |
 | `@tuwaio/nova-transactions/providers` | `NovaTransactionsProvider`, `NovaTransactionsLabelsProvider`, the error context |
 
-Importing the package adds the `relativeTime` plugin to `dayjs`. Both entry points need the same peer dependencies: `@tuwaio/nova-core` (>=0.11), `@tuwaio/pulsar-core` (>=0.12), `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `react-toastify` (>=11), `framer-motion`, `@heroicons/react` (2.x) and `dayjs` (1.x), plus the peer dependencies of `@tuwaio/nova-core`:
+Importing the package adds the `relativeTime` plugin to `dayjs`. Both entry points need the same peer dependencies: `@tuwaio/nova-core` (>=0.11), `@tuwaio/pulsar-core` (>=0.12), `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `react-toastify` (>=11), `framer-motion` and `dayjs` (1.x), plus the peer dependencies of `@tuwaio/nova-core`:
 
 ```bash
-pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react react-toastify framer-motion @heroicons/react dayjs @radix-ui/react-dialog @web3icons/react @web3icons/common clsx tailwind-merge
+pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react react-toastify framer-motion dayjs @radix-ui/react-dialog @web3icons/react @web3icons/common clsx tailwind-merge
 ```
 
 Import the stylesheets of `@tuwaio/nova-core` (theme variables) and of this package (the component styles, Tailwind CSS v4 utilities prefixed with `novatx:`):

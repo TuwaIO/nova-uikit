@@ -2,8 +2,7 @@
  * @file This file contains the `TxErrorBlock` component for displaying transaction error messages.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, CopyIcon, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, NovaSetIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import type { TuwaErrorState } from '@tuwaio/orbit-core';
 import { useMemo } from 'react';
 
@@ -82,7 +81,8 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
             classNames?.title,
           )}
         >
-          <ExclamationTriangleIcon
+          <NovaSetIcon
+            solid="ExclamationTriangleIcon"
             className={cn('novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-error-icon)]', classNames?.icon)}
           />
           <span>{txError.title}</span>

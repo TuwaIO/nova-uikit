@@ -5,8 +5,7 @@
  * when a `beforeTxProcess` preflight check rejects.
  */
 
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
-import { cn, CopyIcon, MorphText, useCopyToClipboard } from '@tuwaio/nova-core';
+import { cn, CopyIcon, MorphText, NovaSetIcon, useCopyToClipboard } from '@tuwaio/nova-core';
 import { ComponentPropsWithoutRef, ComponentType, JSX, ReactNode } from 'react';
 import { ToastContentProps } from 'react-toastify';
 
@@ -77,7 +76,7 @@ export type ToastValidationErrorClassNames = {
   header?: string;
   /** Classes applied to the title/icon wrapper. */
   titleWrapper?: string;
-  /** Classes applied to the `<ExclamationTriangleIcon>` (or custom icon). */
+  /** Classes applied to the `<NovaSetIcon solid="ExclamationTriangleIcon">` (or custom icon). */
   icon?: string;
   /** Classes applied to the title text node. */
   title?: string;
@@ -167,7 +166,8 @@ export type ToastValidationErrorProps = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DefaultIcon = ({ isCopied: _, className, ...props }: ToastValidationErrorIconProps) => (
-  <ExclamationTriangleIcon
+  <NovaSetIcon
+    solid="ExclamationTriangleIcon"
     className={cn('novatx:h-5 novatx:w-5 novatx:flex-shrink-0 novatx:text-[var(--tuwa-error-icon)]', className)}
     {...props}
   />

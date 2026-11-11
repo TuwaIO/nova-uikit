@@ -2,8 +2,7 @@
  * @file ConnectedModal component with comprehensive customization options for all child components.
  */
 
-import { ChevronLeftIcon } from '@heroicons/react/24/solid';
-import { CloseIcon, cn, Dialog, DialogContent, DialogHeader, DialogTitle } from '@tuwaio/nova-core';
+import { CloseIcon, cn, Dialog, DialogContent, DialogHeader, DialogTitle, NovaSetIcon } from '@tuwaio/nova-core';
 import { ConnectorType, formatConnectorChainId, getAdapterFromConnectorType } from '@tuwaio/orbit-core';
 import { type Easing, motion, type Transition, type Variants } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, useCallback, useEffect } from 'react';
@@ -401,7 +400,7 @@ const DefaultBackButton: React.FC<ConnectedModalBackButtonProps> = ({ onBack, la
       className,
     )}
   >
-    <ChevronLeftIcon className="novacon:h-5 novacon:w-5" />
+    <NovaSetIcon solid="ChevronLeftIcon" className="novacon:h-5 novacon:w-5" />
   </button>
 );
 
