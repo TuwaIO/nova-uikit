@@ -96,6 +96,10 @@ Start transactions with the store's `executeTxAction`. A full app with Satellite
 
 ---
 
+## 🎨 Icons
+
+The components draw the pixel icons of [`@tuwaio/nova-icons`](https://stories.tuwa.io/?path=/docs/packages-nova-icons-overview--docs), and the loaders, the marks of a result and the spinner of the tracking modal in the same pixel look. `<NovaTransactionsProvider icons={heroicons} />`, with `heroicons` of `@tuwaio/nova-core/heroicons` and `@heroicons/react` installed, brings back the thin lines of Heroicons and the classic look; see Icons in [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs).
+
 ## 🔊 Sounds
 
 Sounds are off unless you ask for them: `<NovaTransactionsProvider sounds />` plays a transaction that reaches the pool, its success, failure and replacement, an error before it reached the pool, a copy, a dialog opened and closed, and a link to the explorer. `sounds={{ copy: false, volume: 0.3 }}` leaves out a sound and sets the volume. They are synthesized in the browser with the Web Audio API, with no files and no requests, and they play only in a visible tab, after the person has used the page. A pool restored after a page load makes no sound.

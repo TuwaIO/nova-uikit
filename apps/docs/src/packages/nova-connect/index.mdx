@@ -124,6 +124,10 @@ A full app with Nova Transactions, SIWX and a Pulsar store synced with a server 
 
 ---
 
+## 🎨 Icons
+
+The components draw the pixel icons of [`@tuwaio/nova-icons`](https://stories.tuwa.io/?path=/docs/packages-nova-icons-overview--docs), and the wallet of Connect wallet, the status marks of the button, the loaders, the About wallets picture and the star field in the same pixel look. `<NovaConnectProvider icons={heroicons} />`, with `heroicons` of `@tuwaio/nova-core/heroicons` and `@heroicons/react` installed, brings back the thin lines of Heroicons and the classic look; see Icons in [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs).
+
 ## 🔊 Sounds
 
 Sounds are off unless you ask for them: `<NovaConnectProvider sounds />` plays a wallet connected and disconnected, an error of a connection, a change of network, a copy, a balance refreshed by hand, a recent wallet removed, a dialog opened and closed, a link to another site, Connect another wallet, the Get a wallet and About wallets screens, and the Remember this wallet checkbox. `sounds={{ copy: false, volume: 0.3 }}` leaves out a sound and sets the volume. They are synthesized in the browser with the Web Audio API, with no files and no requests, and they play only in a visible tab, after the person has used the page. A wallet restored after a page load makes no sound.
