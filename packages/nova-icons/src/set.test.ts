@@ -103,6 +103,18 @@ describe('the package', () => {
   });
 
   // `sideEffects: false` would let a bundler drop `import '@tuwaio/nova-icons/motion.css'` as an unused import
+  // A CommonJS consumer of TypeScript reads the .d.cts types, an ES module one the .d.ts
+  it('gives each entry the types of its own module format', () => {
+    for (const [path, entry] of Object.entries(pkg.exports)) {
+      if (path.endsWith('.css')) continue;
+      const conditions = entry as unknown as Record<string, Record<string, string>>;
+      expect(conditions.import.types, path).toMatch(/\.d\.ts$/);
+      expect(conditions.import.default, path).toMatch(/\.js$/);
+      expect(conditions.require.types, path).toMatch(/\.d\.cts$/);
+      expect(conditions.require.default, path).toMatch(/\.cjs$/);
+    }
+  });
+
   it('keeps its stylesheet when a bundler drops what is unused', () => {
     expect(pkg.sideEffects).toEqual(['*.css']);
   });
@@ -114,6 +126,11 @@ describe('the package', () => {
     expect(css).toMatch(/@keyframes nova-icon-breathe/);
     expect(css).not.toMatch(/infinite/);
     for (let step = 1; step <= 30; step++) expect(css, `step ${step}`).toContain(`[data-step='${step}']`);
+    // A grid larger than 16 x 16 has diagonals past 30: they come with the last one, not first; the first one waits for none
+    const fallback = css.indexOf("svg[data-motion='assemble'] [data-step] {");
+    expect(css.slice(fallback, css.indexOf('}', fallback))).toContain('animation-delay: 360ms');
+    expect(fallback).toBeLessThan(css.indexOf("[data-step='1']"));
+    expect(css).toMatch(/\[data-step='0'\] \{\s*animation-delay: 0ms;/);
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)[^}]*\{[^}]*animation: none/);
   });
 });

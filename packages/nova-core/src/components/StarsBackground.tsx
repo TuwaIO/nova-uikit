@@ -170,7 +170,9 @@ export function StarsBackground({ starsCount, look }: { starsCount?: number; loo
                   {sprite.cells.map(([cx, cy]) => (
                     <rect key={`${cx}-${cy}`} x={cx} y={cy} width={2} height={2} fill={STAR_COLOR} />
                   ))}
-                  {star.kind === 'nova' && <rect className="tuwa-star-px-heart" x={4} y={4} width={2} height={2} />}
+                  {star.kind === 'nova' && (
+                    <rect className="tuwa-star-px-heart" x={4} y={4} width={2} height={2} fill={STAR_COLOR} />
+                  )}
                 </svg>
               );
             }

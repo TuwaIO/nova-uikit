@@ -33,7 +33,10 @@ import {
   PuzzlePieceIcon,
 } from '@tuwaio/nova-icons/24/solid';
 import { globalSingleton } from '@tuwaio/orbit-core';
-import { type ComponentType, createContext, type SVGProps, useContext } from 'react';
+import type { ComponentType, Context, SVGProps } from 'react';
+// A namespace: the react-server build of React (React Server Components) has no createContext and no useContext, and a named
+// import of either would fail there when the module loads
+import * as React from 'react';
 
 /** The outline icons the Nova components draw, named as in Heroicons. */
 export const NOVA_OUTLINE_ICONS = [
@@ -124,14 +127,23 @@ export const pixelIcons: NovaIconSet = {
   },
 };
 
-/**
- * The icon set of the closest `NovaIconsProvider`, shared on `globalThis` so that two copies of this package agree.
- * Without a provider it is `pixelIcons`.
- */
-export const NovaIconsContext = globalSingleton('tuwaio.nova-core.icons', () => createContext<NovaIconSet>(pixelIcons));
+/** Whether this React has context: the react-server build (React Server Components) has none. */
+const HAS_CONTEXT = 'createContext' in React && 'useContext' in React;
 
 /**
- * Returns the icon set of the closest `NovaIconsProvider`: the icons the Nova components draw, and their look.
+ * The icon set of the closest `NovaIconsProvider`, shared on `globalThis` so that two copies of this package agree.
+ * Without a provider it is `pixelIcons`. It does not exist in a React Server Component, where React has no context.
+ */
+export const NovaIconsContext = (
+  HAS_CONTEXT
+    ? globalSingleton('tuwaio.nova-core.icons', () => React.createContext<NovaIconSet>(pixelIcons))
+    : undefined
+) as Context<NovaIconSet>;
+
+/**
+ * Returns the icon set of the closest `NovaIconsProvider`: the icons the Nova components draw, and their look. In a React
+ * Server Component, which has no context, it is `pixelIcons`: the loader and the icons that render there draw the pixel look
+ * unless their `look` prop says otherwise.
  *
  * @returns The set; `pixelIcons` without a provider.
  *
@@ -150,5 +162,8 @@ export const NovaIconsContext = globalSingleton('tuwaio.nova-core.icons', () => 
  * ```
  */
 export function useNovaIcons(): NovaIconSet {
-  return useContext(NovaIconsContext);
+  return useSetOfProvider();
 }
+
+/** Reads the context where React has one; chosen once, when the module loads, so every render calls the same hooks. */
+const useSetOfProvider: () => NovaIconSet = HAS_CONTEXT ? () => React.useContext(NovaIconsContext) : () => pixelIcons;

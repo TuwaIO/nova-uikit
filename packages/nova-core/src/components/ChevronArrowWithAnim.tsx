@@ -17,7 +17,8 @@ const DRAWINGS = {
  *
  * @param props - The chevron props.
  * @param props.className - Classes merged with the default size and color (`--tuwa-text-secondary`).
- * @param props.strokeWidth - Stroke width of the SVG path. Defaults to `2`.
+ * @param props.strokeWidth - Stroke width of the classic chevron; the pixel one has the two-pixel lines of its grid. Defaults
+ * to `2`.
  * @param props.isOpen - Whether the related list is open.
  * @param props.look - `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel
  * without one).

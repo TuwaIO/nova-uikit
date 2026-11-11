@@ -37,7 +37,7 @@
 
   /* Faster than it opens: a click is over in about 100 ms, and the row of the button may be gone after it */
   a:active .tuwa-trash-lid,
-  button:active .tuwa-trash-lid {
+  button:not(:disabled):active .tuwa-trash-lid {
     transform: none;
     transition-duration: 90ms;
   }
@@ -71,7 +71,7 @@
   }
 
   a:active .tuwa-trash-lid-px,
-  button:active .tuwa-trash-lid-px {
+  button:not(:disabled):active .tuwa-trash-lid-px {
     transform: none;
   }
 

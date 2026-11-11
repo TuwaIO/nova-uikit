@@ -8,8 +8,14 @@
   }
 }
 
+/* Past the 30th diagonal (a grid larger than 16 x 16) a pixel comes with the last one, never first */
 svg[data-motion='assemble'] [data-step] {
   animation: nova-icon-gather 120ms ease-out both;
+  animation-delay: 360ms;
+}
+
+svg[data-motion='assemble'] [data-step='0'] {
+  animation-delay: 0ms;
 }
 
 svg[data-motion='assemble'] [data-step='1'] {

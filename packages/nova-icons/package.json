@@ -11,34 +11,64 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./24/outline": {
-      "types": "./dist/24/outline/index.d.ts",
-      "import": "./dist/24/outline/index.js",
-      "require": "./dist/24/outline/index.cjs"
+      "import": {
+        "types": "./dist/24/outline/index.d.ts",
+        "default": "./dist/24/outline/index.js"
+      },
+      "require": {
+        "types": "./dist/24/outline/index.d.cts",
+        "default": "./dist/24/outline/index.cjs"
+      }
     },
     "./24/solid": {
-      "types": "./dist/24/solid/index.d.ts",
-      "import": "./dist/24/solid/index.js",
-      "require": "./dist/24/solid/index.cjs"
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
     },
     "./20/solid": {
-      "types": "./dist/24/solid/index.d.ts",
-      "import": "./dist/24/solid/index.js",
-      "require": "./dist/24/solid/index.cjs"
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
     },
     "./16/solid": {
-      "types": "./dist/24/solid/index.d.ts",
-      "import": "./dist/24/solid/index.js",
-      "require": "./dist/24/solid/index.cjs"
+      "import": {
+        "types": "./dist/24/solid/index.d.ts",
+        "default": "./dist/24/solid/index.js"
+      },
+      "require": {
+        "types": "./dist/24/solid/index.d.cts",
+        "default": "./dist/24/solid/index.cjs"
+      }
     },
     "./tuwa": {
-      "types": "./dist/tuwa/index.d.ts",
-      "import": "./dist/tuwa/index.js",
-      "require": "./dist/tuwa/index.cjs"
+      "import": {
+        "types": "./dist/tuwa/index.d.ts",
+        "default": "./dist/tuwa/index.js"
+      },
+      "require": {
+        "types": "./dist/tuwa/index.d.cts",
+        "default": "./dist/tuwa/index.cjs"
+      }
     },
     "./motion.css": "./motion.css"
   },

@@ -6,12 +6,22 @@ import * as solid from '@tuwaio/nova-icons/24/solid';
 import { createElement as h, isValidElement, type ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-const { presence } = vi.hoisted(() => ({ presence: { initial: undefined as boolean | undefined } }));
+const { presence, slots } = vi.hoisted(() => ({
+  presence: { initial: undefined as boolean | undefined },
+  // The state of one mounted component across its renders: a test clears it to mount a new one
+  slots: { values: [] as unknown[], next: 0 },
+}));
 
 vi.mock('react', async (importOriginal) => {
   const react = await importOriginal<typeof import('react')>();
   return {
     ...react,
+    useState: (initial: unknown) => {
+      const index = slots.next++;
+      if (!(index in slots.values))
+        slots.values[index] = typeof initial === 'function' ? (initial as () => unknown)() : initial;
+      return [slots.values[index], () => undefined];
+    },
     // The icon set without a provider (pixel), and the presence of an AnimatePresence a test sets
     useContext: (context: { _currentValue: unknown; displayName?: string }) =>
       context._currentValue && typeof context._currentValue === 'object' && 'look' in (context._currentValue as object)
@@ -113,10 +123,22 @@ describe('the pixel look of the parts that move', () => {
   });
 
   it('shows a mark that is already there when the page opens, without drawing it', () => {
+    const mount = () => {
+      slots.values = [];
+      slots.next = 0;
+    };
+    const render = () => {
+      slots.next = 0;
+      return svgOf(h(DrawnCheck, {})).props['data-still'];
+    };
+    mount();
     presence.initial = false;
-    expect(svgOf(h(DrawnCheck, {})).props['data-still']).toBe('');
+    expect(render()).toBe('');
+    // On its way out, framer-motion gives the presence again without `initial`: the mark stays still, not drawn again
     presence.initial = undefined;
-    expect(svgOf(h(DrawnCheck, {})).props['data-still']).toBeUndefined();
+    expect(render()).toBe('');
+    mount();
+    expect(render()).toBeUndefined();
   });
 
   it('turns the sheets of a copy into a check mark', () => {

@@ -10,6 +10,10 @@ vi.mock('framer-motion', async (importOriginal) => ({
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useContext: (context: { _currentValue: unknown }) => context._currentValue,
+  useState: (initial: unknown) => [
+    typeof initial === 'function' ? (initial as () => unknown)() : initial,
+    () => undefined,
+  ],
 }));
 
 import { DrawnCheck, DrawnCross } from './DrawnCheck';

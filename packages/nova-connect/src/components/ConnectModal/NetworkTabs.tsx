@@ -621,7 +621,12 @@ export const NetworkTabs = memo(
                           <NetworkIcon chainId={tabData.networkInfo?.chainId ?? ''} />
                         ) : (
                           <div className="novacon:w-6 novacon:h-6 novacon:rounded-full novacon:bg-[var(--tuwa-bg-primary)]">
-                            <NovaSetIcon solid="GlobeAltIcon" aria-hidden="true" />
+                            {/* The size of its box: Heroicons filled it, the pixel icons are 1em square */}
+                            <NovaSetIcon
+                              solid="GlobeAltIcon"
+                              aria-hidden="true"
+                              className="novacon:block novacon:h-full novacon:w-full"
+                            />
                           </div>
                         )}
                       </CustomIconContainer>

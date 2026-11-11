@@ -75,7 +75,7 @@
     }
   ],
   "peerDependencies": {
-    "@tuwaio/nova-core": ">=0.13",
+    "@tuwaio/nova-core": ">=0.14",
     "@tuwaio/orbit-core": ">=0.6.2",
     "@tuwaio/pulsar-core": ">=0.12",
     "dayjs": "1.x.x",

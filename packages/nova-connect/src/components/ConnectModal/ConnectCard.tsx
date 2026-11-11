@@ -1047,7 +1047,8 @@ export const ConnectCard = memo(
               aria-hidden={true}
               cardData={cardData}
             >
-              <NovaSetIcon solid="ChevronRightIcon" />
+              {/* The size of its box: Heroicons filled it, the pixel icons are 1em square */}
+              <NovaSetIcon solid="ChevronRightIcon" className="novacon:block novacon:h-full novacon:w-full" />
             </CustomChevron>
           )}
         </CustomContainer>

@@ -37,11 +37,14 @@ describe('TrashIcon', () => {
   it('opens on hover and focus, closes on a press, and a disabled button stays closed', () => {
     expect(css).toMatch(/button:not\(:disabled\):hover \.tuwa-trash-lid/);
     expect(css).toMatch(/button:not\(:disabled\):focus-visible \.tuwa-trash-lid/);
-    expect(css).toMatch(/button:active \.tuwa-trash-lid\s*\{[^}]*transform: none/);
-    // After the rules that open it: of two rules of the same weight, the later one wins
-    expect(css.indexOf('button:active .tuwa-trash-lid')).toBeGreaterThan(
-      css.indexOf('button:not(:disabled):hover .tuwa-trash-lid'),
-    );
+    // As heavy as the rules that open it (button:not(:disabled)…) and after them, so that the lid closes on a press: a plain
+    // `button:active` weighs less than `button:not(:disabled):hover` and never won
+    for (const lid of ['tuwa-trash-lid', 'tuwa-trash-lid-px']) {
+      expect(css).toMatch(new RegExp(`button:not\\(:disabled\\):active \\.${lid}\\s*\\{[^}]*transform: none`));
+      expect(css.indexOf(`button:not(:disabled):active .${lid}`)).toBeGreaterThan(
+        css.indexOf(`button:not(:disabled):hover .${lid}`),
+      );
+    }
   });
 
   it('stays still with reduced motion', () => {

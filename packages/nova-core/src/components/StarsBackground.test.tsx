@@ -64,6 +64,10 @@ describe('StarsBackground', () => {
     }
     const svg = elements(tree).find((element) => element.type === 'svg');
     expect(svg?.props.shapeRendering).toBe('crispEdges');
+    // The lit heart of a large star has the color of the star while it waits for its turn, and for good with reduced motion
+    for (const heart of elements(tree).filter((element) => element.props.className === 'tuwa-star-px-heart')) {
+      expect(heart.props.fill).toBe('color-mix(in srgb, var(--tuwa-text-primary) 70%, transparent)');
+    }
   });
 
   it('holds still for a reader who asks for less motion, in both looks', () => {

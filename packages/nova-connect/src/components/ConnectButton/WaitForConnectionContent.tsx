@@ -272,6 +272,10 @@ const DefaultContent = ({ icon, text }: Pick<WaitForConnectionContentContentProp
  * label (or `customization.config.customText`). By default it renders nothing while a wallet is connected
  * (`hideWhenConnected`). Animations can be turned off with `customization.config.disableAnimation` or `reduceMotion`.
  *
+ * In the pixel look (the default icon set of nova-core) the wallet is the `WalletIcon` of the set, its pixels gathering once.
+ * `customization.svg`, `components.Icon` or `components.Path`, or any option of the path (`classNames.path`,
+ * `variants.path`, `animation.path`) keeps the drawn SVG path in any look.
+ *
  * Props: {@link WaitForConnectionContentProps}; the ref is forwarded to the container.
  *
  * @example
@@ -363,7 +367,12 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
     // a wallet drawn line by line in the classic one
     const iconElement = customization?.components?.Icon ? (
       <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />
-    ) : look === 'pixel' && !customization?.svg ? (
+    ) : look === 'pixel' &&
+      !customization?.svg &&
+      !customization?.components?.Path &&
+      !customization?.classNames?.path &&
+      !customization?.variants?.path &&
+      !customization?.animation?.path ? (
       <NovaSetIcon
         outline="WalletIcon"
         motion={disableAnimation || reduceMotion ? undefined : 'assemble'}

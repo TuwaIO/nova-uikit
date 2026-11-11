@@ -3,7 +3,7 @@
  */
 
 import { motion, PresenceContext, useReducedMotion } from 'framer-motion';
-import { type CSSProperties, useContext } from 'react';
+import { type CSSProperties, useContext, useState } from 'react';
 
 import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
 import { CHECK, CHECK_CUT, CROSS, CROSS_CUT, DISC } from '../pixel/art';
@@ -47,8 +47,11 @@ function DrawnMark({
 }: DrawnMarkProps & { mark: keyof typeof STROKES }) {
   const reduceMotion = useReducedMotion();
   const setLook = useNovaIcons().look;
-  // Inside an AnimatePresence with `initial={false}`, a mark that is there when the page opens is shown, not drawn
-  const isStill = useContext(PresenceContext)?.initial === false || still;
+  // Inside an AnimatePresence with `initial={false}`, a mark that is there when the page opens is shown, not drawn. Taken at
+  // mount: on its way out, framer-motion gives the presence again without `initial`, and the mark would draw itself again
+  const presence = useContext(PresenceContext);
+  const [startedStill] = useState(() => presence?.initial === false);
+  const isStill = startedStill || still;
   const isDisc = variant === 'disc';
 
   if ((look ?? setLook) === 'pixel') {

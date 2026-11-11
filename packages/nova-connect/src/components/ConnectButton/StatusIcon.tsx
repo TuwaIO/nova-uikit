@@ -10,6 +10,18 @@ import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from '
 
 import { useNovaConnectLabels } from '../../hooks/useNovaConnectLabels';
 
+/**
+ * The path data the connect button gives each status. In the pixel look the pixel marks of nova-core take their place.
+ *
+ * @internal
+ */
+export const DEFAULT_STATUS_PATHS = {
+  succeed: 'm4.5 12.75 6 6 9-13.5',
+  failed: 'M6 18 18 6M6 6l12 12',
+  replaced:
+    'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99',
+} as const;
+
 // --- Default Motion Variants ---
 const DEFAULT_MOTION_PATH_VARIANTS: Variants = {
   hidden: { pathLength: 0, opacity: 0 },
@@ -240,6 +252,11 @@ const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProp
  * failed or was replaced. Pass the path data as children. Animations can be turned off with
  * `customization.config.disableAnimation` or `reduceMotion`.
  *
+ * In the pixel look (the default icon set of nova-core) the path the connect button gives each status is drawn as a pixel
+ * mark that draws itself (`DrawnCheck`, `DrawnCross`, the arrows of `ArrowPathIcon`). A path of your own, `customization.svg`,
+ * `components.Svg` or `components.Path`, or any option of the path (`classNames.path`, `variants.path`, `animation.path`)
+ * keeps the SVG path in any look.
+ *
  * Props: {@link StatusIconProps}; the ref is forwarded to the container.
  *
  * @example
@@ -350,9 +367,18 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
           focusable="false"
         />
       );
+    // The pixel marks stand in for the default path only: a path or an option of the path the app gives keeps the SVG
+    const isDefaultPath = pathData.replace(/\s+/g, ' ').trim() === DEFAULT_STATUS_PATHS[txStatus];
+    const isPathCustomized = Boolean(
+      customization?.svg ||
+      customization?.components?.Path ||
+      customization?.classNames?.path ||
+      customization?.variants?.path ||
+      customization?.animation?.path,
+    );
     const svgElement = customization?.components?.Svg ? (
       <Svg pathData={pathData} className={svgClasses} aria-hidden={true} focusable={false} />
-    ) : look === 'pixel' && !customization?.svg ? (
+    ) : look === 'pixel' && isDefaultPath && !isPathCustomized ? (
       pixelMark
     ) : (
       <svg
