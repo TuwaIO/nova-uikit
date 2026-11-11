@@ -2,13 +2,23 @@
  * @file RememberWallet component: the "Remember this wallet" checkbox under the wallet list of the connect modal.
  */
 
-import { NovaSetIcon, useNovaSounds } from '@tuwaio/nova-core';
+import { NovaSetIcon, useNovaIcons, useNovaSounds } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { AnimatePresence, motion, useReducedMotion, Variants } from 'framer-motion';
-import { ComponentType, ReactNode, useEffect, useId, useRef, useState } from 'react';
+import { ComponentType, CSSProperties, ReactNode, useEffect, useId, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
+
+/** The pixel check mark of the box: a grid of 6, each pixel two screen pixels at 12 px, drawn from left to right. */
+const PIXEL_CHECK = [
+  [0, 3],
+  [1, 4],
+  [2, 5],
+  [3, 4],
+  [4, 3],
+  [5, 2],
+] as const;
 
 /**
  * Props for a custom container of {@link RememberWallet}.
@@ -135,6 +145,7 @@ export function RememberWallet({ customization }: { customization?: RememberWall
     setStoreRememberWallet(remember);
   };
   const reduceMotion = useReducedMotion() ?? false;
+  const { look } = useNovaIcons();
   const hintId = useId();
   const tooltipId = useId();
   const [hovered, setHovered] = useState(false);
@@ -224,29 +235,55 @@ export function RememberWallet({ customization }: { customization?: RememberWall
               className="novacon:pointer-events-none novacon:absolute novacon:inset-0 novacon:rounded-[inherit] novacon:bg-[var(--tuwa-text-accent)]"
             />
           )}
-          <svg
-            viewBox="0 0 16 16"
-            fill="none"
-            className={
-              classNames?.checkmark?.() ??
-              cn('novacon:relative novacon:h-3 novacon:w-3 novacon:text-[var(--tuwa-text-on-accent)]')
-            }
-          >
-            <motion.path
-              d="M3.5 8.5l3 3 6-7"
-              stroke="currentColor"
-              strokeWidth={2.25}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={false}
-              animate={{ pathLength: rememberWallet ? 1 : 0, opacity: rememberWallet ? 1 : 0 }}
-              transition={
-                reduceMotion
-                  ? { duration: 0 }
-                  : { duration: rememberWallet ? 0.26 : 0.14, delay: rememberWallet ? 0.06 : 0, ease: 'easeOut' }
+          {look === 'pixel' ? (
+            <svg
+              viewBox="0 0 6 6"
+              shapeRendering="crispEdges"
+              fill="currentColor"
+              aria-hidden="true"
+              data-on={rememberWallet ? '' : undefined}
+              className={
+                classNames?.checkmark?.() ??
+                cn('novacon:relative novacon:h-3 novacon:w-3 novacon:text-[var(--tuwa-text-on-accent)]')
               }
-            />
-          </svg>
+            >
+              {PIXEL_CHECK.map(([x, y], index) => (
+                <rect
+                  key={`${x}-${y}`}
+                  className="tuwa-remember-px"
+                  x={x}
+                  y={y}
+                  width={1}
+                  height={1}
+                  style={{ '--k': index } as CSSProperties}
+                />
+              ))}
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              className={
+                classNames?.checkmark?.() ??
+                cn('novacon:relative novacon:h-3 novacon:w-3 novacon:text-[var(--tuwa-text-on-accent)]')
+              }
+            >
+              <motion.path
+                d="M3.5 8.5l3 3 6-7"
+                stroke="currentColor"
+                strokeWidth={2.25}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={false}
+                animate={{ pathLength: rememberWallet ? 1 : 0, opacity: rememberWallet ? 1 : 0 }}
+                transition={
+                  reduceMotion
+                    ? { duration: 0 }
+                    : { duration: rememberWallet ? 0.26 : 0.14, delay: rememberWallet ? 0.06 : 0, ease: 'easeOut' }
+                }
+              />
+            </svg>
+          )}
         </motion.span>
         <span
           className={

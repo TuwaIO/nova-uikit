@@ -3,6 +3,7 @@
  * control.
  */
 
+import { DrawnCheck, DrawnCross, NovaSetIcon, useNovaIcons } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
@@ -269,6 +270,7 @@ const DefaultContent = ({ pathData, finalAriaLabel }: Pick<StatusIconContentProp
 export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
   ({ txStatus, colorVar, children, 'aria-label': ariaLabel, className, customization, ...props }, ref) => {
     const labels = useNovaConnectLabels();
+    const { look } = useNovaIcons();
 
     // Extract path data from children
     const pathData = typeof children === 'string' ? children : '';
@@ -331,9 +333,27 @@ export const StatusIcon = forwardRef<HTMLDivElement, StatusIconProps>(
     const shouldReduceMotion = customization?.config?.reduceMotion ?? false;
     const isAnimationDisabled = customization?.config?.disableAnimation ?? false;
 
-    // Create SVG element with custom props
+    // Create SVG element with custom props. The pixel look draws the marks of nova-core pixel by pixel, unless the svg is
+    // customized
+    const isStill = isAnimationDisabled || shouldReduceMotion;
+    const pixelMark =
+      txStatus === 'succeed' ? (
+        <DrawnCheck className={cn('novacon:w-4 novacon:h-4', svgClasses)} still={isStill} />
+      ) : txStatus === 'failed' ? (
+        <DrawnCross className={cn('novacon:w-4 novacon:h-4', svgClasses)} still={isStill} />
+      ) : (
+        <NovaSetIcon
+          solid="ArrowPathIcon"
+          motion={isStill ? undefined : 'assemble'}
+          className={cn('novacon:w-4 novacon:h-4', svgClasses)}
+          aria-hidden="true"
+          focusable="false"
+        />
+      );
     const svgElement = customization?.components?.Svg ? (
       <Svg pathData={pathData} className={svgClasses} aria-hidden={true} focusable={false} />
+    ) : look === 'pixel' && !customization?.svg ? (
+      pixelMark
     ) : (
       <svg
         className={cn('novacon:w-4 novacon:h-4', svgClasses)}

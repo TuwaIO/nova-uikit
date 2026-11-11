@@ -1,3 +1,54 @@
 @layer theme, base, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme) prefix(novatx);
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(novatx);
+
+/* The pixel spinner of the step being waited for: a lit arc steps round a ring of pixels, the dot in the middle breathes */
+.tuwa-tx-px-ring {
+  fill: currentColor;
+  opacity: 0.22;
+  animation: tuwa-tx-px-run 1.4s step-end infinite;
+  animation-delay: calc(1.4s * (var(--i) / var(--n) - 1));
+}
+
+.tuwa-tx-px-dot {
+  fill: currentColor;
+  animation: tuwa-tx-px-breathe 1.6s step-end infinite;
+}
+
+@keyframes tuwa-tx-px-run {
+  0% {
+    opacity: 1;
+  }
+
+  12% {
+    opacity: 0.6;
+  }
+
+  25%,
+  100% {
+    opacity: 0.22;
+  }
+}
+
+@keyframes tuwa-tx-px-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Still for a reader who asks for less motion: the arc parked at the top */
+@media (prefers-reduced-motion: reduce) {
+  .tuwa-tx-px-ring,
+  .tuwa-tx-px-dot {
+    animation: none;
+  }
+
+  .tuwa-tx-px-park {
+    opacity: 1;
+  }
+}

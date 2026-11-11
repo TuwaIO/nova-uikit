@@ -6,6 +6,7 @@
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
+  ArrowRightIcon,
   ArrowsRightLeftIcon,
   BoltIcon,
   CheckCircleIcon,
@@ -15,8 +16,10 @@ import {
   CommandLineIcon,
   CpuChipIcon,
   DocumentTextIcon,
+  ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
+  WalletIcon,
   XCircleIcon,
 } from '@tuwaio/nova-icons/24/outline';
 import {
@@ -36,6 +39,7 @@ import { type ComponentType, createContext, type SVGProps, useContext } from 're
 export const NOVA_OUTLINE_ICONS = [
   'ArrowLeftIcon',
   'ArrowPathIcon',
+  'ArrowRightIcon',
   'ArrowsRightLeftIcon',
   'BoltIcon',
   'CheckCircleIcon',
@@ -45,8 +49,10 @@ export const NOVA_OUTLINE_ICONS = [
   'CommandLineIcon',
   'CpuChipIcon',
   'DocumentTextIcon',
+  'ExclamationCircleIcon',
   'ExclamationTriangleIcon',
   'InformationCircleIcon',
+  'WalletIcon',
   'XCircleIcon',
 ] as const;
 
@@ -90,6 +96,7 @@ export const pixelIcons: NovaIconSet = {
   outline: {
     ArrowLeftIcon,
     ArrowPathIcon,
+    ArrowRightIcon,
     ArrowsRightLeftIcon,
     BoltIcon,
     CheckCircleIcon,
@@ -99,8 +106,10 @@ export const pixelIcons: NovaIconSet = {
     CommandLineIcon,
     CpuChipIcon,
     DocumentTextIcon,
+    ExclamationCircleIcon,
     ExclamationTriangleIcon,
     InformationCircleIcon,
+    WalletIcon,
     XCircleIcon,
   },
   solid: {

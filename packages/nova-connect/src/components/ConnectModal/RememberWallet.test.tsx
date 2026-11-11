@@ -21,7 +21,8 @@ vi.mock('framer-motion', () => ({
 
 const store = vi.hoisted(() => ({ rememberWallet: false, setRememberWallet: vi.fn() }));
 const play = vi.hoisted(() => vi.fn());
-vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play, NovaSetIcon: () => null }));
+const icons = vi.hoisted(() => ({ look: 'classic' as 'classic' | 'pixel' }));
+vi.mock('@tuwaio/nova-core', () => ({ useNovaSounds: () => play, NovaSetIcon: () => null, useNovaIcons: () => icons }));
 vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: typeof store) => unknown) => selector(store),
 }));
@@ -85,6 +86,20 @@ describe('RememberWallet', () => {
 
     store.rememberWallet = true;
     expect(checkmark(renderNodes()).animate).toMatchObject({ pathLength: 1 });
+  });
+
+  // The pixel look: a check mark of six pixels that draws itself when the box is ticked (CSS, by `data-on`)
+  it('draws the pixel check mark only when the box is ticked, in the pixel look', () => {
+    icons.look = 'pixel';
+    const svgOf = (nodes: Node[]) => nodes.find((n) => n.type === 'svg' && n.props?.viewBox === '0 0 6 6')!;
+    expect(svgOf(renderNodes()).props!['data-on']).toBeUndefined();
+    unmount();
+
+    store.rememberWallet = true;
+    const ticked = renderNodes();
+    expect(svgOf(ticked).props!['data-on']).toBe('');
+    expect(ticked.filter((n) => n.props?.className === 'tuwa-remember-px')).toHaveLength(6);
+    icons.look = 'classic';
   });
 
   it('does not animate for people who prefer reduced motion', () => {

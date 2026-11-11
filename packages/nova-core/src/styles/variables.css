@@ -5,6 +5,8 @@
 @import './quasar-loader.css';
 @import './status-edge.css';
 @import './icons.css';
+/* The motions of the pixel icons (`motion` of an icon of @tuwaio/nova-icons, or of NovaSetIcon) */
+@import '@tuwaio/nova-icons/motion.css' layer(components);
 
 @theme {
   --font-sans: var(

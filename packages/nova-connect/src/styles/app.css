@@ -235,6 +235,75 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
   }
 }
 
+/* The pixel look: a ring of dots that take turns on hover, a plus, an arrow that steps one pixel */
+.tuwa-add-wallet-px-dot {
+  fill: var(--tuwa-text-accent);
+  opacity: 0.9;
+}
+
+.tuwa-add-wallet-px-dot--b {
+  opacity: 0.35;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-dot,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-dot {
+  animation: tuwa-add-wallet-px-turn 0.8s step-end infinite;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-dot--b,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-dot--b {
+  animation-delay: -0.4s;
+}
+
+.tuwa-add-wallet-px-plus {
+  fill: var(--tuwa-text-accent);
+}
+
+.tuwa-add-wallet-px-arrow {
+  opacity: 0.5;
+  transition:
+    transform 160ms step-end,
+    opacity 200ms ease;
+}
+
+.tuwa-add-wallet:hover .tuwa-add-wallet-px-arrow,
+.tuwa-add-wallet:focus-visible .tuwa-add-wallet-px-arrow {
+  opacity: 1;
+  transform: translateX(1px);
+}
+
+/* The pixel check mark of "Remember this wallet" draws itself pixel by pixel, and goes at once */
+.tuwa-remember-px {
+  opacity: 0;
+  transition: opacity 1ms step-end;
+}
+
+[data-on] > .tuwa-remember-px {
+  opacity: 1;
+  transition-delay: calc(60ms + var(--k) * 30ms);
+}
+
+@keyframes tuwa-add-wallet-px-turn {
+  0% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuwa-add-wallet-px-dot,
+  .tuwa-add-wallet-px-arrow,
+  .tuwa-remember-px,
+  [data-on] > .tuwa-remember-px {
+    animation: none !important;
+    transition: none;
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tuwa-add-wallet::before {
     animation: none;

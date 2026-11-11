@@ -6,6 +6,7 @@
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
+  ArrowRightIcon,
   ArrowsRightLeftIcon,
   BoltIcon,
   CheckCircleIcon,
@@ -15,8 +16,10 @@ import {
   CommandLineIcon,
   CpuChipIcon,
   DocumentTextIcon,
+  ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
+  WalletIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
@@ -53,6 +56,7 @@ export const heroicons: NovaIconSet = {
   outline: {
     ArrowLeftIcon,
     ArrowPathIcon,
+    ArrowRightIcon,
     ArrowsRightLeftIcon,
     BoltIcon,
     CheckCircleIcon,
@@ -62,8 +66,10 @@ export const heroicons: NovaIconSet = {
     CommandLineIcon,
     CpuChipIcon,
     DocumentTextIcon,
+    ExclamationCircleIcon,
     ExclamationTriangleIcon,
     InformationCircleIcon,
+    WalletIcon,
     XCircleIcon,
   },
   solid: {

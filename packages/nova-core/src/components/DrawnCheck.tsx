@@ -18,6 +18,8 @@ export type DrawnMarkProps = {
   className?: string;
   /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
   look?: NovaLook;
+  /** Whether the mark is simply shown, without drawing itself (the pixel look; the classic one follows its AnimatePresence). */
+  still?: boolean;
 };
 
 /** The strokes of each mark, on a disc and alone. */
@@ -36,11 +38,17 @@ const PIXEL_MARKS = {
 } as const;
 const DISC_PATH = pathOf(DISC);
 
-function DrawnMark({ mark, variant = 'plain', className, look }: DrawnMarkProps & { mark: keyof typeof STROKES }) {
+function DrawnMark({
+  mark,
+  variant = 'plain',
+  className,
+  look,
+  still,
+}: DrawnMarkProps & { mark: keyof typeof STROKES }) {
   const reduceMotion = useReducedMotion();
   const setLook = useNovaIcons().look;
   // Inside an AnimatePresence with `initial={false}`, a mark that is there when the page opens is shown, not drawn
-  const isStill = useContext(PresenceContext)?.initial === false;
+  const isStill = useContext(PresenceContext)?.initial === false || still;
   const isDisc = variant === 'disc';
 
   if ((look ?? setLook) === 'pixel') {

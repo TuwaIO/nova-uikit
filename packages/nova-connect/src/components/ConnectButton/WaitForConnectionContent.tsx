@@ -3,6 +3,7 @@
  * comprehensive styling control and animation options.
  */
 
+import { NovaSetIcon, useNovaIcons } from '@tuwaio/nova-core';
 import { cn } from '@tuwaio/nova-core/utils';
 import { type Easing, type HTMLMotionProps, motion, type TargetAndTransition, type Variants } from 'framer-motion';
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode } from 'react';
@@ -295,6 +296,7 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
 
     // Connection status check
     const isConnected = Boolean(activeConnection?.isConnected);
+    const { look } = useNovaIcons();
 
     // Extract custom components
     const {
@@ -357,9 +359,18 @@ export const WaitForConnectionContent = forwardRef<HTMLDivElement, WaitForConnec
       delay: customization?.animation?.path?.delay ?? 0.1,
     };
 
-    // Create icon element
+    // Create icon element: a wallet of the icon set that gathers its pixels in the pixel look (unless the svg is customized),
+    // a wallet drawn line by line in the classic one
     const iconElement = customization?.components?.Icon ? (
       <Icon pathData={pathData} className={iconClasses} aria-hidden={true} focusable={false} />
+    ) : look === 'pixel' && !customization?.svg ? (
+      <NovaSetIcon
+        outline="WalletIcon"
+        motion={disableAnimation || reduceMotion ? undefined : 'assemble'}
+        className={cn('novacon:w-5 novacon:h-5', iconClasses)}
+        aria-hidden="true"
+        focusable="false"
+      />
     ) : (
       <svg
         className={cn('novacon:w-5 novacon:h-5', iconClasses)}

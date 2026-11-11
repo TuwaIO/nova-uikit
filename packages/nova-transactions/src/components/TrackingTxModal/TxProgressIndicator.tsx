@@ -2,9 +2,9 @@
  * @file This file contains the `TxProgressIndicator` component, a visual step-by-step progress bar for transactions.
  */
 
-import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, NovaSetIcon } from '@tuwaio/nova-core';
+import { cn, DrawnCheck, DrawnCross, MorphIcon, MorphText, NovaSetIcon, useNovaIcons } from '@tuwaio/nova-core';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ComponentType } from 'react';
+import { ComponentType, CSSProperties } from 'react';
 
 import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 
@@ -63,9 +63,53 @@ const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; circle: string }> = 
   },
 };
 
+/** The pixels of the ring of the pixel spinner, in order round it: a grid of 10, two screen pixels each at 20 px. */
+const PIXEL_RING = (() => {
+  const ring: { x: number; y: number }[] = [];
+  for (let step = 0; step < 720; step++) {
+    const angle = (step / 720) * Math.PI * 2 - Math.PI / 2;
+    const x = Math.floor(5 + 4.5 * Math.cos(angle));
+    const y = Math.floor(5 + 4.5 * Math.sin(angle));
+    if (!ring.some((cell) => cell.x === x && cell.y === y)) ring.push({ x, y });
+  }
+  return ring;
+})();
+
+/**
+ * The step being waited for, in the pixel look: a lit arc steps round a ring of pixels, around a dot that breathes.
+ *
+ * @internal
+ * @returns The spinner.
+ */
+export function PixelActiveMark() {
+  return (
+    <svg
+      viewBox="0 0 10 10"
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+      className="novatx:block novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-pending-icon)]"
+    >
+      {PIXEL_RING.map(({ x, y }, index) => (
+        <rect
+          key={`${x}-${y}`}
+          className={cn('tuwa-tx-px-ring', index < PIXEL_RING.length / 4 && 'tuwa-tx-px-park')}
+          x={x}
+          y={y}
+          width={1}
+          height={1}
+          style={{ '--i': index, '--n': PIXEL_RING.length } as CSSProperties}
+        />
+      ))}
+      <rect className="tuwa-tx-px-dot" x={4} y={4} width={2} height={2} />
+    </svg>
+  );
+}
+
 /** The step being waited for: an arc runs around a dot that breathes, and a halo goes out from it. */
 function ActiveMark() {
   const reduceMotion = useReducedMotion();
+  const { look } = useNovaIcons();
+  if (look === 'pixel') return <PixelActiveMark />;
   return (
     <span className="novatx:relative novatx:block novatx:h-5 novatx:w-5 novatx:text-[var(--tuwa-pending-icon)]">
       {!reduceMotion && (

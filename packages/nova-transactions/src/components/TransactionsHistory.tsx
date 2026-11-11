@@ -3,7 +3,7 @@
  * Supports infinite scrolling when `pagination` props are provided.
  */
 
-import { cn, QuasarLoader } from '@tuwaio/nova-core';
+import { cn, NovaSetIcon, QuasarLoader, useNovaIcons } from '@tuwaio/nova-core';
 import { selectAllTransactionsByActiveWallet, Transaction, TxInMemoryPagination } from '@tuwaio/pulsar-core';
 import {
   ComponentType,
@@ -194,24 +194,29 @@ const HistoryRow = memo(function HistoryRow<T extends Transaction>({
  * Error indicator that appears briefly when a fetch fails, then fades out.
  */
 function PaginationErrorIndicator({ className, iconClassName }: { className?: string; iconClassName?: string }) {
+  const { look } = useNovaIcons();
   return (
     <div
       className={cn('novatx:flex novatx:items-center novatx:justify-center novatx:py-3', className)}
       role="alert"
       aria-live="assertive"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)}
-      >
-        <path
-          fillRule="evenodd"
-          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
-          clipRule="evenodd"
-        />
-      </svg>
+      {look === 'pixel' ? (
+        <NovaSetIcon outline="XCircleIcon" className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)} />
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={cn('novatx:h-5 novatx:w-5 novatx:text-red-500', iconClassName)}
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      )}
     </div>
   );
 }

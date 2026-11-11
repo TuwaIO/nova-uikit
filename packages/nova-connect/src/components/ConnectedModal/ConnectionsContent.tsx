@@ -14,6 +14,7 @@ import {
   QuasarLoader,
   TrashIcon,
   useCopyToClipboard,
+  useNovaIcons,
   useNovaSounds,
 } from '@tuwaio/nova-core';
 import {
@@ -47,6 +48,21 @@ import { getConnectChainId } from '../../utils/getConnectedChainId';
 import { isConnectedAfterAttempt } from '../../utils/isConnectedAfterAttempt';
 import { WalletIcon } from '../WalletIcon';
 import { connectorDisplayName, isImpersonatedConnector } from './connectorName';
+
+/**
+ * The pixel ring of "Connect another wallet": the dots of a circle on a grid of 16, every other one. Two sets that take turns
+ * on hover, so the ring seems to turn as the dashed one of the classic look does.
+ */
+const ADD_WALLET_DOTS = (() => {
+  const dots: { x: number; y: number }[] = [];
+  for (let step = 0; step < 720; step++) {
+    const angle = (step / 720) * Math.PI * 2;
+    const x = Math.floor(8 + 7.4 * Math.cos(angle));
+    const y = Math.floor(8 + 7.4 * Math.sin(angle));
+    if (!dots.some((dot) => dot.x === x && dot.y === y)) dots.push({ x, y });
+  }
+  return dots.filter((_, index) => index % 2 === 0);
+})();
 
 // --- Types for Customization ---
 
@@ -1433,6 +1449,7 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
    * Handle removing a recent wallet from history
    */
   const play = useNovaSounds();
+  const { look } = useNovaIcons();
   const handleRemoveRecent = useCallback(
     (connectorType: ConnectorType, event: React.MouseEvent) => {
       event.stopPropagation();
@@ -1681,19 +1698,53 @@ export const ConnectionsContent: React.FC<ConnectionsContentProps> = ({ classNam
             customization?.classNames?.addWalletButton?.(),
           )}
         >
-          <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" className="novacon:h-8 novacon:w-8 novacon:shrink-0">
-            <circle className="tuwa-add-wallet-ring" cx="16" cy="16" r="15" />
-            <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
-          </svg>
+          {look === 'pixel' ? (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              shapeRendering="crispEdges"
+              className="novacon:h-8 novacon:w-8 novacon:shrink-0"
+            >
+              {ADD_WALLET_DOTS.map(({ x, y }, index) => (
+                <rect
+                  key={`${x}-${y}`}
+                  className={index % 2 ? 'tuwa-add-wallet-px-dot tuwa-add-wallet-px-dot--b' : 'tuwa-add-wallet-px-dot'}
+                  x={x}
+                  y={y}
+                  width={1}
+                  height={1}
+                />
+              ))}
+              <path className="tuwa-add-wallet-px-plus" d="M7 4h2v3h3v2h-3v3h-2v-3h-3v-2h3z" />
+            </svg>
+          ) : (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 32 32"
+              fill="none"
+              className="novacon:h-8 novacon:w-8 novacon:shrink-0"
+            >
+              <circle className="tuwa-add-wallet-ring" cx="16" cy="16" r="15" />
+              <path className="tuwa-add-wallet-plus" d="M16 10.5v11M10.5 16h11" />
+            </svg>
+          )}
           <span className="novacon:min-w-0 novacon:flex-1">{labels.connectNewWallet}</span>
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 16 16"
-            fill="none"
-            className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
-          >
-            <path d="M3 8h10M9 4l4 4-4 4" />
-          </svg>
+          {look === 'pixel' ? (
+            <NovaSetIcon
+              outline="ArrowRightIcon"
+              aria-hidden="true"
+              className="tuwa-add-wallet-px-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+            />
+          ) : (
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="tuwa-add-wallet-arrow novacon:h-4 novacon:w-4 novacon:shrink-0"
+            >
+              <path d="M3 8h10M9 4l4 4-4 4" />
+            </svg>
+          )}
         </button>
       )}
     </Container>
