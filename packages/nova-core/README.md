@@ -86,7 +86,7 @@ export function ClassicNova({ children }: { children: ReactNode }) {
 }
 ```
 
-`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`).
+`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`). What Nova draws itself follows the `look` of the set, `pixel` or `classic`, or a `look` prop of its own: `QuasarLoader`, `StarsBackground` (pixel stars, or round and four-pointed ones), `DrawnCheck` and `DrawnCross`, `CopyIcon`, `ExternalLinkIcon`, `ExitIcon`, `TrashIcon`, `CloseIcon`, `ChevronArrowWithAnim` and `ToastCloseButton`. The pixel ones move by whole pixels, in steps, in CSS.
 
 ---
 

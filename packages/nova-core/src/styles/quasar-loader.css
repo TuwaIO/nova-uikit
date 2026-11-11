@@ -84,6 +84,41 @@
     stroke-width: 4;
   }
 
+  /* The pixel look: the same mark on a grid. The light steps from pixel to pixel instead of gliding */
+  .tuwa-quasar-loader--pixel svg {
+    shape-rendering: crispEdges;
+  }
+
+  .tuwa-qlp-orbit {
+    fill: currentColor;
+    opacity: 0.2;
+    animation: tuwa-qlp-light var(--tuwa-loader-speed) step-end infinite;
+    animation-delay: calc(var(--tuwa-loader-speed) * (var(--i) / var(--n) - 1));
+  }
+
+  .tuwa-qlp-beam {
+    fill: currentColor;
+    opacity: 0.2;
+    animation: tuwa-qlp-light var(--tuwa-loader-speed) step-end infinite;
+    animation-delay: calc(var(--tuwa-loader-speed) * (0.2 + 0.6 * var(--j) / var(--len) - 1));
+  }
+
+  .tuwa-qlp-node {
+    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    opacity: 0.25;
+    animation: tuwa-ql-node var(--tuwa-loader-speed) step-end infinite;
+  }
+
+  .tuwa-qlp-glow {
+    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    opacity: 0.12;
+    animation: tuwa-qlp-glow var(--tuwa-loader-speed) step-end infinite;
+  }
+
+  .tuwa-qlp-core {
+    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+  }
+
   /* The mark holds still, with the dash parked on the near side */
   @media (prefers-reduced-motion: reduce) {
     .tuwa-quasar-loader * {
@@ -101,6 +136,11 @@
 
     .tuwa-ql-beam {
       opacity: 0;
+    }
+
+    .tuwa-qlp-park {
+      fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+      opacity: 1;
     }
   }
 }
@@ -156,6 +196,41 @@
 
   50% {
     transform: scale(1.18);
+    opacity: 0.3;
+  }
+}
+
+/* A pixel lights up in the accent, dims, and goes back to the track: the head and the tail of the dash */
+@keyframes tuwa-qlp-light {
+  0% {
+    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    opacity: 1;
+  }
+
+  6% {
+    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    opacity: 0.55;
+  }
+
+  12%,
+  100% {
+    fill: currentColor;
+    opacity: 0.2;
+  }
+}
+
+@keyframes tuwa-qlp-glow {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+
+  25%,
+  75% {
+    opacity: 0.2;
+  }
+
+  50% {
     opacity: 0.3;
   }
 }

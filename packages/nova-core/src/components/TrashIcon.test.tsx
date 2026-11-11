@@ -2,7 +2,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { ReactElement, ReactNode } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+// No renderer: the default of the icon set
+vi.mock('react', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('react')>()),
+  useContext: (context: { _currentValue: unknown }) => context._currentValue,
+}));
 
 import { TrashIcon } from './TrashIcon';
 
@@ -14,7 +20,7 @@ const childrenOf = (element: ReactElement<Props>) => [element.props.children].fl
 
 describe('TrashIcon', () => {
   it('draws the lid apart from the bin, so that it can open', () => {
-    const svg = TrashIcon({ className: 'h-4 w-4' }) as ReactElement<Props>;
+    const svg = TrashIcon({ className: 'h-4 w-4', look: 'classic' }) as ReactElement<Props>;
     const parts = childrenOf(svg);
     const lid = parts.find((part) => part.props.className === 'tuwa-trash-lid');
     const lidPaths = childrenOf(lid!).map((path) => path.props.d);

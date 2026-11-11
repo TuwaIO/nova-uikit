@@ -2,8 +2,12 @@
  * @file The marks of a result, a check mark and a cross, which draw themselves.
  */
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, PresenceContext, useReducedMotion } from 'framer-motion';
+import { type CSSProperties, useContext } from 'react';
 
+import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
+import { CHECK, CHECK_CUT, CROSS, CROSS_CUT, DISC } from '../pixel/art';
+import { pathOf, PIXEL_SVG, strokeOrder } from '../pixel/draw';
 import { cn } from '../utils';
 
 /** Props of {@link DrawnCheck} and {@link DrawnCross}. */
@@ -12,6 +16,8 @@ export type DrawnMarkProps = {
   variant?: 'plain' | 'disc';
   /** Classes of the icon, which set its size and color. */
   className?: string;
+  /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
+  look?: NovaLook;
 };
 
 /** The strokes of each mark, on a disc and alone. */
@@ -23,9 +29,46 @@ const STROKES = {
 /** How long one stroke takes to draw, in seconds. */
 const STROKE_SECONDS = { check: 0.35, cross: 0.2 } as const;
 
-function DrawnMark({ mark, variant = 'plain', className }: DrawnMarkProps & { mark: keyof typeof STROKES }) {
+/** The pixel marks: the mark alone, and the mark cut out of a disc. */
+const PIXEL_MARKS = {
+  check: { plain: strokeOrder(CHECK, 'check'), disc: strokeOrder(CHECK_CUT, 'check') },
+  cross: { plain: strokeOrder(CROSS, 'cross'), disc: strokeOrder(CROSS_CUT, 'cross') },
+} as const;
+const DISC_PATH = pathOf(DISC);
+
+function DrawnMark({ mark, variant = 'plain', className, look }: DrawnMarkProps & { mark: keyof typeof STROKES }) {
   const reduceMotion = useReducedMotion();
+  const setLook = useNovaIcons().look;
+  // Inside an AnimatePresence with `initial={false}`, a mark that is there when the page opens is shown, not drawn
+  const isStill = useContext(PresenceContext)?.initial === false;
   const isDisc = variant === 'disc';
+
+  if ((look ?? setLook) === 'pixel') {
+    return (
+      <svg
+        {...PIXEL_SVG}
+        fill="none"
+        aria-hidden="true"
+        className={cn('novacore:block', className)}
+        data-still={isStill ? '' : undefined}
+      >
+        {isDisc && <path d={DISC_PATH} fill="currentColor" />}
+        {PIXEL_MARKS[mark][variant].map(({ x, y }, index) => (
+          <rect
+            key={`${x}-${y}`}
+            className="tuwa-drawn-px"
+            x={x}
+            y={y}
+            width={1}
+            height={1}
+            // Cut out of the disc, as in a solid icon, in both themes
+            fill={isDisc ? 'var(--tuwa-bg-primary)' : 'currentColor'}
+            style={{ '--k': index } as CSSProperties}
+          />
+        ))}
+      </svg>
+    );
+  }
   const seconds = STROKE_SECONDS[mark];
 
   return (

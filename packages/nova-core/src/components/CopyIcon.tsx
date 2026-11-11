@@ -3,8 +3,15 @@
  */
 
 import { motion, useReducedMotion } from 'framer-motion';
+import type { CSSProperties } from 'react';
 
+import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
+import { CHECK, SHEETS } from '../pixel/art';
+import { pathOf, PIXEL_SVG, strokeOrder } from '../pixel/draw';
 import { cn } from '../utils';
+
+const SHEETS_PATH = pathOf(SHEETS);
+const CHECK_CELLS = strokeOrder(CHECK, 'check');
 
 /** Props of {@link CopyIcon}. */
 export type CopyIconProps = {
@@ -12,6 +19,8 @@ export type CopyIconProps = {
   copied?: boolean;
   /** Classes of the icon, which set its size and the color of the sheets. The check mark is in the success color. */
   className?: string;
+  /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
+  look?: NovaLook;
 };
 
 /**
@@ -21,8 +30,34 @@ export type CopyIconProps = {
  * @param props - See {@link CopyIconProps}.
  * @returns The icon.
  */
-export function CopyIcon({ copied = false, className }: CopyIconProps) {
+export function CopyIcon({ copied = false, className, look }: CopyIconProps) {
   const reduceMotion = useReducedMotion();
+  const setLook = useNovaIcons().look;
+  if ((look ?? setLook) === 'pixel') {
+    return (
+      <svg
+        {...PIXEL_SVG}
+        fill="currentColor"
+        aria-hidden="true"
+        data-copied={copied ? '' : undefined}
+        className={cn('novacore:block', className)}
+      >
+        <path className="tuwa-copy-px-sheets" d={SHEETS_PATH} />
+        {CHECK_CELLS.map(({ x, y }, index) => (
+          <rect
+            key={`${x}-${y}`}
+            className="tuwa-copy-px-check"
+            x={x}
+            y={y}
+            width={1}
+            height={1}
+            fill="var(--tuwa-success-icon)"
+            style={{ '--k': index } as CSSProperties}
+          />
+        ))}
+      </svg>
+    );
+  }
   const sheets = { duration: reduceMotion ? 0 : 0.2, ease: [0.2, 0, 0, 1] as const };
   const check = {
     duration: reduceMotion ? 0 : 0.3,

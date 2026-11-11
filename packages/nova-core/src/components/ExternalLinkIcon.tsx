@@ -2,12 +2,20 @@
  * @file The icon of a link that leaves the page.
  */
 
+import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
+import { LINK_ARROW, LINK_BOX } from '../pixel/art';
+import { pathOf, PIXEL_SVG } from '../pixel/draw';
 import { cn } from '../utils';
+
+const LINK_BOX_PATH = pathOf(LINK_BOX);
+const LINK_ARROW_PATH = pathOf(LINK_ARROW);
 
 /** Props of {@link ExternalLinkIcon}. */
 export type ExternalLinkIconProps = {
   /** Classes of the icon, which set its size and color. */
   className?: string;
+  /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
+  look?: NovaLook;
 };
 
 /**
@@ -18,7 +26,21 @@ export type ExternalLinkIconProps = {
  * @param props - See {@link ExternalLinkIconProps}.
  * @returns The icon.
  */
-export function ExternalLinkIcon({ className }: ExternalLinkIconProps) {
+export function ExternalLinkIcon({ className, look }: ExternalLinkIconProps) {
+  const setLook = useNovaIcons().look;
+  if ((look ?? setLook) === 'pixel') {
+    return (
+      <svg
+        {...PIXEL_SVG}
+        fill="currentColor"
+        aria-hidden="true"
+        className={cn('novacore:block novacore:overflow-visible', className)}
+      >
+        <path d={LINK_BOX_PATH} />
+        <path className="tuwa-link-arrow-px" d={LINK_ARROW_PATH} />
+      </svg>
+    );
+  }
   return (
     <svg
       viewBox="0 0 24 24"

@@ -42,12 +42,93 @@
     transition-duration: 90ms;
   }
 
+  /* The pixel look: the same moves by one pixel of the grid, in a step, as a pixel drawing moves */
+  .tuwa-link-arrow-px,
+  .tuwa-exit-arrow-px,
+  .tuwa-trash-lid-px {
+    transition: transform 160ms step-end;
+  }
+
+  a:hover .tuwa-link-arrow-px,
+  a:focus-visible .tuwa-link-arrow-px,
+  button:not(:disabled):hover .tuwa-link-arrow-px,
+  button:not(:disabled):focus-visible .tuwa-link-arrow-px {
+    transform: translate(1px, -1px);
+  }
+
+  a:hover .tuwa-exit-arrow-px,
+  a:focus-visible .tuwa-exit-arrow-px,
+  button:not(:disabled):hover .tuwa-exit-arrow-px,
+  button:not(:disabled):focus-visible .tuwa-exit-arrow-px {
+    transform: translateX(-1px);
+  }
+
+  a:hover .tuwa-trash-lid-px,
+  a:focus-visible .tuwa-trash-lid-px,
+  button:not(:disabled):hover .tuwa-trash-lid-px,
+  button:not(:disabled):focus-visible .tuwa-trash-lid-px {
+    transform: translate(1px, -1px);
+  }
+
+  a:active .tuwa-trash-lid-px,
+  button:active .tuwa-trash-lid-px {
+    transform: none;
+  }
+
+  /* The pixel marks of a result draw pixel by pixel; one already there when the page opens is simply shown */
+  .tuwa-drawn-px {
+    animation: tuwa-drawn-px 1ms step-end both;
+    animation-delay: calc(80ms + var(--k) * 16ms);
+  }
+
+  [data-still] .tuwa-drawn-px {
+    animation: none;
+  }
+
+  /* A copied text: the sheets go, and the check mark draws itself pixel by pixel; back, the check mark goes at once */
+  .tuwa-copy-px-sheets {
+    transition: opacity 120ms steps(2, end);
+  }
+
+  [data-copied] .tuwa-copy-px-sheets {
+    opacity: 0;
+  }
+
+  .tuwa-copy-px-check {
+    opacity: 0;
+    transition: opacity 1ms step-end;
+  }
+
+  [data-copied] .tuwa-copy-px-check {
+    opacity: 1;
+    transition-delay: calc(100ms + var(--k) * 14ms);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .tuwa-link-arrow,
     .tuwa-exit-arrow,
-    .tuwa-trash-lid {
+    .tuwa-trash-lid,
+    .tuwa-link-arrow-px,
+    .tuwa-exit-arrow-px,
+    .tuwa-trash-lid-px {
       transition: none;
       transform: none !important;
     }
+
+    .tuwa-drawn-px {
+      animation: none;
+    }
+
+    .tuwa-copy-px-sheets,
+    .tuwa-copy-px-check,
+    [data-copied] .tuwa-copy-px-check {
+      transition: none;
+    }
+  }
+}
+
+@keyframes tuwa-drawn-px {
+  from {
+    opacity: 0;
   }
 }
