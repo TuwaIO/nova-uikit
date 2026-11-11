@@ -1,0 +1,151 @@
+/* The motions of @tuwaio/nova-icons (the `motion` prop of an icon). Each plays once when the icon appears, and not
+   at all for a reader who asks for less motion. */
+
+/* assemble: the pixels gather along the diagonals of the grid, one diagonal every 12 ms, from the top left */
+@keyframes nova-icon-gather {
+  from {
+    opacity: 0;
+  }
+}
+
+svg[data-motion='assemble'] [data-step] {
+  animation: nova-icon-gather 120ms ease-out both;
+}
+
+svg[data-motion='assemble'] [data-step='1'] {
+  animation-delay: 12ms;
+}
+
+svg[data-motion='assemble'] [data-step='2'] {
+  animation-delay: 24ms;
+}
+
+svg[data-motion='assemble'] [data-step='3'] {
+  animation-delay: 36ms;
+}
+
+svg[data-motion='assemble'] [data-step='4'] {
+  animation-delay: 48ms;
+}
+
+svg[data-motion='assemble'] [data-step='5'] {
+  animation-delay: 60ms;
+}
+
+svg[data-motion='assemble'] [data-step='6'] {
+  animation-delay: 72ms;
+}
+
+svg[data-motion='assemble'] [data-step='7'] {
+  animation-delay: 84ms;
+}
+
+svg[data-motion='assemble'] [data-step='8'] {
+  animation-delay: 96ms;
+}
+
+svg[data-motion='assemble'] [data-step='9'] {
+  animation-delay: 108ms;
+}
+
+svg[data-motion='assemble'] [data-step='10'] {
+  animation-delay: 120ms;
+}
+
+svg[data-motion='assemble'] [data-step='11'] {
+  animation-delay: 132ms;
+}
+
+svg[data-motion='assemble'] [data-step='12'] {
+  animation-delay: 144ms;
+}
+
+svg[data-motion='assemble'] [data-step='13'] {
+  animation-delay: 156ms;
+}
+
+svg[data-motion='assemble'] [data-step='14'] {
+  animation-delay: 168ms;
+}
+
+svg[data-motion='assemble'] [data-step='15'] {
+  animation-delay: 180ms;
+}
+
+svg[data-motion='assemble'] [data-step='16'] {
+  animation-delay: 192ms;
+}
+
+svg[data-motion='assemble'] [data-step='17'] {
+  animation-delay: 204ms;
+}
+
+svg[data-motion='assemble'] [data-step='18'] {
+  animation-delay: 216ms;
+}
+
+svg[data-motion='assemble'] [data-step='19'] {
+  animation-delay: 228ms;
+}
+
+svg[data-motion='assemble'] [data-step='20'] {
+  animation-delay: 240ms;
+}
+
+svg[data-motion='assemble'] [data-step='21'] {
+  animation-delay: 252ms;
+}
+
+svg[data-motion='assemble'] [data-step='22'] {
+  animation-delay: 264ms;
+}
+
+svg[data-motion='assemble'] [data-step='23'] {
+  animation-delay: 276ms;
+}
+
+svg[data-motion='assemble'] [data-step='24'] {
+  animation-delay: 288ms;
+}
+
+svg[data-motion='assemble'] [data-step='25'] {
+  animation-delay: 300ms;
+}
+
+svg[data-motion='assemble'] [data-step='26'] {
+  animation-delay: 312ms;
+}
+
+svg[data-motion='assemble'] [data-step='27'] {
+  animation-delay: 324ms;
+}
+
+svg[data-motion='assemble'] [data-step='28'] {
+  animation-delay: 336ms;
+}
+
+svg[data-motion='assemble'] [data-step='29'] {
+  animation-delay: 348ms;
+}
+
+svg[data-motion='assemble'] [data-step='30'] {
+  animation-delay: 360ms;
+}
+
+/* breathe: the lit pixels (the whole drawing when there are none) dim and come back, once */
+@keyframes nova-icon-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+svg[data-motion='breathe'] [data-breathe] {
+  animation: nova-icon-breathe 1.6s ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  svg[data-motion] [data-step],
+  svg[data-motion] [data-breathe] {
+    animation: none;
+  }
+}

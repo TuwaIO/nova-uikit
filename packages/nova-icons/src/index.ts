@@ -1,6 +1,3 @@
-export { CheckIcon } from './icons/CheckIcon';
-export { ChevronDownIcon } from './icons/ChevronDownIcon';
-export { WalletIcon } from './icons/WalletIcon';
-export { XMarkIcon } from './icons/XMarkIcon';
-export type { NovaIcon, NovaIconProps } from './pixelIcon';
-export { createPixelIcon, pixelPath } from './pixelIcon';
+export * from './outline';
+export type { NovaIcon, NovaIconMotion, NovaIconProps } from './pixelIcon';
+export { createPixelIcon, LIT_FILL, pixelPath } from './pixelIcon';

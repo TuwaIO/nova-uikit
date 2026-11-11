@@ -4,7 +4,7 @@
   "private": false,
   "author": "Oleksandr Tkach",
   "license": "Apache-2.0",
-  "description": "The icons of Nova UI Kit (TUWA) in the TUWA retro pixel style: React components drawn on a pixel grid, in the color of the text, with the same names and props as Heroicons.",
+  "description": "The icons of Nova UI Kit (TUWA) in the TUWA retro pixel style: React components drawn on a pixel grid, in the color of the text, with the names, import paths and props of Heroicons.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,17 +14,41 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./24/outline": {
+      "types": "./dist/24/outline/index.d.ts",
+      "import": "./dist/24/outline/index.js",
+      "require": "./dist/24/outline/index.cjs"
+    },
+    "./24/solid": {
+      "types": "./dist/24/solid/index.d.ts",
+      "import": "./dist/24/solid/index.js",
+      "require": "./dist/24/solid/index.cjs"
+    },
+    "./20/solid": {
+      "types": "./dist/24/solid/index.d.ts",
+      "import": "./dist/24/solid/index.js",
+      "require": "./dist/24/solid/index.cjs"
+    },
+    "./16/solid": {
+      "types": "./dist/24/solid/index.d.ts",
+      "import": "./dist/24/solid/index.js",
+      "require": "./dist/24/solid/index.cjs"
+    },
+    "./motion.css": "./motion.css"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "dist",
+    "motion.css",
     "socket.json",
     "NOTICE"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run"
@@ -55,6 +79,7 @@
     "react": ">=19.2.3"
   },
   "devDependencies": {
+    "@heroicons/react": "^2.2.0",
     "@types/react": "^19.3.0",
     "react": "^19.3.1",
     "tsup": "^9.0.0",

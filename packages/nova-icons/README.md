@@ -3,9 +3,9 @@
 [![NPM Version](https://img.shields.io/npm/v/@tuwaio/nova-icons.svg)](https://www.npmjs.com/package/@tuwaio/nova-icons)
 [![License](https://img.shields.io/npm/l/@tuwaio/nova-icons.svg)](https://github.com/TuwaIO/nova-uikit/blob/main/LICENSE)
 
-The icons of Nova UI Kit in the TUWA retro pixel style: React components drawn on a 16 × 16 pixel grid with crisp edges, in the color of the text. They have the names and props of Heroicons (`XMarkIcon`, `className`, `title`), so an icon of one replaces the other.
+The icons of Nova UI Kit in the TUWA retro pixel style: React components drawn on a 16 × 16 pixel grid with crisp edges and two-pixel lines, in the color of the text. They have the names, the import paths and the props of Heroicons (`@heroicons/react/24/outline` → `@tuwaio/nova-icons/24/outline`, `XMarkIcon`, `className`, `title`), so replacing the package name in the imports replaces the icons.
 
-> **Alpha.** The set is being drawn: a few icons for now, more with every release. Nova UI Kit itself still uses Heroicons.
+> **Alpha.** The set has the icons the TUWA apps use; more come with every release. Nova UI Kit itself still uses Heroicons.
 
 ## Installation
 
@@ -18,7 +18,8 @@ pnpm add @tuwaio/nova-icons
 ## Usage
 
 ```tsx
-import { WalletIcon, XMarkIcon } from '@tuwaio/nova-icons';
+import { WalletIcon, XMarkIcon } from '@tuwaio/nova-icons/24/outline';
+import { CheckCircleIcon } from '@tuwaio/nova-icons/24/solid';
 
 export function CloseButton({ onClose }: { onClose: () => void }) {
   return (
@@ -28,14 +29,30 @@ export function CloseButton({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function Balance() {
-  return <WalletIcon title="Wallet" titleId="balance-wallet" className="h-5 w-5" />;
+export function Paid() {
+  return <CheckCircleIcon title="Paid" titleId="invoice-paid" className="h-5 w-5 text-green-600" />;
+}
+
+export function WaitingForWallet() {
+  return <WalletIcon motion="breathe" className="h-5 w-5" />;
 }
 ```
 
-An icon is `1em` square unless its class sets a size, and hidden from screen readers unless it has a `title`. Its lit pixels take the color of `--tuwa-icon-accent`, and the color of the text when the theme sets none.
+The paths are those of Heroicons: `24/outline`, and `24/solid`, `20/solid` and `16/solid`, which lead to the same solid icons, drawn once for small sizes. The main entry `@tuwaio/nova-icons` has the outline icons.
 
-Each icon is a module of its own and the package has no side effects, so a bundler keeps only the icons an app imports.
+An icon is `1em` square unless its class sets a size, and hidden from screen readers unless it has a `title`. Its lit pixels (the clasp of the wallet, the keyhole of a lock) take the color of `--tuwa-icon-accent`, else of `--tuwa-text-accent`, the accent that the Nova and Quasar themes set for the light and the dark theme, else the TUWA blue mixed with the color of the text, which reads on a light and on a dark page. Set `--tuwa-icon-accent: currentColor` to draw an icon in one color.
+
+## Motion
+
+An icon can play one motion, once, when it appears: `motion="assemble"` (the pixels gather, for an empty state or a large icon) or `motion="breathe"` (the lit pixels dim and come back, next to something that waits). The motions are plain CSS: import the stylesheet once.
+
+```css
+@import '@tuwaio/nova-icons/motion.css';
+```
+
+Without the stylesheet, and for a reader who asks for less motion (`prefers-reduced-motion`), the icons stay still.
+
+Each icon is a module of its own and the package has no side effects but its stylesheet, so a bundler keeps only the icons an app imports.
 
 ## 🗄️ Browser Storage
 
