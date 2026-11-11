@@ -5,7 +5,7 @@
 
 The icons of Nova UI Kit in the TUWA retro pixel style: React components drawn on a 16 × 16 pixel grid with crisp edges and two-pixel lines, in the color of the text. They have the names, the import paths and the props of Heroicons (`@heroicons/react/24/outline` → `@tuwaio/nova-icons/24/outline`, `XMarkIcon`, `className`, `title`), so replacing the package name in the imports replaces the icons.
 
-> **Alpha.** The set has the icons the TUWA apps use; more come with every release. Nova UI Kit itself still uses Heroicons.
+The set has every icon the TUWA apps use, more with every release; see them all in the [gallery](https://stories.tuwa.io/?path=/story/nova-icons-gallery--gallery). The Nova components draw these icons by default (see `NovaIconsProvider` of [`@tuwaio/nova-core`](https://stories.tuwa.io/?path=/docs/packages-nova-core-overview--docs) for the Heroicons look).
 
 ## Installation
 

@@ -256,6 +256,9 @@ importers:
       '@tuwaio/nova-core':
         specifier: workspace:^
         version: link:../../packages/nova-core
+      '@tuwaio/nova-icons':
+        specifier: workspace:^
+        version: link:../../packages/nova-icons
       '@tuwaio/nova-transactions':
         specifier: workspace:^
         version: link:../../packages/nova-transactions

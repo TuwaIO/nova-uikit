@@ -2,6 +2,8 @@ import '../src/styles/app.css';
 
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import type { Preview } from '@storybook/react-vite';
+import { NovaIconsProvider } from '@tuwaio/nova-core';
+import { heroicons } from '@tuwaio/nova-core/heroicons';
 import React, { useEffect, useState } from 'react';
 import { addons } from 'storybook/preview-api';
 import { create } from 'storybook/theming/create';
@@ -206,6 +208,7 @@ const preview: Preview = {
           'Introduction',
           'Theming',
           'ConnectButton',
+          'Nova Icons',
           'Nova Core',
           'Nova Transactions',
           'Packages',
@@ -249,7 +252,31 @@ const preview: Preview = {
       },
     },
   },
+  // The icons of Nova: pixel by default, or the Heroicons set and the classic look of what Nova draws
+  globalTypes: {
+    icons: {
+      description: 'The icons and the look of Nova',
+      toolbar: {
+        title: 'Icons',
+        icon: 'grid',
+        items: [
+          { value: 'pixel', title: 'Pixel (nova-icons)' },
+          { value: 'heroicons', title: 'Classic (Heroicons)' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: { icons: 'pixel' },
   decorators: [
+    (Story, context) =>
+      context.globals.icons === 'heroicons' ? (
+        <NovaIconsProvider icons={heroicons}>
+          <Story />
+        </NovaIconsProvider>
+      ) : (
+        <Story />
+      ),
     (Story) => (
       <ThemeInjector>
         <Story />
