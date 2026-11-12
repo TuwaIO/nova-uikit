@@ -31,6 +31,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   },
   toast: {
     openTransaction: 'Open transaction',
+    region: 'Transaction notifications Alt+T',
   },
   statuses: {
     pending: 'Pending',
@@ -68,6 +69,7 @@ export const defaultLabels: NovaTransactionsLabels = {
     field: 'Field',
     copy: 'Copy error',
     copied: 'Copied!',
+    region: 'Transaction errors Alt+T',
   },
   trackingModal: {
     title: 'Transaction Overview',

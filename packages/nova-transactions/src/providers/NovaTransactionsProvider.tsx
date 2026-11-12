@@ -152,6 +152,10 @@ export type NovaTransactionsProviderProps<T extends Transaction> = {
  * Place this component once at the top level of your application, passing the live
  * Pulsar store state as props.
  *
+ * The two kinds of toasts are two regions of the page for assistive technology, each with a name of its own from the
+ * labels (`toast.region` and `validationError.region`), so a screen reader can tell them apart. The `aria-label` prop
+ * replaces the name of the region of the transaction toasts.
+ *
  * @template T The specific transaction type, extending the base `Transaction`.
  */
 export function NovaTransactionsProvider<T extends Transaction>({
@@ -437,6 +441,9 @@ export function NovaTransactionsProvider<T extends Transaction>({
                 icon={false}
                 closeButton={CustomizedCloseButton}
                 containerId={toastContainerId}
+                // A name of its own: the region of the validation errors below is a second one on the page, and
+                // react-toastify names every region `Notifications Alt+T`. The `aria-label` prop replaces it
+                aria-label={mergedLabels.toast.region}
                 toastClassName="novatx:!p-0 novatx:!bg-transparent novatx:!shadow-none novatx:!min-h-0 novatx:!rounded-[var(--tuwa-rounded-corners)]"
                 {...toastProps}
                 style={hidesToasts ? { ...toastProps.style, display: 'none' } : toastProps.style}
@@ -464,6 +471,7 @@ export function NovaTransactionsProvider<T extends Transaction>({
             {enabledFeatures.validationErrorToast && (
               <ToastContainer
                 containerId={VALIDATION_ERROR_CONTAINER_ID}
+                aria-label={mergedLabels.validationError.region}
                 position="top-center"
                 autoClose={6000}
                 pauseOnHover
