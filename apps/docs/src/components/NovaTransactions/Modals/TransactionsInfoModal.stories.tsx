@@ -59,18 +59,30 @@ const WithOpenButton = ({
   </>
 );
 
+/**
+ * On the docs page: the modal and its button with a state of their own. There the primary story and its copy in the list
+ * share their args and the state of the hooks of Storybook, so one button opened both modals; and a change of args
+ * re-renders only the primary one, so the button of another story opened nothing.
+ */
+const WithOwnState = (props: { args: Story['args']; walletAddress: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return <WithOpenButton {...props} isOpen={isOpen} setIsOpen={setIsOpen} />;
+};
+
 /** The history of an EVM wallet. A sped-up operation is one row, opened on its latest record. The `isOpen` control and the button change the same state. */
 export const Default: Story = {
   argTypes: { transactionsPool: { control: false }, connectedWalletAddress: { control: false } },
-  render: (args) => {
-    // Storybook allows its hooks only in the story function itself
+  render: (args, { viewMode }) => {
+    const walletAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+    if (viewMode === 'docs') return <WithOwnState args={args} walletAddress={walletAddress} />;
+    // Storybook allows its hooks only in the story function itself; the view mode of a story never changes
     const [{ isOpen }, updateArgs] = useArgs<{ isOpen: boolean }>();
     return (
       <WithOpenButton
         args={args}
         isOpen={isOpen}
         setIsOpen={(open) => updateArgs({ isOpen: open })}
-        walletAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+        walletAddress={walletAddress}
       />
     );
   },
@@ -80,14 +92,16 @@ export const Default: Story = {
 export const SolanaWallet: Story = {
   args: { adapter: [mockSolanaAdapter] },
   argTypes: { transactionsPool: { control: false }, connectedWalletAddress: { control: false } },
-  render: (args) => {
+  render: (args, { viewMode }) => {
+    const walletAddress = 'AobnbeZ6QB2xdnPzBkaw2Stea5trqhamaoKyVMYenV3u';
+    if (viewMode === 'docs') return <WithOwnState args={args} walletAddress={walletAddress} />;
     const [{ isOpen }, updateArgs] = useArgs<{ isOpen: boolean }>();
     return (
       <WithOpenButton
         args={args}
         isOpen={isOpen}
         setIsOpen={(open) => updateArgs({ isOpen: open })}
-        walletAddress="AobnbeZ6QB2xdnPzBkaw2Stea5trqhamaoKyVMYenV3u"
+        walletAddress={walletAddress}
       />
     );
   },

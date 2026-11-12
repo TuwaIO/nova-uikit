@@ -135,8 +135,9 @@
   align-items: center;
 }
 
+/* The logo of tuwa.io at its size there: 126 px wide */
 .tuwa-docs-footer__logo img {
-  height: 24px;
+  height: 40px;
   width: auto;
 }
 
