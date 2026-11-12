@@ -24,6 +24,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
   },
   toast: {
     openTransaction: 'Відкрити транзакцію',
+    region: 'Сповіщення про транзакції Alt+T',
   },
   statuses: {
     pending: 'В обробці',
@@ -61,6 +62,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     field: 'Поле',
     copy: 'Скопіювати помилку',
     copied: 'Скопійовано!',
+    region: 'Помилки транзакцій Alt+T',
   },
   trackingModal: {
     title: 'Огляд транзакції',

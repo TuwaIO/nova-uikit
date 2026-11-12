@@ -24,6 +24,7 @@ export const chineseLabels: NovaTransactionsLabels = {
   },
   toast: {
     openTransaction: '打开交易',
+    region: '交易通知 Alt+T',
   },
   statuses: {
     pending: '处理中',
@@ -61,6 +62,7 @@ export const chineseLabels: NovaTransactionsLabels = {
     field: '字段',
     copy: '复制错误信息',
     copied: '已复制！',
+    region: '交易错误 Alt+T',
   },
   trackingModal: {
     title: '交易详情概览',

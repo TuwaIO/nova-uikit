@@ -44,6 +44,12 @@ export type NovaTransactionsLabels = {
   toast: {
     /** Text for the button/link within a toast to open the wallet modal. */
     openTransaction: string;
+    /**
+     * The name of the region of the transaction toasts for assistive technology (default: `Transaction notifications
+     * Alt+T`). It names the shortcut that moves the focus to the first toast, and differs from the name of the region
+     * of the validation errors, `validationError.region`: two regions of a page with one name cannot be told apart.
+     */
+    region: string;
   };
   /** Standard labels for transaction statuses. */
   statuses: {
@@ -125,6 +131,11 @@ export type NovaTransactionsLabels = {
     copy: string;
     /** Label for the copy-error button after a successful copy. */
     copied: string;
+    /**
+     * The name of the region of the validation error toasts for assistive technology (default: `Transaction errors
+     * Alt+T`). It names the shortcut that moves the focus to the first toast, and differs from `toast.region`.
+     */
+    region: string;
   };
   /** Labels for the detailed transaction tracking modal. */
   trackingModal: {
