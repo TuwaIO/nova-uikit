@@ -82,8 +82,10 @@
 
 ```css
 :root {
-  /* Paper and ink: warm paper, ink text, lines of 1 px and the TUWA blue, square, with no gradients or soft
-     shadows. Primary, secondary and accent text hold WCAG AA (4.5:1) on the three surfaces; tertiary is for hints. */
+  /* Paper and ink: warm paper, ink text, lines of 1 px and the TUWA orange of the light theme, square, with no gradients
+     or soft shadows. Primary, secondary and accent text hold WCAG AA (4.5:1) on the three surfaces; tertiary is for hints.
+     The accent has two shades: a deep one for text and thin lines (`--tuwa-text-accent`, AA on paper) and a bright one
+     for fills (the main button, lit pixels, illustrations), with ink on it. */
   --tuwa-success-bg: theme('colors.green.100');
   --tuwa-success-text: theme('colors.green.700');
   --tuwa-success-icon: theme('colors.green.500');
@@ -103,8 +105,8 @@
   --tuwa-text-primary: #101014;
   --tuwa-text-secondary: #636366;
   --tuwa-text-tertiary: #8e8e90;
-  --tuwa-text-accent: #0052ff;
-  --tuwa-text-on-accent: #ffffff;
+  --tuwa-text-accent: #b93b0a;
+  --tuwa-text-on-accent: #101014;
 
   /* Raised (dialogs, cards), paper, sunken */
   --tuwa-bg-primary: #faf9f7;
@@ -121,11 +123,16 @@
   --tuwa-button-primary-bg: var(--tuwa-button-gradient-from);
   --tuwa-button-primary-bg-hover: var(--tuwa-button-gradient-from-hover);
 
-  --tuwa-button-gradient-from: #0052ff;
-  --tuwa-button-gradient-to: #5b8cff;
+  /* The TUWA orange: ink on it is 5.6:1, and it stands 3.2:1 apart from the raised paper (WCAG 1.4.11) */
+  --tuwa-button-gradient-from: #f05a14;
+  --tuwa-button-gradient-to: #ff8a5c;
 
-  --tuwa-button-gradient-from-hover: #0047de;
-  --tuwa-button-gradient-to-hover: #0052ff;
+  --tuwa-button-gradient-from-hover: #e34f0d;
+  --tuwa-button-gradient-to-hover: #f05a14;
+
+  /* The lit pixels of the icons and the accents of the illustrations and loaders: the bright fill of the brand, which a
+     host that sets its brand color on the main button gets here too */
+  --tuwa-icon-accent: var(--tuwa-button-primary-bg);
 
   /* A secondary button: no fill, a frame of `--tuwa-border-strong`, the hover fill */
   --tuwa-standart-button-bg: transparent;
@@ -168,8 +175,9 @@
   --tuwa-text-primary: #f2f1ee;
   --tuwa-text-secondary: #9d9c9a;
   --tuwa-text-tertiary: #77767a;
-  --tuwa-text-accent: #60a5fa;
-  --tuwa-text-on-accent: #ffffff;
+  /* The cyan of the dark TUWA logo */
+  --tuwa-text-accent: #3ed2ec;
+  --tuwa-text-on-accent: #101014;
 
   --tuwa-bg-primary: #101014;
   --tuwa-bg-secondary: #17181b;
@@ -179,12 +187,12 @@
   --tuwa-border-secondary: #1d1e22;
   --tuwa-border-strong: #55565a;
 
-  /* The TUWA blue: white text on it is 5.7:1 (WCAG AA needs 4.5) */
-  --tuwa-button-gradient-from: #0052ff;
-  --tuwa-button-gradient-to: #60a5fa;
+  /* The cyan of the dark TUWA logo: ink on it is 9:1 (WCAG AA needs 4.5) */
+  --tuwa-button-gradient-from: #22c3e6;
+  --tuwa-button-gradient-to: #8ef5ff;
 
-  --tuwa-button-gradient-from-hover: #0047de;
-  --tuwa-button-gradient-to-hover: #93c5fd;
+  --tuwa-button-gradient-from-hover: #3ed2ec;
+  --tuwa-button-gradient-to-hover: #9af6ff;
 
   --tuwa-standart-button-bg: transparent;
   --tuwa-standart-button-hover: #222327;

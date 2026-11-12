@@ -10,7 +10,7 @@ import { WalletIcon } from './WalletIcon';
 type Element = { type: unknown; props: Record<string, unknown> & { children?: unknown } };
 
 // The icon of the impersonated wallet is redrawn in the TUWA pixel style, a new picture of Nova's own
-// (a mask on a tile of the TUWA blue), and the note that it came from BGD Labs is gone with the old picture
+// (a mask on a tile of the TUWA orange), and the note that it came from BGD Labs is gone with the old picture
 describe('the icon of the impersonated wallet', () => {
   const svgOf = () => {
     const image = WalletIcon({ walletName: IMPERSONATED_CONNECTOR_ID }) as unknown as Element;
@@ -18,12 +18,13 @@ describe('the icon of the impersonated wallet', () => {
     return (icon.type as (props: Record<string, unknown>) => ReactElement)(icon.props) as unknown as Element;
   };
 
-  it('is the TUWA pixel mask on a 16 x 16 grid, on the TUWA blue', () => {
+  // The brand of TUWA is the orange of the light theme: the image is the same in both themes, so it takes that one
+  it('is the TUWA pixel mask on a 16 x 16 grid, on the TUWA orange', () => {
     const svg = svgOf();
     expect(svg.props.viewBox).toBe('0 0 16 16');
     expect(svg.props.shapeRendering).toBe('crispEdges');
     const [tile] = svg.props.children as Element[];
-    expect(tile.props.fill).toBe('#0052ff');
+    expect(tile.props.fill).toBe('#f05a14');
   });
 
   it('credits no one else: the NOTICE names no source for it', () => {

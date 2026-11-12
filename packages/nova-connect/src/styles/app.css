@@ -94,12 +94,12 @@ div[data-radix-popper-content-wrapper]:has(> [class*='novacon:']) {
 }
 
 .novacon-art-px-path {
-  fill: var(--tuwa-text-accent);
+  fill: var(--tuwa-icon-accent, var(--tuwa-text-accent));
   opacity: 0.45;
 }
 
 .novacon-art-px-flow {
-  fill: var(--tuwa-text-accent);
+  fill: var(--tuwa-icon-accent, var(--tuwa-text-accent));
   opacity: 0;
   animation: novacon-art-px-flow var(--s, 9s) linear infinite;
   animation-delay: calc(var(--d0, 2s) + var(--s, 9s) * 0.58 * var(--i) / var(--len));

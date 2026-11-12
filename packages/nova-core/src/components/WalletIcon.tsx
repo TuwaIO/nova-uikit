@@ -45,8 +45,8 @@ function findWalletIcon(id: string) {
 }
 
 /**
- * Internal component for the icon of the impersonated wallet (watch mode): a TUWA pixel mask on a tile of the TUWA blue with
- * scanlines, its eyes lit at the inner corners. Drawn for Nova on a 16 × 16 grid; its colors are fixed, as it is shown as an
+ * Internal component for the icon of the impersonated wallet (watch mode): a TUWA pixel mask on a tile of the TUWA orange
+ * with scanlines, its eyes lit at the inner corners. Drawn for Nova on a 16 × 16 grid; its colors are fixed, as it is shown as an
  * image (`SvgToImg`) and reads on a light and on a dark page alike.
  */
 const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: React.Ref<SVGSVGElement> }) => (
@@ -57,9 +57,9 @@ const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: R
     shapeRendering="crispEdges"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect width="16" height="16" fill="#0052ff" />
+    <rect width="16" height="16" fill="#f05a14" />
     <path
-      fill="#0047de"
+      fill="#e34f0d"
       d="M0 1h16v1H0zM0 3h16v1H0zM0 5h16v1H0zM0 7h16v1H0zM0 9h16v1H0zM0 11h16v1H0zM0 13h16v1H0zM0 15h16v1H0z"
     />
     <path
@@ -67,7 +67,7 @@ const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: R
       d="M1 5h2v1h-2zM13 5h2v1h-2zM1 6h4v1h-4zM11 6h4v1h-4zM1 7h14v1h-14zM0 8h3v1h-3zM6 8h4v1h-4zM13 8h3v1h-3zM0 9h4v1h-4zM6 9h4v1h-4zM12 9h4v1h-4zM1 10h6v1h-6zM9 10h6v1h-6zM2 11h4v1h-4zM10 11h4v1h-4zM3 12h2v1h-2zM11 12h2v1h-2z"
     />
     <path fill="#101014" d="M4 8h2v2h-2zM10 8h2v2h-2z" />
-    <path fill="#7fa6ff" d="M3 8h1v1h-1zM12 8h1v1h-1z" />
+    <path fill="#ffc9ad" d="M3 8h1v1h-1zM12 8h1v1h-1z" />
   </svg>
 );
 

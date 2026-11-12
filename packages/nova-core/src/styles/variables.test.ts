@@ -94,6 +94,18 @@ describe('theme variables', () => {
     },
   );
 
+  // The brand of TUWA: orange in the light theme, the cyan of the dark logo in the dark one. Text and thin lines take a
+  // deep shade that holds AA on paper; the fills (the main button, lit pixels, illustrations) a bright one, with ink
+  it('are the TUWA orange in the light theme and the cyan of the logo in the dark one, with ink on the fills', () => {
+    expect(color('light', 'text-accent')).toBe('#b93b0a');
+    expect(color('light', 'button-primary-bg')).toBe('#f05a14');
+    expect(color('dark', 'text-accent')).toBe('#3ed2ec');
+    expect(color('dark', 'button-primary-bg')).toBe('#22c3e6');
+    for (const theme of ['light', 'dark'] as const) expect(color(theme, 'text-on-accent')).toBe('#101014');
+    expect(THEMES.light['--tuwa-icon-accent']).toBe('var(--tuwa-button-primary-bg)');
+    expect(css).not.toMatch(/#0052ff|#60a5fa/i);
+  });
+
   it('fill the main button with one solid color, which follows a brand color set on the legacy gradient start', () => {
     expect(THEMES.light['--tuwa-button-primary-bg']).toBe('var(--tuwa-button-gradient-from)');
     expect(THEMES.light['--tuwa-button-primary-bg-hover']).toBe('var(--tuwa-button-gradient-from-hover)');

@@ -217,7 +217,8 @@ export function RememberWallet({ customization }: { customization?: RememberWall
               'novacon:transition-[background-color,border-color] novacon:duration-200',
               'novacon:peer-focus-visible:ring-[length:var(--tuwa-ring-width)] novacon:peer-focus-visible:ring-[var(--tuwa-text-accent)] novacon:peer-focus-visible:ring-offset-[length:var(--tuwa-ring-width)] novacon:peer-focus-visible:ring-offset-[var(--tuwa-bg-primary)]',
               rememberWallet
-                ? 'novacon:border-[var(--tuwa-text-accent)] novacon:bg-[var(--tuwa-text-accent)]'
+                ? // Filled with the bright fill of the brand, as the main button, the tick in the ink on it
+                  'novacon:border-[var(--tuwa-button-primary-bg)] novacon:bg-[var(--tuwa-button-primary-bg)]'
                 : 'novacon:border-[var(--tuwa-border-primary)] novacon:bg-[var(--tuwa-bg-primary)] novacon:group-hover:border-[var(--tuwa-text-accent)]',
             )
           }
@@ -227,7 +228,7 @@ export function RememberWallet({ customization }: { customization?: RememberWall
               initial={false}
               animate={state}
               variants={RIPPLE_VARIANTS}
-              className="novacon:pointer-events-none novacon:absolute novacon:inset-0 novacon:rounded-[inherit] novacon:bg-[var(--tuwa-text-accent)]"
+              className="novacon:pointer-events-none novacon:absolute novacon:inset-0 novacon:rounded-[inherit] novacon:bg-[var(--tuwa-button-primary-bg)]"
             />
           )}
           {look === 'pixel' ? (

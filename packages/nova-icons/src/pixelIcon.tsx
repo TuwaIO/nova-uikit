@@ -32,12 +32,13 @@ export type NovaIconProps = SVGProps<SVGSVGElement> & {
 export type NovaIcon = ((props: NovaIconProps) => ReactElement) & { displayName: string };
 
 /**
- * The color of the lit pixels: `--tuwa-icon-accent`, else the accent of a TUWA theme (`--tuwa-text-accent`, which Nova
- * and Quasar set for the light and the dark theme), else the TUWA blue mixed with the color of the text, which is darker
- * on a light page and lighter on a dark one, so the lit pixels read in both.
+ * The color of the lit pixels: `--tuwa-icon-accent` (Nova sets it to the bright fill of the brand: the TUWA orange in the
+ * light theme, the cyan of the logo in the dark one), else the accent of a TUWA theme (`--tuwa-text-accent`), else the
+ * TUWA orange mixed with the color of the text, which is darker on a light page and lighter on a dark one, so the lit
+ * pixels read in both.
  */
 export const LIT_FILL =
-  'var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #0052ff 72%, currentColor)))';
+  'var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #f05a14 80%, currentColor)))';
 
 /** The marks of a grid: `#` a pixel in the color of the text, `o` a lit pixel in the accent, `.` none. */
 const MARKS = /^[#o.]+$/;

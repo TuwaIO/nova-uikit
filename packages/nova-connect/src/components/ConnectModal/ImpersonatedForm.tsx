@@ -335,7 +335,7 @@ const DefaultResolvingStatus: React.FC<ImpersonatedFormResolvingStatusProps> = (
   if (!isResolving) return null;
 
   return (
-    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-blue-500', className)}>
+    <p className={cn('novacon:mt-1 novacon:text-sm novacon:text-[var(--tuwa-text-accent)]', className)}>
       {formatLabel(labels.resolvingName, { service: domainType })}
     </p>
   );
@@ -772,7 +772,7 @@ export const ImpersonateForm = forwardRef<HTMLDivElement, ImpersonateFormProps>(
           // Error state styling
           { 'novacon:border-red-500 novacon:focus:ring-red-500': connectionError },
           // Resolving state styling
-          { 'novacon:border-blue-500 novacon:focus:ring-blue-500': isResolving },
+          { 'novacon:border-[var(--tuwa-text-accent)] novacon:focus:ring-[var(--tuwa-text-accent)]': isResolving },
           // Transition for smooth state changes
           'novacon:transition-colors novacon:duration-200',
         );
