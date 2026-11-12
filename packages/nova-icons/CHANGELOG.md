@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.0.1...nova-icons-v0.1.0) (2026-11-12)
+
+
+### Features
+
+* **nova:** the TUWA orange in the light theme and the cyan of the logo in the dark one ([#150](https://github.com/TuwaIO/nova-uikit/issues/150)) ([33a0133](https://github.com/TuwaIO/nova-uikit/commit/33a0133d0f5871ca0a01843d0eae7353fe15bf4a))
+
 ## 0.0.1 (2026-11-11)
 
 
