@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.15.0...nova-transactions-v0.15.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* **nova-transactions:** the two toast regions have a name each ([#152](https://github.com/TuwaIO/nova-uikit/issues/152)) ([571e4bf](https://github.com/TuwaIO/nova-uikit/commit/571e4bf57fb4ae0479ee915c95089adcb4e363fb))
+
 ## [0.15.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.14.0...nova-transactions-v0.15.0) (2026-11-12)
 
 
