@@ -54,11 +54,11 @@ describe('a pixel icon', () => {
   });
 
   // The lit pixels stay, and they must read in the light and the dark theme. The color of the
-  // text is light in a dark theme and dark in a light one, so a mix of the TUWA blue with it is darker on a light page
+  // text is light in a dark theme and dark in a light one, so a mix of the TUWA orange with it is darker on a light page
   // and lighter on a dark one; a theme that sets an accent (Nova, Quasar) gives its own for each theme
-  it('lights its lit pixels in the accent of the theme, and without one in a TUWA blue mixed with the text color', () => {
+  it('lights its lit pixels in the accent of the theme, and without one in the TUWA orange mixed with the text color', () => {
     expect(LIT_FILL).toBe(
-      'var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #0052ff 72%, currentColor)))',
+      'var(--tuwa-icon-accent, var(--tuwa-text-accent, color-mix(in oklab, #f05a14 80%, currentColor)))',
     );
   });
 

@@ -2,9 +2,11 @@
  * @file A button that appears further down a page and takes it back to the top.
  */
 
+import { ArrowUpIcon } from '@tuwaio/nova-icons/24/outline';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+import { useNovaIcons } from '../hooks/useNovaIcons';
 import { cn } from '../utils';
 
 /** Props of {@link ScrollToTopButton}. */
@@ -18,8 +20,10 @@ export type ScrollToTopButtonProps = {
 };
 
 /**
- * A button fixed to the corner of the page that scrolls it back to the top. It listens to the `scroll` event of `window`
- * while it is mounted. With reduced motion its arrow stands still and the page jumps to the top at once.
+ * A button fixed to the corner of the page that scrolls it back to the top, with the arrow of the look of the icon set
+ * of the closest `NovaIconsProvider`: the pixel arrow of `@tuwaio/nova-icons` by default, two strokes with Heroicons. It
+ * listens to the `scroll` event of `window` while it is mounted. With reduced motion its arrow stands still and the page
+ * jumps to the top at once.
  *
  * @param props - See {@link ScrollToTopButtonProps}.
  * @returns The button, or nothing near the top of the page.
@@ -36,6 +40,8 @@ export type ScrollToTopButtonProps = {
 export function ScrollToTopButton({ label, visibleAfter = 500, className }: ScrollToTopButtonProps) {
   const [isVisible, setIsVisible] = useState(false);
   const reduceMotion = useReducedMotion();
+
+  const { look } = useNovaIcons();
 
   useEffect(() => {
     const update = () => setIsVisible(window.scrollY > visibleAfter);
@@ -63,17 +69,28 @@ export function ScrollToTopButton({ label, visibleAfter = 500, className }: Scro
           whileTap={reduceMotion ? undefined : { scale: 0.95 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.svg
-            aria-hidden
-            className="novacore:h-6 novacore:w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            animate={reduceMotion ? undefined : { y: [0, -2, 0] }}
-            transition={{ type: 'tween', duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-          </motion.svg>
+          {look === 'pixel' ? (
+            <motion.span
+              aria-hidden
+              className="novacore:flex"
+              animate={reduceMotion ? undefined : { y: [0, -2, 0] }}
+              transition={{ type: 'tween', duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ArrowUpIcon className="novacore:h-6 novacore:w-6" />
+            </motion.span>
+          ) : (
+            <motion.svg
+              aria-hidden
+              className="novacore:h-6 novacore:w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              animate={reduceMotion ? undefined : { y: [0, -2, 0] }}
+              transition={{ type: 'tween', duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+            </motion.svg>
+          )}
         </motion.button>
       )}
     </AnimatePresence>

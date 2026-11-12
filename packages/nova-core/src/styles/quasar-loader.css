@@ -25,13 +25,13 @@
   }
 
   .tuwa-ql-node {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     opacity: 0.25;
     animation: tuwa-ql-node var(--tuwa-loader-speed) ease-in-out infinite;
   }
 
   .tuwa-ql-dash {
-    stroke: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    stroke: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     stroke-linecap: round;
     stroke-dasharray: 24 76;
     animation: tuwa-ql-orbit var(--tuwa-loader-speed) linear infinite;
@@ -47,7 +47,7 @@
   }
 
   .tuwa-ql-beam {
-    stroke: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    stroke: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     stroke-width: 1.4;
     stroke-linecap: round;
     stroke-dasharray: 20 80;
@@ -56,14 +56,14 @@
   }
 
   .tuwa-ql-glow {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     transform-box: fill-box;
     transform-origin: center;
     animation: tuwa-ql-pulse var(--tuwa-loader-speed) ease-in-out infinite;
   }
 
   .tuwa-ql-core {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
   }
 
   .tuwa-ql-spark {
@@ -104,19 +104,19 @@
   }
 
   .tuwa-qlp-node {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     opacity: 0.25;
     animation: tuwa-ql-node var(--tuwa-loader-speed) step-end infinite;
   }
 
   .tuwa-qlp-glow {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     opacity: 0.12;
     animation: tuwa-qlp-glow var(--tuwa-loader-speed) step-end infinite;
   }
 
   .tuwa-qlp-core {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
   }
 
   /* The mark holds still, with the dash parked on the near side */
@@ -139,7 +139,7 @@
     }
 
     .tuwa-qlp-park {
-      fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+      fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
       opacity: 1;
     }
   }
@@ -203,12 +203,12 @@
 /* A pixel lights up in the accent, dims, and goes back to the track: the head and the tail of the dash */
 @keyframes tuwa-qlp-light {
   0% {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     opacity: 1;
   }
 
   6% {
-    fill: var(--tuwa-loader-accent, var(--tuwa-text-accent));
+    fill: var(--tuwa-loader-accent, var(--tuwa-icon-accent, var(--tuwa-text-accent)));
     opacity: 0.55;
   }
 

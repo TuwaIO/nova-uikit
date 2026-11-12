@@ -7,6 +7,7 @@ import { defaultLabels } from '../../i18n/en';
 
 vi.mock('../../providers/NovaTransactionsLabelsProvider', () => ({ useLabels: () => defaultLabels }));
 
+import { PIXEL_RING } from './pixelRing';
 import { PixelActiveMark, TxProgressIndicator } from './TxProgressIndicator';
 
 type Step = { props: { status: string; label: string } };
@@ -58,6 +59,17 @@ describe('the pixel spinner of a step', () => {
     expect(ring.length).toBeGreaterThan(16);
     expect(ring.map((rect) => rect.props.style?.['--i'])).toEqual(ring.map((_, index) => index));
     expect(dot.props.className).toBe('tuwa-tx-px-dot');
+  });
+
+  // Every mark of the steps is square: a ring of pixels read as the one circle left on the line of the steps
+  it('runs round a square frame: every pixel on the edge of the grid, each next to the one before', () => {
+    expect(PIXEL_RING).toHaveLength(36);
+    for (const { x, y } of PIXEL_RING) expect(x === 0 || x === 9 || y === 0 || y === 9, `${x},${y}`).toBe(true);
+    expect(new Set(PIXEL_RING.map(({ x, y }) => `${x},${y}`)).size).toBe(36);
+    PIXEL_RING.forEach(({ x, y }, index) => {
+      const next = PIXEL_RING[(index + 1) % PIXEL_RING.length]!;
+      expect(Math.abs(next.x - x) + Math.abs(next.y - y)).toBe(1);
+    });
   });
 
   it('holds still with reduced motion, the arc parked at the top', () => {

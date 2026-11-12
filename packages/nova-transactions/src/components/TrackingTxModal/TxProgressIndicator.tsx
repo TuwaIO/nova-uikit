@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ComponentType, CSSProperties } from 'react';
 
 import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
+import { PIXEL_RING } from './pixelRing';
 
 /** State of a step of {@link TxProgressIndicator}, which sets its colors and icon. */
 export type StepStatus = 'active' | 'completed' | 'error' | 'inactive' | 'replaced';
@@ -63,20 +64,9 @@ const STEP_STYLE_CONFIG: Record<StepStatus, { line: string; circle: string }> = 
   },
 };
 
-/** The pixels of the ring of the pixel spinner, in order round it: a grid of 10, two screen pixels each at 20 px. */
-const PIXEL_RING = (() => {
-  const ring: { x: number; y: number }[] = [];
-  for (let step = 0; step < 720; step++) {
-    const angle = (step / 720) * Math.PI * 2 - Math.PI / 2;
-    const x = Math.floor(5 + 4.5 * Math.cos(angle));
-    const y = Math.floor(5 + 4.5 * Math.sin(angle));
-    if (!ring.some((cell) => cell.x === x && cell.y === y)) ring.push({ x, y });
-  }
-  return ring;
-})();
-
 /**
- * The step being waited for, in the pixel look: a lit arc steps round a ring of pixels, around a dot that breathes.
+ * The step being waited for, in the pixel look: a lit run steps round a square frame of pixels, around a dot that
+ * breathes.
  *
  * @internal
  * @returns The spinner.

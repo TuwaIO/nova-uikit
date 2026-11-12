@@ -7,12 +7,13 @@
 
 /* ═══════════════════════════════════════════════════════════════════════════
    STORYBOOK DOCS PALETTE — paper and ink, the look of Nova
-   Warm paper, ink text, lines of 1 px, the TUWA blue for links and the accent.
+   Warm paper, ink text, lines of 1 px, the accent of TUWA for links: the deep
+   shade of the TUWA orange in the light theme, the cyan of the logo in the dark.
    ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  --tuwa-docs-primary: #0052ff;
+  --tuwa-docs-primary: #b93b0a;
   /* Links on hover */
-  --tuwa-docs-secondary: #0047de;
+  --tuwa-docs-secondary: #8f2d06;
   /* The page furniture has tokens of its own: the theme of a customized story sets --tuwa-* for the whole document */
   --tuwa-docs-text: #101014;
   --tuwa-docs-text-secondary: #636366;
@@ -22,8 +23,8 @@
 }
 
 .dark {
-  --tuwa-docs-primary: #60a5fa;
-  --tuwa-docs-secondary: #93c5fd;
+  --tuwa-docs-primary: #3ed2ec;
+  --tuwa-docs-secondary: #8ef5ff;
   --tuwa-docs-text: #f2f1ee;
   --tuwa-docs-text-secondary: #9d9c9a;
   --tuwa-docs-text-tertiary: #77767a;
@@ -134,8 +135,9 @@
   align-items: center;
 }
 
+/* The logo of tuwa.io at its size there: 126 px wide */
 .tuwa-docs-footer__logo img {
-  height: 24px;
+  height: 40px;
   width: auto;
 }
 

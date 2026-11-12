@@ -158,7 +158,7 @@ export type RecentBadgeCustomization = {
   };
   /** Configuration options */
   config?: {
-    /** A light runs along the frame (default: `false`, the frame is still; the `animated` prop wins) */
+    /** A light runs along the frame (default: `true`; `false` keeps the frame still; the `animated` prop wins) */
     animated?: boolean;
     /** Custom animation configuration */
     animation?: Partial<BadgeAnimationConfig>;
@@ -182,7 +182,7 @@ export interface RecentBadgeProps {
   className?: string;
   /** Content to display inside the badge (default: the `recent` label) */
   children?: React.ReactNode;
-  /** Whether a light runs along the frame (default: `config.animated`, else `false`: the frame is still, in one color) */
+  /** Whether a light runs along the frame (default: `config.animated`, else `true`; `false` keeps it still, in one color) */
   animated?: boolean;
   /** ARIA label of the badge (default: the text of `children`) */
   'aria-label'?: string;
@@ -275,9 +275,9 @@ const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className
 );
 
 /**
- * The "Recent" badge of a wallet card: a square chip in the accent, its label in monospace capitals, with a still frame
- * of 1 px. With `animated` (or `config.animated`), a light runs along the frame (Framer Motion). It is smaller on touch
- * devices.
+ * The "Recent" badge of a wallet card: a square chip in the accent, its label in monospace capitals, with a frame of 1 px
+ * along which a light runs (Framer Motion); `animated={false}` (or `config.animated: false`) keeps the frame still, and
+ * so does reduced motion. It is smaller on touch devices.
  *
  * Props: {@link RecentBadgeProps}; the ref is forwarded to the container.
  *
@@ -310,7 +310,8 @@ const DefaultContent: React.FC<RecentBadgeContentProps> = ({ children, className
 export const RecentBadge = memo(
   forwardRef<HTMLSpanElement, RecentBadgeProps>(
     ({ className, children: childrenProp, animated: animatedProp, 'aria-label': ariaLabel, customization }, ref) => {
-      const animated = animatedProp ?? customization?.config?.animated ?? false;
+      // The light runs by default: the badge draws the eye to the wallet of the last visit
+      const animated = animatedProp ?? customization?.config?.animated ?? true;
       const labels = useNovaConnectLabels();
       const children = childrenProp ?? labels.recent;
 
