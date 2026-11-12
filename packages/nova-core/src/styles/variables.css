@@ -66,6 +66,13 @@
     line-height: 1 !important;
   }
 
+  /* The keyboard focus of a part of Nova that draws none of its own (a close button): a line of the accent, not the blue
+     ring of the browser. A part with its own ring sets `outline-none`, a utility, which wins over this layer */
+  :is([class*='novacore:'], [class*='novacon:'], [class*='novatx:'], [class*='novapay:']):focus-visible {
+    outline: var(--tuwa-ring-width, 2px) solid var(--tuwa-text-accent);
+    outline-offset: 2px;
+  }
+
   /* Reset negative tracking for Cyrillic / Ukrainian to prevent glyph collision */
   :lang(uk)
     :is(

@@ -106,6 +106,14 @@ describe('theme variables', () => {
     expect(css).not.toMatch(/#0052ff|#60a5fa/i);
   });
 
+  // A part with no focus style of its own (the close button of a dialog) showed the blue ring of the browser, off the
+  // brand: Nova draws the keyboard focus of its parts in the accent
+  it('draw the keyboard focus of the parts of Nova in the accent', () => {
+    expect(css).toMatch(
+      /:is\(\[class\*='novacore:'\], \[class\*='novacon:'\], \[class\*='novatx:'\], \[class\*='novapay:'\]\):focus-visible \{\s*outline: var\(--tuwa-ring-width, 2px\) solid var\(--tuwa-text-accent\);/,
+    );
+  });
+
   it('fill the main button with one solid color, which follows a brand color set on the legacy gradient start', () => {
     expect(THEMES.light['--tuwa-button-primary-bg']).toBe('var(--tuwa-button-gradient-from)');
     expect(THEMES.light['--tuwa-button-primary-bg-hover']).toBe('var(--tuwa-button-gradient-from-hover)');
