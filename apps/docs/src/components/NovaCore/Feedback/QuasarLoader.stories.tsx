@@ -11,6 +11,7 @@ const meta: Meta<typeof QuasarLoader> = {
     variant: { control: 'select', options: [undefined, 'full', 'compact'] },
     accent: { control: 'text' },
     label: { control: 'text' },
+    motion: { control: 'select', options: [undefined, 'assemble'] },
   },
 };
 
@@ -33,6 +34,17 @@ export const Sizes: Story = {
       ))}
     </div>
   ),
+};
+
+/**
+ * With `motion="assemble"` the pixel mark assembles from its pixels as it appears, each one flying in to its place, and
+ * its light runs from the start: for the mark shown large, as beside the title of a sign-in page. Change a control to
+ * play it again.
+ */
+export const Assembles: Story = {
+  args: { size: 96, motion: 'assemble' },
+  // A new key for every set of args, so the mark is mounted anew and assembles again
+  render: (args) => <QuasarLoader key={JSON.stringify(args)} {...args} />,
 };
 
 /** By default it takes the accent color. What is pending takes the pending color instead. */

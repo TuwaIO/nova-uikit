@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **QuasarLoaderProps** = `object`
 
-Defined in: [components/QuasarLoader.tsx:13](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L13)
+Defined in: [components/QuasarLoader.tsx:14](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L14)
 
 Props of [QuasarLoader](?path=/docs/packages-nova-core-functions-quasarloader--docs).
 
@@ -16,7 +16,7 @@ Props of [QuasarLoader](?path=/docs/packages-nova-core-functions-quasarloader--d
 
 > `optional` **accent?**: `string`
 
-Defined in: [components/QuasarLoader.tsx:22](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L22)
+Defined in: [components/QuasarLoader.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L23)
 
 CSS color of the moving parts and the core, such as `var(--tuwa-pending-icon)`. Defaults to `--tuwa-text-accent`.
 
@@ -26,7 +26,7 @@ CSS color of the moving parts and the core, such as `var(--tuwa-pending-icon)`. 
 
 > `optional` **className?**: `string`
 
-Defined in: [components/QuasarLoader.tsx:30](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L30)
+Defined in: [components/QuasarLoader.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L31)
 
 Classes of the loader. The still parts take the text color.
 
@@ -36,7 +36,7 @@ Classes of the loader. The still parts take the text color.
 
 > `optional` **label?**: `string`
 
-Defined in: [components/QuasarLoader.tsx:28](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L28)
+Defined in: [components/QuasarLoader.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L29)
 
 What is being waited for, for screen readers: with it the loader is a `role="status"` region with that text; without it, it
 is decorative. A region announces what changes after it is on the page, so one that mounts with the loader is found by
@@ -48,9 +48,22 @@ browsing, not announced.
 
 > `optional` **look?**: [`NovaLook`](?path=/docs/packages-nova-core-type-aliases-novalook--docs)
 
-Defined in: [components/QuasarLoader.tsx:32](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L32)
+Defined in: [components/QuasarLoader.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L33)
 
 `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one).
+
+***
+
+### motion?
+
+> `optional` **motion?**: `"assemble"`
+
+Defined in: [components/QuasarLoader.tsx:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L40)
+
+`assemble` plays once when the loader appears: the pixel mark assembles from its pixels, each flying in to its place
+from a spot nearby (`pixelFlight`, the motion of the icons of `@tuwaio/nova-icons`), and its light runs from the
+start. For the mark shown large, as beside the title of a sign-in page. The classic look, and a reader who asks for
+less motion, get the mark at once. None by default.
 
 ***
 
@@ -58,7 +71,7 @@ Defined in: [components/QuasarLoader.tsx:32](https://github.com/TuwaIO/nova-uiki
 
 > `optional` **size?**: `number`
 
-Defined in: [components/QuasarLoader.tsx:15](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L15)
+Defined in: [components/QuasarLoader.tsx:16](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L16)
 
 Width and height in pixels. Defaults to `40`.
 
@@ -68,7 +81,7 @@ Width and height in pixels. Defaults to `40`.
 
 > `optional` **variant?**: `"full"` \| `"compact"`
 
-Defined in: [components/QuasarLoader.tsx:20](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L20)
+Defined in: [components/QuasarLoader.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/QuasarLoader.tsx#L21)
 
 `full` is the whole mark, for 40–72 px. `compact` is a rounder disk and the core, bolder, for 12–24 px: buttons and
 lines of text. Defaults to `compact` below 28 px and to `full` from there.

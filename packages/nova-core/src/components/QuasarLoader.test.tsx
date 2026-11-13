@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { pixelFlight } from '@tuwaio/nova-icons';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('react', async (importOriginal) => ({
@@ -114,5 +115,62 @@ describe('QuasarLoader, pixel', () => {
     const still = css.slice(css.indexOf('prefers-reduced-motion'));
     expect(still).toMatch(/\.tuwa-qlp-park \{[^}]*fill: var\(--tuwa-loader-accent/);
     expect(rectsOf(QuasarLoader({ size: 40 }), 'tuwa-qlp-park').length).toBeGreaterThan(0);
+  });
+
+  // The mark beside the title of a sign-in page is drawn from its pixels as the page opens, like an icon with
+  // `motion="assemble"`: each pixel flies in from its own spot, and the light runs on the pixels meanwhile
+  describe('with motion="assemble"', () => {
+    const flying = (tree: unknown) => elements(tree).filter((element) => element.props['data-px'] === '');
+
+    it('assembles from its pixels: every part of the mark is one pixel in a group that flies in from its spot', () => {
+      const tree = QuasarLoader({ size: 96, motion: 'assemble' });
+      const groups = flying(tree);
+      const still = QuasarLoader({ size: 96 });
+
+      expect(svgOf(tree).props['data-motion']).toBe('assemble');
+      // No part is left as one path, which could only appear at once
+      expect(elements(tree).filter((element) => element.type === 'path')).toHaveLength(0);
+      for (const group of groups) {
+        expect(group.type).toBe('g');
+        const [pixel] = elements(group.props.children);
+        expect(pixel.type).toBe('rect');
+        // The node is two pixels square, drawn from the end of its jet outward: it flies as the pixel of that end
+        const isNode = String(pixel.props.className).includes('tuwa-qlp-node');
+        if (!isNode) expect(group.props.style).toEqual(pixelFlight(Number(pixel.props.x), Number(pixel.props.y)));
+      }
+      const pixelsOf = (d: unknown) => [...String(d).matchAll(/M\d+ \d+h1v1h-1z/g)].length;
+      const paths = elements(still).filter((element) => element.type === 'path');
+      const filled = paths.reduce((count, element) => count + pixelsOf(element.props.d), 0);
+      const drawn = elements(still).filter((element) => element.type === 'rect').length;
+      expect(filled).toBeGreaterThan(0);
+      expect(groups).toHaveLength(drawn + filled);
+    });
+
+    it('keeps the light on the pixels: the flight is on the group, the animation of the light on the pixel', () => {
+      const tree = QuasarLoader({ size: 96, motion: 'assemble' });
+      const orbit = rectsOf(tree, 'tuwa-qlp-orbit');
+
+      expect(orbit.length).toBe(rectsOf(QuasarLoader({ size: 96 }), 'tuwa-qlp-orbit').length);
+      for (const rect of orbit) {
+        expect(rect.props['data-px']).toBeUndefined();
+        expect(rect.props.style).toHaveProperty('--i');
+      }
+      expect(rectsOf(tree, 'tuwa-qlp-core').length).toBeGreaterThan(4);
+    });
+
+    it('is the mark at once without it, and in the classic look', () => {
+      expect(svgOf(QuasarLoader({ size: 96 })).props['data-motion']).toBeUndefined();
+      expect(flying(QuasarLoader({ size: 96 }))).toHaveLength(0);
+      const classic = QuasarLoader({ size: 96, look: 'classic', motion: 'assemble' });
+      expect(svgOf(classic).props['data-motion']).toBeUndefined();
+      expect(flying(classic)).toHaveLength(0);
+    });
+
+    it('holds still for a reader who asks for less motion: the flight is an animation inside the loader', () => {
+      const css = readFileSync(path.resolve(__dirname, '../styles/quasar-loader.css'), 'utf8');
+      expect(css).toMatch(
+        /prefers-reduced-motion: reduce\) \{\s*\.tuwa-quasar-loader \* \{\s*animation: none !important;/,
+      );
+    });
   });
 });

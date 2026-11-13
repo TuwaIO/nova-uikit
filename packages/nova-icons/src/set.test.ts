@@ -32,8 +32,9 @@ const USED_OUTLINE = `AdjustmentsHorizontal ArchiveBox ArrowDownCircle ArrowTopR
   DocumentDuplicate DocumentText EllipsisHorizontal Envelope EnvelopeOpen ExclamationTriangle Eye EyeSlash FaceFrown
   FingerPrint Folder Funnel GlobeAlt GlobeEuropeAfrica Hashtag Home Identification Inbox InformationCircle Key Language
   LightBulb Link LockClosed LockOpen MagnifyingGlass Moon NoSymbol PaintBrush PaperAirplane PauseCircle Pause PencilSquare
-  Photo Plus QrCode QuestionMarkCircle ReceiptPercent RocketLaunch Scale Server ServerStack ShieldCheck ShieldExclamation
-  Signal SignalSlash Sparkles Squares2X2 Sun Tag Trash UserCircle UserGroup User UserPlus Users Wallet XCircle XMark`;
+  Photo Plus Power QrCode QuestionMarkCircle ReceiptPercent RocketLaunch Scale Server ServerStack ShieldCheck
+  ShieldExclamation Signal SignalSlash Sparkles Squares2X2 Sun Tag Trash UserCircle UserGroup User UserPlus Users Wallet
+  XCircle XMark`;
 const USED_SOLID = `ArrowDown ArrowPath ArrowUp Beaker CheckCircle ChevronDown ChevronLeft ChevronRight ChevronUp ChevronUpDown
   DocumentDuplicate ExclamationTriangle GlobeAlt PuzzlePiece`;
 const names = (list: string) => list.split(/\s+/).map((name) => `${name}Icon`);
@@ -63,11 +64,11 @@ describe('the icons of the set', () => {
   });
 });
 
-// Icons of TUWA's own for the Transactions and Webhooks of the Quasar dashboard, beside the
-// Heroicons names and never in place of one
+// Icons of TUWA's own, beside the Heroicons names and never in place of one: the craft of the flight plans (the rail
+// of the Quasar sign-in page), and Transactions and Webhooks of the Quasar dashboard
 describe('the icons of TUWA', () => {
-  it('are the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
-    expect(iconsOf(tuwa).map(([name]) => name)).toEqual(['TransactionsIcon', 'WebhooksIcon']);
+  it('are the spacecraft, the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
+    expect(iconsOf(tuwa).map(([name]) => name)).toEqual(['SpacecraftIcon', 'TransactionsIcon', 'WebhooksIcon']);
     for (const [name, Icon] of iconsOf(tuwa)) {
       const svg = (Icon as (props: object) => ReactElement)({}) as unknown as Node & { props: { children?: unknown } };
       expect(svg.props.viewBox, name).toBe('0 0 16 16');
