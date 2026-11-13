@@ -4,7 +4,8 @@
  * grid, and the classic one, in thin lines.
  */
 
-import { type CSSProperties, useId } from 'react';
+import { pixelFlight } from '@tuwaio/nova-icons';
+import { type CSSProperties, type ReactElement, useId } from 'react';
 
 import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
 import { cn } from '../utils';
@@ -30,6 +31,13 @@ export type QuasarLoaderProps = {
   className?: string;
   /** `pixel` or `classic`. Defaults to the look of the icon set of the closest `NovaIconsProvider` (pixel without one). */
   look?: NovaLook;
+  /**
+   * `assemble` plays once when the loader appears: the pixel mark assembles from its pixels, each flying in to its place
+   * from a spot nearby (`pixelFlight`, the motion of the icons of `@tuwaio/nova-icons`), and its light runs from the
+   * start. For the mark shown large, as beside the title of a sign-in page. The classic look, and a reader who asks for
+   * less motion, get the mark at once. None by default.
+   */
+  motion?: 'assemble';
 };
 
 /** Below this size the jets and the thin disk of the whole mark can no longer be told apart. */
@@ -43,14 +51,14 @@ const COMPACT_BELOW = 28;
  * @param props - See {@link QuasarLoaderProps}.
  * @returns The loader.
  */
-export function QuasarLoader({ size = 40, variant, accent, label, className, look }: QuasarLoaderProps) {
+export function QuasarLoader({ size = 40, variant, accent, label, className, look, motion }: QuasarLoaderProps) {
   // The two half planes are per instance: a clip path found by id in another loader that has been unmounted is lost
   const id = useId().replace(/[^\w-]/g, '');
   const setLook = useNovaIcons().look;
   const isCompact = (variant ?? (size < COMPACT_BELOW ? 'compact' : 'full')) === 'compact';
   if ((look ?? setLook) === 'pixel') {
     // A plain function, no hooks: it draws in place of the classic mark
-    return pixelQuasarLoader({ size, isCompact, accent, label, className });
+    return pixelQuasarLoader({ size, isCompact, accent, label, className, assembles: motion === 'assemble' });
   }
   const rx = isCompact ? 15 : 16;
   const ry = isCompact ? 8.5 : 4.4;
@@ -157,21 +165,49 @@ const COMPACT = pixelMark(12, { rx: 5.4, ry: 2.9, core: 4 });
 /** Path data of one-pixel squares. */
 const cellsPath = (cells: Cell[]) => cells.map(({ x, y }) => `M${x} ${y}h1v1h-1z`).join('');
 
-/** The pixel loader: the mark on a grid, its light stepping round the orbit and out along the jets. */
+/**
+ * The pixel loader: the mark on a grid, its light stepping round the orbit and out along the jets. When it assembles,
+ * every pixel is drawn on its own inside a group that flies in to its place (`data-px` under `data-motion="assemble"`,
+ * the motion of `@tuwaio/nova-icons`): the group carries the flight, so the pixel keeps the animation of its light.
+ */
 function pixelQuasarLoader({
   size,
   isCompact,
   accent,
   label,
   className,
+  assembles,
 }: {
   size: number;
   isCompact: boolean;
   accent?: string;
   label?: string;
   className?: string;
+  assembles: boolean;
 }) {
   const mark = isCompact ? COMPACT : FULL;
+  /** A part of the mark at a cell: as it is, or flying in from the spot of that cell while the mark assembles. */
+  const placed = (key: string | number, { x, y }: Cell, part: ReactElement) =>
+    assembles ? (
+      <g key={key} data-px="" style={pixelFlight(x, y)}>
+        {part}
+      </g>
+    ) : (
+      part
+    );
+  /** The pixels of a part drawn as one path, or one by one while the mark assembles. */
+  const filled = (name: string, cells: Cell[]) =>
+    assembles ? (
+      cells.map((cell) =>
+        placed(
+          `${name}-${cell.x}-${cell.y}`,
+          cell,
+          <rect className={name} x={cell.x} y={cell.y} width={1} height={1} />,
+        ),
+      )
+    ) : (
+      <path className={name} d={cellsPath(cells)} />
+    );
   const style = { width: size, height: size, ...(accent && { '--tuwa-loader-accent': accent }) } as CSSProperties;
   const count = mark.orbit.length;
   // Where the light rests when the reader asks for less motion: the front of the near side
@@ -184,21 +220,25 @@ function pixelQuasarLoader({
   );
   const orbit = (near: boolean) =>
     mark.orbit.map((cell, index) =>
-      cell.near === near ? (
-        <rect
-          key={index}
-          className={cn(
-            'tuwa-qlp-orbit',
-            near ? 'tuwa-qlp-orbit--near' : 'tuwa-qlp-orbit--far',
-            parked.has(index) && 'tuwa-qlp-park',
-          )}
-          x={cell.x}
-          y={cell.y}
-          width={1}
-          height={1}
-          style={{ '--i': index, '--n': count } as CSSProperties}
-        />
-      ) : null,
+      cell.near === near
+        ? placed(
+            index,
+            cell,
+            <rect
+              key={index}
+              className={cn(
+                'tuwa-qlp-orbit',
+                near ? 'tuwa-qlp-orbit--near' : 'tuwa-qlp-orbit--far',
+                parked.has(index) && 'tuwa-qlp-park',
+              )}
+              x={cell.x}
+              y={cell.y}
+              width={1}
+              height={1}
+              style={{ '--i': index, '--n': count } as CSSProperties}
+            />,
+          )
+        : null,
     );
 
   return (
@@ -212,33 +252,47 @@ function pixelQuasarLoader({
       {...(label ? { role: 'status' } : { 'aria-hidden': true })}
     >
       {label && <span className="novacore:sr-only">{label}</span>}
-      <svg viewBox={`0 0 ${mark.n} ${mark.n}`} shapeRendering="crispEdges" aria-hidden="true">
+      <svg
+        viewBox={`0 0 ${mark.n} ${mark.n}`}
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+        data-motion={assembles ? 'assemble' : undefined}
+      >
         {orbit(false)}
         {mark.jets.map(({ beam, node }, side) => (
           <g key={side}>
-            {beam.map((cell, index) => (
-              <rect
-                key={index}
-                className="tuwa-qlp-beam"
-                x={cell.x}
-                y={cell.y}
-                width={1}
-                height={1}
-                style={{ '--j': index, '--len': beam.length } as CSSProperties}
-              />
-            ))}
+            {beam.map((cell, index) =>
+              placed(
+                index,
+                cell,
+                <rect
+                  key={index}
+                  className="tuwa-qlp-beam"
+                  x={cell.x}
+                  y={cell.y}
+                  width={1}
+                  height={1}
+                  style={{ '--j': index, '--len': beam.length } as CSSProperties}
+                />,
+              ),
+            )}
             {/* Two pixels square, from the end of the jet outward: up and to the left for the first, down and right for the other */}
-            <rect
-              className="tuwa-qlp-node"
-              x={node.x - (side ? 0 : 1)}
-              y={node.y - (side ? 0 : 1)}
-              width={2}
-              height={2}
-            />
+            {placed(
+              'node',
+              node,
+              <rect
+                key="node"
+                className="tuwa-qlp-node"
+                x={node.x - (side ? 0 : 1)}
+                y={node.y - (side ? 0 : 1)}
+                width={2}
+                height={2}
+              />,
+            )}
           </g>
         ))}
-        <path className="tuwa-qlp-glow" d={cellsPath(mark.glow)} />
-        <path className="tuwa-qlp-core" d={cellsPath(mark.core)} />
+        {filled('tuwa-qlp-glow', mark.glow)}
+        {filled('tuwa-qlp-core', mark.core)}
         {orbit(true)}
       </svg>
     </span>

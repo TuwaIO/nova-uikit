@@ -98,6 +98,7 @@ export { PencilIcon } from './outline/PencilIcon';
 export { PencilSquareIcon } from './outline/PencilSquareIcon';
 export { PhotoIcon } from './outline/PhotoIcon';
 export { PlusIcon } from './outline/PlusIcon';
+export { PowerIcon } from './outline/PowerIcon';
 export { PuzzlePieceIcon } from './outline/PuzzlePieceIcon';
 export { QrCodeIcon } from './outline/QrCodeIcon';
 export { QuestionMarkCircleIcon } from './outline/QuestionMarkCircleIcon';
