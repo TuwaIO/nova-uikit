@@ -89,7 +89,7 @@ const DialogOverlay = ({ className, backdropAnimation }: { backdropAnimation?: V
         className="novacore:relative novacore:overflow-hidden"
       >
         <div
-          className={cn('novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-[rgb(16_16_20/0.5)]', className)}
+          className={cn('novacore:fixed novacore:inset-0 novacore:z-50 novacore:bg-[var(--tuwa-backdrop)]', className)}
         />
       </motion.div>
     </AnimatePresence>

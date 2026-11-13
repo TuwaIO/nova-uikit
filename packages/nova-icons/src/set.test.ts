@@ -65,10 +65,16 @@ describe('the icons of the set', () => {
 });
 
 // Icons of TUWA's own, beside the Heroicons names and never in place of one: the craft of the flight plans (the rail
-// of the Quasar sign-in page), and Transactions and Webhooks of the Quasar dashboard
+// of the Quasar sign-in page), Transactions and Webhooks of the Quasar dashboard, and the struck star of its switch of
+// visual effects (Heroicons has Sparkles, and no struck one)
 describe('the icons of TUWA', () => {
-  it('are the spacecraft, the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
-    expect(iconsOf(tuwa).map(([name]) => name)).toEqual(['SpacecraftIcon', 'TransactionsIcon', 'WebhooksIcon']);
+  it('are the spacecraft, the struck star, the pulsar of Transactions and the loop of Webhooks, each with a lit pixel', () => {
+    expect(iconsOf(tuwa).map(([name]) => name)).toEqual([
+      'SpacecraftIcon',
+      'SparklesSlashIcon',
+      'TransactionsIcon',
+      'WebhooksIcon',
+    ]);
     for (const [name, Icon] of iconsOf(tuwa)) {
       const svg = (Icon as (props: object) => ReactElement)({}) as unknown as Node & { props: { children?: unknown } };
       expect(svg.props.viewBox, name).toBe('0 0 16 16');

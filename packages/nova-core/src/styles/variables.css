@@ -154,6 +154,10 @@
   /* Lines across a surface, a retro screen, barely there; `transparent` turns them off */
   --tuwa-scanline: rgb(16 16 20 / 0.015);
 
+  /* The veil over the page behind an open dialog: dark enough that the page steps back and its text is not read
+     through it */
+  --tuwa-backdrop: rgb(16 16 20 / 0.68);
+
   --tuwa-rounded-corners: 0px;
   /* The shapes that were circles (avatars, icons of wallets, tokens and networks, dots): square; 9999px rounds them again */
   --tuwa-rounded-full: 0px;
@@ -240,6 +244,9 @@ html[lang^='uk'],
   --tuwa-testnet-icons: #6b655e;
 
   --tuwa-scanline: rgb(242 241 238 / 0.012);
+
+  /* Light text shows through a veil more than ink does: darker and denser here */
+  --tuwa-backdrop: rgb(4 4 6 / 0.76);
 }
 
 /* Paper and ink: faint lines across a surface (a dialog, a toast, a dropdown), the color of `--tuwa-scanline`. Still, and

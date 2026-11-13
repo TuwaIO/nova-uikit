@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 
 import { describe, expect, it } from 'vitest';
 
-import { contrastRatio } from '../utils/contrast';
+import { contrastRatio, parseHexColor } from '../utils/contrast';
 
 const css = readFileSync(new URL('./variables.css', import.meta.url), 'utf8');
 const colors = createRequire(import.meta.url)('tailwindcss/colors') as Record<string, string | Record<string, string>>;
@@ -117,6 +117,40 @@ describe('theme variables', () => {
   it('fill the main button with one solid color, which follows a brand color set on the legacy gradient start', () => {
     expect(THEMES.light['--tuwa-button-primary-bg']).toBe('var(--tuwa-button-gradient-from)');
     expect(THEMES.light['--tuwa-button-primary-bg-hover']).toBe('var(--tuwa-button-gradient-from-hover)');
+  });
+});
+
+// At half strength the veil left the page behind a dialog readable (its text at 4.4:1 in the dark theme, 5.2:1 in the
+// light one), so two texts competed. Light text shows through more than ink does, so the dark theme has its own veil
+describe('the veil behind an open dialog', () => {
+  /** A color seen through the veil of a theme. */
+  const veiled = (theme: keyof typeof THEMES, token: string) => {
+    const veil = /rgb\((\d+) (\d+) (\d+) \/ ([\d.]+)\)/.exec(THEMES[theme]['--tuwa-backdrop']);
+    if (!veil) throw new Error(`--tuwa-backdrop of ${theme} is not rgb(r g b / a)`);
+    const alpha = Number(veil[4]);
+    const below = parseHexColor(color(theme, token)) ?? [0, 0, 0];
+    return `#${below
+      .map((channel, index) =>
+        Math.round(channel * (1 - alpha) + Number(veil[index + 1]) * alpha)
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('')}`;
+  };
+
+  it.each(Object.keys(THEMES) as (keyof typeof THEMES)[])('lets the page step back in the %s theme', (theme) => {
+    for (const surface of ['bg-primary', 'bg-secondary']) {
+      const ratio = contrastRatio(veiled(theme, 'text-primary'), veiled(theme, surface));
+      // Still there, so a person knows where they are, and no longer a text to read
+      expect(ratio, `text on ${surface}`).toBeLessThan(3);
+      expect(ratio, `text on ${surface}`).toBeGreaterThan(1.3);
+    }
+  });
+
+  it('is the one veil of every dialog', () => {
+    const modal = readFileSync(new URL('../components/Modal.tsx', import.meta.url), 'utf8');
+    expect(modal).toContain('novacore:bg-[var(--tuwa-backdrop)]');
+    expect(modal).not.toMatch(/bg-\[rgb\(/);
   });
 });
 
