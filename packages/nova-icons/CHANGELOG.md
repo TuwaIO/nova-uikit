@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.1.2...nova-icons-v0.1.3) (2026-11-13)
+
+
+### Bug Fixes
+
+* **nova:** a darker veil behind an open dialog, and the star of Sparkles struck through ([#161](https://github.com/TuwaIO/nova-uikit/issues/161)) ([78f469a](https://github.com/TuwaIO/nova-uikit/commit/78f469a9f64c497d37cff0e8f37813e735e0ee5d))
+
 ## [0.1.2](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.1.1...nova-icons-v0.1.2) (2026-11-13)
 
 
