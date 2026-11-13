@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.1.1...nova-icons-v0.1.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* **nova-icons:** the set has the speaker, with sound and muted ([#159](https://github.com/TuwaIO/nova-uikit/issues/159)) ([42c5b8a](https://github.com/TuwaIO/nova-uikit/commit/42c5b8a5ca6fe9d521456b05ce4e0ace7be28570))
+
 ## [0.1.1](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.1.0...nova-icons-v0.1.1) (2026-11-13)
 
 
