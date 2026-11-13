@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.1.0...nova-icons-v0.1.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **nova-icons:** the set has the power button and the spacecraft, and the Quasar mark assembles from its pixels ([#157](https://github.com/TuwaIO/nova-uikit/issues/157)) ([93d741b](https://github.com/TuwaIO/nova-uikit/commit/93d741b684e8caa43f42a7cd89710f968fa5342e))
+
 ## [0.1.0](https://github.com/TuwaIO/nova-uikit/compare/nova-icons-v0.0.1...nova-icons-v0.1.0) (2026-11-12)
 
 
