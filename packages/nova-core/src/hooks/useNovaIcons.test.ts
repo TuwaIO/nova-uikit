@@ -22,7 +22,14 @@ vi.mock('react', async (importOriginal) => {
 import { NovaIconsProvider } from '../components/NovaIconsProvider';
 import { NovaSetIcon } from '../components/NovaSetIcon';
 import { heroicons } from '../heroicons';
-import { NOVA_OUTLINE_ICONS, NOVA_SOLID_ICONS, pixelIcons, useNovaIcons } from './useNovaIcons';
+import {
+  NOVA_EXTRA_OUTLINE_ICONS,
+  NOVA_OUTLINE_ICONS,
+  NOVA_SOLID_ICONS,
+  type NovaIconSet,
+  pixelIcons,
+  useNovaIcons,
+} from './useNovaIcons';
 
 describe('the icons of Nova', () => {
   // Nova is pixel by default, and returns to its look of today when heroicons are given
@@ -50,6 +57,30 @@ describe('the icons of Nova', () => {
       expect(heroicons.solid[name], name).toBe(heroSolid[name]);
     }
     expect(heroicons.look).toBe('classic');
+  });
+
+  // With the Heroicons set, a package built on Nova (the checkout of Nova Payments) kept its pixel lock, QR code and
+  // download beside the thin icons of Nova: the set had no place for an icon Nova does not draw itself
+  it('may have the icons that packages built on Nova draw, and the heroicons set has them all', () => {
+    for (const name of NOVA_EXTRA_OUTLINE_ICONS) {
+      expect(heroicons.outline[name], name).toBe(heroOutline[name]);
+      // What such a package falls back to without a set that has the icon
+      expect(pixelOutline[name], name).toBeTypeOf('function');
+    }
+    // None of them is an icon Nova draws: the two lists do not overlap
+    expect(NOVA_EXTRA_OUTLINE_ICONS.filter((name) => (NOVA_OUTLINE_ICONS as readonly string[]).includes(name))).toEqual(
+      [],
+    );
+  });
+
+  it('are whole without those icons: a set made before them, and the default one, which loads nothing more', () => {
+    // A set of an app, with the icons Nova draws and nothing else, is still a set (this line is checked by the compiler)
+    const ownSet: NovaIconSet = { look: 'classic', outline: { ...pixelIcons.outline }, solid: { ...pixelIcons.solid } };
+    for (const name of NOVA_EXTRA_OUTLINE_ICONS) {
+      expect(ownSet.outline[name], name).toBeUndefined();
+      expect(pixelIcons.outline[name], name).toBeUndefined();
+    }
+    expect(Object.keys(pixelIcons.outline).sort()).toEqual([...NOVA_OUTLINE_ICONS].sort());
   });
 });
 

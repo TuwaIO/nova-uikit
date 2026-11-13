@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Variables/NOVA_EXTRA_OUTLINE_ICONS" />
+
+# NOVA\_EXTRA\_OUTLINE\_ICONS
+
+> `const` **NOVA\_EXTRA\_OUTLINE\_ICONS**: readonly \[`"ArrowDownTrayIcon"`, `"ArrowPathRoundedSquareIcon"`, `"ArrowUturnLeftIcon"`, `"DevicePhoneMobileIcon"`, `"FingerPrintIcon"`, `"LockClosedIcon"`, `"MagnifyingGlassIcon"`, `"NoSymbolIcon"`, `"QrCodeIcon"`\]
+
+Defined in: [hooks/useNovaIcons.ts:81](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/hooks/useNovaIcons.ts#L81)
+
+Outline icons that packages built on Nova draw and the Nova components do not, named as in Heroicons: a download, a
+lock, a QR code, a phone, a fingerprint and the marks of the outcomes of a payment. A set may have them, and `heroicons`
+of `@tuwaio/nova-core/heroicons` does. A package that draws one takes it from the set of the closest
+`NovaIconsProvider` and falls back to its own icon when the set has none: a set made before these names stays whole,
+and the default set has only what Nova draws, so an app that uses Nova alone loads nothing more.

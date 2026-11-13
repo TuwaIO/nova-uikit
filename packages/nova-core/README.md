@@ -103,7 +103,7 @@ export function ClassicNova({ children }: { children: ReactNode }) {
 }
 ```
 
-`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`). What Nova draws itself follows the `look` of the set, `pixel` or `classic`, or a `look` prop of its own: `QuasarLoader`, `StarsBackground` (pixel stars, or round and four-pointed ones), `DrawnCheck` and `DrawnCross`, `CopyIcon`, `ExternalLinkIcon`, `ExitIcon`, `TrashIcon`, `CloseIcon`, `ChevronArrowWithAnim` and `ToastCloseButton`. The pixel ones are drawn on a grid with crisp edges and move in CSS.
+`useNovaIcons` returns the set of the closest provider, and `NovaSetIcon` draws one of its icons by name (`<NovaSetIcon solid="ArrowPathIcon" />`). A set may also have the icons that packages built on Nova draw and Nova does not (`NOVA_EXTRA_OUTLINE_ICONS`: a download, a lock, a QR code and others, which the checkout of `@tuwaio/nova-payments` draws). `heroicons` has them; with a set that has none, and with the default one, such a package draws its own pixel icons. What Nova draws itself follows the `look` of the set, `pixel` or `classic`, or a `look` prop of its own: `QuasarLoader`, `StarsBackground` (pixel stars, or round and four-pointed ones), `DrawnCheck` and `DrawnCross`, `CopyIcon`, `ExternalLinkIcon`, `ExitIcon`, `TrashIcon`, `CloseIcon`, `ChevronArrowWithAnim` and `ToastCloseButton`. The pixel ones are drawn on a grid with crisp edges and move in CSS.
 
 ---
 

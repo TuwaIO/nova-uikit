@@ -71,6 +71,25 @@ export const NOVA_SOLID_ICONS = [
   'PuzzlePieceIcon',
 ] as const;
 
+/**
+ * Outline icons that packages built on Nova draw and the Nova components do not, named as in Heroicons: a download, a
+ * lock, a QR code, a phone, a fingerprint and the marks of the outcomes of a payment. A set may have them, and `heroicons`
+ * of `@tuwaio/nova-core/heroicons` does. A package that draws one takes it from the set of the closest
+ * `NovaIconsProvider` and falls back to its own icon when the set has none: a set made before these names stays whole,
+ * and the default set has only what Nova draws, so an app that uses Nova alone loads nothing more.
+ */
+export const NOVA_EXTRA_OUTLINE_ICONS = [
+  'ArrowDownTrayIcon',
+  'ArrowPathRoundedSquareIcon',
+  'ArrowUturnLeftIcon',
+  'DevicePhoneMobileIcon',
+  'FingerPrintIcon',
+  'LockClosedIcon',
+  'MagnifyingGlassIcon',
+  'NoSymbolIcon',
+  'QrCodeIcon',
+] as const;
+
 /** An icon component of a set: the props of an SVG element, as an icon of Heroicons takes them. */
 export type NovaIconComponent = ComponentType<SVGProps<SVGSVGElement> & { title?: string; titleId?: string }>;
 
@@ -84,16 +103,21 @@ export type NovaLook = 'pixel' | 'classic';
  * A set of icons for the Nova components and the look of what they draw themselves.
  *
  * - `look`: the look of the loaders, the drawn marks, the pictures and the star field (`NovaLook`).
- * - `outline`: a component for each name of `NOVA_OUTLINE_ICONS`.
+ * - `outline`: a component for each name of `NOVA_OUTLINE_ICONS`, and, if the set has them, for the names of
+ *   `NOVA_EXTRA_OUTLINE_ICONS`, which packages built on Nova draw.
  * - `solid`: a component for each name of `NOVA_SOLID_ICONS`.
  */
 export type NovaIconSet = {
   look: NovaLook;
-  outline: Record<(typeof NOVA_OUTLINE_ICONS)[number], NovaIconComponent>;
+  outline: Record<(typeof NOVA_OUTLINE_ICONS)[number], NovaIconComponent> &
+    Partial<Record<(typeof NOVA_EXTRA_OUTLINE_ICONS)[number], NovaIconComponent>>;
   solid: Record<(typeof NOVA_SOLID_ICONS)[number], NovaIconComponent>;
 };
 
-/** The default set: the pixel icons of `@tuwaio/nova-icons` and the pixel look. */
+/**
+ * The default set: the pixel icons of `@tuwaio/nova-icons` and the pixel look. It has the icons Nova draws and none of
+ * `NOVA_EXTRA_OUTLINE_ICONS`: a package that draws one of those draws its own pixel icon without a set that has it.
+ */
 export const pixelIcons: NovaIconSet = {
   look: 'pixel',
   outline: {
