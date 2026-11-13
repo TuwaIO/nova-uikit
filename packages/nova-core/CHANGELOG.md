@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.15.0...nova-core-v0.15.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **nova-core:** the Heroicons set has the icons that packages built on Nova draw ([#155](https://github.com/TuwaIO/nova-uikit/issues/155)) ([f8ca6d2](https://github.com/TuwaIO/nova-uikit/commit/f8ca6d2fe077b8a532e2612702dc202aab2518d5))
+
 ## [0.15.0](https://github.com/TuwaIO/nova-uikit/compare/nova-core-v0.14.0...nova-core-v0.15.0) (2026-11-12)
 
 
