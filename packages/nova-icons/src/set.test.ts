@@ -33,8 +33,8 @@ const USED_OUTLINE = `AdjustmentsHorizontal ArchiveBox ArrowDownCircle ArrowTopR
   FingerPrint Folder Funnel GlobeAlt GlobeEuropeAfrica Hashtag Home Identification Inbox InformationCircle Key Language
   LightBulb Link LockClosed LockOpen MagnifyingGlass Moon NoSymbol PaintBrush PaperAirplane PauseCircle Pause PencilSquare
   Photo Plus Power QrCode QuestionMarkCircle ReceiptPercent RocketLaunch Scale Server ServerStack ShieldCheck
-  ShieldExclamation Signal SignalSlash Sparkles Squares2X2 Sun Tag Trash UserCircle UserGroup User UserPlus Users Wallet
-  XCircle XMark`;
+  ShieldExclamation Signal SignalSlash Sparkles SpeakerWave SpeakerXMark Squares2X2 Sun Tag Trash UserCircle UserGroup
+  User UserPlus Users Wallet XCircle XMark`;
 const USED_SOLID = `ArrowDown ArrowPath ArrowUp Beaker CheckCircle ChevronDown ChevronLeft ChevronRight ChevronUp ChevronUpDown
   DocumentDuplicate ExclamationTriangle GlobeAlt PuzzlePiece`;
 const names = (list: string) => list.split(/\s+/).map((name) => `${name}Icon`);

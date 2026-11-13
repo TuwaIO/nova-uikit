@@ -113,6 +113,8 @@ export { ShoppingBagIcon } from './outline/ShoppingBagIcon';
 export { SignalIcon } from './outline/SignalIcon';
 export { SignalSlashIcon } from './outline/SignalSlashIcon';
 export { SparklesIcon } from './outline/SparklesIcon';
+export { SpeakerWaveIcon } from './outline/SpeakerWaveIcon';
+export { SpeakerXMarkIcon } from './outline/SpeakerXMarkIcon';
 export { Squares2X2Icon } from './outline/Squares2X2Icon';
 export { SunIcon } from './outline/SunIcon';
 export { TagIcon } from './outline/TagIcon';
