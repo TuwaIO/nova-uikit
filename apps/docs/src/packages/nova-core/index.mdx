@@ -43,6 +43,7 @@ The default theme is flat and square, in the manner of printed paper:
 - **Lines instead of shadows:** parts are drawn with lines of 1 px (`--tuwa-border-primary`, `--tuwa-border-strong` for the frame of a secondary button), lists are cells on shared lines, and nothing has a soft shadow or a gradient of color: a light that runs along a frame (a wait, Connect another wallet) is one solid segment.
 - **Type:** the labels of buttons, chips and sections are monospace capitals with spacing (`primaryButtonClasses`, `standardButtonClasses`, `chipClasses`, `sectionLabelClasses`). Names and addresses keep their case.
 - **Scanlines:** dialogs and toasts carry faint lines across them, a retro screen (`tuwa-scanlines`, colored by `--tuwa-scanline`).
+- **Backdrop:** the page behind an open dialog is covered by one veil, `--tuwa-backdrop`: ink at 68% in the light theme and near-black at 76% in the dark one, where light text shows through more. The page stays in sight and its text is no longer read through the veil.
 - **Icons of actions:** under the pointer the icon of a link to another site takes the accent, and the icons of an exit and a bin turn red; on a filled button (`tuwa-solid`, part of `primaryButtonClasses`) an icon keeps the color of the label. Give `tuwa-solid` to a filled button of your own.
 
 Every rule is a variable: the Theming page lists them all with their values.
