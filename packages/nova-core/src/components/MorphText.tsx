@@ -2,9 +2,11 @@
  * @file Text and icons that change in place: the letters both versions share glide to their new places, the others fade.
  */
 
-import { animate, AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animate, AnimatePresence, motion, PresenceContext, useReducedMotion } from 'framer-motion';
+import { type ReactNode, type RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import { useNovaIcons } from '../hooks/useNovaIcons';
+import { flyFrom, pixelsOf, type Point } from '../pixel/flight';
 import { cn } from '../utils';
 import { morphLetters } from './morphLetters';
 
@@ -193,14 +195,63 @@ export type MorphIconProps = {
 };
 
 /**
- * An icon that swaps with a small pop when its key changes, as a loader giving way to a check mark. With
- * `prefers-reduced-motion` the icon just changes.
+ * An icon that swaps when its key changes: in the pixel look a mark with `data-px` pixels (`DrawnCheck`, `DrawnCross`, or
+ * an icon of `@tuwaio/nova-icons` with `motion="assemble"`) assembles from the pixels of the mark before it (such as
+ * `QuasarLoader`); in the classic look it swaps with a small pop. With `prefers-reduced-motion` the icon just changes.
  *
  * @param props - See {@link MorphIconProps}.
  * @returns The icon.
  */
 export function MorphIcon({ iconKey, children, animateFirst = false, className }: MorphIconProps) {
+  const { look } = useNovaIcons();
   const reduceMotion = useReducedMotion();
+  const box = useRef<HTMLSpanElement>(null);
+  const shown = useRef<{ key: string; pixels: Point[] } | null>(null);
+  const [firstKey] = useState(iconKey);
+  const [hasChanged, setHasChanged] = useState(false);
+  if (!hasChanged && iconKey !== firstKey) {
+    setHasChanged(true);
+  }
+
+  useLayoutEffect(() => {
+    if (look !== 'pixel') {
+      shown.current = null;
+      return;
+    }
+    const frame = box.current;
+    const svg = frame?.querySelector('svg') ?? null;
+    const area = frame?.getBoundingClientRect();
+    const before = shown.current;
+    if (svg && area && !reduceMotion && before && before.key !== iconKey) {
+      flyFrom(svg, area, before.pixels);
+    }
+    shown.current = { key: iconKey, pixels: svg && area ? pixelsOf(svg, area) : [] };
+  }, [iconKey, look, reduceMotion]);
+
+  const isInitial = !hasChanged && iconKey === firstKey;
+  const presence = useMemo(
+    () => ({
+      id: 'morph-icon',
+      initial: animateFirst || !isInitial ? undefined : (false as const),
+      isPresent: true,
+      onExitComplete: () => {},
+      register: () => () => {},
+    }),
+    [animateFirst, isInitial],
+  );
+
+  if (look === 'pixel') {
+    return (
+      <span ref={box} className={cn('novacore:relative novacore:inline-flex novacore:shrink-0', className)}>
+        <PresenceContext.Provider value={presence}>
+          <span key={iconKey} className="novacore:inline-flex">
+            {children}
+          </span>
+        </PresenceContext.Provider>
+      </span>
+    );
+  }
+
   const hidden = reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.6 };
   const transition = reduceMotion
     ? { duration: 0 }

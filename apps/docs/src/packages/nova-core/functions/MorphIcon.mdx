@@ -6,10 +6,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **MorphIcon**(`props`): `Element`
 
-Defined in: [components/MorphText.tsx:202](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/MorphText.tsx#L202)
+Defined in: [components/MorphText.tsx:205](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/MorphText.tsx#L205)
 
-An icon that swaps with a small pop when its key changes, as a loader giving way to a check mark. With
-`prefers-reduced-motion` the icon just changes.
+An icon that swaps when its key changes: in the pixel look a mark with `data-px` pixels (`DrawnCheck`, `DrawnCross`, or
+an icon of `@tuwaio/nova-icons` with `motion="assemble"`) assembles from the pixels of the mark before it (such as
+`QuasarLoader`); in the classic look it swaps with a small pop. With `prefers-reduced-motion` the icon just changes.
 
 ## Parameters
 

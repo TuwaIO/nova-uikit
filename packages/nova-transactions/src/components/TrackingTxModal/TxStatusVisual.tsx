@@ -8,7 +8,7 @@ import { ComponentType } from 'react';
 
 /** The icon of a replaced transaction, from the icon set of `NovaIconsProvider`. */
 const ReplacedIcon = ({ className }: { className?: string }) => (
-  <NovaSetIcon solid="ArrowPathIcon" className={className} />
+  <NovaSetIcon solid="ArrowPathIcon" motion="assemble" className={className} />
 );
 
 /**

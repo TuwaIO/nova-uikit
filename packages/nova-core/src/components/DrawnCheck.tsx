@@ -4,11 +4,11 @@
 
 import { pixelFlight } from '@tuwaio/nova-icons';
 import { motion, PresenceContext, useReducedMotion } from 'framer-motion';
-import { type CSSProperties, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { type NovaLook, useNovaIcons } from '../hooks/useNovaIcons';
 import { CHECK, CHECK_CUT, CROSS, CROSS_CUT, DISC } from '../pixel/art';
-import { pathOf, PIXEL_SVG, strokeOrder } from '../pixel/draw';
+import { PIXEL_SVG, strokeOrder, withoutCells } from '../pixel/draw';
 import { cn } from '../utils';
 
 /** Props of {@link DrawnCheck} and {@link DrawnCross}. */
@@ -32,12 +32,11 @@ const STROKES = {
 /** How long one stroke takes to draw, in seconds. */
 const STROKE_SECONDS = { check: 0.35, cross: 0.2 } as const;
 
-/** The pixel marks: the mark alone, and the mark cut out of a disc. */
+/** The pixel marks: the mark alone, and the disc with the mark cut out of it, each pixel a square so the whole mark can assemble. */
 const PIXEL_MARKS = {
-  check: { plain: strokeOrder(CHECK, 'check'), disc: strokeOrder(CHECK_CUT, 'check') },
-  cross: { plain: strokeOrder(CROSS, 'cross'), disc: strokeOrder(CROSS_CUT, 'cross') },
+  check: { plain: strokeOrder(CHECK, 'check'), disc: withoutCells(DISC, CHECK_CUT) },
+  cross: { plain: strokeOrder(CROSS, 'cross'), disc: withoutCells(DISC, CROSS_CUT) },
 } as const;
-const DISC_PATH = pathOf(DISC);
 
 function DrawnMark({
   mark,
@@ -64,9 +63,7 @@ function DrawnMark({
         className={cn('novacore:block', className)}
         // The mark assembles from its pixels (`motion.css` of @tuwaio/nova-icons); one already there is simply shown
         data-motion={isStill ? undefined : 'assemble'}
-        style={{ '--nova-px-start': '80ms' } as CSSProperties}
       >
-        {isDisc && <path d={DISC_PATH} fill="currentColor" />}
         {PIXEL_MARKS[mark][variant].map(({ x, y }) => (
           <rect
             key={`${x}-${y}`}
@@ -75,8 +72,7 @@ function DrawnMark({
             y={y}
             width={1}
             height={1}
-            // Cut out of the disc, as in a solid icon, in both themes
-            fill={isDisc ? 'var(--tuwa-bg-primary)' : 'currentColor'}
+            fill="currentColor"
             data-px=""
             style={pixelFlight(x, y)}
           />

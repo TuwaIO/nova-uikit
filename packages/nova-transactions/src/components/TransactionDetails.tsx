@@ -368,7 +368,7 @@ const StatusMark = ({ tone }: { tone: StatusTone }) => (
     ) : tone === 'success' ? (
       <DrawnCheck className="novatx:h-3.5 novatx:w-3.5" />
     ) : tone === 'neutral' ? (
-      <NovaSetIcon outline="ArrowPathIcon" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
+      <NovaSetIcon outline="ArrowPathIcon" motion="assemble" className="novatx:h-3.5 novatx:w-3.5" aria-hidden="true" />
     ) : (
       <DrawnCross className="novatx:h-3.5 novatx:w-3.5" />
     )}

@@ -33,6 +33,19 @@ export const pathOf = (art: PixelArt): string =>
     .join('');
 
 /**
+ * The pixels of `art` with the pixels of `cut` removed: a shape with another cut out of it, such as the check mark or the
+ * cross cut out of a disc.
+ *
+ * @param art - The outer drawing.
+ * @param cut - The drawing cut out of it.
+ * @returns The remaining pixels, row by row.
+ */
+export function withoutCells(art: PixelArt, cut: PixelArt): Cell[] {
+  const out = new Set(cellsOf(cut).map(({ x, y }) => `${x},${y}`));
+  return cellsOf(art).filter(({ x, y }) => !out.has(`${x},${y}`));
+}
+
+/**
  * The pixels of a mark in the order its strokes are drawn: a check mark from left to right, a cross from the top left to the
  * bottom right, then from the top right to the bottom left.
  *

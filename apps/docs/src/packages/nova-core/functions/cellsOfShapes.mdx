@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/cellsOfShapes" />
+
+# cellsOfShapes()
+
+> **cellsOfShapes**(`shapes`): [`Cell`](?path=/docs/packages-nova-core-type-aliases-cell--docs)[]
+
+Defined in: [pixel/flight.ts:44](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/pixel/flight.ts#L44)
+
+The pixels a drawing is made of, read from its shapes: rectangles of whole pixels and paths made of runs of pixels,
+which is how the pixel icons and the pixel loader of Nova are drawn. A drawing of lines and curves (the classic look)
+has none.
+
+## Parameters
+
+### shapes
+
+[`PixelShape`](?path=/docs/packages-nova-core-type-aliases-pixelshape--docs)[]
+
+The rectangles and the paths of the drawing.
+
+## Returns
+
+[`Cell`](?path=/docs/packages-nova-core-type-aliases-cell--docs)[]
+
+Its pixels, each once.

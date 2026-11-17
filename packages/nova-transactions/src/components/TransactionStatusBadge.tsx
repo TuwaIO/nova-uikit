@@ -10,7 +10,7 @@ import { statusLabelOf } from '../utils/txStatus';
 
 /** The icon of a replaced transaction, from the icon set of `NovaIconsProvider`. */
 const ReplacedIcon = ({ className }: { className?: string }) => (
-  <NovaSetIcon solid="ArrowPathIcon" className={className} />
+  <NovaSetIcon solid="ArrowPathIcon" motion="assemble" className={className} />
 );
 
 const SuccessIcon = ({ className }: { className?: string }) => <DrawnCheck variant="disc" className={className} />;
@@ -131,11 +131,12 @@ export function TransactionStatusBadge<T extends Transaction>({
   }
 
   const { Icon, color, background, border, iconColor } = visual;
+  const iconKey = visualKey === 'confirmed' ? TransactionStatus.Success : (visualKey as string);
 
   return (
     <div className={cn(baseClasses, color, !isPlain && [background, border], classNames?.container, className)}>
       {/* A row of a list is simply shown when the list opens: old results must not all draw at once */}
-      <MorphIcon iconKey={visualKey as string} animateFirst={isPlain}>
+      <MorphIcon iconKey={iconKey} animateFirst={isPlain}>
         {Icon ? (
           <Icon className={cn('novatx:h-4 novatx:w-4', iconColor, classNames?.icon)} />
         ) : (

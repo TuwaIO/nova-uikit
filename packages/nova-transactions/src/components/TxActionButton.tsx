@@ -18,7 +18,7 @@ const STATUS_ICONS = {
   loading: <QuasarLoader size={16} accent="currentColor" />,
   succeed: <DrawnCheck variant="disc" className={ICON_CLASSES} />,
   failed: <DrawnCross variant="disc" className={ICON_CLASSES} />,
-  replaced: <NovaSetIcon solid="ArrowPathIcon" className={ICON_CLASSES} />,
+  replaced: <NovaSetIcon solid="ArrowPathIcon" motion="assemble" className={ICON_CLASSES} />,
 };
 
 /**
