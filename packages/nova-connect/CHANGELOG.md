@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.15.0...nova-connect-v0.16.0) (2026-11-17)
+
+
+### Features
+
+* **nova:** pixel flight from QuasarLoader to result marks, Next.js 16.4.6, and latest deps ([#163](https://github.com/TuwaIO/nova-uikit/issues/163)) ([9873559](https://github.com/TuwaIO/nova-uikit/commit/98735591ca939568ccf1fd93eb3b6cfef8652568))
+
 ## [0.15.0](https://github.com/TuwaIO/nova-uikit/compare/nova-connect-v0.14.0...nova-connect-v0.15.0) (2026-11-12)
 
 
