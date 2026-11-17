@@ -1,3 +1,4 @@
+import { MorphIcon } from '@tuwaio/nova-core';
 import { OrbitAdapter } from '@tuwaio/orbit-core';
 import { type SolanaTransaction, TransactionStatus, TransactionTracker } from '@tuwaio/pulsar-core';
 import { isValidElement, type ReactElement, type ReactNode } from 'react';
@@ -16,6 +17,17 @@ function labelOf(node: ReactNode): string | undefined {
   if (typeof children === 'string') return children;
   for (const child of Array.isArray(children) ? children : [children]) {
     const found = labelOf(child);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+function iconKeyOf(node: ReactNode): string | undefined {
+  if (!isValidElement(node)) return undefined;
+  const element = node as ReactElement<{ iconKey?: string; children?: ReactNode }>;
+  if (element.type === MorphIcon) return element.props.iconKey;
+  for (const child of Array.isArray(element.props.children) ? element.props.children : [element.props.children]) {
+    const found = iconKeyOf(child);
     if (found) return found;
   }
   return undefined;
@@ -52,6 +64,20 @@ describe('TransactionStatusBadge', () => {
     const tx = solanaTx({ pending: false, status: TransactionStatus.Success, confirmationStatus: 'finalized' });
 
     expect(labelOf(TransactionStatusBadge({ tx }))).toBe(defaultLabels.statuses.success);
+  });
+
+  it('flies the loader pixels into the check mark on confirmed and keeps the same mark key when finalized', () => {
+    const pendingKey = iconKeyOf(TransactionStatusBadge({ tx: solanaTx({}) }));
+    const confirmedKey = iconKeyOf(TransactionStatusBadge({ tx: solanaTx({ confirmationStatus: 'confirmed' }) }));
+    const finalizedKey = iconKeyOf(
+      TransactionStatusBadge({
+        tx: solanaTx({ pending: false, status: TransactionStatus.Success, confirmationStatus: 'finalized' }),
+      }),
+    );
+
+    expect(pendingKey).toBe('pending');
+    expect(confirmedKey).toBe(TransactionStatus.Success);
+    expect(finalizedKey).toBe(confirmedKey);
   });
 });
 

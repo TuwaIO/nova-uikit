@@ -45,7 +45,8 @@ import { ExitIcon } from '../components/ExitIcon';
 import { ExternalLinkIcon } from '../components/ExternalLinkIcon';
 import { TrashIcon } from '../components/TrashIcon';
 import * as art from './art';
-import { type Cell, cellsOf } from './draw';
+import { type Cell, cellsOf, withoutCells } from './draw';
+import { cellsOfShapes, flightOrigins } from './flight';
 
 type Node = { type: unknown; props: Record<string, unknown> & { children?: unknown } };
 
@@ -121,10 +122,34 @@ describe('the pixel look of the parts that move', () => {
     expect(check.length).toBe(cellsOf(art.CHECK).length);
     expect(svgOf(h(DrawnCheck, {})).props.shapeRendering).toBe('crispEdges');
     expect(svgOf(h(DrawnCheck, {})).props['data-motion']).toBe('assemble');
-    // On a disc the mark is cut out: its pixels are drawn in the color of the page
-    const onDisc = cellsDrawn(h(DrawnCross, { variant: 'disc' }), 'tuwa-drawn-px');
-    expect(onDisc.length).toBe(cellsOf(art.CROSS_CUT).length);
-    expect(onDisc[0].props.fill).toBe('var(--tuwa-bg-primary)');
+    // On a disc every pixel of the disc (with the mark cut out) is its own square, so the whole disc can assemble from a loader
+    const checkDisc = cellsDrawn(h(DrawnCheck, { variant: 'disc' }), 'tuwa-drawn-px');
+    expect(new Set(checkDisc.map((node) => `${node.props.x},${node.props.y}`))).toEqual(
+      pixelsOfIcon(solid.CheckCircleIcon),
+    );
+    expect(checkDisc[0].props.fill).toBe('currentColor');
+    const crossDisc = cellsDrawn(h(DrawnCross, { variant: 'disc' }), 'tuwa-drawn-px');
+    expect(crossDisc.length).toBe(withoutCells(art.DISC, art.CROSS_CUT).length);
+    expect(crossDisc[0].props.fill).toBe('currentColor');
+  });
+
+  it('pairs the pixels of a result mark with the pixels of the mark before it', () => {
+    const loaderShapes = [
+      { x: 6, y: 1, width: 4, height: 1 },
+      { x: 7, y: 7, width: 2, height: 2 },
+    ];
+    const sources = cellsOfShapes(loaderShapes);
+    expect(sources).toHaveLength(8);
+    const targets = [
+      { x: 6, y: 0 },
+      { x: 14, y: 8 },
+      { x: 6, y: 15 },
+      { x: 0, y: 8 },
+    ];
+    const origins = flightOrigins(targets, sources, { x: 8, y: 8 });
+    expect(origins).toHaveLength(targets.length);
+    for (const origin of origins) expect(sources).toContainEqual(origin);
+    expect(flightOrigins(targets, [], { x: 8, y: 8 })).toEqual([]);
   });
 
   it('shows a mark that is already there when the page opens, without drawing it', () => {

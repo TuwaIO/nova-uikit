@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/flightOrigins" />
+
+# flightOrigins()
+
+> **flightOrigins**(`targets`, `sources`, `center`): [`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)[]
+
+Defined in: [pixel/flight.ts:73](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/pixel/flight.ts#L73)
+
+Where each pixel of a new mark flies from: the pixel of the mark before it that lies closest in direction from the
+center, so the old mark opens out into the new one. The pixels of a smaller mark are shared among those of a larger
+one.
+
+## Parameters
+
+### targets
+
+[`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)[]
+
+The pixels of the new mark, by their centers.
+
+### sources
+
+[`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)[]
+
+The pixels of the mark before it, in the same box.
+
+### center
+
+[`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)
+
+The center of the box.
+
+## Returns
+
+[`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)[]
+
+For each target, in the same order, the point it starts from; empty without sources.

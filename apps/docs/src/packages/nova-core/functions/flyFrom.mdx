@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-core/Functions/flyFrom" />
+
+# flyFrom()
+
+> **flyFrom**(`svg`, `box`, `sources`): `void`
+
+Defined in: [pixel/flight.ts:131](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/pixel/flight.ts#L131)
+
+Makes the pixels of a mark that assembles (`data-px`, the motion of `@tuwaio/nova-icons`) start from the pixels of
+the mark before it instead of from spots of their own nearby.
+
+## Parameters
+
+### svg
+
+`SVGSVGElement`
+
+The SVG element of the new mark.
+
+### box
+
+`DOMRect`
+
+The bounding box of the mark container.
+
+### sources
+
+[`Point`](?path=/docs/packages-nova-core-type-aliases-point--docs)[]
+
+The pixel centers of the mark before it, from [pixelsOf](?path=/docs/packages-nova-core-functions-pixelsof--docs).
+
+## Returns
+
+`void`

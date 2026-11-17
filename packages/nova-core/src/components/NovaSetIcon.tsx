@@ -2,7 +2,8 @@
  * @file An icon of the icon set of the closest `NovaIconsProvider`, by its name.
  */
 
-import type { SVGProps } from 'react';
+import { PresenceContext } from 'framer-motion';
+import { type SVGProps, useContext } from 'react';
 
 import { type NOVA_OUTLINE_ICONS, type NOVA_SOLID_ICONS, useNovaIcons } from '../hooks/useNovaIcons';
 
@@ -46,7 +47,8 @@ export type NovaSetIconProps = SVGProps<SVGSVGElement> & {
  */
 export function NovaSetIcon({ outline, solid, motion, ...props }: NovaSetIconProps) {
   const icons = useNovaIcons();
+  const presence = useContext(PresenceContext);
   const Icon = outline ? icons.outline[outline] : icons.solid[solid];
   // Only the pixel icons know `motion`: another icon would pass it on to its SVG element as an attribute
-  return <Icon {...props} {...(motion && icons.look === 'pixel' ? { motion } : {})} />;
+  return <Icon {...props} {...(motion && presence?.initial !== false && icons.look === 'pixel' ? { motion } : {})} />;
 }
