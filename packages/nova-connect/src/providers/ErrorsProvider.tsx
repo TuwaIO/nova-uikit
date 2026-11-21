@@ -11,6 +11,7 @@ import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition
 import { ToastError, ToastErrorCustomization } from '../components';
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../satellite';
+import { isUserRejection } from '../utils/isUserRejection';
 
 // --- Types for Customization ---
 /** Props of the toast content of {@link ErrorsProvider} (`customization.components.ToastError`). */
@@ -413,6 +414,9 @@ export function ErrorsProvider({
 
       if (toldErrorRef.current === primaryError) return;
       toldErrorRef.current = primaryError;
+      // A request the person declined in the wallet is their own action, not an error: the connect window says it in
+      // their words (`requestDeclined`), and a toast of the wallet's English message over it was noise
+      if (isUserRejection(primaryError)) return;
       showErrorToast(errorTitle, primaryError, errorHash);
     }
   }, [hasAnyError, isConnected, primaryError, errorType, errorTitle, errorHash, showErrorToast, dismissCurrentToast]);

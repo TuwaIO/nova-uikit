@@ -3,15 +3,16 @@
  * `hooks` (keeping the other exports), then call `render` several times and `unmount`. Hooks keep their state between
  * renders in call order, effects compare their dependencies, and `useEffectEvent` returns a stable function that calls
  * the callback of the latest render. `useContext` returns what `provideContext` set, or the default of the context.
- * `useSyncExternalStore` returns `getSnapshot()` and subscribes after the render
- * (again when `subscribe` changes) with a listener that does nothing: a test calls the listener its store received and
- * renders again. This module must not import `react`.
+ * `useSyncExternalStore` returns `getSnapshot()` (`getServerSnapshot()` in `renderOnServer`) and subscribes after the
+ * render (again when `subscribe` changes) with a listener that does nothing: a test calls the listener its store
+ * received and renders again. This module must not import `react`.
  */
 
 type Slot = { deps?: readonly unknown[]; value?: unknown; cleanup?: unknown; latest?: (...args: unknown[]) => unknown };
 
 const slots: Slot[] = [];
 let index = 0;
+let isServerRender = false;
 const pendingEffects: Array<() => void> = [];
 const provided = new Map<object, unknown>();
 
@@ -66,8 +67,13 @@ export const hooks = {
     if (!('value' in slot)) slot.value = (...args: unknown[]) => slot.latest!(...args);
     return slot.value;
   },
-  useSyncExternalStore(subscribe: (onStoreChange: () => void) => () => void, getSnapshot: () => unknown) {
+  useSyncExternalStore(
+    subscribe: (onStoreChange: () => void) => () => void,
+    getSnapshot: () => unknown,
+    getServerSnapshot?: () => unknown,
+  ) {
     const slot = nextSlot();
+    if (isServerRender) return getServerSnapshot ? getServerSnapshot() : getSnapshot();
     if (depsChanged(slot.deps, [subscribe])) {
       slot.deps = [subscribe];
       pendingEffects.push(() => {
@@ -100,6 +106,26 @@ export function render<P>(component: (props: P, ref?: null) => unknown, props: P
   const output = component(props, null);
   while (pendingEffects.length) pendingEffects.shift()!();
   return output;
+}
+
+/**
+ * Renders the component as the server does, and as the browser does when it hydrates the HTML of the server:
+ * `useSyncExternalStore` returns `getServerSnapshot()`. Effects do not run. Call {@link unmount} before rendering it
+ * in the browser.
+ *
+ * @param component - The component.
+ * @param props - Its props.
+ * @returns The rendered element tree.
+ */
+export function renderOnServer<P>(component: (props: P, ref?: null) => unknown, props: P): unknown {
+  index = 0;
+  isServerRender = true;
+  try {
+    return component(props, null);
+  } finally {
+    isServerRender = false;
+    pendingEffects.length = 0;
+  }
 }
 
 /**

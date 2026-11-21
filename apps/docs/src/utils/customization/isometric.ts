@@ -433,7 +433,11 @@ export const isoConnectButton: ConnectButtonCustomization = {
         buttonBase,
         'min-h-11',
         press,
-        buttonData.isConnected ? cn(text.normal, surface.base, text.primary) : cn(text.strong, surface.ink, text.onInk),
+        // While the last wallet may still come back, the surface of a wallet, not the call to connect
+        buttonData.isConnected || buttonData.isRestoring
+          ? cn(text.normal, surface.base, text.primary)
+          : cn(text.strong, surface.ink, text.onInk),
+        buttonData.isRestoring && 'cursor-progress',
       ),
   },
   childComponents: {

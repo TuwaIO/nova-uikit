@@ -20,6 +20,7 @@ const { state } = vi.hoisted(() => ({
     labels: undefined as unknown as NovaConnectLabels,
     modal: {} as Record<string, unknown>,
     context: null as { isWaitingForSignature?: boolean } | null,
+    connectionError: undefined as unknown,
   },
 }));
 
@@ -37,7 +38,7 @@ vi.mock('../../hooks/useNovaConnectLabels', () => ({ useNovaConnectLabels: () =>
 vi.mock('../../satellite', () => ({
   SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (store: Record<string, unknown>) => unknown) =>
-    selector({ connectionError: undefined, getConnectors: () => ({ evm: [] }), connect: vi.fn() }),
+    selector({ connectionError: state.connectionError, getConnectors: () => ({ evm: [] }), connect: vi.fn() }),
 }));
 
 import type { GroupedConnector } from '../../utils/getGroupedConnectors';
@@ -91,10 +92,40 @@ describe('the connecting step', () => {
   beforeEach(() => {
     state.labels = defaultLabels;
     state.context = null;
+    state.connectionError = undefined;
   });
   afterEach(() => {
     unmount();
     vi.unstubAllGlobals();
+  });
+
+  // The owner's pass of the Quasar stand: a sign-in declined in MetaMask read "Connection error · Cannot connect to the
+  // wallet", though the wallet had connected and the person had only declined the message. Declining is their action
+  it.each([
+    ['en', defaultLabels],
+    ['uk', ukrainianLabels],
+    ['zh', chineseLabels],
+  ])('%s: says that the person declined the request in the wallet, not that it cannot connect', (_, labels) => {
+    state.labels = labels;
+    state.connectionError = { message: 'User rejected the request.', raw: { code: 4001 } };
+
+    const tree = renderConnecting({});
+    expect(heading(tree)).toBe(labels.requestDeclined);
+    const words = elements(tree).map((element) => text(element.props.children));
+    expect(words).toContain(labels.requestDeclinedInWallet);
+    expect(words.join(' ')).not.toContain(labels.cannotConnectWallet);
+    // Screen readers hear the same
+    expect(text(elements(tree).find((element) => element.props.role === 'status')?.props.children)).toContain(
+      labels.requestDeclined,
+    );
+  });
+
+  it('still says that it cannot connect for another failure', () => {
+    state.connectionError = { message: 'Connector not found.', raw: {} };
+
+    const tree = renderConnecting({});
+    expect(heading(tree)).toBe(defaultLabels.connectionError);
+    expect(elements(tree).map((element) => text(element.props.children))).toContain(defaultLabels.cannotConnectWallet);
   });
 
   // The wallet waits at the gate of the sign-in: a window that said "connecting" gave no reason to look at the wallet

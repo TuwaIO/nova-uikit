@@ -1,0 +1,28 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Functions/isUserRejection" />
+
+# isUserRejection()
+
+> **isUserRejection**(`error`): `boolean`
+
+Defined in: [packages/nova-connect/src/utils/isUserRejection.ts:26](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/utils/isUserRejection.ts#L26)
+
+Whether a failed wallet request is the person declining it in the wallet (the connection, the sign-in message, a
+network switch), not a failure: an action of theirs, which the interface tells in their words and does not toast as
+an error.
+
+## Parameters
+
+### error
+
+`TuwaErrorState` \| `null` \| `undefined`
+
+The error as the Satellite store keeps it (`connectionError`, `switchNetworkError`: `normalizeError`
+  of `@tuwaio/orbit-core`), or none.
+
+## Returns
+
+`boolean`
+
+`true` for a request declined in the wallet.

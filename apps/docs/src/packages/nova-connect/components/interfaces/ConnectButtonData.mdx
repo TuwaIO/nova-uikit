@@ -14,7 +14,7 @@ Connect button data for customization context
 
 > **activeConnection**: `BaseConnector` \| `undefined`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L27)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:33](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L33)
 
 Active wallet information
 
@@ -30,11 +30,23 @@ Whether wallet is connected
 
 ***
 
+### isRestoring?
+
+> `optional` **isRestoring?**: `boolean`
+
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L23)
+
+Whether Satellite Connect may still be restoring the last wallet after a page load (`useWalletRestoring` of
+`@tuwaio/nova-connect/hooks`): the button then shows a neutral, disabled state instead of the connect prompt.
+Always set by [ConnectButton](?path=/docs/packages-nova-connect-components-variables-connectbutton--docs).
+
+***
+
 ### labels
 
 > **labels**: [`NovaConnectLabels`](?path=/docs/packages-nova-connect-i18n-type-aliases-novaconnectlabels--docs)
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L25)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:31](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L31)
 
 Current labels from i18n
 
@@ -44,7 +56,7 @@ Current labels from i18n
 
 > `optional` **withBalance?**: `boolean`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:19](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L19)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:25](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L25)
 
 Whether balance should be shown
 
@@ -54,7 +66,7 @@ Whether balance should be shown
 
 > `optional` **withChain?**: `boolean`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:21](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L21)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:27](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L27)
 
 Whether chain selector should be shown
 
@@ -64,6 +76,6 @@ Whether chain selector should be shown
 
 > `optional` **withImpersonated?**: `boolean`
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:23](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L23)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:29](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L29)
 
 Whether impersonated wallets are enabled

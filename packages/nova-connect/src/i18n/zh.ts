@@ -25,6 +25,9 @@ export const chineseLabels: NovaConnectLabels = {
   connectingTo: '正在连接至',
   errorWhenChainSwitching: '切换网络时出错',
   cannotConnectWallet: '无法连接到钱包。请重试或尝试其他连接方式。',
+  requestDeclined: '请求已拒绝',
+  requestDeclinedInWallet: '您已在钱包中拒绝了该请求。准备好后请重试。',
+  restoringWallet: '正在恢复钱包…',
 
   // Transaction states - Status indicators for blockchain transactions
   success: '成功',

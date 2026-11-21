@@ -25,6 +25,9 @@ export const defaultLabels: NovaConnectLabels = {
   connectingTo: 'Connecting to',
   errorWhenChainSwitching: 'Error when chain switching',
   cannotConnectWallet: 'Cannot connect to the wallet. Please try again or use another connector.',
+  requestDeclined: 'Request declined',
+  requestDeclinedInWallet: 'You declined the request in your wallet. Try again when you are ready.',
+  restoringWallet: 'Restoring your wallet…',
 
   // Transaction states - Status indicators for blockchain transactions
   success: 'Success',

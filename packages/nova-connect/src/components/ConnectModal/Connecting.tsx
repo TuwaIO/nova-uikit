@@ -9,6 +9,7 @@ import React, { ComponentType, forwardRef, memo, useContext, useEffect, useEffec
 import { useNovaConnectLabels } from '../../hooks';
 import { NovaConnectProviderContext } from '../../hooks/useNovaConnect';
 import { useSatelliteConnectStore } from '../../satellite';
+import { isUserRejection } from '../../utils/isUserRejection';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
 
@@ -628,6 +629,9 @@ export const Connecting = memo(
        */
       const connectionState: ConnectionState =
         connectionError || customErrorMessage ? 'error' : isConnected ? 'success' : 'connecting';
+      // The person declined the request in the wallet (the connection or the sign-in message): their action, said in
+      // their words. "Cannot connect to the wallet" was wrong for it: the wallet had connected
+      const declined = connectionState === 'error' && !customErrorMessage && isUserRejection(connectionError);
 
       /**
        * Display message
@@ -635,7 +639,7 @@ export const Connecting = memo(
       const displayMessage = (() => {
         switch (connectionState) {
           case 'error':
-            return customErrorMessage || labels.connectionError;
+            return customErrorMessage || (declined ? labels.requestDeclined : labels.connectionError);
           case 'success':
             return labels.connectedSuccessfully;
           case 'connecting':
@@ -664,7 +668,9 @@ export const Connecting = memo(
           ? null
           : customErrorMessage && showDetailedError
             ? customErrorMessage
-            : labels.cannotConnectWallet;
+            : declined
+              ? labels.requestDeclinedInWallet
+              : labels.cannotConnectWallet;
 
       /**
        * Memoized status data
@@ -942,7 +948,8 @@ export const Connecting = memo(
           <div className="novacon:sr-only" aria-live="assertive" role="status">
             {connectionState === 'connecting' && `${labels.connecting} ${walletName}`}
             {connectionState === 'success' && `${labels.connectedSuccessfully} ${walletName}`}
-            {connectionState === 'error' && `${labels.connectionError} ${walletName}`}
+            {connectionState === 'error' &&
+              `${declined ? labels.requestDeclined : labels.connectionError} ${walletName}`}
           </div>
 
           {/* Hidden Content for Screen Readers */}

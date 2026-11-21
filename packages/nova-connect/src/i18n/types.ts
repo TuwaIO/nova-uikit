@@ -40,6 +40,18 @@ export type NovaConnectLabels = {
   errorWhenChainSwitching: string;
   /** Text under the connection error heading */
   cannotConnectWallet: string;
+  /**
+   * Heading of the connect window when the person declined the request in the wallet (the connection or the sign-in
+   * message): an action of theirs, not an error (default: `Request declined`)
+   */
+  requestDeclined: string;
+  /** Text under {@link NovaConnectLabels.requestDeclined}: what happened and that they may try again */
+  requestDeclinedInWallet: string;
+  /**
+   * Name of the connect button while the last wallet may still come back after a page load, instead of `Connect
+   * Wallet` (default: `Restoring your wallet…`)
+   */
+  restoringWallet: string;
 
   // Transaction states - Status indicators for blockchain transactions
   /** Transaction status in the connect button (default: `Success`) */

@@ -25,6 +25,9 @@ export const ukrainianLabels: NovaConnectLabels = {
   connectingTo: 'Підключення до',
   errorWhenChainSwitching: 'Помилка при перемиканні мережі',
   cannotConnectWallet: `Не вдається підключитись до гаманця. Спробуйте знову або використайте інший з'єднувач.`,
+  requestDeclined: 'Запит відхилено',
+  requestDeclinedInWallet: 'Ви відхилили запит у гаманці. Спробуйте знову, коли будете готові.',
+  restoringWallet: 'Відновлюємо гаманець…',
 
   // Стани транзакцій - Індикатори статусу для блокчейн транзакцій
   success: 'Успіх',

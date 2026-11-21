@@ -3,7 +3,7 @@ import { BaseConnector } from '@tuwaio/satellite-core';
 import { motion } from 'framer-motion';
 import React, { ComponentPropsWithoutRef, ComponentType, forwardRef, memo, useCallback } from 'react';
 
-import { NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels } from '../../hooks';
+import { NovaConnectProviderProps, useNovaConnect, useNovaConnectLabels, useWalletRestoring } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
 import { ChainSelector, ChainSelectorCustomization } from '../Chains/ChainSelector';
 import { ConnectedContent, ConnectedContentCustomization } from './ConnectedContent';
@@ -15,6 +15,12 @@ import { WaitForConnectionContent, WaitForConnectionContentCustomization } from 
 export interface ConnectButtonData {
   /** Whether wallet is connected */
   isConnected: boolean;
+  /**
+   * Whether Satellite Connect may still be restoring the last wallet after a page load (`useWalletRestoring` of
+   * `@tuwaio/nova-connect/hooks`): the button then shows a neutral, disabled state instead of the connect prompt.
+   * Always set by {@link ConnectButton}.
+   */
+  isRestoring?: boolean;
   /** Whether balance should be shown */
   withBalance?: boolean;
   /** Whether chain selector should be shown */
@@ -82,11 +88,24 @@ export type ConnectButtonButtonProps = {
   'aria-label'?: string;
   /** Whether a wallet is connected. */
   'aria-pressed'?: boolean;
-  /** Whether the button is disabled. */
+  /** Whether the last wallet may still be restored (`buttonData.isRestoring`). */
+  'aria-busy'?: boolean;
+  /** Whether the button is disabled: while the last wallet may still be restored. */
   disabled?: boolean;
   /** State of the button (connection, options, labels). */
   buttonData: ConnectButtonData;
 } & React.RefAttributes<HTMLButtonElement>;
+
+/**
+ * Props of the content of the button while the last wallet may still be restored
+ * (`customization.components.RestoringContent`).
+ */
+export type ConnectButtonRestoringContentProps = {
+  /** What is happening, for screen readers: the `restoringWallet` label. */
+  label: string;
+  /** State of the button (connection, options, labels). */
+  buttonData: ConnectButtonData;
+};
 
 /**
  * Customization options for ConnectButton component
@@ -102,6 +121,8 @@ export type ConnectButtonCustomization = {
     ButtonContainer?: ComponentType<ConnectButtonButtonContainerProps>;
     /** Custom button element */
     Button?: ComponentType<ConnectButtonButtonProps>;
+    /** Custom content of the button while the last wallet may still be restored (a placeholder by default) */
+    RestoringContent?: ComponentType<ConnectButtonRestoringContentProps>;
     /** Custom motion div */
     MotionDiv?: ComponentType<ComponentPropsWithoutRef<typeof motion.div>>;
   };
@@ -256,6 +277,26 @@ const DefaultButton = forwardRef<HTMLButtonElement, ConnectButtonButtonProps>(
 );
 DefaultButton.displayName = 'DefaultButton';
 
+const RESTORING_SHAPE = cn(
+  'novacon:block novacon:bg-[var(--tuwa-bg-muted)] novacon:animate-pulse novacon:motion-reduce:animate-none',
+);
+
+// The shape of a connected wallet (its avatar and its name), muted: the wallet that may come back, said by nothing the
+// button would take back a moment later
+const DefaultRestoringContent = ({ label }: ConnectButtonRestoringContentProps) => (
+  <span className="novacon:flex novacon:items-center novacon:gap-2">
+    <span
+      aria-hidden="true"
+      className={cn(RESTORING_SHAPE, 'novacon:h-6 novacon:w-6 novacon:rounded-[var(--tuwa-rounded-full)]')}
+    />
+    <span
+      aria-hidden="true"
+      className={cn(RESTORING_SHAPE, 'novacon:h-3 novacon:w-20 novacon:rounded-[var(--tuwa-rounded-corners)]')}
+    />
+    <span className="novacon:sr-only">{label}</span>
+  </span>
+);
+
 /**
  * Base props for ConnectButton component
  */
@@ -306,10 +347,14 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
   } = useNovaConnect();
 
   const isConnected = Boolean(activeConnection?.isConnected);
+  // After a reload Satellite restores the last wallet (a wait, then its silent reconnect): the connect prompt in that
+  // moment is taken back by the restored wallet, a flash of the wrong state
+  const isRestoring = useWalletRestoring(isConnected);
 
   // Button data for customization context
   const buttonData: ConnectButtonData = {
     isConnected,
+    isRestoring,
     labels,
     activeConnection,
     withChain,
@@ -325,6 +370,7 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
   const Container = components.Container || DefaultContainer;
   const ButtonContainer = components.ButtonContainer || DefaultButtonContainer;
   const Button = components.Button || DefaultButton;
+  const RestoringContent = components.RestoringContent || DefaultRestoringContent;
   const CustomMotionDiv = components.MotionDiv || motion.div;
 
   /**
@@ -372,9 +418,11 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
   // Button aria-label
   const buttonAriaLabel = config.ariaLabels?.button
     ? config.ariaLabels.button(buttonData)
-    : isConnected
-      ? `${labels.walletConnected}. ${labels.openWalletModal}`
-      : `${labels.walletNotConnected}. ${labels.connectWallet}`;
+    : isRestoring
+      ? labels.restoringWallet
+      : isConnected
+        ? `${labels.walletConnected}. ${labels.openWalletModal}`
+        : `${labels.walletNotConnected}. ${labels.connectWallet}`;
 
   // Navigation aria-label
   const navigationAriaLabel = config.ariaLabels?.navigation
@@ -390,26 +438,36 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
       'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:font-mono novacon:transition-colors novacon:duration-200',
       'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)]',
       'novacon:focus:ring-offset-[var(--tuwa-border-secondary)]',
-      'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed',
-      isConnected
+      isRestoring
         ? [
-            // The name of the wallet or its address: never in capitals (addresses are case-sensitive)
-            'novacon:text-sm novacon:font-medium',
-            // A surface of its own: it sits on the page of the host, whatever its color
+            // The frame of a connected wallet, quiet: not the filled call to connect, and not the faded look of a
+            // button that cannot be used, since it only waits
             'novacon:bg-[var(--tuwa-bg-primary)]',
-            'novacon:text-[var(--tuwa-text-primary)]',
-            'novacon:hover:bg-[var(--tuwa-standart-button-hover)]',
-            'novacon:focus:ring-[var(--tuwa-text-secondary)]',
             'novacon:border-[var(--tuwa-border-strong)]',
+            'novacon:disabled:cursor-progress',
           ]
-        : [
-            // Filled: the icons in it keep their color under the pointer (`tuwa-solid`)
-            'tuwa-solid novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em]',
-            'novacon:border-[var(--tuwa-button-primary-bg)] novacon:bg-[var(--tuwa-button-primary-bg)]',
-            'novacon:text-[var(--tuwa-text-on-accent)]',
-            'novacon:hover:border-[var(--tuwa-button-primary-bg-hover)] novacon:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
-            'novacon:focus:ring-[var(--tuwa-text-accent)]',
-          ],
+        : 'novacon:disabled:opacity-50 novacon:disabled:cursor-not-allowed',
+      isRestoring
+        ? null
+        : isConnected
+          ? [
+              // The name of the wallet or its address: never in capitals (addresses are case-sensitive)
+              'novacon:text-sm novacon:font-medium',
+              // A surface of its own: it sits on the page of the host, whatever its color
+              'novacon:bg-[var(--tuwa-bg-primary)]',
+              'novacon:text-[var(--tuwa-text-primary)]',
+              'novacon:hover:bg-[var(--tuwa-standart-button-hover)]',
+              'novacon:focus:ring-[var(--tuwa-text-secondary)]',
+              'novacon:border-[var(--tuwa-border-strong)]',
+            ]
+          : [
+              // Filled: the icons in it keep their color under the pointer (`tuwa-solid`)
+              'tuwa-solid novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em]',
+              'novacon:border-[var(--tuwa-button-primary-bg)] novacon:bg-[var(--tuwa-button-primary-bg)]',
+              'novacon:text-[var(--tuwa-text-on-accent)]',
+              'novacon:hover:border-[var(--tuwa-button-primary-bg-hover)] novacon:hover:bg-[var(--tuwa-button-primary-bg-hover)]',
+              'novacon:focus:ring-[var(--tuwa-text-accent)]',
+            ],
       className,
     );
 
@@ -451,9 +509,13 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
               className={buttonClasses}
               aria-label={buttonAriaLabel}
               aria-pressed={isConnected}
+              aria-busy={isRestoring || undefined}
+              disabled={isRestoring || undefined}
               buttonData={buttonData}
             >
-              {isConnected ? (
+              {isRestoring ? (
+                <RestoringContent label={labels.restoringWallet} buttonData={buttonData} />
+              ) : isConnected ? (
                 <ConnectedContent
                   withBalance={withBalance}
                   transactionPool={transactionPool}

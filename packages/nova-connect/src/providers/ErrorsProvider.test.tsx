@@ -26,7 +26,9 @@ vi.mock('../satellite', () => ({
 
 import { ErrorsProvider, type ErrorsProviderProps } from './ErrorsProvider';
 
-const rejected = () => ({ message: 'User rejected the request' });
+const failed = () => ({ message: 'The wallet is not installed', raw: {} });
+/** A request the person declined in the wallet, as the store keeps it. */
+const declined = () => ({ message: 'User rejected the request.', raw: { code: 4001 } });
 const titleOfLastToast = () => (toast.error.mock.lastCall?.[0] as { props: { title: string } }).props.title;
 const onCloseOfLastToast = () => (toast.error.mock.lastCall?.[1] as { onClose: () => void }).onClose;
 const renderProvider = (props: ErrorsProviderProps = {}) => render(ErrorsProvider, props);
@@ -45,7 +47,7 @@ describe('ErrorsProvider', () => {
   it('tells a switch error while connected, over a leftover connection error', () => {
     storeState.value = {
       activeConnection: { isConnected: true },
-      connectionError: rejected(),
+      connectionError: failed(),
       switchNetworkError: { message: 'The wallet refused the chain' },
     };
 
@@ -56,7 +58,7 @@ describe('ErrorsProvider', () => {
   });
 
   it('tells nothing while connected for a connection error alone', () => {
-    storeState.value = { activeConnection: { isConnected: true }, connectionError: rejected() };
+    storeState.value = { activeConnection: { isConnected: true }, connectionError: failed() };
 
     renderProvider();
 
@@ -64,20 +66,33 @@ describe('ErrorsProvider', () => {
   });
 
   it('tells a connection error without a wallet', () => {
-    storeState.value = { connectionError: rejected() };
+    storeState.value = { connectionError: failed() };
 
     renderProvider();
 
     expect(titleOfLastToast()).toBe('Connection error');
   });
 
+  // The owner's pass of the Quasar stand: a sign-in declined in MetaMask showed the connect window's error and, over it, a
+  // toast with viem's English message. Declining is the person's own action: the connect window says it in their words
+  it('toasts no request the person declined in the wallet: the connection, or a network switch', () => {
+    storeState.value = { connectionError: declined() };
+    renderProvider();
+    expect(toast.error).not.toHaveBeenCalled();
+
+    unmount();
+    storeState.value = { activeConnection: { isConnected: true }, switchNetworkError: declined() };
+    renderProvider();
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
   // It dismissed its own toast and then found the error already shown, so nothing was on screen
   it('keeps the toast of an error that comes again', () => {
-    storeState.value = { connectionError: rejected() };
+    storeState.value = { connectionError: failed() };
     renderProvider();
     toast.dismiss.mockClear();
 
-    storeState.value = { connectionError: rejected() };
+    storeState.value = { connectionError: failed() };
     renderProvider();
 
     expect(toast.error).toHaveBeenCalledTimes(1);
@@ -86,7 +101,7 @@ describe('ErrorsProvider', () => {
 
   // With inline customization every render looked new, and the toast the user had closed came back
   it('does not bring back a toast the user closed', () => {
-    const error = rejected();
+    const error = failed();
     storeState.value = { connectionError: error };
     renderProvider({ customization: {} });
     onCloseOfLastToast()();
@@ -97,11 +112,11 @@ describe('ErrorsProvider', () => {
   });
 
   it('tells the next failure after the user closed the toast', () => {
-    storeState.value = { connectionError: rejected() };
+    storeState.value = { connectionError: failed() };
     renderProvider();
     onCloseOfLastToast()();
 
-    storeState.value = { connectionError: rejected() };
+    storeState.value = { connectionError: failed() };
     renderProvider();
 
     expect(toast.error).toHaveBeenCalledTimes(2);
