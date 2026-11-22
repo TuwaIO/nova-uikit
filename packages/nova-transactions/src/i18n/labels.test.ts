@@ -1,59 +1,46 @@
 import { describe, expect, it } from 'vitest';
 
+import { germanLabels } from './de';
 import { defaultLabels } from './en';
+import { spanishLabels } from './es';
+import { italianLabels } from './it';
+import type { NovaTransactionsLabels } from './types';
 import { ukrainianLabels } from './ua';
 import { chineseLabels } from './zh';
 
-function getLeafKeys(obj: Record<string, unknown>, prefix = ''): string[] {
-  const keys: string[] = [];
+function getLeaves(obj: Record<string, unknown>, prefix = ''): [string, unknown][] {
+  const leaves: [string, unknown][] = [];
   for (const [key, value] of Object.entries(obj)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      keys.push(...getLeafKeys(value as Record<string, unknown>, fullKey));
+      leaves.push(...getLeaves(value as Record<string, unknown>, fullKey));
     } else {
-      keys.push(fullKey);
+      leaves.push([fullKey, value]);
     }
   }
-  return keys.sort();
+  return leaves.sort(([a], [b]) => a.localeCompare(b));
 }
 
+const leavesOf = (labels: NovaTransactionsLabels) => getLeaves(labels as unknown as Record<string, unknown>);
+
+const translations: [string, NovaTransactionsLabels][] = [
+  ['Ukrainian', ukrainianLabels],
+  ['Chinese', chineseLabels],
+  // A German, Spanish or Italian checkout of Nova Payments showed its toasts half in English
+  ['German', germanLabels],
+  ['Spanish', spanishLabels],
+  ['Italian', italianLabels],
+];
+
 describe('nova-transactions i18n labels', () => {
-  it('has identical nested key structure across English, Ukrainian, and Chinese dictionaries', () => {
-    const enKeys = getLeafKeys(defaultLabels as unknown as Record<string, unknown>);
-    const uaKeys = getLeafKeys(ukrainianLabels as unknown as Record<string, unknown>);
-    const zhKeys = getLeafKeys(chineseLabels as unknown as Record<string, unknown>);
-
-    expect(uaKeys).toEqual(enKeys);
-    expect(zhKeys).toEqual(enKeys);
+  it.each(translations)('%s has the nested keys of the English dictionary', (_, labels) => {
+    expect(leavesOf(labels).map(([key]) => key)).toEqual(leavesOf(defaultLabels).map(([key]) => key));
   });
 
-  it('contains non-empty strings for all Ukrainian labels', () => {
-    function validateValues(obj: Record<string, unknown>, path = '') {
-      for (const [key, value] of Object.entries(obj)) {
-        const fullPath = path ? `${path}.${key}` : key;
-        if (typeof value === 'object' && value !== null) {
-          validateValues(value as Record<string, unknown>, fullPath);
-        } else {
-          expect(typeof value, `${fullPath} should be a string`).toBe('string');
-          expect((value as string).trim().length, `${fullPath} should not be empty`).toBeGreaterThan(0);
-        }
-      }
+  it.each(translations)('%s has non-empty strings for all labels', (language, labels) => {
+    for (const [key, value] of leavesOf(labels)) {
+      expect(typeof value, `${language} ${key} should be a string`).toBe('string');
+      expect((value as string).trim().length, `${language} ${key} should not be empty`).toBeGreaterThan(0);
     }
-    validateValues(ukrainianLabels as unknown as Record<string, unknown>);
-  });
-
-  it('contains non-empty strings for all Chinese labels', () => {
-    function validateValues(obj: Record<string, unknown>, path = '') {
-      for (const [key, value] of Object.entries(obj)) {
-        const fullPath = path ? `${path}.${key}` : key;
-        if (typeof value === 'object' && value !== null) {
-          validateValues(value as Record<string, unknown>, fullPath);
-        } else {
-          expect(typeof value, `${fullPath} should be a string`).toBe('string');
-          expect((value as string).trim().length, `${fullPath} should not be empty`).toBeGreaterThan(0);
-        }
-      }
-    }
-    validateValues(chineseLabels as unknown as Record<string, unknown>);
   });
 });
