@@ -191,7 +191,7 @@ export const chineseLabels: NovaConnectLabels = {
   resolvedTo: '已解析至：{address}',
   legalInformation: '法律与隐私信息',
   disconnectAllDescription: '断开所有已连接钱包并关闭面板',
-  explorerLinkDescription: '在区块链浏览器中查看该地址',
+  explorerLinkDescription: '在新标签页中打开：钱包地址 {address} 在区块链浏览器中的页面',
   explorerNotAvailable: '该网络暂未配置区块链浏览器',
   connectWalletsAvailable: '已连接的钱包 - 已连接 {count} 个',
   switchNetworkNetworksAvailable: '切换网络 - {count} 个可用网络',
