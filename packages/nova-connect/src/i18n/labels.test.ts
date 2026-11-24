@@ -32,6 +32,23 @@ describe('nova-connect i18n labels', () => {
     }
   });
 
+  // Ukrainian capitalizes a sentence, not its words, and a network of wallets is a "мережа": "ланцюг" is a chain of links
+  it('Ukrainian is written as Ukrainian writes it', () => {
+    for (const [key, label] of Object.entries(ukrainianLabels)) {
+      expect(label, key).not.toMatch(/ланцюг/i);
+      for (const sentence of label.split(/[.!?:]\s+/)) {
+        const capitalized = sentence
+          .split(/\s+/)
+          .slice(1)
+          .filter((word) => /^[А-ЯЄІЇҐ][а-яєіїґ]/.test(word));
+        expect(
+          capitalized.filter((word) => word !== 'Інтернету'),
+          key,
+        ).toEqual([]);
+      }
+    }
+  });
+
   it.each(translations)('%s keeps the placeholders of every English label', (language, labels) => {
     for (const [key, english] of Object.entries(defaultLabels)) {
       const translated = labels[key as keyof NovaConnectLabels];

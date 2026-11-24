@@ -6,7 +6,7 @@ import { NovaConnectLabels } from './types';
  */
 export const ukrainianLabels: NovaConnectLabels = {
   // Основні дії - Основні взаємодії користувача
-  connectWallet: 'Підключити Гаманець',
+  connectWallet: 'Підключити гаманець',
   disconnect: 'Відключити',
   disconnectAll: 'Відключити всі',
   connecting: 'Підключення...',
@@ -45,13 +45,13 @@ export const ukrainianLabels: NovaConnectLabels = {
   aboutWallets: 'Про гаманці',
   getWallet: 'Отримати гаманець',
   connectImpersonatedWallet: 'Підключити імітований гаманець',
-  transactionsInApp: 'Транзакції в додатку',
+  transactionsInApp: 'Транзакції в застосунку',
   switchNetwork: 'Змінити мережу',
-  switchNetworks: 'Змінити Мережі',
+  switchNetworks: 'Змінити мережу',
   connectingEllipsis: 'Підключення...',
   signMessageInWallet: 'Підпишіть повідомлення в гаманці',
   checkWalletRequest: 'Перевірте гаманець: запит може чекати там.',
-  connectedWallets: 'Підключені Гаманці',
+  connectedWallets: 'Підключені гаманці',
 
   // Секції гаманців - Категорії для групування з'єднувачів гаманців
   installed: 'Встановлені',
@@ -72,7 +72,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   viewTransactions: 'Переглянути транзакції',
 
   // Форма імітації - Підписи для функції імітації адреси гаманця
-  enterWalletAddressOrAddressName: 'Введіть адресу гаманця або його імя для імітації',
+  enterWalletAddressOrAddressName: 'Введіть адресу гаманця або його ім’я для імітації',
   walletAddressPlaceholder: '0x...',
 
   // Повідомлення про помилки - Повідомлення про помилки для користувача
@@ -80,9 +80,9 @@ export const ukrainianLabels: NovaConnectLabels = {
   noConnectorsDescription: 'Ми не змогли знайти жодних гаманців або методів підключення для обраної мережі.',
   somethingWentWrong: 'Щось пішло не так',
   networkPickingError: 'Щось пішло не так з вибором мережі гаманця. Поверніться назад і спробуйте знову.',
-  pulsarAdapterRequired: 'Потрібен Pulsar Адаптер',
+  pulsarAdapterRequired: 'Потрібен адаптер Pulsar',
   pulsarAdapterDescription:
-    'Потрібна додаткова конфігурація для перегляду транзакцій в додатку. Зверніться до вашого адміністратора.',
+    'Потрібна додаткова конфігурація для перегляду транзакцій у застосунку. Зверніться до вашого адміністратора.',
   selectAvailableNetwork: 'Оберіть одну з доступних мереж',
 
   // Секція отримання гаманця - Контент для нових користувачів без гаманців
@@ -105,15 +105,15 @@ export const ukrainianLabels: NovaConnectLabels = {
   copied: 'Скопійовано!',
 
   // Підписи доступності - Підписи для зчитувачів екрану та ARIA для кращої доступності
-  chainSelector: 'Селектор Ланцюга',
+  chainSelector: 'Вибір мережі',
   closeModal: 'Закрити модальне вікно',
-  selectChain: 'Оберіть ланцюг',
-  chainOption: 'Варіант ланцюга',
-  openChainSelector: 'Відкрити селектор ланцюга',
-  currentChain: 'Поточний ланцюг',
+  selectChain: 'Оберіть мережу',
+  chainOption: 'Варіант мережі',
+  openChainSelector: 'Відкрити вибір мережі',
+  currentChain: 'Поточна мережа',
   scrollToTop: 'Прокрутити вгору',
   scrollToBottom: 'Прокрутити вниз',
-  chainListContainer: 'Контейнер списку ланцюгів',
+  chainListContainer: 'Список мереж',
   walletControls: 'Керування гаманцем',
   openWalletModal: 'Відкрити модальне вікно гаманця',
   walletConnected: 'Гаманець підключено',
@@ -136,8 +136,8 @@ export const ukrainianLabels: NovaConnectLabels = {
   walletIcon: 'Іконка гаманця',
 
   // Помилки імітації
-  impersonateAddressEmpty: 'Введіть адресу або імя гаманця для імітації.',
-  impersonateAddressNotCorrect: 'Введена адреса або імя гаманця неправильна. Спробуйте знову.',
+  impersonateAddressEmpty: 'Введіть адресу або ім’я гаманця для імітації.',
+  impersonateAddressNotCorrect: 'Введена адреса або ім’я гаманця неправильні. Спробуйте знову.',
   impersonateAddressConnected: 'Спочатку відключіть гаманець для імітації іншої адреси.',
 
   // Підписи юридичного розділу
@@ -155,7 +155,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   carousel: 'карусель',
   carouselNavigation: 'Навігація слайдами',
   goToSlide: 'Перейти до слайда {index}: {title}',
-  slideOfTotal: 'Слайд {index} з {total}',
+  slideOfTotal: 'Слайд {index} із {total}',
   autoPlaying: 'Автопрогравання',
   paused: 'Призупинено',
   carouselInstructions:

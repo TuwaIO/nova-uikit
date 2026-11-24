@@ -120,6 +120,32 @@ describe('the connecting step', () => {
     );
   });
 
+  // "Гаманець: MetaMask, мережа: evm, стан: error": the hidden line read the values of the code in every language
+  it.each([
+    ['en', defaultLabels],
+    ['uk', ukrainianLabels],
+    ['zh', chineseLabels],
+  ])('%s: tells a screen reader the network and the state in the words of the language', (_, labels) => {
+    state.labels = labels;
+    const details = (tree: unknown) =>
+      elements(tree)
+        .filter((element) => element.type === 'p')
+        .map((element) => text(element.props.children))
+        .find((line) => line.includes('MetaMask'));
+    expect(details(renderConnecting({}))).toBe(
+      labels.connectingDetails
+        .replace('{wallet}', 'MetaMask')
+        .replace('{network}', 'Ethereum')
+        .replace('{status}', labels.connecting),
+    );
+    unmount();
+    state.connectionError = { message: 'User rejected the request.', raw: { code: 4001 } };
+    expect(details(renderConnecting({}))).toContain(labels.requestDeclined);
+    unmount();
+    state.connectionError = { message: 'Connector not found.', raw: {} };
+    expect(details(renderConnecting({}))).toContain(labels.connectionError);
+  });
+
   it('still says that it cannot connect for another failure', () => {
     state.connectionError = { message: 'Connector not found.', raw: {} };
 
