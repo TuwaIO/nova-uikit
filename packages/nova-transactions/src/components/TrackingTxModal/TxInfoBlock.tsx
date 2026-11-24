@@ -11,7 +11,7 @@ import { ComponentType, ReactNode } from 'react';
 
 import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 import type { NovaTransactionsProviderProps } from '../../providers/NovaTransactionsProvider';
-import { hasConfirmations } from '../../utils/txStatus';
+import { confirmationsText, hasConfirmations } from '../../utils/txStatus';
 import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
 
@@ -179,7 +179,11 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
       )}
 
       {'confirmations' in tx && hasConfirmations(tx.confirmations) && (
-        <InfoRow label={statuses.confirmationsLabel} value={tx.confirmations} classNames={rowClassNames} />
+        <InfoRow
+          label={statuses.confirmationsLabel}
+          value={confirmationsText(tx.confirmations, statuses)}
+          classNames={rowClassNames}
+        />
       )}
 
       {'txKey' in tx && tx.txKey && (

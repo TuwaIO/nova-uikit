@@ -14,6 +14,7 @@ import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
 import { canReplaceTx, canSpeedUpTx, runReplacement } from '../utils/replacement';
 import {
+  confirmationsText,
   hasConfirmations,
   isTxOfWallet,
   progressOf,
@@ -230,7 +231,7 @@ export function ToastTransaction<T extends Transaction>({
   connectedWalletAddress,
   adapter,
 }: ToastTransactionProps<T>): JSX.Element {
-  const { actions, toast, transaction } = useLabels();
+  const { actions, toast, transaction, statuses } = useLabels();
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
@@ -292,8 +293,8 @@ export function ToastTransaction<T extends Transaction>({
         />
         {hasConfirmations(tx.confirmations) && (
           <ConfirmationsBadge
-            count={tx.confirmations as number | string}
-            required={tx.requiredConfirmations}
+            count={confirmationsText(tx.confirmations, statuses)}
+            required={tx.confirmations === 'MAX' ? undefined : tx.requiredConfirmations}
             isSuccess={tx.status === TransactionStatus.Success}
             className={classNames?.confirmationsBadge}
           />

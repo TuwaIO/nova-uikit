@@ -29,6 +29,7 @@ export const germanLabels: NovaTransactionsLabels = {
   statuses: {
     pending: 'Ausstehend',
     confirmed: 'Bestätigt',
+    finalized: 'Finalisiert',
     success: 'Erfolgreich',
     spedUp: 'Beschleunigt',
     cancelled: 'Abgebrochen',

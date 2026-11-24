@@ -51,6 +51,21 @@ export function hasConfirmations(confirmations: Transaction['confirmations']): b
 }
 
 /**
+ * The confirmations of a transaction as a person reads them: the count, or that the transaction is finalized (`MAX`, as a
+ * Solana node says it).
+ *
+ * @param confirmations - The confirmations of the record ({@link hasConfirmations}).
+ * @param statuses - The status labels.
+ * @returns The text.
+ */
+export function confirmationsText(
+  confirmations: Transaction['confirmations'],
+  statuses: NovaTransactionsLabels['statuses'],
+): string {
+  return confirmations === 'MAX' ? statuses.finalized : String(confirmations);
+}
+
+/**
  * The label of the status of a transaction.
  *
  * @param tx - The transaction.

@@ -60,6 +60,8 @@ export type NovaTransactionsLabels = {
      * usually within a second) and is waiting to be finalized.
      */
     confirmed: string;
+    /** Text for a transaction that can no longer be undone (Solana), in place of a count of confirmations. */
+    finalized: string;
     /** Text for a successful transaction. */
     success: string;
     /** Text for a transaction replaced by a speed-up: the operation goes on under a new hash. */

@@ -29,6 +29,7 @@ export const chineseLabels: NovaTransactionsLabels = {
   statuses: {
     pending: '处理中',
     confirmed: '已确认',
+    finalized: '已最终确认',
     success: '已完成',
     spedUp: '已加速',
     cancelled: '已取消',

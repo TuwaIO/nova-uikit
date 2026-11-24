@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { defaultLabels } from '../i18n/en';
 import { ukrainianLabels } from '../i18n/ua';
 import {
+  confirmationsText,
   hasConfirmations,
   progressOf,
   statusLabelOf,
@@ -104,6 +105,10 @@ describe('hasConfirmations', () => {
     expect(hasConfirmations(3)).toBe(true);
     expect(hasConfirmations('2')).toBe(true);
     expect(hasConfirmations('MAX')).toBe(true);
+    // A toast of a paid invoice had a badge "MAX": a finalized Solana transaction says what it is
+    expect(confirmationsText('MAX', defaultLabels.statuses)).toBe('Finalized');
+    expect(confirmationsText(3, defaultLabels.statuses)).toBe('3');
+    expect(confirmationsText('12', defaultLabels.statuses)).toBe('12');
   });
 
   it('hides nothing to show: a 0 would be rendered next to the status', () => {

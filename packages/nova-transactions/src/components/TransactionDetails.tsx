@@ -43,7 +43,14 @@ import {
   stopTrackingDueIn,
 } from '../utils/replacement';
 import { statusText } from '../utils/statusText';
-import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
+import {
+  confirmationsText,
+  hasConfirmations,
+  progressOf,
+  statusLabelOf,
+  toneOf,
+  walletPartOf,
+} from '../utils/txStatus';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 
 /** The icons of the sections and rows, from the icon set of `NovaIconsProvider` (the pixel ones by default). */
@@ -813,7 +820,10 @@ export function TransactionDetails<T extends Transaction>({
             </CMetadataRow>
             {showConfirmations && (
               <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.confirmations}>
-                {`${tx.confirmations}${tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}`}
+                {/* A finalized transaction is past any count */}
+                {tx.requiredConfirmations && tx.confirmations !== 'MAX'
+                  ? `${tx.confirmations} / ${tx.requiredConfirmations}`
+                  : confirmationsText(tx.confirmations, statuses)}
               </CMetadataRow>
             )}
             {showTxKey && <CCopyableField label={transactionDetails.txKey} value={tx.txKey} />}
