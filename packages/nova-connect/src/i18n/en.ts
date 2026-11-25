@@ -107,6 +107,7 @@ export const defaultLabels: NovaConnectLabels = {
   // Accessibility labels - Screen reader and ARIA labels for better accessibility
   chainSelector: 'Chain Selector',
   closeModal: 'Close modal',
+  closeToast: 'Close notification',
   selectChain: 'Select chain',
   chainOption: 'Chain option',
   openChainSelector: 'Open chain selector',

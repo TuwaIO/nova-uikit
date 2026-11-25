@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { render, unmount } from '../testing/hookHarness';
@@ -18,6 +19,7 @@ vi.mock('../hooks/useNovaConnectLabels', () => ({
     connectionError: 'Connection error',
     errorWhenChainSwitching: 'Switch error',
     somethingWentWrong: 'Something went wrong',
+    closeToast: 'Закрити сповіщення',
   }),
 }));
 vi.mock('../satellite', () => ({
@@ -55,6 +57,22 @@ describe('ErrorsProvider', () => {
 
     expect(toast.error).toHaveBeenCalledTimes(1);
     expect(titleOfLastToast()).toBe('Switch error');
+  });
+
+  // The cross said "Close toast notification" in every language
+  it('names the cross of its toasts in the language of the labels, and as the app names it', () => {
+    const crossOf = (props: ErrorsProviderProps = {}) => {
+      const { closeButton } = (renderProvider(props) as ReactElement<{ closeButton: (props: object) => ReactElement }>)
+        .props;
+      const { ariaLabel, title } = closeButton({}).props as { ariaLabel?: string; title?: string };
+      unmount();
+      return [ariaLabel, title];
+    };
+    expect(crossOf()).toEqual(['Закрити сповіщення', 'Закрити сповіщення']);
+    expect(crossOf({ customization: { toastCloseButton: { ariaLabel: 'Hide', title: 'Hide it' } } })).toEqual([
+      'Hide',
+      'Hide it',
+    ]);
   });
 
   it('tells nothing while connected for a connection error alone', () => {

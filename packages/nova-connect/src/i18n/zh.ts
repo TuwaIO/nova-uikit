@@ -102,6 +102,7 @@ export const chineseLabels: NovaConnectLabels = {
   // Accessibility (ARIA) labels - Screen reader support and accessibility
   chainSelector: '区块链网络选择器',
   closeModal: '关闭弹窗',
+  closeToast: '关闭通知',
   selectChain: '选择网络',
   chainOption: '网络选项',
   openChainSelector: '打开网络选择器',

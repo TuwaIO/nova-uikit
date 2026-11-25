@@ -178,6 +178,8 @@ export type NovaConnectLabels = {
   chainSelector: string;
   /** ARIA label of the close buttons of the modals (default: `Close modal`) */
   closeModal: string;
+  /** Name of the cross of an error toast (default: `Close notification`) */
+  closeToast: string;
   /** ARIA label of the chain list (default: `Select chain`) */
   selectChain: string;
   /** ARIA label of a chain option (default: `Chain option`) */

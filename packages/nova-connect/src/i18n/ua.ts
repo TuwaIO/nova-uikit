@@ -107,6 +107,7 @@ export const ukrainianLabels: NovaConnectLabels = {
   // Підписи доступності - Підписи для зчитувачів екрану та ARIA для кращої доступності
   chainSelector: 'Вибір мережі',
   closeModal: 'Закрити модальне вікно',
+  closeToast: 'Закрити сповіщення',
   selectChain: 'Оберіть мережу',
   chainOption: 'Варіант мережі',
   openChainSelector: 'Відкрити вибір мережі',

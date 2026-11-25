@@ -107,6 +107,7 @@ export const italianLabels: NovaConnectLabels = {
   // Accessibility labels - Screen reader and ARIA labels for better accessibility
   chainSelector: 'Selettore di rete',
   closeModal: 'Chiudi la finestra',
+  closeToast: 'Chiudi la notifica',
   selectChain: 'Scegli la rete',
   chainOption: 'Opzione di rete',
   openChainSelector: 'Apri il selettore di rete',
