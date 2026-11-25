@@ -4,6 +4,7 @@ import { NovaTransactionsLabels } from './types';
  * Italian (it) translations for Nova Transactions modals, toasts, and history.
  */
 export const italianLabels: NovaTransactionsLabels = {
+  locale: 'it',
   transaction: {
     defaultTitle: 'Transazione',
     defaultDescription: {

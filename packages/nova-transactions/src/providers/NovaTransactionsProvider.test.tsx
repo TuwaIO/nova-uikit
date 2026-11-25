@@ -46,10 +46,20 @@ function regions(props: Partial<Props> = {}) {
     } as Props,
   );
   const containers = findElements(tree, (element) => element.type === ToastContainer).map(
-    (element) => element.props as { containerId: string; 'aria-label'?: string },
+    (element) =>
+      element.props as {
+        containerId: string;
+        'aria-label'?: string;
+        closeButton: (props: object) => ReactElement<{ ariaLabel?: string; title?: string }>;
+      },
   );
   return {
     count: containers.length,
+    /** What the cross of a toast of each container is named. */
+    crosses: containers.map(({ closeButton }) => {
+      const { ariaLabel, title } = closeButton({}).props;
+      return [ariaLabel, title];
+    }),
     transactions: containers.find((container) => container.containerId === 'nova-transactions')?.['aria-label'],
     errors: containers.find((container) => container.containerId === VALIDATION_ERROR_CONTAINER_ID)?.['aria-label'],
   };
@@ -93,8 +103,31 @@ describe('the regions of the toasts', () => {
 
   it('stay apart when one of the two is turned off', () => {
     const onlyErrors = regions({ features: { toasts: false } });
-    expect(onlyErrors).toEqual({ count: 1, transactions: undefined, errors: defaultLabels.validationError.region });
+    expect(onlyErrors).toMatchObject({
+      count: 1,
+      transactions: undefined,
+      errors: defaultLabels.validationError.region,
+    });
     const onlyTransactions = regions({ features: { validationErrorToast: false } });
-    expect(onlyTransactions).toEqual({ count: 1, transactions: defaultLabels.toast.region, errors: undefined });
+    expect(onlyTransactions).toMatchObject({
+      count: 1,
+      transactions: defaultLabels.toast.region,
+      errors: undefined,
+    });
+  });
+});
+
+// The cross of every toast said "Close toast notification", whatever the language of the toast
+describe('the cross of a toast', () => {
+  it('is named in the language of the labels, and as the app names it', () => {
+    for (const labels of [defaultLabels, ukrainianLabels, chineseLabels]) {
+      const { crosses } = regions({ labels });
+      expect(crosses).toContainEqual([labels.actions.close, labels.actions.close]);
+    }
+    const { crosses } = regions({
+      labels: ukrainianLabels,
+      customization: { toastCloseButton: { ariaLabel: 'Hide', title: 'Hide it' } },
+    });
+    expect(crosses).toContainEqual(['Hide', 'Hide it']);
   });
 });

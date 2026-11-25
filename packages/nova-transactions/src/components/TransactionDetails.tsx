@@ -28,7 +28,6 @@ import {
   Transaction,
   TransactionTracker,
 } from '@tuwaio/pulsar-core';
-import dayjs from 'dayjs';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
@@ -43,6 +42,7 @@ import {
   stopTrackingDueIn,
 } from '../utils/replacement';
 import { statusText } from '../utils/statusText';
+import { timeOf } from '../utils/time';
 import {
   confirmationsText,
   hasConfirmations,
@@ -502,8 +502,6 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
   customization?: TransactionDetailsCustomization;
 };
 
-const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, YYYY, HH:mm:ss');
-
 /**
  * A detailed view of one transaction, shown by {@link TransactionsHistory} and {@link TransactionsInfoModal} when a
  * transaction is selected, laid out as the transaction page of the Quasar dashboard:
@@ -540,7 +538,7 @@ export function TransactionDetails<T extends Transaction>({
   className,
   customization,
 }: TransactionDetailsProps<T>) {
-  const { transactionDetails, statuses, actions } = useLabels();
+  const { locale, transactionDetails, statuses, actions } = useLabels();
   const { showPreSubmitErrorToast } = useNovaTransactionsError();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
@@ -805,11 +803,11 @@ export function TransactionDetails<T extends Transaction>({
               {tx.adapter}
             </CMetadataRow>
             <CMetadataRow icon={SectionIcons.ClockIcon} label={transactionDetails.submittedAt}>
-              {formatTime(tx.localTimestamp)}
+              {timeOf(tx.localTimestamp, locale, { year: true })}
             </CMetadataRow>
             {tx.finishedTimestamp && (
               <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.finishedAt}>
-                {formatTime(tx.finishedTimestamp)}
+                {timeOf(tx.finishedTimestamp, locale, { year: true })}
               </CMetadataRow>
             )}
             <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.tracker}>

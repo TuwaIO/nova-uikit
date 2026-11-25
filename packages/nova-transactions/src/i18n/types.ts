@@ -8,6 +8,11 @@
  * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
 export type NovaTransactionsLabels = {
+  /**
+   * The language of the labels, a BCP 47 tag such as `uk`: the times beside them are in it. Labels without one have their
+   * times in English.
+   */
+  locale?: string;
   /** What a transaction shows when the app gave it no title or description. */
   transaction: {
     /** The title of a transaction with none. */

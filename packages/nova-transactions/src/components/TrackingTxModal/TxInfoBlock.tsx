@@ -6,11 +6,11 @@
 import { cn, getChainName, NetworkIcon } from '@tuwaio/nova-core';
 import { OrbitAdapter, selectAdapterByKey, setChainId } from '@tuwaio/orbit-core';
 import { InitialTransaction, SolanaTransaction, Transaction } from '@tuwaio/pulsar-core';
-import dayjs from 'dayjs';
 import { ComponentType, ReactNode } from 'react';
 
 import { useLabels } from '../../providers/NovaTransactionsLabelsProvider';
 import type { NovaTransactionsProviderProps } from '../../providers/NovaTransactionsProvider';
+import { timeOf } from '../../utils/time';
 import { confirmationsText, hasConfirmations } from '../../utils/txStatus';
 import { HashLink, HashLinkProps } from '../HashLink';
 import { TransactionKey, TransactionKeyProps } from '../TransactionKey';
@@ -112,7 +112,7 @@ function DefaultInfoRow({ label, value, classNames }: TxInfoBlockInfoRowProps) {
  * such as network, timestamps, Solana-specific details, and relevant hashes/keys.
  */
 export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, customization }: TxInfoBlockProps<T>) {
-  const { txInfo, statuses, hashLabels } = useLabels();
+  const { locale, txInfo, statuses, hashLabels } = useLabels();
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
@@ -147,11 +147,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
         classNames={rowClassNames}
       />
       {tx.localTimestamp && (
-        <InfoRow
-          label={txInfo.started}
-          value={dayjs.unix(tx.localTimestamp).format('MMM D, HH:mm:ss')}
-          classNames={rowClassNames}
-        />
+        <InfoRow label={txInfo.started} value={timeOf(tx.localTimestamp, locale)} classNames={rowClassNames} />
       )}
 
       {isSolanaTransaction && (

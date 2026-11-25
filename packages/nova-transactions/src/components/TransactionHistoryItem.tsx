@@ -6,18 +6,15 @@
 import { cn, NetworkIcon } from '@tuwaio/nova-core';
 import { setChainId } from '@tuwaio/orbit-core';
 import { Transaction } from '@tuwaio/pulsar-core';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime.js';
 import { ComponentType, JSX } from 'react';
 
 import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
+import { timeAgo } from '../utils/time';
 import { txTitleSource } from '../utils/txStatus';
 import { StatusAwareText, StatusAwareTextProps } from './StatusAwareText';
 import { TransactionKey, TransactionKeyProps } from './TransactionKey';
 import { TransactionStatusBadge, TransactionStatusBadgeProps } from './TransactionStatusBadge';
-
-dayjs.extend(relativeTime);
 
 /** Props of the icon of {@link TransactionHistoryItem} (`customization.components.Icon`). */
 export type TransactionHistoryItemIconProps = {
@@ -117,16 +114,18 @@ const DefaultIcon = ({ chainId, className }: TransactionHistoryItemIconProps) =>
   </div>
 );
 
-const DefaultTimestamp = ({ timestamp, className }: TransactionHistoryItemTimestampProps) => (
-  <span className={cn('novatx:mb-1 novatx:block novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]', className)}>
-    {timestamp ? dayjs.unix(timestamp).fromNow() : '...'}
-  </span>
-);
+const DefaultTimestamp = ({ timestamp, className }: TransactionHistoryItemTimestampProps) => {
+  const { locale } = useLabels();
+  return (
+    <span className={cn('novatx:mb-1 novatx:block novatx:text-xs novatx:text-[var(--tuwa-text-secondary)]', className)}>
+      {timestamp ? timeAgo(timestamp, locale) : '...'}
+    </span>
+  );
+};
 
 /**
- * One transaction of the history list: the network icon, title, relative submission time (`dayjs` with the
- * `relativeTime` plugin, which this module adds to `dayjs` when it is imported), description, status badge and hashes.
- * Clicking the item (outside its links and buttons) calls `onSelectTx` when `canViewDetails` is `true`.
+ * One transaction of the history list: the network icon, title, relative submission time (in the language of the labels,
+ * `locale`), description, status badge and hashes. Clicking the item (outside its links and buttons) calls `onSelectTx` when `canViewDetails` is `true`.
  *
  * @typeParam T - The transaction type of the Pulsar store.
  * @param props - See {@link TransactionHistoryItemProps}.

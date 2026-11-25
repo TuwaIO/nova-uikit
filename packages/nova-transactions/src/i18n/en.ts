@@ -11,6 +11,7 @@ import { NovaTransactionsLabels } from './types';
  * for creating other language translations.
  */
 export const defaultLabels: NovaTransactionsLabels = {
+  locale: 'en',
   transaction: {
     defaultTitle: 'Transaction',
     defaultDescription: {

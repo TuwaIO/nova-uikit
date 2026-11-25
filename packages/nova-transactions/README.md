@@ -29,7 +29,7 @@ The package has two entry points:
 | `@tuwaio/nova-transactions`           | The components, `defaultLabels` and the label types                             |
 | `@tuwaio/nova-transactions/providers` | `NovaTransactionsProvider`, `NovaTransactionsLabelsProvider`, the error context |
 
-Importing the package adds the `relativeTime` plugin to `dayjs`. Both entry points need the same peer dependencies: `@tuwaio/nova-core` (>=0.14), `@tuwaio/pulsar-core` (>=0.12), `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `react-toastify` (>=11), `framer-motion` and `dayjs` (1.x), plus the peer dependencies of `@tuwaio/nova-core`:
+Both entry points need the same peer dependencies: `@tuwaio/nova-core` (>=0.14), `@tuwaio/pulsar-core` (>=0.12), `@tuwaio/orbit-core` (>=0.4), `react` (>=19.2.3), `react-toastify` (>=11) and `framer-motion`, plus the peer dependencies of `@tuwaio/nova-core` and `dayjs` (1.x) of `@tuwaio/pulsar-core`:
 
 ```bash
 pnpm add @tuwaio/nova-transactions @tuwaio/nova-core @tuwaio/pulsar-core @tuwaio/orbit-core react react-toastify framer-motion dayjs @radix-ui/react-dialog @web3icons/react @web3icons/common clsx tailwind-merge

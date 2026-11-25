@@ -407,16 +407,20 @@ export function NovaTransactionsProvider<T extends Transaction>({
   // Hidden, not unmounted: an unmounted container forgets its toasts, and the ones of a pending transaction would not come back
   const hidesToasts = isMobile && (isTrackingModalOpen || isTransactionsInfoModalOpen);
 
-  // Create customized close button component
+  // The cross of a toast, named in the language of the labels. The same component while neither changes: a new one on every
+  // render would mount every cross anew
+  const closeLabel = mergedLabels.actions.close;
   const CustomizedCloseButton = useMemo(() => {
-    const closeButtonCustomization = customization?.toastCloseButton;
-    if (!closeButtonCustomization) return ToastCloseButton;
-
-    // Return a wrapper component that passes customization props
-    return ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLElement>) => void }) => (
-      <ToastCloseButton closeToast={closeToast} {...closeButtonCustomization} />
+    const CloseButton = ({ closeToast }: Pick<ToastCloseButtonProps, 'closeToast'>) => (
+      <ToastCloseButton
+        closeToast={closeToast}
+        ariaLabel={closeLabel}
+        title={closeLabel}
+        {...customization?.toastCloseButton}
+      />
     );
-  }, [customization?.toastCloseButton]);
+    return CloseButton;
+  }, [customization?.toastCloseButton, closeLabel]);
 
   const errorContextValue = useMemo(
     () => ({

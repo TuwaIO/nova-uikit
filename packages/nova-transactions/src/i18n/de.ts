@@ -4,6 +4,7 @@ import { NovaTransactionsLabels } from './types';
  * German (de) translations for Nova Transactions modals, toasts, and history.
  */
 export const germanLabels: NovaTransactionsLabels = {
+  locale: 'de',
   transaction: {
     defaultTitle: 'Transaktion',
     defaultDescription: {

@@ -4,6 +4,7 @@ import { NovaTransactionsLabels } from './types';
  * Ukrainian (uk) translations for Nova Transactions modals, toasts, and history.
  */
 export const ukrainianLabels: NovaTransactionsLabels = {
+  locale: 'uk',
   transaction: {
     defaultTitle: 'Транзакція',
     defaultDescription: {

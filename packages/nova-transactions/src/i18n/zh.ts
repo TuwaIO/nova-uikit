@@ -4,6 +4,7 @@ import { NovaTransactionsLabels } from './types';
  * Chinese Simplified (zh-CN) localization for Nova Transactions modals, toasts, and history.
  */
 export const chineseLabels: NovaTransactionsLabels = {
+  locale: 'zh-CN',
   transaction: {
     defaultTitle: '交易',
     defaultDescription: {
