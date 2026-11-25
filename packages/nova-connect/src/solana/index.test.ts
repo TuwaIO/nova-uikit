@@ -13,7 +13,8 @@ describe('@tuwaio/nova-connect/solana', () => {
     expect(
       getChainsListByConnectorType({
         connectorType: 'solana:phantom',
-        solanaRPCUrls: { mainnet: 'https://rpc.example', devnet: 'https://devnet.example' },
+        // One URL of a cluster or several, the next when one does not answer: the lists read the clusters alone
+        solanaRPCUrls: { mainnet: 'https://rpc.example', devnet: ['https://devnet.example', 'https://spare.example'] },
         chains: ['solana:devnet'],
       }),
     ).toEqual(['devnet']);

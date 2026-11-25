@@ -40,11 +40,12 @@ Customization options
 
 ### solanaRPCUrls?
 
-> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string`\>\>
+> `optional` **solanaRPCUrls?**: `Partial`\<`Record`\<`SolanaClusterMoniker`, `string` \| readonly `string`[]\>\>
 
-Defined in: [packages/nova-connect/src/types.ts:39](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L39)
+Defined in: [packages/nova-connect/src/types.ts:40](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/types.ts#L40)
 
-Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+Solana RPC URL for each cluster moniker, or several, for example `{ devnet: 'https://api.devnet.solana.com' }`: the same
+object the Satellite adapter takes. Nova Connect reads the clusters alone and calls no URL. See
 [NovaConnectSolanaRPCUrls](?path=/docs/packages-nova-connect-connect-type-aliases-novaconnectsolanarpcurls--docs).
 
 #### Inherited from
