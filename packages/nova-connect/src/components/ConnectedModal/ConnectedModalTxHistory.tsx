@@ -457,7 +457,7 @@ const DefaultLoadingContainer: React.FC<ConnectedModalTxHistoryLoadingContainerP
     >
       <QuasarLoader size={40} className={cn('novacon:text-[var(--tuwa-text-primary)]', classNames?.spinner)} />
       <p className={cn('novacon:text-sm novacon:text-[var(--tuwa-text-secondary)]', classNames?.text)}>
-        {labels.loading} {labels.transactionsInApp.toLowerCase()}...
+        {`${labels.loading}...`}
       </p>
     </div>
   );

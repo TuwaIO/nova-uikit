@@ -387,7 +387,7 @@ export const ToastError = forwardRef<HTMLDivElement, ToastErrorProps>(
       onKeyDown: handleKeyDown,
       className: buttonClasses,
       type: 'button' as const,
-      'aria-label': isCopied ? `${labels.copied} ${labels.copyRawError}` : labels.copyRawError,
+      'aria-label': isCopied ? labels.copied : labels.copyRawError,
       'aria-describedby': `${titleId} ${descriptionId}`,
       disabled: !errorToCopy.trim(),
     };
