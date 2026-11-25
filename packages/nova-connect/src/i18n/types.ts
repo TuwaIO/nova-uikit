@@ -22,9 +22,9 @@ export type NovaConnectLabels = {
   connect: string;
   /** Network tab that shows the wallets of all networks (default: `All`) */
   all: string;
-  /** Badge of the active wallet and title of the connected wallets section (default: `Active`) */
+  /** Badge of the active wallet (default: `Active`) */
   active: string;
-  /** Title of the connected wallets section (after `active`) (default: `Connectors`) */
+  /** Title of the connected wallets section, with their number after it (default: `Active Connectors`) */
   connectors: string;
   /** Button of the connections screen that opens the connect modal (default: `Connect new wallet`) */
   connectNewWallet: string;

@@ -16,7 +16,7 @@ export const germanLabels: NovaConnectLabels = {
   connect: 'Verbinden',
   all: 'Alle',
   active: 'Aktiv',
-  connectors: 'Konnektoren',
+  connectors: 'Aktive Wallets',
   connectNewWallet: 'Weiteres Wallet verbinden',
 
   // Connection states - Status messages for wallet connection flow

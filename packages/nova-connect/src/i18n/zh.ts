@@ -16,7 +16,7 @@ export const chineseLabels: NovaConnectLabels = {
   connect: '连接',
   all: '全部',
   active: '当前活跃',
-  connectors: '连接器',
+  connectors: '活跃的钱包',
   connectNewWallet: '连接另一个钱包',
 
   // Connection states - Status messages for wallet connection flow

@@ -16,7 +16,7 @@ export const italianLabels: NovaConnectLabels = {
   connect: 'Collega',
   all: 'Tutti',
   active: 'Attivo',
-  connectors: 'Connettori',
+  connectors: 'Wallet attivi',
   connectNewWallet: 'Collega un altro wallet',
 
   // Connection states - Status messages for wallet connection flow

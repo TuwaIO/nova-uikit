@@ -852,7 +852,7 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, ConnectionsCon
             classNames?.title,
           )}
         >
-          {labels.active} {labels.connectors} {count > 0 && `(${count})`}
+          {labels.connectors} {count > 0 && `(${count})`}
         </h3>
         <div
           className={cn(
@@ -931,8 +931,9 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
       <div
         ref={ref}
         className={cn(
-          // Wraps: on a phone the button of a long word ("Відключити") stood past the window
-          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4',
+          // Wraps: on a phone the button of a long word ("Відключити") stood past the window. There the wallet starts under the
+          // badge in the corner, which lay on the end of a name of twenty letters
+          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4 novacon:max-[480px]:pt-7',
           classNames?.container,
           className,
         )}

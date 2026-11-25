@@ -349,21 +349,18 @@ const DefaultActiveIndicatorWrapper: React.FC<ChainListRendererActiveIndicatorWr
 /**
  * Default active indicator component
  */
-const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = ({ isActive, label, className }) => {
+const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = ({ isActive, className }) => {
   if (!isActive) return null;
 
+  // For the eye: the option says "Connected" in its name, and on a phone in words next to the mark
   return (
-    <>
-      <span
-        className={cn(
-          'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-success-text)]',
-          className,
-        )}
-        aria-label={label}
-        role="status"
-      />
-      <span className="novacon:sr-only">{label}</span>
-    </>
+    <span
+      className={cn(
+        'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-success-text)]',
+        className,
+      )}
+      aria-hidden="true"
+    />
   );
 };
 

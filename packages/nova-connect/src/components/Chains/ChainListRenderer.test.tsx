@@ -18,6 +18,18 @@ type Element = ReactElement<Record<string, unknown> & { children?: unknown }>;
 const childrenOf = (element: Element): Element[] =>
   ([] as unknown[]).concat(element.props.children).flat().filter(isValidElement) as Element[];
 
+// The words of what an element holds as it is drawn, without what is hidden from a screen reader
+function wordsOf(node: unknown): string {
+  if (Array.isArray(node)) return node.map(wordsOf).filter(Boolean).join(' ');
+  if (typeof node === 'string') return node;
+  if (!isValidElement(node)) return '';
+  const element = node as Element;
+  if (element.props['aria-hidden']) return '';
+  if (element.props['aria-label']) return String(element.props['aria-label']);
+  if (typeof element.type === 'function') return wordsOf((element.type as (props: object) => unknown)(element.props));
+  return wordsOf(element.props.children);
+}
+
 const keyEvent = (key: string) => ({ key, preventDefault: vi.fn(), ctrlKey: false, altKey: false, metaKey: false });
 
 function renderList(props: Partial<ChainListRendererProps>): Element {
@@ -153,5 +165,15 @@ describe('ChainListRenderer, as a list', () => {
     const [active, other] = childrenOf(renderList({ isMobile }));
     expect(active.props['aria-label']).toBe(`${defaultLabels.chainOption}: Ethereum. ${defaultLabels.connected}`);
     expect(other.props['aria-label']).toBe(`${defaultLabels.chainOption}: Polygon`);
+  });
+
+  // The mark of the active chain said the word again, twice: the words in the option were not the ones of its name
+  it.each([
+    ['mobile', true, 'Ethereum Connected'],
+    ['desktop', false, 'Ethereum'],
+  ])('%s: the mark of the active chain is for the eye', (_, isMobile, words) => {
+    const [active, other] = childrenOf(renderList({ isMobile }));
+    expect(wordsOf(active.props.children)).toBe(words);
+    expect(wordsOf(other.props.children)).toBe('Polygon');
   });
 });

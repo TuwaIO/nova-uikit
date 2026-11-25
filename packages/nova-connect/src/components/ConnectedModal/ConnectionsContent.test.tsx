@@ -1,7 +1,12 @@
 import { isValidElement, type ReactElement } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { germanLabels } from '../../i18n/de';
 import { defaultLabels } from '../../i18n/en';
+import { spanishLabels } from '../../i18n/es';
+import { italianLabels } from '../../i18n/it';
+import { ukrainianLabels } from '../../i18n/ua';
+import { chineseLabels } from '../../i18n/zh';
 
 // The recent wallets list (the only array state of the component) can be preset by a test
 let recentList: unknown[] | undefined;
@@ -18,12 +23,13 @@ vi.mock('react', async (importOriginal) => ({
 }));
 
 vi.mock('../../hooks', () => ({
-  useNovaConnectLabels: () => defaultLabels,
+  useNovaConnectLabels: () => labels,
   useNovaConnect: () => ({ setIsConnectModalOpen: vi.fn(), appChains: [{ id: 137 }] }),
   useGetWalletNameAndAvatar: () => ({ ensNameAbbreviated: undefined }),
 }));
 
 let storeState: Record<string, unknown> = {};
+let labels = defaultLabels;
 
 vi.mock('../../satellite', () => ({
   SatelliteStoreContext: {},
@@ -66,6 +72,7 @@ const drawRow = (row: Element): Element =>
 describe('ConnectionsContent', () => {
   beforeEach(() => {
     recentList = undefined;
+    labels = defaultLabels;
     storeState = {
       connections: {},
       activeConnection: undefined,
@@ -110,6 +117,30 @@ describe('ConnectionsContent', () => {
     // The wallet gives way inside its own place, and the button keeps to the end of the line
     expect(content.props.className).toContain('novacon:min-w-0');
     expect(button.props.className).toContain('novacon:ml-auto');
+  });
+
+  // The badge in the corner lay on the end of a name of twenty letters
+  it('keeps the name of the active wallet under its badge on a phone', () => {
+    expect(drawRow(rowsFor(connection)[0]).props.className).toContain('novacon:max-[480px]:pt-7');
+  });
+
+  // Two labels put together: "Активний Конектори (1)", "Aktiv Konnektoren (1)"
+  it.each([
+    ['en', defaultLabels],
+    ['uk', ukrainianLabels],
+    ['zh', chineseLabels],
+    ['de', germanLabels],
+    ['es', spanishLabels],
+    ['it', italianLabels],
+  ])('%s: the title of the connected wallets is a label of its own', (_, of) => {
+    labels = of;
+    storeState.connections = { [connection.connectorType]: connection };
+    storeState.activeConnection = connection;
+    const section = childrenOf(ConnectionsContent({}) as Element).find((child) => 'count' in child.props)!;
+    const [title] = childrenOf(drawRow(section));
+
+    expect(title.type).toBe('h3');
+    expect(([] as unknown[]).concat(title.props.children).join('')).toBe(`${of.connectors} (1)`);
   });
 
   // "Disconnect evm:metamask": the type of the connector, which means nothing to a person
