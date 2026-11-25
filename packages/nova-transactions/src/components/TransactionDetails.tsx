@@ -249,7 +249,7 @@ const DefaultCopyableField = ({ label, value, mono = true, className, children, 
           className={cn('novatx:truncate', mono && 'novatx:font-mono novatx:text-[13px]', classNames?.code)}
           title={value}
         >
-          {shortAddress(value, 8, 8)}
+          {shortAddress(value)}
         </span>
       )}
       <CopyButton value={value} className={classNames?.copyButton} />
@@ -394,14 +394,14 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
     >
-      {shortAddress(hash, 8, 8)}
+      {shortAddress(hash)}
     </a>
   ) : (
     <span
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-primary)]"
     >
-      {shortAddress(hash, 8, 8)}
+      {shortAddress(hash)}
     </span>
   );
 
