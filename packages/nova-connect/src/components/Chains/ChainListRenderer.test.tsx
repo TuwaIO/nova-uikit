@@ -20,6 +20,19 @@ const childrenOf = (element: Element): Element[] =>
 
 const keyEvent = (key: string) => ({ key, preventDefault: vi.fn(), ctrlKey: false, altKey: false, metaKey: false });
 
+function renderList(props: Partial<ChainListRendererProps>): Element {
+  const list = render(ChainListRenderer as (p: ChainListRendererProps) => unknown, {
+    chainsList: [1, 137],
+    selectValue: '1',
+    handleValueChange: vi.fn(),
+    getChainData: (chain) => ({ chain, formattedChainId: chain }),
+    onClose: vi.fn(),
+    ...props,
+  }) as Element;
+  unmount();
+  return list;
+}
+
 function renderDesktopList(props: Partial<ChainListRendererProps>) {
   const handleValueChange = vi.fn();
   const onClose = vi.fn();
@@ -105,5 +118,40 @@ describe('ChainListRenderer (desktop)', () => {
     const drawn = (content.type as (props: unknown) => Element)(content.props);
 
     expect(JSON.stringify(drawn)).toContain('novacon:shrink-0');
+  });
+});
+
+// The list stood as a listbox inside another one: the options belonged to neither for a screen reader, and the name of the list
+// was said twice
+describe('ChainListRenderer, as a list', () => {
+  afterEach(() => unmount());
+
+  it('is the listbox of the mobile dialog', () => {
+    const list = renderList({ isMobile: true });
+    expect(list.props.role).toBe('listbox');
+    expect(list.props['aria-label']).toBe(defaultLabels.selectChain);
+    expect(renderList({ isMobile: true, 'aria-label': 'Networks' }).props['aria-label']).toBe('Networks');
+  });
+
+  it('is a part of the listbox of Radix Select on desktop', () => {
+    const list = renderList({});
+    expect(list.props.role).toBe('presentation');
+    expect(list.props['aria-label']).toBeUndefined();
+  });
+
+  it('is a named group of that listbox with a name of its own', () => {
+    const list = renderList({ 'aria-label': 'Networks' });
+    expect(list.props.role).toBe('group');
+    expect(list.props['aria-label']).toBe('Networks');
+  });
+
+  // Its words on the screen are "Ethereum" and "Connected", and its name had only the first
+  it.each([
+    ['mobile', true],
+    ['desktop', false],
+  ])('%s: the name of the active chain says that it is connected', (_, isMobile) => {
+    const [active, other] = childrenOf(renderList({ isMobile }));
+    expect(active.props['aria-label']).toBe(`${defaultLabels.chainOption}: Ethereum. ${defaultLabels.connected}`);
+    expect(other.props['aria-label']).toBe(`${defaultLabels.chainOption}: Polygon`);
   });
 });

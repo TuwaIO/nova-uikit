@@ -30,6 +30,12 @@ vi.mock('../../satellite', () => ({
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) => selector(storeState),
 }));
 
+// The hook of nova-core runs the React of its own build
+vi.mock('@tuwaio/nova-core', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tuwaio/nova-core')>()),
+  useCopyToClipboard: () => ({ copy: vi.fn(), isCopied: false }),
+}));
+
 import { ConnectionsContent } from './ConnectionsContent';
 
 const connection = {
@@ -44,6 +50,18 @@ type Element = ReactElement<Record<string, unknown> & { children?: unknown }>;
 // Direct children of an element, without `false` and `null`
 const childrenOf = (element: Element): Element[] =>
   ([] as unknown[]).concat(element.props.children).flat().filter(isValidElement) as Element[];
+
+// The connected wallets, the active one first, as the screen passes them to their rows
+const rowsFor = (...connections: (typeof connection)[]): Element[] => {
+  storeState.connections = Object.fromEntries(connections.map((item) => [item.connectorType, item]));
+  storeState.activeConnection = connections[0];
+  const screen = ConnectionsContent({}) as Element;
+  return childrenOf(childrenOf(screen).find((child) => 'count' in child.props)!);
+};
+
+// A row as it is drawn (a `forwardRef` component)
+const drawRow = (row: Element): Element =>
+  (row.type as unknown as { render: (props: object, ref: null) => Element }).render(row.props, null);
 
 describe('ConnectionsContent', () => {
   beforeEach(() => {
@@ -82,6 +100,24 @@ describe('ConnectionsContent', () => {
     }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
 
     expect(element.props.children.props.children).toBe('Nothing here');
+  });
+
+  // In Ukrainian the button "Відключити" stood past the window of a phone of 320 and of 360 px
+  it('takes the disconnect button to the next line when the row of the active wallet has no place for it', () => {
+    const row = drawRow(rowsFor(connection)[0]);
+    expect(row.props.className).toContain('novacon:flex-wrap');
+    const [, content, button] = childrenOf(row);
+    // The wallet gives way inside its own place, and the button keeps to the end of the line
+    expect(content.props.className).toContain('novacon:min-w-0');
+    expect(button.props.className).toContain('novacon:ml-auto');
+  });
+
+  // "Disconnect evm:metamask": the type of the connector, which means nothing to a person
+  it('names the wallet a disconnect button disconnects', () => {
+    storeState.getConnectors = () => ({ evm: [{ name: 'MetaMask' }, { name: 'Rainbow' }] });
+    const rows = rowsFor(connection, { ...connection, connectorType: 'evm:rainbow' });
+    const names = rows.map((row) => childrenOf(drawRow(row)).at(-1)!.props['aria-label']);
+    expect(names).toEqual(['Disconnect MetaMask', 'Disconnect Rainbow']);
   });
 
   it('handles the keyboard shortcuts on the container, not on window', async () => {

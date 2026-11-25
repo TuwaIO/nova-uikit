@@ -186,6 +186,16 @@ export interface ConnectedContentProps extends Pick<NovaConnectProviderProps, 't
 /** What the button shows for a balance that is not known, as `BalanceDisplay` does. */
 const UNKNOWN_BALANCE = '—';
 
+/**
+ * What a screen reader says of a balance.
+ *
+ * @param formattedBalance - The shown balance.
+ * @param labels - The labels of Nova Connect.
+ * @returns The words.
+ */
+const balanceWords = (formattedBalance: string, labels: Record<string, string>): string =>
+  formattedBalance === UNKNOWN_BALANCE ? labels.noBalanceAvailable : `${labels.walletBalance}: ${formattedBalance}`;
+
 const DefaultBalanceContainer = ({
   formattedBalance,
   labels,
@@ -199,11 +209,7 @@ const DefaultBalanceContainer = ({
         className,
       )}
       role="text"
-      aria-label={
-        formattedBalance === UNKNOWN_BALANCE
-          ? labels.noBalanceAvailable
-          : `${labels.walletBalance}: ${formattedBalance}`
-      }
+      aria-label={balanceWords(formattedBalance, labels)}
       {...props}
     >
       {/* The place of `0.000` whatever is in it: from a dash to a number the button grew by 34 px on every change of network,
@@ -428,7 +434,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
     const statusDisplay = (() => {
       if (!activeConnection) return { displayName: null, avatarIcon: null, ariaLabel: '' };
 
-      const baseAriaLabel = `${labels.transactionStatus}: ${getStatusAriaLabel(connectedButtonStatus)}`;
+      const resultAriaLabel = `${labels.transactionStatus}: ${getStatusAriaLabel(connectedButtonStatus)}`;
 
       switch (connectedButtonStatus) {
         case 'succeed':
@@ -444,7 +450,8 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 {DEFAULT_STATUS_PATHS.succeed}
               </StatusIcon>
             ),
-            ariaLabel: baseAriaLabel,
+            // With the word that is shown: the name of the button around it is this one
+            ariaLabel: `${labels.success}. ${resultAriaLabel}`,
           };
         case 'failed':
           return {
@@ -459,7 +466,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 {DEFAULT_STATUS_PATHS.failed}
               </StatusIcon>
             ),
-            ariaLabel: baseAriaLabel,
+            ariaLabel: `${labels.error}. ${resultAriaLabel}`,
           };
         case 'replaced':
         case 'cancelled':
@@ -477,7 +484,7 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
                 {DEFAULT_STATUS_PATHS.replaced}
               </StatusIcon>
             ),
-            ariaLabel: baseAriaLabel,
+            ariaLabel: `${connectedButtonStatus === 'cancelled' ? labels.cancelled : labels.replaced}. ${resultAriaLabel}`,
           };
         case 'loading':
           return {
@@ -543,7 +550,12 @@ export const ConnectedContent = forwardRef<HTMLDivElement, ConnectedContentProps
       className: containerClasses,
       role: 'status',
       'aria-live': 'polite' as const,
-      'aria-label': ariaLabel || statusDisplay.ariaLabel,
+      // All that is shown: this label is the one of the button around it, and the balance is in it as well
+      'aria-label':
+        ariaLabel ||
+        (withBalance
+          ? `${balanceWords(formattedBalance, labels)}. ${statusDisplay.ariaLabel}`
+          : statusDisplay.ariaLabel),
     };
 
     if (!activeConnection) return null;

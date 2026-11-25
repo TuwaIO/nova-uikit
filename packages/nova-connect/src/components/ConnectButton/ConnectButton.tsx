@@ -84,7 +84,10 @@ export type ConnectButtonButtonProps = {
    * @param event - The keyboard event.
    */
   onKeyDown: (event: React.KeyboardEvent) => void;
-  /** Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state). */
+  /**
+   * Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state). Not set by default while a
+   * wallet is connected: the name of the button is then its content, with the wallet it shows.
+   */
   'aria-label'?: string;
   /** Whether a wallet is connected. */
   'aria-pressed'?: boolean;
@@ -415,13 +418,14 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
     [handleConnectButtonClick, buttonData],
   );
 
-  // Button aria-label
+  // Button aria-label. None over a connected wallet: the name of the button has to hold the name it shows (it is pressed by
+  // voice with it), and the content says it
   const buttonAriaLabel = config.ariaLabels?.button
     ? config.ariaLabels.button(buttonData)
     : isRestoring
       ? labels.restoringWallet
       : isConnected
-        ? `${labels.walletConnected}. ${labels.openWalletModal}`
+        ? undefined
         : `${labels.walletNotConnected}. ${labels.connectWallet}`;
 
   // Navigation aria-label
@@ -433,7 +437,8 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
   const buttonClasses =
     classNames.button?.({ buttonData }) ||
     cn(
-      'novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
+      // `relative`: the hidden words of its name are placed by it, or in a row that scrolls they would widen the page
+      'novacon:relative novacon:cursor-pointer novacon:inline-flex novacon:items-center novacon:justify-center novacon:gap-2 novacon:px-3 novacon:min-h-[42px] novacon:py-1',
       // Paper and ink: flat, square, framed; no growing on hover
       'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:font-mono novacon:transition-colors novacon:duration-200',
       'novacon:focus:outline-none novacon:focus:ring-[length:var(--tuwa-ring-width)] novacon:focus:ring-offset-[length:var(--tuwa-ring-width)]',
@@ -516,11 +521,15 @@ export const ConnectButton = memo<ConnectButtonProps>(({ className, transactionP
               {isRestoring ? (
                 <RestoringContent label={labels.restoringWallet} buttonData={buttonData} />
               ) : isConnected ? (
-                <ConnectedContent
-                  withBalance={withBalance}
-                  transactionPool={transactionPool}
-                  customization={childComponents.connectedContent}
-                />
+                <>
+                  {!buttonAriaLabel && <span className="novacon:sr-only">{`${labels.walletConnected}. `}</span>}
+                  <ConnectedContent
+                    withBalance={withBalance}
+                    transactionPool={transactionPool}
+                    customization={childComponents.connectedContent}
+                  />
+                  {!buttonAriaLabel && <span className="novacon:sr-only">{`. ${labels.openWalletModal}`}</span>}
+                </>
               ) : (
                 <WaitForConnectionContent customization={childComponents.waitForConnectionContent} />
               )}

@@ -931,7 +931,8 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
       <div
         ref={ref}
         className={cn(
-          'novacon:relative novacon:flex novacon:items-center novacon:justify-between novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4',
+          // Wraps: on a phone the button of a long word ("Відключити") stood past the window
+          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4',
           classNames?.container,
           className,
         )}
@@ -948,7 +949,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
           </span>
         </div>
 
-        <div className={cn('novacon:flex novacon:items-center novacon:gap-3', classNames?.content)}>
+        <div className={cn('novacon:flex novacon:min-w-0 novacon:items-center novacon:gap-3', classNames?.content)}>
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
@@ -1012,10 +1013,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <button
           onClick={onDisconnect}
           className={cn(
-            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:mt-4 novacon:ml-auto novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
-          aria-label={`${labels.disconnect} ${connectorType}`}
+          aria-label={`${labels.disconnect} ${connectorName(connectorType)}`}
         >
           {labels.disconnect}
         </button>
@@ -1094,7 +1095,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
-          aria-label={`${labels.disconnect} ${connectorType}`}
+          aria-label={`${labels.disconnect} ${connectorName(connectorType)}`}
         >
           <ExitIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>
