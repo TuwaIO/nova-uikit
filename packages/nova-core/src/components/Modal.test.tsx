@@ -1,7 +1,11 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const { play, effects } = vi.hoisted(() => ({ play: vi.fn(), effects: [] as Array<() => void | (() => void)> }));
+const { play, effects, insertions } = vi.hoisted(() => ({
+  play: vi.fn(),
+  effects: [] as Array<() => void | (() => void)>,
+  insertions: [] as Array<() => void | (() => void)>,
+}));
 
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
@@ -9,6 +13,9 @@ vi.mock('react', async (importOriginal) => ({
   useRef: (initial: unknown) => ({ current: initial }),
   useEffect: (effect: () => void | (() => void)) => {
     effects.push(effect);
+  },
+  useInsertionEffect: (effect: () => void | (() => void)) => {
+    insertions.push(effect);
   },
 }));
 
@@ -31,6 +38,8 @@ const isDialogSounds = (element: Element | null | undefined) =>
   (element?.type as { name?: string } | undefined)?.name === 'DialogSounds';
 
 describe('DialogContent', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   // A dialog opens and closes with a muffled sound. `DialogContent` itself stays mounted with the `Dialog`: an
   // effect of its own ran once, with the page, and no dialog made a sound
   it('plays a sound when it opens and another when it closes, from what Radix mounts only while it is open', () => {
@@ -50,6 +59,53 @@ describe('DialogContent', () => {
 
     cleanups.forEach((cleanup) => cleanup?.());
     expect(play).toHaveBeenLastCalledWith('modalClose');
+  });
+
+  // Radix asks where the focus goes only when nothing inside has it yet: a field with `autoFocus` takes it first, the opener
+  // was never noted, and after the password window of an app the keyboard started from the top of the page again
+  it('gives the focus back to what opened it, also when a field of it took the focus by itself', () => {
+    class FakeElement {
+      isConnected = true;
+      focus = vi.fn();
+    }
+    const opener = new FakeElement();
+    const body = new FakeElement();
+    vi.stubGlobal('HTMLElement', FakeElement);
+    vi.stubGlobal('document', { activeElement: opener, body });
+    const render = (DialogContent as unknown as { render: (props: object, ref: null) => unknown }).render;
+    const open = (props: object = {}) => {
+      insertions.length = 0;
+      const content = elements(render({ children: 'content', ...props }, null)).find(
+        (element) => element.type === DialogPrimitive.Content,
+      )!;
+      // What Radix mounts only while the dialog is open, not `DialogContent`, which stays mounted with the `Dialog`
+      for (const { type, props: own } of elements(content.props.children)) {
+        if (typeof type === 'function' && type.name === 'OpenerNote') (type as (value: object) => unknown)(own);
+      }
+      // Before any field of the dialog takes the focus: React focuses `autoFocus` after the insertion effects
+      insertions.forEach((effect) => effect());
+      return content.props as { onCloseAutoFocus: (event: object) => void };
+    };
+    const close = (content: ReturnType<typeof open>, prevented = false) => {
+      const event = { defaultPrevented: prevented, preventDefault: vi.fn() };
+      content.onCloseAutoFocus(event);
+      return event;
+    };
+
+    const content = open();
+    vi.stubGlobal('document', { activeElement: new FakeElement(), body });
+    expect(close(content).preventDefault).toHaveBeenCalledOnce();
+    expect(opener.focus).toHaveBeenCalledOnce();
+
+    // Opened by nothing (with the page), taken over by the app, or the opener is gone: Radix's own answer stands
+    vi.stubGlobal('document', { activeElement: body, body });
+    expect(close(open()).preventDefault).not.toHaveBeenCalled();
+    vi.stubGlobal('document', { activeElement: opener, body });
+    expect(close(open(), true).preventDefault).not.toHaveBeenCalled();
+    const gone = open();
+    opener.isConnected = false;
+    expect(close(gone).preventDefault).not.toHaveBeenCalled();
+    expect(opener.focus).toHaveBeenCalledOnce();
   });
 
   it('never scales its frame with a layout animation (the scale left an empty band under shrinking content)', () => {
