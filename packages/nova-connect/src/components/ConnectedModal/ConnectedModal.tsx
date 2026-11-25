@@ -574,14 +574,14 @@ const DefaultMainContent: React.FC<ConnectedModalMainContentSlotProps> = ({
   };
 
   return (
-    <main
+    <div
       className={cn('novacon:relative', className)}
       id="connected-modal-description"
       aria-live="polite"
       aria-atomic="true"
     >
       {renderContent()}
-    </main>
+    </div>
   );
 };
 

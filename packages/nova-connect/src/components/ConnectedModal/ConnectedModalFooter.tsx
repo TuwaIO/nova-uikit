@@ -5,7 +5,7 @@
 import { ExitIcon, ExternalLinkIcon } from '@tuwaio/nova-core';
 import { cn, formatLabel, standardButtonClasses } from '@tuwaio/nova-core/utils';
 import { getAdapterFromConnectorType } from '@tuwaio/orbit-core';
-import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, useCallback } from 'react';
+import { ComponentPropsWithoutRef, ComponentType, forwardRef, ReactNode, Ref, useCallback } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { useSatelliteConnectStore } from '../../satellite';
@@ -80,7 +80,7 @@ export type ConnectedModalFooterContentProps = {
  * Customization options of {@link ConnectedModalFooter}.
  */
 export type ConnectedModalFooterCustomization = {
-  /** Props of the `footer` element (the component props, `className`, `role` and `aria-label` take precedence) */
+  /** Props of the footer (the component props, `className`, `role` and `aria-label` take precedence) */
   containerProps?: Partial<ComponentPropsWithoutRef<'footer'>>;
   /** Custom components */
   components?: {
@@ -480,9 +480,8 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     const containerProps = {
       ...customization?.containerProps,
       ...props,
-      ref,
       className: containerClasses,
-      role: 'contentinfo' as const,
+      role: 'group' as const,
       'aria-label': ariaLabel || finalLabels.walletControls,
     };
 
@@ -490,7 +489,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
     if (!activeConnection) return null;
 
     return (
-      <footer {...containerProps}>
+      <div {...containerProps} ref={ref as Ref<HTMLDivElement>}>
         <FooterContent
           disconnectButton={disconnectButtonElement}
           explorerLink={explorerLinkElement}
@@ -498,7 +497,7 @@ export const ConnectedModalFooter = forwardRef<HTMLElement, ConnectedModalFooter
           walletAddress={activeConnection.address}
           labels={finalLabels}
         />
-      </footer>
+      </div>
     );
   },
 );

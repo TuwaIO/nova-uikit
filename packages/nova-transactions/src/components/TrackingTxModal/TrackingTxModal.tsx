@@ -346,7 +346,7 @@ export function TrackingTxModal<T extends Transaction>({
             />
           )}
 
-          <main className={cn('novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4', classNames?.main)}>
+          <div className={cn('novatx:flex novatx:flex-col novatx:gap-4 novatx:p-4', classNames?.main)}>
             {CustomStatusVisual ? (
               <CustomStatusVisual
                 isProcessing={isProcessing}
@@ -399,7 +399,7 @@ export function TrackingTxModal<T extends Transaction>({
                 classNames={customization?.errorBlockCustomization?.classNames}
               />
             )}
-          </main>
+          </div>
 
           {CustomFooter ? (
             <CustomFooter
@@ -534,7 +534,7 @@ const DefaultFooter = ({
   const { trackingModal, actions } = useLabels();
 
   return (
-    <footer
+    <div
       className={cn(
         'novatx:flex novatx:w-full novatx:items-center novatx:justify-between novatx:border-t novatx:border-[var(--tuwa-border-primary)] novatx:p-4',
         classNames?.footer,
@@ -588,6 +588,6 @@ const DefaultFooter = ({
           <MorphText>{isProcessing && !canReplace ? trackingModal.processing : trackingModal.close}</MorphText>
         </button>
       </div>
-    </footer>
+    </div>
   );
 };

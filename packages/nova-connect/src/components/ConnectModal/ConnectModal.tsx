@@ -643,15 +643,14 @@ DefaultCloseButton.displayName = 'DefaultCloseButton';
 const DefaultMainContent = forwardRef<HTMLDivElement, ConnectModalMainContentProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
-    <main
+    <div
       ref={ref}
       className={cn('novacon:flex novacon:flex-col novacon:gap-4 novacon:p-4', className)}
       id="connect-modal-content"
-      role="main"
       {...props}
     >
       {children}
-    </main>
+    </div>
   ),
 );
 DefaultMainContent.displayName = 'DefaultMainContent';
@@ -659,17 +658,17 @@ DefaultMainContent.displayName = 'DefaultMainContent';
 const DefaultFooter = forwardRef<HTMLDivElement, ConnectModalFooterProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
-    <footer
+    <div
       ref={ref}
       className={cn(
         'novacon:flex novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4',
         className,
       )}
-      role="contentinfo"
+      role="group"
       {...props}
     >
       {children}
-    </footer>
+    </div>
   ),
 );
 DefaultFooter.displayName = 'DefaultFooter';
