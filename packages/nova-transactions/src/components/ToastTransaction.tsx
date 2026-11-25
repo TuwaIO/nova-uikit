@@ -12,7 +12,7 @@ import { ToastContainerProps, ToastContentProps } from 'react-toastify';
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
 import { useLabels } from '../providers/NovaTransactionsLabelsProvider';
 import type { NovaTransactionsProviderProps } from '../providers/NovaTransactionsProvider';
-import { canReplaceTx, canSpeedUpTx, runReplacement } from '../utils/replacement';
+import { canReplaceTx, canSpeedUpTx, refusedReplacementWords, runReplacement } from '../utils/replacement';
 import {
   confirmationsText,
   hasConfirmations,
@@ -239,7 +239,7 @@ export function ToastTransaction<T extends Transaction>({
 
   const canBeReplaced = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
 
-  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, refusedReplacementWords(error, actions));
 
   const handleCancel = () => {
     if (canBeReplaced) void runReplacement(foundAdapter!.cancelTxAction!, tx, reportRefusal);

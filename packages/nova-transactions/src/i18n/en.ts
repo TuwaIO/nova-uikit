@@ -94,6 +94,8 @@ export const defaultLabels: NovaTransactionsLabels = {
   },
   actions: {
     replacementFailed: 'Could not replace the transaction',
+    replacementSettled: 'The transaction has already been confirmed or replaced.',
+    replacementFeeTooLow: 'The network already has a version with a higher fee: change it in the wallet.',
     stopTracking: 'Stop tracking',
     copy: 'Copy address',
     viewOnExplorer: 'View on explorer',

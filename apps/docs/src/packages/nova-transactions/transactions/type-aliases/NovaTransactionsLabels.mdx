@@ -45,6 +45,18 @@ Text for a "Copy" action (e.g., copy address or hash).
 
 Title of the toast when a speed-up or a cancel is refused (default: `Could not replace the transaction`).
 
+#### replacementFeeTooLow
+
+> **replacementFeeTooLow**: `string`
+
+What that toast says when the network holds a replacement with a higher fee, sent from the wallet or another tab.
+
+#### replacementSettled
+
+> **replacementSettled**: `string`
+
+What that toast says when there is nothing to replace: the transaction is in a block, or was replaced already.
+
 #### speedUp
 
 > **speedUp**: `string`
@@ -390,7 +402,7 @@ The title of a transaction with none.
 
 > **transactionDetails**: `object`
 
-Defined in: [i18n/types.ts:200](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L200)
+Defined in: [i18n/types.ts:204](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/i18n/types.ts#L204)
 
 Labels for the detailed transaction view.
 

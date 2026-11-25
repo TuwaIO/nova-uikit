@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **useNovaTransactionsError**(): `object`
 
-Defined in: [providers/NovaTransactionsErrorContext.tsx:111](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L111)
+Defined in: [providers/NovaTransactionsErrorContext.tsx:112](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-transactions/src/providers/NovaTransactionsErrorContext.tsx#L112)
 
 Hook that returns `showPreSubmitErrorToast` — a function that fires the
 top-center validation error toast.
@@ -23,7 +23,8 @@ up any `customization.validationErrorToast` settings via context.
 
 `object`
 
-`{ showPreSubmitErrorToast }` — call with any caught error value.
+`{ showPreSubmitErrorToast }` — call with any caught error value. Its options replace the title and the words of the
+error (`message`), which otherwise come as the error has them, in English; the error itself is still there to copy.
 
 ### showPreSubmitErrorToast
 
@@ -36,6 +37,10 @@ up any `customization.validationErrorToast` settings via context.
 `unknown`
 
 ##### options?
+
+###### message?
+
+`string`
 
 ###### title?
 

@@ -87,6 +87,8 @@ export const spanishLabels: NovaTransactionsLabels = {
   },
   actions: {
     replacementFailed: 'No se pudo reemplazar la transacción',
+    replacementSettled: 'La transacción ya se confirmó o se reemplazó.',
+    replacementFeeTooLow: 'La red ya tiene una versión con una comisión más alta: cámbiala en la billetera.',
     stopTracking: 'Dejar de seguir',
     copy: 'Copiar la dirección',
     viewOnExplorer: 'Ver en el explorador',

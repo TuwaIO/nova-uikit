@@ -183,6 +183,10 @@ export type NovaTransactionsLabels = {
   actions: {
     /** Title of the toast when a speed-up or a cancel is refused (default: `Could not replace the transaction`). */
     replacementFailed: string;
+    /** What that toast says when there is nothing to replace: the transaction is in a block, or was replaced already. */
+    replacementSettled: string;
+    /** What that toast says when the network holds a replacement with a higher fee, sent from the wallet or another tab. */
+    replacementFeeTooLow: string;
     /** Text for the action that stops tracking a transaction that never ends. */
     stopTracking: string;
     /** Text for a "Copy" action (e.g., copy address or hash). */

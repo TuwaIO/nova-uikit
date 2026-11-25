@@ -87,7 +87,8 @@ export const NovaTransactionsErrorContext = createContext<NovaTransactionsErrorC
  * When rendered inside a `NovaTransactionsProvider`, the hook additionally picks
  * up any `customization.validationErrorToast` settings via context.
  *
- * @returns `{ showPreSubmitErrorToast }` — call with any caught error value.
+ * @returns `{ showPreSubmitErrorToast }` — call with any caught error value. Its options replace the title and the words of the
+ * error (`message`), which otherwise come as the error has them, in English; the error itself is still there to copy.
  *
  * @example
  * ```tsx
@@ -109,12 +110,12 @@ export const NovaTransactionsErrorContext = createContext<NovaTransactionsErrorC
  * ```
  */
 export function useNovaTransactionsError(): {
-  showPreSubmitErrorToast: (error: unknown, options?: { title?: string }) => void;
+  showPreSubmitErrorToast: (error: unknown, options?: { title?: string; message?: string }) => void;
 } {
   const { customization, enabled } = useContext(NovaTransactionsErrorContext);
 
   const showPreSubmitErrorToast = useCallback(
-    (error: unknown, options?: { title?: string }) => {
+    (error: unknown, options?: { title?: string; message?: string }) => {
       if (!enabled) return;
 
       const message = error instanceof Error ? error.message : String(error);
@@ -126,7 +127,7 @@ export function useNovaTransactionsError(): {
         (props: ToastContentProps): JSX.Element => (
           <ToastValidationError
             {...props}
-            message={message}
+            message={options?.message ?? message}
             rawError={rawError}
             fieldName={fieldName}
             title={options?.title}

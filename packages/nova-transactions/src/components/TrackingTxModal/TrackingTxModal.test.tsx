@@ -297,6 +297,26 @@ describe('TrackingTxModal actions', () => {
     expect(footerProps(render({ pending: true, confirmations: 1 })).canReplace).toBe(false);
   });
 
+  // The wallet's node said it in English, on a page in any language
+  it.each(['onSpeedUp', 'onCancel'])('tells a refusal of %s in the words of the labels', async (handler) => {
+    showPreSubmitErrorToast.mockClear();
+    const refusal = new Error('Failed', { cause: new Error('nonce too low: next nonce 8, tx nonce 7') });
+    vi.mocked(adapter.speedUpTxAction!).mockRejectedValueOnce(refusal);
+    vi.mocked(adapter.cancelTxAction!).mockRejectedValueOnce(refusal);
+    const pending = { pending: true, nonce: 7, maxFeePerGas: '1000', maxPriorityFeePerGas: '100' };
+
+    (footerProps(render(pending))[handler] as () => void)();
+
+    await vi.waitFor(() =>
+      expect(showPreSubmitErrorToast).toHaveBeenCalledWith(refusal, {
+        title: defaultLabels.actions.replacementFailed,
+        message: defaultLabels.actions.replacementSettled,
+      }),
+    );
+    vi.mocked(adapter.speedUpTxAction!).mockReset();
+    vi.mocked(adapter.cancelTxAction!).mockReset();
+  });
+
   it('does not offer them before the tracker has read the nonce', () => {
     expect(footerProps(render({ pending: true })).onSpeedUp).toBeUndefined();
   });

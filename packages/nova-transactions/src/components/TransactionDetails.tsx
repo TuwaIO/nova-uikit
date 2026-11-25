@@ -38,6 +38,7 @@ import {
   canSpeedUpTx,
   explorerUrlOfHash,
   explorerUrlOfReplaced,
+  refusedReplacementWords,
   runReplacement,
   stopTrackingDueIn,
 } from '../utils/replacement';
@@ -565,7 +566,7 @@ export function TransactionDetails<T extends Transaction>({
   const explorerUrl = explorerUrlOfHash(foundAdapter, tx, hash);
   // Only what can really be replaced: from another account the same transfer would be sent a second time
   const canReplace = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
-  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, refusedReplacementWords(error, actions));
   const chainId = setChainId(tx.chainId);
   const tone = toneOf(tx);
 
