@@ -933,13 +933,13 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         className={cn(
           // Wraps: on a phone the button of a long word ("Відключити") stood past the window. There the wallet starts under the
           // badge in the corner, which lay on the end of a name of twenty letters
-          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4 novacon:max-[480px]:pt-7',
+          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4 novacon:max-[480px]:pt-8',
           classNames?.container,
           className,
         )}
       >
-        {/* Active Badge - Absolute Top Right */}
-        <div className="novacon:absolute novacon:top-2 novacon:right-2">
+        {/* Active Badge - Absolute Top Right. A flex box: on the line of text of a block it stood 4 px lower than its place */}
+        <div className="novacon:absolute novacon:top-2 novacon:right-2 novacon:flex">
           <span
             className={cn(
               'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)] novacon:bg-[var(--tuwa-success-bg)] novacon:px-1.5 novacon:py-0.5 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:leading-3 novacon:text-[var(--tuwa-success-text)]',

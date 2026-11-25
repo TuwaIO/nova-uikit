@@ -20,7 +20,7 @@ const childrenOf = (element: Element): Element[] =>
 
 // The words of what an element holds as it is drawn, without what is hidden from a screen reader
 function wordsOf(node: unknown): string {
-  if (Array.isArray(node)) return node.map(wordsOf).filter(Boolean).join(' ');
+  if (Array.isArray(node)) return node.map(wordsOf).filter((words) => words.trim()).join(' ');
   if (typeof node === 'string') return node;
   if (!isValidElement(node)) return '';
   const element = node as Element;
@@ -175,5 +175,16 @@ describe('ChainListRenderer, as a list', () => {
     const [active, other] = childrenOf(renderList({ isMobile }));
     expect(wordsOf(active.props.children)).toBe(words);
     expect(wordsOf(other.props.children)).toBe('Polygon');
+  });
+
+  // Text that is read in one piece ran on: "EthereumConnected" was not the name of the option for axe
+  it.each([
+    ['mobile', true],
+    ['desktop', false],
+  ])('%s: keeps a space between the name of the chain and its mark', (_, isMobile) => {
+    const [active] = childrenOf(renderList({ isMobile }));
+    const parts = ([] as unknown[]).concat(active.props.children);
+    expect(parts).toHaveLength(3);
+    expect(parts[1]).toBe(' ');
   });
 });

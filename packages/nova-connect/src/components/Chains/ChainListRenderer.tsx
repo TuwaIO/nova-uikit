@@ -655,8 +655,8 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
           tabIndex={0}
           {...motionProps}
         >
-          {contentElement}
-          {activeIndicatorWrapper}
+          {/* A space between the two, which a flex row does not draw: read in one piece, the words ran on ("EthereumConnected") */}
+          {contentElement} {activeIndicatorWrapper}
         </MotionItem>
       );
     }
@@ -672,8 +672,7 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
         onKeyDown={handleKeyDown}
         className={itemClasses}
       >
-        {contentElement}
-        {activeIndicatorWrapper}
+        {contentElement} {activeIndicatorWrapper}
       </SelectItemBase>
     );
   };

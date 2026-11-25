@@ -119,9 +119,13 @@ describe('ConnectionsContent', () => {
     expect(button.props.className).toContain('novacon:ml-auto');
   });
 
-  // The badge in the corner lay on the end of a name of twenty letters
+  // The badge in the corner lay on the end of a name of twenty letters: on the line of text of its box it stood 4 px lower than
+  // its place, and 5 px into the name
   it('keeps the name of the active wallet under its badge on a phone', () => {
-    expect(drawRow(rowsFor(connection)[0]).props.className).toContain('novacon:max-[480px]:pt-7');
+    const row = drawRow(rowsFor(connection)[0]);
+    expect(row.props.className).toContain('novacon:max-[480px]:pt-8');
+    const [badge] = childrenOf(row);
+    expect(badge.props.className).toContain('novacon:flex');
   });
 
   // Two labels put together: "Активний Конектори (1)", "Aktiv Konnektoren (1)"
