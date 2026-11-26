@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.16.0...nova-transactions-v0.17.0) (2026-11-26)
+
+
+### Features
+
+* German, Spanish and Italian labels, several Solana RPC URLs of a cluster, and the fixes of the Payments passes ([#165](https://github.com/TuwaIO/nova-uikit/issues/165)) ([d836679](https://github.com/TuwaIO/nova-uikit/commit/d836679d5c0602ceaf582a4582bce4f4e630ce49))
+
 ## [0.16.0](https://github.com/TuwaIO/nova-uikit/compare/nova-transactions-v0.15.1...nova-transactions-v0.16.0) (2026-11-17)
 
 
