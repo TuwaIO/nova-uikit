@@ -37,6 +37,7 @@ module.exports = {
         prepareCmd: `
           echo "Final version will be: \${nextRelease.version}.\$(git rev-parse --short HEAD)"
           pnpm -r exec pnpm dlx json -I -f package.json -e "this.version = '\${nextRelease.version}.\$(git rev-parse --short HEAD)'"
+          node scripts/exact-workspace-ranges.mjs
         `,
         publishCmd: 'pnpm publish --filter "@tuwaio/*" --no-git-checks --tag alpha --access public',
       },

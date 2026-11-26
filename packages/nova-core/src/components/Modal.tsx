@@ -110,6 +110,19 @@ function DialogSounds() {
 }
 
 /**
+ * Notes the element that has the focus as the dialog opens, from what Radix mounts only while it is open. In an insertion
+ * effect: React focuses a field with `autoFocus` after it, and Radix asks where the focus goes only when nothing inside has it
+ * yet, so `onOpenAutoFocus` never came of such a dialog and nothing gave the focus back when it closed.
+ */
+function OpenerNote({ openerRef }: { openerRef: React.RefObject<HTMLElement | null> }) {
+  React.useInsertionEffect(() => {
+    const active = document.activeElement;
+    openerRef.current = active instanceof HTMLElement && active !== document.body ? active : null;
+  }, [openerRef]);
+  return null;
+}
+
+/**
  * The dialog panel (`Content` of `@radix-ui/react-dialog`), rendered in a portal above {@link DialogOverlay}. It takes
  * the props of the Radix `Content` plus `modalAnimation` and `backdropAnimation` (`framer-motion` variants). By default
  * the panel scales in at the center of the screen, or slides up from the bottom on touch devices (`isTouchDevice`); its
@@ -148,7 +161,6 @@ const DialogContent = React.forwardRef<
       backdropAnimation,
       anchorTop = false,
       animateHeight = true,
-      onOpenAutoFocus,
       onCloseAutoFocus,
       onPointerDownOutside,
       ...props
@@ -195,12 +207,6 @@ const DialogContent = React.forwardRef<
             // A toast is above the dialog, not outside it: its click closed the dialog, or opened the leave question of a checkout
             if (isInsideToast(event.target)) event.preventDefault();
           }}
-          onOpenAutoFocus={(event) => {
-            // Called before the focus moves into the dialog
-            const active = document.activeElement;
-            opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
-            onOpenAutoFocus?.(event);
-          }}
           onCloseAutoFocus={(event) => {
             onCloseAutoFocus?.(event);
             if (event.defaultPrevented || !opener.current?.isConnected) return;
@@ -214,6 +220,7 @@ const DialogContent = React.forwardRef<
           {...props}
         >
           <DialogSounds />
+          <OpenerNote openerRef={opener} />
           <div className="NovaNoScrolling novacore:relative novacore:overflow-hidden">
             <AnimatePresence>
               <motion.div

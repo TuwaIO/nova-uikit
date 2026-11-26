@@ -339,7 +339,7 @@ export function ToastValidationError({
         {...(customization?.buttonProps ?? {})}
         type="button"
         disabled={disabled}
-        aria-label={isCopied ? `${labels.copied} ${labels.copy}` : labels.copy}
+        aria-label={isCopied ? labels.copied : labels.copy}
         className={copyButtonClasses}
         onClick={async (e) => {
           e.stopPropagation();

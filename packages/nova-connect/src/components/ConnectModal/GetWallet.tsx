@@ -777,7 +777,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
         {/* Animated Header Section */}
         <CustomAnimationSection
           className={animationSectionClasses}
-          role="banner"
+          role="group"
           aria-label={customConfig?.ariaLabels?.animationSection ?? labels.walletIconsAnimation}
         >
           {/* Stars Background */}
@@ -814,7 +814,7 @@ export const GetWallet = forwardRef<HTMLElement, GetWalletProps>(
         </CustomAnimationSection>
 
         {/* Content Section */}
-        <CustomContentSection className={contentSectionClasses} role="main">
+        <CustomContentSection className={contentSectionClasses}>
           {/* Main Title */}
           <CustomTitle className={titleClasses} role="heading" aria-level={2}>
             {labels.startExploringWeb3}

@@ -852,7 +852,7 @@ const DefaultActiveConnectorsSection = forwardRef<HTMLDivElement, ConnectionsCon
             classNames?.title,
           )}
         >
-          {labels.active} {labels.connectors} {count > 0 && `(${count})`}
+          {labels.connectors} {count > 0 && `(${count})`}
         </h3>
         <div
           className={cn(
@@ -931,13 +931,15 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
       <div
         ref={ref}
         className={cn(
-          'novacon:relative novacon:flex novacon:items-center novacon:justify-between novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4',
+          // Wraps: on a phone the button of a long word ("Відключити") stood past the window. There the wallet starts under the
+          // badge in the corner, which lay on the end of a name of twenty letters
+          'novacon:relative novacon:flex novacon:flex-wrap novacon:items-center novacon:justify-between novacon:gap-x-3 novacon:bg-[color-mix(in_srgb,var(--tuwa-text-accent)_5%,transparent)] novacon:p-4 novacon:max-[480px]:pt-8',
           classNames?.container,
           className,
         )}
       >
-        {/* Active Badge - Absolute Top Right */}
-        <div className="novacon:absolute novacon:top-2 novacon:right-2">
+        {/* Active Badge - Absolute Top Right. A flex box: on the line of text of a block it stood 4 px lower than its place */}
+        <div className="novacon:absolute novacon:top-2 novacon:right-2 novacon:flex">
           <span
             className={cn(
               'novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[color-mix(in_srgb,var(--tuwa-success-icon)_35%,transparent)] novacon:bg-[var(--tuwa-success-bg)] novacon:px-1.5 novacon:py-0.5 novacon:font-mono novacon:text-[10px] novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:leading-3 novacon:text-[var(--tuwa-success-text)]',
@@ -948,7 +950,7 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
           </span>
         </div>
 
-        <div className={cn('novacon:flex novacon:items-center novacon:gap-3', classNames?.content)}>
+        <div className={cn('novacon:flex novacon:min-w-0 novacon:items-center novacon:gap-3', classNames?.content)}>
           <ConnectorIcon
             connectorType={connectorType}
             icon={icon}
@@ -1012,10 +1014,10 @@ const DefaultActiveConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProps>(
         <button
           onClick={onDisconnect}
           className={cn(
-            'novacon:mt-4 novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
+            'novacon:mt-4 novacon:ml-auto novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:border novacon:border-[var(--tuwa-border-strong)] novacon:px-3 novacon:py-1.5 novacon:font-mono novacon:text-xs novacon:font-bold novacon:uppercase novacon:tracking-[0.12em] novacon:text-[var(--tuwa-text-primary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-muted)] novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
-          aria-label={`${labels.disconnect} ${connectorType}`}
+          aria-label={`${labels.disconnect} ${connectorName(connectorType)}`}
         >
           {labels.disconnect}
         </button>
@@ -1094,7 +1096,7 @@ const DefaultConnectedConnectorRow = forwardRef<HTMLDivElement, ConnectorRowProp
             'novacon:cursor-pointer novacon:rounded-[var(--tuwa-rounded-corners)] novacon:p-1.5 novacon:text-[var(--tuwa-text-secondary)] novacon:transition-colors novacon:hover:bg-[var(--tuwa-bg-error)]/10 novacon:hover:text-[var(--tuwa-error-text)]',
             classNames?.disconnectButton,
           )}
-          aria-label={`${labels.disconnect} ${connectorType}`}
+          aria-label={`${labels.disconnect} ${connectorName(connectorType)}`}
         >
           <ExitIcon className={cn('novacon:h-5 novacon:w-5', classNames?.disconnectIcon)} />
         </button>

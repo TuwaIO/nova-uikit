@@ -3,12 +3,13 @@
  */
 
 import { cn, DrawnCheck, DrawnCross, formatLabel, MorphText } from '@tuwaio/nova-core';
-import { formatConnectorName, OrbitAdapter } from '@tuwaio/orbit-core';
+import { formatConnectorName, getNetworkData, OrbitAdapter } from '@tuwaio/orbit-core';
 import React, { ComponentType, forwardRef, memo, useContext, useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { NovaConnectProviderContext } from '../../hooks/useNovaConnect';
 import { useSatelliteConnectStore } from '../../satellite';
+import { isUserRejection } from '../../utils/isUserRejection';
 import { WalletIcon, WalletIconCustomization } from '../WalletIcon';
 import { GroupedConnector } from './ConnectModal';
 
@@ -628,6 +629,15 @@ export const Connecting = memo(
        */
       const connectionState: ConnectionState =
         connectionError || customErrorMessage ? 'error' : isConnected ? 'success' : 'connecting';
+      // The person declined the request in the wallet (the connection or the sign-in message): their action, said in
+      // their words. "Cannot connect to the wallet" was wrong for it: the wallet had connected
+      const declined = connectionState === 'error' && !customErrorMessage && isUserRejection(connectionError);
+      // What a screen reader hears of the state
+      const stateLabel = {
+        connecting: labels.connecting,
+        success: labels.connectedSuccessfully,
+        error: declined ? labels.requestDeclined : labels.connectionError,
+      }[connectionState];
 
       /**
        * Display message
@@ -635,7 +645,7 @@ export const Connecting = memo(
       const displayMessage = (() => {
         switch (connectionState) {
           case 'error':
-            return customErrorMessage || labels.connectionError;
+            return customErrorMessage || (declined ? labels.requestDeclined : labels.connectionError);
           case 'success':
             return labels.connectedSuccessfully;
           case 'connecting':
@@ -664,7 +674,9 @@ export const Connecting = memo(
           ? null
           : customErrorMessage && showDetailedError
             ? customErrorMessage
-            : labels.cannotConnectWallet;
+            : declined
+              ? labels.requestDeclinedInWallet
+              : labels.cannotConnectWallet;
 
       /**
        * Memoized status data
@@ -940,9 +952,7 @@ export const Connecting = memo(
 
           {/* Screen Reader Announcements */}
           <div className="novacon:sr-only" aria-live="assertive" role="status">
-            {connectionState === 'connecting' && `${labels.connecting} ${walletName}`}
-            {connectionState === 'success' && `${labels.connectedSuccessfully} ${walletName}`}
-            {connectionState === 'error' && `${labels.connectionError} ${walletName}`}
+            {`${stateLabel} ${walletName}`}
           </div>
 
           {/* Hidden Content for Screen Readers */}
@@ -950,8 +960,9 @@ export const Connecting = memo(
             <p>
               {formatLabel(labels.connectingDetails, {
                 wallet: walletName,
-                network: selectedAdapter,
-                status: connectionState,
+                // The name its tab has, and the words of the state: not the values of the code
+                network: getNetworkData(selectedAdapter)?.chain?.name ?? selectedAdapter,
+                status: stateLabel,
               })}
             </p>
           </div>

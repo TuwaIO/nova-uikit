@@ -4,6 +4,7 @@ import { NovaTransactionsLabels } from './types';
  * Ukrainian (uk) translations for Nova Transactions modals, toasts, and history.
  */
 export const ukrainianLabels: NovaTransactionsLabels = {
+  locale: 'uk',
   transaction: {
     defaultTitle: 'Транзакція',
     defaultDescription: {
@@ -29,6 +30,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
   statuses: {
     pending: 'В обробці',
     confirmed: 'Підтверджено',
+    finalized: 'Фіналізовано',
     success: 'Успішно',
     spedUp: 'Прискорено',
     cancelled: 'Скасовано',
@@ -85,6 +87,8 @@ export const ukrainianLabels: NovaTransactionsLabels = {
   },
   actions: {
     replacementFailed: 'Не вдалося замінити транзакцію',
+    replacementSettled: 'Транзакцію вже підтверджено або замінено.',
+    replacementFeeTooLow: 'У мережі вже є версія з вищою комісією: змініть її в гаманці.',
     stopTracking: 'Припинити відстеження',
     copy: 'Скопіювати адресу',
     viewOnExplorer: 'В експлорері',

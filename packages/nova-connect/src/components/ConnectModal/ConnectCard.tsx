@@ -286,7 +286,7 @@ export type ConnectCardInfoLinkProps = {
   target?: string;
   /** `noopener noreferrer` */
   rel?: string;
-  /** From `config.ariaLabels.infoLink`, or the `learnMore` and `aboutWallets` labels with the title */
+  /** From `config.ariaLabels.infoLink`, or the `learnMore` label with the title */
   'aria-label'?: string;
   /** Data of the card */
   cardData: ConnectCardData;
@@ -1009,7 +1009,7 @@ export const ConnectCard = memo(
               aria-label={
                 customConfig?.ariaLabels?.infoLink
                   ? customConfig.ariaLabels.infoLink(cardData)
-                  : `${labels.learnMore} ${labels.aboutWallets} ${title}`
+                  : `${labels.learnMore}: ${title}`
               }
               cardData={cardData}
             >

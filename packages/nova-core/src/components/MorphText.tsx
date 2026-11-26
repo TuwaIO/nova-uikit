@@ -2,7 +2,7 @@
  * @file Text and icons that change in place: the letters both versions share glide to their new places, the others fade.
  */
 
-import { animate, AnimatePresence, motion, PresenceContext, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, PresenceContext, useReducedMotion } from 'framer-motion';
 import { type ReactNode, type RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { useNovaIcons } from '../hooks/useNovaIcons';
@@ -60,14 +60,20 @@ function Letters({
     root.style.width = `${fromWidth}px`;
     // In the next frame, not in this commit: motion can snapshot a letter only after the microtask that follows its mount, and
     // without a snapshot the letters jump instead of gliding. The frame in between shows the same text, so nothing is seen.
-    let width: ReturnType<typeof animate> | undefined;
+    // The browser animates the width, not motion: stopped while it still ran, motion wrote the width once more in its next
+    // frame, after it had been taken off, and the text kept it: a label on two lines no longer wrapped.
+    let width: Animation | undefined;
     const frame = requestAnimationFrame(() => {
       setShown(to);
-      width = animate(root, { width: [fromWidth, toWidth] }, { duration: MORPH_SECONDS, ease: MORPH_EASE });
+      root.style.width = `${toWidth}px`;
+      width = root.animate?.([{ width: `${fromWidth}px` }, { width: `${toWidth}px` }], {
+        duration: MORPH_SECONDS * 1000,
+        easing: `cubic-bezier(${MORPH_EASE.join(', ')})`,
+      });
     });
     return () => {
       cancelAnimationFrame(frame);
-      width?.stop();
+      width?.cancel();
     };
   }, [to, wrap, rootRef, textRef, onTooLong]);
 
@@ -153,8 +159,10 @@ export function MorphText({ children: text, wrap, className }: MorphTextProps) {
     <span
       ref={rootRef}
       className={cn(
-        showsLetters && 'novacore:relative novacore:inline-flex novacore:whitespace-pre',
-        isMorphing && isTooLong && 'novacore:relative novacore:block',
+        // The font of the place it stands in: with a class of Nova it may be the outermost part of Nova, which has its own
+        isMorphing && 'novacore:relative novacore:[font-family:inherit]',
+        showsLetters && 'novacore:inline-flex novacore:whitespace-pre',
+        isMorphing && isTooLong && 'novacore:block',
         className,
       )}
     >

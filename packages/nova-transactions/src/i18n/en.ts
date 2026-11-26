@@ -11,6 +11,7 @@ import { NovaTransactionsLabels } from './types';
  * for creating other language translations.
  */
 export const defaultLabels: NovaTransactionsLabels = {
+  locale: 'en',
   transaction: {
     defaultTitle: 'Transaction',
     defaultDescription: {
@@ -36,6 +37,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   statuses: {
     pending: 'Pending',
     confirmed: 'Confirmed',
+    finalized: 'Finalized',
     success: 'Success',
     spedUp: 'Sped up',
     cancelled: 'Cancelled',
@@ -92,6 +94,8 @@ export const defaultLabels: NovaTransactionsLabels = {
   },
   actions: {
     replacementFailed: 'Could not replace the transaction',
+    replacementSettled: 'The transaction has already been confirmed or replaced.',
+    replacementFeeTooLow: 'The network already has a version with a higher fee: change it in the wallet.',
     stopTracking: 'Stop tracking',
     copy: 'Copy address',
     viewOnExplorer: 'View on explorer',

@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Packages/nova-connect/connect/Variables/WALLET_RESTORE_WAIT_MS" />
+
+# WALLET\_RESTORE\_WAIT\_MS
+
+> `const` **WALLET\_RESTORE\_WAIT\_MS**: `5000` = `5000`
+
+Defined in: [packages/nova-connect/src/hooks/useWalletRestoring.ts:11](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/hooks/useWalletRestoring.ts#L11)
+
+How long, in milliseconds, [useWalletRestoring](?path=/docs/packages-nova-connect-connect-functions-usewalletrestoring--docs) waits at most for Satellite Connect to restore the last
+wallet. The restore waits 300 ms, then up to 1.5 s for the wallet to be listed, then reconnects it silently; an app
+that never restores (no `initializeAutoConnect`) is not left waiting longer than this.

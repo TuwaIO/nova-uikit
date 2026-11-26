@@ -64,7 +64,7 @@ export interface ScrollableChainListScrollContainerProps {
   onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
   /** Classes from `classNames.container` or the defaults */
   className?: string;
-  /** `listbox` */
+  /** `group`: the listbox is the chain list in it */
   role: string;
   /** The `selectChain` label */
   'aria-label': string;
@@ -608,7 +608,8 @@ export const ScrollableChainList: React.FC<ScrollableChainListProps> = ({
       <ScrollContainer
         ref={containerRef}
         className={containerClasses}
-        role="listbox"
+        // Not a listbox: the list in it is one, and while it is loading there are no options
+        role="group"
         aria-label={labels.selectChain}
         tabIndex={0}
         onKeyDown={handleKeyDown}

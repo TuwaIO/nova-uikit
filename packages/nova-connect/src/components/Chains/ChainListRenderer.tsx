@@ -282,7 +282,10 @@ export interface ChainListRendererProps {
   itemClassName?: string;
   /** Customization options */
   customization?: ChainListRendererCustomization;
-  /** ARIA label for the list container (default: the `selectChain` label) */
+  /**
+   * ARIA label for the list container (default: the `selectChain` label for the mobile list; the desktop list is in the listbox
+   * of Radix Select, which has a name of its own)
+   */
   'aria-label'?: string;
   /** Shows the loading message instead of the list (default: `false`) */
   isLoading?: boolean;
@@ -346,21 +349,18 @@ const DefaultActiveIndicatorWrapper: React.FC<ChainListRendererActiveIndicatorWr
 /**
  * Default active indicator component
  */
-const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = ({ isActive, label, className }) => {
+const DefaultActiveIndicator: React.FC<ChainListRendererActiveIndicatorProps> = ({ isActive, className }) => {
   if (!isActive) return null;
 
+  // For the eye: the option says "Connected" in its name, and on a phone in words next to the mark
   return (
-    <>
-      <span
-        className={cn(
-          'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-success-text)]',
-          className,
-        )}
-        aria-label={label}
-        role="status"
-      />
-      <span className="novacon:sr-only">{label}</span>
-    </>
+    <span
+      className={cn(
+        'novacon:ml-auto novacon:text-xs novacon:font-semibold novacon:w-2 novacon:h-2 novacon:rounded-[var(--tuwa-rounded-full)] novacon:bg-[var(--tuwa-success-text)]',
+        className,
+      )}
+      aria-hidden="true"
+    />
   );
 };
 
@@ -631,11 +631,12 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
         indicator={indicator}
         className={activeIndicatorWrapperClasses}
       >
-        <span aria-label={labels.connected}>{labels.connected}</span>
+        <span>{labels.connected}</span>
       </ActiveIndicatorWrapper>
     );
 
-    const ariaLabel = `${labels.chainOption}: ${chainName}`;
+    // All that the option shows: the active chain says "Connected" next to its name
+    const optionLabel = `${labels.chainOption}: ${chainName}${isActive ? `. ${labels.connected}` : ''}`;
 
     // Render mobile version
     if (isMobile) {
@@ -650,12 +651,12 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
           className={itemClasses}
           role="option"
           aria-selected={isActive}
-          aria-label={ariaLabel}
+          aria-label={optionLabel}
           tabIndex={0}
           {...motionProps}
         >
-          {contentElement}
-          {activeIndicatorWrapper}
+          {/* A space between the two, which a flex row does not draw: read in one piece, the words ran on ("EthereumConnected") */}
+          {contentElement} {activeIndicatorWrapper}
         </MotionItem>
       );
     }
@@ -665,14 +666,13 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
       <SelectItemBase
         key={chain}
         value={String(formattedChainId)}
-        aria-label={ariaLabel}
+        aria-label={optionLabel}
         isActive={isActive}
         onActivate={handleClick}
         onKeyDown={handleKeyDown}
         className={itemClasses}
       >
-        {contentElement}
-        {activeIndicatorWrapper}
+        {contentElement} {activeIndicatorWrapper}
       </SelectItemBase>
     );
   };
@@ -683,8 +683,9 @@ export const ChainListRenderer: React.FC<ChainListRendererProps> = ({
 
   return (
     <MotionContainer
-      role="listbox"
-      aria-label={ariaLabel || labels.selectChain}
+      // The desktop list is in the listbox of Radix Select: a listbox in a listbox left the options with no list of their own
+      role={isMobile ? 'listbox' : ariaLabel ? 'group' : 'presentation'}
+      aria-label={isMobile ? ariaLabel || labels.selectChain : ariaLabel}
       // Paper and ink: the chains are cells on lines of 1 px, unless a host styles the list
       className={
         customization?.classNames?.container

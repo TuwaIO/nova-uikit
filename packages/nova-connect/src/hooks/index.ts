@@ -12,3 +12,4 @@ export * from './useNovaSiwx';
 export * from './useWalletChainsList';
 export * from './useWalletConnectors';
 export * from './useWalletNativeBalance';
+export * from './useWalletRestoring';

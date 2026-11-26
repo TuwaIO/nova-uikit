@@ -22,9 +22,9 @@ export type NovaConnectLabels = {
   connect: string;
   /** Network tab that shows the wallets of all networks (default: `All`) */
   all: string;
-  /** Badge of the active wallet and title of the connected wallets section (default: `Active`) */
+  /** Badge of the active wallet (default: `Active`) */
   active: string;
-  /** Title of the connected wallets section (after `active`) (default: `Connectors`) */
+  /** Title of the connected wallets section, with their number after it (default: `Active Connectors`) */
   connectors: string;
   /** Button of the connections screen that opens the connect modal (default: `Connect new wallet`) */
   connectNewWallet: string;
@@ -40,6 +40,18 @@ export type NovaConnectLabels = {
   errorWhenChainSwitching: string;
   /** Text under the connection error heading */
   cannotConnectWallet: string;
+  /**
+   * Heading of the connect window when the person declined the request in the wallet (the connection or the sign-in
+   * message): an action of theirs, not an error (default: `Request declined`)
+   */
+  requestDeclined: string;
+  /** Text under {@link NovaConnectLabels.requestDeclined}: what happened and that they may try again */
+  requestDeclinedInWallet: string;
+  /**
+   * Name of the connect button while the last wallet may still come back after a page load, instead of `Connect
+   * Wallet` (default: `Restoring your wallet…`)
+   */
+  restoringWallet: string;
 
   // Transaction states - Status indicators for blockchain transactions
   /** Transaction status in the connect button (default: `Success`) */
@@ -166,6 +178,8 @@ export type NovaConnectLabels = {
   chainSelector: string;
   /** ARIA label of the close buttons of the modals (default: `Close modal`) */
   closeModal: string;
+  /** Name of the cross of an error toast (default: `Close notification`) */
+  closeToast: string;
   /** ARIA label of the chain list (default: `Select chain`) */
   selectChain: string;
   /** ARIA label of a chain option (default: `Chain option`) */
@@ -182,9 +196,9 @@ export type NovaConnectLabels = {
   chainListContainer: string;
   /** ARIA label of the wallet controls (default: `Wallet controls`) */
   walletControls: string;
-  /** ARIA label of the connect button while connected (default: `Open wallet modal`) */
+  /** Ends the name of the connect button while connected, after the wallet it shows (default: `Open wallet modal`) */
   openWalletModal: string;
-  /** ARIA text of the connected state (default: `Wallet connected`) */
+  /** ARIA text of the connected state; begins the name of the connect button (default: `Wallet connected`) */
   walletConnected: string;
   /** ARIA text of the disconnected state (default: `Wallet not connected`) */
   walletNotConnected: string;

@@ -18,7 +18,36 @@ type Element = ReactElement<Record<string, unknown> & { children?: unknown }>;
 const childrenOf = (element: Element): Element[] =>
   ([] as unknown[]).concat(element.props.children).flat().filter(isValidElement) as Element[];
 
+// The words of what an element holds as it is drawn, without what is hidden from a screen reader
+function wordsOf(node: unknown): string {
+  if (Array.isArray(node))
+    return node
+      .map(wordsOf)
+      .filter((words) => words.trim())
+      .join(' ');
+  if (typeof node === 'string') return node;
+  if (!isValidElement(node)) return '';
+  const element = node as Element;
+  if (element.props['aria-hidden']) return '';
+  if (element.props['aria-label']) return String(element.props['aria-label']);
+  if (typeof element.type === 'function') return wordsOf((element.type as (props: object) => unknown)(element.props));
+  return wordsOf(element.props.children);
+}
+
 const keyEvent = (key: string) => ({ key, preventDefault: vi.fn(), ctrlKey: false, altKey: false, metaKey: false });
+
+function renderList(props: Partial<ChainListRendererProps>): Element {
+  const list = render(ChainListRenderer as (p: ChainListRendererProps) => unknown, {
+    chainsList: [1, 137],
+    selectValue: '1',
+    handleValueChange: vi.fn(),
+    getChainData: (chain) => ({ chain, formattedChainId: chain }),
+    onClose: vi.fn(),
+    ...props,
+  }) as Element;
+  unmount();
+  return list;
+}
 
 function renderDesktopList(props: Partial<ChainListRendererProps>) {
   const handleValueChange = vi.fn();
@@ -105,5 +134,61 @@ describe('ChainListRenderer (desktop)', () => {
     const drawn = (content.type as (props: unknown) => Element)(content.props);
 
     expect(JSON.stringify(drawn)).toContain('novacon:shrink-0');
+  });
+});
+
+// The list stood as a listbox inside another one: the options belonged to neither for a screen reader, and the name of the list
+// was said twice
+describe('ChainListRenderer, as a list', () => {
+  afterEach(() => unmount());
+
+  it('is the listbox of the mobile dialog', () => {
+    const list = renderList({ isMobile: true });
+    expect(list.props.role).toBe('listbox');
+    expect(list.props['aria-label']).toBe(defaultLabels.selectChain);
+    expect(renderList({ isMobile: true, 'aria-label': 'Networks' }).props['aria-label']).toBe('Networks');
+  });
+
+  it('is a part of the listbox of Radix Select on desktop', () => {
+    const list = renderList({});
+    expect(list.props.role).toBe('presentation');
+    expect(list.props['aria-label']).toBeUndefined();
+  });
+
+  it('is a named group of that listbox with a name of its own', () => {
+    const list = renderList({ 'aria-label': 'Networks' });
+    expect(list.props.role).toBe('group');
+    expect(list.props['aria-label']).toBe('Networks');
+  });
+
+  // Its words on the screen are "Ethereum" and "Connected", and its name had only the first
+  it.each([
+    ['mobile', true],
+    ['desktop', false],
+  ])('%s: the name of the active chain says that it is connected', (_, isMobile) => {
+    const [active, other] = childrenOf(renderList({ isMobile }));
+    expect(active.props['aria-label']).toBe(`${defaultLabels.chainOption}: Ethereum. ${defaultLabels.connected}`);
+    expect(other.props['aria-label']).toBe(`${defaultLabels.chainOption}: Polygon`);
+  });
+
+  // The mark of the active chain said the word again, twice: the words in the option were not the ones of its name
+  it.each([
+    ['mobile', true, 'Ethereum Connected'],
+    ['desktop', false, 'Ethereum'],
+  ])('%s: the mark of the active chain is for the eye', (_, isMobile, words) => {
+    const [active, other] = childrenOf(renderList({ isMobile }));
+    expect(wordsOf(active.props.children)).toBe(words);
+    expect(wordsOf(other.props.children)).toBe('Polygon');
+  });
+
+  // Text that is read in one piece ran on: "EthereumConnected" was not the name of the option for axe
+  it.each([
+    ['mobile', true],
+    ['desktop', false],
+  ])('%s: keeps a space between the name of the chain and its mark', (_, isMobile) => {
+    const [active] = childrenOf(renderList({ isMobile }));
+    const parts = ([] as unknown[]).concat(active.props.children);
+    expect(parts).toHaveLength(3);
+    expect(parts[1]).toBe(' ');
   });
 });

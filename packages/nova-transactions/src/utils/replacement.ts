@@ -13,6 +13,7 @@ import {
   TxAdapter,
 } from '@tuwaio/pulsar-core';
 
+import type { NovaTransactionsLabels } from '../i18n/types';
 import { isTxOfWallet } from './txStatus';
 
 const asEvm = (tx: Transaction) => tx as unknown as EvmTransaction;
@@ -104,6 +105,39 @@ export function isUserRejection(error: unknown): boolean {
     if (name === 'UserRejectedRequestError' || code === 4001 || /user rejected|user denied/i.test(message)) return true;
   }
   return false;
+}
+
+/** Pulsar's own refusal of a nonce already used, with no wallet prompt, and what the wallet's node says of one. */
+const SETTLED_ERROR = 'NonceAlreadyUsedError';
+const SETTLED_WORDS = /nonce too low|nonce has already been used/i;
+/** What a node says of a replacement that does not pay enough more than the one it holds. */
+const FEE_TOO_LOW_WORDS = /replacement transaction underpriced|replacement fee too low/i;
+
+/** The message of anything thrown: a wallet may reject with a plain object. */
+const wordsOf = (error: unknown) =>
+  typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : '';
+
+/**
+ * What the toast of a refused speed-up or cancel says. The two refusals a person meets have words of their own in the language of the
+ * interface; the node says them in English. Any other error keeps its own words.
+ *
+ * @param error - What the action threw.
+ * @param labels - The labels of the actions.
+ * @returns The title of the toast and, for a refusal that is known, its message.
+ */
+export function refusedReplacementWords(
+  error: unknown,
+  labels: Pick<NovaTransactionsLabels['actions'], 'replacementFailed' | 'replacementSettled' | 'replacementFeeTooLow'>,
+): { title: string; message?: string } {
+  const title = labels.replacementFailed;
+  const chain = errorChain(error);
+  if (chain.some((current) => current instanceof Error && current.name === SETTLED_ERROR)) {
+    return { title, message: labels.replacementSettled };
+  }
+  const words = chain.map(wordsOf);
+  if (words.some((message) => SETTLED_WORDS.test(message))) return { title, message: labels.replacementSettled };
+  if (words.some((message) => FEE_TOO_LOW_WORDS.test(message))) return { title, message: labels.replacementFeeTooLow };
+  return { title };
 }
 
 const replacementsRunning = new Set<string>();

@@ -8,6 +8,11 @@
  * This type defines structured labels for wallet modals, transaction statuses, toast notifications, and more.
  */
 export type NovaTransactionsLabels = {
+  /**
+   * The language of the labels, a BCP 47 tag such as `uk`: the times beside them are in it. Labels without one have their
+   * times in English.
+   */
+  locale?: string;
   /** What a transaction shows when the app gave it no title or description. */
   transaction: {
     /** The title of a transaction with none. */
@@ -60,6 +65,8 @@ export type NovaTransactionsLabels = {
      * usually within a second) and is waiting to be finalized.
      */
     confirmed: string;
+    /** Text for a transaction that can no longer be undone (Solana), in place of a count of confirmations. */
+    finalized: string;
     /** Text for a successful transaction. */
     success: string;
     /** Text for a transaction replaced by a speed-up: the operation goes on under a new hash. */
@@ -176,6 +183,10 @@ export type NovaTransactionsLabels = {
   actions: {
     /** Title of the toast when a speed-up or a cancel is refused (default: `Could not replace the transaction`). */
     replacementFailed: string;
+    /** What that toast says when there is nothing to replace: the transaction is in a block, or was replaced already. */
+    replacementSettled: string;
+    /** What that toast says when the network holds a replacement with a higher fee, sent from the wallet or another tab. */
+    replacementFeeTooLow: string;
     /** Text for the action that stops tracking a transaction that never ends. */
     stopTracking: string;
     /** Text for a "Copy" action (e.g., copy address or hash). */

@@ -625,7 +625,9 @@ export const Disclaimer = forwardRef<HTMLDivElement, DisclaimerProps>(
 
         {/* Screen reader summary */}
         <CustomStatus className={customization?.classNames?.status?.() ?? 'novacon:sr-only'}>
-          {formatLabel(labels.disclaimerSummary, { topic: title.toLowerCase() })} {description}
+          {/* A title that is a question ends the sentence itself */}
+          {formatLabel(labels.disclaimerSummary, { topic: title.toLowerCase() }).replace(/([?!？！])[.。]$/, '$1')}{' '}
+          {description}
           {learnMoreAction &&
             ` ${formatLabel(labels.actionAvailable, { action: customConfig?.buttonLabels?.learnMore ?? labels.learnMore })}`}
           {listAction &&

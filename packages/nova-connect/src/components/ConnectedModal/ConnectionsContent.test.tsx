@@ -1,7 +1,12 @@
 import { isValidElement, type ReactElement } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { germanLabels } from '../../i18n/de';
 import { defaultLabels } from '../../i18n/en';
+import { spanishLabels } from '../../i18n/es';
+import { italianLabels } from '../../i18n/it';
+import { ukrainianLabels } from '../../i18n/ua';
+import { chineseLabels } from '../../i18n/zh';
 
 // The recent wallets list (the only array state of the component) can be preset by a test
 let recentList: unknown[] | undefined;
@@ -18,16 +23,23 @@ vi.mock('react', async (importOriginal) => ({
 }));
 
 vi.mock('../../hooks', () => ({
-  useNovaConnectLabels: () => defaultLabels,
+  useNovaConnectLabels: () => labels,
   useNovaConnect: () => ({ setIsConnectModalOpen: vi.fn(), appChains: [{ id: 137 }] }),
   useGetWalletNameAndAvatar: () => ({ ensNameAbbreviated: undefined }),
 }));
 
 let storeState: Record<string, unknown> = {};
+let labels = defaultLabels;
 
 vi.mock('../../satellite', () => ({
   SatelliteStoreContext: {},
   useSatelliteConnectStore: (selector: (state: Record<string, unknown>) => unknown) => selector(storeState),
+}));
+
+// The hook of nova-core runs the React of its own build
+vi.mock('@tuwaio/nova-core', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tuwaio/nova-core')>()),
+  useCopyToClipboard: () => ({ copy: vi.fn(), isCopied: false }),
 }));
 
 import { ConnectionsContent } from './ConnectionsContent';
@@ -45,9 +57,22 @@ type Element = ReactElement<Record<string, unknown> & { children?: unknown }>;
 const childrenOf = (element: Element): Element[] =>
   ([] as unknown[]).concat(element.props.children).flat().filter(isValidElement) as Element[];
 
+// The connected wallets, the active one first, as the screen passes them to their rows
+const rowsFor = (...connections: (typeof connection)[]): Element[] => {
+  storeState.connections = Object.fromEntries(connections.map((item) => [item.connectorType, item]));
+  storeState.activeConnection = connections[0];
+  const screen = ConnectionsContent({}) as Element;
+  return childrenOf(childrenOf(screen).find((child) => 'count' in child.props)!);
+};
+
+// A row as it is drawn (a `forwardRef` component)
+const drawRow = (row: Element): Element =>
+  (row.type as unknown as { render: (props: object, ref: null) => Element }).render(row.props, null);
+
 describe('ConnectionsContent', () => {
   beforeEach(() => {
     recentList = undefined;
+    labels = defaultLabels;
     storeState = {
       connections: {},
       activeConnection: undefined,
@@ -82,6 +107,52 @@ describe('ConnectionsContent', () => {
     }) as ReactElement<{ children: ReactElement<{ children: string }> }>;
 
     expect(element.props.children.props.children).toBe('Nothing here');
+  });
+
+  // In Ukrainian the button "Відключити" stood past the window of a phone of 320 and of 360 px
+  it('takes the disconnect button to the next line when the row of the active wallet has no place for it', () => {
+    const row = drawRow(rowsFor(connection)[0]);
+    expect(row.props.className).toContain('novacon:flex-wrap');
+    const [, content, button] = childrenOf(row);
+    // The wallet gives way inside its own place, and the button keeps to the end of the line
+    expect(content.props.className).toContain('novacon:min-w-0');
+    expect(button.props.className).toContain('novacon:ml-auto');
+  });
+
+  // The badge in the corner lay on the end of a name of twenty letters: on the line of text of its box it stood 4 px lower than
+  // its place, and 5 px into the name
+  it('keeps the name of the active wallet under its badge on a phone', () => {
+    const row = drawRow(rowsFor(connection)[0]);
+    expect(row.props.className).toContain('novacon:max-[480px]:pt-8');
+    const [badge] = childrenOf(row);
+    expect(badge.props.className).toContain('novacon:flex');
+  });
+
+  // Two labels put together: "Активний Конектори (1)", "Aktiv Konnektoren (1)"
+  it.each([
+    ['en', defaultLabels],
+    ['uk', ukrainianLabels],
+    ['zh', chineseLabels],
+    ['de', germanLabels],
+    ['es', spanishLabels],
+    ['it', italianLabels],
+  ])('%s: the title of the connected wallets is a label of its own', (_, of) => {
+    labels = of;
+    storeState.connections = { [connection.connectorType]: connection };
+    storeState.activeConnection = connection;
+    const section = childrenOf(ConnectionsContent({}) as Element).find((child) => 'count' in child.props)!;
+    const [title] = childrenOf(drawRow(section));
+
+    expect(title.type).toBe('h3');
+    expect(([] as unknown[]).concat(title.props.children).join('')).toBe(`${of.connectors} (1)`);
+  });
+
+  // "Disconnect evm:metamask": the type of the connector, which means nothing to a person
+  it('names the wallet a disconnect button disconnects', () => {
+    storeState.getConnectors = () => ({ evm: [{ name: 'MetaMask' }, { name: 'Rainbow' }] });
+    const rows = rowsFor(connection, { ...connection, connectorType: 'evm:rainbow' });
+    const names = rows.map((row) => childrenOf(drawRow(row)).at(-1)!.props['aria-label']);
+    expect(names).toEqual(['Disconnect MetaMask', 'Disconnect Rainbow']);
   });
 
   it('handles the keyboard shortcuts on the container, not on window', async () => {

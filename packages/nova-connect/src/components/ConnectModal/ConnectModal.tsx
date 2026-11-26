@@ -149,7 +149,7 @@ export type ConnectModalInfoButtonProps = {
   className?: string;
   /** Runs `handlers.onInfoClick`, or shows the "About wallets" screen */
   onClick: () => void;
-  /** From `config.ariaLabels.infoButton`, or the `learnMore` and `aboutWallets` labels */
+  /** From `config.ariaLabels.infoButton`, or the `aboutWallets` label */
   'aria-label'?: string;
   /** State of the modal */
   modalData: ConnectModalData;
@@ -468,7 +468,7 @@ export type ConnectModalCustomization = {
     /** Custom ARIA labels */
     ariaLabels?: {
       /**
-       * Returns the ARIA label of the info button (default: the `learnMore` and `aboutWallets` labels).
+       * Returns the ARIA label of the info button (default: the `aboutWallets` label).
        *
        * @param modalData - State of the modal.
        * @returns The label.
@@ -643,15 +643,14 @@ DefaultCloseButton.displayName = 'DefaultCloseButton';
 const DefaultMainContent = forwardRef<HTMLDivElement, ConnectModalMainContentProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
-    <main
+    <div
       ref={ref}
       className={cn('novacon:flex novacon:flex-col novacon:gap-4 novacon:p-4', className)}
       id="connect-modal-content"
-      role="main"
       {...props}
     >
       {children}
-    </main>
+    </div>
   ),
 );
 DefaultMainContent.displayName = 'DefaultMainContent';
@@ -659,17 +658,17 @@ DefaultMainContent.displayName = 'DefaultMainContent';
 const DefaultFooter = forwardRef<HTMLDivElement, ConnectModalFooterProps>(
   // eslint-disable-next-line
   ({ className, children, modalData, ...props }, ref) => (
-    <footer
+    <div
       ref={ref}
       className={cn(
         'novacon:flex novacon:w-full novacon:items-center novacon:justify-between novacon:border-t novacon:border-[var(--tuwa-border-primary)] novacon:p-4',
         className,
       )}
-      role="contentinfo"
+      role="group"
       {...props}
     >
       {children}
-    </footer>
+    </div>
   ),
 );
 DefaultFooter.displayName = 'DefaultFooter';
@@ -1227,9 +1226,7 @@ export const ConnectModal = memo<ConnectModalProps>(({ appChains, solanaRPCUrls,
                   <InfoButton
                     className={classNames.infoButton?.({ modalData })}
                     onClick={handleInfoClick}
-                    aria-label={
-                      config.ariaLabels?.infoButton?.(modalData) || `${labels.learnMore} ${labels.aboutWallets}`
-                    }
+                    aria-label={config.ariaLabels?.infoButton?.(modalData) || labels.aboutWallets}
                     modalData={modalData}
                   />
                 )}

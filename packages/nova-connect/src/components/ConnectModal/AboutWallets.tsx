@@ -4,7 +4,7 @@
 
 import { cn, formatLabel, QuasarLoader, StarsBackground } from '@tuwaio/nova-core';
 import { AnimatePresence, motion, type Transition, type Variants } from 'framer-motion';
-import React, { ComponentType, forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ComponentType, forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { useNovaConnectLabels } from '../../hooks';
 import { AboutWalletsArt, hasArt } from './AboutWalletsArt';
@@ -279,6 +279,8 @@ export type AboutWalletsNavigationProps = {
   classNames?: AboutWalletsClassNames;
   /** Custom indicator component */
   IndicatorComponent?: ComponentType<AboutWalletsIndicatorProps>;
+  /** ID of the box with the current slide, for `aria-controls` of the indicators */
+  slidesId?: string;
 };
 
 /**
@@ -297,6 +299,8 @@ export type AboutWalletsIndicatorProps = {
   className?: string;
   /** The Nova Connect labels */
   labels: Record<string, string>;
+  /** ID of the box with the current slide, for `aria-controls` */
+  slidesId?: string;
 };
 
 /**
@@ -618,6 +622,7 @@ const DefaultIndicator: React.FC<AboutWalletsIndicatorProps> = ({
   onClick,
   className,
   labels,
+  slidesId,
 }) => (
   <button
     onClick={onClick}
@@ -632,7 +637,7 @@ const DefaultIndicator: React.FC<AboutWalletsIndicatorProps> = ({
     )}
     role="tab"
     aria-selected={isActive}
-    aria-controls={`slide-${index}`}
+    aria-controls={slidesId}
     aria-label={formatLabel(labels.goToSlide, { index: index + 1, title: labels[slide.titleKey as string] })}
     tabIndex={isActive ? 0 : -1}
   />
@@ -646,6 +651,7 @@ const DefaultNavigation: React.FC<AboutWalletsNavigationProps> = ({
   labels,
   classNames,
   IndicatorComponent = DefaultIndicator,
+  slidesId,
 }) => (
   <nav
     className={cn(
@@ -667,6 +673,7 @@ const DefaultNavigation: React.FC<AboutWalletsNavigationProps> = ({
           onClick={() => onSlideChange(index)}
           labels={labels}
           className={classNames?.indicator?.({ index, isActive: currentSlide === index })}
+          slidesId={slidesId}
         />
       ))}
     </div>
@@ -790,6 +797,10 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
   const touchConfig = { enabled: true, ...TOUCH_CONFIG, ...customization?.touch };
   const animationConfig = { ...ANIMATION_CONFIG, ...customization?.animation };
   const customHandlers = customization?.handlers;
+
+  // Of the box the slides are in, which is always on the page: a slide is there only while it is the current one, and an app
+  // may draw a slide of its own
+  const slidesId = useId();
 
   // State management
   const [currentSlide, setCurrentSlide] = useState(initialSlide);
@@ -1010,6 +1021,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
     >
       <CustomSlideContainer className={customClassNames?.slideContainer?.()} aria-live="polite" aria-atomic={false}>
         <div
+          id={slidesId}
           className="novacon:h-full novacon:touch-pan-x"
           onTouchStart={(e) => {
             if (!touchConfig.enabled) return;
@@ -1102,6 +1114,7 @@ export const AboutWallets = forwardRef<HTMLElement, AboutWalletsProps>(({ classN
         labels={labels}
         classNames={customClassNames}
         IndicatorComponent={CustomIndicator}
+        slidesId={slidesId}
       />
 
       <CustomStatus

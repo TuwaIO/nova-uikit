@@ -28,7 +28,6 @@ import {
   Transaction,
   TransactionTracker,
 } from '@tuwaio/pulsar-core';
-import dayjs from 'dayjs';
 import { ComponentType, ReactNode, useEffect, useMemo, useState } from 'react';
 
 import { useNovaTransactionsError } from '../providers/NovaTransactionsErrorContext';
@@ -39,11 +38,20 @@ import {
   canSpeedUpTx,
   explorerUrlOfHash,
   explorerUrlOfReplaced,
+  refusedReplacementWords,
   runReplacement,
   stopTrackingDueIn,
 } from '../utils/replacement';
 import { statusText } from '../utils/statusText';
-import { hasConfirmations, progressOf, statusLabelOf, toneOf, walletPartOf } from '../utils/txStatus';
+import { timeOf } from '../utils/time';
+import {
+  confirmationsText,
+  hasConfirmations,
+  progressOf,
+  statusLabelOf,
+  toneOf,
+  walletPartOf,
+} from '../utils/txStatus';
 import { headerCloseButtonClassName, HeaderContent, headerTitleClassName } from './HeaderContent';
 
 /** The icons of the sections and rows, from the icon set of `NovaIconsProvider` (the pixel ones by default). */
@@ -241,7 +249,7 @@ const DefaultCopyableField = ({ label, value, mono = true, className, children, 
           className={cn('novatx:truncate', mono && 'novatx:font-mono novatx:text-[13px]', classNames?.code)}
           title={value}
         >
-          {shortAddress(value, 8, 8)}
+          {shortAddress(value)}
         </span>
       )}
       <CopyButton value={value} className={classNames?.copyButton} />
@@ -386,14 +394,14 @@ const LinkedHash = ({ hash, href }: { hash: string; href?: string }) =>
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-accent)] novatx:no-underline novatx:hover:underline"
     >
-      {shortAddress(hash, 8, 8)}
+      {shortAddress(hash)}
     </a>
   ) : (
     <span
       title={hash}
       className="novatx:truncate novatx:font-mono novatx:text-[13px] novatx:text-[var(--tuwa-text-primary)]"
     >
-      {shortAddress(hash, 8, 8)}
+      {shortAddress(hash)}
     </span>
   );
 
@@ -495,8 +503,6 @@ export type TransactionDetailsProps<T extends Transaction> = Pick<NovaTransactio
   customization?: TransactionDetailsCustomization;
 };
 
-const formatTime = (timestamp: number) => dayjs.unix(timestamp).format('MMM D, YYYY, HH:mm:ss');
-
 /**
  * A detailed view of one transaction, shown by {@link TransactionsHistory} and {@link TransactionsInfoModal} when a
  * transaction is selected, laid out as the transaction page of the Quasar dashboard:
@@ -533,7 +539,7 @@ export function TransactionDetails<T extends Transaction>({
   className,
   customization,
 }: TransactionDetailsProps<T>) {
-  const { transactionDetails, statuses, actions } = useLabels();
+  const { locale, transactionDetails, statuses, actions } = useLabels();
   const { showPreSubmitErrorToast } = useNovaTransactionsError();
 
   const foundAdapter = useMemo(() => selectAdapterByKey({ adapterKey: tx.adapter, adapter }), [tx.adapter, adapter]);
@@ -560,7 +566,7 @@ export function TransactionDetails<T extends Transaction>({
   const explorerUrl = explorerUrlOfHash(foundAdapter, tx, hash);
   // Only what can really be replaced: from another account the same transfer would be sent a second time
   const canReplace = canReplaceTx(tx, foundAdapter, connectedWalletAddress);
-  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, { title: actions.replacementFailed });
+  const reportRefusal = (error: unknown) => showPreSubmitErrorToast(error, refusedReplacementWords(error, actions));
   const chainId = setChainId(tx.chainId);
   const tone = toneOf(tx);
 
@@ -798,11 +804,11 @@ export function TransactionDetails<T extends Transaction>({
               {tx.adapter}
             </CMetadataRow>
             <CMetadataRow icon={SectionIcons.ClockIcon} label={transactionDetails.submittedAt}>
-              {formatTime(tx.localTimestamp)}
+              {timeOf(tx.localTimestamp, locale, { year: true })}
             </CMetadataRow>
             {tx.finishedTimestamp && (
               <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.finishedAt}>
-                {formatTime(tx.finishedTimestamp)}
+                {timeOf(tx.finishedTimestamp, locale, { year: true })}
               </CMetadataRow>
             )}
             <CMetadataRow icon={SectionIcons.CpuChipIcon} label={transactionDetails.tracker}>
@@ -813,7 +819,10 @@ export function TransactionDetails<T extends Transaction>({
             </CMetadataRow>
             {showConfirmations && (
               <CMetadataRow icon={SectionIcons.CheckCircleIcon} label={transactionDetails.confirmations}>
-                {`${tx.confirmations}${tx.requiredConfirmations ? ` / ${tx.requiredConfirmations}` : ''}`}
+                {/* A finalized transaction is past any count */}
+                {tx.requiredConfirmations && tx.confirmations !== 'MAX'
+                  ? `${tx.confirmations} / ${tx.requiredConfirmations}`
+                  : confirmationsText(tx.confirmations, statuses)}
               </CMetadataRow>
             )}
             {showTxKey && <CCopyableField label={transactionDetails.txKey} value={tx.txKey} />}

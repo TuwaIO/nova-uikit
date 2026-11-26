@@ -1,4 +1,7 @@
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
@@ -8,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const config = createRequire(import.meta.url)(path.join(repoRoot, 'alpha.release.config.js')) as {
   branches: (string | { name: string; prerelease: string })[];
+  plugins: (string | [string, { prepareCmd?: string }])[];
 };
 
 /** The templates of the prerelease of the alpha branches, as semantic-release takes them. */
@@ -55,5 +59,31 @@ describe('the alpha release of a branch', () => {
       expect(prereleaseOf(template, 'feat/nova-0.15')).toBe('feat-nova-0-15-alpha');
       expect(prereleaseOf(template, 'fix/nova-transactions-0.15.1')).toBe('fix-nova-transactions-0-15-1-alpha');
     }
+  });
+});
+
+// `nova-core` 1.0.0-feat-payments-alpha.3 asked for the icons in a caret range of its own version, and npm took the icons of
+// an older branch, 1.0.0-fix-toast-regions-labels-alpha.1: the parts of a prerelease are compared as text, and "fix" is after
+// "feat"
+describe('the packages of an alpha', () => {
+  const script = path.join(repoRoot, 'scripts', 'exact-workspace-ranges.mjs');
+
+  it('take each other in the very version of that alpha, before it is published', () => {
+    const prepare = config.plugins.flatMap((plugin) =>
+      typeof plugin === 'string' ? [] : (plugin[1].prepareCmd ?? []),
+    );
+    expect(prepare.join('\n')).toContain('node scripts/exact-workspace-ranges.mjs');
+  });
+
+  it('keep every other range', () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'alpha-ranges-'));
+    const file = path.join(root, 'packages', 'a', 'package.json');
+    mkdirSync(path.dirname(file), { recursive: true });
+    const manifest = (range: string) =>
+      `${JSON.stringify({ name: 'a', dependencies: { b: range, zod: '^4.0.0' }, peerDependencies: { react: '>=19' } }, null, 2)}\n`;
+    writeFileSync(file, manifest('workspace:^'));
+    expect(spawnSync(process.execPath, [script], { cwd: root }).status).toBe(0);
+    expect(readFileSync(file, 'utf8')).toBe(manifest('workspace:*'));
+    rmSync(root, { recursive: true });
   });
 });

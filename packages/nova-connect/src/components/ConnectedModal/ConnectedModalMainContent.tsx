@@ -777,7 +777,7 @@ export const ConnectedModalMainContent = forwardRef<HTMLDivElement, ConnectedMod
       ...props,
       ref,
       className: containerClasses,
-      role: 'main',
+      role: 'group',
       'aria-label': ariaLabel || ariaLabels?.container || `${labels.walletConnected} - ${walletName}`,
     };
 

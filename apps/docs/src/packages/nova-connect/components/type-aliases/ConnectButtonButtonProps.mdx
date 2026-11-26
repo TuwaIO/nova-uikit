@@ -6,17 +6,24 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **ConnectButtonButtonProps** = `object` & `React.RefAttributes`\<`HTMLButtonElement`\>
 
-Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:68](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L68)
+Defined in: [packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx:74](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-connect/src/components/ConnectButton/ConnectButton.tsx#L74)
 
 Props of the button element (`customization.components.Button`).
 
 ## Type Declaration
 
+### aria-busy?
+
+> `optional` **aria-busy?**: `boolean`
+
+Whether the last wallet may still be restored (`buttonData.isRestoring`).
+
 ### aria-label?
 
 > `optional` **aria-label?**: `string`
 
-Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state).
+Accessible label (`customization.config.ariaLabels.button`, or labels of the connection state). Not set by default while a
+wallet is connected: the name of the button is then its content, with the wallet it shows.
 
 ### aria-pressed?
 
@@ -46,7 +53,7 @@ Classes from `customization.classNames.button`, or the default ones.
 
 > `optional` **disabled?**: `boolean`
 
-Whether the button is disabled.
+Whether the button is disabled: while the last wallet may still be restored.
 
 ### onClick
 

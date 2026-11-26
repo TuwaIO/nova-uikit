@@ -12,6 +12,7 @@ import {
   latestRecordOf,
   mayOpenNewToast,
   pendingOfWallet,
+  refusedReplacementWords,
   runReplacement,
   STOP_TRACKING_AFTER_SECONDS,
   stopTrackingDueIn,
@@ -227,6 +228,47 @@ describe('runReplacement', () => {
     await runReplacement(() => Promise.reject(outer), tx(), report);
 
     expect(report).not.toHaveBeenCalled();
+  });
+});
+
+describe('refusedReplacementWords', () => {
+  const labels = {
+    replacementFailed: 'Could not replace',
+    replacementSettled: 'Already in a block',
+    replacementFeeTooLow: 'A higher fee is there',
+  };
+  const inside = (inner: Error) => new Error(`Failed to speed up transaction: ${inner.message}`, { cause: inner });
+
+  // The words of the wallet's node, in English on a page in any language
+  it.each([
+    ['of Pulsar', Object.assign(new Error('The nonce is already used'), { name: 'NonceAlreadyUsedError' })],
+    ['of a node', new Error('nonce too low: next nonce 12, tx nonce 11')],
+    ['of a library', new Error('nonce has already been used')],
+  ])('say the transaction is settled, in the language of the page, on the refusal %s', (_name, inner) => {
+    expect(refusedReplacementWords(inside(inner), labels)).toEqual({
+      title: 'Could not replace',
+      message: 'Already in a block',
+    });
+  });
+
+  it.each([
+    ['geth', new Error('replacement transaction underpriced')],
+    ['another node', new Error('Replacement fee too low')],
+    ['a wallet, as a plain object', { code: -32000, message: 'replacement transaction underpriced' }],
+  ])('say a higher fee is there already on the refusal of %s', (_name, inner) => {
+    const error = inner instanceof Error ? inside(inner) : new Error('Failed to speed up', { cause: inner });
+
+    expect(refusedReplacementWords(error, labels)).toEqual({
+      title: 'Could not replace',
+      message: 'A higher fee is there',
+    });
+  });
+
+  it('leave any other refusal its own words', () => {
+    expect(refusedReplacementWords(inside(new Error('insufficient funds')), labels)).toEqual({
+      title: 'Could not replace',
+    });
+    expect(refusedReplacementWords('no', labels)).toEqual({ title: 'Could not replace' });
   });
 });
 

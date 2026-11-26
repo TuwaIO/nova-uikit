@@ -8,12 +8,14 @@ vi.mock('framer-motion', async (importOriginal) => ({
 }));
 
 const state = vi.hoisted(() => ({ settled: undefined as string | undefined }));
+const layoutEffects = vi.hoisted(() => [] as (() => unknown)[]);
 
 vi.mock('react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('react')>()),
   useState: (initial: unknown) => [typeof initial === 'string' ? (state.settled ?? initial) : initial, vi.fn()],
   useRef: () => ({ current: null }),
   useEffect: vi.fn(),
+  useLayoutEffect: (effect: () => unknown) => void layoutEffects.push(effect),
 }));
 
 import { morphLetters } from './morphLetters';
@@ -69,6 +71,63 @@ describe('MorphText', () => {
     expect(textOf(tree).type).toBe('span');
     expect(textOf(tree).props.children).toBe('Success');
     expect(tree.props.children[1]).toBeTruthy();
+  });
+
+  // A text of the host in its monospace font turned to Nova's own one while its letters changed, and back: at rest it has no
+  // class of Nova, and with one it became the outermost part of Nova, which sets the font
+  it('keeps the font it stands in while it changes', () => {
+    reduceMotion.value = false;
+    state.settled = undefined;
+    expect((MorphText({ children: 'Pending' }) as unknown as Node).props.className).toBe('');
+    state.settled = 'Pending';
+    const changing = MorphText({ children: 'Success' }) as unknown as Node;
+    expect(changing.props.className).toContain('novacore:[font-family:inherit]');
+  });
+
+  // A button whose label had changed its language kept the width of the change: motion wrote the width once more in the frame
+  // after it had been taken off, so the label no longer wrapped and ran out of a narrow window
+  it('leaves no width on the text, whenever the change ends', () => {
+    reduceMotion.value = false;
+    state.settled = 'Delete account';
+    const letters = (
+      MorphText({ children: 'Видалити обліковий запис' }) as unknown as { props: { children: unknown[] } }
+    ).props.children[1] as { type: (props: object) => unknown; props: object };
+    const cancel = vi.fn();
+    const root = {
+      getBoundingClientRect: () => ({ width: 100 }),
+      parentElement: null,
+      animate: vi.fn(() => ({ cancel })),
+      style: {
+        width: '',
+        removeProperty(name: string) {
+          if (name === 'width') this.width = '';
+        },
+      },
+    };
+    const text = { getBoundingClientRect: () => ({ width: 228 }) };
+    let frame: (() => void) | undefined;
+    vi.stubGlobal('requestAnimationFrame', (callback: () => void) => {
+      frame = callback;
+      return 1;
+    });
+    vi.stubGlobal('cancelAnimationFrame', vi.fn());
+    layoutEffects.length = 0;
+    letters.type({ ...letters.props, rootRef: { current: root }, textRef: { current: text } });
+    const cleanups = layoutEffects.map((effect) => effect());
+    expect(root.style.width).toBe('100px');
+
+    frame?.();
+    // The browser animates it, and writes nothing to the element: the end of the change stands under it
+    expect(root.animate).toHaveBeenCalledExactlyOnceWith([{ width: '100px' }, { width: '228px' }], {
+      duration: 340,
+      easing: 'cubic-bezier(0.2, 0, 0, 1)',
+    });
+    expect(root.style.width).toBe('228px');
+
+    for (const cleanup of cleanups) if (typeof cleanup === 'function') cleanup();
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(root.style.width).toBe('');
+    vi.unstubAllGlobals();
   });
 
   it('just changes the text with prefers-reduced-motion', () => {

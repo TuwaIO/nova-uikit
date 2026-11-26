@@ -16,7 +16,7 @@ export const chineseLabels: NovaConnectLabels = {
   connect: '连接',
   all: '全部',
   active: '当前活跃',
-  connectors: '连接器',
+  connectors: '活跃的钱包',
   connectNewWallet: '连接另一个钱包',
 
   // Connection states - Status messages for wallet connection flow
@@ -25,6 +25,9 @@ export const chineseLabels: NovaConnectLabels = {
   connectingTo: '正在连接至',
   errorWhenChainSwitching: '切换网络时出错',
   cannotConnectWallet: '无法连接到钱包。请重试或尝试其他连接方式。',
+  requestDeclined: '请求已拒绝',
+  requestDeclinedInWallet: '您已在钱包中拒绝了该请求。准备好后请重试。',
+  restoringWallet: '正在恢复钱包…',
 
   // Transaction states - Status indicators for blockchain transactions
   success: '成功',
@@ -99,6 +102,7 @@ export const chineseLabels: NovaConnectLabels = {
   // Accessibility (ARIA) labels - Screen reader support and accessibility
   chainSelector: '区块链网络选择器',
   closeModal: '关闭弹窗',
+  closeToast: '关闭通知',
   selectChain: '选择网络',
   chainOption: '网络选项',
   openChainSelector: '打开网络选择器',
@@ -188,7 +192,7 @@ export const chineseLabels: NovaConnectLabels = {
   resolvedTo: '已解析至：{address}',
   legalInformation: '法律与隐私信息',
   disconnectAllDescription: '断开所有已连接钱包并关闭面板',
-  explorerLinkDescription: '在区块链浏览器中查看该地址',
+  explorerLinkDescription: '在新标签页中打开：钱包地址 {address} 在区块链浏览器中的页面',
   explorerNotAvailable: '该网络暂未配置区块链浏览器',
   connectWalletsAvailable: '已连接的钱包 - 已连接 {count} 个',
   switchNetworkNetworksAvailable: '切换网络 - {count} 个可用网络',

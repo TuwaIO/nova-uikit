@@ -278,9 +278,7 @@ const DefaultLoadingState: React.FC<LoadingStateProps> = ({ labels, className })
       role="status"
       aria-label={labels.loading}
     >
-      <span className="novacon:sr-only">
-        {labels.loading} {labels.walletBalance}
-      </span>
+      <span className="novacon:sr-only">{`${labels.walletBalance}: ${labels.loading}`}</span>
     </motion.div>
   );
 };

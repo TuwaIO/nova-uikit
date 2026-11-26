@@ -1,8 +1,8 @@
 /**
  * Chain configuration types of the networks the app imports. Importing `@tuwaio/nova-connect/evm` adds `appChains`
  * (the viem chains of your wagmi config, `readonly [Chain, ...Chain[]]`); importing `@tuwaio/nova-connect/solana` adds
- * `solanaRPCUrls` (`Partial<Record<SolanaClusterMoniker, string>>` from `@tuwaio/orbit-solana`). Read the resulting
- * types through {@link NovaConnectAppChains} and {@link NovaConnectSolanaRPCUrls}.
+ * `solanaRPCUrls` (the RPC URLs by `SolanaClusterMoniker` from `@tuwaio/orbit-solana`). Read the resulting types through
+ * {@link NovaConnectAppChains} and {@link NovaConnectSolanaRPCUrls}.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NovaConnectChainConfigTypes {}
@@ -16,12 +16,12 @@ export type NovaConnectAppChains = NovaConnectChainConfigTypes extends { appChai
   : readonly { readonly id: number }[];
 
 /**
- * Type of `solanaRPCUrls`: an RPC URL for each cluster moniker (`Partial<Record<SolanaClusterMoniker, string>>`) when
- * `@tuwaio/nova-connect/solana` is imported, otherwise an RPC URL for each cluster name.
+ * Type of `solanaRPCUrls`: an RPC URL, or several, for each cluster moniker (`SolanaClusterMoniker` from
+ * `@tuwaio/orbit-solana`) when `@tuwaio/nova-connect/solana` is imported, otherwise for each cluster name.
  */
 export type NovaConnectSolanaRPCUrls = NovaConnectChainConfigTypes extends { solanaRPCUrls: infer T }
   ? T
-  : Readonly<Partial<Record<string, string>>>;
+  : Readonly<Partial<Record<string, string | readonly string[]>>>;
 
 /**
  * Chain configuration of the app, passed to `NovaConnectProvider` as `appChains` and `solanaRPCUrls`. The provider
@@ -33,7 +33,8 @@ export interface AllChainConfigs {
   appChains?: NovaConnectAppChains;
 
   /**
-   * Solana RPC URL for each cluster moniker, for example `{ devnet: 'https://api.devnet.solana.com' }`. See
+   * Solana RPC URL for each cluster moniker, or several, for example `{ devnet: 'https://api.devnet.solana.com' }`: the same
+   * object the Satellite adapter takes. Nova Connect reads the clusters alone and calls no URL. See
    * {@link NovaConnectSolanaRPCUrls}.
    */
   solanaRPCUrls?: NovaConnectSolanaRPCUrls;

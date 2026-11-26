@@ -11,6 +11,7 @@ import { Bounce, toast, ToastContainer, type ToastPosition, type ToastTransition
 import { ToastError, ToastErrorCustomization } from '../components';
 import { useNovaConnectLabels } from '../hooks/useNovaConnectLabels';
 import { useSatelliteConnectStore } from '../satellite';
+import { isUserRejection } from '../utils/isUserRejection';
 
 // --- Types for Customization ---
 /** Props of the toast content of {@link ErrorsProvider} (`customization.components.ToastError`). */
@@ -413,6 +414,9 @@ export function ErrorsProvider({
 
       if (toldErrorRef.current === primaryError) return;
       toldErrorRef.current = primaryError;
+      // A request the person declined in the wallet is their own action, not an error: the connect window says it in
+      // their words (`requestDeclined`), and a toast of the wallet's English message over it was noise
+      if (isUserRejection(primaryError)) return;
       showErrorToast(errorTitle, primaryError, errorHash);
     }
   }, [hasAnyError, isConnected, primaryError, errorType, errorTitle, errorHash, showErrorToast, dismissCurrentToast]);
@@ -434,18 +438,19 @@ export function ErrorsProvider({
       })
     : 'novacon:p-0 novacon:bg-transparent';
 
-  // Create customized close button component
-  // KEEPING useMemo here because it returns a Component Definition.
-  // Returning a new component function every render causes remounts and focus loss.
+  // The cross of a toast, named in the language of the labels. Memoized: it is a component, and a new one on every render
+  // would mount every cross anew and lose its focus
   const CustomizedCloseButton = useMemo(() => {
-    const closeButtonCustomization = customization?.toastCloseButton;
-    if (!closeButtonCustomization) return ToastCloseButton;
-
-    // Return a wrapper component that passes customization props
-    return ({ closeToast }: { closeToast?: (e: React.MouseEvent<HTMLElement>) => void }) => (
-      <ToastCloseButton closeToast={closeToast} {...closeButtonCustomization} />
+    const CloseButton = ({ closeToast }: Pick<ToastCloseButtonProps, 'closeToast'>) => (
+      <ToastCloseButton
+        closeToast={closeToast}
+        ariaLabel={labels.closeToast}
+        title={labels.closeToast}
+        {...customization?.toastCloseButton}
+      />
     );
-  }, [customization?.toastCloseButton]);
+    return CloseButton;
+  }, [customization?.toastCloseButton, labels.closeToast]);
 
   // Default container props
   const defaultContainerProps = {

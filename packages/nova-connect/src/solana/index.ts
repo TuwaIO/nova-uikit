@@ -32,7 +32,7 @@ registerChainAdapter(OrbitAdapter.SOLANA, solanaChainAdapter);
 // @ts-ignore - Need for declaration merging
 declare module '@tuwaio/nova-connect' {
   export interface NovaConnectChainConfigTypes {
-    solanaRPCUrls: Partial<Record<SolanaClusterMoniker, string>>;
+    solanaRPCUrls: Partial<Record<SolanaClusterMoniker, string | readonly string[]>>;
   }
 }
 

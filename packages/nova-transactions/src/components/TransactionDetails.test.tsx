@@ -218,6 +218,9 @@ describe('TransactionDetails', () => {
 
     const finished = { ...evmTx, confirmations: 'MAX' } as unknown as EvmTransaction;
     expect(containsText(renderDetails(finished), defaultLabels.transactionDetails.confirmations)).toBe(true);
+    // "MAX" is the word of a Solana node for a finalized transaction, not for a person
+    expect(containsText(renderDetails(finished), 'MAX')).toBe(false);
+    expect(containsText(renderDetails(finished), defaultLabels.statuses.finalized)).toBe(true);
 
     const none = { ...evmTx, confirmations: 0 } as EvmTransaction;
     expect(containsText(renderDetails(none), defaultLabels.transactionDetails.confirmations)).toBe(false);
