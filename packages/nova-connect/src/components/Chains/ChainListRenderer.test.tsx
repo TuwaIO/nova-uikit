@@ -20,7 +20,11 @@ const childrenOf = (element: Element): Element[] =>
 
 // The words of what an element holds as it is drawn, without what is hidden from a screen reader
 function wordsOf(node: unknown): string {
-  if (Array.isArray(node)) return node.map(wordsOf).filter((words) => words.trim()).join(' ');
+  if (Array.isArray(node))
+    return node
+      .map(wordsOf)
+      .filter((words) => words.trim())
+      .join(' ');
   if (typeof node === 'string') return node;
   if (!isValidElement(node)) return '';
   const element = node as Element;
