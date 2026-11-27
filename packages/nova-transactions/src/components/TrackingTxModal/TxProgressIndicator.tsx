@@ -239,7 +239,10 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
 
       <span
         className={cn(
-          'novatx:mt-2 novatx:text-center novatx:text-xs novatx:font-mono',
+          // As wide as its step and no wider: a word longer than the step breaks inside it, where its language allows,
+          // else anywhere. On a phone 320 px wide a long label ran under the steps next to it ("Підтверджується" of the
+          // Nova Payments checkout in Ukrainian)
+          'novatx:mt-2 novatx:w-full novatx:text-center novatx:text-xs novatx:font-mono novatx:hyphens-auto novatx:[overflow-wrap:anywhere]',
           status !== 'inactive'
             ? 'novatx:font-semibold novatx:text-[var(--tuwa-text-primary)]'
             : 'novatx:text-[var(--tuwa-text-secondary)]',
@@ -247,7 +250,8 @@ function Step({ status, label, isFirst = false, classNames }: StepProps) {
           statusOverride?.label,
         )}
       >
-        <MorphText>{label}</MorphText>
+        {/* A label on two lines crossfades when it changes: its letters would stand on one line, past its step */}
+        <MorphText wrap>{label}</MorphText>
       </span>
     </div>
   );

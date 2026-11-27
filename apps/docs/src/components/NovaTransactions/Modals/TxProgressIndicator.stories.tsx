@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { StepProps, TxProgressIndicator } from '@tuwaio/nova-transactions';
+import { defaultLabels, type NovaTransactionsLabels, StepProps, TxProgressIndicator } from '@tuwaio/nova-transactions';
+import { NovaTransactionsLabelsProvider } from '@tuwaio/nova-transactions/providers';
 import { useState } from 'react';
+import { expect, within } from 'storybook/test';
 
 import { iso } from '../../../utils/customization/isometric';
 import { withIsometricTheme } from '../../../utils/customization/IsometricFrame';
@@ -184,5 +186,92 @@ export const WithCustomStep: Story = {
         </span>
       </div>
     ),
+  },
+};
+
+/** The steps as the Nova Payments checkout labels them, in a language whose words are long. */
+const stepLabels = (
+  progressIndicator: NovaTransactionsLabels['trackingModal']['progressIndicator'],
+  statuses: Pick<NovaTransactionsLabels['statuses'], 'confirmed' | 'failed'>,
+): NovaTransactionsLabels => ({
+  ...defaultLabels,
+  trackingModal: { ...defaultLabels.trackingModal, progressIndicator },
+  statuses: { ...defaultLabels.statuses, ...statuses },
+});
+
+/**
+ * Checks that every label stands under its own step: inside the column of the step, and clear of the label before it.
+ *
+ * @param canvasElement - The story.
+ * @param labels - The labels of the three steps, in order.
+ */
+async function expectLabelsInTheirSteps(canvasElement: HTMLElement, labels: string[]) {
+  const canvas = within(canvasElement);
+  const boxes = labels.map((label) => {
+    const text = canvas.getByText(label);
+    // The column of the step: the first block around its label
+    const step = text.closest('div');
+    return { label, text: text.getBoundingClientRect(), step: step!.getBoundingClientRect() };
+  });
+  for (const { label, text, step } of boxes) {
+    await expect(text.left, `"${label}" starts inside its step`).toBeGreaterThanOrEqual(step.left - 0.5);
+    await expect(text.right, `"${label}" ends inside its step`).toBeLessThanOrEqual(step.right + 0.5);
+  }
+  for (const [index, { label, text }] of boxes.entries()) {
+    if (index === 0) continue;
+    const before = boxes[index - 1];
+    await expect(text.left, `"${label}" is clear of "${before.label}"`).toBeGreaterThanOrEqual(before.text.right);
+  }
+}
+
+/** The width of the indicator whose steps are 80 px wide, as in the checkout on a phone 320 px wide. */
+const NARROW_PHONE_WIDTH = 272;
+
+/**
+ * Labels longer than their steps on a phone 320 px wide, as the Nova Payments checkout gives them in Ukrainian: a word
+ * that is longer than its step ("Підтверджується") breaks inside it, on two lines, and does not run under the steps
+ * next to it. Before, it ran under "Надіслано" and "Не пройшов".
+ */
+export const LongLabelsUkrainian: Story = {
+  name: 'Long labels: Ukrainian, phone 320 px',
+  args: { isFailed: true },
+  render: (args) => (
+    <NovaTransactionsLabelsProvider
+      labels={stepLabels(
+        { created: 'Надіслано', processing: 'Підтверджується', succeed: 'Оплачено' },
+        { confirmed: 'Підтверджено', failed: 'Не пройшов' },
+      )}
+    >
+      <div lang="uk" style={{ width: NARROW_PHONE_WIDTH }}>
+        <TxProgressIndicator {...args} />
+      </div>
+    </NovaTransactionsLabelsProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    await expectLabelsInTheirSteps(canvasElement, ['Надіслано', 'Підтверджується', 'Не пройшов']);
+  },
+};
+
+/**
+ * The same in German, where the long word is the result: "Fehlgeschlagen" stays under the last step, and "Wird
+ * bestätigt" breaks between its words.
+ */
+export const LongLabelsGerman: Story = {
+  name: 'Long labels: German, phone 320 px',
+  args: { isFailed: true },
+  render: (args) => (
+    <NovaTransactionsLabelsProvider
+      labels={stepLabels(
+        { created: 'Gesendet', processing: 'Wird bestätigt', succeed: 'Bezahlt' },
+        { confirmed: 'Bestätigt', failed: 'Fehlgeschlagen' },
+      )}
+    >
+      <div lang="de" style={{ width: NARROW_PHONE_WIDTH }}>
+        <TxProgressIndicator {...args} />
+      </div>
+    </NovaTransactionsLabelsProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    await expectLabelsInTheirSteps(canvasElement, ['Gesendet', 'Wird bestätigt', 'Fehlgeschlagen']);
   },
 };
