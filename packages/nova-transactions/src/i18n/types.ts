@@ -121,6 +121,8 @@ export type NovaTransactionsLabels = {
   txError: {
     /** The title for the error details section. */
     title: string;
+    /** Label of the button that copies the error message (default: `Copy error`). */
+    copy: string;
     /** Confirmation text shown after copying an error message. */
     copied: string;
   };
@@ -189,8 +191,16 @@ export type NovaTransactionsLabels = {
     replacementFeeTooLow: string;
     /** Text for the action that stops tracking a transaction that never ends. */
     stopTracking: string;
-    /** Text for a "Copy" action (e.g., copy address or hash). */
+    /** Label of the button that copies an address (default: `Copy address`). */
     copy: string;
+    /** Label of the button that copies a hash: of a transaction, of its replacement, a Solana blockhash (default: `Copy hash`). */
+    copyHash: string;
+    /** Label of the button that copies the key a transaction is tracked by (default: `Copy key`). */
+    copyKey: string;
+    /** Label of the button that copies a block of JSON, such as the payload of a transaction (default: `Copy JSON`). */
+    copyJson: string;
+    /** Label of the button that copies the slot of a Solana transaction (default: `Copy slot`). */
+    copySlot: string;
     /** Text for a link to view the transaction on a block explorer. */
     viewOnExplorer: string;
     /** Text for a generic "Close" action. */

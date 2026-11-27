@@ -57,6 +57,7 @@ export const ukrainianLabels: NovaTransactionsLabels = {
   },
   txError: {
     title: 'Помилка',
+    copy: 'Скопіювати помилку',
     copied: 'Скопійовано!',
   },
   validationError: {
@@ -91,6 +92,10 @@ export const ukrainianLabels: NovaTransactionsLabels = {
     replacementFeeTooLow: 'У мережі вже є версія з вищою комісією: змініть її в гаманці.',
     stopTracking: 'Припинити відстеження',
     copy: 'Скопіювати адресу',
+    copyHash: 'Скопіювати хеш',
+    copyKey: 'Скопіювати ключ',
+    copyJson: 'Скопіювати JSON',
+    copySlot: 'Скопіювати слот',
     viewOnExplorer: 'В експлорері',
     close: 'Закрити',
     cancel: 'Скасувати',

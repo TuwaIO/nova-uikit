@@ -57,6 +57,7 @@ export const chineseLabels: NovaTransactionsLabels = {
   },
   txError: {
     title: '错误',
+    copy: '复制错误信息',
     copied: '已复制！',
   },
   validationError: {
@@ -91,6 +92,10 @@ export const chineseLabels: NovaTransactionsLabels = {
     replacementFeeTooLow: '网络中已有手续费更高的版本，请在钱包中修改。',
     stopTracking: '停止追踪',
     copy: '复制地址',
+    copyHash: '复制哈希',
+    copyKey: '复制密钥',
+    copyJson: '复制 JSON',
+    copySlot: '复制槽位',
     viewOnExplorer: '在区块浏览器中查看',
     close: '关闭',
     cancel: '取消',

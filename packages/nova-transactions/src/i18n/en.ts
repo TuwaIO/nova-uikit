@@ -64,6 +64,7 @@ export const defaultLabels: NovaTransactionsLabels = {
   },
   txError: {
     title: 'Error',
+    copy: 'Copy error',
     copied: 'Copied!',
   },
   validationError: {
@@ -98,6 +99,10 @@ export const defaultLabels: NovaTransactionsLabels = {
     replacementFeeTooLow: 'The network already has a version with a higher fee: change it in the wallet.',
     stopTracking: 'Stop tracking',
     copy: 'Copy address',
+    copyHash: 'Copy hash',
+    copyKey: 'Copy key',
+    copyJson: 'Copy JSON',
+    copySlot: 'Copy slot',
     viewOnExplorer: 'View on explorer',
     close: 'Close',
     cancel: 'Cancel',

@@ -48,7 +48,7 @@ export type TxErrorBlockProps = {
  */
 export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps) {
   const { isCopied, copy } = useCopyToClipboard();
-  const { actions, txError } = useLabels();
+  const { txError } = useLabels();
 
   // Serialize error for display and copy
   const { displayMessage, copyMessage } = useMemo(() => {
@@ -90,8 +90,8 @@ export function TxErrorBlock({ error, className, classNames }: TxErrorBlockProps
         <button
           type="button"
           onClick={() => copy(copyMessage)}
-          title={isCopied ? txError.copied : actions.copy}
-          aria-label={isCopied ? txError.copied : actions.copy}
+          title={isCopied ? txError.copied : txError.copy}
+          aria-label={isCopied ? txError.copied : txError.copy}
           className={cn(
             'novatx:cursor-pointer novatx:text-[var(--tuwa-error-icon)]/50 novatx:transition-colors novatx:hover:text-[var(--tuwa-error-icon)]',
             classNames?.copyButton,

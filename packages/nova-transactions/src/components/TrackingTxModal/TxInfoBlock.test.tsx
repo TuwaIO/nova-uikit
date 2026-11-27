@@ -50,4 +50,25 @@ describe('TxInfoBlock', () => {
     expect(getExplorerUrl).toHaveBeenCalledWith('/block/42', 'devnet');
     expect(findHashLinkProps(element, '42')?.explorerUrl).toBe('explorer/block/42?cluster=devnet');
   });
+
+  // The slot was copied by a button named "Copy address"
+  it('names the copy of the Solana slot as the copy of a slot', () => {
+    const adapter = {
+      key: OrbitAdapter.SOLANA,
+      getExplorerUrl: () => undefined,
+    } as unknown as TxAdapter<SolanaTransaction>;
+    const tx = {
+      txKey: 'signature',
+      adapter: OrbitAdapter.SOLANA,
+      tracker: TransactionTracker.Solana,
+      chainId: 'devnet',
+      from: 'address',
+      pending: false,
+      type: 'TRANSFER',
+      connectorType: 'solana:phantom',
+      localTimestamp: 1,
+      slot: 42,
+    } as unknown as SolanaTransaction;
+    expect(findHashLinkProps(TxInfoBlock({ tx, adapter }), '42')?.copyLabel).toBe('Copy slot');
+  });
 });

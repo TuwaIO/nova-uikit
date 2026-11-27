@@ -83,6 +83,11 @@ export type CopyableFieldProps = {
   className?: string;
   /** Content shown instead of the value (the copy button still copies `value`); used for the explorer link. */
   children?: ReactNode;
+  /**
+   * The name of the copy button, which says what it copies: `actions.copyHash`, `actions.copy` (an address),
+   * `actions.copyKey` of the labels; `actions.copy` when not given.
+   */
+  copyLabel?: string;
   /** Classes of the parts of the row. */
   classNames?: {
     /** The label. */
@@ -215,7 +220,18 @@ const rowLabelClassName =
 const rowValueClassName =
   'novatx:m-0 novatx:min-w-0 novatx:text-right novatx:text-[var(--tuwa-text-primary)] novatx:[overflow-wrap:anywhere]';
 
-const CopyButton = ({ value, className, dark = false }: { value: string; className?: string; dark?: boolean }) => {
+const CopyButton = ({
+  value,
+  label,
+  className,
+  dark = false,
+}: {
+  value: string;
+  /** What it copies (`actions.copy`, an address, when not given). */
+  label?: string;
+  className?: string;
+  dark?: boolean;
+}) => {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
@@ -230,15 +246,23 @@ const CopyButton = ({ value, className, dark = false }: { value: string; classNa
           : 'novatx:border-[var(--tuwa-border-primary)] novatx:bg-[var(--tuwa-bg-primary)] novatx:text-[var(--tuwa-text-secondary)] novatx:hover:text-[var(--tuwa-text-accent)]',
         className,
       )}
-      title={isCopied ? txError.copied : actions.copy}
-      aria-label={isCopied ? txError.copied : actions.copy}
+      title={isCopied ? txError.copied : (label ?? actions.copy)}
+      aria-label={isCopied ? txError.copied : (label ?? actions.copy)}
     >
       <CopyIcon copied={isCopied} className="novatx:h-3.5 novatx:w-3.5" />
     </button>
   );
 };
 
-const DefaultCopyableField = ({ label, value, mono = true, className, children, classNames }: CopyableFieldProps) => (
+const DefaultCopyableField = ({
+  label,
+  value,
+  mono = true,
+  className,
+  children,
+  copyLabel,
+  classNames,
+}: CopyableFieldProps) => (
   <div className={cn(rowClassName, className)}>
     <dt className={cn(rowLabelClassName, classNames?.label)}>{label}</dt>
     <dd
@@ -252,7 +276,7 @@ const DefaultCopyableField = ({ label, value, mono = true, className, children, 
           {shortAddress(value)}
         </span>
       )}
-      <CopyButton value={value} className={classNames?.copyButton} />
+      <CopyButton value={value} label={copyLabel} className={classNames?.copyButton} />
     </dd>
   </div>
 );
@@ -275,6 +299,7 @@ const DefaultMetadataRow = ({ label, children, className, classNames }: Metadata
 );
 
 const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps) => {
+  const { actions } = useLabels();
   if (!data || (typeof data === 'object' && Object.keys(data as object).length === 0)) return null;
   const jsonStr = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
 
@@ -299,7 +324,7 @@ const DefaultJsonBlock = ({ label, data, className, classNames }: JsonBlockProps
         >
           {label}
         </span>
-        <CopyButton value={jsonStr} dark className={classNames?.copyButton} />
+        <CopyButton value={jsonStr} label={actions.copyJson} dark className={classNames?.copyButton} />
       </div>
       <div
         className={cn(
@@ -772,7 +797,7 @@ export function TransactionDetails<T extends Transaction>({
           </CSectionHeading>
           <dl className="novatx:m-0">
             {hash ? (
-              <CCopyableField label={transactionDetails.hash} value={hash}>
+              <CCopyableField label={transactionDetails.hash} value={hash} copyLabel={actions.copyHash}>
                 <LinkedHash hash={hash} href={explorerUrl} />
               </CCopyableField>
             ) : (
@@ -794,9 +819,9 @@ export function TransactionDetails<T extends Transaction>({
                 )}
               </span>
             </CMetadataRow>
-            <CCopyableField label={transactionDetails.from} value={tx.from} />
+            <CCopyableField label={transactionDetails.from} value={tx.from} copyLabel={actions.copy} />
             {evmTx?.to ? (
-              <CCopyableField label={transactionDetails.to} value={evmTx.to} />
+              <CCopyableField label={transactionDetails.to} value={evmTx.to} copyLabel={actions.copy} />
             ) : (
               <CDetailItem label={transactionDetails.to} value="—" />
             )}
@@ -825,7 +850,9 @@ export function TransactionDetails<T extends Transaction>({
                   : confirmationsText(tx.confirmations, statuses)}
               </CMetadataRow>
             )}
-            {showTxKey && <CCopyableField label={transactionDetails.txKey} value={tx.txKey} />}
+            {showTxKey && (
+              <CCopyableField label={transactionDetails.txKey} value={tx.txKey} copyLabel={actions.copyKey} />
+            )}
           </dl>
         </CSectionCard>
 
@@ -861,7 +888,11 @@ export function TransactionDetails<T extends Transaction>({
               )}
               {evmTx.value !== undefined && <CDetailItem label={transactionDetails.value} value={evmTx.value} />}
               {evmTx.replacedTxHash && (
-                <CCopyableField label={transactionDetails.replacedHash} value={evmTx.replacedTxHash}>
+                <CCopyableField
+                  label={transactionDetails.replacedHash}
+                  value={evmTx.replacedTxHash}
+                  copyLabel={actions.copyHash}
+                >
                   <LinkedHash
                     hash={evmTx.replacedTxHash}
                     href={explorerUrlOfHash(foundAdapter, tx, evmTx.replacedTxHash)}
@@ -869,7 +900,7 @@ export function TransactionDetails<T extends Transaction>({
                 </CCopyableField>
               )}
               {evmTx.replaces && (
-                <CCopyableField label={transactionDetails.replaces} value={evmTx.replaces}>
+                <CCopyableField label={transactionDetails.replaces} value={evmTx.replaces} copyLabel={actions.copyHash}>
                   <LinkedHash hash={evmTx.replaces} href={explorerUrlOfReplaced(foundAdapter, tx, evmTx.replaces)} />
                 </CCopyableField>
               )}
@@ -887,7 +918,11 @@ export function TransactionDetails<T extends Transaction>({
               {solanaFee && <CDetailItem label={transactionDetails.fee} value={`${solanaFee} SOL`} />}
               {solanaTx.slot !== undefined && <CDetailItem label={transactionDetails.slot} value={solanaTx.slot} />}
               {solanaTx.recentBlockhash && (
-                <CCopyableField label={transactionDetails.recentBlockhash} value={solanaTx.recentBlockhash} />
+                <CCopyableField
+                  label={transactionDetails.recentBlockhash}
+                  value={solanaTx.recentBlockhash}
+                  copyLabel={actions.copyHash}
+                />
               )}
             </dl>
             {solanaInstructions && <CJsonBlock label={transactionDetails.instructions} data={solanaInstructions} />}
@@ -901,7 +936,11 @@ export function TransactionDetails<T extends Transaction>({
             </CSectionHeading>
             <dl className="novatx:m-0">
               {starknetTx.contractAddress && (
-                <CCopyableField label={transactionDetails.contractAddress} value={starknetTx.contractAddress} />
+                <CCopyableField
+                  label={transactionDetails.contractAddress}
+                  value={starknetTx.contractAddress}
+                  copyLabel={actions.copy}
+                />
               )}
               {starknetTx.actualFee && (
                 <CDetailItem

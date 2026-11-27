@@ -112,7 +112,7 @@ function DefaultInfoRow({ label, value, classNames }: TxInfoBlockInfoRowProps) {
  * such as network, timestamps, Solana-specific details, and relevant hashes/keys.
  */
 export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, customization }: TxInfoBlockProps<T>) {
-  const { locale, txInfo, statuses, hashLabels } = useLabels();
+  const { locale, txInfo, statuses, hashLabels, actions } = useLabels();
 
   const foundAdapter = selectAdapterByKey({ adapterKey: tx.adapter, adapter });
 
@@ -159,6 +159,7 @@ export function TxInfoBlock<T extends Transaction>({ tx, adapter, className, cus
                 <HashLink
                   hash={solanaTx.slot.toString()}
                   explorerUrl={foundAdapter?.getExplorerUrl?.(`/block/${solanaTx.slot}`, chainId)}
+                  copyLabel={actions.copySlot}
                 />
               }
               classNames={rowClassNames}

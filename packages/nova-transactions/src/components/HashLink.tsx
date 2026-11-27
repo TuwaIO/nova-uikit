@@ -18,6 +18,11 @@ export type HashLinkProps = {
   explorerUrl?: string;
   /** The visual style of the component. 'default' is larger, 'compact' is smaller. */
   variant?: 'default' | 'compact';
+  /**
+   * The name of the copy button, which says what it copies (`actions.copyHash` of the labels by default; the slot of a
+   * Solana transaction, for one, passes `actions.copySlot`).
+   */
+  copyLabel?: string;
   /** Additional CSS classes to apply to the container element for custom styling. */
   className?: string;
   /** Granular class names for sub-elements */
@@ -41,7 +46,15 @@ export type HashLinkProps = {
  * @param props - See {@link HashLinkProps}.
  * @returns The hash element.
  */
-export function HashLink({ label, hash, explorerUrl, variant = 'default', className, classNames }: HashLinkProps) {
+export function HashLink({
+  label,
+  hash,
+  explorerUrl,
+  variant = 'default',
+  copyLabel,
+  className,
+  classNames,
+}: HashLinkProps) {
   const { isCopied, copy } = useCopyToClipboard();
   const { actions, txError } = useLabels();
 
@@ -96,8 +109,8 @@ export function HashLink({ label, hash, explorerUrl, variant = 'default', classN
             'novatx:cursor-pointer novatx:text-[var(--tuwa-text-tertiary)] novatx:transition-colors novatx:hover:text-[var(--tuwa-text-secondary)]',
             classNames?.copyButton,
           )}
-          title={isCopied ? txError.copied : actions.copy}
-          aria-label={isCopied ? txError.copied : actions.copy}
+          title={isCopied ? txError.copied : (copyLabel ?? actions.copyHash)}
+          aria-label={isCopied ? txError.copied : (copyLabel ?? actions.copyHash)}
         >
           <CopyIcon copied={isCopied} className="novatx:h-4 novatx:w-4" />
         </button>

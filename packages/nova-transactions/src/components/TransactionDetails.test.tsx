@@ -212,6 +212,18 @@ describe('TransactionDetails', () => {
     expect(containsText(element, '0xsafe')).toBe(true);
   });
 
+  // Every copy button of the details was named "Copy address": the hash, the key and the JSON of the payload too
+  it('names each copy button by what it copies', () => {
+    const safeTx = { ...evmTx, txKey: '0xsafe', tracker: TransactionTracker.Safe } as EvmTransaction;
+    const element = renderDetails(safeTx);
+    const fieldOf = (label: string) => findElement(element, (props) => props.label === label);
+    const FIELDS = defaultLabels.transactionDetails;
+    expect(fieldOf(FIELDS.hash)?.props).toMatchObject({ copyLabel: 'Copy hash' });
+    expect(fieldOf(FIELDS.from)?.props).toMatchObject({ copyLabel: 'Copy address' });
+    expect(fieldOf(FIELDS.to)?.props).toMatchObject({ copyLabel: 'Copy address' });
+    expect(fieldOf(FIELDS.txKey)?.props).toMatchObject({ copyLabel: 'Copy key' });
+  });
+
   it('shows the confirmations a transaction has, and no row without any', () => {
     const pending = { ...evmTx, pending: true, status: undefined, confirmations: 1, requiredConfirmations: 3 };
     expect(containsText(renderDetails(pending as EvmTransaction), '1 / 3')).toBe(true);

@@ -57,6 +57,7 @@ export const spanishLabels: NovaTransactionsLabels = {
   },
   txError: {
     title: 'Error',
+    copy: 'Copiar el error',
     copied: '¡Copiado!',
   },
   validationError: {
@@ -91,6 +92,10 @@ export const spanishLabels: NovaTransactionsLabels = {
     replacementFeeTooLow: 'La red ya tiene una versión con una comisión más alta: cámbiala en la billetera.',
     stopTracking: 'Dejar de seguir',
     copy: 'Copiar la dirección',
+    copyHash: 'Copiar el hash',
+    copyKey: 'Copiar la clave',
+    copyJson: 'Copiar el JSON',
+    copySlot: 'Copiar el slot',
     viewOnExplorer: 'Ver en el explorador',
     close: 'Cerrar',
     cancel: 'Cancelar',
