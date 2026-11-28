@@ -6,12 +6,15 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **GithubFallbackIcon**(`props`): `Element`
 
-Defined in: [components/GithubFallbackIcon.tsx:82](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/GithubFallbackIcon.tsx#L82)
+Defined in: [components/GithubFallbackIcon.tsx:91](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/GithubFallbackIcon.tsx#L91)
 
-Fetches and displays an SVG icon from the web3icons GitHub repository.
+The icon of a network, a wallet or a token that the bundled `@web3icons/react` does not have.
 
-Used as a fallback when the bundled `@web3icons/react` library
-doesn't have a specific icon available.
+By default it is the fallback drawn here (`fallbackContent`) and nothing is sent. With `remoteFallback` the SVG is
+fetched from the web3icons GitHub repository, once per page for each icon, with a pulsing fallback meanwhile and the
+fallback when the repository does not have it.
+
+Side effect: with `remoteFallback`, a request to `raw.githubusercontent.com`.
 
 ## Parameters
 
@@ -25,4 +28,4 @@ doesn't have a specific icon available.
 
 `Element`
 
-Loading indicator, the fetched icon, or an error fallback
+The fallback, a loading indicator, or the fetched icon

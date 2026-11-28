@@ -74,7 +74,9 @@ export interface UseGetWalletNameAndAvatarOptions {
 
 /**
  * Resolves the name (ENS on EVM, SNS on Solana) and its avatar for the active wallet with `getName` and `getAvatar`
- * of its Satellite adapter, which send requests to the name service. All the callers share one lookup per wallet, kept
+ * of its Satellite adapter, which ask a name service only when the adapter was created with the option for it (by
+ * default an EVM name is read over the mainnet RPC, no avatar is looked up, and a Solana name is the address with an
+ * identicon drawn locally). All the callers share one lookup per wallet, kept
  * for the life of the page; a failed one is not kept. It reads again when the address or the adapter changes, and drops
  * the previous answer. Without a name it returns the shortened address.
  *

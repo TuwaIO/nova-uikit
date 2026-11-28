@@ -25,6 +25,11 @@ export interface NetworkIconProps {
   variant?: 'background' | 'branded' | 'mono';
   /** Classes merged with the default classes (full size of the parent, corners of `--tuwa-rounded-full`, square by default). */
   className?: string;
+  /**
+   * Fetch the icon of a network `@web3icons/common` does not list from `raw.githubusercontent.com`, which tells GitHub
+   * the address of the visitor and the network. Off by default, and then such a network shows a `?` placeholder.
+   */
+  remoteFallback?: boolean;
 }
 
 /** CSS variable for testnet icon styling */
@@ -33,16 +38,17 @@ const TESTNET_FILL = 'var(--tuwa-testnet-icons)';
 /**
  * The icon of a network. Networks listed in `@web3icons/common` are drawn with `@web3icons/react`, loaded on demand one
  * icon at a time (a pulsing {@link FallbackIcon} is shown meanwhile) and rendered through {@link SvgToImg}. An unknown numeric chain
- * shows a `?` placeholder; an unknown string id is fetched from the web3icons repository on GitHub
- * ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet draw the mark of their mainnet in white on a
+ * shows a `?` placeholder; an unknown string id too, or with `remoteFallback` its icon is fetched from the web3icons
+ * repository on GitHub ({@link GithubFallbackIcon}). Testnets and the Solana devnet and testnet draw the mark of their mainnet in white on a
  * `--tuwa-testnet-icons` tile (square, `--tuwa-rounded-full`). An icon without a `mono` style keeps its own drawing on that background instead.
  *
- * Side effect: a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common` does not list.
+ * Side effect: with `remoteFallback`, a GitHub request (`raw.githubusercontent.com`) for icons that `@web3icons/common`
+ * does not list.
  *
  * @param props - See {@link NetworkIconProps}.
  * @returns The icon element.
  */
-export function NetworkIcon({ chainId, variant = 'background', className }: NetworkIconProps) {
+export function NetworkIcon({ chainId, variant = 'background', className, remoteFallback = false }: NetworkIconProps) {
   const chainInfo = getChainName(chainId);
   const isStringId = typeof chainId === 'string';
 
@@ -74,7 +80,14 @@ export function NetworkIcon({ chainId, variant = 'background', className }: Netw
     if (typeof chainId === 'number') {
       return <FallbackIcon content="?" className={className} />;
     }
-    return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} firstPathFill={testnetFill} />;
+    return (
+      <GithubFallbackIcon
+        githubSrc={githubSrc}
+        className={componentClassName}
+        firstPathFill={testnetFill}
+        remoteFallback={remoteFallback}
+      />
+    );
   }
 
   // In one shape (the tile of `--tuwa-rounded-full`) and one color, whatever the mark: each network brought the shape and the color of its background,

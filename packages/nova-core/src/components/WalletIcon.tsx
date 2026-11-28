@@ -26,6 +26,11 @@ export interface WalletIconProps {
   variant?: 'background' | 'branded' | 'mono';
   /** Additional CSS class names. */
   className?: string;
+  /**
+   * Fetch the icon of a wallet `@web3icons/common` does not list from `raw.githubusercontent.com`, which tells GitHub
+   * the address of the visitor and the wallet. Off by default, and then such a wallet shows a `?` placeholder.
+   */
+  remoteFallback?: boolean;
 }
 
 /**
@@ -79,11 +84,16 @@ const ImpersonatedWalletIcon = ({ className, ref }: { className?: string; ref: R
  * 2. Normalizing IDs for common wallets (e.g. 'walletconnect' -> 'wallet-connect').
  * 3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`). An icon without the asked style is
  *    drawn in a style it has, and a mono icon stays an inline SVG, so that its `currentColor` follows the theme.
+ * 4. A wallet `@web3icons/common` does not list shows a `?` placeholder, or with `remoteFallback` its icon fetched from
+ *    the web3icons repository on GitHub ({@link GithubFallbackIcon}).
+ *
+ * Side effect: with `remoteFallback`, a request to `raw.githubusercontent.com` for a wallet `@web3icons/common` does not
+ * list.
  *
  * @param props - {@link WalletIconProps}
  * @returns The wallet icon or a fallback UI.
  */
-export function WalletIcon({ walletName, variant = 'background', className }: WalletIconProps) {
+export function WalletIcon({ walletName, variant = 'background', className, remoteFallback = false }: WalletIconProps) {
   const componentClassName = cn(
     'novacore:w-full novacore:h-full novacore:rounded-[var(--tuwa-rounded-full)]',
     className,
@@ -106,7 +116,7 @@ export function WalletIcon({ walletName, variant = 'background', className }: Wa
   // 3. If wallet not found in @web3icons/common metadata, skip the icon library entirely
   const icon = findWalletIcon(libraryId);
   if (!icon?.filePath) {
-    return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} />;
+    return <GithubFallbackIcon githubSrc={githubSrc} className={componentClassName} remoteFallback={remoteFallback} />;
   }
   const drawnVariant = iconVariantOf(icon.variants, variant);
 

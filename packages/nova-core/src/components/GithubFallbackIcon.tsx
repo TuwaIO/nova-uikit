@@ -68,16 +68,25 @@ export interface GithubFallbackIconProps extends Omit<ComponentProps<'img'>, 'sr
   fallbackContent?: string;
   /** Paths to try in order when the repository does not have `githubSrc`, such as the other styles of an icon. */
   alternativeSrcs?: string[];
+  /**
+   * Fetch the icon from `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository): the request tells GitHub the
+   * address of the visitor and which icon the page shows. Off by default, and then the fallback (`fallbackContent`) is
+   * shown at once and nothing is sent.
+   */
+  remoteFallback?: boolean;
 }
 
 /**
- * Fetches and displays an SVG icon from the web3icons GitHub repository.
+ * The icon of a network, a wallet or a token that the bundled `@web3icons/react` does not have.
  *
- * Used as a fallback when the bundled `@web3icons/react` library
- * doesn't have a specific icon available.
+ * By default it is the fallback drawn here (`fallbackContent`) and nothing is sent. With `remoteFallback` the SVG is
+ * fetched from the web3icons GitHub repository, once per page for each icon, with a pulsing fallback meanwhile and the
+ * fallback when the repository does not have it.
+ *
+ * Side effect: with `remoteFallback`, a request to `raw.githubusercontent.com`.
  *
  * @param props - {@link GithubFallbackIconProps}
- * @returns Loading indicator, the fetched icon, or an error fallback
+ * @returns The fallback, a loading indicator, or the fetched icon
  */
 export function GithubFallbackIcon({
   githubSrc,
@@ -86,6 +95,7 @@ export function GithubFallbackIcon({
   firstPathFill,
   fallbackContent = '?',
   alternativeSrcs,
+  remoteFallback = false,
   ...props
 }: GithubFallbackIconProps) {
   const cacheKey = `${githubSrc}|${firstPathFill ?? ''}`;
@@ -99,8 +109,8 @@ export function GithubFallbackIcon({
   const alternativesKey = alternativeSrcs?.join('|') ?? '';
 
   useEffect(() => {
-    // Check cache first (might be loaded by another instance)
-    if (svgCache.has(cacheKey) || !hasFileName(githubSrc)) return;
+    // Not asked for, or loaded by another instance already
+    if (!remoteFallback || svgCache.has(cacheKey) || !hasFileName(githubSrc)) return;
 
     let isMounted = true;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -123,9 +133,9 @@ export function GithubFallbackIcon({
     return () => {
       isMounted = false;
     };
-  }, [githubSrc, alternativesKey, firstPathFill, cacheKey]);
+  }, [githubSrc, alternativesKey, firstPathFill, cacheKey, remoteFallback]);
 
-  if (!hasFileName(githubSrc)) {
+  if (!remoteFallback || !hasFileName(githubSrc)) {
     return <FallbackIcon content={fallbackContent} className={className} />;
   }
 

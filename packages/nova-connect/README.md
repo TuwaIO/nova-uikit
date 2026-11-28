@@ -148,7 +148,7 @@ Satellite Connect writes the last connection and the recent wallets (see [`@tuwa
 
 ## 🌐 External Services
 
-Nova Connect sends no request of its own. It shows data that the Satellite adapters of the store load: native balances (through the RPC of each chain), ENS names and avatars on Ethereum Mainnet, SNS names and avatars (Bonfida), and the ENS name typed in the impersonation form. Missing network and wallet icons are fetched from GitHub by `@tuwaio/nova-core`. Links to block explorers and to wallet guides are opened by the browser only when clicked.
+Nova Connect sends no request of its own. It shows data that the Satellite adapters of the store load: native balances (through the RPC of each chain), ENS names on Ethereum Mainnet, and the ENS name typed in the impersonation form; ENS avatars (`ensAvatar`) and SNS names and pictures of Bonfida (`snsName`, `snsAvatar`) only when the adapters are created with those options. Network and wallet icons that `@tuwaio/nova-core` does not bundle are a placeholder; they are fetched from GitHub only with its `remoteFallback`, which Nova Connect does not set. Links to block explorers and to wallet guides are opened by the browser only when clicked.
 
 ---
 

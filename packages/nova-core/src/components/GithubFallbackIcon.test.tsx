@@ -20,8 +20,8 @@ describe('GithubFallbackIcon', () => {
     const fetch = vi.fn().mockResolvedValue({ ok: true, text: async () => '<svg></svg>' });
     vi.stubGlobal('fetch', fetch);
 
-    GithubFallbackIcon({ githubSrc: 'tokens/branded/ONE.svg' });
-    GithubFallbackIcon({ githubSrc: 'tokens/branded/ONE.svg' });
+    GithubFallbackIcon({ githubSrc: 'tokens/branded/ONE.svg', remoteFallback: true });
+    GithubFallbackIcon({ githubSrc: 'tokens/branded/ONE.svg', remoteFallback: true });
     await settle();
 
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -32,9 +32,9 @@ describe('GithubFallbackIcon', () => {
     const fetch = vi.fn().mockResolvedValue({ ok: false, status: 404 });
     vi.stubGlobal('fetch', fetch);
 
-    GithubFallbackIcon({ githubSrc: 'tokens/branded/MISSING.svg' });
+    GithubFallbackIcon({ githubSrc: 'tokens/branded/MISSING.svg', remoteFallback: true });
     await settle();
-    GithubFallbackIcon({ githubSrc: 'tokens/branded/MISSING.svg' });
+    GithubFallbackIcon({ githubSrc: 'tokens/branded/MISSING.svg', remoteFallback: true });
     await settle();
 
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -44,7 +44,7 @@ describe('GithubFallbackIcon', () => {
     const fetch = vi.fn();
     vi.stubGlobal('fetch', fetch);
 
-    GithubFallbackIcon({ githubSrc: 'wallets/branded/.svg' });
+    GithubFallbackIcon({ githubSrc: 'wallets/branded/.svg', remoteFallback: true });
 
     expect(fetch).not.toHaveBeenCalled();
   });
@@ -60,6 +60,7 @@ describe('GithubFallbackIcon', () => {
 
     GithubFallbackIcon({
       githubSrc: 'tokens/background/OKB.svg',
+      remoteFallback: true,
       alternativeSrcs: ['tokens/branded/OKB.svg', 'tokens/mono/OKB.svg'],
     });
     await settle();
@@ -75,7 +76,11 @@ describe('GithubFallbackIcon', () => {
     const fetch = vi.fn().mockResolvedValue({ ok: false, status: 503 });
     vi.stubGlobal('fetch', fetch);
 
-    GithubFallbackIcon({ githubSrc: 'tokens/background/DOWN.svg', alternativeSrcs: ['tokens/mono/DOWN.svg'] });
+    GithubFallbackIcon({
+      githubSrc: 'tokens/background/DOWN.svg',
+      alternativeSrcs: ['tokens/mono/DOWN.svg'],
+      remoteFallback: true,
+    });
     await settle();
 
     expect(fetch).toHaveBeenCalledTimes(1);

@@ -53,7 +53,7 @@ const TokenCard = ({ token, variant, reduceMotion }: { token: Token; variant: Va
       animate={{ opacity: 1, scale: 1 }}
       exit={reduceMotion ? undefined : { opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.18, ease: 'easeOut' }}
-      onClick={() => void copy(`<TokenIcon symbol="${token.symbol}" />`)}
+      onClick={() => void copy(`<TokenIcon symbol="${token.symbol}"${token.isBundled ? '' : ' remoteFallback'} />`)}
       // Starts with the text on the card: whoever speaks to the page says what they see
       aria-label={`${isCopied ? 'Copied' : token.symbol} ${token.name}, copy the code of the icon`}
       title={token.isBundled ? token.name : `${token.name}, loaded on demand`}
@@ -63,7 +63,7 @@ const TokenCard = ({ token, variant, reduceMotion }: { token: Token; variant: Va
         <span aria-hidden className="absolute top-2 right-2 h-1.5 w-1.5 bg-[var(--tuwa-text-tertiary)]" />
       )}
       <span className="block h-11 w-11 transition-transform duration-200 group-hover:scale-110">
-        <TokenIcon symbol={token.symbol} variant={variant} />
+        <TokenIcon symbol={token.symbol} variant={variant} remoteFallback={!token.isBundled} />
       </span>
       <span className="flex w-full min-w-0 flex-col items-center gap-0.5">
         <span
@@ -104,7 +104,8 @@ const TokenGallery = () => {
           <h2 className="text-2xl font-semibold tracking-tight">Token icons</h2>
           <p className="mt-1.5 text-sm text-[var(--tuwa-text-secondary)]">
             {TOKENS.length.toLocaleString('en')} tokens: {BUNDLED.size} go through your bundler, and the others, marked
-            with a dot, load on demand from GitHub and cost your build nothing. Choose one to copy its code.
+            with a dot, load on demand from GitHub with <code>remoteFallback</code> and cost your build nothing (without
+            it they show the first letter of their symbol). Choose one to copy its code.
           </p>
           <a
             href="https://www.web3icons.io/?type=token&variant=branded"

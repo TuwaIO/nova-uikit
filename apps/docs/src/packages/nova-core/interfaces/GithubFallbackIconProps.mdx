@@ -58,3 +58,15 @@ Path to the SVG file within the web3icons repository.
 ```ts
 "networks/background/ethereum.svg"
 ```
+
+***
+
+### remoteFallback?
+
+> `optional` **remoteFallback?**: `boolean`
+
+Defined in: [components/GithubFallbackIcon.tsx:76](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/GithubFallbackIcon.tsx#L76)
+
+Fetch the icon from `raw.githubusercontent.com` (the `0xa3k5/web3icons` repository): the request tells GitHub the
+address of the visitor and which icon the page shows. Off by default, and then the fallback (`fallbackContent`) is
+shown at once and nothing is sent.

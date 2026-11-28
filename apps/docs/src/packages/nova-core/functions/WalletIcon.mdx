@@ -6,7 +6,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 > **WalletIcon**(`props`): `Element`
 
-Defined in: [components/WalletIcon.tsx:86](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/WalletIcon.tsx#L86)
+Defined in: [components/WalletIcon.tsx:96](https://github.com/TuwaIO/nova-uikit/blob/main/packages/nova-core/src/components/WalletIcon.tsx#L96)
 
 Renders a wallet icon based on the wallet name.
 
@@ -15,6 +15,11 @@ It handles logic for:
 2. Normalizing IDs for common wallets (e.g. 'walletconnect' -\> 'wallet-connect').
 3. Lazy loading other icons from @web3icons/react, one icon at a time (see `Web3IconLazy`). An icon without the asked style is
    drawn in a style it has, and a mono icon stays an inline SVG, so that its `currentColor` follows the theme.
+4. A wallet `@web3icons/common` does not list shows a `?` placeholder, or with `remoteFallback` its icon fetched from
+   the web3icons repository on GitHub ([GithubFallbackIcon](?path=/docs/packages-nova-core-functions-githubfallbackicon--docs)).
+
+Side effect: with `remoteFallback`, a request to `raw.githubusercontent.com` for a wallet `@web3icons/common` does not
+list.
 
 ## Parameters
 
